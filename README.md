@@ -14,9 +14,9 @@ Our school in Super Mario 64, with online co-op and playable versions of our fri
 
 ## Layout
 
-- `mods/sgl64/` holds the main mod: Lua scripts, friend models (`actors/`), portraits (`textures/`) and levels (`levels/castle_grounds` = the hub, `levels/bob` = The Swamp, `levels/wf` = Reitz Union & Engineering, `levels/jrb` = Lake Alice, `levels/ccm` = the Marston Science Library interior, `levels/bbh` = Library West After Dark, the Library West interior at night, `levels/sgl_test`). Each stage's missions are in their own file (`swamp_missions.lua`, `wf_reitz_missions.lua`, `uf_lake_missions.lua`, `uf_marston_missions.lua`, `uf_west_library_missions.lua`).
+- `mods/sgl64/` holds the main mod: Lua scripts, friend models (`actors/`), portraits (`textures/`) and levels (`levels/castle_grounds` = the hub, `levels/bob` = The Swamp, `levels/wf` = Reitz Union & Engineering, `levels/jrb` = Lake Alice, `levels/ccm` = Marston, `levels/bbh` = the Library West night course, `levels/sgl_test`). Only Reitz and Marston are enterable in the solo gameplay scope; the existing Library West interior assets are legacy and should be replaced by the exterior-only design in `docs/singleplayer_campaign.md`.
 - `docs/flow.md` is the level-flow contract (doors, warp nodes, stars, act order, load order); `docs/game_design.md` is the original full design; `docs/singleplayer_campaign.md` is the detailed solo gameplay proposal for review before implementation.
-- `tools/campus/` builds the stages from campus data (`build_stage.py` for the outdoor stages, `build_interior.py` + `interiors/marston.py` / `interiors/libwest.py` for the Marston and Library West interiors; `stage_pickups.py`: the coins, hearts, 1-ups, Goombas and poles of a stage); `tools/luatest/` checks the Lua offline.
+- `tools/campus/` builds the stages from campus data (`build_stage.py` for the outdoor stages, `build_interior.py` + `interiors/marston.py` for Marston; `interiors/libwest.py` remains a legacy prototype); `stage_pickups.py` places coins, hearts, 1-ups, Goombas, and poles; `tools/luatest/` checks the Lua offline.
 - `install-mods.sh` copies `mods/` into the game's mods folder.
 - `companion/app/` is an optional DeepSpace web dashboard prototype. It is separate from the native game and is not required to play.
 
