@@ -222,9 +222,15 @@ def pick_hammocks(S, probe, n=3):
 def build(S, probe, avoid=()):
     """Place the dressing; returns pole objects [{name, stage (x, y), z, height_m}] for build_stage.
     avoid = [(stage x, y, radius)] kept clear (spawn, signs, climbable trees).
-    The Swamp has its own game-day set (build_swamp); every other stage uses the hub tables."""
+    The Swamp has its own game-day set (build_swamp), Course 2 its own (build_reitz); every other stage
+    uses the hub tables."""
     if getattr(S, "key", "hub") == "swamp":
         return build_swamp(S, probe, avoid)
+    if getattr(S, "key", "hub") == "reitz_eng":
+        return build_reitz(S, probe, avoid)
+    if getattr(S, "key", "hub") == "lake_alice":      # Course 3: observation deck + nest (stage_lake.py)
+        import stage_lake
+        return stage_lake.build_dressing(S, probe, avoid)
     vis = S.acc("Dressing visual", collision=False)
     col = S.acc("Dressing collision", render=False)
     taken = list(avoid)
@@ -457,4 +463,265 @@ def build_swamp(S, probe, avoid=()):
     S.swamp_secrets = secrets
     print(f"SGL: swamp dressing: {len(rep['tents'])} tailgate tents, {len(rep['lamps'])} lamp posts, "
           f"{len(rep['statues'])} gator statues, {len(rep['markers'])} markers; skipped {rep['skipped']}")
+    return poles
+
+
+# ------------------------------------------------------------------ Course 2: Reitz Union & Engineering
+# (docs/game_design.md 7.2). Banner lamp posts (climbable) round the stage spawn on the Reitz North Lawn
+# strip, along the lawn's radial walks and on Malachowsky's Campus Green plaza; benches on the lawn; the
+# act anchors that are part of the stage itself (missions add the moving / scripted objects):
+#   * act 3 "Weil Wind Tunnel": the wind-tunnel floor vent beside the Weil Cooling Towers (a steel grate
+#     on a 0.4 m curb, 5.2 m across): the vertical airflow rises from it past the towers' 11 m roof;
+#   * act 4 "Rogue Robot Roundup": the robots' charging dock on the lawn south-east of Liberty Pond;
+#   * act 5 "Meal Swipe Tokens": the Gator Corner patio tables and the Reitz Ravine boardwalk (a 0.45 m
+#     timber deck along the woods' mulch trail, step-up height, so it needs no ramps).
+REITZ_LAMPS = [(-452.0, -222.0), (-438.0, -236.0), (-470.0, -233.0), (-410.0, -233.0), (-378.0, -234.0),
+               (-345.0, -226.0), (-305.0, -214.0), (-388.0, -203.0), (-330.0, -168.0), (-276.0, -192.0),
+               (-470.0, -499.0), (-434.0, -499.0)]
+REITZ_BENCHES = [(-425.0, -219.0, 180.0), (-398.0, -219.0, 180.0), (-360.0, -205.0, 225.0), (-300.0, -190.0, 200.0)]
+REITZ_WIND_VENT = (-488.0, -136.0)       # act 3: east of the Weil Cooling Towers (east face x -499.6)
+WIND_VENT_R, WIND_VENT_H = 2.6, 0.4
+REITZ_DOCK = (-343.0, -352.0)            # act 4: lawn south-east of Liberty Pond
+DOCK_HALF, DOCK_H = (1.5, 1.2), 0.25
+REITZ_PATIO_TABLES = [(-648.0, -117.0), (-655.0, -123.0), (-641.0, -111.0)]   # south-east of Gator Corner
+REITZ_BOARDWALK_WAY = "w428102720"       # Reitz Ravine Woods mulch trail
+BOARDWALK_W, BOARDWALK_H = 2.2, 0.45
+
+
+def wind_vent(vis, col, x, y):
+    """Wind-tunnel floor vent: octagonal steel curb (0.4 m) with a grate on top and a fan hub, UF
+    orange / blue warning bands on the curb. Collision: the curb sides + the grate (walkable)."""
+    n = 8
+    ring = [(x + WIND_VENT_R * math.cos(2 * math.pi * (k + 0.5) / n),
+             y + WIND_VENT_R * math.sin(2 * math.pi * (k + 0.5) / n)) for k in range(n)]
+    for k, (a, b) in enumerate(zip(ring, ring[1:] + ring[:1])):
+        vis.wall(a, b, -0.05, WIND_VENT_H, "banner_orange" if k % 2 == 0 else "banner_blue",
+                 [(0, 0.45), (1, 0.45), (1, 0.62), (0, 0.62)])
+    inner = [(x + (px - x) * 0.82, y + (py - y) * 0.82) for px, py in ring]
+    for (a, b), (ia, ib) in zip(zip(ring, ring[1:] + ring[:1]), zip(inner, inner[1:] + inner[:1])):
+        vis.poly([(a[0], a[1], WIND_VENT_H), (b[0], b[1], WIND_VENT_H), (ib[0], ib[1], WIND_VENT_H),
+                  (ia[0], ia[1], WIND_VENT_H)], "metal_gray")
+    vis.flat(inner, WIND_VENT_H, "dark_trim")
+    # grate bars (thin raised strips) + the fan hub
+    for k in range(-3, 4):
+        off = k * 0.55
+        half = math.sqrt(max(0.0, (WIND_VENT_R * 0.8) ** 2 - off * off))
+        _obox(vis, x + off, y, 0.0, 0.05, half, WIND_VENT_H, WIND_VENT_H + 0.04, "metal_gray", "metal_gray")
+    _obox(vis, x, y, 0.0, 0.45, 0.45, WIND_VENT_H, WIND_VENT_H + 0.12, "metal_gray", "door_marker")
+    if col is not None:
+        for a, b in zip(ring, ring[1:] + ring[:1]):
+            col.wall(a, b, 0.0, WIND_VENT_H, "COL default")
+        col.flat(ring, WIND_VENT_H, "COL default")
+
+
+FAN_R, FAN_H = 1.8, 1.4                  # cooling-tower fan shrouds on the Weil Cooling Towers' roof
+
+
+def fan_shroud(vis, col, x, y, z):
+    """Cooling-tower fan: an octagonal steel shroud (1.4 m) with a dark fan deck, a hub and four blades on top.
+    Collision: its sides + the top (a step on the catwalk roof)."""
+    n = 8
+    ring = [(x + FAN_R * math.cos(2 * math.pi * (k + 0.5) / n), y + FAN_R * math.sin(2 * math.pi * (k + 0.5) / n))
+            for k in range(n)]
+    for k, (a, b) in enumerate(zip(ring, ring[1:] + ring[:1])):
+        vis.wall(a, b, z - 0.05, z + FAN_H, "metal_gray")
+    inner = [(x + (px - x) * 0.86, y + (py - y) * 0.86) for px, py in ring]
+    for (a, b), (ia, ib) in zip(zip(ring, ring[1:] + ring[:1]), zip(inner, inner[1:] + inner[:1])):
+        vis.poly([(a[0], a[1], z + FAN_H), (b[0], b[1], z + FAN_H), (ib[0], ib[1], z + FAN_H),
+                  (ia[0], ia[1], z + FAN_H)], "metal_gray")
+    vis.flat(inner, z + FAN_H - 0.02, "dark_trim")
+    for k in range(4):
+        _obox(vis, x, y, k * math.pi / 4, FAN_R * 0.78, 0.12, z + FAN_H - 0.02, z + FAN_H + 0.03, "metal_gray",
+              "metal_gray")
+    _obox(vis, x, y, 0.0, 0.3, 0.3, z + FAN_H, z + FAN_H + 0.18, "metal_gray", "door_marker")
+    if col is not None:
+        for a, b in zip(ring, ring[1:] + ring[:1]):
+            col.wall(a, b, z, z + FAN_H, "COL default")
+        col.flat(ring, z + FAN_H, "COL default")
+
+
+def charging_dock(vis, col, x, y):
+    """Robot charging dock: a 3 x 2.4 m concrete pad (0.25 m, a step up) with a charging post and an
+    orange / blue light band on the north side. Collision: the pad + the post."""
+    hx, hy = DOCK_HALF
+    _obox(vis, x, y, 0.0, hx, hy, -0.05, DOCK_H, "concrete", "concrete")
+    _obox(vis, x, y, 0.0, hx - 0.25, hy - 0.25, DOCK_H, DOCK_H + 0.02, "banner_blue", "banner_blue")
+    px, py = x, y + hy - 0.25
+    _obox(vis, px, py, 0.0, 0.25, 0.2, DOCK_H, DOCK_H + 1.5, "metal_gray", "dark_trim")
+    _obox(vis, px, py - 0.21, 0.0, 0.18, 0.02, DOCK_H + 0.9, DOCK_H + 1.3, "banner_orange", None)
+    if col is not None:
+        _obox(col, x, y, 0.0, hx, hy, 0.0, DOCK_H, "COL default", "COL default")
+        _obox(col, px, py, 0.0, 0.25, 0.2, DOCK_H, DOCK_H + 1.5, "COL default", "COL default")
+
+
+def boardwalk(S, probe, vis, col, way_id):
+    """Timber boardwalk (BOARDWALK_W wide, deck at BOARDWALK_H) along the OSM trail way_id, cut into
+    runs where the trail is clear (ground floor, no tree collider within the deck's half width + 0.4 m).
+    Collision: the deck top only (0.45 m is a walk-up step in SM64: find_floor reaches 78 units up).
+    -> [{"from_m", "to_m", "length_m", "mid_m"}] runs (map metres)."""
+    way = next((p for p in S.data["paths"] if p["id"] == way_id), None)
+    if way is None:
+        return []
+    pts = [S.T(q) for q in way["pts"]]
+    samples = []
+    for a, b in zip(pts, pts[1:]):
+        L = math.dist(a, b)
+        n = max(1, math.ceil(L / 1.0))
+        for k in range(n):
+            t = k / n
+            samples.append((a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t))
+    samples.append(pts[-1])
+    ok = []
+    for (x, y) in samples:
+        fz = probe.floor(x, y, 3.0)
+        good = fz is not None and abs(fz) < 0.05 and not probe.inside(x, y, 0.6)
+        if good:
+            good = probe.clearance(x, y, BOARDWALK_H + 0.6, BOARDWALK_W / 2 + 0.4) >= BOARDWALK_W / 2 + 0.4
+        ok.append(good)
+    runs, cur = [], []
+    for p, g in zip(samples, ok):
+        if g:
+            cur.append(p)
+        else:
+            if len(cur) >= 6:
+                runs.append(cur)
+            cur = []
+    if len(cur) >= 6:
+        runs.append(cur)
+    out = []
+    hw = BOARDWALK_W / 2
+    for run in runs:
+        # simplify: keep every 3rd sample (the trail is smooth) plus the ends
+        pl = run[::3] + ([run[-1]] if (len(run) - 1) % 3 else [])
+        segs = list(zip(pl, pl[1:]))
+        for i, (a, b) in enumerate(segs):
+            L = math.dist(a, b)
+            if L < 0.2:
+                continue
+            ux, uy = (b[0] - a[0]) / L, (b[1] - a[1]) / L
+            nx, ny = uy, -ux                                      # right of a -> b
+            ext = 0.15 if i < len(segs) - 1 else 0.0              # overlap the next piece (no cracks)
+            a2 = (a[0] - ux * (0.15 if i else 0.0), a[1] - uy * (0.15 if i else 0.0))
+            b2 = (b[0] + ux * ext, b[1] + uy * ext)
+            q = [(a2[0] + nx * hw, a2[1] + ny * hw), (b2[0] + nx * hw, b2[1] + ny * hw),
+                 (b2[0] - nx * hw, b2[1] - ny * hw), (a2[0] - nx * hw, a2[1] - ny * hw)]
+            q = q if G.signed_area(q) > 0 else q[::-1]
+            vis.flat(q, BOARDWALK_H, "door_wood")
+            for e0, e1 in zip(q, q[1:] + q[:1]):
+                vis.wall(e0, e1, -0.05, BOARDWALK_H, "dark_trim")
+            col.flat(q, BOARDWALK_H, "COL default")
+            # rail posts every piece on both sides (visual only, low: no snagging the camera)
+            for s in (1, -1):
+                trunk(vis, a[0] + nx * (hw - 0.1) * s, a[1] + ny * (hw - 0.1) * s, 0.06, BOARDWALK_H, BOARDWALK_H + 0.9,
+                      4, "door_wood", f"bw{len(out)}:{i}:{s}")
+        mid = run[len(run) // 2]
+        out.append({"from_m": [round(run[0][0] + S.cx, 2), round(run[0][1] + S.cy, 2)],
+                    "to_m": [round(run[-1][0] + S.cx, 2), round(run[-1][1] + S.cy, 2)],
+                    "length_m": round(sum(math.dist(p, q_) for p, q_ in zip(run, run[1:])), 1),
+                    "mid_m": [round(mid[0] + S.cx, 2), round(mid[1] + S.cy, 2), BOARDWALK_H],
+                    "deck_m": BOARDWALK_H})
+    return out
+
+
+def reserve(S):
+    """Before the trees are built (build_stage.py): keep the generator's trees off the spots this stage's
+    dressing needs. Course 2: the ravine boardwalk's trail (deck half width + 0.9 m), the wind vent, the
+    charging dock and the patio tables. Every other stage: nothing. -> the tree ids removed."""
+    if getattr(S, "key", "hub") == "lake_alice":      # Course 3: thinned woods, clear trails, arrival vista
+        import stage_lake
+        return stage_lake.reserve(S)
+    if getattr(S, "key", "hub") != "reitz_eng":
+        return []
+    way = next((p for p in S.data["paths"] if p["id"] == REITZ_BOARDWALK_WAY), None)
+    segs = list(zip(way["pts"], way["pts"][1:])) if way else []
+    spots = [(REITZ_WIND_VENT, WIND_VENT_R + 2.0), (REITZ_DOCK, 3.0)] + [(t, 2.0) for t in REITZ_PATIO_TABLES]
+    gone = []
+    for t in S.data["trees"]:
+        if t["id"] in S.removed_points:
+            continue
+        p = tuple(t["pt"])
+        if any(G.seg_dist(p, tuple(a), tuple(b)) < BOARDWALK_W / 2 + 0.9 for a, b in segs) or \
+                any(math.dist(p, c) < r for c, r in spots):
+            S.removed_points.add(t["id"])
+            gone.append(t["id"])
+    S.stats["dressing_reserved_trees"] = gone
+    print(f"SGL: reitz dressing: {len(gone)} trees kept off the boardwalk trail / vent / dock / patio")
+    return gone
+
+
+def build_reitz(S, probe, avoid=()):
+    """Dressing of Course 2 (see REITZ_* above). Every item is checked against the real collision
+    (_place). Sets S.reitz_dressing (report + stage_points); returns the lamp poles."""
+    vis = S.acc("Dressing visual", collision=False)
+    col = S.acc("Dressing collision", render=False)
+    taken = list(avoid)
+    rep = {"lamps": [], "benches": [], "tables": [], "wind_vent": None, "charging_dock": None, "boardwalk": [],
+           "skipped": []}
+    poles = []
+    p = _place(S, probe, taken, *REITZ_WIND_VENT, WIND_VENT_R + 0.6)
+    if p is None:
+        rep["skipped"].append(("wind_vent",) + REITZ_WIND_VENT)
+    else:
+        wind_vent(vis, col, p[0], p[1])
+        taken.append((p[0], p[1], WIND_VENT_R + 1.0))
+        rep["wind_vent"] = {"map_m": [round(p[0] + S.cx, 2), round(p[1] + S.cy, 2)], "radius_m": WIND_VENT_R,
+                            "grate_m": WIND_VENT_H}
+    p = _place(S, probe, taken, *REITZ_DOCK, 2.2)
+    if p is None:
+        rep["skipped"].append(("charging_dock",) + REITZ_DOCK)
+    else:
+        charging_dock(vis, col, p[0], p[1])
+        taken.append((p[0], p[1], 2.4))
+        rep["charging_dock"] = {"map_m": [round(p[0] + S.cx, 2), round(p[1] + S.cy, 2)], "pad_m": DOCK_H,
+                                "half_m": list(DOCK_HALF)}
+    # the Weil Cooling Towers (generic flat roof, louvred "service" facade in this stage): two fan shrouds on
+    # the north half of the roof deck, clear of the catwalk token (12 m south of the centre) and of the climb
+    # route (east face, south half)
+    rep["fans"] = []
+    cool = next((x for x in S.data["buildings"] if x["id"] == "w150858524"), None)
+    cst = next((x for x in S.stats.get("buildings", []) if x.get("id") == "w150858524"), None)
+    if cool is not None and cst is not None:
+        eave = cst.get("eave", 10.0)
+        for dy in (6.0, 13.0):          # on the roof's centre line (it is ~13 m wide), north of the catwalk token
+            fx, fy = S.T((cool["c"][0], cool["c"][1] + dy))
+            fz = probe.floor(fx, fy, eave + 1.0)
+            room = probe.clearance(fx, fy, eave + 0.6, FAN_R + 1.5) if fz is not None else 0.0
+            if fz is None or abs(fz - eave) > 0.1 or room < FAN_R + 0.6:
+                rep["skipped"].append(("cooling tower fan", round(fx + S.cx, 1), round(fy + S.cy, 1), fz, round(room, 2)))
+                continue
+            fan_shroud(vis, col, fx, fy, fz)
+            rep["fans"].append({"map_m": [round(fx + S.cx, 2), round(fy + S.cy, 2)], "top_m": round(fz + FAN_H, 2)})
+    for i, (mx, my) in enumerate(REITZ_PATIO_TABLES):
+        p = _place(S, probe, taken, mx, my, 1.3)
+        if p is None:
+            rep["skipped"].append(("table", mx, my))
+            continue
+        table(vis, col, p[0], p[1], "banner_orange" if i % 2 == 0 else "banner_blue")
+        taken.append((p[0], p[1], 1.3))
+        rep["tables"].append([round(p[0] + S.cx, 2), round(p[1] + S.cy, 2), 0.76])
+    for i, (mx, my, facing) in enumerate(REITZ_BENCHES):
+        p = _place(S, probe, taken, mx, my, 1.1, walk_pad=0.15)
+        if p is None:
+            rep["skipped"].append(("bench", mx, my))
+            continue
+        bench(vis, col, p[0], p[1], facing)
+        taken.append((p[0], p[1], 1.1))
+        rep["benches"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+    for i, (mx, my) in enumerate(REITZ_LAMPS):
+        p = _place(S, probe, taken, mx, my, 1.4, walk_pad=0.3)
+        if p is None:
+            rep["skipped"].append(("lamp", mx, my))
+            continue
+        yaw = 0.0 if i % 2 == 0 else math.pi / 2
+        lamp(vis, p[0], p[1], f"reitz_lamp{i}", yaw)
+        taken.append((p[0], p[1], 1.4))
+        poles.append({"name": f"Lamp post {i:02d}", "stage": p, "z": 0.0, "height_m": LAMP_POLE_M})
+        rep["lamps"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+    rep["boardwalk"] = boardwalk(S, probe, vis, col, REITZ_BOARDWALK_WAY)
+    S.stats["dressing"] = rep
+    S.reitz_dressing = rep
+    print(f"SGL: reitz dressing: {len(rep['lamps'])} lamp posts, {len(rep['benches'])} benches, "
+          f"{len(rep['tables'])} patio tables, wind vent {'ok' if rep['wind_vent'] else 'MISSING'}, "
+          f"charging dock {'ok' if rep['charging_dock'] else 'MISSING'}, boardwalk runs "
+          f"{[r['length_m'] for r in rep['boardwalk']]}; skipped {rep['skipped']}")
     return poles

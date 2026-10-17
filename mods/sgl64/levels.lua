@@ -611,6 +611,7 @@ SGL_MAP_CENTERS = {
     [LEVEL_CASTLE_GROUNDS] = { -45, 98 },
     [LEVEL_BOB] = { -580, 160 },      -- The Swamp (stages.json swamp window centre; data/uf/swamp_points.json map_m)
     [LEVEL_WF] = { -470, -293 },      -- Reitz & Engineering (stages.json reitz_eng window centre; data/uf/reitz_points.json)
+    [LEVEL_JRB] = { -1760, -660 },    -- Lake Alice (stages.json lake_alice window centre; data/uf/lake_points.json)
 }
 
 local function warp_hub()

@@ -10,7 +10,15 @@ of the collision ground (HOLE_OVERLAP_M smaller: see there) and the base grass l
 cut-out rectangle per group of holes / ponds whose tile rectangles overlap, so no tile is covered
 twice); mapped areas, roads, centre lines, walkways, barriers and fountains drop the pieces whose
 centre lies in a hole. Inside a hole the landmark module provides every floor. S.ground_holes keeps
-them (stage coordinates).
+them (stage coordinates). A landmark ground hole that an OSM area already has as one of its own holes
+(the Lake Alice shore = the lake hole of the surrounding woods) is not added to that area a second time.
+
+Landmark lakes (Lake Alice, landmarks/lake_alice_water.py): an OSM water polygon whose id a landmark
+entry lists in "replaces_areas" (or "osm_ids") gets no generic pond (basin, water, water box); the
+landmark builds the basin itself and lists its SM64 water boxes in "water_boxes_m":
+    [{"name": str, "rect_m": [xmin, ymin, xmax, ymax] (map metres), "surface_z": m, "bottom_z": m}, ...]
+which go into S.water_boxes after the ponds' boxes (build_stage.py clips them to the play zone).
+Stages without such entries build exactly as before.
 """
 import math
 
@@ -120,6 +128,28 @@ def landmark_ground_holes(S):
     return out
 
 
+def landmark_water_boxes(S):
+    """Landmark "water_boxes_m" (map metres) -> S.water_boxes tuples (stage coordinates)."""
+    out = []
+    for e in S.landmark_entries:
+        for b in e.get("water_boxes_m", []) or []:
+            x0, y0, x1, y1 = b["rect_m"]
+            (ax, ay), (bx, by) = S.T((x0, y0)), S.T((x1, y1))
+            surf = float(b["surface_z"])
+            out.append((min(ax, bx), min(ay, by), max(ax, bx), max(ay, by), surf,
+                        float(b.get("bottom_z", surf - 6.0)), b.get("name") or e["slug"]))
+    return out
+
+
+def _same_hole(p, q, tol=0.5):
+    """Two rings with the same bounding box (within tol m) and the same area (within 2 %)."""
+    bp, bq = G.bbox(p), G.bbox(q)
+    if any(abs(a - b) > tol for a, b in zip(bp, bq)):
+        return False
+    ap, aq = abs(G.signed_area(p)), abs(G.signed_area(q))
+    return abs(ap - aq) <= 0.02 * max(ap, aq, 1e-6)
+
+
 def _centre(pts):
     return (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts))
 
@@ -134,7 +164,12 @@ def build(S):
     roads_acc = S.acc("Roads and paths visual", collision=False)
     col = S.acc("Ground collision", render=False)
 
-    ponds = [[T(p) for p in w["ring"]] for w in d["water"]]
+    # OSM water a landmark draws itself (Lake Alice): no generic pond
+    replaced_water = S.replaced_areas | S.replaced_ids
+    waters = [w for w in d["water"] if w["id"] not in replaced_water]
+    if len(waters) != len(d["water"]):
+        S.stats["water_replaced_by_landmarks"] = sorted(w["id"] for w in d["water"] if w["id"] in replaced_water)
+    ponds = [[T(p) for p in w["ring"]] for w in waters]
     ponds = [G.ccw(p) for p in ponds if len(p) >= 3]
     holes = landmark_ground_holes(S)          # landmark ground holes (the stadium bowl)
     S.ground_holes = holes
@@ -179,9 +214,12 @@ def build(S):
             continue
         z = Z["lawn"] if a["cls"] in ("lawn", "forest") else Z["area"]
         # ponds (and landmark ground holes) inside a park polygon become holes, or the lawn would
-        # cover the water / the sunken bowl
+        # cover the water / the sunken bowl (a landmark hole the area already has is not added twice)
+        own_holes = list(holes)
         for p in ponds + S.ground_holes:
             if all(G.point_in_poly(q, ring) for q in p):
+                if own_holes and any(p is h for h in S.ground_holes) and any(_same_hole(p, h) for h in own_holes):
+                    continue
                 holes.append(p[::-1])
         tris = G.triangulate([ring] + holes)
         if S.ground_holes:   # partial overlaps: drop the triangles whose centre is in a ground hole
@@ -255,7 +293,7 @@ def build(S):
     basin_v = S.acc("Pond basins visual", collision=False)
     basin_c = S.acc("Pond basins collision", render=False)
     water_v = S.acc("Pond water", collision=False)
-    for w, ring in zip(d["water"], ponds):
+    for w, ring in zip(waters, ponds):
         tris = G.triangulate([ring])
         basin_v.flat_tris(tris, POND_FLOOR, "pond_bed", cell=TILE, ox=TILE_OFF, oy=TILE_OFF)
         basin_c.flat_tris(tris, POND_FLOOR, "COL default", cell=TILE, ox=TILE_OFF, oy=TILE_OFF)
@@ -265,6 +303,8 @@ def build(S):
             basin_c.wall(b, a, POND_FLOOR, 0.0, "COL default")
         x0, y0, x1, y1 = G.bbox(ring)
         S.water_boxes.append((x0, y0, x1, y1, POND_SURFACE, POND_FLOOR - 0.4, w.get("name") or w["id"]))
+    # ---- landmark lakes: their own water boxes (contract key "water_boxes_m")
+    S.water_boxes.extend(landmark_water_boxes(S))
 
     # ---- fountain(s): low limestone basin with water on top (solid; you can stand on the rim)
     for f in d.get("fountains", []):

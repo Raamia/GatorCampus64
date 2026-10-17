@@ -10,8 +10,9 @@ Usage:
                          level_<slot>_entry.lvl, which replaces that vanilla level.
     --custom             old behaviour: a custom level sgl_<key> (level_register in levels.lua)
     --levels-dir DIR     where the level folder goes (default mods/sgl64/levels)
-    --report-dir DIR     where sgl_<key>_build.json goes (default art/levels/<key>; e.g. scratch for test builds)
-    --previews           render previews to art/levels/<key>/previews/ after exporting
+    --report-dir DIR     where sgl_<key>_build.json goes (default art/levels/<key>, or STAGE_SHORT_NAMES: reitz_eng ->
+                         art/levels/reitz; e.g. scratch for test builds)
+    --previews           render previews to art/levels/<key>/previews/ (STAGE_SHORT_NAMES) after exporting
     --previews-only      build + render previews, do not export
     --no-export          build only (with --blend to inspect it)
     --blend OUT.blend    save the built scene
@@ -22,8 +23,10 @@ Usage:
     --repair-collision / --no-repair-collision
                          T-junction-split + weld the exported floors (stage_collision.py; default on
                          for REPAIR_COLLISION_STAGES = the hub and the swamp)
-The swamp also writes its mission anchor points (stage_points.py) to data/uf/swamp_points.json
-(next to the report for a --report-dir test build).
+The swamp and reitz_eng also write their mission anchor points (stage_points.py) to
+data/uf/swamp_points.json / data/uf/reitz_points.json (next to the report for a --report-dir test build).
+Course 3, lake_alice (slot jrb): its stage-specific parts (tree thinning, the observation deck + nest, pickups,
+data/uf/lake_points.json, preview cameras) live in stage_lake.py.
 
 Pipeline
   1. tools/.venv/bin/python -I tools/campus/make_textures.py   -> art/levels/textures/*.png
@@ -90,7 +93,17 @@ SPAWN = {"hub": {"pos": (38.2, 142.4), "facing": 190.0,
          # The Swamp: the Courtyard of Champions just north of the stadium's north gatehouse (the
          # swamp_stadium module's suggested_stage_spawn), facing south at the Sunshine Seats, the north
          # gate tunnel straight ahead and the two helix ramp towers either side
-         "swamp": {"pos": (-513.49, 272.98), "facing": 180.0}}
+         "swamp": {"pos": (-513.49, 272.98), "facing": 180.0},
+         # Course 2, Reitz Union & Engineering: on the North Lawn's west walks, about 40 m north-east of the
+         # Reitz Union, facing south-west at it (fun review fix round: the first shot is the landmark): the
+         # glass east wing and the 27 m tower ahead, the north colonnade on the right, act 1's CLIMB HERE
+         # (the ravine terrace at the south-west corner, behind the building) 16 degrees left of centre
+         "reitz_eng": {"pos": (-398.0, -200.0), "facing": 214.0},
+         # Course 3, Lake Alice: the bat-house field on the north shore (lake_alice_shore.py's landing zone,
+         # spot spawn_field), the 2010 / 2017 bat barns behind, facing south-south-east over the observation
+         # fence and Museum Road down the arrival vista (stage_lake.SPAWN_VISTA) to the north boardwalk inlet,
+         # the west bog (the island nest) and the lily-pad line to the observation deck
+         "lake_alice": {"pos": (-1893.0, -541.0), "facing": 150.0}}
 # per-stage look (keys override FOG_COLOR_SRGB / BACKGROUND / MUSIC / terrain); the fog distances and
 # the far plane are shared (levels.lua SGL_FAR_UNITS)
 STAGE_LOOK = {
@@ -99,6 +112,15 @@ STAGE_LOOK = {
     # switches to SEQ_LEVEL_SLIDE while racing (sgl_mission.lua)
     "swamp": {"fog_color": (188, 204, 224), "background": "OCEAN_SKY", "music": "SEQ_LEVEL_SNOW",
               "terrain": "TERRAIN_GRASS"},
+    # Course 2: a hot Gainesville afternoon on the quad (a warmer, paler haze); its own music, Lethal Lava
+    # Land / Shifting Sand Land's theme (adventurous, tall things to climb; the hub keeps GRASS, the
+    # Swamp SNOW, races SLIDE)
+    "reitz_eng": {"fog_color": (200, 206, 216), "background": "OCEAN_SKY", "music": "SEQ_LEVEL_HOT",
+                  "terrain": "TERRAIN_GRASS"},
+    # Course 3: a humid daytime over the water (a soft green-blue haze); Jolly Roger Bay / Dire Dire Docks'
+    # water theme (the slot's own vanilla music). The act 4 dusk look is applied per act from Lua.
+    "lake_alice": {"fog_color": (182, 206, 210), "background": "OCEAN_SKY", "music": "SEQ_LEVEL_WATER",
+                   "terrain": "TERRAIN_GRASS"},
 }
 # level-script stars a stage build places itself (docs/flow.md 5: act k -> star id k - 1, ACT_k).
 # "spot" = a landmark module spot (landmark_extras) or "pos": (map x, y, z hint); the star hovers
@@ -108,21 +130,34 @@ STAGE_STARS = {
     # of the module's climb route (rim -> tower ledges -> Bull Gator Deck -> camera decks -> roof)
     "swamp": [{"act": 1, "landmark": "stadium", "spot": "press_box_roof_star",
                "name": "Kickoff star (press box roof)"}],
+    # Course 2 has no level-script star (integration decision, docs/flow.md §11): every Reitz mission
+    # spawns its own star from its controller, act 1 ROOFTOP OF THE REITZ included (spawn_default_star at
+    # reitz_points.json act1_rooftop.star_target, the penthouse roof 1.2 m up; wf_reitz_missions.lua
+    # reitz_rooftop has no levelStar). To switch act 1 to a Swamp-style level-script star, add
+    #   "reitz_eng": [{"act": 1, "landmark": "reitz_union", "spot": "roof_star",
+    #                  "name": "Rooftop of the Reitz star (tower penthouse)"}],
+    # rebuild, AND set levelStar = true on reitz_rooftop (tools/luatest test_flow / test_reitz_missions
+    # fail on a mismatch either way).
 }
 STAR_UP_M = 1.2
 # coins, hearts, 1-ups, Goombas and the landmark poles a stage places in its level script
 # (stage_pickups.py; the report lists them under "pickups")
-STAGE_PICKUPS = {"swamp": lambda m: m.swamp_pickups}
+STAGE_PICKUPS = {"swamp": lambda m: m.swamp_pickups, "reitz_eng": lambda m: m.reitz_pickups,
+                 "lake_alice": lambda m: __import__("stage_lake").lake_pickups}      # Course 3: stage_lake.py
 # stages whose level script loads the common0 model group (MODEL_HEART, MODEL_GOOMBA, ...):
 # JUMP_LINK(script_func_global_1) after MARIO(...), as every vanilla course does
-STAGE_COMMON0_MODELS = {"swamp"}
+STAGE_COMMON0_MODELS = {"swamp", "reitz_eng", "lake_alice"}
 # stage key -> anchor point exporter (stage_points.py), run after the build: data/uf/<key>_points.json
-STAGE_POINTS = {"swamp": lambda m: m.swamp_points}
+STAGE_POINTS = {"swamp": lambda m: m.swamp_points, "reitz_eng": lambda m: m.reitz_points,
+                "lake_alice": lambda m: __import__("stage_lake").lake_points}        # data/uf/lake_points.json
 # post-export collision seam repair (stage_collision.py: T-junction split + vertex weld of the floors on
 # the exported integer data, so rounded seams leave no find_floor NULL points = invisible walls or holes).
 # On by default for these stages (the hub since the integration pass: its seams had ~21k crack points,
 # mostly on roofs); --repair-collision / --no-repair-collision override
-REPAIR_COLLISION_STAGES = {"swamp", "hub"}
+REPAIR_COLLISION_STAGES = {"swamp", "hub", "reitz_eng", "lake_alice"}
+# short name of a stage whose stages.json key is long: its art folder (art/levels/<short>/: build report,
+# previews) and its anchor points (data/uf/<short>_points.json); others use the key itself
+STAGE_SHORT_NAMES = {"reitz_eng": "reitz", "lake_alice": "lake"}
 TREE_BEHAVIOR = "bhvTree"            # vanilla climbable tree: SET_HITBOX(80, 500), pushes Mario away
 LAMP_BEHAVIOR = "bhvPoleGrabbing"    # vanilla pole: hitbox height = bparam2 * 10 units
 
@@ -622,10 +657,13 @@ def main():
     sp = SPAWN.get(key, {"pos": tuple(data["center"]), "facing": 0.0})
     if key not in SPAWN:
         print(f"SGL WARNING: no SPAWN entry for stage {key!r}: spawning at the window centre facing north")
+    S.spawn = sp                                              # stage_pickups / stage_points use it
     keep_clear = [(sp["pos"][0], sp["pos"][1], 3.5)]          # map metres: no climbable tree here
     if "sign" in sp:
         keep_clear.append((sp["sign"]["pos"][0], sp["sign"]["pos"][1], 2.5))
     keep_clear += [(d["map_pos"][0], d["map_pos"][1], 7.0) for d in S.doors if d.get("sign")]
+    import stage_dressing
+    stage_dressing.reserve(S)                                 # trees off the stage dressing's spots (Course 2)
     stage_nature.build(S, keep_clear)
     boundary_walls(S)
 
@@ -719,7 +757,7 @@ def main():
         items, skipped = STAGE_PICKUPS[key](stage_pickups)(S, probe)
         for it in items:
             L.add_object(area, it["name"], it["stage"], it["behavior"], it["model"], it["bparams"],
-                         yaw_for_facing(it["facing_deg"]))
+                         yaw_for_facing(it["facing_deg"]), acts=it.get("acts"))
         pickups_out = stage_pickups.summary(items, skipped)
         S.stage_pickups = pickups_out
         print(f"SGL: {pickups_out['objects']} pickup / enemy / pole objects ({pickups_out['by_kind']}), "
@@ -894,7 +932,7 @@ def main():
         bpy.ops.wm.save_as_mainfile(filepath=opts["blend"], copy=True)
         print(f"SGL: saved {opts['blend']}")
 
-    art_dir = os.path.join(ROOT, "art", "levels", key)
+    art_dir = os.path.join(ROOT, "art", "levels", STAGE_SHORT_NAMES.get(key, key))
     report_dir = opts["report_dir"] or art_dir
     os.makedirs(report_dir, exist_ok=True)
     if opts["export"]:
@@ -944,7 +982,7 @@ def main():
             {"map_m": list(sp["pos"]), "facing_deg": sp["facing"], "game_units": report["spawn"]["game_units"]},
             stars_out, warp_nodes, level, slot)
         pts_path = os.path.join(report_dir if opts["report_dir"] else os.path.join(ROOT, "data", "uf"),
-                                f"{key}_points.json")
+                                f"{STAGE_SHORT_NAMES.get(key, key)}_points.json")
         stage_points.write(pts_path, pts)
         print(f"SGL: wrote {pts_path} ({len(pts.get('checks', []))} point checks flagged)")
         for c in pts.get("checks", []):

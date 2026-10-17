@@ -8,7 +8,7 @@
 --   hub    castle_grounds  LEVEL_CASTLE_GROUNDS  (tools/campus/build_stage.py hub)
 --   door 1 bob             LEVEL_BOB / COURSE_BOB  The Swamp (Auditorium door)                 built
 --   door 2 wf              LEVEL_WF  / COURSE_WF   Reitz Union + Engineering (The Hub door)    built (2 stars)
---   door 3 jrb             LEVEL_JRB / COURSE_JRB  Lake Alice (Newell Hall door)               reserved
+--   door 3 jrb             LEVEL_JRB / COURSE_JRB  Lake Alice (Newell Hall door)               built (5 stars)
 --   door 4 ccm             LEVEL_CCM / COURSE_CCM  Marston Science Library (Marston door)      reserved
 --   door 5 bbh             LEVEL_BBH / COURSE_BBH  Library West After Dark (Library West door) reserved
 --   door 6 ttc             LEVEL_TTC / COURSE_TTC  Century Tower interior (tower base door)    reserved
@@ -26,6 +26,9 @@
 -- Reitz & Engineering: 1 Rooftop of the Reitz (design 7.2 act 1), 2 Meal Swipe Tokens (design act 5),
 -- 3 Remote Robotics Lab (design act 2, co-op); design acts 3 (Weil Wind Tunnel), 4 (Rogue Robot Roundup)
 -- and 6 (Data Packet Relay) come later as 4/5/6.
+-- Lake Alice: 1 Boardwalk Welcome (design 7.4 act 1), 2 Gator Hop (design act 2), 3 Bat Census at Dusk (design
+-- act 4, co-op); design acts 3 (Shell Surf Regatta), 5 (Lost Hatchling) and 6 (Lily Pad Red Coins) come later
+-- as 4/5/6. Its acts stay unreachable until levels/jrb is built (the door says "Coming soon" until then).
 
 ---------------------------------------------------------------------------------------------
 -- warp nodes (area 1 everywhere)
@@ -65,9 +68,17 @@ SGL_STAGES = {
           "COMING SOON - ROBOT ROUNDUP",  -- design 7.2 "Rogue Robot Roundup" (no mission yet)
           "COMING SOON - DATA RELAY",     -- design 7.2 "Data Packet Relay" (no mission yet)
       } },
-    { door = 3, key = "alice", slot = "jrb", level = LEVEL_JRB, course = COURSE_JRB, stars = 8,
-      name = "LAKE ALICE", building = "NEWELL HALL" },
-    { door = 4, key = "marston", slot = "ccm", level = LEVEL_CCM, course = COURSE_CCM, stars = 5,
+    { door = 3, key = "alice", slot = "jrb", level = LEVEL_JRB, course = COURSE_JRB, stars = 5,
+      name = "LAKE ALICE", building = "NEWELL HALL",
+      acts = {
+          "BOARDWALK WELCOME",            -- uf_lake_missions.lua lake_boardwalk (lily pads to the lake-centre deck; spawns star id 0)
+          "GATOR HOP",                    -- uf_lake_missions.lua lake_gator_hop (sinking gators to the nest)
+          "BAT CENSUS AT DUSK - 2P",      -- uf_lake_missions.lua lake_bat_census (co-op, 2-4 players, dusk lighting)
+          "COMING SOON - REGATTA",        -- design 7.4 act 3 "Shell Surf Regatta" (no mission yet)
+          "COMING SOON - HATCHLING",      -- design 7.4 act 5 "Lost Hatchling" (no mission yet)
+          "COMING SOON - RED COINS",      -- design 7.4 act 6 "Lily Pad Red Coins" (no mission yet)
+      } },
+    { door = 4, key = "marston", slot = "ccm", level = LEVEL_CCM, course = COURSE_CCM, stars = 8,
       name = "MARSTON LIBRARY", building = "MARSTON SCIENCE LIBRARY" },
     { door = 5, key = "libwest", slot = "bbh", level = LEVEL_BBH, course = COURSE_BBH, stars = 14,
       name = "LIBRARY WEST AFTER DARK", building = "LIBRARY WEST" },

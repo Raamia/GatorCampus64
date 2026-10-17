@@ -95,11 +95,22 @@ def roof_slopes(acc, pts, inn, z0, z1, mat, tile):
             acc.poly(q, mat, uvs)
 
 
+# osm id -> facade style for one stage only (fun review, Course 2: the Weil Cooling Towers read as a windowed
+# brick block; the "service" facade is louvred brick, and stage_dressing.build_reitz puts fan shrouds on the
+# roof). The Swamp window keeps its backdrop shell as it was.
+STYLE_OVERRIDES = {
+    "w150858524": {"style": "service", "stages": ["reitz_eng"]},     # Weil Cooling Towers
+}
+
+
 def build_one(S, b, vis, col):
     pts = G.dedupe(G.ccw([S.T(p) for p in b["pts"]]), 0.2)
     if len(pts) < 3 or abs(G.signed_area(pts)) < 8:
         return None
     style = b["style"]
+    ov = STYLE_OVERRIDES.get(b["id"])
+    if ov is not None and getattr(S, "key", "hub") in ov.get("stages", ()):
+        style = ov["style"]
     h = float(b["h"])
     info = {"id": b["id"], "name": b.get("name"), "h": h, "style": style, "roof": b["roof"]}
 
@@ -144,7 +155,7 @@ def build_one(S, b, vis, col):
                 roof_slopes(col, pts, inn, eave, top, "COL default", 0.0)
                 col.flat_tris(G.triangulate([inn]), top, "COL default", cell=TILE, ox=TILE_OFF, oy=TILE_OFF)
             info.update(kind="hip", eave=round(eave, 2), top=round(top, 2), floors=floors)
-            if b["id"] in CLIMB_ROUTES and col is not None:
+            if has_climb_route(S, b) and col is not None:
                 info["climb_route"] = climb_route(S, b, pts, eave, False, style, vis, col)
             return info
         # inset failed: fall through to a flat roof
@@ -180,7 +191,7 @@ def build_one(S, b, vis, col):
                 col.wall(ic, ia, eave, h, "COL default")
         col.flat_tris(tris, eave, "COL default")
     info.update(kind="flat", eave=round(eave, 2), top=round(h, 2), floors=floors)
-    if b["id"] in CLIMB_ROUTES and col is not None:
+    if has_climb_route(S, b) and col is not None:
         info["climb_route"] = climb_route(S, b, pts, eave, True, style, vis, col)
     return info
 
@@ -193,7 +204,24 @@ CLIMB_ROUTES = {
     "w154223690": {"name": "Griffin-Floyd Hall", "facing": 90.0},
     "w154223807": {"name": "Anderson Hall", "facing": 210.0},
     "r2075617/154223654": {"name": "Leigh Hall", "facing": 90.0},
+    # Course 2, Reitz Union & Engineering (docs/game_design.md 7.2): only built into that stage ("stages";
+    # the Weil Cooling Towers are also a backdrop shell in the Swamp window, which stays untouched)
+    # the cooling-tower catwalk (act 5 token) above the act 3 wind-tunnel courtyard on the east side
+    "w150858524": {"name": "Weil Cooling Towers", "facing": 90.0, "near": (-500.0, -148.0),
+                   "stages": ["reitz_eng"]},
+    # the bookstore awning (act 5 token): the UF Bookstore's east entrance canopy, facing Liberty Pond
+    "w150821701": {"name": "UF Bookstore & Welcome Center", "facing": 90.0, "near": (-410.5, -352.0),
+                   "stages": ["reitz_eng"]},
 }
+
+
+def has_climb_route(S, b):
+    """CLIMB_ROUTES entry for building b in the stage being built (an entry's optional "stages" list
+    limits it to those stages.json keys; without it the route is built in every stage)."""
+    cfg = CLIMB_ROUTES.get(b["id"])
+    if cfg is None:
+        return False
+    return "stages" not in cfg or getattr(S, "key", "hub") in cfg["stages"]
 CANOPY_TOP, CANOPY_W, CANOPY_D, CANOPY_T = 3.0, 4.4, 2.0, 0.3
 LEDGE_STEP, LEDGE_W, LEDGE_D, LEDGE_T, LEDGE_GAP = 3.0, 3.0, 1.1, 1.2, 0.8
 

@@ -15,6 +15,11 @@
 #      the shared token hunt, the co-op robotics cranes (2-4 players), act select, levels/wf contract
 #   8. check_reitz_points.py: REITZ_POINTS vs data/uf/reitz_points.json, and every anchor / crane lane /
 #      console against the built levels/wf collision (skipped when tools/.venv is missing)
+#   9. test_lake_missions.lua: course 3 (uf_lake_missions.lua): the lily-pad route, the sinking gator line +
+#      big gators, the co-op bat census (2-4 players) and its dusk lighting, act select, levels/jrb contract
+#  10. check_lake_points.py: LAKE_POINTS vs data/uf/lake_points.json or the lake landmark modules, lake
+#      depth / clearance of the gators, and the built levels/jrb collision + water boxes once it exists
+#      (skipped when tools/.venv is missing)
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
 # Fixtures (regenerate only for a new coopdx version): coopdx_constants_v151.lua,
 # coopdx_api_v151.lua, coopdx_structs_v151.lua (gen_coopdx_*.py, see their headers).
@@ -49,6 +54,9 @@ echo "== test_flow (whole mod + level scripts)"
 echo "== test_reitz_missions (course 2: Reitz Union & Engineering)"
 "$LUA" "$HERE/test_reitz_missions.lua"
 
+echo "== test_lake_missions (course 3: Lake Alice)"
+"$LUA" "$HERE/test_lake_missions.lua"
+
 PY="$HERE/../.venv/bin/python"
 if [ -x "$PY" ]; then
     echo "== check_swamp_points"
@@ -57,7 +65,10 @@ if [ -x "$PY" ]; then
     echo "== check_reitz_points"
     out="$("$PY" -I "$HERE/check_reitz_points.py")" || { echo "$out"; exit 1; }
     echo "$out"
+    echo "== check_lake_points"
+    out="$("$PY" -I "$HERE/check_lake_points.py")" || { echo "$out"; exit 1; }
+    echo "$out"
 else
-    echo "== check_swamp_points / check_reitz_points skipped (no tools/.venv)"
+    echo "== check_swamp_points / check_reitz_points / check_lake_points skipped (no tools/.venv)"
 fi
 echo "== all luatest checks passed"

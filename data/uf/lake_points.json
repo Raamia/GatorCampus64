@@ -1,0 +1,7012 @@
+{
+ "schema": "sgl64.lake_points/1",
+ "generated_by": "tools/campus/build_stage.py lake_alice (stage_points.lake_points -> stage_lake.lake_points)",
+ "stage": "lake_alice",
+ "level": "jrb",
+ "slot": "jrb",
+ "level_const": "LEVEL_JRB",
+ "course": "COURSE_JRB",
+ "center_m": [
+  -1760,
+  -660
+ ],
+ "coordinates": {
+  "map_m": "x = east, y = north, z = metres above grade (the lake surface is at -0.5); origin = Century Tower",
+  "game": "X = (x - cx) * 100, Y = z * 100, Z = -(y - cy) * 100 with (cx, cy) = center_m = (-1760, -660); Y is the ray-cast collision floor (Mario's feet), or the water surface (-50) for 'water_surface' points. Objects that hover (stars, coins) add their own offset.",
+  "game_yaw": "0 = faces +Z (south), 0x4000 = east, 0x8000 = north, 0xC000 = west",
+  "floor_m": "collision floor measured by ray-casting the built level (STAND_FROM_M above the design height, straight down)",
+  "depth_m": "water depth at a water-surface point: surface -0.5 minus the floor under it. Mario wades below 1.0 m (his feet on the floor), swims deeper (pos.y < waterLevel - 100)"
+ },
+ "note": "Anchor points for the Course 3 mission author (docs/game_design.md 7.4, Lake Alice, slot jrb / LEVEL_JRB, door 3 = Newell Hall, 8 stars). Re-generated on every `build_stage.py -- lake_alice` from the built collision; points with a 'check' key did not measure as designed. 'actN_' keys use the DESIGN act numbers (1 Boardwalk Welcome, 2 Gator Hop, 3 Shell Surf Regatta, 4 Bat Census at Dusk (2P+), 5 Lost Hatchling, 6 Lily Pad Red Coins); course.lua numbers the playable acts 1..n (solo acts first, docs/flow.md 5.1). The level script has NO level-script star (stars = []): every mission spawns its own (spawn_default_star from the controller loop, star id = course act - 1), or build_stage.py STAGE_STARS gets an entry. Alligators are mission objects (reskinned / original SM64 enemy stand-ins); this file only says where.",
+ "spawn": {
+  "name": "spawn_0x0A",
+  "map_m": [
+   -1893.0,
+   -541.0,
+   0.0
+  ],
+  "game": [
+   -13300,
+   0,
+   -11900
+  ],
+  "floor_m": 0.0,
+  "clearance_m": 3.0,
+  "headroom_m": null,
+  "facing_deg": 150.0,
+  "game_yaw": "0x1555",
+  "note": "stage entry spawn (bhvSpinAirborneWarp, MARIO_POS) in the bat-house field (the shore module's landing zone), the bat barns behind, facing the lake over Museum Road through the arrival vista; the object hovers 1 m up",
+  "node": "0x0A",
+  "spawn_object_game": [
+   -13300,
+   100,
+   -11900
+  ]
+ },
+ "warp_nodes": [
+  {
+   "id": "0x0A",
+   "dest_level": "LEVEL_JRB",
+   "dest_area": 1,
+   "dest_node": "0x0A",
+   "note": "stage entry spawn"
+  },
+  {
+   "id": "0xF0",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x23",
+   "note": "star exit -> hub outside door 3"
+  },
+  {
+   "id": "0xF1",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x33",
+   "note": "death / Exit course -> hub outside door 3"
+  }
+ ],
+ "stars": [],
+ "water": {
+  "surface_m": -0.5,
+  "surface_game_y": -50,
+  "bed_m": -3.0,
+  "deep_m": -5.0,
+  "boxes": [
+   {
+    "name": "Lake Alice 1",
+    "x0": -11420,
+    "x1": 7390,
+    "z0": 15922,
+    "z1": 21448,
+    "surface_y": -50,
+    "bottom_y": -700
+   },
+   {
+    "name": "Lake Alice 2",
+    "x0": -11267,
+    "x1": 7312,
+    "z0": 10595,
+    "z1": 16022,
+    "surface_y": -50,
+    "bottom_y": -700
+   },
+   {
+    "name": "Lake Alice 3",
+    "x0": -22290,
+    "x1": 17602,
+    "z0": 5268,
+    "z1": 10695,
+    "surface_y": -50,
+    "bottom_y": -700
+   },
+   {
+    "name": "Lake Alice 4",
+    "x0": -22104,
+    "x1": 24039,
+    "z0": -58,
+    "z1": 5368,
+    "surface_y": -50,
+    "bottom_y": -700
+   },
+   {
+    "name": "Lake Alice 5",
+    "x0": -18239,
+    "x1": 23261,
+    "z0": -5385,
+    "z1": 42,
+    "surface_y": -50,
+    "bottom_y": -700
+   },
+   {
+    "name": "Lake Alice 6",
+    "x0": -9008,
+    "x1": 22038,
+    "z0": -10711,
+    "z1": -5285,
+    "surface_y": -50,
+    "bottom_y": -700
+   },
+   {
+    "name": "Lake Alice 7",
+    "x0": -3064,
+    "x1": 18084,
+    "z0": -16038,
+    "z1": -10611,
+    "surface_y": -50,
+    "bottom_y": -700
+   },
+   {
+    "name": "Lake Alice 8",
+    "x0": 7309,
+    "x1": 18117,
+    "z0": -21464,
+    "z1": -15938,
+    "surface_y": -50,
+    "bottom_y": -700
+   }
+  ],
+  "coverage_check": {
+   "grid_m": 2.0,
+   "wet_points": 18915,
+   "outside_every_box": 0,
+   "dry_points_in_ring": 2999,
+   "misses": [],
+   "note": "every lake point whose floor is under the surface must be inside a water box (SM64 tests loX < X < hiX and loZ < Z < hiZ strictly); dry points = banks, bog islands, lily pads, the deck"
+  },
+  "deep_spots": [
+   {
+    "name": "deep_1_bed",
+    "map_m": [
+     -1700.0,
+     -605.0,
+     -4.96
+    ],
+    "game": [
+     6000,
+     -496,
+     -5500
+    ],
+    "floor_m": -4.96,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "deep_2_bed",
+    "map_m": [
+     -1792.0,
+     -680.0,
+     -4.58
+    ],
+    "game": [
+     -3200,
+     -458,
+     2000
+    ],
+    "floor_m": -4.58,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "deep_3_bed",
+    "map_m": [
+     -1630.0,
+     -640.0,
+     -4.83
+    ],
+    "game": [
+     13000,
+     -483,
+     -2000
+    ],
+    "floor_m": -4.83,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "deep_4_bed",
+    "map_m": [
+     -1880.0,
+     -680.0,
+     -4.65
+    ],
+    "game": [
+     -12000,
+     -465,
+     2000
+    ],
+    "floor_m": -4.65,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  ],
+  "note": "SM64 water boxes (COL_WATER_BOX in area_1/collision.inc.c) from lake_alice_water.py water_boxes_m, clipped to the play zone + 2 m. Swimming: water deeper than 1 m."
+ },
+ "act1_boardwalk_welcome": {
+  "note": "Spawn -> lakeshore trail -> the north boardwalk (deck 0.5 m) -> wade onto the west bog -> walk it east -> the north_shallows lily pads (15, edge gaps 1.3 -> 2.4 m, a coin over each but the red-coin rest pad 5) -> the observation deck (octagon, top 0.2 m, pavilion roof apex 4.0 m). Skeeters / cheep-cheeps: skeeter_spots (water surface beside the pads), cheep_spots (1 m under the surface). A miss = swim to a pad and water-jump (A + stick forward at the surface) onto it.",
+  "route": [
+   {
+    "name": "act1_boardwalk_west_end",
+    "map_m": [
+     -1850.06,
+     -612.9,
+     0.0
+    ],
+    "game": [
+     -9006,
+     0,
+     -4710
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "lake_alice_shore.py north_boardwalk_west_end"
+   },
+   {
+    "name": "act1_boardwalk_mid",
+    "map_m": [
+     -1843.3,
+     -608.79,
+     0.5
+    ],
+    "game": [
+     -8330,
+     50,
+     -5121
+    ],
+    "floor_m": 0.5,
+    "clearance_m": 1.7,
+    "headroom_m": null,
+    "source": "lake_alice_shore.py north_boardwalk_mid"
+   },
+   {
+    "name": "act1_boardwalk_east_end",
+    "map_m": [
+     -1836.53,
+     -604.68,
+     0.0
+    ],
+    "game": [
+     -7653,
+     0,
+     -5532
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "lake_alice_shore.py north_boardwalk_east_end"
+   },
+   {
+    "name": "act1_west_bog_top",
+    "map_m": [
+     -1799.5,
+     -602.5,
+     -0.12
+    ],
+    "game": [
+     -3950,
+     -12,
+     -5750
+    ],
+    "floor_m": -0.12,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "lake_alice_water.py island_1_top"
+   },
+   {
+    "name": "act1_lily_route_start",
+    "map_m": [
+     -1784.2,
+     -603.4,
+     -0.4
+    ],
+    "game": [
+     -2420,
+     -40,
+     -5660
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "lake_alice_water.py lily_route_start"
+   }
+  ],
+  "lily_pads": [
+   {
+    "name": "act1_pad_00",
+    "map_m": [
+     -1784.2,
+     -603.4,
+     -0.4
+    ],
+    "game": [
+     -2420,
+     -40,
+     -5660
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "radius_m": 1.7
+   },
+   {
+    "name": "act1_pad_01",
+    "map_m": [
+     -1779.79,
+     -604.31,
+     -0.4
+    ],
+    "game": [
+     -1979,
+     -40,
+     -5569
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "radius_m": 1.5
+   },
+   {
+    "name": "act1_pad_02",
+    "map_m": [
+     -1776.58,
+     -607.32,
+     -0.4
+    ],
+    "game": [
+     -1658,
+     -40,
+     -5268
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "radius_m": 1.5
+   },
+   {
+    "name": "act1_pad_03",
+    "map_m": [
+     -1772.09,
+     -607.4,
+     -0.4
+    ],
+    "game": [
+     -1209,
+     -40,
+     -5260
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "radius_m": 1.4
+   },
+   {
+    "name": "act1_pad_04",
+    "map_m": [
+     -1768.99,
+     -610.67,
+     -0.4
+    ],
+    "game": [
+     -899,
+     -40,
+     -4933
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "radius_m": 1.4
+   },
+   {
+    "name": "act1_pad_05",
+    "map_m": [
+     -1764.34,
+     -613.2,
+     -0.4
+    ],
+    "game": [
+     -434,
+     -40,
+     -4680
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "radius_m": 2.3
+   },
+   {
+    "name": "act1_pad_06",
+    "map_m": [
+     -1761.99,
+     -617.96,
+     -0.4
+    ],
+    "game": [
+     -199,
+     -40,
+     -4204
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "radius_m": 1.3
+   },
+   {
+    "name": "act1_pad_07",
+    "map_m": [
+     -1757.92,
+     -619.88,
+     -0.4
+    ],
+    "game": [
+     208,
+     -40,
+     -4012
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "radius_m": 1.3
+   },
+   {
+    "name": "act1_pad_08",
+    "map_m": [
+     -1756.5,
+     -624.26,
+     -0.4
+    ],
+    "game": [
+     350,
+     -40,
+     -3574
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "radius_m": 1.3
+   },
+   {
+    "name": "act1_pad_09",
+    "map_m": [
+     -1752.82,
+     -627.02,
+     -0.4
+    ],
+    "game": [
+     718,
+     -40,
+     -3298
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "radius_m": 1.2
+   },
+   {
+    "name": "act1_pad_10",
+    "map_m": [
+     -1751.84,
+     -631.51,
+     -0.4
+    ],
+    "game": [
+     816,
+     -40,
+     -2849
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "radius_m": 1.2
+   },
+   {
+    "name": "act1_pad_11",
+    "map_m": [
+     -1748.04,
+     -634.45,
+     -0.4
+    ],
+    "game": [
+     1196,
+     -40,
+     -2555
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "radius_m": 1.3
+   },
+   {
+    "name": "act1_pad_12",
+    "map_m": [
+     -1746.7,
+     -639.17,
+     -0.4
+    ],
+    "game": [
+     1330,
+     -40,
+     -2083
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "radius_m": 1.3
+   },
+   {
+    "name": "act1_pad_13",
+    "map_m": [
+     -1742.7,
+     -641.99,
+     -0.4
+    ],
+    "game": [
+     1730,
+     -40,
+     -1801
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "radius_m": 1.2
+   },
+   {
+    "name": "act1_pad_14",
+    "map_m": [
+     -1739.52,
+     -647.77,
+     -0.4
+    ],
+    "game": [
+     2048,
+     -40,
+     -1223
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "radius_m": 3.0
+   }
+  ],
+  "deck": {
+   "center": {
+    "name": "act1_deck_center",
+    "map_m": [
+     -1734.1,
+     -655.3,
+     0.2
+    ],
+    "game": [
+     2590,
+     20,
+     -470
+    ],
+    "floor_m": 0.2,
+    "clearance_m": 3.0,
+    "headroom_m": 2.62
+   },
+   "landing_from_pads": {
+    "name": "act1_deck_landing",
+    "map_m": [
+     -1735.97,
+     -652.7,
+     0.2
+    ],
+    "game": [
+     2403,
+     20,
+     -730
+    ],
+    "floor_m": 0.2,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "pavilion_roof_apex": {
+    "name": "act1_pavilion_roof",
+    "map_m": [
+     -1734.1,
+     -655.3,
+     4.0
+    ],
+    "game": [
+     2590,
+     400,
+     -470
+    ],
+    "floor_m": 4.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "geometry": {
+    "map_m": [
+     -1734.1,
+     -655.3
+    ],
+    "top_m": 0.2,
+    "inradius_m": 4.5,
+    "edge0_bearing_deg": 324.3,
+    "railed_edges": [
+     2,
+     3,
+     5,
+     6
+    ],
+    "open_edges": [
+     0,
+     1,
+     4,
+     7
+    ],
+    "bed_m": -3.08,
+    "pavilion": {
+     "eave_m": 3.0,
+     "apex_m": 4.0,
+     "roof_half_m": 2.3,
+     "post_half_m": 1.5
+    },
+    "octagon_m": [
+     [
+      -1735.22,
+      -650.56
+     ],
+     [
+      -1738.24,
+      -652.74
+     ],
+     [
+      -1738.84,
+      -656.42
+     ],
+     [
+      -1736.66,
+      -659.44
+     ],
+     [
+      -1732.98,
+      -660.04
+     ],
+     [
+      -1729.96,
+      -657.86
+     ],
+     [
+      -1729.36,
+      -654.18
+     ],
+     [
+      -1731.54,
+      -651.16
+     ]
+    ]
+   },
+   "note": "edge 0 faces the last lily pad, edge 1 the gator route to the bog; edges 0, 1, 4, 7 are open (water-jump on from a swim: A + stick forward at the surface), edges 2, 3, 5, 6 have 1 m railings"
+  },
+  "star_target": {
+   "name": "act1_star_target",
+   "map_m": [
+    -1732.17,
+    -657.98,
+    1.4
+   ],
+   "game": [
+    2783,
+    140,
+    -202
+   ],
+   "floor_m": 0.2,
+   "clearance_m": 2.47,
+   "headroom_m": null,
+   "note": "star 1.2 m over the deck floor on its far side (deck frame u -3.3 m, by the open edge 4), 1.0 m clear of the pavilion roof's eave: the star's arc in and its final 2.1 m rise (bhvStarSpawnCoordinates) miss the roof"
+  },
+  "star_from": {
+   "name": "act1_star_from",
+   "map_m": [
+    -1728.55,
+    -663.01,
+    3.0
+   ],
+   "game": [
+    3145,
+    300,
+    301
+   ],
+   "air": true,
+   "floor_below_m": -3.1,
+   "height_above_floor_m": 6.1,
+   "note": "where act 1's star arcs in from (over the open water beyond edge 4)"
+  },
+  "last_pad_to_deck_gap_m": 1.78,
+  "skeeter_spots": [
+   {
+    "name": "act1_skeeter_0",
+    "map_m": [
+     -1781.37,
+     -612.43,
+     -0.5
+    ],
+    "game": [
+     -2137,
+     -50,
+     -4757
+    ],
+    "water_surface": true,
+    "floor_below_m": -2.53,
+    "depth_m": 2.03,
+    "room_m": 3.0,
+    "in_lake": true,
+    "facing_deg": 133.2,
+    "game_yaw": "0x214F",
+    "note": "water strider spot 7 m beside the pad line"
+   },
+   {
+    "name": "act1_skeeter_1",
+    "map_m": [
+     -1760.99,
+     -607.05,
+     -0.5
+    ],
+    "game": [
+     -99,
+     -50,
+     -5295
+    ],
+    "water_surface": true,
+    "floor_below_m": -2.83,
+    "depth_m": 2.33,
+    "room_m": 3.0,
+    "in_lake": true,
+    "facing_deg": 118.5,
+    "game_yaw": "0x2BB3",
+    "note": "water strider spot 7 m beside the pad line"
+   },
+   {
+    "name": "act1_skeeter_2",
+    "map_m": [
+     -1763.16,
+     -626.42,
+     -0.5
+    ],
+    "game": [
+     -316,
+     -50,
+     -3358
+    ],
+    "water_surface": true,
+    "floor_below_m": -2.96,
+    "depth_m": 2.46,
+    "room_m": 3.0,
+    "in_lake": true,
+    "facing_deg": 162.0,
+    "game_yaw": "0x0CC6",
+    "note": "water strider spot 7 m beside the pad line"
+   },
+   {
+    "name": "act1_skeeter_3",
+    "map_m": [
+     -1743.76,
+     -628.91,
+     -0.5
+    ],
+    "game": [
+     1624,
+     -50,
+     -3109
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.07,
+    "depth_m": 2.57,
+    "room_m": 3.0,
+    "in_lake": true,
+    "facing_deg": 127.7,
+    "game_yaw": "0x252C",
+    "note": "water strider spot 7 m beside the pad line"
+   },
+   {
+    "name": "act1_skeeter_4",
+    "map_m": [
+     -1746.73,
+     -647.71,
+     -0.5
+    ],
+    "game": [
+     1327,
+     -50,
+     -1229
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.06,
+    "depth_m": 2.56,
+    "room_m": 3.0,
+    "in_lake": true,
+    "facing_deg": 125.2,
+    "game_yaw": "0x26FB",
+    "note": "water strider spot 7 m beside the pad line"
+   }
+  ],
+  "cheep_spots": [
+   {
+    "name": "act1_cheep_0",
+    "map_m": [
+     -1773.16,
+     -603.67,
+     -1.5
+    ],
+    "game": [
+     -1316,
+     -150,
+     -5633
+    ],
+    "water_surface": true,
+    "floor_below_m": -2.62,
+    "depth_m": 2.12,
+    "room_m": 3.0,
+    "in_lake": true,
+    "note": "cheep-cheep swim spot 1 m under the surface, 5 m off the pad line"
+   },
+   {
+    "name": "act1_cheep_1",
+    "map_m": [
+     -1766.73,
+     -617.59,
+     -1.5
+    ],
+    "game": [
+     -673,
+     -150,
+     -4241
+    ],
+    "water_surface": true,
+    "floor_below_m": -2.8,
+    "depth_m": 2.3,
+    "room_m": 3.0,
+    "in_lake": true,
+    "note": "cheep-cheep swim spot 1 m under the surface, 5 m off the pad line"
+   },
+   {
+    "name": "act1_cheep_2",
+    "map_m": [
+     -1751.74,
+     -622.72,
+     -1.5
+    ],
+    "game": [
+     826,
+     -150,
+     -3728
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.05,
+    "depth_m": 2.55,
+    "room_m": 3.0,
+    "in_lake": true,
+    "note": "cheep-cheep swim spot 1 m under the surface, 5 m off the pad line"
+   },
+   {
+    "name": "act1_cheep_3",
+    "map_m": [
+     -1751.1,
+     -638.4,
+     -1.5
+    ],
+    "game": [
+     890,
+     -150,
+     -2160
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.05,
+    "depth_m": 2.55,
+    "room_m": 3.0,
+    "in_lake": true,
+    "note": "cheep-cheep swim spot 1 m under the surface, 5 m off the pad line"
+   },
+   {
+    "name": "act1_cheep_4",
+    "map_m": [
+     -1739.82,
+     -637.9,
+     -1.5
+    ],
+    "game": [
+     2018,
+     -150,
+     -2210
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.07,
+    "depth_m": 2.57,
+    "room_m": 3.0,
+    "in_lake": true,
+    "note": "cheep-cheep swim spot 1 m under the surface, 5 m off the pad line"
+   }
+  ],
+  "lurk_gator_spots": [
+   {
+    "name": "act1_lurk_gator_0",
+    "map_m": [
+     -1763.0,
+     -602.66,
+     -0.5
+    ],
+    "game": [
+     -300,
+     -50,
+     -5734
+    ],
+    "water_surface": true,
+    "floor_below_m": -2.77,
+    "depth_m": 2.27,
+    "room_m": 3.0,
+    "in_lake": true,
+    "note": "lurking big gator home, 10 m to the left of north_shallows pad 4 (open water; the pads are the safe way)"
+   },
+   {
+    "name": "act1_lurk_gator_1",
+    "map_m": [
+     -1760.25,
+     -636.92,
+     -0.5
+    ],
+    "game": [
+     -25,
+     -50,
+     -2308
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.01,
+    "depth_m": 2.51,
+    "room_m": 3.0,
+    "in_lake": true,
+    "note": "lurking big gator home, 10 m to the right of north_shallows pad 10 (open water; the pads are the safe way)"
+   }
+  ]
+ },
+ "act2_gator_hop": {
+  "note": "The island nest is on the small bog (lake_alice_water island 3, OSM w118249560), the bog uf_lake_missions.lua's gator line ends at: nest = the mound top, nest_island_top = the bog's middle (the module's island_3_top spot, kept clear for the star), mother_spot beside the mound. small_bog_landings: the bog's edge (0.25 m under water) at N / E / S / W, where a gator line can end. approach_south: the water depth every 5 m due south of the bog (the deep hole deep_1 lies there). big_gator_spots: deep water by the bog for the snapping big gators. The bog is also reachable by wading from the north bank (NEST_BANK): a big gator there guards it.",
+  "nest": {
+   "name": "act2_nest_top",
+   "map_m": [
+    -1723.0,
+    -529.3,
+    0.29
+   ],
+   "game": [
+    3700,
+    29,
+    -13070
+   ],
+   "floor_m": 0.29,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "note": "top of the nest mound (mud + sticks, three eggs) on the small bog"
+  },
+  "mother_spot": {
+   "name": "act2_mother_gator",
+   "map_m": [
+    -1724.0,
+    -526.9,
+    -0.17
+   ],
+   "game": [
+    3600,
+    -17,
+    -13310
+   ],
+   "floor_m": -0.17,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "note": "beside the nest, on the bog (the mother gator of act 5; she faces the nest)"
+  },
+  "nest_island_top": {
+   "name": "act2_nest_island_top",
+   "map_m": [
+    -1720.5,
+    -528.5,
+    -0.11
+   ],
+   "game": [
+    3950,
+    -11,
+    -13150
+   ],
+   "floor_m": -0.11,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "note": "the small bog's middle, 2.6 m east of the mound (a star / probe spot)"
+  },
+  "small_bog_landings": [
+   {
+    "name": "act2_small_bog_edge_N",
+    "map_m": [
+     -1720.5,
+     -521.3,
+     -0.62
+    ],
+    "game": [
+     3950,
+     -62,
+     -13870
+    ],
+    "floor_m": -0.62,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "shore_m": 8.0
+   },
+   {
+    "name": "act2_small_bog_edge_E",
+    "map_m": [
+     -1714.8,
+     -528.5,
+     -0.63
+    ],
+    "game": [
+     4520,
+     -63,
+     -13150
+    ],
+    "floor_m": -0.63,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "shore_m": 6.5
+   },
+   {
+    "name": "act2_small_bog_edge_S",
+    "map_m": [
+     -1720.5,
+     -534.7,
+     -0.62
+    ],
+    "game": [
+     3950,
+     -62,
+     -12530
+    ],
+    "floor_m": -0.62,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "shore_m": 7.0
+   },
+   {
+    "name": "act2_small_bog_edge_W",
+    "map_m": [
+     -1730.2,
+     -528.5,
+     -0.75
+    ],
+    "game": [
+     2980,
+     -75,
+     -13150
+    ],
+    "floor_m": -0.75,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "shore_m": 10.5
+   }
+  ],
+  "approach_south": [
+   {
+    "name": "act2_south_00m",
+    "map_m": [
+     -1720.5,
+     -537.5,
+     -0.5
+    ],
+    "game": [
+     3950,
+     -50,
+     -12250
+    ],
+    "water_surface": true,
+    "floor_below_m": -1.21,
+    "depth_m": 0.71,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act2_south_05m",
+    "map_m": [
+     -1720.5,
+     -542.5,
+     -0.5
+    ],
+    "game": [
+     3950,
+     -50,
+     -11750
+    ],
+    "water_surface": true,
+    "floor_below_m": -2.36,
+    "depth_m": 1.86,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act2_south_10m",
+    "map_m": [
+     -1720.5,
+     -547.5,
+     -0.5
+    ],
+    "game": [
+     3950,
+     -50,
+     -11250
+    ],
+    "water_surface": true,
+    "floor_below_m": -2.67,
+    "depth_m": 2.17,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act2_south_15m",
+    "map_m": [
+     -1720.5,
+     -552.5,
+     -0.5
+    ],
+    "game": [
+     3950,
+     -50,
+     -10750
+    ],
+    "water_surface": true,
+    "floor_below_m": -2.8,
+    "depth_m": 2.3,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act2_south_20m",
+    "map_m": [
+     -1720.5,
+     -557.5,
+     -0.5
+    ],
+    "game": [
+     3950,
+     -50,
+     -10250
+    ],
+    "water_surface": true,
+    "floor_below_m": -2.91,
+    "depth_m": 2.41,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act2_south_25m",
+    "map_m": [
+     -1720.5,
+     -562.5,
+     -0.5
+    ],
+    "game": [
+     3950,
+     -50,
+     -9750
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.01,
+    "depth_m": 2.51,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act2_south_30m",
+    "map_m": [
+     -1720.5,
+     -567.5,
+     -0.5
+    ],
+    "game": [
+     3950,
+     -50,
+     -9250
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.04,
+    "depth_m": 2.54,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act2_south_35m",
+    "map_m": [
+     -1720.5,
+     -572.5,
+     -0.5
+    ],
+    "game": [
+     3950,
+     -50,
+     -8750
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.03,
+    "depth_m": 2.53,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act2_south_40m",
+    "map_m": [
+     -1720.5,
+     -577.5,
+     -0.5
+    ],
+    "game": [
+     3950,
+     -50,
+     -8250
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.03,
+    "depth_m": 2.53,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act2_south_45m",
+    "map_m": [
+     -1720.5,
+     -582.5,
+     -0.5
+    ],
+    "game": [
+     3950,
+     -50,
+     -7750
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.31,
+    "depth_m": 2.81,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act2_south_50m",
+    "map_m": [
+     -1720.5,
+     -587.5,
+     -0.5
+    ],
+    "game": [
+     3950,
+     -50,
+     -7250
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.43,
+    "depth_m": 2.93,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act2_south_55m",
+    "map_m": [
+     -1720.5,
+     -592.5,
+     -0.5
+    ],
+    "game": [
+     3950,
+     -50,
+     -6750
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.45,
+    "depth_m": 2.95,
+    "room_m": 3.0,
+    "in_lake": true
+   }
+  ],
+  "big_gator_spots": [
+   {
+    "name": "act2_big_gator_0",
+    "map_m": [
+     -1714.0,
+     -556.0,
+     -0.5
+    ],
+    "game": [
+     4600,
+     -50,
+     -10400
+    ],
+    "water_surface": true,
+    "floor_below_m": -2.83,
+    "depth_m": 2.33,
+    "room_m": 3.0,
+    "in_lake": true,
+    "note": "open water south of the small bog (between it and the deep hole deep_1): covers the last gators before the nest"
+   },
+   {
+    "name": "act2_big_gator_1",
+    "map_m": [
+     -1732.1,
+     -616.9,
+     -0.5
+    ],
+    "game": [
+     2790,
+     -50,
+     -4310
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.08,
+    "depth_m": 2.58,
+    "room_m": 3.0,
+    "in_lake": true,
+    "note": "7 m west of the gator line by gators 3-7 (the line's first leg, north of the lily-pad end)"
+   },
+   {
+    "name": "act2_big_gator_2",
+    "map_m": [
+     -1704.0,
+     -590.0,
+     -0.5
+    ],
+    "game": [
+     5600,
+     -50,
+     -7000
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.96,
+    "depth_m": 3.46,
+    "room_m": 3.0,
+    "in_lake": true,
+    "note": "east of the line's bend, on the north-west rim of the deep hole deep_1: covers gators 8-11"
+   }
+  ]
+ },
+ "act3_shell_surf_regatta": {
+  "note": "Grab a Koopa shell at the start and surf the 8 buoys in order (closed loop). Buoys are >= 27 m from every shore and bog; every leg is open water >= 0.6 m deep with no wall 0.4 m above the surface (pads have no walls). Start candidates: the water off the Baughman lawn (regatta_dock_water), the north boardwalk's viewing bay, the Baughman footbridge.",
+  "buoys": [
+   {
+    "name": "act3_buoy_1",
+    "map_m": [
+     -1905.0,
+     -672.0,
+     -0.5
+    ],
+    "game": [
+     -14500,
+     -50,
+     1200
+    ],
+    "water_surface": true,
+    "floor_below_m": -2.92,
+    "depth_m": 2.42,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act3_buoy_2",
+    "map_m": [
+     -1836.0,
+     -752.0,
+     -0.5
+    ],
+    "game": [
+     -7600,
+     -50,
+     9200
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.04,
+    "depth_m": 2.54,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act3_buoy_3",
+    "map_m": [
+     -1790.0,
+     -706.0,
+     -0.5
+    ],
+    "game": [
+     -3000,
+     -50,
+     4600
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.23,
+    "depth_m": 2.73,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act3_buoy_4",
+    "map_m": [
+     -1700.0,
+     -672.0,
+     -0.5
+    ],
+    "game": [
+     6000,
+     -50,
+     1200
+    ],
+    "water_surface": true,
+    "floor_below_m": -2.43,
+    "depth_m": 1.93,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act3_buoy_5",
+    "map_m": [
+     -1588.0,
+     -666.0,
+     -0.5
+    ],
+    "game": [
+     17200,
+     -50,
+     600
+    ],
+    "water_surface": true,
+    "floor_below_m": -2.93,
+    "depth_m": 2.43,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act3_buoy_6",
+    "map_m": [
+     -1640.0,
+     -585.0,
+     -0.5
+    ],
+    "game": [
+     12000,
+     -50,
+     -7500
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.02,
+    "depth_m": 2.52,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act3_buoy_7",
+    "map_m": [
+     -1716.0,
+     -575.0,
+     -0.5
+    ],
+    "game": [
+     4400,
+     -50,
+     -8500
+    ],
+    "water_surface": true,
+    "floor_below_m": -3.06,
+    "depth_m": 2.56,
+    "room_m": 3.0,
+    "in_lake": true
+   },
+   {
+    "name": "act3_buoy_8",
+    "map_m": [
+     -1820.0,
+     -650.0,
+     -0.5
+    ],
+    "game": [
+     -6000,
+     -50,
+     -1000
+    ],
+    "water_surface": true,
+    "floor_below_m": -2.92,
+    "depth_m": 2.42,
+    "room_m": 3.0,
+    "in_lake": true
+   }
+  ],
+  "legs": [
+   {
+    "from": 1,
+    "to": 2,
+    "length_m": 105.65,
+    "heading_deg": 139.2,
+    "shallow_samples": [],
+    "obstacle_at_m": []
+   },
+   {
+    "from": 2,
+    "to": 3,
+    "length_m": 65.05,
+    "heading_deg": 45.0,
+    "shallow_samples": [],
+    "obstacle_at_m": []
+   },
+   {
+    "from": 3,
+    "to": 4,
+    "length_m": 96.21,
+    "heading_deg": 69.3,
+    "shallow_samples": [],
+    "obstacle_at_m": []
+   },
+   {
+    "from": 4,
+    "to": 5,
+    "length_m": 112.16,
+    "heading_deg": 86.9,
+    "shallow_samples": [],
+    "obstacle_at_m": []
+   },
+   {
+    "from": 5,
+    "to": 6,
+    "length_m": 96.25,
+    "heading_deg": 327.3,
+    "shallow_samples": [],
+    "obstacle_at_m": []
+   },
+   {
+    "from": 6,
+    "to": 7,
+    "length_m": 76.66,
+    "heading_deg": 277.5,
+    "shallow_samples": [],
+    "obstacle_at_m": []
+   },
+   {
+    "from": 7,
+    "to": 8,
+    "length_m": 128.22,
+    "heading_deg": 234.2,
+    "shallow_samples": [],
+    "obstacle_at_m": []
+   },
+   {
+    "from": 8,
+    "to": 1,
+    "length_m": 87.8,
+    "heading_deg": 255.5,
+    "shallow_samples": [],
+    "obstacle_at_m": []
+   }
+  ],
+  "loop_length_m": 768.0,
+  "par_note": "design par 75 s; a ridden shell tops out near 64 units/frame = 19 m/s, so the loop is ~40 s flat out",
+  "start": [
+   {
+    "name": "act3_start_water_baughman",
+    "map_m": [
+     -1941.0,
+     -700.5,
+     -0.5
+    ],
+    "game": [
+     -18100,
+     -50,
+     4050
+    ],
+    "water_surface": true,
+    "floor_below_m": -0.92,
+    "depth_m": 0.42,
+    "room_m": 3.0,
+    "in_lake": true,
+    "note": "a ridden shell floats on any water deeper than its floor"
+   },
+   {
+    "name": "act3_start_boardwalk_bay",
+    "map_m": [
+     -1842.33,
+     -610.42,
+     0.5
+    ],
+    "game": [
+     -8233,
+     50,
+     -4958
+    ],
+    "floor_m": 0.5,
+    "clearance_m": 0.37,
+    "headroom_m": null,
+    "source": "lake_alice_shore.py regatta_launch_boardwalk"
+   },
+   {
+    "name": "act3_start_footbridge",
+    "map_m": [
+     -1964.97,
+     -711.98,
+     0.55
+    ],
+    "game": [
+     -20497,
+     55,
+     5198
+    ],
+    "floor_m": 0.55,
+    "clearance_m": 0.75,
+    "headroom_m": null,
+    "source": "lake_alice_shore.py regatta_launch_bridge"
+   },
+   {
+    "name": "act3_shell_box_lawn",
+    "map_m": [
+     -1948.68,
+     -725.9,
+     0.0
+    ],
+    "game": [
+     -18868,
+     0,
+     6590
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.19,
+    "headroom_m": null,
+    "note": "open lawn by the water for a shell box (a regatta start on land)",
+    "source": "lake_alice_shore.py baughman_lakeside_lawn"
+   }
+  ]
+ },
+ "act4_bat_census": {
+  "note": "Three clipboard census stations (count only while staffed; 64-136 m apart, so one player cannot hold two). Swoopers stream out of the barns' open mesh bottoms (4.15 m) for 90 s at dusk. The 1991 Bat House was demolished in 2022 (its fenced plot is empty): a third stream can come from old_house_site at the same height. Dusk is a per-act Lua look (lighting / fog / skybox), the level's base is daytime.",
+  "stations": [
+   {
+    "name": "act4_station_houses",
+    "map_m": [
+     -1890.0,
+     -528.0,
+     0.0
+    ],
+    "game": [
+     -13000,
+     0,
+     -13200
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "lake_alice_shore.py census_houses"
+   },
+   {
+    "name": "act4_station_gardens",
+    "map_m": [
+     -1849.96,
+     -474.47,
+     0.0
+    ],
+    "game": [
+     -8996,
+     0,
+     -18553
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "lake_alice_shore.py census_gardens"
+   },
+   {
+    "name": "act4_station_boardwalk",
+    "map_m": [
+     -1842.43,
+     -610.25,
+     0.5
+    ],
+    "game": [
+     -8243,
+     50,
+     -4975
+    ],
+    "floor_m": 0.5,
+    "clearance_m": 0.57,
+    "headroom_m": null,
+    "source": "lake_alice_shore.py census_boardwalk"
+   }
+  ],
+  "station_distances_m": {
+   "act4_station_houses-act4_station_gardens": 66.85,
+   "act4_station_houses-act4_station_boardwalk": 95.02,
+   "act4_station_gardens-act4_station_boardwalk": 135.99
+  },
+  "stations_shore_module": {
+   "houses": [
+    -1890.0,
+    -528.0
+   ],
+   "gardens": [
+    -1849.96,
+    -474.47
+   ],
+   "boardwalk": [
+    -1842.43,
+    -610.25
+   ]
+  },
+  "swooper_exits": [
+   {
+    "name": "act4_bat_exit_0",
+    "map_m": [
+     -1882.57,
+     -510.56,
+     4.2
+    ],
+    "game": [
+     -12257,
+     420,
+     -14944
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 4.2
+   },
+   {
+    "name": "act4_bat_exit_1",
+    "map_m": [
+     -1908.9,
+     -502.71,
+     4.2
+    ],
+    "game": [
+     -14890,
+     420,
+     -15729
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 4.2
+   }
+  ],
+  "third_exit_old_house_site": {
+   "name": "act4_bat_exit_old_house",
+   "map_m": [
+    -1895.81,
+    -511.48,
+    4.15
+   ],
+   "game": [
+    -13581,
+    415,
+    -14852
+   ],
+   "air": true,
+   "floor_below_m": 0.0,
+   "height_above_floor_m": 4.15
+  },
+  "dusk_look_hint": {
+   "skybox": "BACKGROUND_PURPLE_SKY (or BACKGROUND_FLAMING_SKY) via set_override_skybox",
+   "light_color_srgb": [
+    255,
+    170,
+    120
+   ],
+   "ambient_srgb": [
+    70,
+    60,
+    90
+   ],
+   "fog_color_srgb": [
+    96,
+    74,
+    92
+   ],
+   "note": "suggested values for the act 4 Lua. coopdx v1.5.1 has set_override_skybox(bg), set_lighting_color(ch, v), set_lighting_color_ambient(ch, v), set_lighting_dir(ch, v), set_fog_color(ch, v), set_fog_intensity(f), set_skybox_color(ch, v), set_vertex_color(ch, v) (ch = 0 red, 1 green, 2 blue; v = 0-255; tools/luatest/coopdx_api_v151.lua); apply them in act 4 only and restore the defaults when the act or level ends. The level's fog colour is baked into its display lists (gsDPSetFogColor 182, 206, 210)."
+  }
+ },
+ "act5_lost_hatchling": {
+  "note": "The baby gator waits on Museum Road (shore module spot) and must be carried to its mother at the nest on the small bog: carry_route = the shortest walk at grade on the built collision (A* on a 2 m grid, stage_points.ground_route) from the hatchling to the north bank above the bog (NEST_BANK), then a ~10 m wade (or throw it across to a friend on the bog). throw_spots: bank points by the bog.",
+  "hatchling_start": {
+   "name": "act5_hatchling_start",
+   "map_m": [
+    -1905.0,
+    -583.0,
+    0.0
+   ],
+   "game": [
+    -14500,
+    0,
+    -7700
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "source": "lake_alice_shore.py hatchling_museum_road"
+  },
+  "mother": {
+   "name": "act2_mother_gator",
+   "map_m": [
+    -1724.0,
+    -526.9,
+    -0.17
+   ],
+   "game": [
+    3600,
+    -17,
+    -13310
+   ],
+   "floor_m": -0.17,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "note": "beside the nest, on the bog (the mother gator of act 5; she faces the nest)"
+  },
+  "nest": {
+   "name": "act2_nest_top",
+   "map_m": [
+    -1723.0,
+    -529.3,
+    0.29
+   ],
+   "game": [
+    3700,
+    29,
+    -13070
+   ],
+   "floor_m": 0.29,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "note": "top of the nest mound (mud + sticks, three eggs) on the small bog"
+  },
+  "carry_route": {
+   "waypoints": [
+    {
+     "name": "act5_carry_00",
+     "map_m": [
+      -1905.0,
+      -583.0,
+      0.0
+     ],
+     "game": [
+      -14500,
+      0,
+      -7700
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "act5_carry_01",
+     "map_m": [
+      -1811.0,
+      -552.0,
+      0.0
+     ],
+     "game": [
+      -5100,
+      0,
+      -10800
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "act5_carry_02",
+     "map_m": [
+      -1743.0,
+      -510.0,
+      0.0
+     ],
+     "game": [
+      1700,
+      0,
+      -15000
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "act5_carry_03",
+     "map_m": [
+      -1724.0,
+      -507.0,
+      0.0
+     ],
+     "game": [
+      3600,
+      0,
+      -15300
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    }
+   ],
+   "game_path": [
+    [
+     -14500,
+     0,
+     -7700
+    ],
+    [
+     -5100,
+     0,
+     -10800
+    ],
+    [
+     1700,
+     0,
+     -15000
+    ],
+    [
+     3600,
+     0,
+     -15300
+    ]
+   ],
+   "length_m": 198.14,
+   "path_check": {
+    "name": "act5_carry_path",
+    "length_m": 198.1,
+    "closed": false,
+    "samples": 199,
+    "floor_range_m": [
+     -0.27,
+     0.0
+    ],
+    "max_floor_deviation_m": 0.27,
+    "gaps": [],
+    "walls_across": []
+   }
+  },
+  "throw_spots": [
+   {
+    "name": "act5_throw_north_bank",
+    "map_m": [
+     -1724.0,
+     -507.0,
+     0.0
+    ],
+    "game": [
+     3600,
+     0,
+     -15300
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "north bank above the small bog (~20 m from the nest, mostly wading water)"
+   }
+  ]
+ },
+ "act6_red_coins": {
+  "red_coins": [
+   {
+    "name": "rc_lily_pad_north_shallows_5",
+    "map_m": [
+     -1764.34,
+     -613.2,
+     -0.4
+    ],
+    "game": [
+     -434,
+     -40,
+     -4680
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "lily pad 5 of the north_shallows hop route (r 2.3 m)"
+   },
+   {
+    "name": "rc_lily_pad_east_marsh_7",
+    "map_m": [
+     -1586.75,
+     -619.46,
+     -0.4
+    ],
+    "game": [
+     17325,
+     -40,
+     -4054
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "lily pad 7 of the east_marsh hop route (r 1.8 m)"
+   },
+   {
+    "name": "rc_lily_pad_south_arm_4",
+    "map_m": [
+     -1847.8,
+     -786.91,
+     -0.4
+    ],
+    "game": [
+     -8780,
+     -40,
+     12691
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "lily pad 4 of the south_arm hop route (r 1.5 m)"
+   },
+   {
+    "name": "rc_barn2010_roof_peak",
+    "map_m": [
+     -1882.57,
+     -510.56,
+     9.0
+    ],
+    "game": [
+     -12257,
+     900,
+     -14944
+    ],
+    "floor_m": 9.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "2010 Bat Barn cross-gable peak (9 m): bat-cam pole -> roof"
+   },
+   {
+    "name": "rc_barn2017_roof_apex",
+    "map_m": [
+     -1908.9,
+     -502.71,
+     9.0
+    ],
+    "game": [
+     -14890,
+     900,
+     -15729
+    ],
+    "floor_m": 9.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "2017 bat barn hip-roof apex (9 m)"
+   },
+   {
+    "name": "rc_garden_trellis",
+    "map_m": [
+     -1859.86,
+     -479.86,
+     2.6
+    ],
+    "game": [
+     -9986,
+     260,
+     -18014
+    ],
+    "floor_m": 2.6,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "Bat House Gardens arbor top (2.6 m)"
+   },
+   {
+    "name": "rc_cypress_knee",
+    "map_m": [
+     -1859.9,
+     -808.93,
+     -0.24
+    ],
+    "game": [
+     -9990,
+     -24,
+     14893
+    ],
+    "air": true,
+    "floor_below_m": -0.67,
+    "height_above_floor_m": 0.43,
+    "note": "top of a knee of bald cypress 16 (visual knee poking out of the wading shallows; the coin floats there, the floor is the shallow bed)",
+    "wading_depth_m": 0.17
+   },
+   {
+    "name": "rc_boardwalk_underside",
+    "map_m": [
+     -1844.15,
+     -609.31,
+     -0.5
+    ],
+    "game": [
+     -8415,
+     -50,
+     -5069
+    ],
+    "water_surface": true,
+    "floor_below_m": -0.52,
+    "depth_m": 0.02,
+    "room_m": 1.6,
+    "in_lake": true,
+    "note": "at the water surface under the north boardwalk (swim under the deck); the inlet under the deck is a mud flat at the waterline (0-7 cm of water) and the deck is top-only collision, so Mario wades in under it"
+   }
+  ],
+  "star_spot": {
+   "name": "act6_red_coin_star_field",
+   "map_m": [
+    -1887.0,
+    -551.0,
+    0.0
+   ],
+   "game": [
+    -12700,
+    0,
+    -10900
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.2,
+   "headroom_m": null
+  },
+  "note": "design 7.4 act 6's 8 spots in its order (3 lily pads, 2 bat-barn roof tops, the garden trellis, a cypress knee, the boardwalk underside at the water surface); heights are the floor (or the surface), add the coin's hover. No yellow coin sits on these spots (stage_lake.lake_pickups). Red-coin star: the bat-house field, in sight of the spawn."
+ },
+ "shoreline": {
+  "checkpoints": [
+   {
+    "name": "shore_cp_00",
+    "map_m": [
+     -1924.39,
+     -622.62,
+     0.0
+    ],
+    "game": [
+     -16439,
+     0,
+     -3738
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "facing_deg": 71.1,
+    "game_yaw": "0x4D78",
+    "water_edge_m": [
+     -1921.26,
+     -619.43
+    ]
+   },
+   {
+    "name": "shore_cp_01",
+    "map_m": [
+     -1966.28,
+     -704.49,
+     0.0
+    ],
+    "game": [
+     -20628,
+     0,
+     4449
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.69,
+    "headroom_m": null,
+    "facing_deg": 162.4,
+    "game_yaw": "0x0C8A",
+    "water_edge_m": [
+     -1965.07,
+     -708.3
+    ]
+   },
+   {
+    "name": "shore_cp_02",
+    "map_m": [
+     -1913.27,
+     -731.61,
+     0.0
+    ],
+    "game": [
+     -15327,
+     0,
+     7161
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.67,
+    "headroom_m": null,
+    "facing_deg": 355.2,
+    "game_yaw": "0x836F",
+    "water_edge_m": [
+     -1913.61,
+     -727.62
+    ]
+   },
+   {
+    "name": "shore_cp_03",
+    "map_m": [
+     -1871.57,
+     -804.79,
+     0.0
+    ],
+    "game": [
+     -11157,
+     0,
+     14479
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "facing_deg": 103.5,
+    "game_yaw": "0x3660",
+    "water_edge_m": [
+     -1867.21,
+     -803.78
+    ]
+   },
+   {
+    "name": "shore_cp_04",
+    "map_m": [
+     -1800.21,
+     -824.78,
+     0.0
+    ],
+    "game": [
+     -4021,
+     0,
+     16478
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.84,
+    "headroom_m": null,
+    "facing_deg": 329.3,
+    "game_yaw": "0x95D1",
+    "water_edge_m": [
+     -1802.25,
+     -821.34
+    ]
+   },
+   {
+    "name": "shore_cp_05",
+    "map_m": [
+     -1746.51,
+     -875.03,
+     0.0
+    ],
+    "game": [
+     1349,
+     0,
+     21503
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "facing_deg": 353.7,
+    "game_yaw": "0x8482",
+    "water_edge_m": [
+     -1746.95,
+     -871.05
+    ]
+   },
+   {
+    "name": "shore_cp_06",
+    "map_m": [
+     -1703.52,
+     -811.77,
+     0.0
+    ],
+    "game": [
+     5648,
+     0,
+     15177
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "facing_deg": 175.5,
+    "game_yaw": "0x033A",
+    "water_edge_m": [
+     -1703.2,
+     -815.76
+    ]
+   },
+   {
+    "name": "shore_cp_07",
+    "map_m": [
+     -1739.91,
+     -733.62,
+     0.0
+    ],
+    "game": [
+     2009,
+     0,
+     7362
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "facing_deg": 279.3,
+    "game_yaw": "0xB96B",
+    "water_edge_m": [
+     -1743.85,
+     -732.97
+    ]
+   },
+   {
+    "name": "shore_cp_08",
+    "map_m": [
+     -1642.54,
+     -711.18,
+     0.0
+    ],
+    "game": [
+     11746,
+     0,
+     5118
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "facing_deg": 323.2,
+    "game_yaw": "0x9A26",
+    "water_edge_m": [
+     -1644.93,
+     -707.98
+    ]
+   },
+   {
+    "name": "shore_cp_09",
+    "map_m": [
+     -1542.51,
+     -690.13,
+     0.0
+    ],
+    "game": [
+     21749,
+     0,
+     3013
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "facing_deg": 275.0,
+    "game_yaw": "0xBC7A",
+    "water_edge_m": [
+     -1546.49,
+     -689.79
+    ]
+   },
+   {
+    "name": "shore_cp_10",
+    "map_m": [
+     -1539.39,
+     -600.98,
+     0.0
+    ],
+    "game": [
+     22061,
+     0,
+     -5902
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "facing_deg": 247.1,
+    "game_yaw": "0xD050",
+    "water_edge_m": [
+     -1543.08,
+     -602.54
+    ]
+   },
+   {
+    "name": "shore_cp_11",
+    "map_m": [
+     -1589.58,
+     -541.13,
+     0.0
+    ],
+    "game": [
+     17042,
+     0,
+     -11887
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "facing_deg": 285.8,
+    "game_yaw": "0xB4C0",
+    "water_edge_m": [
+     -1593.42,
+     -540.04
+    ]
+   },
+   {
+    "name": "shore_cp_12",
+    "map_m": [
+     -1618.47,
+     -458.3,
+     0.0
+    ],
+    "game": [
+     14153,
+     0,
+     -20170
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "facing_deg": 195.8,
+    "game_yaw": "0xF4C9",
+    "water_edge_m": [
+     -1619.55,
+     -462.15
+    ]
+   },
+   {
+    "name": "shore_cp_13",
+    "map_m": [
+     -1694.14,
+     -501.4,
+     0.0
+    ],
+    "game": [
+     6586,
+     0,
+     -15860
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "facing_deg": 147.8,
+    "game_yaw": "0x16E1",
+    "water_edge_m": [
+     -1692.01,
+     -504.78
+    ]
+   },
+   {
+    "name": "shore_cp_14",
+    "map_m": [
+     -1788.12,
+     -546.51,
+     0.0
+    ],
+    "game": [
+     -2812,
+     0,
+     -11349
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "facing_deg": 130.3,
+    "game_yaw": "0x2356",
+    "water_edge_m": [
+     -1785.07,
+     -549.1
+    ]
+   },
+   {
+    "name": "shore_cp_15",
+    "map_m": [
+     -1841.96,
+     -593.05,
+     0.0
+    ],
+    "game": [
+     -8196,
+     0,
+     -6695
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "facing_deg": 243.4,
+    "game_yaw": "0xD2F1",
+    "water_edge_m": [
+     -1845.54,
+     -594.84
+    ]
+   }
+  ],
+  "perimeter_m": 1862.11,
+  "note": "16 checkpoints on the bank all round the lake (4 m out of the shore ring, clear ground; facing = towards the water), in shore-ring order (counter-clockwise seen from above, starting at the north-west shore under Museum Road). water_edge_m = the shore point behind each."
+ },
+ "gator_spots": {
+  "basking_waterline": [
+   {
+    "name": "bask_gator_02",
+    "map_m": [
+     -1914.03,
+     -722.64,
+     -0.5
+    ],
+    "game": [
+     -15403,
+     -50,
+     6264
+    ],
+    "water_surface": true,
+    "floor_below_m": -0.53,
+    "depth_m": 0.03,
+    "room_m": 3.0,
+    "in_lake": true,
+    "facing_deg": 355.2,
+    "game_yaw": "0x836F",
+    "note": "basking spot at the waterline (bank), facing the water"
+   },
+   {
+    "name": "bask_gator_04",
+    "map_m": [
+     -1805.32,
+     -816.17,
+     -0.5
+    ],
+    "game": [
+     -4532,
+     -50,
+     15617
+    ],
+    "water_surface": true,
+    "floor_below_m": -0.53,
+    "depth_m": 0.03,
+    "room_m": 3.0,
+    "in_lake": true,
+    "facing_deg": 329.3,
+    "game_yaw": "0x95D1",
+    "note": "basking spot at the waterline (bank), facing the water"
+   },
+   {
+    "name": "bask_gator_06",
+    "map_m": [
+     -1702.65,
+     -822.73,
+     -0.5
+    ],
+    "game": [
+     5735,
+     -50,
+     16273
+    ],
+    "water_surface": true,
+    "floor_below_m": -0.54,
+    "depth_m": 0.04,
+    "room_m": 3.0,
+    "in_lake": true,
+    "facing_deg": 175.5,
+    "game_yaw": "0x033A",
+    "note": "basking spot at the waterline (bank), facing the water"
+   },
+   {
+    "name": "bask_gator_08",
+    "map_m": [
+     -1649.13,
+     -702.37,
+     -0.5
+    ],
+    "game": [
+     11087,
+     -50,
+     4237
+    ],
+    "water_surface": true,
+    "floor_below_m": -0.64,
+    "depth_m": 0.14,
+    "room_m": 3.0,
+    "in_lake": true,
+    "facing_deg": 323.2,
+    "game_yaw": "0x9A26",
+    "note": "basking spot at the waterline (bank), facing the water"
+   },
+   {
+    "name": "bask_gator_12",
+    "map_m": [
+     -1620.64,
+     -466.0,
+     -0.5
+    ],
+    "game": [
+     13936,
+     -50,
+     -19400
+    ],
+    "water_surface": true,
+    "floor_below_m": -0.7,
+    "depth_m": 0.2,
+    "room_m": 2.97,
+    "in_lake": true,
+    "facing_deg": 195.8,
+    "game_yaw": "0xF4C9",
+    "note": "basking spot at the waterline (bank), facing the water"
+   },
+   {
+    "name": "bask_gator_14",
+    "map_m": [
+     -1780.5,
+     -552.98,
+     -0.5
+    ],
+    "game": [
+     -2050,
+     -50,
+     -10702
+    ],
+    "water_surface": true,
+    "floor_below_m": -0.66,
+    "depth_m": 0.16,
+    "room_m": 3.0,
+    "in_lake": true,
+    "facing_deg": 130.3,
+    "game_yaw": "0x2356",
+    "note": "basking spot at the waterline (bank), facing the water"
+   }
+  ],
+  "islands": [
+   {
+    "name": "bask_gator_island_1",
+    "map_m": [
+     -1812.0,
+     -607.0,
+     0.03
+    ],
+    "game": [
+     -5200,
+     3,
+     -5300
+    ],
+    "floor_m": 0.03,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "bask_gator_island_2",
+    "map_m": [
+     -1666.5,
+     -493.5,
+     -0.12
+    ],
+    "game": [
+     9350,
+     -12,
+     -16650
+    ],
+    "floor_m": -0.12,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "bask_gator_island_3",
+    "map_m": [
+     -1720.5,
+     -528.5,
+     -0.11
+    ],
+    "game": [
+     3950,
+     -11,
+     -13150
+    ],
+    "floor_m": -0.11,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  ],
+  "basking_gators": [
+   {
+    "name": "basking_gator_0",
+    "map_m": [
+     -1812.0,
+     -607.0
+    ],
+    "heading_deg": 120.0,
+    "length_m": 3.0,
+    "floor_m": [
+     -0.16,
+     -0.16
+    ],
+    "top_m": 0.13,
+    "waterline": false,
+    "note": "west bog (act 1's route), snout to the lake centre"
+   },
+   {
+    "name": "basking_gator_1",
+    "map_m": [
+     -1660.0,
+     -497.0
+    ],
+    "heading_deg": 200.0,
+    "length_m": 3.4,
+    "floor_m": [
+     -0.18,
+     -0.14
+    ],
+    "top_m": 0.15,
+    "waterline": false,
+    "note": "north-east bog, east of its coin ring"
+   },
+   {
+    "name": "basking_gator_2",
+    "map_m": [
+     -1782.02,
+     -551.68
+    ],
+    "heading_deg": 130.3,
+    "length_m": 2.8,
+    "floor_m": [
+     -0.59,
+     -0.3
+    ],
+    "top_m": -0.15,
+    "waterline": true,
+    "note": "north shore waterline (bask_gator_14)"
+   },
+   {
+    "name": "basking_gator_3",
+    "map_m": [
+     -1647.93,
+     -703.97
+    ],
+    "heading_deg": 323.2,
+    "length_m": 3.2,
+    "floor_m": [
+     -0.61,
+     -0.34
+    ],
+    "top_m": -0.16,
+    "waterline": true,
+    "note": "south-east shore waterline (bask_gator_08)"
+   },
+   {
+    "name": "basking_gator_4",
+    "map_m": [
+     -1913.95,
+     -723.64
+    ],
+    "heading_deg": 355.2,
+    "length_m": 2.9,
+    "floor_m": [
+     -0.66,
+     -0.32
+    ],
+    "top_m": -0.19,
+    "waterline": true,
+    "note": "south-west shore by the Baughman lawn (bask_gator_02)"
+   },
+   {
+    "name": "basking_gator_5",
+    "map_m": [
+     -1620.1,
+     -464.07
+    ],
+    "heading_deg": 195.8,
+    "length_m": 3.0,
+    "floor_m": [
+     -0.61,
+     -0.09
+    ],
+    "top_m": -0.0,
+    "waterline": true,
+    "note": "north-east cove waterline (bask_gator_12)"
+   }
+  ],
+  "note": "decorative / hazard gator spots (mission objects): at the waterline round the lake and on the bog tops; act 2's platforms and big gators are under act2_gator_hop, act 1's lurking gators under act1_boardwalk_welcome.lurk_gator_spots. basking_gators: the rigid basking alligators built into the level (stage_lake.BASKING_GATORS, every act; a low collision body)"
+ },
+ "landmark_spots": {
+  "bat_barns": {
+   "barn2010_roof_peak": {
+    "name": "barn2010_roof_peak",
+    "map_m": [
+     -1882.57,
+     -510.56,
+     9.0
+    ],
+    "game": [
+     -12257,
+     900,
+     -14944
+    ],
+    "floor_m": 9.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "barn2010_roof_east_arm": {
+    "name": "barn2010_roof_east_arm",
+    "map_m": [
+     -1879.63,
+     -509.22,
+     8.21
+    ],
+    "game": [
+     -11963,
+     821,
+     -15078
+    ],
+    "floor_m": 8.21,
+    "clearance_m": 0.91,
+    "headroom_m": null
+   },
+   "barn2010_roof_south_arm": {
+    "name": "barn2010_roof_south_arm",
+    "map_m": [
+     -1883.62,
+     -513.72,
+     8.2
+    ],
+    "game": [
+     -12362,
+     820,
+     -14628
+    ],
+    "floor_m": 8.2,
+    "clearance_m": 0.9,
+    "headroom_m": null
+   },
+   "barn2010_bat_exit": {
+    "name": "barn2010_bat_exit",
+    "map_m": [
+     -1882.57,
+     -510.56,
+     4.15
+    ],
+    "game": [
+     -12257,
+     415,
+     -14944
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 4.15,
+    "note": "not a floor (bat exit, pole top, slide ridge)"
+   },
+   "barn2010_batcam_top": {
+    "name": "barn2010_batcam_top",
+    "map_m": [
+     -1878.85,
+     -514.01,
+     8.3
+    ],
+    "game": [
+     -11885,
+     830,
+     -14599
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 8.3,
+    "note": "not a floor (bat exit, pole top, slide ridge)"
+   },
+   "barn2017_roof_apex": {
+    "name": "barn2017_roof_apex",
+    "map_m": [
+     -1908.9,
+     -502.71,
+     9.0
+    ],
+    "game": [
+     -14890,
+     900,
+     -15729
+    ],
+    "floor_m": 9.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "barn2017_roof_east": {
+    "name": "barn2017_roof_east",
+    "map_m": [
+     -1907.11,
+     -502.6,
+     7.88
+    ],
+    "game": [
+     -14711,
+     788,
+     -15740
+    ],
+    "floor_m": 7.88,
+    "clearance_m": 0.97,
+    "headroom_m": null
+   },
+   "barn2017_bat_exit": {
+    "name": "barn2017_bat_exit",
+    "map_m": [
+     -1908.9,
+     -502.71,
+     4.15
+    ],
+    "game": [
+     -14890,
+     415,
+     -15729
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 4.15,
+    "note": "not a floor (bat exit, pole top, slide ridge)"
+   },
+   "barn2017_batcam_top": {
+    "name": "barn2017_batcam_top",
+    "map_m": [
+     -1905.46,
+     -500.9,
+     8.3
+    ],
+    "game": [
+     -14546,
+     830,
+     -15910
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 8.3,
+    "note": "not a floor (bat exit, pole top, slide ridge)"
+   },
+   "barn2017_addon_box_east": {
+    "name": "barn2017_addon_box_east",
+    "map_m": [
+     -1906.16,
+     -502.55,
+     5.48
+    ],
+    "game": [
+     -14616,
+     548,
+     -15745
+    ],
+    "floor_m": 5.48,
+    "clearance_m": 0.15,
+    "headroom_m": 1.81
+   },
+   "old_house_site": {
+    "name": "old_house_site",
+    "map_m": [
+     -1895.81,
+     -511.48,
+     0.0
+    ],
+    "game": [
+     -13581,
+     0,
+     -14852
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "fence1_top_south": {
+    "name": "fence1_top_south",
+    "map_m": [
+     -1883.18,
+     -515.29,
+     2.0
+    ],
+    "game": [
+     -12318,
+     200,
+     -14471
+    ],
+    "floor_m": 2.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  },
+  "baughman_center": {
+   "baughman_vestibule_roof": {
+    "name": "baughman_vestibule_roof",
+    "map_m": [
+     -1968.78,
+     -736.98,
+     3.7
+    ],
+    "game": [
+     -20878,
+     370,
+     7698
+    ],
+    "floor_m": 3.7,
+    "clearance_m": 0.58,
+    "headroom_m": null
+   },
+   "baughman_aisle_ne": {
+    "name": "baughman_aisle_ne",
+    "map_m": [
+     -1952.23,
+     -726.94,
+     4.0
+    ],
+    "game": [
+     -19223,
+     400,
+     6694
+    ],
+    "floor_m": 4.0,
+    "clearance_m": 1.06,
+    "headroom_m": null
+   },
+   "baughman_aisle_nw": {
+    "name": "baughman_aisle_nw",
+    "map_m": [
+     -1968.14,
+     -732.35,
+     4.0
+    ],
+    "game": [
+     -20814,
+     400,
+     7235
+    ],
+    "floor_m": 4.0,
+    "clearance_m": 1.05,
+    "headroom_m": null
+   },
+   "baughman_aisle_se": {
+    "name": "baughman_aisle_se",
+    "map_m": [
+     -1949.54,
+     -734.86,
+     4.0
+    ],
+    "game": [
+     -18954,
+     400,
+     7486
+    ],
+    "floor_m": 4.0,
+    "clearance_m": 1.06,
+    "headroom_m": null
+   },
+   "baughman_ridge": {
+    "name": "baughman_ridge",
+    "map_m": [
+     -1958.27,
+     -733.41,
+     12.0
+    ],
+    "game": [
+     -19827,
+     1200,
+     7341
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 12.0,
+    "note": "not a floor (bat exit, pole top, slide ridge)"
+   },
+   "baughman_main_door": {
+    "name": "baughman_main_door",
+    "map_m": [
+     -1972.51,
+     -738.24,
+     0.0
+    ],
+    "game": [
+     -21251,
+     0,
+     7824
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.1,
+    "headroom_m": null
+   },
+   "baughman_lakeside_lawn": {
+    "name": "baughman_lakeside_lawn",
+    "map_m": [
+     -1948.68,
+     -725.9,
+     0.0
+    ],
+    "game": [
+     -18868,
+     0,
+     6590
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.19,
+    "headroom_m": null
+   },
+   "baughman_bridge_mid": {
+    "name": "baughman_bridge_mid",
+    "map_m": [
+     -1964.73,
+     -712.54,
+     0.55
+    ],
+    "game": [
+     -20473,
+     55,
+     5254
+    ],
+    "floor_m": 0.55,
+    "clearance_m": 0.75,
+    "headroom_m": null
+   },
+   "regatta_launch_bridge": {
+    "name": "regatta_launch_bridge",
+    "map_m": [
+     -1964.97,
+     -711.98,
+     0.55
+    ],
+    "game": [
+     -20497,
+     55,
+     5198
+    ],
+    "floor_m": 0.55,
+    "clearance_m": 0.75,
+    "headroom_m": null
+   },
+   "baughman_bridge_south_foot": {
+    "name": "baughman_bridge_south_foot",
+    "map_m": [
+     -1961.38,
+     -720.16,
+     0.0
+    ],
+    "game": [
+     -20138,
+     0,
+     6016
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "baughman_bridge_north_foot": {
+    "name": "baughman_bridge_north_foot",
+    "map_m": [
+     -1968.08,
+     -704.91,
+     0.0
+    ],
+    "game": [
+     -20808,
+     0,
+     4491
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  },
+  "lake_boardwalks": {
+   "north_boardwalk_mid": {
+    "name": "north_boardwalk_mid",
+    "map_m": [
+     -1843.3,
+     -608.79,
+     0.5
+    ],
+    "game": [
+     -8330,
+     50,
+     -5121
+    ],
+    "floor_m": 0.5,
+    "clearance_m": 1.7,
+    "headroom_m": null
+   },
+   "census_boardwalk": {
+    "name": "census_boardwalk",
+    "map_m": [
+     -1842.43,
+     -610.25,
+     0.5
+    ],
+    "game": [
+     -8243,
+     50,
+     -4975
+    ],
+    "floor_m": 0.5,
+    "clearance_m": 0.57,
+    "headroom_m": null
+   },
+   "regatta_launch_boardwalk": {
+    "name": "regatta_launch_boardwalk",
+    "map_m": [
+     -1842.33,
+     -610.42,
+     0.5
+    ],
+    "game": [
+     -8233,
+     50,
+     -4958
+    ],
+    "floor_m": 0.5,
+    "clearance_m": 0.37,
+    "headroom_m": null
+   },
+   "boardwalk_underside": {
+    "name": "boardwalk_underside",
+    "map_m": [
+     -1844.15,
+     -609.31,
+     -0.5
+    ],
+    "game": [
+     -8415,
+     -50,
+     -5069
+    ],
+    "water_surface": true,
+    "floor_below_m": -0.52,
+    "depth_m": 0.02,
+    "room_m": 1.6,
+    "in_lake": true,
+    "note": "mud flat at the waterline under the deck"
+   },
+   "north_boardwalk_west_end": {
+    "name": "north_boardwalk_west_end",
+    "map_m": [
+     -1850.06,
+     -612.9,
+     0.0
+    ],
+    "game": [
+     -9006,
+     0,
+     -4710
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "north_boardwalk_east_end": {
+    "name": "north_boardwalk_east_end",
+    "map_m": [
+     -1836.53,
+     -604.68,
+     0.0
+    ],
+    "game": [
+     -7653,
+     0,
+     -5532
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "east_overlook_platform": {
+    "name": "east_overlook_platform",
+    "map_m": [
+     -1514.17,
+     -628.1,
+     0.6
+    ],
+    "game": [
+     24583,
+     60,
+     -3190
+    ],
+    "floor_m": 0.6,
+    "clearance_m": 2.27,
+    "headroom_m": null
+   },
+   "east_overlook_steps_foot": {
+    "name": "east_overlook_steps_foot",
+    "map_m": [
+     -1517.81,
+     -631.67,
+     0.0
+    ],
+    "game": [
+     24219,
+     0,
+     -2833
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.75,
+    "headroom_m": null
+   }
+  },
+  "museum_road_edge": {
+   "kiosk_roof": {
+    "name": "kiosk_roof",
+    "map_m": [
+     -1890.38,
+     -588.02,
+     2.95
+    ],
+    "game": [
+     -13038,
+     295,
+     -7198
+    ],
+    "floor_m": 2.95,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "lake_bench_1": {
+    "name": "lake_bench_1",
+    "map_m": [
+     -1895.44,
+     -592.35,
+     0.46
+    ],
+    "game": [
+     -13544,
+     46,
+     -6765
+    ],
+    "floor_m": 0.46,
+    "clearance_m": 2.59,
+    "headroom_m": null
+   },
+   "lake_bench_2": {
+    "name": "lake_bench_2",
+    "map_m": [
+     -1907.49,
+     -601.76,
+     0.46
+    ],
+    "game": [
+     -14749,
+     46,
+     -5824
+    ],
+    "floor_m": 0.46,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "hatchling_museum_road": {
+    "name": "hatchling_museum_road",
+    "map_m": [
+     -1905.0,
+     -583.0,
+     0.0
+    ],
+    "game": [
+     -14500,
+     0,
+     -7700
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "bus_stop": {
+    "name": "bus_stop",
+    "map_m": [
+     -1970.6,
+     -627.88,
+     0.0
+    ],
+    "game": [
+     -21060,
+     0,
+     -3212
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "street_light_0_top": {
+    "name": "street_light_0_top",
+    "map_m": [
+     -1758.57,
+     -495.09,
+     7.2
+    ],
+    "game": [
+     143,
+     720,
+     -16491
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 7.2,
+    "note": "not a floor (bat exit, pole top, slide ridge)"
+   },
+   "street_light_1_top": {
+    "name": "street_light_1_top",
+    "map_m": [
+     -1795.16,
+     -521.28,
+     7.2
+    ],
+    "game": [
+     -3516,
+     720,
+     -13872
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 7.2,
+    "note": "not a floor (bat exit, pole top, slide ridge)"
+   },
+   "street_light_2_top": {
+    "name": "street_light_2_top",
+    "map_m": [
+     -1831.76,
+     -547.47,
+     7.2
+    ],
+    "game": [
+     -7176,
+     720,
+     -11253
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 7.2,
+    "note": "not a floor (bat exit, pole top, slide ridge)"
+   },
+   "street_light_3_top": {
+    "name": "street_light_3_top",
+    "map_m": [
+     -1868.82,
+     -573.04,
+     7.2
+    ],
+    "game": [
+     -10882,
+     720,
+     -8696
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 7.2,
+    "note": "not a floor (bat exit, pole top, slide ridge)"
+   },
+   "street_light_4_top": {
+    "name": "street_light_4_top",
+    "map_m": [
+     -1906.29,
+     -597.19,
+     7.2
+    ],
+    "game": [
+     -14629,
+     720,
+     -6281
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 7.2,
+    "note": "not a floor (bat exit, pole top, slide ridge)"
+   },
+   "street_light_5_top": {
+    "name": "street_light_5_top",
+    "map_m": [
+     -1941.77,
+     -624.7,
+     7.2
+    ],
+    "game": [
+     -18177,
+     720,
+     -3530
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 7.2,
+    "note": "not a floor (bat exit, pole top, slide ridge)"
+   },
+   "street_light_6_top": {
+    "name": "street_light_6_top",
+    "map_m": [
+     -1971.64,
+     -657.52,
+     7.2
+    ],
+    "game": [
+     -21164,
+     720,
+     -248
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 7.2,
+    "note": "not a floor (bat exit, pole top, slide ridge)"
+   },
+   "street_light_7_top": {
+    "name": "street_light_7_top",
+    "map_m": [
+     -1995.16,
+     -695.67,
+     7.2
+    ],
+    "game": [
+     -23516,
+     720,
+     3567
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 7.2,
+    "note": "not a floor (bat exit, pole top, slide ridge)"
+   }
+  },
+  "bat_house_field": {
+   "spawn_field": {
+    "name": "spawn_field",
+    "map_m": [
+     -1893.0,
+     -541.0,
+     0.0
+    ],
+    "game": [
+     -13300,
+     0,
+     -11900
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "spawn_bus_stop": {
+    "name": "spawn_bus_stop",
+    "map_m": [
+     -1968.6,
+     -626.38,
+     0.0
+    ],
+    "game": [
+     -20860,
+     0,
+     -3362
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "census_houses": {
+    "name": "census_houses",
+    "map_m": [
+     -1890.0,
+     -528.0,
+     0.0
+    ],
+    "game": [
+     -13000,
+     0,
+     -13200
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "census_gardens": {
+    "name": "census_gardens",
+    "map_m": [
+     -1849.96,
+     -474.47,
+     0.0
+    ],
+    "game": [
+     -8996,
+     0,
+     -18553
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "garden_arbor_top": {
+    "name": "garden_arbor_top",
+    "map_m": [
+     -1859.86,
+     -479.86,
+     2.6
+    ],
+    "game": [
+     -9986,
+     260,
+     -18014
+    ],
+    "floor_m": 2.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "bat_info_board": {
+    "name": "bat_info_board",
+    "map_m": [
+     -1882.34,
+     -556.72,
+     0.0
+    ],
+    "game": [
+     -12234,
+     0,
+     -10328
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.55,
+    "headroom_m": null
+   },
+   "bat_bench_1": {
+    "name": "bat_bench_1",
+    "map_m": [
+     -1886.48,
+     -557.71,
+     0.46
+    ],
+    "game": [
+     -12648,
+     46,
+     -10229
+    ],
+    "floor_m": 0.46,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "garden_bed_0_top": {
+    "name": "garden_bed_0_top",
+    "map_m": [
+     -1853.86,
+     -479.75,
+     0.45
+    ],
+    "game": [
+     -9386,
+     45,
+     -18025
+    ],
+    "floor_m": 0.45,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "garden_bed_1_top": {
+    "name": "garden_bed_1_top",
+    "map_m": [
+     -1848.36,
+     -479.64,
+     0.45
+    ],
+    "game": [
+     -8836,
+     45,
+     -18036
+    ],
+    "floor_m": 0.45,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "garden_bed_2_top": {
+    "name": "garden_bed_2_top",
+    "map_m": [
+     -1842.86,
+     -479.54,
+     0.45
+    ],
+    "game": [
+     -8286,
+     45,
+     -18046
+    ],
+    "floor_m": 0.45,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  },
+  "lake_alice_water": {
+   "lake_center_deck_site": {
+    "name": "lake_center_deck_site",
+    "map_m": [
+     -1734.1,
+     -655.3,
+     0.2
+    ],
+    "game": [
+     2590,
+     20,
+     -470
+    ],
+    "floor_m": 0.2,
+    "clearance_m": 3.0,
+    "headroom_m": 2.62,
+    "note": "the observation deck's top (the module's spot is the lake bed under it)"
+   },
+   "lake_center_deck_site_water": {
+    "name": "lake_center_deck_site_water",
+    "map_m": [
+     -1734.1,
+     -655.3,
+     -0.5
+    ],
+    "game": [
+     2590,
+     -50,
+     -470
+    ],
+    "water_surface": true,
+    "floor_below_m": 0.2,
+    "depth_m": -0.7,
+    "room_m": 3.0,
+    "in_lake": true,
+    "note": "the observation deck (top 0.2 m) stands here now"
+   },
+   "lily_route_start": {
+    "name": "lily_route_start",
+    "map_m": [
+     -1784.2,
+     -603.4,
+     -0.4
+    ],
+    "game": [
+     -2420,
+     -40,
+     -5660
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "lily_route_end": {
+    "name": "lily_route_end",
+    "map_m": [
+     -1739.52,
+     -647.77,
+     -0.4
+    ],
+    "game": [
+     2048,
+     -40,
+     -1223
+    ],
+    "floor_m": -0.4,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "island_1_top": {
+    "name": "island_1_top",
+    "map_m": [
+     -1799.5,
+     -602.5,
+     -0.12
+    ],
+    "game": [
+     -3950,
+     -12,
+     -5750
+    ],
+    "floor_m": -0.12,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "island_1_nest": {
+    "name": "island_1_nest",
+    "map_m": [
+     -1799.5,
+     -602.5,
+     -0.12
+    ],
+    "game": [
+     -3950,
+     -12,
+     -5750
+    ],
+    "floor_m": -0.12,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "island_2_top": {
+    "name": "island_2_top",
+    "map_m": [
+     -1666.5,
+     -493.5,
+     -0.12
+    ],
+    "game": [
+     9350,
+     -12,
+     -16650
+    ],
+    "floor_m": -0.12,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "island_3_top": {
+    "name": "island_3_top",
+    "map_m": [
+     -1720.5,
+     -528.5,
+     -0.11
+    ],
+    "game": [
+     3950,
+     -11,
+     -13150
+    ],
+    "floor_m": -0.11,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "deep_1_bed": {
+    "name": "deep_1_bed",
+    "map_m": [
+     -1700.0,
+     -605.0,
+     -4.96
+    ],
+    "game": [
+     6000,
+     -496,
+     -5500
+    ],
+    "floor_m": -4.96,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "deep_2_bed": {
+    "name": "deep_2_bed",
+    "map_m": [
+     -1792.0,
+     -680.0,
+     -4.58
+    ],
+    "game": [
+     -3200,
+     -458,
+     2000
+    ],
+    "floor_m": -4.58,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "deep_3_bed": {
+    "name": "deep_3_bed",
+    "map_m": [
+     -1630.0,
+     -640.0,
+     -4.83
+    ],
+    "game": [
+     13000,
+     -483,
+     -2000
+    ],
+    "floor_m": -4.83,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "deep_4_bed": {
+    "name": "deep_4_bed",
+    "map_m": [
+     -1880.0,
+     -680.0,
+     -4.65
+    ],
+    "game": [
+     -12000,
+     -465,
+     2000
+    ],
+    "floor_m": -4.65,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "baughman_landing": {
+    "name": "baughman_landing",
+    "map_m": [
+     -1966.35,
+     -708.85,
+     0.55
+    ],
+    "game": [
+     -20635,
+     55,
+     4885
+    ],
+    "floor_m": 0.55,
+    "clearance_m": 0.75,
+    "headroom_m": null
+   },
+   "baughman_landing_s": {
+    "name": "baughman_landing_s",
+    "map_m": [
+     -1962.91,
+     -716.68,
+     0.55
+    ],
+    "game": [
+     -20291,
+     55,
+     5668
+    ],
+    "floor_m": 0.55,
+    "clearance_m": 0.75,
+    "headroom_m": null
+   },
+   "north_boardwalk_landing_w": {
+    "name": "north_boardwalk_landing_w",
+    "map_m": [
+     -1847.67,
+     -611.45,
+     0.5
+    ],
+    "game": [
+     -8767,
+     50,
+     -4855
+    ],
+    "floor_m": 0.5,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "north_boardwalk_landing_e": {
+    "name": "north_boardwalk_landing_e",
+    "map_m": [
+     -1838.92,
+     -606.13,
+     0.5
+    ],
+    "game": [
+     -7892,
+     50,
+     -5387
+    ],
+    "floor_m": 0.5,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "regatta_dock_water": {
+    "name": "regatta_dock_water",
+    "map_m": [
+     -1941.0,
+     -700.5,
+     -0.5
+    ],
+    "game": [
+     -18100,
+     -50,
+     4050
+    ],
+    "water_surface": true,
+    "floor_below_m": -0.92,
+    "depth_m": 0.42,
+    "room_m": 3.0,
+    "in_lake": true
+   }
+  }
+ },
+ "poles": [
+  {
+   "name": "pole_bat_cam_2010",
+   "map_m": [
+    -1878.85,
+    -514.01,
+    0.0
+   ],
+   "game": [
+    -11885,
+    0,
+    -14599
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.9,
+   "headroom_m": null,
+   "height_m": 8.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00530000",
+   "note": "bat-cam pole outside the 2010 barn's south-east notch (inside fence 1): climb to 8.3, jump north-west onto the cross-gable roof (eave 7.1, peak 9.0)"
+  },
+  {
+   "name": "pole_bat_cam_2017",
+   "map_m": [
+    -1905.46,
+    -500.9,
+    0.0
+   ],
+   "game": [
+    -14546,
+    0,
+    -15910
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "height_m": 8.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00530000",
+   "note": "bat-cam pole 0.65 m east of the 2017 barn's eave (inside fence 2): climb, jump west onto the hip roof (eave 7.2, apex 9.0); the east add-on box (5.48) is a perch below"
+  },
+  {
+   "name": "pole_museum_road_light_0",
+   "map_m": [
+    -1758.57,
+    -495.09,
+    0.0
+   ],
+   "game": [
+    143,
+    0,
+    -16491
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "height_m": 7.2,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00480000",
+   "note": "Museum Road street light on the lake side (climbable; the arm points at the road)"
+  },
+  {
+   "name": "pole_museum_road_light_1",
+   "map_m": [
+    -1795.16,
+    -521.28,
+    0.0
+   ],
+   "game": [
+    -3516,
+    0,
+    -13872
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "height_m": 7.2,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00480000",
+   "note": "Museum Road street light on the lake side (climbable; the arm points at the road)"
+  },
+  {
+   "name": "pole_museum_road_light_2",
+   "map_m": [
+    -1831.76,
+    -547.47,
+    0.0
+   ],
+   "game": [
+    -7176,
+    0,
+    -11253
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "height_m": 7.2,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00480000",
+   "note": "Museum Road street light on the lake side (climbable; the arm points at the road)"
+  },
+  {
+   "name": "pole_museum_road_light_3",
+   "map_m": [
+    -1868.82,
+    -573.04,
+    0.0
+   ],
+   "game": [
+    -10882,
+    0,
+    -8696
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "height_m": 7.2,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00480000",
+   "note": "Museum Road street light on the lake side (climbable; the arm points at the road)"
+  },
+  {
+   "name": "pole_museum_road_light_4",
+   "map_m": [
+    -1906.29,
+    -597.19,
+    0.0
+   ],
+   "game": [
+    -14629,
+    0,
+    -6281
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "height_m": 7.2,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00480000",
+   "note": "Museum Road street light on the lake side (climbable; the arm points at the road)"
+  },
+  {
+   "name": "pole_museum_road_light_5",
+   "map_m": [
+    -1941.77,
+    -624.7,
+    0.0
+   ],
+   "game": [
+    -18177,
+    0,
+    -3530
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "height_m": 7.2,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00480000",
+   "note": "Museum Road street light on the lake side (climbable; the arm points at the road)"
+  },
+  {
+   "name": "pole_museum_road_light_6",
+   "map_m": [
+    -1971.64,
+    -657.52,
+    0.0
+   ],
+   "game": [
+    -21164,
+    0,
+    -248
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "height_m": 7.2,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00480000",
+   "note": "Museum Road street light on the lake side (climbable; the arm points at the road)"
+  },
+  {
+   "name": "pole_museum_road_light_7",
+   "map_m": [
+    -1995.16,
+    -695.67,
+    0.0
+   ],
+   "game": [
+    -23516,
+    0,
+    3567
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "height_m": 7.2,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00480000",
+   "note": "Museum Road street light on the lake side (climbable; the arm points at the road)"
+  },
+  {
+   "name": "pole_cypress_1",
+   "map_m": [
+    -1949.0,
+    -706.0,
+    -0.72
+   ],
+   "game": [
+    -18900,
+    -72,
+    4600
+   ],
+   "floor_m": -0.72,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 6.7,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00430000",
+   "note": null
+  },
+  {
+   "name": "pole_cypress_2",
+   "map_m": [
+    -1925.0,
+    -724.5,
+    -0.46
+   ],
+   "game": [
+    -16500,
+    -46,
+    6450
+   ],
+   "floor_m": -0.46,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 6.9,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00450000",
+   "note": null
+  },
+  {
+   "name": "pole_cypress_3",
+   "map_m": [
+    -1852.0,
+    -617.5,
+    0.0
+   ],
+   "game": [
+    -9200,
+    0,
+    -4250
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 8.2,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00520000",
+   "note": null
+  },
+  {
+   "name": "pole_cypress_4",
+   "map_m": [
+    -1733.16,
+    -791.4,
+    -0.65
+   ],
+   "game": [
+    2684,
+    -65,
+    13140
+   ],
+   "floor_m": -0.65,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 7.0,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00460000",
+   "note": null
+  },
+  {
+   "name": "pole_cypress_5",
+   "map_m": [
+    -1808.98,
+    -575.98,
+    -0.57
+   ],
+   "game": [
+    -4898,
+    -57,
+    -8402
+   ],
+   "floor_m": -0.57,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 8.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00530000",
+   "note": null
+  },
+  {
+   "name": "pole_cypress_6",
+   "map_m": [
+    -1861.55,
+    -834.8,
+    -0.43
+   ],
+   "game": [
+    -10155,
+    -43,
+    17480
+   ],
+   "floor_m": -0.43,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 7.9,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x004F0000",
+   "note": null
+  },
+  {
+   "name": "pole_cypress_7",
+   "map_m": [
+    -1566.91,
+    -698.38,
+    -0.58
+   ],
+   "game": [
+    19309,
+    -58,
+    3838
+   ],
+   "floor_m": -0.58,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 7.0,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00460000",
+   "note": null
+  },
+  {
+   "name": "pole_cypress_8",
+   "map_m": [
+    -1864.62,
+    -730.48,
+    -0.89
+   ],
+   "game": [
+    -10462,
+    -89,
+    7048
+   ],
+   "floor_m": -0.89,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 6.7,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00430000",
+   "note": null
+  },
+  {
+   "name": "pole_cypress_9",
+   "map_m": [
+    -1715.72,
+    -825.1,
+    -0.71
+   ],
+   "game": [
+    4428,
+    -71,
+    16510
+   ],
+   "floor_m": -0.71,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 7.0,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00460000",
+   "note": null
+  },
+  {
+   "name": "pole_cypress_10",
+   "map_m": [
+    -1548.61,
+    -654.78,
+    -0.63
+   ],
+   "game": [
+    21139,
+    -63,
+    -522
+   ],
+   "floor_m": -0.63,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 6.6,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00420000",
+   "note": null
+  },
+  {
+   "name": "pole_cypress_11",
+   "map_m": [
+    -1695.89,
+    -852.14,
+    -0.62
+   ],
+   "game": [
+    6411,
+    -62,
+    19214
+   ],
+   "floor_m": -0.62,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 8.8,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00580000",
+   "note": null
+  },
+  {
+   "name": "pole_cypress_12",
+   "map_m": [
+    -1830.42,
+    -821.25,
+    -0.62
+   ],
+   "game": [
+    -7042,
+    -62,
+    16125
+   ],
+   "floor_m": -0.62,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 7.2,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00480000",
+   "note": null
+  },
+  {
+   "name": "pole_cypress_13",
+   "map_m": [
+    -1864.7,
+    -764.65,
+    -0.52
+   ],
+   "game": [
+    -10470,
+    -52,
+    10465
+   ],
+   "floor_m": -0.52,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 7.6,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x004C0000",
+   "note": null
+  },
+  {
+   "name": "pole_cypress_14",
+   "map_m": [
+    -1729.94,
+    -860.89,
+    -0.73
+   ],
+   "game": [
+    3006,
+    -73,
+    20089
+   ],
+   "floor_m": -0.73,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 7.5,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x004B0000",
+   "note": null
+  },
+  {
+   "name": "pole_cypress_15",
+   "map_m": [
+    -1752.35,
+    -862.82,
+    -0.73
+   ],
+   "game": [
+    765,
+    -73,
+    20282
+   ],
+   "floor_m": -0.73,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 8.5,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00550000",
+   "note": null
+  },
+  {
+   "name": "pole_cypress_16",
+   "map_m": [
+    -1861.52,
+    -809.93,
+    -0.57
+   ],
+   "game": [
+    -10152,
+    -57,
+    14993
+   ],
+   "floor_m": -0.57,
+   "clearance_m": 0.39,
+   "headroom_m": null,
+   "height_m": 8.9,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00590000",
+   "note": null
+  }
+ ],
+ "secret_spots": [
+  {
+   "name": "secret_barn2017_addon_box",
+   "map_m": [
+    -1906.16,
+    -502.55,
+    5.48
+   ],
+   "game": [
+    -14616,
+    548,
+    -15745
+   ],
+   "floor_m": 5.48,
+   "clearance_m": 0.15,
+   "headroom_m": 1.81,
+   "source": "lake_alice_shore.py barn2017_addon_box_east"
+  },
+  {
+   "name": "secret_kiosk_roof",
+   "map_m": [
+    -1890.38,
+    -588.02,
+    2.95
+   ],
+   "game": [
+    -13038,
+    295,
+    -7198
+   ],
+   "floor_m": 2.95,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "source": "lake_alice_shore.py kiosk_roof"
+  },
+  {
+   "name": "secret_baughman_aisle_ne",
+   "map_m": [
+    -1952.23,
+    -726.94,
+    4.0
+   ],
+   "game": [
+    -19223,
+    400,
+    6694
+   ],
+   "floor_m": 4.0,
+   "clearance_m": 1.06,
+   "headroom_m": null,
+   "source": "lake_alice_shore.py baughman_aisle_ne"
+  },
+  {
+   "name": "secret_east_overlook",
+   "map_m": [
+    -1514.17,
+    -628.1,
+    0.6
+   ],
+   "game": [
+    24583,
+    60,
+    -3190
+   ],
+   "floor_m": 0.6,
+   "clearance_m": 2.27,
+   "headroom_m": null,
+   "source": "lake_alice_shore.py east_overlook_platform"
+  },
+  {
+   "name": "secret_pavilion_roof",
+   "map_m": [
+    -1734.1,
+    -655.3,
+    4.0
+   ],
+   "game": [
+    2590,
+    400,
+    -470
+   ],
+   "floor_m": 4.0,
+   "clearance_m": 3.0,
+   "headroom_m": null
+  },
+  {
+   "name": "secret_deepest_hole",
+   "map_m": [
+    -1700.0,
+    -605.0,
+    -4.96
+   ],
+   "game": [
+    6000,
+    -496,
+    -5500
+   ],
+   "floor_m": -4.96,
+   "clearance_m": 3.0,
+   "headroom_m": null
+  }
+ ],
+ "dressing": {
+  "observation_deck": {
+   "map_m": [
+    -1734.1,
+    -655.3
+   ],
+   "top_m": 0.2,
+   "inradius_m": 4.5,
+   "edge0_bearing_deg": 324.3,
+   "railed_edges": [
+    2,
+    3,
+    5,
+    6
+   ],
+   "open_edges": [
+    0,
+    1,
+    4,
+    7
+   ],
+   "bed_m": -3.08,
+   "pavilion": {
+    "eave_m": 3.0,
+    "apex_m": 4.0,
+    "roof_half_m": 2.3,
+    "post_half_m": 1.5
+   },
+   "octagon_m": [
+    [
+     -1735.22,
+     -650.56
+    ],
+    [
+     -1738.24,
+     -652.74
+    ],
+    [
+     -1738.84,
+     -656.42
+    ],
+    [
+     -1736.66,
+     -659.44
+    ],
+    [
+     -1732.98,
+     -660.04
+    ],
+    [
+     -1729.96,
+     -657.86
+    ],
+    [
+     -1729.36,
+     -654.18
+    ],
+    [
+     -1731.54,
+     -651.16
+    ]
+   ]
+  },
+  "nest": {
+   "map_m": [
+    -1723.0,
+    -529.3
+   ],
+   "bog_floor_m": -0.11,
+   "top_m": 0.29,
+   "radius_m": 1.4,
+   "island": "small bog (w118249560)",
+   "note": "gator nest mound (mud + sticks, three eggs) on the small bog: the \"island nest\" of design acts 2 and 5 (the bog uf_lake_missions.lua uses); the mother gator goes beside it"
+  },
+  "basking_gators": [
+   {
+    "name": "basking_gator_0",
+    "map_m": [
+     -1812.0,
+     -607.0
+    ],
+    "heading_deg": 120.0,
+    "length_m": 3.0,
+    "floor_m": [
+     -0.16,
+     -0.16
+    ],
+    "top_m": 0.13,
+    "waterline": false,
+    "note": "west bog (act 1's route), snout to the lake centre"
+   },
+   {
+    "name": "basking_gator_1",
+    "map_m": [
+     -1660.0,
+     -497.0
+    ],
+    "heading_deg": 200.0,
+    "length_m": 3.4,
+    "floor_m": [
+     -0.18,
+     -0.14
+    ],
+    "top_m": 0.15,
+    "waterline": false,
+    "note": "north-east bog, east of its coin ring"
+   },
+   {
+    "name": "basking_gator_2",
+    "map_m": [
+     -1782.02,
+     -551.68
+    ],
+    "heading_deg": 130.3,
+    "length_m": 2.8,
+    "floor_m": [
+     -0.59,
+     -0.3
+    ],
+    "top_m": -0.15,
+    "waterline": true,
+    "note": "north shore waterline (bask_gator_14)"
+   },
+   {
+    "name": "basking_gator_3",
+    "map_m": [
+     -1647.93,
+     -703.97
+    ],
+    "heading_deg": 323.2,
+    "length_m": 3.2,
+    "floor_m": [
+     -0.61,
+     -0.34
+    ],
+    "top_m": -0.16,
+    "waterline": true,
+    "note": "south-east shore waterline (bask_gator_08)"
+   },
+   {
+    "name": "basking_gator_4",
+    "map_m": [
+     -1913.95,
+     -723.64
+    ],
+    "heading_deg": 355.2,
+    "length_m": 2.9,
+    "floor_m": [
+     -0.66,
+     -0.32
+    ],
+    "top_m": -0.19,
+    "waterline": true,
+    "note": "south-west shore by the Baughman lawn (bask_gator_02)"
+   },
+   {
+    "name": "basking_gator_5",
+    "map_m": [
+     -1620.1,
+     -464.07
+    ],
+    "heading_deg": 195.8,
+    "length_m": 3.0,
+    "floor_m": [
+     -0.61,
+     -0.09
+    ],
+    "top_m": -0.0,
+    "waterline": true,
+    "note": "north-east cove waterline (bask_gator_12)"
+   }
+  ],
+  "basking_gators_skipped": []
+ },
+ "trees": {
+  "in_lake": 1088,
+  "trail": 65,
+  "vista": [
+   95.0,
+   5.0,
+   17.0
+  ],
+  "thinned": 977,
+  "kept_play": 310,
+  "kept_shore": 355,
+  "kept_margin": 221,
+  "keep_fraction": {
+   "play": 0.5,
+   "shore": 0.7,
+   "margin": 0.3
+  },
+  "shore_band_m": 25.0
+ },
+ "pickups": {
+  "coins_placed": 176,
+  "coins_with_goombas": 181,
+  "objects": 109,
+  "by_kind": {
+   "coin": 48,
+   "coin_ring": 6,
+   "1up": 3,
+   "heart": 5,
+   "coin_line": 16,
+   "goomba": 5,
+   "pole": 26
+  },
+  "skipped": [],
+  "items": [
+   {
+    "kind": "coin",
+    "name": "lily pad coin north_shallows 00",
+    "map_m": [
+     -1784.2,
+     -603.4,
+     0.2
+    ],
+    "game": [
+     -2420,
+     20,
+     -5660
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin north_shallows 01",
+    "map_m": [
+     -1779.79,
+     -604.31,
+     0.2
+    ],
+    "game": [
+     -1979,
+     20,
+     -5569
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin north_shallows 02",
+    "map_m": [
+     -1776.58,
+     -607.32,
+     0.2
+    ],
+    "game": [
+     -1658,
+     20,
+     -5268
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin north_shallows 03",
+    "map_m": [
+     -1772.09,
+     -607.4,
+     0.2
+    ],
+    "game": [
+     -1209,
+     20,
+     -5260
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin north_shallows 04",
+    "map_m": [
+     -1768.99,
+     -610.67,
+     0.2
+    ],
+    "game": [
+     -899,
+     20,
+     -4933
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin north_shallows 06",
+    "map_m": [
+     -1761.99,
+     -617.96,
+     0.2
+    ],
+    "game": [
+     -199,
+     20,
+     -4204
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin north_shallows 07",
+    "map_m": [
+     -1757.92,
+     -619.88,
+     0.2
+    ],
+    "game": [
+     208,
+     20,
+     -4012
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin north_shallows 08",
+    "map_m": [
+     -1756.5,
+     -624.26,
+     0.2
+    ],
+    "game": [
+     350,
+     20,
+     -3574
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin north_shallows 09",
+    "map_m": [
+     -1752.82,
+     -627.02,
+     0.2
+    ],
+    "game": [
+     718,
+     20,
+     -3298
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin north_shallows 10",
+    "map_m": [
+     -1751.84,
+     -631.51,
+     0.2
+    ],
+    "game": [
+     816,
+     20,
+     -2849
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin north_shallows 11",
+    "map_m": [
+     -1748.04,
+     -634.45,
+     0.2
+    ],
+    "game": [
+     1196,
+     20,
+     -2555
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin north_shallows 12",
+    "map_m": [
+     -1746.7,
+     -639.17,
+     0.2
+    ],
+    "game": [
+     1330,
+     20,
+     -2083
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin north_shallows 13",
+    "map_m": [
+     -1742.7,
+     -641.99,
+     0.2
+    ],
+    "game": [
+     1730,
+     20,
+     -1801
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin north_shallows 14",
+    "map_m": [
+     -1739.52,
+     -647.77,
+     0.2
+    ],
+    "game": [
+     2048,
+     20,
+     -1223
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin east_marsh 00",
+    "map_m": [
+     -1559.0,
+     -606.0,
+     0.2
+    ],
+    "game": [
+     20100,
+     20,
+     -5400
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin east_marsh 01",
+    "map_m": [
+     -1562.64,
+     -608.97,
+     0.2
+    ],
+    "game": [
+     19736,
+     20,
+     -5103
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin east_marsh 02",
+    "map_m": [
+     -1567.23,
+     -608.74,
+     0.2
+    ],
+    "game": [
+     19277,
+     20,
+     -5126
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin east_marsh 03",
+    "map_m": [
+     -1570.02,
+     -612.53,
+     0.2
+    ],
+    "game": [
+     18998,
+     20,
+     -4747
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin east_marsh 04",
+    "map_m": [
+     -1574.82,
+     -612.4,
+     0.2
+    ],
+    "game": [
+     18518,
+     20,
+     -4760
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin east_marsh 05",
+    "map_m": [
+     -1577.81,
+     -616.28,
+     0.2
+    ],
+    "game": [
+     18219,
+     20,
+     -4372
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin east_marsh 06",
+    "map_m": [
+     -1582.71,
+     -616.2,
+     0.2
+    ],
+    "game": [
+     17729,
+     20,
+     -4380
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin south_arm 00",
+    "map_m": [
+     -1849.0,
+     -770.0,
+     0.2
+    ],
+    "game": [
+     -8900,
+     20,
+     11000
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin south_arm 01",
+    "map_m": [
+     -1847.44,
+     -774.22,
+     0.2
+    ],
+    "game": [
+     -8744,
+     20,
+     11422
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin south_arm 02",
+    "map_m": [
+     -1848.89,
+     -778.59,
+     0.2
+    ],
+    "game": [
+     -8889,
+     20,
+     11859
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin south_arm 03",
+    "map_m": [
+     -1846.36,
+     -782.55,
+     0.2
+    ],
+    "game": [
+     -8636,
+     20,
+     12255
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "lily pad coin south_arm 05",
+    "map_m": [
+     -1846.22,
+     -791.34,
+     0.2
+    ],
+    "game": [
+     -8622,
+     20,
+     13134
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "deep hole 1 coins",
+    "map_m": [
+     -1696.0,
+     -605.0,
+     -4.74
+    ],
+    "game": [
+     6400,
+     -474,
+     -5500
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "deep hole 2 coins",
+    "map_m": [
+     -1788.0,
+     -680.0,
+     -4.34
+    ],
+    "game": [
+     -2800,
+     -434,
+     2000
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "deep hole 3 coins",
+    "map_m": [
+     -1626.0,
+     -640.0,
+     -4.6
+    ],
+    "game": [
+     13400,
+     -460,
+     -2000
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "deep hole 4 coins",
+    "map_m": [
+     -1876.0,
+     -680.0,
+     -4.35
+    ],
+    "game": [
+     -11600,
+     -435,
+     2000
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up bottom of the deepest hole",
+    "map_m": [
+     -1700.0,
+     -605.0,
+     -4.36
+    ],
+    "game": [
+     6000,
+     -436,
+     -5500
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "deck coin edge 0",
+    "map_m": [
+     -1736.03,
+     -652.62,
+     0.8
+    ],
+    "game": [
+     2397,
+     80,
+     -738
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "deck coin edge 1",
+    "map_m": [
+     -1737.36,
+     -654.77,
+     0.8
+    ],
+    "game": [
+     2264,
+     80,
+     -523
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "deck coin edge 7",
+    "map_m": [
+     -1733.57,
+     -652.04,
+     0.8
+    ],
+    "game": [
+     2643,
+     80,
+     -796
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart observation deck",
+    "map_m": [
+     -1737.19,
+     -654.8,
+     1.2
+    ],
+    "game": [
+     2281,
+     120,
+     -520
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up observation deck pavilion roof",
+    "map_m": [
+     -1734.1,
+     -655.3,
+     4.6
+    ],
+    "game": [
+     2590,
+     460,
+     -470
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "north boardwalk coins",
+    "map_m": [
+     -1843.3,
+     -608.79,
+     0.5
+    ],
+    "game": [
+     -8330,
+     50,
+     -5121
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 58.7,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart north boardwalk (west end)",
+    "map_m": [
+     -1850.06,
+     -612.9,
+     1.0
+    ],
+    "game": [
+     -9006,
+     100,
+     -4710
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "kiosk roof coin",
+    "map_m": [
+     -1890.38,
+     -588.02,
+     3.55
+    ],
+    "game": [
+     -13038,
+     355,
+     -7198
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "lakeshore trail coins w427713644 30",
+    "map_m": [
+     -1841.51,
+     -592.76,
+     0.0
+    ],
+    "game": [
+     -8151,
+     0,
+     -6724
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 326.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "lakeshore trail coins w427713644 70",
+    "map_m": [
+     -1859.09,
+     -581.37,
+     0.0
+    ],
+    "game": [
+     -9909,
+     0,
+     -7863
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 293.8,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "lakeshore trail coins w427713645 30",
+    "map_m": [
+     -1875.65,
+     -588.58,
+     0.0
+    ],
+    "game": [
+     -11565,
+     0,
+     -7142
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 101.1,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "lakeshore trail coins w427713645 70",
+    "map_m": [
+     -1855.61,
+     -597.9,
+     0.0
+    ],
+    "game": [
+     -9561,
+     0,
+     -6210
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 151.9,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "museum road coins 1",
+    "map_m": [
+     -1813.46,
+     -534.38,
+     0.0
+    ],
+    "game": [
+     -5346,
+     0,
+     -12562
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 234.4,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "museum road coins 3",
+    "map_m": [
+     -1887.55,
+     -585.12,
+     0.0
+    ],
+    "game": [
+     -12755,
+     0,
+     -7488
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 237.2,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "museum road coins 5",
+    "map_m": [
+     -1956.7,
+     -641.11,
+     -0.0
+    ],
+    "game": [
+     -19670,
+     0,
+     -1889
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 222.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "field coins from the spawn",
+    "map_m": [
+     -1888.5,
+     -548.79,
+     0.0
+    ],
+    "game": [
+     -12850,
+     0,
+     -11121
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 150.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "field coins by the bat barns",
+    "map_m": [
+     -1884.0,
+     -530.0,
+     -0.0
+    ],
+    "game": [
+     -12400,
+     0,
+     -13000
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "garden bed coin 0",
+    "map_m": [
+     -1853.86,
+     -479.75,
+     1.05
+    ],
+    "game": [
+     -9386,
+     105,
+     -18025
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "garden bed coin 1",
+    "map_m": [
+     -1848.36,
+     -479.64,
+     1.05
+    ],
+    "game": [
+     -8836,
+     105,
+     -18036
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "garden bed coin 2",
+    "map_m": [
+     -1842.86,
+     -479.54,
+     1.05
+    ],
+    "game": [
+     -8286,
+     105,
+     -18046
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "gardens coins",
+    "map_m": [
+     -1841.96,
+     -473.47,
+     -0.0
+    ],
+    "game": [
+     -8196,
+     0,
+     -18653
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "bat barns coin barn2010_roof_east_arm",
+    "map_m": [
+     -1879.63,
+     -509.22,
+     8.81
+    ],
+    "game": [
+     -11963,
+     881,
+     -15078
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "bat barns coin barn2010_roof_south_arm",
+    "map_m": [
+     -1883.62,
+     -513.72,
+     8.8
+    ],
+    "game": [
+     -12362,
+     880,
+     -14628
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "bat barns coin barn2017_roof_east",
+    "map_m": [
+     -1907.11,
+     -502.6,
+     8.48
+    ],
+    "game": [
+     -14711,
+     848,
+     -15740
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "bat barns coin fence1_top_south",
+    "map_m": [
+     -1883.18,
+     -515.29,
+     2.6
+    ],
+    "game": [
+     -12318,
+     260,
+     -14471
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up 2017 barn east add-on box",
+    "map_m": [
+     -1906.16,
+     -502.55,
+     6.08
+    ],
+    "game": [
+     -14616,
+     608,
+     -15745
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "west bog coins",
+    "map_m": [
+     -1806.5,
+     -611.5,
+     -0.14
+    ],
+    "game": [
+     -4650,
+     -14,
+     -4850
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 60.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "north-east bog coins",
+    "map_m": [
+     -1666.5,
+     -493.5,
+     -0.12
+    ],
+    "game": [
+     9350,
+     -12,
+     -16650
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart north-east bog",
+    "map_m": [
+     -1670.0,
+     -493.5,
+     0.88
+    ],
+    "game": [
+     9000,
+     88,
+     -16650
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "small bog coin",
+    "map_m": [
+     -1717.5,
+     -529.5,
+     0.41
+    ],
+    "game": [
+     4250,
+     41,
+     -13050
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "cypress 2 knee coin",
+    "map_m": [
+     -1924.3,
+     -725.98,
+     0.15
+    ],
+    "game": [
+     -16430,
+     15,
+     6598
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "cypress 5 knee coin",
+    "map_m": [
+     -1808.62,
+     -577.93,
+     0.2
+    ],
+    "game": [
+     -4862,
+     20,
+     -8207
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "cypress 8 knee coin",
+    "map_m": [
+     -1863.93,
+     -732.5,
+     0.28
+    ],
+    "game": [
+     -10393,
+     28,
+     7250
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "cypress 11 knee coin",
+    "map_m": [
+     -1696.04,
+     -854.46,
+     0.36
+    ],
+    "game": [
+     6396,
+     36,
+     19446
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "cypress 14 knee coin",
+    "map_m": [
+     -1730.48,
+     -862.4,
+     0.2
+    ],
+    "game": [
+     2952,
+     20,
+     20240
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "baughman lawn coins (line)",
+    "map_m": [
+     -1946.68,
+     -731.9,
+     0.0
+    ],
+    "game": [
+     -18668,
+     0,
+     7190
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart Baughman lawn",
+    "map_m": [
+     -1946.68,
+     -731.9,
+     1.0
+    ],
+    "game": [
+     -18668,
+     100,
+     7190
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "baughman coin baughman_aisle_ne",
+    "map_m": [
+     -1952.23,
+     -726.94,
+     4.6
+    ],
+    "game": [
+     -19223,
+     460,
+     6694
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "baughman coin baughman_aisle_nw",
+    "map_m": [
+     -1968.14,
+     -732.35,
+     4.6
+    ],
+    "game": [
+     -20814,
+     460,
+     7235
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "baughman coin baughman_aisle_se",
+    "map_m": [
+     -1949.54,
+     -734.86,
+     4.6
+    ],
+    "game": [
+     -18954,
+     460,
+     7486
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "baughman coin baughman_vestibule_roof",
+    "map_m": [
+     -1968.78,
+     -736.98,
+     4.3
+    ],
+    "game": [
+     -20878,
+     430,
+     7698
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "footbridge coins",
+    "map_m": [
+     -1964.73,
+     -712.54,
+     0.55
+    ],
+    "game": [
+     -20473,
+     55,
+     5254
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 156.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "east overlook coin",
+    "map_m": [
+     -1514.17,
+     -628.1,
+     1.2
+    ],
+    "game": [
+     24583,
+     120,
+     -3190
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart east overlook steps",
+    "map_m": [
+     -1517.81,
+     -631.67,
+     1.0
+    ],
+    "game": [
+     24219,
+     100,
+     -2833
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "shallows coins 0",
+    "map_m": [
+     -1556.0,
+     -640.0,
+     -0.68
+    ],
+    "game": [
+     20400,
+     -68,
+     -2000
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "shallows coins 1",
+    "map_m": [
+     -1585.0,
+     -700.0,
+     -0.75
+    ],
+    "game": [
+     17500,
+     -75,
+     4000
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "shallows coins 3",
+    "map_m": [
+     -1720.0,
+     -862.0,
+     -0.63
+    ],
+    "game": [
+     4000,
+     -63,
+     20200
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba 0",
+    "map_m": [
+     -1870.0,
+     -533.0,
+     -0.0
+    ],
+    "game": [
+     -11000,
+     0,
+     -12700
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 250.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba 1",
+    "map_m": [
+     -1918.0,
+     -553.0,
+     0.0
+    ],
+    "game": [
+     -15800,
+     0,
+     -10700
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 60.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba 2",
+    "map_m": [
+     -1862.0,
+     -582.0,
+     0.0
+    ],
+    "game": [
+     -10200,
+     0,
+     -7800
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 300.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba 3",
+    "map_m": [
+     -1940.0,
+     -748.0,
+     -0.0
+    ],
+    "game": [
+     -18000,
+     0,
+     8800
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 30.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba 5",
+    "map_m": [
+     -1640.0,
+     -760.0,
+     -0.0
+    ],
+    "game": [
+     12000,
+     0,
+     10000
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "pole",
+    "name": "pole bat_cam_2010",
+    "map_m": [
+     -1878.85,
+     -514.01,
+     0.0
+    ],
+    "game": [
+     -11885,
+     0,
+     -14599
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00530000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 8.3,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole bat_cam_2017",
+    "map_m": [
+     -1905.46,
+     -500.9,
+     0.0
+    ],
+    "game": [
+     -14546,
+     0,
+     -15910
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00530000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 8.3,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole museum_road_light_0",
+    "map_m": [
+     -1758.57,
+     -495.09,
+     0.0
+    ],
+    "game": [
+     143,
+     0,
+     -16491
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00480000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 7.2,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole museum_road_light_1",
+    "map_m": [
+     -1795.16,
+     -521.28,
+     0.0
+    ],
+    "game": [
+     -3516,
+     0,
+     -13872
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00480000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 7.2,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole museum_road_light_2",
+    "map_m": [
+     -1831.76,
+     -547.47,
+     0.0
+    ],
+    "game": [
+     -7176,
+     0,
+     -11253
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00480000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 7.2,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole museum_road_light_3",
+    "map_m": [
+     -1868.82,
+     -573.04,
+     0.0
+    ],
+    "game": [
+     -10882,
+     0,
+     -8696
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00480000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 7.2,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole museum_road_light_4",
+    "map_m": [
+     -1906.29,
+     -597.19,
+     0.0
+    ],
+    "game": [
+     -14629,
+     0,
+     -6281
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00480000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 7.2,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole museum_road_light_5",
+    "map_m": [
+     -1941.77,
+     -624.7,
+     0.0
+    ],
+    "game": [
+     -18177,
+     0,
+     -3530
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00480000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 7.2,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole museum_road_light_6",
+    "map_m": [
+     -1971.64,
+     -657.52,
+     0.0
+    ],
+    "game": [
+     -21164,
+     0,
+     -248
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00480000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 7.2,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole museum_road_light_7",
+    "map_m": [
+     -1995.16,
+     -695.67,
+     0.0
+    ],
+    "game": [
+     -23516,
+     0,
+     3567
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00480000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 7.2,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_1",
+    "map_m": [
+     -1949.0,
+     -706.0,
+     -0.72
+    ],
+    "game": [
+     -18900,
+     -72,
+     4600
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00430000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 6.7,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_2",
+    "map_m": [
+     -1925.0,
+     -724.5,
+     -0.46
+    ],
+    "game": [
+     -16500,
+     -46,
+     6450
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00450000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 6.9,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_3",
+    "map_m": [
+     -1852.0,
+     -617.5,
+     -0.0
+    ],
+    "game": [
+     -9200,
+     0,
+     -4250
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00520000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 8.2,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_4",
+    "map_m": [
+     -1733.16,
+     -791.4,
+     -0.65
+    ],
+    "game": [
+     2684,
+     -65,
+     13140
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00460000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 7.0,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_5",
+    "map_m": [
+     -1808.98,
+     -575.98,
+     -0.57
+    ],
+    "game": [
+     -4898,
+     -57,
+     -8402
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00530000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 8.3,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_6",
+    "map_m": [
+     -1861.55,
+     -834.8,
+     -0.43
+    ],
+    "game": [
+     -10155,
+     -43,
+     17480
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x004F0000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 7.9,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_7",
+    "map_m": [
+     -1566.91,
+     -698.38,
+     -0.58
+    ],
+    "game": [
+     19309,
+     -58,
+     3838
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00460000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 7.0,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_8",
+    "map_m": [
+     -1864.62,
+     -730.48,
+     -0.89
+    ],
+    "game": [
+     -10462,
+     -89,
+     7048
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00430000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 6.7,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_9",
+    "map_m": [
+     -1715.72,
+     -825.1,
+     -0.71
+    ],
+    "game": [
+     4428,
+     -71,
+     16510
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00460000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 7.0,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_10",
+    "map_m": [
+     -1548.61,
+     -654.78,
+     -0.63
+    ],
+    "game": [
+     21139,
+     -63,
+     -522
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00420000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 6.6,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_11",
+    "map_m": [
+     -1695.89,
+     -852.14,
+     -0.62
+    ],
+    "game": [
+     6411,
+     -62,
+     19214
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00580000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 8.8,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_12",
+    "map_m": [
+     -1830.42,
+     -821.25,
+     -0.62
+    ],
+    "game": [
+     -7042,
+     -62,
+     16125
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00480000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 7.2,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_13",
+    "map_m": [
+     -1864.7,
+     -764.65,
+     -0.52
+    ],
+    "game": [
+     -10470,
+     -52,
+     10465
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x004C0000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 7.6,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_14",
+    "map_m": [
+     -1729.94,
+     -860.89,
+     -0.73
+    ],
+    "game": [
+     3006,
+     -73,
+     20089
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x004B0000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 7.5,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_15",
+    "map_m": [
+     -1752.35,
+     -862.82,
+     -0.73
+    ],
+    "game": [
+     765,
+     -73,
+     20282
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00550000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 8.5,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole cypress_16",
+    "map_m": [
+     -1861.52,
+     -809.93,
+     -0.57
+    ],
+    "game": [
+     -10152,
+     -57,
+     14993
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00590000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 8.9,
+    "hanging": false
+   }
+  ]
+ },
+ "checks": []
+}

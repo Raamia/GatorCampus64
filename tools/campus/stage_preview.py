@@ -305,6 +305,11 @@ def default_views(S):
     H = S.data["extent_half_m"]
     if getattr(S, "key", "hub") == "swamp":
         return swamp_views(S)
+    if getattr(S, "key", "hub") == "reitz_eng":
+        return reitz_views(S)
+    if getattr(S, "key", "hub") == "lake_alice":      # Course 3 (stage_lake.py)
+        import stage_lake
+        return stage_lake.lake_views(S)
     return [
         {"name": "hub_topdown", "ortho": 2 * H, "fog": False, "px": 1600},
         # where Lakitu starts: 9 m behind Mario at the spawn, looking the way he faces (190 deg)
@@ -396,4 +401,58 @@ def swamp_views(S):
         {"name": "swamp_bull_gator", "cam": (-601.0, 4.0, 3.0), "target": (-608.1, -2.9, 1.2), "vfov": 55.0},
         {"name": "swamp_stadium_road", "cam": (-600.0, -25.0, 3.0), "target": (-480.0, -10.0, 12.0), "vfov": 60.0},
         {"name": "swamp_edge_check", "cam": (-830.0, 410.0, 2.2), "target": (-900.0, 470.0, 6.0)},
+    ]
+
+
+def reitz_views(S):
+    """Course 2, Reitz Union & Engineering (map metres, flat at grade 0): the arrival (Lakitu's first
+    view), the Reitz Union (north lawn, ravine climb, tower roof, South Terrace / Liberty Pond), Weil
+    Hall + the Engineering Clock Tower, Malachowsky Hall (plaza, glass stair, atrium, roof), the act
+    anchors (wind vent, ravine boardwalk, Gator Corner patio) and aerials."""
+    H = S.data["extent_half_m"]
+    sp = getattr(S, "spawn", None) or {"pos": (-446.0, -229.0), "facing": 68.0}
+    f = math.radians(sp["facing"])
+    fx, fy = math.sin(f), math.cos(f)
+    x, y = sp["pos"]
+    return [
+        {"name": "reitz_topdown", "ortho": 2 * H, "fog": False, "px": 1600},
+        # where Lakitu starts: ~10 m behind Mario at the spawn, looking the way he faces (up the North Lawn)
+        {"name": "reitz_arrival", "cam": (x - fx * 10.0, y - fy * 10.0, 3.4), "target": (x + fx * 70.0, y + fy * 70.0, 7.0),
+         "vfov": 50.0},
+        {"name": "reitz_arrival_wide", "cam": (x - fx * 22.0 - fy * 6.0, y - fy * 22.0 + fx * 6.0, 11.0),
+         "target": (x + fx * 60.0, y + fy * 60.0 - 25.0, 6.0), "vfov": 60.0},
+        # the Reitz Union
+        {"name": "reitz_union_from_lawn", "cam": (-392.0, -196.0, 4.0), "target": (-440.0, -262.0, 15.0), "vfov": 55.0},
+        {"name": "reitz_union_ravine_climb", "cam": (-506.0, -303.0, 4.5), "target": (-502.0, -281.0, 9.0),
+         "vfov": 62.0},
+        {"name": "reitz_union_tower_from_podium", "cam": (-472.0, -278.0, 20.0), "target": (-436.0, -258.0, 27.0),
+         "vfov": 62.0},
+        {"name": "reitz_union_roof_view", "cam": (-436.5, -268.0, 30.5), "target": (-330.0, -170.0, 0.0), "vfov": 62.0},
+        {"name": "reitz_amphitheater_liberty_pond", "cam": (-340.0, -352.0, 4.0), "target": (-388.0, -300.0, 6.0),
+         "vfov": 60.0},
+        # Weil Hall + the Engineering Clock Tower
+        {"name": "reitz_weil_clock_tower_plaza", "cam": (-604.0, -92.0, 4.0), "target": (-555.0, -50.0, 11.0),
+         "vfov": 60.0},
+        {"name": "reitz_weil_north_facade", "cam": (-472.0, -12.0, 4.0), "target": (-505.0, -50.0, 14.0), "vfov": 60.0},
+        {"name": "reitz_weil_roof_run", "cam": (-438.0, -78.0, 20.0), "target": (-482.0, -50.0, 22.0), "vfov": 62.0},
+        # Malachowsky Hall
+        {"name": "reitz_malachowsky_plaza", "cam": (-452.0, -468.0, 4.0), "target": (-440.0, -525.0, 16.0),
+         "vfov": 58.0},
+        {"name": "reitz_malachowsky_glass_stair", "cam": (-398.0, -486.0, 14.0), "target": (-420.0, -512.0, 18.0),
+         "vfov": 62.0},
+        {"name": "reitz_malachowsky_atrium", "cam": (-442.0, -518.5, 2.0), "target": (-462.0, -533.0, 17.0),
+         "vfov": 75.0},
+        {"name": "reitz_from_malachowsky_roof", "cam": (-428.0, -514.0, 36.0), "target": (-440.0, -300.0, 12.0),
+         "vfov": 55.0},
+        # act anchors
+        {"name": "reitz_cooling_towers_wind_vent", "cam": (-474.0, -152.0, 3.5), "target": (-494.0, -131.0, 6.0),
+         "vfov": 62.0},
+        {"name": "reitz_ravine_boardwalk", "cam": (-522.0, -326.0, 3.0), "target": (-560.0, -362.0, 1.0), "vfov": 62.0},
+        {"name": "reitz_gator_corner", "cam": (-628.0, -132.0, 3.0), "target": (-655.0, -102.0, 3.0), "vfov": 60.0},
+        # aerials
+        {"name": "reitz_aerial_se", "cam": (-240.0, -470.0, 180.0), "target": (-465.0, -285.0, 0.0), "vfov": 52.0},
+        {"name": "reitz_aerial_nw", "cam": (-700.0, -60.0, 170.0), "target": (-455.0, -320.0, 0.0), "vfov": 52.0},
+        {"name": "reitz_aerial_low_north", "cam": (-380.0, -120.0, 55.0), "target": (-450.0, -300.0, 12.0),
+         "vfov": 58.0},
+        {"name": "reitz_edge_check", "cam": (-720.0, -545.0, 2.2), "target": (-790.0, -600.0, 6.0)},
     ]

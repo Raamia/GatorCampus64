@@ -1,5 +1,5 @@
 -- Integration tests: the WHOLE mod (every mods/sgl64/*.lua, in coopdx's load order) plus the REAL
--- generated level scripts (levels/castle_grounds, levels/bob, levels/wf) in the offline coopdx simulation.
+-- generated level scripts (levels/castle_grounds, levels/bob, levels/wf, levels/jrb) in the offline coopdx simulation.
 -- The built stages are the ones on disk (Sim.built_on_disk), as in the game.
 -- What it pins down (docs/flow.md):
 --   * every file loads with strict globals in strcmp order; no two files register the same chat
@@ -41,17 +41,18 @@ local function test(name, fn)
     print((failed == before and "PASS " or "FAIL ") .. name)
 end
 
-local HUB, BOB, WF = C.LEVEL_CASTLE_GROUNDS, C.LEVEL_BOB, C.LEVEL_WF
+local HUB, BOB, WF, JRB = C.LEVEL_CASTLE_GROUNDS, C.LEVEL_BOB, C.LEVEL_WF, C.LEVEL_JRB
 local MS = { IDLE = 0, WAITING = 1, INTRO = 2, ACTIVE = 3, SUCCESS = 4, FAILED = 5, DONE = 6 }
 local HUB_SCRIPT = assert(Sim.level_script("castle_grounds"), "levels/castle_grounds/script.c")
 local BOB_SCRIPT = assert(Sim.level_script("bob"), "levels/bob/script.c")
 local WF_SCRIPT = Sim.level_script("wf")      -- nil until course 2 is built
+local JRB_SCRIPT = Sim.level_script("jrb")    -- nil until course 3 is built
 -- the contract table of docs/flow.md section 2 (door -> slot, level, stars to open)
 local CONTRACT = {
     { door = 1, slot = "bob", level = "LEVEL_BOB", stars = 0 },
     { door = 2, slot = "wf", level = "LEVEL_WF", stars = 2 },
-    { door = 3, slot = "jrb", level = "LEVEL_JRB", stars = 8 },
-    { door = 4, slot = "ccm", level = "LEVEL_CCM", stars = 5 },
+    { door = 3, slot = "jrb", level = "LEVEL_JRB", stars = 5 },
+    { door = 4, slot = "ccm", level = "LEVEL_CCM", stars = 8 },
     { door = 5, slot = "bbh", level = "LEVEL_BBH", stars = 14 },
     { door = 6, slot = "ttc", level = "LEVEL_TTC", stars = 20 },
 }
@@ -434,6 +435,120 @@ test("door 2: The Hub (2 stars) -> Reitz & Engineering act 1 -> star -> back out
     w:connect("Friend")
     w:step(3)
     check(env.sgl_next_stage().key == "swamp", "2 players online: next = The Swamp (its co-op act 3)")
+end)
+
+test("door 3: Newell Hall (5 stars) -> Lake Alice act 1 -> star -> back outside the Newell Hall door", function()
+    if JRB_SCRIPT == nil then
+        print("  (levels/jrb not built: skipped)")
+        return
+    end
+    -- 4 stars (Swamp acts 1-3, Reitz act 1): built but LOCKED
+    local w = full_world({ starFlags = { [C.COURSE_BOB] = 0x07, [C.COURSE_WF] = 0x01 } })
+    local H = w:connect("Host")
+    H.strStorage.friend = "josh"
+    w:step(3)
+    w:warp(H, HUB, 1, 0)
+    w:seconds(2)
+    local env = H.env
+    check(env.sgl_stage_ready(env.sgl_stage_by_door(3)), "levels/jrb is ours: course 3 is built")
+    check(env.sgl_total_stars() == 4, "4 stars")
+    check(env.sgl_next_stage() ~= env.sgl_stage_by_door(3), "Lake Alice locked: the NEXT stage is not Lake Alice")
+    at_door(H, 3, 600)
+    w:step(2)
+    check(Sim.hud_has(H, "LAKE ALICE") and Sim.hud_has(H, "LOCKED %- 5 stars %(you have 4%)"), "door 3 label: LOCKED")
+    at_door(H, 3, 50)
+    w:step(3)
+    check(Sim.find(H.popups, "Locked!.-LAKE ALICE needs 5 stars %(you have 4%)") ~= nil, "locked popup")
+    check(H.action ~= C.ACT_DISAPPEARED and H.level == HUB, "a locked door does not open")
+
+    -- 6 stars (every playable act of courses 1-2): open, and the hint points at Newell Hall
+    w = full_world({ starFlags = { [C.COURSE_BOB] = 0x07, [C.COURSE_WF] = 0x07 } })
+    H = w:connect("Host")
+    H.strStorage.friend = "josh"
+    -- Lake Alice's gator stand-ins (act 1's lurking gators, act 2's line) read gObjectAnimations (a real v1.5.1
+    -- global: smlua_cobject.c exposes gGlobalObjectAnimations under that name; the sushi field is in
+    -- smlua_anim_utils.h) and call obj_init_animation: the stubs of test_lake_missions.lua's prep, which tests
+    -- the acts themselves.
+    H.stubs.gObjectAnimations = { swoop_seg6_anims_060070D0 = "ANIM:swoop", sushi_seg5_anims_0500AE54 = "ANIM:sushi" }
+    H.stubs.obj_init_animation = function(o, i) raw(o)._anim = i end
+    w:step(3)
+    w:warp(H, HUB, 1, 0)
+    w:seconds(2)
+    env = H.env
+    check(env.sgl_total_stars() == 6, "6 stars")
+    check(Sim.find(H.popups, "Walk into the Newell Hall door to enter LAKE ALICE!") ~= nil, "first hub visit: door hint names Newell Hall")
+    check(Sim.hud_has(H, "NEXT: LAKE ALICE") and Sim.hud_has(H, "NEWELL HALL door"), "hub NEXT panel: Lake Alice")
+    local model3
+    for _, o in ipairs(Sim.objects_with(H, env.id_bhvSglDoor)) do
+        if ((raw(o).oBehParams >> 24) & 0xFF) == 3 then model3 = raw(o)._model end
+    end
+    check(model3 == C.E_MODEL_STAR, "door 3: gold star (open)")
+    at_door(H, 3, 600)
+    w:step(2)
+    check(Sim.hud_has(H, "LAKE ALICE") and Sim.hud_has(H, "Walk in!"), "door 3 label: Walk in!")
+    at_door(H, 3, 50)
+    w:step(2)
+    local m = H.ms[0]
+    check(H.action == C.ACT_DISAPPEARED and raw(m).actionArg == (C.WARP_OP_WARP_OBJECT << 16) + 2, "door 3: vanilla warp-object entry")
+    local used = raw(m).usedObj
+    check(used ~= nil and ((raw(used).oBehParams >> 16) & 0xFF) == 0x13, "usedObj carries hub node 0x13")
+    local lv, area, node = follow_node(HUB_SCRIPT, 0x13)
+    check(lv == JRB and area == 1 and node == 0x0A, "hub 0x13 -> JRB 0x0A")
+    local acts = Sim.selectable_acts(w.starFlags[C.COURSE_JRB] or 0)
+    check(#acts == 1 and acts[1] == 1, "act select offers act 1 only")
+    H.action = C.ACT_IDLE
+    w:warp(H, lv, area, acts[1])
+    local sp0 = H.levelSpawns[0x0A]
+    check(sp0 and sp0.bhv == "bhvSpinAirborneWarp", "JRB entry spawn 0x0A (spin-in)")
+    H.pos.x, H.pos.y, H.pos.z = sp0.x, sp0.y - 100, sp0.z
+    w:step(5)
+    check(Sim.hud_has(H, "LAKE ALICE %- ACT 1") and Sim.hud_has(H, "BOARDWALK WELCOME"), "act 1 banner")
+    check(Sim.stars_of(H, 0) == 0, "no level-script star: the mission spawns act 1's")
+    local P = env.LAKE_POINTS
+    check(sp0.x == P.spawn_field.x and sp0.z == P.spawn_field.z, "LAKE_POINTS.spawn_field = the level script's spawn")
+    Sim.cmd(H, "campus", "where")
+    -- the spawn in campus map metres (stages.json lake_alice centre (-1760, -660): x = X/100 - 1760, y = -Z/100 - 660)
+    local mx, my = sp0.x / 100 - 1760, -sp0.z / 100 - 660
+    check(Sim.find(H.chat, string.format("campus map: %.1f m east, %.1f m north", mx, my):gsub("%-", "%%-"):gsub("%.", "%%.")) ~= nil,
+        string.format("/campus where: campus map metres at the spawn (%.1f, %.1f)", mx, my))
+    check(math.abs(mx - (-1893.0)) < 0.6 and math.abs(my - (-541.0)) < 0.6, "JRB spawn on the bat-house field (shore module spawn_field)")
+    w:seconds(3.5)
+    check(state(H) == MS.ACTIVE, "mission active")
+    H.pos.x, H.pos.y, H.pos.z = P.deck.x, P.deck.y, P.deck.z
+    w:step(4)
+    check(state(H) == MS.SUCCESS, "on the lake-centre deck: success")
+    w:step(3)
+    check(#H.starSpawns == 1 and Sim.stars_of(H, 0) == 1, "one star, id 0")
+    local star = Sim.objects_with(H, C.id_bhvStarSpawnCoordinates)[1]
+    Sim.run_hooks(H, C.HOOK_ON_INTERACT, H.ms[0], star, C.INTERACT_STAR_OR_KEY, true)
+    w.starFlags[C.COURSE_JRB] = (w.starFlags[C.COURSE_JRB] or 0) | (1 << ((raw(star).oBehParams >> 24) & 0xFF))
+    raw(star).activeFlags = C.ACTIVE_FLAG_DEACTIVATED
+    w:step(3)
+    check(state(H) == MS.DONE, "mission DONE")
+    -- star exit: JRB 0xF0 -> hub 0x23, outside the Newell Hall door
+    local lv2, a2, n2 = follow_node(JRB_SCRIPT, 0xF0)
+    check(lv2 == HUB and n2 == 0x23, "JRB 0xF0 -> hub 0x23")
+    w:warp(H, lv2, a2, 0)
+    local sp = H.levelSpawns[n2]
+    check(sp ~= nil and sp.bhv == "bhvPaintingStarCollectWarp", "hub 0x23 is a star-return spawn")
+    local d = HUB_DOORS[3]
+    check(math.sqrt((sp.x - d.x) ^ 2 + (sp.z - d.z) ^ 2) < 400, "0x23 is right outside the Newell Hall door")
+    H.pos.x, H.pos.y, H.pos.z = sp.x, sp.y - 80, sp.z
+    H.face.y = sp.yaw
+    w:step(5)
+    check(H.action ~= C.ACT_DISAPPEARED, "landing outside Newell Hall does not re-enter the door")
+    check(env.sgl_total_stars() == 7, "7 stars")
+    acts = Sim.selectable_acts(w.starFlags[C.COURSE_JRB])
+    check(acts[#acts] == 2 and env.sgl_mission_get(JRB, 2).id == "lake_gator_hop", "next visit: act 2 = GATOR HOP")
+    check(env.sgl_next_stage().key == "alice", "the hint stays on Lake Alice (act 2)")
+    -- death / Exit course: JRB 0xF1 -> hub 0x33, the same spot
+    local lv3, _, n3 = follow_node(JRB_SCRIPT, 0xF1)
+    check(lv3 == HUB and n3 == 0x33 and H.levelSpawns[0x33].bhv == "bhvPaintingDeathWarp"
+        and H.levelSpawns[0x33].x == sp.x and H.levelSpawns[0x33].z == sp.z, "JRB 0xF1 -> hub 0x33 (same spot)")
+    -- /campus alice 2 from the host: straight into act 2 (the door lock and act select skipped, as for the other stages)
+    Sim.cmd(H, "campus", "alice 2")
+    w:step(3)
+    check(H.level == JRB and H.act == 2, "/campus alice 2 -> Lake Alice act 2")
 end)
 
 test("coming soon acts: free roam notice, no mission, no star, no invite; exit works", function()
