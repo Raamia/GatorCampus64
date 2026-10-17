@@ -2,7 +2,7 @@
 
 ## Goal
 
-Make Super Gatorlator 64 a complete single-player game. Every required course, star, unlock, and ending must work with one local player and no network connection. Co-op can make some activities faster or more playful, but it never blocks the campaign.
+Make Super Gatorlator 64 a complete single-player game. Every required course, star, unlock, and ending must work with one local player and no network connection. Co-op is out of scope for this pass and can be added later.
 
 ## Core loop
 
@@ -25,19 +25,17 @@ The moment-to-moment play stays focused on Mario movement: running, long jumps, 
 | Library West After Dark | 11 stars | All-Nighter; Coffee Run; Quiet Hours solo route | Nighttime climbing, a timed delivery, and hide-from-the-librarian play |
 | Century Tower + Final Exam | 30 stars | Finals Week Ascent; The Final Exam | The campaign finale and graduation ending |
 
-The existing ten solo missions remain the campaign backbone. Give each of the five currently co-op-only missions a one-player ruleset so the act remains available solo:
+The existing ten solo missions remain the campaign backbone. Replace the five currently co-op-only acts with solo-designed missions for this pass:
 
-- **Gator Chomp Chorus:** stand on one center pad and hit the beat sequence; extra pads add optional bonus points.
-- **Remote Robotics Lab:** use floor buttons to move the crane one level at a time, then ride it through the atrium.
-- **Bat Census at Dusk:** carry a clipboard between the three census stations and record bat waves before the timer ends.
-- **Group Study Room Booking:** activate the kiosks in a timed route, with a generous solo window and a short reset on mistakes.
-- **Quiet Hours Hide-and-Seek:** evade a predictable patrol route, collect three library cards, and reach the circulation desk.
-
-With friends present, preserve the original simultaneous-button, operator/rider, staffed-station, and hide-and-seek variants. Solo and co-op should share the same star and act; the mission adapts to the number of players in the act.
+- **Stadium Rhythm Challenge:** hit a ground-pound beat sequence across one connected set of pads.
+- **Robotics Lab Trial:** steer a self-running crane through a platforming route using floor controls.
+- **Bat Census at Dusk:** follow bat waves between three stations and record them before the timer ends.
+- **Study Room Route:** activate kiosks across multiple floors in a timed route, with a short reset on mistakes.
+- **Quiet Hours Patrol:** evade a predictable librarian route, collect three library cards, and reach the circulation desk.
 
 ## Star economy
 
-The current door thresholds (2, 5, 8, and 11 stars) work once all five co-op acts have solo routes. Make the full 30-star finale reachable without grinding:
+The current door thresholds (2, 5, 8, and 11 stars) work once the five replacement solo acts are built. Make the full 30-star finale reachable without grinding:
 
 - 15 course mission stars: three reliable, authored stars per campus course.
 - 15 optional course stars: token hunts, races, 100-coin stars, and secret routes.
@@ -53,6 +51,18 @@ The exact final count can stay at the existing 52-star target. Before tuning the
 - Optional stars add tighter times, harder routes, red-coin searches, and 100-coin challenges.
 - Personal bests and completion times are stored locally. A failed attempt never erases a collected star.
 
+## Leaderboard loop
+
+The leaderboard is an optional replay feature, not a campaign gate:
+
+1. After a mission star is collected, show a results card with completion time, retries, and local personal best.
+2. Save the result locally immediately, whether or not the player is signed in or online.
+3. If the player opts in to account sync, submit the result to DeepSpace and show its current rank when available.
+4. Put a **Record Board** in the Plaza hub. It shows the top times for each mission and the player's own best, with a filter for friends or global entries if those scopes are available.
+5. Let the player replay any completed act directly from its course door to beat a personal best or leaderboard time.
+
+Use separate categories for each mission so a short course is not compared against a long one. Keep the posted metric simple: fastest valid completion time, with retries as a tie-breaker. Store a run ID, mission ID, duration, retry count, and game version; don't upload email or other personal profile fields. Treat the board as casual unless the game adds server-side validation against cheated times. A leaderboard position never grants a required star or blocks an unlock.
+
 ## Ending
 
 At 30 stars, the Century Tower opens for Finals Week Ascent. Reach the bell chamber, enter the exam arena, defeat the original campus-themed boss, collect the Grand Star, and return to the Plaza for a short graduation scene featuring the playable friends. The credits should acknowledge the team and OpenStreetMap contributors.
@@ -66,7 +76,8 @@ Because this project is an sm64coopdx Lua mod, the Lua code should not be treate
 ## Ship order
 
 1. Verify the ten existing solo missions from a fresh save.
-2. Add and test solo rulesets for the five co-op-only acts.
+2. Replace the five co-op-only acts with solo-designed missions and test them.
 3. Confirm the 11-star Library West gate and 30-star finale can be reached from a one-player save.
 4. Add the finale and graduation sequence.
-5. Add optional DeepSpace result sync after the local campaign loop is stable.
+5. Add the local Record Board and personal-best results cards.
+6. Add optional DeepSpace leaderboard sync after the local campaign loop is stable.
