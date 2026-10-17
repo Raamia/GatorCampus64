@@ -13,28 +13,28 @@
  "background": "OCEAN_SKY",
  "kit_tris": {
   "total": {
-   "visual": 145453,
-   "collision": 11523
+   "visual": 145386,
+   "collision": 11549
   },
   "by_group": {
    "F1": {
-    "visual": 45170,
-    "collision": 3570
+    "visual": 45245,
+    "collision": 3586
    },
    "F2": {
-    "visual": 19746,
+    "visual": 19838,
     "collision": 1924
    },
    "F3": {
-    "visual": 17372,
+    "visual": 17292,
     "collision": 1310
    },
    "F4": {
-    "visual": 16740,
-    "collision": 1274
+    "visual": 16742,
+    "collision": 1284
    },
    "F5": {
-    "visual": 18454,
+    "visual": 18406,
     "collision": 900
    },
    "roof": {
@@ -54,7 +54,7 @@
     "collision": 0
    },
    "backdrop": {
-    "visual": 15334,
+    "visual": 15226,
     "collision": 0
    }
   }
@@ -107,12 +107,12 @@
   "note": "stage entry spawn (bhvSpinAirborneWarp, MARIO_POS) in the lobby just inside the north doors, facing the atrium; the object hovers 1 m above this floor"
  },
  "pickups": {
-  "coins_placed": 203,
-  "coins_with_goombas": 208,
-  "objects": 102,
+  "coins_placed": 204,
+  "coins_with_goombas": 209,
+  "objects": 103,
   "by_kind": {
    "coin_line": 25,
-   "coin": 62,
+   "coin": 63,
    "coin_ring": 2,
    "heart": 4,
    "1up": 4,
@@ -1381,6 +1381,26 @@
     "acts": null
    },
    {
+    "kind": "coin",
+    "name": "F4 terrace planter coin 9",
+    "map_m": [
+     -35.9,
+     -106.0,
+     13.22
+    ],
+    "game": [
+     2370,
+     1322,
+     710
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
     "kind": "coin_ring",
     "name": "roof ring",
     "map_m": [
@@ -2283,8 +2303,8 @@
     "solid": 30
    },
    "F2": {
-    "glass": 11,
-    "solid": 14
+    "glass": 10,
+    "solid": 15
    },
    "F3": {
     "glass": 0,
@@ -2339,7 +2359,7 @@
    "buildings": 21,
    "trees": 110,
    "way_segments": 858,
-   "ground_rects": 340
+   "ground_rects": 325
   },
   "dressing": {
    "F1": 79,
@@ -2349,16 +2369,23 @@
    "F5": 4
   },
   "dressing_skipped": 5,
+  "ribbon_steps": {
+   "cuts": 1,
+   "end_caps": 5,
+   "soffit_end_caps": 4,
+   "depth_clipped": 0
+  },
   "collision_clean": {
-   "back_to_back_dropped": 341,
+   "back_to_back_dropped": 337,
    "doubled_dropped": 8,
    "default_inside_nocam_kept": 0
   },
-  "finish_swaps": 3662,
-  "uv_splits": 646,
+  "finish_swaps": 3696,
+  "f1_core_brick_polys": 67,
+  "uv_splits": 637,
   "coplanar_overlap": {
-   "m2": 1.69,
-   "pairs": 106,
+   "m2": 1.6,
+   "pairs": 98,
    "worst": [
     [
      0.04,
@@ -2504,13 +2531,23 @@
   "furnish_skipped": [],
   "bench120_dressed": [
    [
-    -79.6,
+    -79.8,
     -71.6,
     [
-     -80.96,
+     -81.13,
      -72.93,
-     -78.27,
-     -70.3
+     -78.5,
+     -70.24
+    ]
+   ],
+   [
+    -79.8,
+    -67.9,
+    [
+     -81.13,
+     -69.23,
+     -78.5,
+     -66.54
     ]
    ]
   ],
@@ -2544,17 +2581,17 @@
  "objects": {
   "marston F1 visual": {
    "group": "F1",
-   "tris": 23538,
+   "tris": 23600,
    "collision": false
   },
   "marston F1 collision": {
    "group": "F1",
-   "tris": 1895,
+   "tris": 1903,
    "collision": true
   },
   "marston F2 visual": {
    "group": "F2",
-   "tris": 10504,
+   "tris": 10550,
    "collision": false
   },
   "marston F2 collision": {
@@ -2564,7 +2601,7 @@
   },
   "marston F3 visual": {
    "group": "F3",
-   "tris": 9318,
+   "tris": 9278,
    "collision": false
   },
   "marston F3 collision": {
@@ -2574,17 +2611,17 @@
   },
   "marston F4 visual": {
    "group": "F4",
-   "tris": 8884,
+   "tris": 8885,
    "collision": false
   },
   "marston F4 collision": {
    "group": "F4",
-   "tris": 647,
+   "tris": 652,
    "collision": true
   },
   "marston F5 visual": {
    "group": "F5",
-   "tris": 9813,
+   "tris": 9789,
    "collision": false
   },
   "marston F5 collision": {
@@ -2629,12 +2666,12 @@
   },
   "marston backdrop visual": {
    "group": "backdrop",
-   "tris": 12760,
+   "tris": 12667,
    "collision": false
   }
  },
  "export_hygiene": {
-  "geometry_mode_lines_sorted": 418,
+  "geometry_mode_lines_sorted": 430,
   "trailing_ws_lines": 4,
   "max_abs_vertex": 20518,
   "common0_jump_link": true
@@ -2642,27 +2679,27 @@
  "collision_repair": {
   "area_1": {
    "vertices": [
-    8913,
-    8902
+    8937,
+    8926
    ],
    "welded_vertices": 11,
    "collapsed_tris": 0,
-   "tjunction_splits": 423,
+   "tjunction_splits": 435,
    "triangles": [
-    11342,
-    11765
+    11368,
+    11803
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [],
-  "collision_tris": 11765,
-  "render_tris": 145453,
+  "collision_tris": 11803,
+  "render_tris": 145386,
   "lua_names": [],
   "fog_patched": [
-   114,
-   114
+   117,
+   117
   ]
  },
  "level_dir": "mods/sgl64/levels/ccm",

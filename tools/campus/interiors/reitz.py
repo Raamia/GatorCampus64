@@ -346,7 +346,9 @@ def zone_style(z):
         if zid == "arredondo_cafe":
             s.update(floor="int_ru_carpet_olive", wall="int_ru_wall_cream", light="down", spacing=2.8)
         else:
-            s.update(floor="int_ru_carpet_grey", wall="int_ru_wall_greyblue", light="down", spacing=2.6)
+            # fix round 5 (fidelity-4, improvement 2; ru_os_matthews_1/3/4): white baseboards (were black)
+            s.update(floor="int_ru_carpet_grey", wall="int_ru_wall_greyblue", light="down", spacing=2.6,
+                     base="int_ru_white")
     elif t == "hotel_room":
         # fix round 4 (fidelity-4 pass, improvement 8): white walls (ru_hotel_room, ru_hotel_suite; the cream baked a
         # dull beige-grey)
@@ -481,6 +483,10 @@ def window_spec(fid, a, b, zone):
     if fid in ("L5", "L6"):
         return (0.9, 3.2, "ribbon")
     if fid == "L4":
+        if zid == "matthews_suite" and abs(b[1] - a[1]) < 0.3 * abs(b[0] - a[0]) and my < -287.5:
+            # fix round 5 (fidelity-4, improvement 4; ru_os_matthews_1): the suite's long south wall is solid pale
+            # blue-grey with a row of four frames; the glass is the west end wall only
+            return None
         return (0.25, clear - 0.35, "curtain")
     if fid == "LL":
         return None
@@ -713,8 +719,9 @@ def _entrance_door_pair(V, a, b, z0, leaf_h=2.45, top=GLASS_DOOR_H):
     def at(s_):
         return (a[0] + dx * s_, a[1] + dy * s_)
     # fix round 2 (design): the door bank is the first thing seen on arrival: clear glass (alpha 0.14, neutral)
-    R.panel(V, a, b, z0, z0 + top, "int_ru_glass_clear")
-    R.panel(V, b, a, z0, z0 + top, "int_ru_glass_clear")
+    # fix round 5 (design, improvement 3): the leaves (no collision) take the faint glass (alpha 0.08, no sheen)
+    R.panel(V, a, b, z0, z0 + top, "int_ru_glass_faint")
+    R.panel(V, b, a, z0, z0 + top, "int_ru_glass_faint")
     st, hl = 0.11, 0.035                    # stile width, half depth
     for k in range(n):
         s0, s1 = w * k / n, w * (k + 1) / n
@@ -784,6 +791,17 @@ def threshold(V, C, a, b, n, z, depth, mat):
     q = R.ccw(q)
     V.poly([(p[0], p[1], z) for p in q], mat, ao=1.0)
     C.poly([(p[0], p[1], z) for p in q], K.COL)
+
+
+# fix round 5 (fidelity-2): the Level 1 outdoor dining terrace (outdoor_dining_area) opens from the south hall
+# through its west glass door (plan door x -431.1, y -337.0 .. -335.3): a walkable doorway (it was a closed door and
+# the terrace an unreachable empty strip). The north door (y -318.4) stays closed.
+TERRACE_OPEN_DOORS = [(-431.1, -337.0, -431.1, -335.3)]
+
+
+def _terrace_door(fid, mid):
+    return fid == "L1" and any(R.seg_point_dist(mid, (od[0], od[1]), (od[2], od[3])) < 0.6
+                               for od in TERRACE_OPEN_DOORS)
 
 
 def entrance_at(fid, a, b):
@@ -1263,6 +1281,21 @@ def build_floor(RZ, F):
                 zn.style["accent_wall"] = (a_, b_)
                 zn.style["front_runs"] = [(r["pa"], r["pb"]) for r, _s, _l in ln["runs"]]
                 continue
+        if zn.id in ACCENT_DIR:
+            # fix round 5 (fidelity-4, improvement 1; ru_os_2355_2365): the slate-blue is a named END wall (the rows
+            # face it down the room's length); 2365 had picked its 14.9 m long wall (turned 90 degrees)
+            ux_, uy_ = ACCENT_DIR[zn.id]
+            for r in runs_all:
+                for side in ("L", "R"):
+                    cls, z_ = r[side]
+                    if cls != "W" or z_ is not zn:
+                        continue
+                    Lr = math.dist(r["pa"], r["pb"])
+                    if Lr < 2.5 or abs((r["pb"][0] - r["pa"][0]) * ux_ + (r["pb"][1] - r["pa"][1]) * uy_) > 0.3 * Lr:
+                        continue
+                    sc = (r["pa"][0] + r["pb"][0]) / 2 * ux_ + (r["pa"][1] + r["pb"][1]) / 2 * uy_
+                    if best is None or sc > best[3] + 0.3 or (abs(sc - best[3]) <= 0.3 and Lr > best[0]):
+                        best = (Lr, r, side, sc)
         # fix round 4: FRONT_DOOR_WALL rooms take a door-carrying run first, else the corridor-facing rule
         for door_front in ((True, False) if zn.id in FRONT_DOOR_WALL else (False,)):
             if best is not None:
@@ -1368,7 +1401,22 @@ def build_floor(RZ, F):
         own = [zn for zn, zz in zone_zc if zz == zc]
         other = [o.poly for o, zz in zone_zc if zz != zc
                  and any(o.area < zn.area and _bb_overlap(o.bb, zn.bb) for zn in own)]
-        rects, exact = R.rect_cover(polys, 3.0, avoid=avoid + other)
+        # fix round 5 (design pass, improvement 7): a LOWER ceiling's 3 m cover cells spilled into the taller zone
+        # next to it (the 2.7 m elevator-car ceilings put a 2.7 m invisible soffit over the L6 hotel corridor at
+        # x -444..-438, y -268.5..-267; the camera ended above it). Taller neighbours are avoided too, so the cells
+        # along them are exact pieces of the low zone only (a higher ceiling spilling over a lower one is harmless:
+        # the lower ceiling is found first). Such a low zone (smaller than a taller zone it touches) gets its exact
+        # triangulated outline instead of 3 m cells.
+        low = [k for k, zn in enumerate(own)
+               if any(o.area > zn.area and zz > zc + 0.05 and _bb_overlap(o.bb, zn.bb) for o, zz in zone_zc)]
+        if low and len(own) == len(polys):
+            holes = [h for a in avoid + other for h in _convex_parts(a)]
+            for k in low:
+                for t_ in R.triangulate(polys[k]):
+                    for pc in R.subtract([R.ccw(t_)], holes):
+                        CC.append([(x, y, zc) for x, y in reversed(R.ccw(pc))])
+            polys = [p for k, p in enumerate(polys) if k not in low]
+        rects, exact = R.rect_cover(polys, 3.0, avoid=avoid + other) if polys else ([], [])
         for (x0, y0, x1, y1) in rects:
             CC.append([(x0, y0, zc), (x0, y1, zc), (x1, y1, zc), (x1, y0, zc)])
         for pc in exact:
@@ -1427,6 +1475,14 @@ def _closed_look(F):
             keep.add(corr[0] if corr else mine[0][0])
             cand.update(i for i, _ in mine)
         out = cand - keep
+    if F.id == "G":
+        # fix round 5 (fidelity-3; ru_os_g330): the G325 / G330 connecting door (plan x -368.4..-366.2, y -271.3) is a
+        # closed wood leaf under an EXIT sign; it was an open 2.2 m gap that showed G325's royal wall like a blue
+        # door. Both rooms keep their corridor doors.
+        for i, d in enumerate(F.doors):
+            m = ((d[0] + d[2]) / 2, (d[1] + d[3]) / 2)
+            if abs(m[0] + 367.3) < 0.4 and abs(m[1] + 271.3) < 0.3:
+                out.add(i)
     F._closed_look = out
     return out
 
@@ -1450,6 +1506,8 @@ def _wall_run(RZ, F, V, C, CW, pa, pb, left, right, doors, stats, accent=()):
         open_ext = any(R.seg_point_dist(((pa[0] + (pb[0] - pa[0]) * (d0 + d1) / 2 / RL),
                                           (pa[1] + (pb[1] - pa[1]) * (d0 + d1) / 2 / RL)), (od[0], od[1]), (od[2], od[3])) < 0.6
                        for e in ENTRANCES if e["floor"] == fid for od in e.get("open_doors", ()))
+        open_ext = open_ext or _terrace_door(fid, (pa[0] + (pb[0] - pa[0]) * (d0 + d1) / 2 / RL,
+                                                   pa[1] + (pb[1] - pa[1]) * (d0 + d1) / 2 / RL))
         if open_ext and ent is None:
             ent = True
         if kinds == {"W"} and di in _closed_look(F):
@@ -1522,17 +1580,66 @@ def _wall_run(RZ, F, V, C, CW, pa, pb, left, right, doors, stats, accent=()):
                     wall_face(V, fa, fb, z, z + h, "int_ru_glass_smoke", base="int_ru_black", holes=hh)
                     _rail_strip(V, fa, fb, z + GLASS_DOOR_H, z + GLASS_DOOR_H + 0.1, hs, nrm, mat="int_ru_black")
                 else:
-                    _rail_strip(V, fa, fb, z, z + 0.10, hs, nrm, mat="int_ru_black")
+                    # fix round 5 (fidelity-3 blocking; ru_es_oelrich_9188 / 9215 / 9352, ru_es_overview): seen from
+                    # INSIDE the arena the storefront is a solid near-black hex wall (the red-bench run and south of
+                    # the door bay; every inside photo is a dark room) with smoked glass only in the door / sign / TV
+                    # bay (y -296.0 .. -291.8). The faces are one-sided, so each side sees exactly one smoked layer
+                    # and the Game Room still looks into the blue-lit arena through its own.
+                    LF = math.dist(fa, fb)
+
+                    def _ps(s_, fa=fa, fb=fb, LF=LF):
+                        return (fa[0] + (fb[0] - fa[0]) * s_ / LF, fa[1] + (fb[1] - fa[1]) * s_ / LF)
+                    if abs(fb[1] - fa[1]) > 1.0:
+                        b0_, b1_ = sorted(((-296.0 - fa[1]) / (fb[1] - fa[1]) * LF, (-291.8 - fa[1]) / (fb[1] - fa[1]) * LF))
+                    else:
+                        b0_, b1_ = 0.0, LF
+                    b0_, b1_ = max(0.0, b0_), min(LF, b1_)
+                    for s0_, s1_, gl_ in ((0.0, b0_, False), (b0_, b1_, True), (b1_, LF, False)):
+                        if s1_ - s0_ < 0.05:
+                            continue
+                        hp_ = [(max(h_[0], s0_) - s0_, min(h_[1], s1_) - s0_, h_[2], h_[3]) for h_ in hh
+                               if h_[1] > s0_ and h_[0] < s1_]
+                        wall_face(V, _ps(s0_), _ps(s1_), z, z + h, "int_ru_glass_smoke" if gl_ else mat,
+                                  base="int_ru_black", holes=hp_)
                     _rail_strip(V, fa, fb, z + GLASS_DOOR_H, z + GLASS_DOOR_H + 0.1, hs, nrm, mat="int_ru_black")
             elif vest_glass:
                 # fix round 2 (design): the entrance vestibules get the clear glass and a thinner transom (the
                 # milky int_ru_glass x 2 layers hazed the atrium reveal on arrival; the 10 cm transom was the top
                 # L1 camera occluder after the trees)
                 vest_ = bool({zn.id, getattr(ozn, "id", None)} & GLASS_VESTIBULES)
-                wall_face(V, fa, fb, z, z + h, "int_ru_glass_clear" if vest_ else "int_ru_glass", base="int_ru_steel",
-                          holes=hh)
+                # fix round 5 (design, improvement 3): the north vestibule's inner bank is the second layer the
+                # arrival camera looks through (door leaves + bank): faint glass there; the south one stays as is
+                gm_ = ("int_ru_glass_faint" if "north_entrance" in {zn.id, getattr(ozn, "id", None)}
+                       else "int_ru_glass_clear") if vest_ else "int_ru_glass"
+                wall_face(V, fa, fb, z, z + h, gm_, base="int_ru_steel", holes=hh)
                 _rail_strip(V, fa, fb, z + GLASS_DOOR_H - (0.05 if vest_ else 0.0), z + GLASS_DOOR_H + (0.0 if vest_ else 0.1),
                             hs, nrm, mat="int_ru_steel")
+            elif zn.id in ROYAL_BAY and side in accent and st.get("accent"):
+                # fix round 5 (fidelity-3; ru_os_g325): the royal blue is a bay lit by a row of wall-washers, with the
+                # white wall (and the wood door) to its left and a white return to its right; the whole 11 m run
+                # was royal. White wall round the bay (it is a hole in the white face, so nothing is coplanar), the
+                # once-mapped scallop texture in the bay, the chair rail on the white parts only
+                LF = math.dist(fa, fb)
+                ux_, uy_ = (fb[0] - fa[0]) / LF, (fb[1] - fa[1]) / LF
+                q0_, q1_ = sorted(((p_[0] - fa[0]) * ux_ + (p_[1] - fa[1]) * uy_ for p_ in ROYAL_BAY[zn.id]))
+                q0_, q1_ = max(0.0, q0_), min(LF, q1_)
+                hb_ = min(h, st.get("ceil_h", h))             # the bay ends at the dropped ceiling (white above)
+                bay_ = [(q0_, q1_, z - 1.0, z + hb_)] if q1_ - q0_ > 0.05 else []
+                bse_ = st["base"] if st["base"] else base
+                wall_face(V, fa, fb, z, z + h, st["wall"], base=bse_, holes=hh + bay_)
+                _rail_strip(V, fa, fb, z + 0.88, z + 0.96, hs + bay_, nrm)
+                ba_ = (fa[0] + ux_ * q0_, fa[1] + uy_ * q0_)
+                bb_ = (fa[0] + ux_ * q1_, fa[1] + uy_ * q1_)
+                if bay_:
+                    wall_face(V, ba_, bb_, z, z + 0.10, bse_)
+                    R.panel(V, ba_, bb_, z + 0.10, z + hb_, "int_ru_wall_royal_wash", off=0.0)
+                # the three wall-washer cans in the ceiling in front of the bay (1.5 cm under the ceiling)
+                for k_ in range(3 if bay_ else 0):
+                    s_ = q0_ + (q1_ - q0_) * (k_ + 0.5) / 3
+                    cx_, cy_ = fa[0] + ux_ * s_ + nrm[0] * 0.55, fa[1] + uy_ * s_ + nrm[1] * 0.55
+                    zc_ = z + st.get("ceil_h", h)
+                    V.box(cx_ - 0.11, cy_ - 0.11, zc_ - 0.035, cx_ + 0.11, cy_ + 0.11, zc_ - 0.015, "int_ru_led",
+                          faces="-z+x-x+y-y", glow=True)
             else:
                 wall_face(V, fa, fb, z, z + h, mat, base=st["base"] if st["base"] else base, holes=hh)
             col_face(CW, fa, fb, z, z + h, holes=[x for x in hs],
@@ -1552,17 +1659,31 @@ def _wall_run(RZ, F, V, C, CW, pa, pb, left, right, doors, stats, accent=()):
                         my_ = fa[1] + (fb[1] - fa[1]) * (s0_ + s1_) / 2 / LF
                         if abs(my_ + 257.95) < 0.3 and -385.0 < mx_ < -376.0:
                             bank.append((s0_, s1_))
+                        elif _terrace_door(fid, (mx_, my_)):
+                            bank.append((s0_, s1_))
                 if bank:
                     LF = max(1e-6, math.dist(fa, fb))
                     cuts = [0.0]
                     for s0_, s1_ in sorted(bank):
                         cuts += [s0_, s1_]
                     cuts.append(LF)
+                    terr_ = zn.id == "l1_corridor_08" and ocls == "O"
                     for u0_, u1_ in zip(cuts[0::2], cuts[1::2]):
                         if u1_ - u0_ > 0.3:
                             _window(V, C, (fa[0] + (fb[0] - fa[0]) * u0_ / LF, fa[1] + (fb[1] - fa[1]) * u0_ / LF),
                                     (fa[0] + (fb[0] - fa[0]) * u1_ / LF, fa[1] + (fb[1] - fa[1]) * u1_ / LF),
-                                    z, win, nrm, t, ocls, glass="int_ru_glass_clear")
+                                    z, win, nrm, t, ocls, glass="int_ru_glass" if terr_ else "int_ru_glass_clear")
+                    if terr_:
+                        # fix round 5 (fidelity-2): over the open terrace doorway, transom glass from the door head
+                        # to the curtain glass head, in the pane plane (a steel bar at the door head)
+                        for s0_, s1_ in bank:
+                            ta_ = (fa[0] + (fb[0] - fa[0]) * s0_ / LF - nrm[0] * t,
+                                   fa[1] + (fb[1] - fa[1]) * s0_ / LF - nrm[1] * t)
+                            tb_ = (fa[0] + (fb[0] - fa[0]) * s1_ / LF - nrm[0] * t,
+                                   fa[1] + (fb[1] - fa[1]) * s1_ / LF - nrm[1] * t)
+                            R.quad_wall(V, ta_, tb_, z + GLASS_DOOR_H + 0.08, z + win[1], "int_ru_glass", ao=1.0)
+                            R.seg_box(V, ta_, tb_, 0.05, z + GLASS_DOOR_H, z + GLASS_DOOR_H + 0.08, "int_ru_steel",
+                                      faces="side", ao=0.95)
                 else:
                     _window(V, C, fa, fb, z, win, nrm, t, ocls)
             # chair rail in meeting rooms / corridors of the 2016 wing (photos: white chair rail at ~0.9 m)
@@ -1853,7 +1974,43 @@ def _balcony_edge(V, C, a, b, z, F):
         R.seg_box(V, (pa_[0] - nx * 0.06, pa_[1] - ny * 0.06), (pb_[0] - nx * 0.06, pb_[1] - ny * 0.06), 0.06, z,
                   z + 0.12, "int_ru_white", faces="sidetop")
         # collision: the railing block (both faces + ends; 30 cm thick: no vanilla push-through from behind)
-        R.col_seg(C, ra, rb, 0.15, z, z + RAIL_H + 0.06, K.COL_NOCAM)
+        # fix round 5 (technical blocking 1; spotfall_r): 30 cm is less than Mario's 0.5 m wall radius, so at the
+        # flight junctions (where the end caps let him close in on the floor face) the block's VOID face pulled him
+        # through it into the void (284 falls at three junctions). The block now runs 0.6 m thick, its extra 0.3 m
+        # outboard over the void (the floor face stays where it was), except where that outboard part would reach
+        # into a scissor flight's walkway (|offset from the flight axis| < 0.66 m): there it keeps the 0.3 m block.
+        thin = []
+        for gp, gd in STAIR_GAPS.get(F.id, ()):
+            if R.seg_point_dist(gp, a, b) > 3.0:
+                continue
+            c0_ = gd[0] * (a[1] - gp[1]) - gd[1] * (a[0] - gp[0])
+            c1_ = gd[0] * uy - gd[1] * ux
+            c2_ = gd[0] * ny - gd[1] * nx
+            if abs(c1_) < 1e-6:
+                continue
+            ends = []
+            for dd in (0.03, 0.33):
+                ends += [(-0.66 - c0_ - c2_ * dd) / c1_, (0.66 - c0_ - c2_ * dd) / c1_]
+            thin.append((min(ends), max(ends)))
+        segs = [(r0, r1, True)]
+        for t0, t1 in thin:
+            nsg = []
+            for q0, q1, thick in segs:
+                if not thick or t1 <= q0 or t0 >= q1:
+                    nsg.append((q0, q1, thick))
+                    continue
+                if t0 > q0:
+                    nsg.append((q0, t0, True))
+                nsg.append((max(q0, t0), min(q1, t1), False))
+                if t1 < q1:
+                    nsg.append((t1, q1, True))
+            segs = nsg
+        for q0, q1, thick in segs:
+            if q1 - q0 < 0.02:
+                continue
+            ca_ = (a[0] + ux * q0 + nx * (0.03 if thick else -0.12), a[1] + uy * q0 + ny * (0.03 if thick else -0.12))
+            cb_ = (a[0] + ux * q1 + nx * (0.03 if thick else -0.12), a[1] + uy * q1 + ny * (0.03 if thick else -0.12))
+            R.col_seg(C, ca_, cb_, 0.3 if thick else 0.15, z, z + RAIL_H + 0.06, K.COL_NOCAM)
     # collision: slab edge into the void
     C.poly([(a[0], a[1], z - SLAB), (b[0], b[1], z - SLAB), (b[0], b[1], z), (a[0], a[1], z)], K.COL)
 
@@ -2201,7 +2358,17 @@ PICKUPS = [
     {"kind": "1up", "name": "swamp boss 1-up", "pos": (-397.3, -271.1, 0.9)},
     # fix round 4 (design pass, improvement 2): a coin ring on the L1 outdoor dining terrace (the reward for finding
     # the way out through the south hall; >= 4 m of open reachable floor all round in the reachability flood)
-    {"kind": "coin_ring", "name": "outdoor dining terrace coins", "pos": (-422.1, -331.4, 6.0)},
+    # fix round 5 (technical improvement 2): the ring fell back to a 5-coin line that crossed the terrace glass (coin
+    # 3 behind it, coin 4 on the unreachable terrace): a line along the south hall, wholly inside it, by the glass
+    # fix round 5 (fidelity-2): the terrace opens from the south hall (TERRACE_OPEN_DOORS): the line moves out onto it,
+    # down the middle of its east leg (x -420.75 .. -418.1, clear of the south leg's patio tables)
+    {"kind": "coin_line", "name": "outdoor dining terrace coins", "pos": (-419.4, -326.0, 6.0), "facing": 0.0},
+    # fix round 5 (design pass, improvement 4 / fun): the Arts & Crafts Center had no pickups: a coin line down its
+    # east aisle (past the mural and the two studio doors) and a coin on the kiln lid (a small hop)
+    {"kind": "coin_line", "name": "acc east aisle coins", "pos": (-448.6, -257.0, -6.0), "facing": 0.0},
+    {"kind": "coin", "name": "acc kiln lid coin", "pos": (-457.9, -266.7, -4.92)},
+    # ... and a coin line down the Game Room's east window strip (past the table games)
+    {"kind": "coin_line", "name": "game room window coins", "pos": (-422.8, -309.0, 0.0), "facing": 0.0},
 ]
 # fix round 4 (design pass, improvement 2): Goomba spots checked in the reachability flood (>= 2 m of open floor all
 # round). NOT placed: build_interior.build_area (the area-module path, shared with other stages, not this module's
@@ -2292,9 +2459,22 @@ def _amphitheater(RZ, V):
             # glass, sky above it as in ru_dining_windows; they reached 5 m, ~95% of the glass), a smaller,
             # irregular top tier above
             zt = 8.6 + 0.6 * (k % 2)
-            V.box(tx - r1, ty - r1, 3.4, tx + r1, ty + r1, zt, "leaves_oak", faces="+x-x+y-y+z-z")
-            V.box(tx - r1 * 0.55, ty - r1 * 0.6, zt, tx + r1 * 0.6, ty + r1 * 0.5, zt + 0.9, "leaves_oak2",
-                  faces="+x-x+y-y+z")
+            # fix round 5 (fidelity-2; ru_dining_windows: separate rounded crowns with sky between them, not one
+            # flat-topped hedge): a lower body to 1.4 m under the old top, then three staggered crown lumps whose
+            # tops vary by ~1.3 m (no side face on another's plane)
+            # (round 5 iteration: the body narrower (0.8 r1) and lower, each tree's crown height varied, lumps
+            # spread over ~2 m: the first pass still read as one level band in the matched 'dining' view)
+            zt += (0.0, 0.9, -0.5, 0.5, -0.2, 0.7)[k % 6]
+            rb = r1 * 0.8
+            V.box(tx - rb, ty - rb, 3.4, tx + rb, ty + rb, zt - 2.0, "leaves_oak", faces="+x-x+y-y+z-z")
+            sg = 1 if k % 2 else -1
+            for (ox, oy, hu, top, mat, bot) in ((-0.38 * sg, -0.3, 0.52, zt + 0.2, "leaves_oak", 2.3),
+                                                (0.42 * sg, 0.34, 0.44, zt - 1.0, "leaves_oak2", 2.4),
+                                                (0.18 * sg, -0.52, 0.34, zt + 0.9, "leaves_oak2", 2.5)):
+                # closed lumps (they overhang the narrower body), each bottom at its own height (no shared plane)
+                cx_, cy_ = tx + ox * r1, ty + oy * r1
+                V.box(cx_ - hu * r1, cy_ - hu * r1 * 0.9, zt - bot, cx_ + hu * r1, cy_ + hu * r1 * 0.9, top, mat,
+                      faces="+x-x+y-y+z-z")
             placed.append((tx, ty))
         else:
             if not _tree_clear(RZ, tx, ty, 2.8, 3.0, 12.4, margin=0.3):
@@ -2308,7 +2488,8 @@ def _amphitheater(RZ, V):
         if math.dist((ax_, ay_), (bx_, by_)) < 4.0 or not _tree_clear(RZ, ux_, uy_, 2.0, 2.0, 7.8, margin=0.3):
             continue
         R.cyl(V, ux_, uy_, 0.22, -0.15, 3.0, "bark", n=5, top=False)
-        V.box(ux_ - 2.0, uy_ - 2.0, 2.4, ux_ + 2.0, uy_ + 2.0, 7.6, "leaves_oak2", faces="+x-x+y-y+z-z")
+        # fix round 5 (fidelity-2): the understory lower and narrower (its 7.6 m top bridged the crowns into a hedge)
+        V.box(ux_ - 1.6, uy_ - 1.6, 2.4, ux_ + 1.6, uy_ + 1.6, 6.9, "leaves_oak2", faces="+x-x+y-y+z-z")
     # umbrella terrace (South Terrace, east of the bowl): round tables under navy umbrellas
     for (ux, uy) in ((-386.6, -293.6), (-382.0, -292.8), (-377.4, -293.2), (-384.4, -297.6), (-379.6, -297.4)):
         R.cyl(V, ux, uy, 0.55, -0.12, 0.74, "int_ru_white", n=8)
@@ -2319,6 +2500,42 @@ def _amphitheater(RZ, V):
             p0, p1 = ring[i], ring[(i + 1) % 8]
             V.poly([(p0[0], p0[1], 2.3), (p1[0], p1[1], 2.3), apex], "int_ru_fabric_navy", ao=1.0)
             V.poly([apex, (p1[0], p1[1], 2.3), (p0[0], p0[1], 2.3)], "int_ru_fabric_navy", ao=0.8)
+
+
+TERRACE_TABLES = ((-427.6, -336.15), (-424.4, -336.15), (-421.3, -336.15))   # the south leg's patio tables
+
+
+def _terrace_dress(RZ, F, zn, P):
+    """fix round 5 (fidelity-2; ru_south_terrace_seating): the Level 1 outdoor dining terrace, entered from the south
+    hall through its west door (TERRACE_OPEN_DOORS). Collision on the terrace side of the glass walls it shares with
+    the hall and corridor 03 (their walls faced the hall only: once in, Mario would walk out through the glass) on the
+    inset outline (the facade faces' plane), the doorway cut out; black metal patio tables with attached seats along
+    the south leg (the photo's covered-terrace seating)."""
+    z = F.z
+    poly = R.ccw(zn.poly)
+    t = EXT_T / 2
+    ins = _inset_ortho(poly, t)
+    for i in range(len(poly)):
+        pa, pb = poly[i], poly[(i + 1) % len(poly)]
+        L = math.dist(pa, pb)
+        if L < 0.3:
+            continue
+        mid = ((pa[0] + pb[0]) / 2, (pa[1] + pb[1]) / 2)
+        out_pt = (mid[0] + (pb[1] - pa[1]) / L * 0.4, mid[1] - (pb[0] - pa[0]) / L * 0.4)
+        if F.cls_at(out_pt)[0] not in ("W", "S"):
+            continue                      # the open east edge keeps its rail guard (build_backdrop)
+        a_, b_ = ins[(i + 1) % len(ins)], ins[i]          # reversed: the normal (right of a_ -> b_) faces in
+        La = math.dist(a_, b_)
+        ux, uy = (b_[0] - a_[0]) / La, (b_[1] - a_[1]) / La
+        holes = []
+        for od in TERRACE_OPEN_DOORS:
+            if R.seg_point_dist(((od[0] + od[2]) / 2, (od[1] + od[3]) / 2), pa, pb) < 0.6:
+                s0 = (od[0] - a_[0]) * ux + (od[1] - a_[1]) * uy
+                s1 = (od[2] - a_[0]) * ux + (od[3] - a_[1]) * uy
+                holes.append((min(s0, s1), max(s0, s1), z - 1.0, z + GLASS_DOOR_H))
+        col_face(P.collision, a_, b_, z, z + 4.2, holes=holes, mat=K.COL_NOCAM)
+    for k, (tx, ty) in enumerate(TERRACE_TABLES):
+        RZ.kit_add(R.patio_table(rot=math.radians(20.0 * (k % 2))), "L1", tag=f"terrace_table_{k}", x=tx, y=ty, z=z)
 
 
 def build_backdrop(RZ):
@@ -2391,6 +2608,7 @@ def build_backdrop(RZ):
             # invisible wall 2 m short of the rail for 15 m)
             for t_ in R.triangulate(zn.poly):
                 P.collision.poly([(x, y, z) for x, y in R.ccw(t_)], K.COL)
+            _terrace_dress(RZ, F1, zn, P)
         # the slab's underside is cut where it roofs Ground rooms (Gator Esports): their own ceilings sit at the same
         # 5.4 m, and the coplanar soffit z-fought with the black esports ceiling (fidelity pass 3)
         under = [pc for o in RZ.floors["G"].walk_zones() if _bb_overlap(o.bb, R.bbox(zn.poly))
@@ -2690,7 +2908,7 @@ def atrium_top(RZ):
     for sgn in (-1, 1):
         prev = None
         for k in range(29):
-            x = x0 + 0.6 + (xe - BULGE - x0 - 0.6) * k / 28
+            x = x0 + 0.6 + (xe - BULGE * 0.72 - x0 - 0.6) * k / 28     # fix round 5: ribs run into the full-width drum
             s_ = (x - x0) / max(1e-3, xe - x0)
             frac = sgn * (0.16 + 0.42 * s_ ** 1.3)
             cur = (x, _ly(x) + frac * _lb(x), _lz(x, frac) - 0.14)
@@ -2714,9 +2932,22 @@ def atrium_top(RZ):
             R.quad_wall(V, ib, ia, z1 - 0.5, z1 + 0.02, "int_ru_slat_dark", ao=0.8)
     # the east bulkhead: a half-sine in plan bulging BULGE m into the void, silver grid-seamed panels from the L3
     # ceiling line (z0) to above the crown, a flat panel soffit under it with a row of small downlights
-    ya_, yb_ = _half_w(xe - 0.05)[1] - _half_w(xe - 0.05)[0], _half_w(xe - 0.05)[1] + _half_w(xe - 0.05)[0]
-    nb = 12
-    arc = [(x1 + 0.02 - BULGE * math.sin(math.pi * u / nb), ya_ - 0.02 + (yb_ - ya_ + 0.04) * u / nb) for u in range(nb + 1)]
+    # fix round 5 (fidelity-1 blocking; ru_atrium_hdr_flickr, ru_atrium_construction_2015, ru_atrium_enr_vertical):
+    # the drum spans the WHOLE east end of the void (it was sized from a slice at the slanted tip, so it covered only
+    # the SE corner, 3.4 m, beside a flat panel band). ya_..yb_ = the void's full y extent over its last 1.5 m; the
+    # arc's back edge follows the void's own east boundary (so its ends meet the end corners) and bulges BULGE into
+    # the void at mid-width. The soffit stops exactly on the void edge (no overlap with the L3 ceiling tiles).
+    eseg = R.clip_convex(void, x1 - 1.5, -400.0, x1 + 0.1, 0.0)
+    ya_, yb_ = min(p[1] for p in eseg) + 0.01, max(p[1] for p in eseg) - 0.01
+
+    def _xb(y):
+        s_ = R.clip_convex(void, x1 - 3.0, y - 0.005, x1 + 0.1, y + 0.005)
+        return max(p[0] for p in s_) if s_ else x1 - 1.5
+    nb = 16
+    ys_ = sorted(set([round(ya_ + (yb_ - ya_) * u / nb, 4) for u in range(nb + 1)]
+                     + [p[1] for p in void if p[0] > x1 - 1.5 and ya_ < p[1] < yb_]))
+    back = [(_xb(y), y) for y in ys_]
+    arc = [(bx_ - BULGE * math.sin(math.pi * (y - ya_) / (yb_ - ya_)), y) for bx_, y in back]
     zt = z1 + VAULT_RISE + 0.3
     cen = R.centroid(void)
     for pa, pb in zip(arc, arc[1:]):
@@ -2725,11 +2956,11 @@ def atrium_top(RZ):
         Lh = math.hypot(nh[0], nh[1])
         V.poly([(pa[0], pa[1], z0), (pb[0], pb[1], z0), (pb[0], pb[1], zt), (pa[0], pa[1], zt)], "int_ru_metal_panel",
                normal_hint=(nh[0] / Lh, nh[1] / Lh, 0.0), ao=0.9)
-    soff = R.ccw([(x1 + 0.02, yb_ + 0.02)] + list(reversed(arc)) + [(x1 + 0.02, ya_ - 0.02)])
+    soff = R.ccw(list(arc) + list(reversed(back)))
     R.floor_poly(V, R.clean(soff, 0.01, 0.0), z0, "int_ru_metal_panel", step=3.0, down=True, ao=0.85)
-    for u in range(1, nb):
-        bx = x1 - BULGE * math.sin(math.pi * u / nb) + 0.35
+    for u in range(2, nb - 1):
         by = ya_ + (yb_ - ya_) * u / nb
+        bx = _xb(by) - BULGE * math.sin(math.pi * u / nb) + 0.35
         V.poly([(bx - 0.09, by - 0.09, z0 - 0.015), (bx + 0.09, by - 0.09, z0 - 0.015), (bx + 0.09, by + 0.09, z0 - 0.015),
                 (bx - 0.09, by + 0.09, z0 - 0.015)], "int_ru_led", glow=True, normal_hint=(0, 0, -1))
     # the atrium's warm downlight (the old pendants' light, now from the vault and the bulkhead row)
@@ -2831,8 +3062,10 @@ def atrium_lounge(RZ):
     K.col_box(P.collision, -411.95, -265.3, z, -406.85, -264.47, z + 2.2, K.COL_NOCAM)
     wall_a, wall_b = (-414.0, -264.36), (-404.6, -264.36)
     # fix round 4 (fidelity-1): the texture maps over 2 m (plates about 2x larger in world size)
-    R.panel(V, wall_a, wall_b, z, z + 5.3, "int_ru_gator_skin", off=0.13, u0=0.0, u1=math.dist(wall_a, wall_b) / 2.0,
-            v0=0.0, v1=5.3 / 2.0)
+    # fix round 5 (fidelity-1): the recipe now has 3 x 3 taupe plates on a cream network per tile, mapped over 1.0 m
+    # (~0.33 m plates, the photo's ~0.3-0.4 m)
+    R.panel(V, wall_a, wall_b, z, z + 5.3, "int_ru_gator_skin", off=0.13, u0=0.0, u1=math.dist(wall_a, wall_b) / 1.0,
+            v0=0.0, v1=5.3 / 1.0)
     # fix round 2 (fidelity, ru_atrium_uf_letters_flickr): the gator-skin wall is washed by spots (it reads light /
     # cream in the photo; under the Level 1 soffit the baked light left it a mid grey)
     for wx in (-412.2, -409.3, -406.4):
@@ -2909,11 +3142,107 @@ def atrium_lounge(RZ):
         for (u, v) in ((-0.2, -0.2), (0.2, -0.2), (0.2, 0.2), (-0.2, 0.2)):
             pts.append((px + u * math.cos(ang) - v * math.sin(ang), py + u * math.sin(ang) + v * math.cos(ang), z + 0.004))
         V.poly(pts, "int_ru_gator_track", uvs=[(0, 1), (0, 0), (1, 0), (1, 1)], normal_hint=(0, 0, 1))
+    orange_brew_front(V, P, z)
     RZ.kit_add(P, "G", tag="atrium_lounge")
     RZ.points.setdefault("atrium", {})["lounge"] = {"name": "interior_atrium_lounge", "p": [-404.0, -271.0, 0.0],
                                                     "kind": "ground"}
     RZ.points["atrium"]["uf_letters_top"] = {"name": "interior_uf_letters_top", "p": [-411.33, -265.6, 2.95],
                                              "kind": "ground"}
+
+
+# fix round 5 (fidelity-1, ru_atrium_enr_lounge right third): the lounge's south side (the slanted SW facade's inner
+# face, (-396.93, -282.72) -> (-406.18, -291.77), facing the lounge) was a blank cream wall ~13 m long. The photo
+# shows the Orange & Brew front there: a low white ledge, tall glazed bays with dark bronze mullions ~1.2 m apart, warm
+# lit interiors with posters behind, a transom bar under the white wall / soffit. Visual only, on the wall's room side:
+# panels 5 cm off the wall (no coplanar faces; 3 cm read as coplanar to the origin-offset z-fight scan on the slanted
+# run), mullions / transom / ledge cap 6.5-21.5 cm off it (inside Mario's 24 cm foot wall radius: the wall's own
+# collision is unchanged, nothing new to stand on or snag).
+OB_FRONT = [((-396.93, -282.72), (-402.68, -288.06), 0.2, 0.2, 2),     # (a, b, inset at a, inset at b, door bay)
+            ((-402.54, -287.92), (-406.18, -291.77), 0.4, 0.2, None)]
+
+
+def orange_brew_front(V, P, z):
+    BAY = 1.25
+    for a, b, ia, ib, door in OB_FRONT:
+        L = math.dist(a, b)
+        d = ((b[0] - a[0]) / L, (b[1] - a[1]) / L)
+        n = (d[1], -d[0])                                   # right of a -> b: into the lounge
+        a2 = (a[0] + d[0] * ia, a[1] + d[1] * ia)
+        L2 = L - ia - ib
+        nb = max(1, int(round(L2 / BAY)))
+        w = L2 / nb
+
+        def at(s_, off):
+            return (a2[0] + d[0] * s_ + n[0] * off, a2[1] + d[1] * s_ + n[1] * off)
+        for i in range(nb):
+            pa, pb = at(i * w, 0.0), at((i + 1) * w, 0.0)
+            if i == door:
+                # the glass door bay into Orange & Brew, a white panel over it
+                R.panel(V, pa, pb, z + 0.02, z + 2.4, "int_ru_door_glass", off=0.05)
+                R.panel(V, pa, pb, z + 2.4, z + 2.98, "int_ru_white", off=0.05)
+                continue
+            R.panel(V, pa, pb, z + 0.1, z + 0.98, "int_ru_white", off=0.05)                   # the low white ledge
+            u0, u1 = (0.0, 1.0) if i % 2 == 0 else (1.0, 0.0)                             # mirrored: variety
+            R.panel(V, pa, pb, z + 0.98, z + 2.98, "int_ru_cafe_bay", off=0.05, u0=u0, u1=u1, glow=True)
+            R.seg_box(V, at(i * w + 0.02, 0.14), at((i + 1) * w - 0.02, 0.14), 0.075, z + 0.96, z + 1.02,
+                      "int_ru_white", faces="sideends_top_bot")                          # the ledge cap
+        for i in range(nb + 1):                                                          # bronze mullions
+            s_ = min(max(i * w, 0.04), L2 - 0.04)
+            R.seg_box(V, at(s_, 0.065), at(s_, 0.15), 0.04, z + 0.02, z + 2.97, "int_ru_slat_dark",
+                      faces="sideends_top")
+        R.seg_box(V, at(0.0, 0.1075), at(L2, 0.1075), 0.0425, z + 2.98, z + 3.1, "int_ru_slat_dark",
+                  faces="sideends_top_bot")                                              # the transom bar
+        if door is not None:
+            c0 = (door + 0.5) * w
+            R.panel(V, at(c0 - 1.0, 0.0), at(c0 + 1.0, 0.0), z + 3.3, z + 4.3, "int_ru_sign_ob", off=0.05)
+        for i in range(0, nb, 2):
+            P.lights.append(K.Light(at((i + 0.5) * w, 1.2)[:2] + (z + 2.3,), radius=3.2, strength=0.22,
+                                    color=LIGHT_WARM))
+
+
+# fix round 5 (fidelity-1 improvement 4; ru_atrium_enr_vertical): the void's east (far) end walls at Levels 2 and 3
+# read as plain white walls with small framed pictures; the photo shows the balconies wrapping the far end with glass
+# office fronts under the bulkhead. The centre runs of those end walls (between their glass doors) get glazed office
+# bays: an office-interior glass card 4 cm off each wall segment (no coplanar faces), silver mullions and a head bar
+# 4.5-13 cm off it. Visual only (inside Mario's wall radius; the walls' collision is unchanged). Segments: (north end,
+# south end) of each west-facing wall face, from the plan walls; 0.18 m inset at both ends (the faces overlap there).
+EAST_END_OFFICES = {
+    "L2": [((-387.69, -270.21), (-388.01, -267.31))[::-1], ((-387.81, -271.69), (-387.69, -269.99))[::-1],
+           ((-388.01, -275.29), (-387.79, -271.49))[::-1]],
+    "L3": [((-388.78, -268.42), (-389.12, -266.82))[::-1], ((-388.59, -270.51), (-388.81, -268.21))[::-1],
+           ((-388.6, -271.5), (-388.6, -270.3))[::-1], ((-388.71, -272.79), (-388.59, -271.29))[::-1],
+           ((-388.81, -274.19), (-388.69, -272.59))[::-1], ((-389.12, -275.27), (-388.77, -273.98))[::-1]],
+}
+
+
+def east_end_offices(RZ):
+    for fl, segs in EAST_END_OFFICES.items():
+        z = RZ.floors[fl].z
+        P = K.Prop(f"east_offices_{fl}")
+        V = P.visual
+        for a, b in segs:
+            if a[1] < b[1]:
+                a, b = b, a                                   # north -> south: the right normal faces west (the void)
+            L = math.dist(a, b)
+            d = ((b[0] - a[0]) / L, (b[1] - a[1]) / L)
+            n = (d[1], -d[0])
+            ins = 0.18
+            L2 = L - 2 * ins
+            nb = max(1, int(round(L2 / 1.25)))
+            w = L2 / nb
+
+            def at(s_, off):
+                return (a[0] + d[0] * (ins + s_) + n[0] * off, a[1] + d[1] * (ins + s_) + n[1] * off)
+            for i in range(nb):
+                u0, u1 = (0.0, 1.0) if (i + len(fl)) % 2 == 0 else (1.0, 0.0)
+                R.panel(V, at(i * w, 0.0), at((i + 1) * w, 0.0), z + 0.1, z + 2.7, "int_ru_office_bay", off=0.04,
+                        u0=u0, u1=u1)
+            for i in range(nb + 1):
+                s_ = min(max(i * w, 0.035), L2 - 0.035)
+                R.seg_box(V, at(s_, 0.045), at(s_, 0.12), 0.035, z + 0.1, z + 2.69, "int_ru_steel", faces="sideends_top")
+            R.seg_box(V, at(0.0, 0.0825), at(L2, 0.0825), 0.0375, z + 2.7, z + 2.8, "int_ru_steel",
+                      faces="sideends_top_bot")
+        RZ.kit_add(P, fl, tag=f"east_offices_{fl}")
 
 
 def level1_extras(RZ):
@@ -2965,10 +3294,14 @@ def rail_plugs(RZ):
     for fid, x, y, h in RAIL_PLUGS:
         z = RZ.floors[fid].z
         K.col_box(P.collision, x - h, y - h, z - 0.05, x + h, y + h, z + RAIL_H + 0.06, K.COL_NOCAM)
+        # fix round 5 (technical improvement 0): every plug that stays is a rendered newel post (it stood as an
+        # invisible post on walkable floor); 1 cm inside its collision on every side
+        P.visual.box(x - h + 0.01, y - h + 0.01, z, x + h - 0.01, y + h - 0.01, z + RAIL_H + 0.05, "int_ru_white",
+                     faces="+x-x+y-y+z")
     RZ.kit_add(P, "L1", tag="rail_plugs")
 
 
-DRESSERS.extend([atrium_stairs, atrium_top, atrium_lounge, level1_extras, rail_plugs])
+DRESSERS.extend([atrium_stairs, atrium_top, atrium_lounge, level1_extras, rail_plugs, east_end_offices])
 
 
 # ================================================================== Ground: Game Room + Gator Esports Center
@@ -3024,7 +3357,9 @@ def game_room(RZ):
     # wall graphics: GAME ROOM over the billiards (north wall), and by the service desk
     # fix round 4 (fidelity-3 blocking): the GAME ROOM graphic sits east along the billiards wall, above the cue
     # racks (the photo's west end is a plain dark wall with the racks); a 1.5 cm proud face (decal rule)
-    R.panel(V, (-447.85, -281.5), (-443.85, -281.5), z + 3.3, z + 5.05, "int_ru_sign_gameroom", off=0.015)
+    # fix round 5 (fidelity-3; ru_gr_wall_graphic_billiards): its own graphic, GAME ROOM / THE UNIVERSITY OF FLORIDA
+    # with the planets and a bowling ball (it reused the desk mural's REITZ UNION GAME ROOM)
+    R.panel(V, (-447.85, -281.5), (-443.85, -281.5), z + 3.3, z + 5.05, "int_ru_sign_gameroom_uf", off=0.015)
     # fix round 4 (fidelity-3; ru_gr_entry_graphic): the desk graphic is wall-filling (10 x 4.2 m from behind the
     # counter nearly to the ceiling; it was a 7 x 3.5 m framed panel), 4 cm proud of the wall face
     R.panel(V, (-435.6, -290.0), (-425.6, -290.0), z + 0.9, z + 5.1, "int_ru_sign_gameroom", off=0.04)
@@ -3040,6 +3375,11 @@ def game_room(RZ):
     RZ.kit_add(R.air_hockey(), "G", tag="air_hockey_2", x=-428.0, y=-314.2, facing=90.0)
     RZ.kit_add(R.foosball(), "G", tag="foosball_1", x=-423.8, y=-318.0, facing=90.0)
     RZ.kit_add(R.foosball(), "G", tag="foosball_2", x=-428.2, y=-318.0, facing=90.0)
+    # fix round 5 (design pass, improvement 5; ru_gr_booth_detail, ru_gr_booths): the open plank south of the
+    # table games (x -427..-424, y -320.5..-325.5, clear of the Goomba spots in GOOMBA_SPOTS) gets a seating cluster:
+    # two navy curved booths with their low tables, facing each other
+    RZ.kit_add(R.booth(2.9), "G", tag="gr_east_booth_n", x=-425.5, y=-320.6, facing=180.0)
+    RZ.kit_add(R.booth(2.9), "G", tag="gr_east_booth_s", x=-425.5, y=-325.4, facing=0.0)
     # fix round 2 (blocking; ru_es_oelrich_8951, ru_gr_esports_bridge_billiards, ru_gr_arcade, ru_gr_arcade_2): the
     # arcade cabinets stand against the Esports Center's glass storefront on the billiards side (they were at the
     # pin end, sliced by the service-corridor walls), with the blue kiosk, the black high-top bar with a steel
@@ -3052,7 +3392,17 @@ def game_room(RZ):
     R.panel(V, (xs_ + 0.86, -292.75), (xs_ + 0.86, -292.25), z + 1.0, z + 1.45, "int_ru_game_screen", off=0.0, glow=True)
     K.col_box(C, xs_ + 0.15, -292.85, z, xs_ + 0.85, -292.15, z + 1.55, K.COL_NOCAM)
     # glass door in the storefront (visual; the plan's door into the Esports Center is the north one)
-    door_leaves(V, (xs_, -294.75), (xs_, -293.05), z, 2.8, "int_ru_door_glass")
+    # fix round 5 (fidelity-3; ru_es_oelrich_8951): a black-framed door of the storefront's own dark glass (the pale
+    # int_ru_door_glass leaves read as a grey-white double door): stiles, rails and the meeting stile 3 cm proud of
+    # the Game Room face (butted, never overlapping), steel pull bars 1.5 cm proud of the frame
+    da_, db_ = -294.75, -293.05
+    for y0f, y1f in ((da_ - 0.05, da_ + 0.07), (db_ - 0.07, db_ + 0.05)):
+        R.panel(V, (xs_, y0f), (xs_, y1f), z, z + 2.88, "int_ru_black", off=0.03)
+    for z0f, z1f in ((0.0, 0.22), (2.72, 2.88)):
+        R.panel(V, (xs_, da_ + 0.07), (xs_, db_ - 0.07), z + z0f, z + z1f, "int_ru_black", off=0.03)
+    R.panel(V, (xs_, -293.96), (xs_, -293.84), z + 0.22, z + 2.72, "int_ru_black", off=0.03)
+    for yb_ in (-294.12, -293.68):
+        R.panel(V, (xs_, yb_ - 0.02), (xs_, yb_ + 0.02), z + 0.85, z + 1.45, "int_ru_steel", off=0.045)
     _esports_sign(V, (xs_, -296.0), (xs_, -291.8), z + 3.02, z + 3.46, off=0.1)
     for k_ in range(9):
         y0_ = -283.0 - k_ * 2.65
@@ -3080,6 +3430,17 @@ def game_room(RZ):
     for i in range(1, 3):
         R.panel(V, (-432.0 + i * 3.4 + 2.8, -330.25), (-432.0 + i * 3.4, -330.25), z + 2.3, z + 3.7, "int_ru_hex_neon",
                 off=0.12, glow=True)
+    # fix round 5 (fidelity-3; ru_gr_arcade_2 'arcade cabinets, hex neon wall'): a second bank of lit arcade cabinets
+    # backed onto the hex-neon south wall of the table-games strip (its south 10 m was empty plank); facing north,
+    # one merged collision block for the bank (collision budget)
+    for i in range(6):
+        RZ.kit_add(_nocol(R.arcade_cabinet()), "G", tag=f"arcade_s_{i}", x=-427.575 + i * 0.95, y=-329.8, facing=0.0)
+    K.col_box(C, -427.935, -330.225, z, -422.465, -329.125, z + 1.85, K.COL_NOCAM)
+    # fix round 5 (fidelity-3; ru_es_oelrich_8951): the black square column at the Esports frontage with its lit
+    # portrait screen, the navy / tan ottomans in front of it (the photo's left foreground)
+    V.box(-456.6, -299.6, z, -455.8, -298.8, z + CLEAR["G"], "int_ru_black", faces="+x-x+y-y")
+    R.panel(V, (-455.8, -299.45), (-455.8, -298.95), z + 0.7, z + 2.1, "int_ru_game_screen", off=0.02, glow=True)
+    K.col_box(C, -456.6, -299.6, z, -455.8, -298.8, z + CLEAR["G"], K.COL_NOCAM)
     # ceiling fans over the booth pits (ru_gr_lanes_overview_2)
     for i in range(4):
         fx, fy = lx - 9.0 + i * 6.0, ly + 7.5
@@ -3274,7 +3635,9 @@ VENDOR_STYLES = {
     "tacos": dict(_FASCIA, fascia="int_ru_wall_cream", letters="int_ru_vletters_tacos", letters_w=3.0),
     "coffee": {"counter": "int_ru_maple_panel", "top": "int_ru_black", "side": "int_ru_maple_panel",   # fix round 4
                "back_counter": "int_ru_maple_panel", "menu": "int_ru_chalkboard", "menu_glow": False, "menu_w": 3.4,
-               "menu_z": (1.6, 2.35), "hood": False, "coffee_bar": True,
+               # fix round 5 (fidelity-2; ru_starbucks_2017): the chalkboards hang high on the mosaic, their
+               # bottoms about head height (they sat at 1.6-2.35 m, mid-wall)
+               "menu_z": (1.95, 2.65), "hood": False, "coffee_bar": True,
                "fascia": "int_ru_maple_panel", "open_h": 2.8, "letters": "int_ru_vletters_coffee", "letters_w": 2.8,
                "letters_h": 0.55},
     "burger": {"counter": "int_ru_counter_navy", "top": "int_ru_white", "side": "int_ru_white",
@@ -3346,8 +3709,30 @@ def _fc_sonic_wall(V, z):
     _wall_strip(V, a, b, z + FC_FRONT_H, zb + 0.01, "int_ru_counter_navy", off=0.13)   # 3 cm proud of the face
     # the navy wraps the 1.2 m of wall left of the storefront (to the mac corner) from the base up (the photo's navy
     # wall runs on left of the neon)
-    _wall_strip(V, a, (-432.0, -297.115), z + 0.10, z + FC_FRONT_H, "int_ru_counter_navy", off=0.13)
+    # fix round 5 (technical blocking 2): 3 cm further out (at 0.13 it lay 0.02 u off the servery wall face)
+    _wall_strip(V, a, (-432.0, -297.115), z + 0.10, z + FC_FRONT_H, "int_ru_counter_navy", off=0.16)
     V.box(x0, yw - dep, zb, x1, yw - 0.1, zc - 0.005, "int_ru_soffit", faces="-y-z+x", ao=0.92)
+
+
+# fix round 5 (fidelity-2; ru_food_court_sonic_2025: the photo's most visible foreground props): black stanchion
+# posts with black belt barriers on the checker floor in front of the burger counter (counter front ~y -297.9): a
+# line 1.6 m out from it and a return to the counter at the west end (a queue lane, open to the east)
+FC_STANCHIONS = ((-431.3, -298.35), (-431.3, -299.5), (-429.8, -299.5), (-428.3, -299.5), (-426.8, -299.5),
+                 (-425.3, -299.5))
+
+
+def _fc_stanchions(V, z):
+    """Visual only (Mario walks through the belts: no thin invisible-looking collision walls in the queue)."""
+    for (px, py) in FC_STANCHIONS:
+        R.cyl(V, px, py, 0.15, z, z + 0.025, "int_ru_black", n=8)
+        R.cyl(V, px, py, 0.028, z + 0.025, z + 0.95, "int_ru_black", n=5, top=False)
+        R.cyl(V, px, py, 0.04, z + 0.95, z + 0.99, "int_ru_black", n=6, bottom=True)
+    for (ax, ay), (bx, by) in zip(FC_STANCHIONS, FC_STANCHIONS[1:]):
+        L = math.dist((ax, ay), (bx, by))
+        ux, uy = (bx - ax) / L, (by - ay) / L
+        a_ = (ax + ux * 0.045, ay + uy * 0.045)
+        b_ = (bx - ux * 0.045, by - uy * 0.045)
+        R.seg_box(V, a_, b_, 0.006, z + 0.86, z + 0.91, "int_ru_black", faces="side")
 
 
 def _offset_open(path, d, simplify=1.0, arc_seg=4, chaikin=2):
@@ -3499,6 +3884,7 @@ def food_court(RZ):
         facing = math.degrees(math.atan2(nx, ny)) % 360.0
         RZ.kit_add(R.storefront(w, sign, back, side, h=FC_FRONT_H, style=VENDOR_STYLES.get(sty)), "L1", tag=f"storefront_{i}",
                    x=cxm, y=cym, z=z, facing=facing)
+    _fc_stanchions(V, z)
     # seating: tables in the south hall, the east hall and along the curved glass
     # fidelity-2: the south hall's 7 x 4 grid of single tables (28 collision blocks) became rows of table pairs
     # pushed together (ru_food_court_counter_2023: the hall full of tables in rows): 5 pairs a row = 40 tables,
@@ -3673,6 +4059,7 @@ def grand_ballroom(RZ):
         R.seg_box(V, (q0[0] + nx * 0.12, q0[1] + ny * 0.12), (q1[0] + nx * 0.12, q1[1] + ny * 0.12), 0.12, z + 0.1, ztop,
                   "int_ru_white", faces="sideends")
 
+    HB = _built_wall_index(RZ)
     for a, b in _room_inside_edges(zn, 0.11):
         L = math.dist(a, b)
         if L < 1.0:
@@ -3682,6 +4069,11 @@ def grand_ballroom(RZ):
         mid_x, mid_y = (a[0] + b[0]) / 2, (a[1] + b[1]) / 2
         east = mid_x > x1 - 1.0
         ztop = zend if east else zsof
+        # fix round 5 (technical blocking 2): every layer on this wall moves out by sh so the slate band stands
+        # 1.5 cm proud of the BUILT wall face (it lay 0.1 u off the grey wall: ~20-40 m2 of flicker on the north
+        # wall; the acoustic / clerestory strips on the east wall likewise)
+        sh = _strip_shift(HB, a, b, z + 0.1, ztop)
+        a, b = (a[0] + nx * sh, a[1] + ny * sh), (b[0] + nx * sh, b[1] + ny * sh)
         _wall_strip(V, a, b, z + 0.1, z + 3.3, "int_ru_wall_slate", off=0.0)
         _wall_strip(V, a, b, z + 3.3, z + 3.4, "int_ru_white", off=0.01)
         screens = []
@@ -3876,6 +4268,9 @@ def _span_y(poly, x):
     return (min(ys), max(ys)) if len(ys) >= 2 else None
 
 
+AUD_CROSS_ROW = 6        # fix round 5 (fidelity-4): the row left out as the railed cross aisle (6 front rows, 4 rear)
+
+
 def auditorium(RZ):
     """Auditorium (L2, 299 seats; ru_os_auditorium_1..3): honey-wood seat shells (navy fabric) in continuous rows
     with side aisles on a raked floor, a railed cross-aisle in front of the first row, the screen between navy
@@ -3901,7 +4296,10 @@ def auditorium(RZ):
     ys0, ys1 = sp[0] + 0.47, sp[1] - 0.47
     sz0 = z + 0.95
     sz1 = min(zc - 0.6, sz0 + (ys1 - ys0) * 0.92)
-    R.panel(V, (x0 + 0.45, ys0), (x0 + 0.45, ys1), sz0, sz1, "int_ru_proj_screen", off=0.0)
+    # fix round 5 (fidelity-4, improvement 5b; ru_os_auditorium_1..3): no black border (the texture's frame texels
+    # are cropped off): the screen fills the bay edge to edge
+    R.panel(V, (x0 + 0.45, ys0), (x0 + 0.45, ys1), sz0, sz1, "int_ru_proj_screen", off=0.0, u0=0.07, u1=0.93,
+            v0=0.08, v1=0.92)
     for yy in (sp[0] + 0.22, sp[1] - 0.22):
         V.box(x0 + 0.05, yy - 0.22, z + 0.7, x0 + 0.55, yy + 0.22, zc - 0.25, "int_ru_wall_navy", faces="+x+y-y")
     # screen wall navy, the angled walls beside it honey-wood panel blocks with an exit door each, the long side
@@ -3916,24 +4314,35 @@ def auditorium(RZ):
             if L > 4.5:
                 _wall_strip(V, a, b, z + 0.1, zc - 0.3, "int_ru_wall_navy", off=0.02)
             else:
-                _wall_strip(V, a, b, z + 0.1, zc - 0.3, "int_ru_wood_panel", off=0.02)
+                # fix round 5 (fidelity-4 blocking): 1.5 cm nearer the wall (at 0.02 the strip lay 0.5 mm behind the
+                # plan door leaf on the north stage-end wall and z-fought with it)
+                _wall_strip(V, a, b, z + 0.1, zc - 0.3, "int_ru_wood_panel", off=0.005)
                 if L > 2.4:
                     # the honey-wood block: proud of the wall, an exit door + EXIT sign on its outer half
                     nx, ny = dy, -dx
                     R.panel(V, a, b, z + 0.1, z + 3.4, "int_ru_wood_panel", off=0.12)
                     side = 0.72 if (a[1] + b[1]) / 2 > (y0 + y1) / 2 else 0.28
                     sc = L * side
-                    da = (a[0] + dx * (sc - 0.5) + nx * 0.13, a[1] + dy * (sc - 0.5) + ny * 0.13)
-                    db = (a[0] + dx * (sc + 0.5) + nx * 0.13, a[1] + dy * (sc + 0.5) + ny * 0.13)
+                    # fix round 5 (fidelity-4 blocking): the leaves stand 0.17 off the wall line (8 cm proud of the
+                    # block): at 0.13 the north leaf lay 0.5 mm off the next short wall's wood strip and z-fought
+                    da = (a[0] + dx * (sc - 0.5) + nx * 0.17, a[1] + dy * (sc - 0.5) + ny * 0.17)
+                    db = (a[0] + dx * (sc + 0.5) + nx * 0.17, a[1] + dy * (sc + 0.5) + ny * 0.17)
                     door_leaves(V, da, db, z, 2.3, "int_ru_door")
                     R.panel(V, (a[0] + dx * (sc - 0.21), a[1] + dy * (sc - 0.21)),
                             (a[0] + dx * (sc + 0.21), a[1] + dy * (sc + 0.21)), z + 2.5, z + 2.7, "int_ru_exit",
                             off=0.16, glow=True, v0=0.28, v1=0.72)
         elif L > 8.0:
-            for k in range(1, int(L / 6.0) + 1):
-                sk = L * k / (int(L / 6.0) + 1)
-                _wall_strip(V, (a[0] + dx * (sk - 0.6), a[1] + dy * (sk - 0.6)), (a[0] + dx * (sk + 0.6), a[1] + dy * (sk + 0.6)),
-                            z + 0.1, z + 3.6, "int_ru_wood_panel", off=0.03)
+            # fix round 5 (fidelity-4, improvement 5d; ru_os_auditorium_1..3): narrow vertical honey-wood strips
+            # down the long side walls (were 1.2 m panels every 6 m, which read as plain grey), clear of the doors
+            ad_ = [dm for _da, _db, dm, _dn in _room_doors(F, zn)]
+            n_ = int(L / 1.6)
+            for k in range(1, n_):
+                sk = L * k / n_
+                q_ = (a[0] + dx * sk, a[1] + dy * sk)
+                if any(math.dist(q_, dm) < 1.0 for dm in ad_):
+                    continue
+                _wall_strip(V, (q_[0] - dx * 0.13, q_[1] - dy * 0.13), (q_[0] + dx * 0.13, q_[1] + dy * 0.13),
+                            z + 0.1, zc - 0.6, "int_ru_wood_panel", off=0.03)
     # raked seating: rows step up 0.18 m toward the east; continuous rows (no centre aisle), side aisles >= 1.2 m,
     # each row as wide as the room allows at its depth (the north-east corner is cut on the diagonal)
     nrows = 11
@@ -3955,6 +4364,24 @@ def auditorium(RZ):
         ylo, yhi = max(sp_[0] for sp_ in spans), min(sp_[1] for sp_ in spans)
         seats = int((yhi - ylo - 2 * 1.3) / 0.5)
         if seats < 4:
+            continue
+        if r == AUD_CROSS_ROW:
+            # fix round 5 (fidelity-4, improvement 5a; ru_os_auditorium_1..3): a cross aisle between the front and
+            # rear sections, a steel pipe rail on its rear (upper) edge, open at the side aisles
+            xr_ = rx0 + row_d - 0.06
+            zr_ = zr
+            V.box(xr_ - 0.03, ylo + 0.2, zr_ + 0.92, xr_ + 0.03, yhi - 0.2, zr_ + 0.98, "int_ru_steel",
+                  faces="+x-x+y-y+z-z")
+            npost = max(2, int((yhi - ylo - 0.4) / 1.8) + 1)
+            for k in range(npost):
+                yp_ = ylo + 0.2 + (yhi - ylo - 0.4) * k / (npost - 1)
+                yp_ = min(max(yp_, ylo + 0.23), yhi - 0.23)
+                V.box(xr_ - 0.025, yp_ - 0.025, zr_, xr_ + 0.025, yp_ + 0.025, zr_ + 0.92, "int_ru_steel",
+                      faces="+x-x+y-y")
+            C.poly([(xr_ + 0.03, ylo + 0.2, zr_), (xr_ + 0.03, yhi - 0.2, zr_), (xr_ + 0.03, yhi - 0.2, zr_ + 0.98),
+                    (xr_ + 0.03, ylo + 0.2, zr_ + 0.98)], K.COL_NOCAM)
+            C.poly([(xr_ - 0.03, yhi - 0.2, zr_), (xr_ - 0.03, ylo + 0.2, zr_), (xr_ - 0.03, ylo + 0.2, zr_ + 0.98),
+                    (xr_ - 0.03, yhi - 0.2, zr_ + 0.98)], K.COL_NOCAM)
             continue
         rows = R.chair_rows(1, seats, pitch=row_d, aisle_every=0, kind="aud", seat_h=0.44)
         RZ.kit_add(rows, "L2", tag=f"aud_row_{r}", x=rx0 + 0.75, y=(ylo + yhi) / 2, z=zr, facing=270.0)
@@ -4010,7 +4437,8 @@ def auditorium(RZ):
         V.box(cx_ - 0.36, ya, zc - 0.32, cx_ + 0.36, yb, zc - 0.26, "int_ru_led", faces="-z", glow=True)
         V.box(cx_ - 0.42, ya, zc - 0.36, cx_ - 0.36, yb, zc, "int_ru_black", faces="-x-z")
         V.box(cx_ + 0.36, ya, zc - 0.36, cx_ + 0.42, yb, zc, "int_ru_black", faces="+x-z")
-        P.lights.append(K.Light((cx_, (ya + yb) / 2, zc - 0.9), radius=9.0, strength=0.30, color=LIGHT_WARM))
+        # fix round 5 (fidelity-4, improvement 5c): dimmer coves (0.30; median luminance 48-59 vs the photos' 18-30)
+        P.lights.append(K.Light((cx_, (ya + yb) / 2, zc - 0.9), radius=9.0, strength=0.24, color=LIGHT_WARM))
     RZ.kit_add(P, "L2", tag="auditorium")
     RZ.points.setdefault("ballrooms", {})["auditorium_stage"] = {"name": "interior_auditorium_stage",
                                                                   "p": [x0 + 1.8, (y0 + y1) / 2, z + 0.7], "kind": "ground"}
@@ -4229,6 +4657,9 @@ def _meeting_walls(F, zn, V, fx, fy, upstairs=False):
         # prints: the long interior side walls (exterior walls carry the ribbon windows)
         if outside == "O" or L < 4.0 or abs(dx * fx + dy * fy) < 0.7:
             continue
+        aw_n = ART_WALL.get(zn.id)
+        if aw_n is not None and nx * aw_n[0] + ny * aw_n[1] < 0.7:
+            continue                            # fix round 5 (fidelity-4): the named art wall only (2355 / 2365)
         if pmode in ("long5", "one"):
             side_cands.append((sum(s1_ - s0_ for s0_, s1_ in spans), spans, P))
             continue
@@ -4262,14 +4693,28 @@ def _meeting_walls(F, zn, V, fx, fy, upstairs=False):
         for sc in slots:
             j = nprint % 8
             nprint += 1
+            if zn.id in ART_WALL:
+                # fix round 5 (fidelity-4, improvement 1; ru_os_2355_2365): wide colourful landscape canvases
+                # (~1.2 x 0.8 m, no white mat), 4.5 cm proud of the wall face (2355's east wall is
+                # slanted: its 1 cm-rounded vertices brought a 2.5 cm offset within the z-fight tolerance)
+                u0, v0 = (j % 2) * 0.5, (0.5 if (j // 2) % 2 == 0 else 0.0)
+                R.panel(V, P(sc - 0.6), P(sc + 0.6), z + 1.40, z + 2.20, "int_ru_canvas", off=0.03,
+                        u0=u0, u1=u0 + 0.5, v0=v0, v1=v0 + 0.5)
+                continue
             u0, v0 = (j % 4) * 0.25, (0.5 if j < 4 else 0.0)
             R.panel(V, P(sc - 0.45), P(sc + 0.45), z + 1.45, z + 2.25, "int_ru_prints", off=0.01,
                     u0=u0, u1=u0 + 0.25, v0=v0, v1=v0 + 0.5)
     # EXIT signs over the doors, room side (int_ru_exit: the sign is texture rows 9-22)
     for da, db, dm, dn in doors:
         d = (-dn[1], dn[0])
+        # fix round 5 (fidelity-3; ru_os_g330): a door whose plan midpoint lies outside the room (G330's slanted north
+        # wall: 4 cm) put its sign 1 cm BEHIND the wall face; on Ground the sign steps out by that much (<= 15 cm)
+        ex_ = 0.0
+        if F.id == "G" and not R.pip(dm, zn.poly):
+            ex_ = min(0.15, R.poly_dist(dm, zn.poly))
         R.panel(V, (dm[0] - d[0] * 0.21, dm[1] - d[1] * 0.21), (dm[0] + d[0] * 0.21, dm[1] + d[1] * 0.21),
-                z + DOOR_H + 0.14, z + DOOR_H + 0.34, "int_ru_exit", off=WALL_T / 2 + 0.03, glow=True, v0=0.28, v1=0.72)
+                z + DOOR_H + 0.14, z + DOOR_H + 0.34, "int_ru_exit", off=WALL_T / 2 + 0.03 + ex_, glow=True, v0=0.28,
+                v1=0.72)
 
 
 def _ceiling_projector(V, P, x, y, zc, f):
@@ -4288,7 +4733,15 @@ FRONT_DOOR_WALL = {"meeting_2315", "meeting_2320", "meeting_2325", "meeting_2330
                    "meeting_3320"}
 # ru_os_2335_2340: the blue is the short end wall, the room's door on the long wall right next to it
 FRONT_END_WALL = {"meeting_2335", "meeting_2340"}
+# fix round 5 (fidelity-4, improvement 1; ru_os_2355_2365): the rows face a slate-blue END wall (here the north one,
+# unit vector out of the room), the five landscape canvases hang on the long DOOR wall (ART_WALL: the inward normal of
+# that wall). 2355 = the photo (canvases on the right-hand east wall); 2365 is its mirror twin (canvases on the west)
+ACCENT_DIR = {"meeting_2355": (0.0, 1.0), "meeting_2365": (0.0, 1.0)}
+ART_WALL = {"meeting_2355": (-1.0, 0.0), "meeting_2365": (1.0, 0.0)}
 # all-white rooms: ru_os_2345_2350 (wall TV beside the door), ru_os_3315_3320
+# fix round 5 (fidelity-3; ru_os_g325): rooms whose accent is a royal BAY on the accent wall (two plan points spanning
+# it), white wall round it, lit by wall-washers (int_ru_wall_royal_wash): G325's 7.8 m bay, white door wall to its west
+ROYAL_BAY = {"meeting_G325": ((-369.2, -261.8), (-361.4, -261.8))}
 NO_ACCENT = {"meeting_2345", "meeting_2350", "meeting_3315", "meeting_3320"}
 # fix round 4 (fidelity-4 pass, improvement 1): the upstairs art per room, from the photos (rooms not listed: bare)
 UPSTAIRS_PRINTS = {"meeting_2355": "long5", "meeting_2365": "long5", "meeting_3315": "front_row",
@@ -4306,6 +4759,17 @@ def _nocol(prop):
     """A kit prop without its own collision (a run of tables gets one merged block: collision budget)."""
     prop.collision.polys = []
     return prop
+
+
+def _runs_of(us, gap):
+    """Group sorted positions into runs whose neighbours are at most `gap` apart."""
+    out = []
+    for u in sorted(us):
+        if out and u - out[-1][-1] <= gap:
+            out[-1].append(u)
+        else:
+            out.append([u])
+    return out
 
 
 def _col_rect(C, c, a, ha, hb, z0, z1, mat=None):
@@ -4427,6 +4891,37 @@ def meeting_rooms(RZ):
                     if pick is not None:
                         RZ.kit_add(R.draped_table(1.6, 0.75), fid, tag=f"drape_{zn.id}", x=pick[0], y=pick[1], z=z,
                                    facing=facing)
+            elif kind == "classroom" and D > 4.0 and fid == "G":
+                # fix round 5 (fidelity-3; ru_os_g325): the rows of training tables fill the room's width, three
+                # 1.8 m tables a side of a centre aisle (they were two tables a row in a 4 m block, the west half of
+                # the 14 m room bare carpet); tables that would cross a wall or block a door are dropped. One merged
+                # no-cam block per run of tables covers the tables AND their chairs (the chairs had no collision);
+                # rows 2.3 m apart leave a 1 m walkway between a row's chair backs and the next row's tables
+                n = max(2, int((D - 1.2 - 0.95 - 2.2) / 2.3) + 1)
+                zp = R.offset_poly(zn.poly, 0.05)
+                dmid_ = [d[2] for d in _room_doors(F, zn)]
+                for r in range(n):
+                    dv = 2.2 + r * 2.3
+                    for side in (-1, 1):
+                        kept = []
+                        for k_ in range(3):
+                            u = tmid + side * (1.55 + k_ * 1.9)
+                            tx_, ty_ = mx + fx * dv + tx * u, my + fy * dv + ty * u
+                            tb = _nocol(R.folding_table(1.8, 0.6))
+                            pts = [v for pl_ in tb.placed(tx_, ty_, z, (facing + 180.0) % 360).visual.polys
+                                   for v in pl_.pts]
+                            if not pts or sum(1 for v in pts if not R.pip((v[0], v[1]), zp)) > 0.03 * len(pts):
+                                continue
+                            if any(math.dist((tx_, ty_), dm) < 1.9 for dm in dmid_):
+                                continue
+                            RZ.kit_add(tb, fid, tag=f"class_{zn.id}_{r}_{side}_{k_}", x=tx_, y=ty_, z=z,
+                                       facing=(facing + 180.0) % 360)
+                            kept.append(u)
+                        for grp in _runs_of(kept, 1.95):
+                            uc = (min(grp) + max(grp)) / 2
+                            # tables (-0.32) to chair backs (+0.95) along the facing (the chairs are room-side)
+                            _col_rect(P.collision, (mx + fx * (dv + 0.315) + tx * uc, my + fy * (dv + 0.315) + ty * uc),
+                                      (tx, ty), (max(grp) - min(grp)) / 2 + 0.9, 0.635, z, z + 0.74)
             elif kind == "classroom" and D > 4.0:
                 n = max(2, int((D - 2.8) / 1.6))
                 zp = R.offset_poly(zn.poly, 0.05)
@@ -4572,7 +5067,8 @@ def level4(RZ):
     # three (the photos show 5-7 tables; was 3)
     for j, (dx, dy) in enumerate(((-4.0, 1.75), (-0.15, 1.75), (3.7, 1.75), (-4.0, -1.75), (-0.15, -1.75),
                                   (3.7, -1.75))):
-        RZ.kit_add(R.round_table(0.75, top="int_ru_bed", chair_mat="int_ru_fabric_navy", chairs=7), "L4",
+        # fix round 5 (fidelity-4, improvement 3): white tops on pedestals, thick-backed navy chairs on silver legs
+        RZ.kit_add(R.round_table(0.75, top="int_ru_bed", chair_mat="int_ru_fabric_navy", chairs=7, pedestal=True), "L4",
                    tag=f"matthews_round_{j}", x=c[0] + dx, y=c[1] + dy, z=z)
     P = K.Prop("matthews_photos")
     V = P.visual
@@ -4587,9 +5083,12 @@ def level4(RZ):
             # fix round 2 (blocking): never on the window wall (the frames floated in front of the L4 curtain glass;
             # ru_os_matthews_1/2: the photos hang on the solid grey-blue walls)
             nx_, ny_ = dy, -dx
+            row4 = False
             if any(F4.cls_at((a[0] + dx * L * t_ - nx_ * 0.45, a[1] + dy * L * t_ - ny_ * 0.45))[0] == "O"
                    for t_ in (0.2, 0.5, 0.8)):
-                continue
+                if window_spec("L4", a, b, ms) is not None:
+                    continue
+                row4 = True             # fix round 5 (fidelity-4): the solid south wall (ru_os_matthews_1)
             gaps = []
             for da, db, dm, dn in mdoors:
                 if abs((dm[0] - a[0]) * nx_ + (dm[1] - a[1]) * ny_) > 0.5:
@@ -4597,7 +5096,7 @@ def level4(RZ):
                 s0_ = (da[0] - a[0]) * dx + (da[1] - a[1]) * dy
                 s1_ = (db[0] - a[0]) * dx + (db[1] - a[1]) * dy
                 gaps.append((min(s0_, s1_) - 0.35, max(s0_, s1_) + 0.35))
-            walls_.append((L, a, b, dx, dy, gaps))
+            walls_.append((L, a, b, dx, dy, gaps, row4))
 
     def _Pm(a, dx, dy, s_):
         return (a[0] + dx * s_, a[1] + dy * s_)
@@ -4606,9 +5105,18 @@ def level4(RZ):
         R.panel(V, _Pm(a, dx, dy, sc - 0.40), _Pm(a, dx, dy, sc + 0.40), z0, z1, "int_ru_photos", off=0.02,
                 u0=0.5 * (k % 2), u1=0.5 * (k % 2) + 0.5)
     kf = 0
-    for L, a, b, dx, dy, gaps in walls_:
+    for L, a, b, dx, dy, gaps, row4 in walls_:
         free = lambda s0_, s1_: all(s1_ <= g0 or s0_ >= g1 for g0, g1 in gaps)  # noqa: E731
-        if L > 9.0:
+        if row4:
+            # ru_os_matthews_1: a single row of four frames along the solid south wall
+            for k4 in range(4):
+                sc = L * (k4 + 1) / 5
+                if free(sc - 0.45, sc + 0.45):
+                    # on the exterior wall's inner face (EXT_T / 2 from the plan line) + 2.5 cm
+                    R.panel(V, _Pm(a, dx, dy, sc - 0.40), _Pm(a, dx, dy, sc + 0.40), z + 1.50, z + 2.16,
+                            "int_ru_photos", off=EXT_T / 2 + 0.025 - 0.12, u0=0.5 * (kf % 2), u1=0.5 * (kf % 2) + 0.5)
+                    kf += 1
+        elif L > 9.0:
             # ru_os_matthews_2: cream-matted framed documents (~0.8 x 0.65 m, ~0.45 m apart), a 2-row grid of three
             # next to the door, then single frames down the wall
             sc = L - 0.9
@@ -4649,7 +5157,114 @@ def level4(RZ):
                 nx_, ny_ = dy, -dx
                 pm = _Pm(a, dx, dy, sm)
                 _ceiling_projector(V, P, pm[0] + nx_ * 5.0, pm[1] + ny_ * 5.0, zc, (nx_, ny_))
+    _matthews_anteroom(F4, F4.zone("l4_matthews_suite"), V, z)
+    # fix round 5 (fidelity-4, improvement 2; ru_os_matthews_1..4): white crown moulding round the suite too
+    _crown(F4, ms, V, z + ms.style.get("ceil_h", ms.style["clear"]))
     RZ.kit_add(P, "L4", tag="matthews_photos")
+
+
+def _crown(F, zn, V, zc, h=0.12):
+    """A white crown-moulding strip under the ceiling on a room's solid walls (4 cm proud of the wall face; not
+    on the window wall)."""
+    for a, b in _room_inside_edges(zn, 0.12):
+        L = math.dist(a, b)
+        if L < 0.6:
+            continue
+        dx, dy = (b[0] - a[0]) / L, (b[1] - a[1]) / L
+        nx_, ny_ = dy, -dx
+        if any(F.cls_at((a[0] + dx * L * t_ - nx_ * 0.45, a[1] + dy * L * t_ - ny_ * 0.45))[0] == "O"
+               for t_ in (0.2, 0.5, 0.8)):
+            continue
+        R.panel(V, a, b, zc - h, zc - 0.005, "int_ru_white", off=0.02, ao=1.0)
+
+
+def _matthews_anteroom(F, an, V, z):
+    """fix round 5 (fidelity-4, improvement 2; ru_os_matthews_3 / _4): the anteroom's walls are full of cream-matted
+    framed historic photos (2 x 2 groups, stacked pairs, a row of three with a larger centre one), white double closet
+    doors beside the wood door, white base (zone_style) and crown. Frames 4 cm proud of the wall face."""
+    zc = z + an.style.get("ceil_h", an.style["clear"])
+    doors = _room_doors(F, an)
+    kf = 0
+    for a, b in _room_inside_edges(an, 0.12):
+        L = math.dist(a, b)
+        if L < 0.8:
+            continue
+        dx, dy = (b[0] - a[0]) / L, (b[1] - a[1]) / L
+        nx_, ny_ = dy, -dx
+        if any(F.cls_at((a[0] + dx * L * t_ - nx_ * 0.45, a[1] + dy * L * t_ - ny_ * 0.45))[0] in ("O", "V")
+               for t_ in (0.2, 0.5, 0.8)):
+            continue
+        gaps = []
+        for da, db, dm, dn in doors:
+            if abs((dm[0] - a[0]) * nx_ + (dm[1] - a[1]) * ny_) > 0.5:
+                continue
+            s0_ = (da[0] - a[0]) * dx + (da[1] - a[1]) * dy
+            s1_ = (db[0] - a[0]) * dx + (db[1] - a[1]) * dy
+            gaps.append((min(s0_, s1_) - 0.3, max(s0_, s1_) + 0.3))
+        spans = [(0.15, L - 0.15)]
+        for g0, g1 in sorted(gaps):
+            nxt = []
+            for s0_, s1_ in spans:
+                if g1 <= s0_ or g0 >= s1_:
+                    nxt.append((s0_, s1_))
+                    continue
+                if g0 > s0_:
+                    nxt.append((s0_, g0))
+                if g1 < s1_:
+                    nxt.append((g1, s1_))
+            spans = nxt
+
+        def at(s_, a=a, dx=dx, dy=dy):
+            return (a[0] + dx * s_, a[1] + dy * s_)
+
+        def frame(sc, hw, z0, z1):
+            nonlocal kf
+            R.panel(V, at(sc - hw), at(sc + hw), z0, z1, "int_ru_photos", off=0.02, u0=0.5 * (kf % 2),
+                    u1=0.5 * (kf % 2) + 0.5)
+            kf += 1
+        if L > 6.0 and gaps:
+            # the long wall with the wood door: two white double closets right beside it (ru_os_matthews_3)
+            g0, g1 = min(gaps, key=lambda g: abs((g[0] + g[1]) / 2 - L / 2))
+            side = 1.0 if (L - g1) > g0 else -1.0
+            s_ = g1 if side > 0 else g0
+            for k in range(2):
+                for leaf in range(2):
+                    c0 = s_ + side * (0.05 + k * 1.45 + leaf * 0.66)
+                    c1 = c0 + side * 0.64
+                    R.panel(V, at(min(c0, c1)), at(max(c0, c1)), z + 0.02, z + 2.35, "int_ru_wainscot", off=0.02,
+                            u0=0.0, u1=1.0, v0=0.0, v1=2.0)
+            cl0, cl1 = sorted((s_, s_ + side * (0.05 + 1.45 + 1.32 + 0.2)))
+            nxt = []
+            for s0_, s1_ in spans:
+                if cl1 <= s0_ or cl0 >= s1_:
+                    nxt.append((s0_, s1_))
+                    continue
+                if cl0 > s0_:
+                    nxt.append((s0_, cl0))
+                if cl1 < s1_:
+                    nxt.append((cl1, s1_))
+            spans = nxt
+        for s0_, s1_ in spans:
+            w = s1_ - s0_
+            m = (s0_ + s1_) / 2
+            if w >= 2.2:
+                # a row of three, the centre one larger (ru_os_matthews_4's far wall)
+                frame(m, 0.34, z + 1.30, z + 2.15)
+                frame(m - 0.75, 0.24, z + 1.50, z + 2.05)
+                frame(m + 0.75, 0.24, z + 1.50, z + 2.05)
+                if w >= 3.6:
+                    for sg in (-1.0, 1.0):
+                        for z0_ in (z + 1.15, z + 1.85):
+                            frame(m + sg * 1.45, 0.22, z0_, z0_ + 0.55)
+            elif w >= 1.3:
+                # a 2 x 2 group (ru_os_matthews_3 / _4 side walls)
+                for sg in (-1.0, 1.0):
+                    for z0_ in (z + 1.15, z + 1.85):
+                        frame(m + sg * 0.3, 0.22, z0_, z0_ + 0.55)
+            elif w >= 0.6:
+                for z0_ in (z + 1.15, z + 1.85):
+                    frame(m, 0.22, z0_, z0_ + 0.55)
+    _crown(F, an, V, zc)
 
 
 ARREDONDO_COLUMN = (-437.5, -262.5)    # the stone-clad column mid-room (ru_os_arredondo_cafe; position estimated)
@@ -4742,8 +5357,10 @@ def hotel(RZ):
         # fix round 4 (fidelity-4 pass; ru_hotel_balcony): the cream soffit overhead (the underside of the Level 6
         # balcony) with a deep cream edge beam along the outer side; a ceiling collision face to match
         zs = z + bal.style.get("clear", CLEAR["L5"]) if bal.style else z + CLEAR["L5"]
-        V.poly([(x0, y0, zs), (x0, y1, zs), (x1, y1, zs), (x1, y0, zs)], "int_ru_wall_cream", normal_hint=(0, 0, -1),
-               ao=1.0)
+        # fix round 5 (fidelity-4 / technical blocking): 1.5 cm under the zone's own int_ru_soffit (it lay exactly on
+        # it at zs and z-fought over the balcony)
+        V.poly([(x0, y0, zs - 0.015), (x0, y1, zs - 0.015), (x1, y1, zs - 0.015), (x1, y0, zs - 0.015)],
+               "int_ru_wall_cream", normal_hint=(0, 0, -1), ao=1.0)
         R.seg_box(V, (x1 - 0.16, y0), (x1 - 0.16, y1), 0.16, zs - 0.42, zs - 0.01, "int_ru_wall_cream",
                   faces="sideends_bot")
         C.poly([(x0, y0, zs), (x0, y1, zs), (x1, y1, zs), (x1, y0, zs)], K.COL)
@@ -4944,8 +5561,13 @@ def _acc_studio(V, C, z):
     for j in range(nrow + 1):
         zz = z + 0.06 + (h - 0.08) * j / nrow
         V.box(x0, yf - 0.03, zz - 0.025, x1, yf, zz + 0.025, "int_ru_maple_panel", faces="-y+z-z")
-    bins = ("int_ru_orange_uf", "int_ru_uf_blue", "int_ru_gator_green", "int_ru_orange_uf", "int_ru_uf_blue")
-    for k, (ci, rj) in enumerate(((0, 0), (2, 0), (3, 1), (5, 0), (1, 2))):
+    # fix round 5 (design pass, improvement 4): the cubby unit read as a thin dark strip at camera distance: 12 of
+    # the 18 cubbies hold saturated supply bins (orange / blue / green / red / lime / sky)
+    bins = ("int_ru_orange_uf", "int_ru_uf_blue", "int_ru_gator_green", "int_ru_red", "int_ru_paint_lime",
+            "int_ru_paint_sky", "int_ru_uf_blue", "int_ru_orange_uf", "int_ru_red", "int_ru_gator_green",
+            "int_ru_paint_sky", "int_ru_orange_uf")
+    for k, (ci, rj) in enumerate(((0, 0), (1, 0), (2, 0), (3, 0), (5, 0), (0, 1), (2, 1), (3, 1), (4, 1), (1, 2),
+                                  (3, 2), (5, 2))):
         cx0 = x0 + (x1 - x0) * ci / ncol + 0.08
         cx1 = x0 + (x1 - x0) * (ci + 1) / ncol - 0.08
         zb = z + 0.06 + (h - 0.08) * rj / nrow + 0.03
@@ -4962,20 +5584,49 @@ def _acc_studio(V, C, z):
     V.box(sx0, sy0 - 0.005, z + 0.05, sx1, sy0, z + 0.12, "int_ru_black", faces="-y")      # kick
     K.col_box(C, sx0, sy0, z, sx1, yb, z + 0.92, K.COL_NOCAM)
     # three pottery wheels across the south end (thrower faces north), stools behind
+    # fix round 5 (design pass, improvement 4): at 6.5-10 m the wheels read as grey boxes: a wide white 8-sided
+    # splash pan on each body and a terracotta clay lump on the wheel head (the round head reads from the camera)
     for wx in (-455.0, -452.6, -450.2):
         wy = -265.5
         V.box(wx - 0.32, wy - 0.38, z, wx + 0.32, wy + 0.38, z + 0.42, "int_ru_wall_grey", faces="+x-x+y-y+z")
-        R.cyl(V, wx, wy + 0.06, 0.2, z + 0.42, z + 0.5, "int_ru_steel", n=8, top=True, bottom=False)
-        R.cyl(V, wx, wy + 0.06, 0.09, z + 0.5, z + 0.66, "int_ru_wall_cream", n=6, top=True, bottom=False)   # a pot
+        R.cyl(V, wx, wy + 0.06, 0.34, z + 0.42, z + 0.56, "int_ru_white", n=8, top=True, bottom=False)   # splash pan
+        R.cyl(V, wx, wy + 0.06, 0.15, z + 0.56, z + 0.76, "int_ru_clay", n=8, top=True, bottom=False)    # clay lump
         R.cyl(V, wx, wy - 0.85, 0.17, z, z + 0.48, "int_ru_black", n=6, top=True, bottom=False)          # stool
-        K.col_box(C, wx - 0.32, wy - 0.38, z, wx + 0.32, wy + 0.38, z + 0.5, K.COL_NOCAM)
+        K.col_box(C, wx - 0.32, wy - 0.38, z, wx + 0.32, wy + 0.38, z + 0.56, K.COL_NOCAM)
     # electric kiln in the SW corner (octagonal steel drum on a stand, a grey lid)
+    # fix round 5 (design pass, improvement 4): a ~1 m bright steel drum with a grey lid and a black lid handle
     kx, ky = -457.9, -266.7
-    R.cyl(V, kx, ky, 0.42, z + 0.2, z + 0.95, "int_ru_steel", n=8, top=False, bottom=False)
-    R.cyl(V, kx, ky, 0.44, z + 0.95, z + 1.02, "int_ru_wall_grey", n=8, top=True, bottom=False)
-    V.box(kx - 0.3, ky - 0.3, z, kx + 0.3, ky + 0.3, z + 0.2, "int_ru_black", faces="+x-x+y-y")
-    V.box(kx + 0.1, ky + 0.405, z + 0.5, kx + 0.3, ky + 0.42, z + 0.7, "int_ru_black", faces="+y")       # control box
-    K.col_box(C, kx - 0.44, ky - 0.44, z, kx + 0.44, ky + 0.44, z + 1.02, K.COL_NOCAM)
+    R.cyl(V, kx, ky, 0.5, z + 0.2, z + 1.0, "int_ru_steel_bright", n=8, top=False, bottom=False)
+    R.cyl(V, kx, ky, 0.53, z + 1.0, z + 1.08, "int_ru_wall_grey", n=8, top=True, bottom=False)
+    V.box(kx - 0.18, ky - 0.03, z + 1.08, kx + 0.18, ky + 0.03, z + 1.13, "int_ru_black", faces="+x-x+y-y+z")  # handle
+    V.box(kx - 0.35, ky - 0.35, z, kx + 0.35, ky + 0.35, z + 0.2, "int_ru_black", faces="+x-x+y-y")
+    V.box(kx + 0.08, ky + 0.50, z + 0.5, kx + 0.3, ky + 0.52, z + 0.72, "int_ru_black", faces="+y+x-x+z")  # control box
+    K.col_box(C, kx - 0.53, ky - 0.53, z, kx + 0.53, ky + 0.53, z + 1.08, K.COL_NOCAM)
+    # fix round 5 (design pass, improvement 4; ru_acc_studio: student work on every wall): a band of student
+    # paintings on the blank south wall (its face is slightly skewed: y -267.688 at x -447.9, -267.521 at x -457.8,
+    # measured on the export) and the two east step walls (faces x -447.4 south of the door strip, x -447.2 north
+    # of the mural), 1.7 cm off the wall (no coplanar faces), above the wheels and the kiln
+    def yf_(x_):
+        return -267.688 - 0.01687 * (x_ + 447.9)
+    # (1.0 x 1.3 m each: the first 0.8 x 1.1 m try read as small frames from the 10 m camera). The west wall
+    # north of the book shelf gets six more (its face: x -458.569 at y -246.5, -458.677 at y -259.2)
+    def xw_(y_):
+        return -458.569 + 0.0085 * (y_ + 246.5)
+    k = 0
+    for i in range(8):
+        xe = -447.9 - i * 1.3
+        R.panel(V, (xe, yf_(xe)), (xe - 1.0, yf_(xe - 1.0)), z + 1.35, z + 2.65, "int_ru_student_art", off=0.017,
+                u0=(k % 4) * 0.25, u1=(k % 4) * 0.25 + 0.25)
+        k += 1
+    for xw, yn in ((-447.4, -264.2), (-447.4, -265.9), (-447.2, -249.9), (-447.2, -251.6)):
+        R.panel(V, (xw, yn), (xw, yn - 1.0), z + 1.35, z + 2.65, "int_ru_student_art", off=0.017,
+                u0=(k % 4) * 0.25, u1=(k % 4) * 0.25 + 0.25)
+        k += 1
+    for i in range(6):
+        ys = -258.6 + i * 2.0
+        R.panel(V, (xw_(ys), ys), (xw_(ys + 1.0), ys + 1.0), z + 1.35, z + 2.65, "int_ru_student_art", off=0.017,
+                u0=(k % 4) * 0.25, u1=(k % 4) * 0.25 + 0.25)
+        k += 1
 
 
 def lower_level(RZ):
@@ -5196,6 +5847,99 @@ WAINSCOT_FLOORS = ("LL", "L2")
 WAINSCOT_H = 0.94          # navy field; a 6 cm cherry rail cap on top (1.0 m, under the bulletin boards at 1.05)
 
 
+def _built_wall_index(RZ):
+    """fix round 5 (technical blocking 2): every BUILT vertical visual face so far (placed kit props), hashed on a
+    1 m plan grid: (nx, ny, d, x0, x1, y0, y1, z0, z1). _corridor_wainscot measures the real wall face from it (the
+    plan-wall estimate of _face_off left the band 0.04-0.43 u off some walls: angled runs, skirtings, other builds)."""
+    H = {}
+    for _t, _g, p in RZ.kit.items:
+        for pl in p.visual.polys:
+            pts = pl.pts
+            if len(pts) < 3:
+                continue
+            nx = ny = nz = 0.0
+            for i_ in range(len(pts)):
+                a_, b_ = pts[i_], pts[(i_ + 1) % len(pts)]
+                nx += (a_[1] - b_[1]) * (a_[2] + b_[2])
+                ny += (a_[2] - b_[2]) * (a_[0] + b_[0])
+                nz += (a_[0] - b_[0]) * (a_[1] + b_[1])
+            L_ = math.sqrt(nx * nx + ny * ny + nz * nz)
+            if L_ < 1e-6 or abs(nz) / L_ > 0.05:
+                continue
+            h_ = math.hypot(nx, ny)
+            nx, ny = nx / h_, ny / h_
+            xs, ys, zs = [q[0] for q in pts], [q[1] for q in pts], [q[2] for q in pts]
+            e = (nx, ny, nx * pts[0][0] + ny * pts[0][1], min(xs), max(xs), min(ys), max(ys), min(zs), max(zs))
+            for i_ in range(int(math.floor(e[3])), int(math.floor(e[4])) + 1):
+                for j_ in range(int(math.floor(e[5])), int(math.floor(e[6])) + 1):
+                    H.setdefault((i_, j_), []).append(e)
+    return H
+
+
+def _built_face_t(H, q, nout, z0, z1, reach=0.4):
+    """The largest offset t along nout (|t| <= reach) of a built face facing nout that covers q + t * nout over the
+    height z0..z1 (None if there is none)."""
+    best = None
+    for e in H.get((int(math.floor(q[0])), int(math.floor(q[1]))), ()):
+        nx, ny, d, x0, x1, y0, y1, ez0, ez1 = e
+        dn = nx * nout[0] + ny * nout[1]
+        if dn < 0.995 or ez1 < z0 + 0.01 or ez0 > z1 - 0.01:
+            continue
+        t_ = (d - nx * q[0] - ny * q[1]) / dn
+        if abs(t_) > reach:
+            continue
+        px, py = q[0] + nout[0] * t_, q[1] + nout[1] * t_
+        if x0 - 0.02 <= px <= x1 + 0.02 and y0 - 0.02 <= py <= y1 + 0.02:
+            if best is None or t_ > best:
+                best = t_
+    return best
+
+
+def _built_face_plane(HB, p0, p1, nout, z0, z1):
+    """fix round 5: the plane (nx, ny, d) of the most proud built face facing nout that covers BOTH ends and the
+    middle of p0 -> p1 (None if no single plane does)."""
+    pick = None
+    for q in (p0, ((p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2), p1):
+        best = None
+        for e in HB.get((int(math.floor(q[0])), int(math.floor(q[1]))), ()):
+            nx, ny, d, x0, x1, y0, y1, ez0, ez1 = e
+            dn = nx * nout[0] + ny * nout[1]
+            if dn < 0.995 or ez1 < z0 + 0.01 or ez0 > z1 - 0.01:
+                continue
+            t_ = (d - nx * q[0] - ny * q[1]) / dn
+            if abs(t_) > 0.4:
+                continue
+            px, py = q[0] + nout[0] * t_, q[1] + nout[1] * t_
+            if x0 - 0.02 <= px <= x1 + 0.02 and y0 - 0.02 <= py <= y1 + 0.02 and (best is None or t_ > best[0]):
+                best = (t_, (round(nx, 4), round(ny, 4), round(d, 3)))
+        if best is None:
+            return None
+        if pick is None:
+            pick = best[1]
+        elif abs(best[1][0] - pick[0]) > 1e-3 or abs(best[1][1] - pick[1]) > 1e-3 or abs(best[1][2] - pick[2]) > 0.003:
+            return None
+    return pick
+
+
+def _strip_shift(HB, a, b, z0, z1, gap=0.015, cap=0.08):
+    """fix round 5 (technical blocking 2): how far (>= 0) a strip drawn at off=0 on the line a -> b (facing right)
+    must move out to stand gap proud of every BUILT face behind it (faces up to cap off the line; a closer look than
+    the plan-wall estimate, which left bands 0.1-0.4 u off the ballroom walls)."""
+    L = math.dist(a, b)
+    if L < 0.05:
+        return 0.0
+    dx, dy = (b[0] - a[0]) / L, (b[1] - a[1]) / L
+    nrm = (dy, -dx)
+    best = None
+    n = max(2, int(L / 0.5) + 1)
+    for k in range(n + 1):
+        q = (a[0] + dx * L * k / n, a[1] + dy * L * k / n)
+        t_ = _built_face_t(HB, q, nrm, z0, z1, reach=cap)
+        if t_ is not None and (best is None or t_ > best):
+            best = t_
+    return 0.0 if best is None else max(0.0, best + gap)
+
+
 def _corridor_wainscot(RZ, F, P):
     """fix round 4 (design pass, improvement 3; no photo of the LL corridor or the L2 pre-function hall, inferred, in
     the house palette): from 4-9 m behind Mario the 5.4 m white room blocks along the LL corridor and the L2
@@ -5207,6 +5951,7 @@ def _corridor_wainscot(RZ, F, P):
     z = F.z
     n_runs, run_len = 0, 0.0
     step = 0.25
+    HB = _built_wall_index(RZ)
     for oz in F.zones:
         if oz.type not in SOLID_TYPES or oz.cls not in ("S", "W"):
             continue
@@ -5242,8 +5987,31 @@ def _corridor_wainscot(RZ, F, P):
                     continue
                 c = (pa[0] + u[0] * (s0 + s1) / 2, pa[1] + u[1] * (s0 + s1) / 2)
                 off_ = _face_off(F, c, nout, gap=0.025)
+                # fix round 5 (technical blocking 2): measured on the BUILT faces at every sample of the run (not
+                # only the plan-wall estimate at its centre): 2 cm proud of the most proud face anywhere along it
+                tb = [_built_face_t(HB, (pa[0] + u[0] * sv, pa[1] + u[1] * sv), nout, z + 0.02, z + 1.0)
+                      for sv in ss[k0:k] + [s1]]
+                tb = [t_ for t_ in tb if t_ is not None]
+                if tb:
+                    off_ = max(off_, max(tb) + 0.02)
                 p0 = (pa[0] + u[0] * s0, pa[1] + u[1] * s0)      # right of p0 -> p1 = nout (the corridor)
                 p1 = (pa[0] + u[0] * s1, pa[1] + u[1] * s1)
+                # ... and PARALLEL to that face (the room edge can be ~1-2 degrees off the built wall): the band's ends
+                # are put 2 cm off the face plane itself when one face covers the whole run
+                fe = _built_face_plane(HB, p0, p1, nout, z + 0.02, z + 1.0)
+                if fe is not None:
+                    for sv in ss[k0:k]:
+                        q_ = (pa[0] + u[0] * sv, pa[1] + u[1] * sv)
+                        tq = _built_face_t(HB, q_, nout, z + 0.02, z + 1.0)
+                        dn_ = fe[0] * nout[0] + fe[1] * nout[1]
+                        if tq is not None and (fe[2] - fe[0] * q_[0] - fe[1] * q_[1]) / dn_ < tq - 0.003:
+                            fe = None           # a more proud face somewhere along the run: keep the max offset
+                            break
+                if fe is not None:
+                    fnx, fny, fd = fe
+                    p0 = (p0[0] + fnx * (fd + 0.02 - fnx * p0[0] - fny * p0[1]), p0[1] + fny * (fd + 0.02 - fnx * p0[0] - fny * p0[1]))
+                    p1 = (p1[0] + fnx * (fd + 0.02 - fnx * p1[0] - fny * p1[1]), p1[1] + fny * (fd + 0.02 - fnx * p1[0] - fny * p1[1]))
+                    off_ = 0.0
                 R.panel(V, p0, p1, z + 0.02, z + WAINSCOT_H, "int_ru_wall_navy", off=off_, u1=round((s1 - s0) / 2.0, 3),
                         v1=0.46)       # texel density as the 2 m tile
                 R.panel(V, p0, p1, z + WAINSCOT_H, z + 1.0, "int_ru_cherry", off=off_, u1=round((s1 - s0) / 1.2, 3),

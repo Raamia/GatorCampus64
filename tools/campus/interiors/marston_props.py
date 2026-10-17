@@ -360,7 +360,7 @@ def hex_ottoman(r=0.55, h=0.45, tint=T_SALMON, col=True):
 
 
 def banquette_arc(r_in=1.15, depth=0.62, a0=200.0, a1=340.0, seat_tint=T_ORANGE_LEATHER, back_mat="int_ms_fab_dark",
-                  back_tint=None, base_tint=None, seat_h=0.44, back_h=1.02, n=None, col=True):
+                  back_tint=None, base_tint=None, seat_h=0.44, back_h=1.02, n=None, col=True, banded=False):
     """Curved modular banquette (F2 lounge: orange-tan leather seats, charcoal patterned backs [#24 #25]; F1: salmon
     seats, olive base, multicolour backs [#38]). Local origin = the circle's centre; the seats face it. Angles in
     degrees, counter-clockwise from local +x. Collision: one block per segment (seat height) + the back."""
@@ -392,8 +392,17 @@ def banquette_arc(r_in=1.15, depth=0.62, a0=200.0, a1=340.0, seat_tint=T_ORANGE_
                back_mat, tint=bt, normal_hint=(-(ma[0] + mb[0]), -(ma[1] + mb[1]), 0))
         V.poly([(ma[0], ma[1], back_h), (oa[0], oa[1], back_h), (ob[0], ob[1], back_h), (mb[0], mb[1], back_h)],
                back_mat, tint=bt, normal_hint=(0, 0, 1))
-        V.poly([(oa[0], oa[1], 0.06), (ob[0], ob[1], 0.06), (ob[0], ob[1], back_h), (oa[0], oa[1], back_h)], back_mat,
-               tint=(bt[0] * 0.9, bt[1] * 0.9, bt[2] * 0.9), normal_hint=(oa[0] + ob[0], oa[1] + ob[1], 0))
+        if banded:
+            # iteration 5 (fidelity-1, #38 4272): the outer back is banded bottom-up: olive base, salmon band, the
+            # multicolour fabric band, a salmon cap (strips edge to edge, no overlap)
+            for z0_, z1_, m_, t_ in ((0.06, 0.30, "int_ms_leather", base_t), (0.30, 0.55, "int_ms_leather", seat_tint),
+                                     (0.55, 0.78, back_mat, (bt[0] * 0.9, bt[1] * 0.9, bt[2] * 0.9)),
+                                     (0.78, back_h, "int_ms_leather", seat_tint)):
+                V.poly([(oa[0], oa[1], z0_), (ob[0], ob[1], z0_), (ob[0], ob[1], z1_), (oa[0], oa[1], z1_)], m_,
+                       tint=t_, normal_hint=(oa[0] + ob[0], oa[1] + ob[1], 0))
+        else:
+            V.poly([(oa[0], oa[1], 0.06), (ob[0], ob[1], 0.06), (ob[0], ob[1], back_h), (oa[0], oa[1], back_h)],
+                   back_mat, tint=(bt[0] * 0.9, bt[1] * 0.9, bt[2] * 0.9), normal_hint=(oa[0] + ob[0], oa[1] + ob[1], 0))
         if col:
             col_prism(C, [a, b, mb, ma], 0.0, seat_h)
             col_prism(C, [ma, mb, ob, oa], 0.0, back_h)
@@ -473,7 +482,10 @@ def commons_pod(arm=1.25, h=1.35, col=True):
         y0, y1 = sorted((0.0, dy * arm)) if dy else (-t, t)
         # iteration 4 (fidelity-1, #36 4212): the photo's pod panels are a light blue-grey (RGB ~116 / 120 / 147); the
         # (1.25, 1.27, 1.32) felt rendered a neutral 87-109 / 93-114 / 99-119
-        V.box(x0, y0, 0.22, x1, y1, h - 0.08, "int_ms_felt", faces="+x-x+y-y+z", tint=(1.35, 1.38, 1.60))
+        # iteration 5 (fidelity-1, #36 4212: still 73-75 / 78-81 / 82-85 rendered vs the photo's ~125 / 130 / 158; a
+        # tint cannot lift the dark #5E605E felt past its own colour, the vertex colour clamps at 1): the light,
+        # low-noise int_ms_leather tinted blue-grey (only the commons pods; the F5 pods keep the dark felt)
+        V.box(x0, y0, 0.22, x1, y1, h - 0.08, "int_ms_leather", faces="+x-x+y-y+z", tint=(0.81, 0.83, 1.01))
         ex, ey = dx * arm, dy * arm
         # fidelity-1: posts 5 cm square (were 8 cm: their faces sat 1 cm off the 10 cm felt panel's, z-fighting)
         V.box(ex - 0.025, ey - 0.025, 0.0, ex + 0.025, ey + 0.025, h, "int_metal", faces="+x-x+y-y+z")
@@ -766,14 +778,20 @@ def white_benching_120(arms=3, arm_l=1.5, h=0.74, col=True, chair=None, monitors
     iteration 4: chair = sayl_chair kwargs (the lab's light grey LAB_CHAIR), monitors = a monitor on each desk."""
     P = K.Prop("bench120", col_closed=True)
     V = P.visual
+    # iteration 5 (fidelity-2): the desk tops start where neighbouring arms' corners meet (r0) and a hub polygon fills
+    # the centre, so the arms no longer overlap coplanar at the hub (z-fight scan); the collision keeps r = 0.15
+    r0 = max(0.15, 0.38 / math.tan(math.pi / arms))
+    hub = []
     for k in range(arms):
         a = 2 * math.pi * k / arms
         ca, sa = math.cos(a), math.sin(a)
 
         def rot(x, y):
             return (x * ca - y * sa, x * sa + y * ca)
+        hub.append(rot(r0, 0.38))
         pts = [rot(0.15, -0.38), rot(arm_l, -0.38), rot(arm_l, 0.38), rot(0.15, 0.38)]
-        prism(V, pts, h - 0.03, h, "int_drywall", tint=(1.0, 1.0, 1.0))
+        vpts = [rot(r0, -0.38), rot(arm_l, -0.38), rot(arm_l, 0.38), rot(r0, 0.38)]
+        prism(V, vpts, h - 0.03, h, "int_drywall", tint=(1.0, 1.0, 1.0))
         p, q = rot(0.2, 0.40), rot(arm_l, 0.40)
         V.wall(p, q, h, h + 0.36, "int_ms_glass_frost")         # fidelity-2 fix 2: frosted (#64), not blue
         V.wall(q, p, h, h + 0.36, "int_ms_glass_frost")
@@ -786,6 +804,9 @@ def white_benching_120(arms=3, arm_l=1.5, h=0.74, col=True, chair=None, monitors
             P.merge(K.monitor(screen_w=0.56, screen_h=0.36), mx, my, h, (math.degrees(-a) + 180.0) % 360.0)
         if col:
             col_prism(P.collision, pts, 0.0, h)
+    if K._signed_area(hub) < 0:
+        hub.reverse()
+    V.poly([(x, y, h) for x, y in hub], "int_drywall", tint=(1.0, 1.0, 1.0))
     return P
 
 
@@ -832,7 +853,9 @@ def range_unit(L, W, h, books="int_ms_stacks", end_tint=T_STEEL_BLUE, shelf_tint
         # design fix round 1: one slim label strip near the top of the panel (#83-#86); the two 0.24 m squares at
         # 62-70 % read as pairs of eyes on every aisle end. labels: True (both ends), False, or "+x" / "-x"
         if labels is True or labels == ("+x" if sx > 0 else "-x"):
-            xl = x1 + 0.005 if sx > 0 else x0 - 0.005
+            # iteration 5 (technical): 1.2 cm proud (0.5 cm rounded onto the end panel's plane at the shortened F4
+            # south range ends, game z 1560: five thin flicker strips)
+            xl = x1 + 0.012 if sx > 0 else x0 - 0.012
             zc = h * 0.88
             pl = [(xl, -0.15, zc - 0.04), (xl, 0.15, zc - 0.04), (xl, 0.15, zc + 0.04), (xl, -0.15, zc + 0.04)]
             if sx < 0:
@@ -858,13 +881,14 @@ def range_unit(L, W, h, books="int_ms_stacks", end_tint=T_STEEL_BLUE, shelf_tint
     return P
 
 
-def low_shelf(L=1.4, W=0.9, h=1.15, sign=None, books="int_ms_stacks", seed=0, col=True):
+def low_shelf(L=1.4, W=0.9, h=1.15, sign=None, books="int_ms_stacks", seed=0, col=True, steel=None):
     """Grey steel double-faced low display shelf with a maple top (Collection Highlights #24 #31, New Books #32),
-    a white sign panel on the +x end (sign: an int_ms_sign_* material). Collision: one block."""
+    a white sign panel on the +x end (sign: an int_ms_sign_* material). Collision: one block. steel: the carcass
+    tint (iteration 5: the darker steel of the sci-fi shelves by L308, #80)."""
     P = K.Prop("low_shelf", col_closed=True)
     V = P.visual
     hl, hw = L / 2, W / 2
-    g = (0.70, 0.72, 0.76)
+    g = steel or (0.70, 0.72, 0.76)
     V.box(-hl, -hw, 0.0, hl, hw, h - 0.04, "int_drywall", faces="+x-x", tint=g)
     V.box(-hl, -hw, h - 0.04, hl, hw, h, "int_ms_maple", faces=K.BOX_ALL)
     rng = random.Random(seed)
@@ -1275,8 +1299,8 @@ def fish_tank(L=1.8, W=0.6, h=1.45, stand=0.78):
         # averages lum ~28; the render read pale cyan-green 86/116/111): a dimmer back, darker water on the glass,
         # darker gravel, black rock and deep-green fronds
         V.poly(quad(-hl + 0.02, hl - 0.02, sgn * 0.02, zb, zt), "int_ms_aquarium", uvs=K.ONCE, glow=True,
-               tint=(0.72, 0.78, 0.74))
-        V.poly(quad(-hl + 0.01, hl - 0.01, sgn * hw, stand, h - 0.10), "int_glass", tint=(0.42, 0.54, 0.50))
+               tint=(0.80, 0.90, 0.76))                   # iteration 5 (fidelity-4, #78): a little brighter
+        V.poly(quad(-hl + 0.01, hl - 0.01, sgn * hw, stand, h - 0.10), "int_glass", tint=(0.48, 0.60, 0.52))
         V.poly([(-hl + 0.02, 0.0, zb), (hl - 0.02, 0.0, zb), (hl - 0.02, sgn * (hw - 0.02), zb),
                 (-hl + 0.02, sgn * (hw - 0.02), zb)][::sgn], "int_ms_carpet", tint=(0.44, 0.40, 0.32),
                normal_hint=(0, 0, 1))
@@ -1297,7 +1321,9 @@ def fish_tank(L=1.8, W=0.6, h=1.45, stand=0.78):
             for k in range(nk):
                 x = -hl + 0.12 + (L - 0.24) * (k + rng.uniform(0.1, 0.9)) / nk
                 hh = rng.uniform(0.25, 0.62) * (1.0 if layer == 0 else 0.55) * (zt - zb)
-                g = rng.choice(((0.28, 0.54, 0.22), (0.38, 0.62, 0.24), (0.20, 0.44, 0.18)))
+                # iteration 5 (fidelity-4, #78 f3_fish_tank_2023: a brightly lit tank of vivid green plants, luminance
+                # ~99; g4_fish read 54): brighter, more saturated greens (the random draws are unchanged)
+                g = rng.choice(((0.34, 0.70, 0.20), (0.48, 0.80, 0.22), (0.26, 0.58, 0.16)))
                 lean = rng.uniform(-0.10, 0.10)
                 for dw in (-0.09, 0.0, 0.09):
                     tri = [(x - 0.08, sgn * yy, zb), (x + 0.08, sgn * yy, zb),
@@ -1345,6 +1371,15 @@ def vending_machine(w=1.0, d=0.85, h=1.85):
     V = P.visual
     V.box(-w / 2, -d / 2, 0.0, w / 2, d / 2, h, "int_drywall", faces="+x-x-y+z", tint=(0.44, 0.34, 0.66))
     V.poly(K.front_quad(-w / 2, w / 2, d / 2, 0.0, h), "int_ms_vending", uvs=K.ONCE, glow=True, tint=(0.95, 0.95, 0.98))
+    # iteration 5 (fidelity-2, #73): the lower third is a full-colour 'SUPPLIES AND MORE' photo graphic (1.5 cm proud
+    # of the front), and a silver keypad / card-reader column runs down the viewer's right 0.2 m (local -x, 3 cm
+    # proud) with a dark keypad and a black card slot on it (each 1.2 cm proud of the one behind)
+    kx0, kx1 = -w / 2 + 0.02, -w / 2 + 0.20
+    V.poly(K.front_quad(kx1 + 0.03, w / 2 - 0.03, d / 2 + 0.015, 0.14, 0.69), "int_ms_vend_graphic", uvs=K.ONCE,
+           glow=True)
+    V.box(kx0, d / 2, 0.14, kx1, d / 2 + 0.03, h - 0.22, "int_metal", faces="+y+x-x+z-z", tint=(1.05, 1.06, 1.10))
+    V.poly(K.front_quad(kx0 + 0.04, kx1 - 0.04, d / 2 + 0.042, 1.02, 1.24), "int_plastic", tint=(0.20, 0.20, 0.22))
+    V.poly(K.front_quad(kx0 + 0.05, kx1 - 0.05, d / 2 + 0.042, 0.84, 0.90), "int_plastic", tint=(0.08, 0.08, 0.09))
     K.col_box(P.collision, -w / 2, -d / 2, 0.0, w / 2, d / 2, h, NOCAM)
     return P
 
@@ -1554,6 +1589,21 @@ def pegboard_wall(L=2.4, h=1.4, z=0.95):
     V.poly(K.front_quad(-L / 2, L / 2, 0.02, z, z + h), "int_ms_pegboard", uvs=K.uv_rect(0, 0, L, h))
     V.box(-L / 2, 0.0, 0.88, L / 2, 0.65, 0.92, "int_ms_butcher", faces="+y+z+x-x")
     V.box(-L / 2, 0.0, 0.0, L / 2, 0.6, 0.88, "int_metal", faces="+y+x-x", tint=(0.36, 0.36, 0.38))
+    # iteration 5 (fidelity-2, #58 peg): the signature fan of orange-handled wrenches, hung from one peg in the upper
+    # left of the board: steel shafts 1.5 cm off the board, the orange grips 1.2 cm off the shafts
+    hx, hz = L / 2 - 0.45, z + h - 0.30
+    for k in range(9):
+        a = math.radians(-60.0 + k * 15.0)
+        ux, uz = math.sin(a), -math.cos(a)
+        px, pz = -uz * 0.016, ux * 0.016
+
+        def quad(r0, r1, w, y, mat, tint):
+            q = [(hx + ux * r0 - px * w, y, hz + uz * r0 - pz * w), (hx + ux * r1 - px * w, y, hz + uz * r1 - pz * w),
+                 (hx + ux * r1 + px * w, y, hz + uz * r1 + pz * w), (hx + ux * r0 + px * w, y, hz + uz * r0 + pz * w)]
+            V.poly(q, mat, tint=tint, normal_hint=(0, 1, 0), ao=1.0)
+        # (shafts start 0.13 m and grips 0.19 m out from the peg: neighbours 15 degrees apart never overlap)
+        quad(0.13, 0.19 + 0.012 * k, 1.0, 0.035, "int_metal", (1.02, 1.03, 1.06))
+        quad(0.19 + 0.012 * k, 0.30 + 0.014 * k, 1.4, 0.047, "int_plastic", (0.96, 0.46, 0.12))
     K.col_box(P.collision, -L / 2, 0.0, 0.0, L / 2, 0.65, 0.92, NOCAM)
     return P
 
@@ -1569,7 +1619,7 @@ def printer_station(w=1.2, d=0.8, h=1.15):
     return P
 
 
-def door_leaf(w=0.95, h=2.13, mat="int_ms_veneer", vision=True, open_deg=0.0, tint=None):
+def door_leaf(w=0.95, h=2.13, mat="int_ms_veneer", vision=True, open_deg=0.0, tint=None, col=None):
     """A wood-veneer door leaf (study rooms #36 #38, data room #77, L308 #78), hinge at local x = 0, closed along
     +x, swung open by open_deg (positive = toward +y). Visual only (door gaps stay open for co-op traffic)."""
     P = K.Prop("door_leaf", col_closed=True)
@@ -1596,6 +1646,14 @@ def door_leaf(w=0.95, h=2.13, mat="int_ms_veneer", vision=True, open_deg=0.0, ti
                 V.wall(a0, a1, 1.0, 1.85, "int_glass", tint=(0.8, 0.85, 0.9))
     hx, hy = ux * (w - 0.08), uy * (w - 0.08)
     V.box(hx - 0.03, hy - 0.06, 1.0, hx + 0.03, hy + 0.06, 1.08, "int_metal", faces="+x-x+y-y+z")
+    if col:
+        # iteration 5: an optional NO_CAM block along the leaf, 14 cm thick (the thin-wall rule). Off by default:
+        # on every swung leaf it added 24 airborne pass-throughs and blocked the L129 / R201F door walks (QA r5),
+        # so the swung leaves stay visual only
+        k = 0.07 / (t / 2)
+        cn = (nx * k, ny * k)
+        col_prism(P.collision, [(cn[0], cn[1]), (ux * w + cn[0], uy * w + cn[1]), (ux * w - cn[0], uy * w - cn[1]),
+                                (-cn[0], -cn[1])], 0.0, h)
     return P
 
 
@@ -1865,24 +1923,97 @@ def printer_rack(L=1.2, d=0.5, h=1.85, printers=5, seed=0, col=True):
     return P
 
 
-def spool_wall(L=2.4, z0=1.0, z1=2.3, seed=0):
-    """fidelity-2 (#60): the wall of coloured thread spools and ribbon rolls on pegs above the long sewing table.
-    On the wall plane y = 0, facing +y. Visual only."""
+def spool_wall(L=2.4, z0=1.0, z1=2.3, seed=0, ledges=5, garland=True):
+    """fidelity-2 (#60): the wall of coloured thread spools and ribbon rolls above the long sewing table.
+    iteration 5 (fidelity-2, #60 m_supply_w: the flat white board with coloured cells read as a poster): a deep,
+    dense rack: `ledges` stepped shelves (0.14 m deep at the foot to 0.09 m at the head) on a dark backing, each
+    carrying a packed row of spools / ribbon rolls standing on it, and a bunting garland of pennants along the top.
+    On the wall plane y = 0, facing +y. Visual only (the shelves stay within 0.15 m of the wall: the sewing table
+    in front keeps players further off)."""
     P = K.Prop("spool_wall", col_closed=True)
     V = P.visual
     rng = random.Random(seed)
-    V.poly(K.front_quad(-L / 2, L / 2, 0.012, z0, z1), "int_ms_pegboard", uvs=K.uv_rect(0, 0, L, z1 - z0))
+    V.poly(K.front_quad(-L / 2, L / 2, 0.012, z0, z1), "int_plastic", tint=(0.22, 0.21, 0.23), ao=1.0)
     cols = ((0.86, 0.20, 0.20), (0.95, 0.55, 0.15), (0.95, 0.85, 0.22), (0.30, 0.70, 0.35), (0.25, 0.50, 0.88),
             (0.55, 0.35, 0.78), (0.96, 0.62, 0.72), (1.0, 1.0, 1.0), (0.22, 0.22, 0.24), (0.40, 0.80, 0.80))
-    rows = int((z1 - z0 - 0.06) / 0.16)
-    for r in range(rows):
-        z = z0 + 0.05 + r * 0.16
-        x = -L / 2 + 0.06
-        while x < L / 2 - 0.12:
-            w = rng.choice((0.05, 0.05, 0.06, 0.10))
-            hh = 0.08 if w < 0.08 else 0.06
-            V.box(x, 0.012, z, x + w, 0.075, z + hh, "int_ms_wall", faces="+y+z", tint=rng.choice(cols))
-            x += w + 0.03
+    step = (z1 - z0 - 0.04) / ledges
+    for r in range(ledges):
+        z = z0 + r * step
+        dep = 0.14 - 0.05 * r / max(1, ledges - 1)
+        V.box(-L / 2 + 0.01, 0.012, z - 0.025, L / 2 - 0.01, dep, z, "int_ms_wall", faces="+y+z-z+x-x",
+              tint=(0.90, 0.90, 0.88))
+        x = -L / 2 + 0.04
+        while x < L / 2 - 0.10:
+            w = rng.choice((0.045, 0.05, 0.06, 0.06, 0.09))
+            hh = rng.choice((0.08, 0.10, 0.12)) if w < 0.08 else 0.07
+            hh = min(hh, step - 0.05)
+            V.box(x, 0.03, z, x + w, dep - 0.015, z + hh, "int_ms_wall", faces="+y+z", tint=rng.choice(cols))
+            x += w + 0.012
+    if garland:                                   # the bunting along the head: pennants on a cord, 3 cm off the wall
+        zt = z1 + 0.06
+        V.box(-L / 2 + 0.02, 0.025, zt - 0.006, L / 2 - 0.02, 0.035, zt + 0.006, "int_plastic", faces="+y-z",
+              tint=(0.95, 0.95, 0.92))
+        n = int(L / 0.16)
+        for k in range(n):
+            cx = -L / 2 + (k + 0.5) * L / n
+            V.poly([(cx + 0.06, 0.03, zt), (cx - 0.06, 0.03, zt), (cx, 0.03, zt - 0.13)], "int_ms_wall",
+                   tint=cols[k % 7], normal_hint=(0, 1, 0))
+    return P
+
+
+def solder_bench_kit(L=3.3, D=0.75, seed=0):
+    """iteration 5 (fidelity-2, #59 solder: the butcher-block perimeter benches were bare): the electronics bench's
+    kit along the back of a bench top (z = 0 on the top, local +y = the room side, the bench L x D centred on the
+    origin): parts-drawer organisers (grey frames, rows of clear drawers with coloured parts), soldering stations
+    (blue-grey box, red dial, the iron in its stand), black fume extractors with a grey filter face, a monitor.
+    Each front detail 1.2-1.5 cm off the face behind it. Visual only."""
+    P = K.Prop("solder_kit", col_closed=True)
+    V = P.visual
+    rng = random.Random(seed)
+    yb = -D / 2 + 0.06
+    parts = ((0.86, 0.30, 0.22), (0.95, 0.78, 0.25), (0.30, 0.55, 0.86), (0.36, 0.66, 0.42), (0.85, 0.85, 0.82))
+
+    def organiser(x):
+        w, d, h = 0.42, 0.17, 0.32
+        V.box(x - w / 2, yb, 0.0, x + w / 2, yb + d, h, "int_plastic", faces="+x-x+y+z", tint=(0.62, 0.63, 0.66))
+        for r in range(5):
+            for c in range(4):
+                u0 = x - w / 2 + 0.02 + c * (w - 0.04) / 4
+                z0 = 0.02 + r * (h - 0.04) / 5
+                V.poly(K.front_quad(u0 + 0.008, u0 + (w - 0.04) / 4 - 0.008, yb + d + 0.013, z0 + 0.008,
+                                    z0 + (h - 0.04) / 5 - 0.008), "int_plastic", tint=rng.choice(parts), ao=1.0)
+
+    def station(x):
+        V.box(x - 0.11, yb + 0.02, 0.0, x + 0.11, yb + 0.18, 0.11, "int_plastic", faces="+x-x+y+z",
+              tint=(0.26, 0.32, 0.42))
+        V.poly(K.front_quad(x - 0.07, x - 0.01, yb + 0.193, 0.03, 0.09), "int_plastic", tint=(0.86, 0.18, 0.16),
+               ao=1.0)
+        V.poly(K.front_quad(x + 0.02, x + 0.08, yb + 0.193, 0.05, 0.08), "int_plastic", tint=(0.10, 0.30, 0.20),
+               ao=1.0)
+        sx = x + 0.20                                          # the iron stand: a coil post and the yellow handle
+        V.box(sx - 0.04, yb + 0.06, 0.0, sx + 0.04, yb + 0.14, 0.03, "int_metal", faces="+x-x+y-y+z")
+        V.box(sx - 0.012, yb + 0.088, 0.03, sx + 0.012, yb + 0.112, 0.15, "int_metal", faces="+x-x+y-y+z",
+              tint=(0.85, 0.86, 0.90))
+        V.box(sx - 0.016, yb + 0.084, 0.15, sx + 0.016, yb + 0.116, 0.24, "int_plastic", faces="+x-x+y-y+z",
+              tint=(0.95, 0.78, 0.20))
+
+    def extractor(x):
+        V.box(x - 0.12, yb, 0.0, x + 0.12, yb + 0.11, 0.26, "int_plastic", faces="+x-x+y+z", tint=(0.12, 0.12, 0.13))
+        V.poly(K.front_quad(x - 0.09, x + 0.09, yb + 0.123, 0.05, 0.23), "int_plastic", tint=(0.42, 0.43, 0.45),
+               ao=1.0)
+
+    plan = [("org", -1.30), ("sta", -0.80), ("ext", -0.30), ("mon", 0.20), ("org", 0.72), ("sta", 1.12)]
+    if seed % 2:
+        plan = [(k, -x) for (k, x) in plan]
+    for kind, x in plan:
+        if kind == "org":
+            organiser(x)
+        elif kind == "sta":
+            station(x)
+        elif kind == "ext":
+            extractor(x)
+        else:
+            P.merge(K.monitor(screen_w=0.5, screen_h=0.32), x, yb + 0.12, 0.0, 0.0)
     return P
 
 

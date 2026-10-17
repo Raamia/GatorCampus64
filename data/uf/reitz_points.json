@@ -8905,12 +8905,12 @@
    }
   ],
   "pickups": {
-   "coins_placed": 89,
-   "coins_with_goombas": 89,
-   "objects": 40,
+   "coins_placed": 100,
+   "coins_with_goombas": 100,
+   "objects": 43,
    "by_kind": {
-    "coin_line": 13,
-    "coin": 24,
+    "coin_line": 15,
+    "coin": 25,
     "heart": 1,
     "1up": 2
    },
@@ -9258,21 +9258,81 @@
     },
     {
      "kind": "coin_line",
-     "name": "outdoor dining terrace coins (line)",
+     "name": "outdoor dining terrace coins",
      "map_m": [
-      -422.1,
-      -331.4,
+      -419.4,
+      -326.0,
       6.0
      ],
      "game": [
-      4790,
+      5060,
       600,
-      3840
+      3300
      ],
      "behavior": "bhvCoinFormation",
      "model": "MODEL_NONE",
      "bparams": "0x00000000",
-     "facing_deg": 90.0,
+     "facing_deg": 0.0,
+     "coins": 5,
+     "acts": null
+    },
+    {
+     "kind": "coin_line",
+     "name": "acc east aisle coins",
+     "map_m": [
+      -448.6,
+      -257.0,
+      -6.0
+     ],
+     "game": [
+      2140,
+      -600,
+      -3600
+     ],
+     "behavior": "bhvCoinFormation",
+     "model": "MODEL_NONE",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
+     "coins": 5,
+     "acts": null
+    },
+    {
+     "kind": "coin",
+     "name": "acc kiln lid coin",
+     "map_m": [
+      -457.9,
+      -266.7,
+      -4.32
+     ],
+     "game": [
+      1210,
+      -432,
+      -2630
+     ],
+     "behavior": "bhvYellowCoin",
+     "model": "MODEL_YELLOW_COIN",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
+     "coins": 1,
+     "acts": null
+    },
+    {
+     "kind": "coin_line",
+     "name": "game room window coins",
+     "map_m": [
+      -422.8,
+      -309.0,
+      0.0
+     ],
+     "game": [
+      4720,
+      0,
+      1600
+     ],
+     "behavior": "bhvCoinFormation",
+     "model": "MODEL_NONE",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
      "coins": 5,
      "acts": null
     },
@@ -10158,7 +10218,7 @@
     ],
     "floor_m": 6.0,
     "clearance_m": 1.9,
-    "headroom_m": 2.7
+    "headroom_m": 5.4
    },
    "L2": {
     "name": "interior_wayfind_L2",

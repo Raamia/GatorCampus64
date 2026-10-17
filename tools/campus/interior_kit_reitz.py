@@ -54,7 +54,7 @@ RU_MATERIALS = {
     "int_ru_carpet_grey":  {"size": (32, 32), "tile_m": 1.2, "color": "#9C9A96"},
     "int_ru_carpet_hotel": {"size": (32, 32), "tile_m": 1.2, "color": "#5C6688"},
     "int_ru_carpet_aud":   {"size": (32, 32), "tile_m": 1.6, "color": "#46567E"},
-    "int_ru_concrete_dark": {"size": (32, 32), "tile_m": 2.0, "color": "#5C5C5E"},
+    "int_ru_concrete_dark": {"size": (32, 32), "tile_m": 2.0, "color": "#424448"},   # fix round 5: was #5C5C5E
     "int_ru_paving":       {"size": (32, 32), "tile_m": 3.0, "color": "#C2BEB4"},
     # ---- walls
     "int_ru_wall":         {"size": (32, 32), "tile_m": 2.0, "color": "#EDEBE6"},
@@ -63,14 +63,14 @@ RU_MATERIALS = {
     "int_ru_wall_navy":    {"size": (32, 32), "tile_m": 2.0, "color": "#22283A"},
     "int_ru_wall_grey":    {"size": (32, 32), "tile_m": 2.0, "color": "#B2B4B6"},
     # fix round 4 (fidelity-4 pass; ru_os_auditorium_1..3): the auditorium's mid-grey fabric wall panels
-    "int_ru_wall_aud":     {"size": (32, 32), "tile_m": 2.0, "color": "#86888A"},
+    "int_ru_wall_aud":     {"size": (32, 32), "tile_m": 2.0, "color": "#707274"},   # fix round 5: darker (was #86888A)
     # fix round 4 (fidelity-4 pass; ru_os_2345_2350): the boardroom's pale maple laminate table top
     "int_ru_maple_light":  {"size": (32, 32), "tile_m": 1.2, "color": "#DCC8A8"},
     "int_ru_wall_slate":   {"size": (32, 32), "tile_m": 2.0, "color": "#80848A"},
     "int_ru_wall_cream":   {"size": (32, 32), "tile_m": 2.0, "color": "#E8E0CC"},
     "int_ru_hex":          {"size": (32, 32), "tile_m": 1.2, "color": "#15161C"},
     "int_ru_hex_neon":     {"size": (64, 32), "tile_m": 1.6, "color": "#AAC8FF", "kind": "cutout", "map": "once"},
-    "int_ru_gator_skin":   {"size": (32, 32), "tile_m": 2.0, "color": "#E2DFD8"},   # fix round 4: 2 m tile
+    "int_ru_gator_skin":   {"size": (32, 32), "tile_m": 1.0, "color": "#DEDAD2"},   # fix round 5: 1 m tile, 0.33 m plates
     "int_ru_acoustic":     {"size": (32, 32), "tile_m": 1.2, "color": "#E2E2E0"},
     "int_ru_cherry":       {"size": (32, 32), "tile_m": 1.2, "color": "#8C4026"},
     "int_ru_chevron":      {"size": (64, 32), "tile_m": 9.0, "color": "#B0643C", "map": "once"},
@@ -161,7 +161,7 @@ RU_MATERIALS = {
     "int_ru_tv_hotel":     {"size": (32, 32), "tile_m": 1.0, "color": "#26323E", "map": "once"},
     "int_ru_pins":         {"size": (32, 32), "tile_m": 1.0, "color": "#EEEEEA", "map": "once"},
     # ---- food court vendor finishes (fidelity pass 2: each storefront its own front, as in the photos)
-    "int_ru_counter_navy": {"size": (32, 32), "tile_m": 1.0, "color": "#062A56"},
+    "int_ru_counter_navy": {"size": (32, 32), "tile_m": 1.0, "color": "#0C3A74"},
     "int_ru_counter_red":  {"size": (32, 32), "tile_m": 1.0, "color": "#A82420"},
     "int_ru_mosaic":       {"size": (32, 32), "tile_m": 0.8, "color": "#C89A62"},
     "int_ru_chalkboard":   {"size": (64, 32), "tile_m": 2.0, "color": "#26282A", "map": "once"},
@@ -227,6 +227,13 @@ RU_MATERIALS = {
     # fix round 4 (design pass, improvement 5): the fixed vestibule panes have collision but read as nothing: alpha
     # 0.14 -> 0.22 and two soft 2-texel diagonal sheen streaks per 3 m tile (tx_glass_sheen)
     "int_ru_glass_clear":  {"size": (32, 32), "tile_m": 3.0, "color": "#DCE6EA", "kind": "water", "alpha": 0.22},
+    # fix round 5 (design pass, improvement 3): the north entrance's door leaves + inner vestibule bank stack two
+    # glass layers in front of the 10 m follow camera on arrival (Mario a red smudge in a white veil): a faint glass,
+    # alpha 0.08 and no sheen, for those (two layers ~15% white); the fixed panes with collision keep the sheen glass
+    "int_ru_glass_faint":  {"size": (32, 32), "tile_m": 3.0, "color": "#E4ECEF", "kind": "water", "alpha": 0.08},
+    # fix round 5 (design pass, improvement 4): the ACC's student artwork band + the pottery wheels' clay
+    "int_ru_student_art":  {"size": (64, 32), "tile_m": 1.0, "color": "#C8A070", "map": "once"},
+    "int_ru_clay":         {"size": (32, 32), "tile_m": 0.5, "color": "#B0603A"},
     "int_ru_room_plaque":  {"size": (16, 32), "tile_m": 0.3, "color": "#1E2A5C", "map": "once"},
     "int_ru_bulletin":     {"size": (32, 32), "tile_m": 1.2, "color": "#B88A58", "map": "once"},
     "int_ru_sign_bookstore": {"size": (64, 32), "tile_m": 3.0, "color": "#1E2A5C", "map": "once"},
@@ -234,7 +241,8 @@ RU_MATERIALS = {
     # Esports storefront's dark smoked glass
     "int_ru_wall_paleblue": {"size": (32, 32), "tile_m": 2.0, "color": "#BCC4D0"},
     "int_ru_wall_billiards": {"size": (32, 32), "tile_m": 2.0, "color": "#4E4440"},
-    "int_ru_glass_smoke":  {"size": (32, 32), "tile_m": 3.0, "color": "#1C2234", "kind": "water", "alpha": 0.62},
+    # fix round 5 (fidelity-3; ru_es_oelrich_8951): alpha 0.62 -> 0.52, the blue-lit arena glows through from the Game Room
+    "int_ru_glass_smoke":  {"size": (32, 32), "tile_m": 3.0, "color": "#1C2234", "kind": "water", "alpha": 0.52},
     # fix round 4 (fidelity-1 blocking): the atrium's east bulkhead, silver grid-seamed metal panels
     "int_ru_metal_panel":  {"size": (32, 32), "tile_m": 1.5, "color": "#B4B8BE"},
     # fix round 4 (fidelity-1 improvements): the UF letters' bright orange (ru_atrium_uf_letters_wall (241,119,17)),
@@ -244,6 +252,23 @@ RU_MATERIALS = {
     "int_ru_steel_bright": {"size": (32, 32), "tile_m": 1.0, "color": "#E6EAEE"},
     "int_ru_wood_tan":     {"size": (32, 32), "tile_m": 1.2, "color": "#C9A06A"},
     "int_ru_fabric_orange": {"size": (32, 32), "tile_m": 0.6, "color": "#EE6A22"},
+    # fix round 5 (fidelity-1, ru_atrium_enr_lounge right third): the Orange & Brew glazed bays on the lounge's south
+    # side (a warm-lit cafe interior seen through glass, one 1.25 x 2.0 m bay per texture) and its fascia sign
+    "int_ru_cafe_bay":     {"size": (32, 64), "tile_m": 2.0, "color": "#D8B07A", "map": "once"},
+    "int_ru_sign_ob":      {"size": (64, 32), "tile_m": 2.4, "color": "#F2F0EC", "map": "once"},
+    # ... the glass office fronts on the atrium void's east end at Levels 2 / 3 (ru_atrium_enr_vertical)
+    "int_ru_office_bay":   {"size": (32, 64), "tile_m": 2.6, "color": "#C8D2D8", "map": "once"},
+    # fix round 5 (fidelity-3): the billiards tables' near-black espresso mahogany (ru_gr_billiards_room: aprons and
+    # legs (36,15,13)..(13,6,4); int_ru_cherry read bright orange), the billiards-wall graphic GAME ROOM / THE
+    # UNIVERSITY OF FLORIDA (ru_gr_wall_graphic_billiards; it reused the desk's REITZ UNION GAME ROOM) and G325's
+    # royal bay lit by a row of wall-washers (ru_os_g325)
+    "int_ru_espresso":     {"size": (32, 32), "tile_m": 1.2, "color": "#3A1E16"},
+    "int_ru_sign_gameroom_uf": {"size": (64, 32), "tile_m": 3.0, "color": "#1E2C6A", "map": "once"},
+    "int_ru_wall_royal_wash": {"size": (64, 32), "tile_m": 6.0, "color": "#1E3CA0", "map": "once"},
+    # fix round 5 (fidelity-4; ru_os_2355_2365): four colourful landscape canvases (no mat, no frame line)
+    "int_ru_canvas":       {"size": (64, 32), "tile_m": 1.2, "color": "#C89A4A", "map": "once"},
+    # fix round 5 (fidelity-4; meeting-room chair rows): black stacking-chair seats, 4 per repeat, 6 cm gaps
+    "int_ru_seatrow_black": {"size": (64, 32), "tile_m": 2.0, "color": "#1E1E22", "map": "once"},
 }
 for _m in RU_MATERIALS.values():
     _m["tex"] = None
@@ -473,6 +498,30 @@ def tx_glass_sheen(seed):
     return t
 
 
+def tx_student_art(seed):
+    """fix round 5 (design pass, improvement 4; ru_acc_studio shows student work everywhere): four student paintings
+    pinned on kraft paper, one per 16 x 32 cell (a panel maps one cell over ~0.8 x 1.1 m): a sun over hills, colour
+    blocks, a target swirl and a gator on orange. Every edge >= 2 texels (no 1-texel high-contrast lines)."""
+    t = Tex(64, 32, hexc("#C8A070"), seed)
+    t.noise(3)
+    # cell 0: blue sky, orange sun, green hills
+    t.rect(2, 2, 13, 29, hexc("#5AA8E0")); t.rect(2, 18, 13, 29, hexc("#4AA048")); t.rect(6, 15, 13, 21, hexc("#3A8A3A"))
+    t.disc(9, 8, 3, hexc("#F29A2A"))
+    # cell 1: bright colour blocks (soft dark-blue 2-texel dividers)
+    t.rect(18, 2, 29, 29, hexc("#22306A"))
+    t.rect(18, 2, 25, 13, hexc("#E83A3A")); t.rect(28, 2, 29, 13, hexc("#F4D03A")); t.rect(18, 16, 21, 29, hexc("#F4D03A"))
+    t.rect(24, 16, 29, 23, hexc("#2E7AC8")); t.rect(24, 26, 29, 29, hexc("#F2F2EE"))
+    # cell 2: a purple / teal target swirl
+    t.rect(34, 2, 45, 29, hexc("#F2EEDC"))
+    for r_, c_ in ((6, "#7A3AB0"), (4, "#2AA8A0"), (2, "#F27A3A")):
+        t.disc(39, 15, r_, hexc(c_))
+    # cell 3: a green gator on orange
+    t.rect(50, 2, 61, 29, hexc("#F2862A"))
+    t.rect(52, 12, 59, 19, hexc("#2E7A3A")); t.rect(52, 8, 55, 12, hexc("#2E7A3A")); t.rect(54, 19, 57, 27, hexc("#2E7A3A"))
+    t.rect(52, 9, 53, 10, hexc("#F2F2EE"))
+    return t
+
+
 def tx_metal_panel(seed):
     """fix round 4: silver metal panels with soft 2-texel seams (low contrast: no 1-texel shimmer lines)."""
     t = _flat("#B4B8BE", seed, 3)
@@ -656,11 +705,13 @@ def tx_fc_tile(seed):
 def tx_counter_navy(seed):
     """Burger drive-in counter front + fascia (ru_food_court_sonic_2025): dark navy panels with faint vertical reveals."""
     # fix round 4 (fidelity-2): the photo's saturated royal navy (~0, 40, 82; was 26, 34, 72)
-    t = Tex(32, 32, hexc("#062A56"), seed)
+    # fix round 5 (fidelity-2): ~30% lighter (#062A56 rendered ~4, 28, 60 against the photo's lit 30, 54, 88: it read
+    # as near-black); the reveals follow
+    t = Tex(32, 32, hexc("#0C3A74"), seed)
     t.noise(2)
     for y in range(32):
-        t.set(15, y, hexc("#04244C"))
-        t.set(31, y, hexc("#04244C"))
+        t.set(15, y, hexc("#0A3266"))
+        t.set(31, y, hexc("#0A3266"))
     return t
 
 
@@ -762,9 +813,12 @@ def tx_carpet_ballroom(seed):
     sx, sy = 2.6 / 64, 2.6 / 32                     # metres per texel (u, v)
     white, pale = hexc("#F2F5FB"), hexc("#9CC4EE")
     # (centre px, amplitude px, cycles per repeat, phase, colour, width m)
-    specs = [(3.0, 5.0, 1, 0.3, white, 0.042), (11.0, 3.5, 2, 2.1, pale, 0.035), (19.0, 6.0, 1, 4.0, white, 0.038),
-             (27.0, 4.0, 1, 1.2, white, 0.042), (35.0, 5.5, 2, 5.2, pale, 0.035), (43.0, 4.5, 1, 3.3, white, 0.038),
-             (51.0, 6.5, 1, 0.9, white, 0.042), (58.0, 3.0, 2, 2.7, pale, 0.035), (31.0, 9.0, 1, 5.9, white, 0.035)]
+    # fix round 5 (fidelity-4, improvement 7; ru_os_grand_ballroom_3/4): close to the camera the nine lines per
+    # 2.6 m (three of them two-cycle wiggles) read as a dense short-wave net; the photo has long sparse sweeps.
+    # Now four gentle one-cycle sweeps per tile (one about every 0.65 m), one of them crossing its neighbours
+    # (near-parallel meanders, so they flow side by side instead of crossing into a diamond net)
+    specs = [(5.0, 6.5, 1, 0.3, white, 0.045), (21.0, 7.0, 1, 0.9, white, 0.042), (37.0, 6.0, 1, 1.4, pale, 0.040),
+             (52.0, 7.0, 1, 0.6, white, 0.045), (29.0, 10.0, 1, 3.6, white, 0.038)]
     for xc, amp, cyc, ph, col, wm in specs:
         wm = max(wm, 2.0 * sx)                      # design r2: every line >= 2 texels wide (no mipmaps)
         for y in range(32):
@@ -885,34 +939,111 @@ def tx_gator_skin(seed):
     the photo's plate size: about 9 plates across a 2.5 m letter)."""
     # fix round 2 (fidelity, ru_atrium_uf_letters_flickr): light white / cream plates with thin, only slightly
     # darker seams (the grout was a dark (118,118,122) 1-2 px line that read as grey cobblestone)
-    t = Tex(32, 32, hexc("#A5A5AA"), seed)
-    pal = [hexc("#F2F0EA"), hexc("#E6E0D2"), hexc("#DADCDC"), hexc("#F6F4EE"), hexc("#CED0D0"), hexc("#EAE4D6")]
+    # fix round 5 (fidelity-1, ru_atrium_uf_letters_flickr zoom): the figure / ground was inverted (pale plates on a
+    # connected grey grout). The photo: soft light-grey / taupe rounded, slightly elongated plates (~0.3-0.4 m) on a
+    # connected WHITE / cream network (~30 % of the area). Now: 3 x 3 jittered periodic Voronoi sites per 32 px tile
+    # (the panel maps the tile over 1.0 m: ~0.33 m plates), anisotropic metric (plates longer than tall), taupe
+    # plates #C9C4BB..#D6D2CA, a cream network #F3F1EC about 2 texels wide (6 cm) with a soft 1-texel blend (no
+    # 1-texel high-contrast line: no mipmaps), plates a touch lighter toward their rim (rounded).
+    net = hexc("#F3F1EC")
+    t = Tex(32, 32, net, seed)
+    pal = [hexc("#CCC7BF"), hexc("#D6D2CA"), hexc("#D1CCC4"), hexc("#C9C4BB"), hexc("#D4CFC6"), hexc("#CFCAC1")]
     sites = []
-    for gy in range(4):
-        for gx in range(4):
-            if (gx, gy) in ((1, 2), (3, 0), (2, 3)):
-                continue
-            sites.append((gx * 8 + 4 + t.r.uniform(-2.6, 2.6), gy * 8 + 4 + t.r.uniform(-2.6, 2.6),
-                          pal[(gx * 3 + gy * 5) % len(pal)], 1.0 + t.r.uniform(-0.05, 0.04)))
+    cell = 32.0 / 3.0
+    for gy in range(3):
+        for gx in range(3):
+            sites.append((gx * cell + cell / 2 + t.r.uniform(-2.4, 2.4), gy * cell + cell / 2 + t.r.uniform(-2.2, 2.2),
+                          pal[(gx * 2 + gy * 4) % len(pal)], 1.0 + t.r.uniform(-0.02, 0.02)))
     for y in range(32):
         for x in range(32):
             ds = []
             for sx, sy, c, k in sites:
                 dx = min(abs(x + 0.5 - sx), 32 - abs(x + 0.5 - sx))
                 dy = min(abs(y + 0.5 - sy), 32 - abs(y + 0.5 - sy))
-                ds.append((math.hypot(dx, dy), c, k))
+                ds.append((math.hypot(dx * 0.85, dy * 1.1), c, k))
             ds.sort(key=lambda q: q[0])
             d1, c, k = ds[0]
             gap = ds[1][0] - d1
-            # fix round 4 (fidelity-1, ru_atrium_uf_letters_flickr): larger, flatter pale plates (the panel maps the
-            # tile over 2 m, ~0.55 m plates) with SOFT light seams about 2 texels wide (no 1-texel dark line: the
-            # grey-cobblestone read and the no-mipmap shimmer)
-            if gap < 1.9:
-                t.set(x, y, mix(hexc("#C9C7C2"), c, 0.25 * gap / 1.9))
+            if gap < 1.5:
+                t.set(x, y, net)
+            elif gap < 2.6:
+                t.set(x, y, mix(net, shade(c, k), 0.45 + 0.5 * (gap - 1.5) / 1.1))
             else:
-                # rounded plates: a little darker toward the grout
-                t.set(x, y, shade(c, k * (0.96 + 0.04 * min(1.0, (gap - 1.9) / 3.0))))
-    t.noise(2)
+                t.set(x, y, shade(c, k * (1.0 + 0.025 * max(0.0, 1.0 - (gap - 2.6) / 2.5))))
+    t.noise(1)
+    return t
+
+
+def tx_cafe_bay(seed):
+    """fix round 5 (fidelity-1, ru_atrium_enr_lounge): one Orange & Brew glazed bay, 32 x 64 over 1.25 x 2.0 m (row 0
+    = the top): a warm-lit cafe seen through the glass (amber back wall, a lit pendant, an orange Orange & Brew poster,
+    a dark wood counter with a white top), with a soft 2-texel diagonal sheen. No 1-texel high-contrast lines."""
+    base = hexc("#E2BE88")
+    t = Tex(32, 64, base, seed)
+    for y in range(64):
+        k = 1.05 - 0.13 * (y / 63.0)          # brighter toward the top (the lights)
+        for x in range(32):
+            t.set(x, y, shade(base, k))
+    t.rect(22, 16, 29, 47, hexc("#8A5E3A"))           # a darker doorway / back room at the right
+    t.rect(0, 38, 31, 39, hexc("#9A6A40"))            # back-wall shelf band
+    t.rect(4, 20, 16, 35, hexc("#E8661A"))            # the poster: orange with a cream roundel and a text bar
+    t.disc(10.5, 25.5, 3.2, hexc("#F6E8D0"))
+    t.rect(6, 31, 14, 32, hexc("#F6E8D0"))
+    t.rect(15, 0, 16, 9, hexc("#6A4A34"))             # a pendant lamp: 2 px cord and a bright shade
+    t.disc(16.0, 12.0, 3.0, hexc("#FFF0C4"))
+    t.rect(0, 46, 31, 47, hexc("#F4F2EE"))            # counter: white top, dark wood front
+    t.rect(0, 48, 31, 63, hexc("#6E4A2E"))
+    for x in range(1, 32, 8):
+        t.rect(x, 50, x + 1, 63, hexc("#5E3E26"))
+    for y in range(64):                               # glass sheen: a soft 2-texel diagonal streak
+        for x in range(32):
+            if (x + y // 2) % 32 in (6, 7):
+                t.set(x, y, mix(t.get(x, y)[:3], hexc("#FFFFFF"), 0.35))
+    t.noise(1)
+    return t
+
+
+def tx_office_bay(seed):
+    """fix round 5 (fidelity-1, ru_atrium_enr_vertical): one glass office-front bay, 32 x 64 over ~1.25 x 2.6 m (row
+    0 = the top): a pale lit office behind blue-grey glass (a ceiling light band, a UF-blue pinboard, a desk with a
+    monitor and a navy chair), a frosted privacy band at eye height and a soft diagonal sheen. Edges >= 2 texels."""
+    base = hexc("#C8D2D8")
+    t = Tex(32, 64, base, seed)
+    for y in range(64):
+        k = 1.06 - 0.12 * (y / 63.0)
+        for x in range(32):
+            t.set(x, y, shade(base, k))
+    t.rect(0, 2, 31, 3, hexc("#F2F4F0"))              # ceiling light band
+    t.rect(4, 14, 13, 24, hexc("#3A5A9A"))            # UF-blue pinboard with two notes
+    t.rect(6, 16, 8, 18, hexc("#F0E6C8"))
+    t.rect(10, 19, 11, 21, hexc("#E8661A"))
+    for y in range(28, 31):                           # frosted privacy band
+        for x in range(32):
+            t.set(x, y, mix(t.get(x, y)[:3], hexc("#F4F6F6"), 0.55))
+    t.rect(18, 34, 26, 42, hexc("#2A2C32"))           # monitor (blue screen inside)
+    t.rect(19, 35, 25, 40, hexc("#6A8EC0"))
+    t.rect(21, 43, 22, 44, hexc("#2A2C32"))
+    t.rect(0, 45, 31, 46, hexc("#9A7A56"))            # desk top and dark front
+    t.rect(14, 47, 31, 63, hexc("#5A5E66"))
+    t.rect(4, 44, 11, 58, hexc("#26304E"))            # navy chair
+    for y in range(64):                               # glass sheen
+        for x in range(32):
+            if (x + y // 2) % 32 in (20, 21):
+                t.set(x, y, mix(t.get(x, y)[:3], hexc("#FFFFFF"), 0.3))
+    t.noise(1)
+    return t
+
+
+def tx_sign_ob(seed):
+    """fix round 5 (fidelity-1): the Orange & Brew fascia sign over its glazed bays (64 x 32: ORANGE & / BREW in
+    the 5 px font, orange on the white fascia, with a soft orange rule under it)."""
+    bg = hexc("#F2F0EC")
+    t = Tex(64, 32, bg, seed)
+    t.noise(1)
+    org = hexc("#E2601A")
+    font_center(t, "ORANGE &", 6, org, font=FONT5)
+    font_center(t, "BREW", 16, org, font=FONT5)
+    t.rect(10, 26, 54, 28, mix(bg, org, 0.8))
     return t
 
 
@@ -1347,6 +1478,47 @@ def tx_sign_gameroom(seed):
     return t
 
 
+def tx_sign_gameroom_uf(seed):
+    """fix round 5 (fidelity-3; ru_gr_wall_graphic_billiards): the billiards-wall graphic, its own variant of the
+    navy space scene: GAME ROOM in big white letters over THE UNIVERSITY / OF FLORIDA (orange), a blue planet top
+    right, the big orange planet with its ring bottom right and a bowling ball beside it."""
+    t = Tex(64, 32, hexc("#1A2660"), seed)
+    for y in range(32):
+        for x in range(64):
+            t.set(x, y, mix(hexc("#10163E"), hexc("#22307A"), y / 31))
+    t.speckle(22, [hexc("#E8ECFF"), hexc("#8CA4FF")])
+    t.disc(60, 4, 3, hexc("#2C5CD8"))
+    t.disc(59, 3, 1, hexc("#6C94F0"))
+    t.disc(55, 25, 6, hexc("#F06A1E"))
+    t.disc(53, 23, 2, hexc("#F4A060"))
+    for x in range(46, 64):
+        t.set(x, 25 + (x - 55) // 4, hexc("#F0D8A0"))
+    t.disc(45, 28, 3, hexc("#203890"))
+    t.set(44, 27, hexc("#0C0C14"))
+    t.set(46, 27, hexc("#0C0C14"))
+    font_text(t, "GAME ROOM", 2, 4, hexc("#FFFFFF"))
+    font_text(t, "THE UNIVERSITY", 2, 14, hexc("#DCE0EC"), font=FONT3)
+    font_text(t, "OF FLORIDA", 2, 20, hexc("#F27A2A"), font=FONT3)
+    return t
+
+
+def tx_wall_royal_wash(seed):
+    """fix round 5 (fidelity-3; ru_os_g325): G325's royal-blue bay lit from the top by a row of three wall-washer
+    downlights: soft lighter scallops fading down the wall (smooth ramps, no hard 1-texel edges: no mipmaps).
+    64 x 32 once over the bay (row 0 = the top)."""
+    base, hi = hexc("#1C38A0"), hexc("#7C9CF4")
+    t = Tex(64, 32, base, seed)
+    for y in range(32):
+        for x in range(64):
+            k = 0.0
+            for cx in (10.5, 31.5, 52.5):
+                dx = (x - cx) / 8.5
+                k = max(k, 1.0 - dx * dx - (y - 2) / 15.0)
+            t.set(x, y, mix(base, hi, max(0.0, min(1.0, k)) ** 1.5 * 0.95))
+    t.noise(2)
+    return t
+
+
 def tx_sign_esports(seed):
     """GATOR ESPORTS CENTER lit letters on clear (ru_es_overview): ONE long line of big white letters. The line is
     128 px wide: its left half is rows 0-15, its right half rows 16-31 (the sign is two quads side by side, see
@@ -1698,6 +1870,47 @@ def tx_wainscot(seed):
     return t
 
 
+def tx_canvas(seed):
+    """fix round 5 (fidelity-4; ru_os_2355_2365): four colourful gallery-wrapped landscape canvases, one per 32 x 16
+    cell (2 x 2; a panel maps one cell over ~1.2 x 0.8 m): a sky / field split, soft colour blocks and a sun / tree
+    blob in each. No frame or mat line (the wall edge is the canvas edge: no 1-texel high-contrast line)."""
+    t = Tex(64, 32, hexc("#C89A4A"), seed)
+    pal = [("#F2C23A", "#2E7AC8", "#E0582A", "#3A9A4A"),     # yellow sky, blue water, red sun, green shore
+           ("#5AB4D8", "#E8A030", "#C83A3A", "#2A5AA8"),     # pale-blue sky, orange field, red roofs, blue hills
+           ("#E86A3A", "#F4D04A", "#3A6AC0", "#6AB04A"),     # sunset orange, yellow band, blue, green
+           ("#3A9AB0", "#8AC04A", "#F2E06A", "#B03A6A")]     # teal sky, lime hills, yellow sun, magenta flowers
+    for k, (sky, field, sun, acc) in enumerate(pal):
+        x0, y0 = (k % 2) * 32, (k // 2) * 16
+        hz = y0 + 6 + (k % 3)
+        for y in range(y0, y0 + 16):
+            for x in range(x0, x0 + 32):
+                band = mix(hexc(sky), hexc(field), 0.0 if y < hz else 1.0)
+                t.set(x, y, shade(band, 1.0 + 0.06 * (((x + 2 * y + k) % 5) - 2) / 2))
+        # soft colour blocks across the field (2-4 texels: no single-texel lines)
+        for j in range(5):
+            bx = x0 + 2 + t.r.randrange(24)
+            by = hz + 1 + t.r.randrange(max(1, y0 + 13 - hz))
+            t.rect(bx, by, min(x0 + 31, bx + 3 + t.r.randrange(4)), min(y0 + 15, by + 1 + t.r.randrange(2)),
+                   mix(hexc(acc), hexc(field), 0.25 * (j % 3)))
+        t.disc(x0 + 8 + 14 * (k % 2), y0 + 3 + (k % 2), 2, hexc(sun))
+        t.rect(x0 + 20 - 10 * (k % 2), hz - 3, x0 + 23 - 10 * (k % 2), hz + 2, mix(hexc(acc), hexc("#203020"), 0.4))
+    t.noise(3)
+    return t
+
+
+def tx_seatrow_black(seed):
+    """fix round 5 (fidelity-4, improvement 6): the seat strip of a row of black stacking chairs, 4 seats per 64 px
+    (0.5 m = 16 px each): a black padded seat with a soft lighter front roll, and a 2-texel (6 cm) blue-grey gap
+    between seats (the carpet showing through), so the row reads as separate chairs, not one long black bench."""
+    t = Tex(64, 32, hexc("#1E1E22"), seed)
+    for k in range(4):
+        x0 = k * 16
+        t.rect(x0 + 1, 22, x0 + 13, 31, hexc("#2A2A30"))
+        t.rect(x0 + 14, 0, x0 + 15, 31, hexc("#46526E"))
+    t.noise(2)
+    return t
+
+
 def tx_prints(seed):
     """Eight small framed prints (2 rows x 4, 16 px each: dark frame, white mat, an image) for the row of art on
     the meeting rooms' long white walls (ru_os_g310_g320, ru_os_g330)."""
@@ -1910,11 +2123,18 @@ def tx_neon_swirl_tall(seed):
     as a dim framed poster): thick tubes (a ~3-texel coloured halo round a pale hot core), a big red / pink swirl
     over a blue S-tube tail, no background, no frame."""
     t = Tex(32, 64, (0, 0, 0), seed, alpha=0)
-    red = [(16 + (2.5 + 11.0 * i / 220.0) * math.cos(i / 220.0 * math.pi * 4.6 + 1.2),
-            22 + (2.5 + 11.0 * i / 220.0) * math.sin(i / 220.0 * math.pi * 4.6 + 1.2)) for i in range(221)]
-    blue = [(16 + 9.0 * math.sin((y - 36) / 24.0 * math.pi * 1.5), y) for y in [36 + k * 0.25 for k in range(97)]]
-    ring = [(16 + 14.6 * math.cos(a_ * math.pi / 60), 22 + 14.6 * math.sin(a_ * math.pi / 60)) for a_ in range(0, 121)
-            if not 20 < a_ < 40]
+    # fix round 5 (fidelity-2): the layout was upside down (a ~0.8 m swirl at the top on a thin blue stem read as a
+    # lollipop). The photo's big red / pink loop sits LOW (counter to head height, ~1.2 m across: texel row 0 is the
+    # top, the decal spans 0.95-3.45 m, so rows 34-63 are ~1.0-2.1 m) inside a broken blue ring, and the blue
+    # strokes sweep up above it (a tall S-tube plus a short hook), with sky-blue cores.
+    cy = 48.5
+    red = [(16 + (3.0 + 8.5 * i / 240.0) * math.cos(i / 240.0 * math.pi * 3.6 + 2.0),
+            cy + (3.0 + 8.5 * i / 240.0) * math.sin(i / 240.0 * math.pi * 3.6 + 2.0)) for i in range(241)]
+    blue = [(15 + 8.5 * math.sin((32.5 - y) / 27.0 * math.pi * 1.25), y) for y in [5.0 + k * 0.25 for k in range(111)]]
+    blue += [(24.0 + 4.0 * math.cos(a_ * math.pi / 30), 10.5 + 4.0 * math.sin(a_ * math.pi / 30))
+             for a_ in range(25, 61)]
+    ring = [(16 + 14.0 * math.cos(a_ * math.pi / 60), cy + 14.0 * math.sin(a_ * math.pi / 60)) for a_ in range(0, 121)
+            if not 75 < a_ < 100]
     for pts, halo in ((red, "#E01E3A"), (blue + ring, "#2A62E8")):
         for x, y in pts:
             t.disc(x, y, 1.7, hexc(halo))
@@ -1982,7 +2202,8 @@ TEXTURES = {
     "int_ru_carpet_grey": lambda s: tx_carpet_pattern("#9C9A96", "#B4B2AE", s, "loop"),
     "int_ru_carpet_hotel": lambda s: tx_carpet_pattern("#5C6688", "#8A7A5A", s, "diamond"),
     "int_ru_carpet_aud": lambda s: tx_carpet_pattern("#46567E", "#5E6E96", s, "tri"),
-    "int_ru_concrete_dark": lambda s: _flat("#5C5C5E", s, 5),
+    # fix round 5 (fidelity-4, improvement 9d; ru_the_gallery): dark polished concrete (the mid-grey read matte)
+    "int_ru_concrete_dark": lambda s: _flat("#424448", s, 4),
     "int_ru_paving": tx_paving,
     "int_ru_wall": lambda s: _flat("#EDEBE6", s, 2),
     "int_ru_wall_greyblue": lambda s: _flat("#A6B2C4", s, 2),
@@ -2150,8 +2371,22 @@ TEXTURES = {
     # last: texture seeds go by position in this dict (append only)
     # fix round 4 (fidelity-4 pass): appended last so the seeds of every earlier recipe stay the same
     "int_ru_row_rion": lambda s: tx_row("rion", s),
-    "int_ru_wall_aud": lambda s: _flat("#86888A", s, 3),
+    "int_ru_wall_aud": lambda s: _flat("#707274", s, 3),
     "int_ru_maple_light": tx_maple_light,
+    # fix round 5 (fidelity-1): appended last (every earlier recipe keeps its seed)
+    "int_ru_cafe_bay": tx_cafe_bay,                                     # Orange & Brew glazed bays
+    "int_ru_sign_ob": tx_sign_ob,                                       # ... and its fascia sign
+    "int_ru_office_bay": tx_office_bay,                                 # ... void east-end office fronts (L2 / L3)
+    # fix round 5 (fidelity-3): appended last (every earlier recipe keeps its seed)
+    "int_ru_espresso": lambda s: tx_wood("#3A1E16", s, stripe=8, gap_k=0.82),   # billiards tables
+    "int_ru_sign_gameroom_uf": lambda s: tx_sign_gameroom_uf(s),        # billiards-wall graphic
+    "int_ru_wall_royal_wash": lambda s: tx_wall_royal_wash(s),          # G325 royal bay + wall-washer scallops
+    # fix round 5 (fidelity-4): appended last (every earlier recipe keeps its seed)
+    "int_ru_canvas": tx_canvas,                                         # 2355 / 2365 landscape canvases
+    "int_ru_seatrow_black": tx_seatrow_black,                           # meeting-room chair-row seats
+    "int_ru_glass_faint": lambda s: _flat("#E4ECEF", s, 1),             # fix round 5 design: north door leaves / bank
+    "int_ru_student_art": lambda s: tx_student_art(s),                  # ... ACC student artwork band
+    "int_ru_clay": lambda s: _flat("#B0603A", s, 4),                    # ... terracotta clay on the pottery wheels
 }
 
 
@@ -3084,20 +3319,21 @@ def cue_rack():
 
 
 def billiard_table(L=2.84, W=1.57, h=0.79):
-    """9-ft table (ru_gr_billiards_room): blue felt, brown rails, heavy legs; long axis = local x."""
+    """9-ft table (ru_gr_billiards_room): blue felt, near-black espresso mahogany rails / apron / heavy legs (fix round
+    5, fidelity-3: int_ru_cherry read bright orange against the photo's (36,15,13)); long axis = local x."""
     P = _p("billiards")
     V, C = P.visual, P.collision
     rw = 0.16
     V.box(-L / 2 + rw, -W / 2 + rw, h - 0.02, L / 2 - rw, W / 2 - rw, h, "int_ru_felt", faces="+z")
     for (x0, y0, x1, y1) in ((-L / 2, -W / 2, L / 2, -W / 2 + rw), (-L / 2, W / 2 - rw, L / 2, W / 2),
                              (-L / 2, -W / 2 + rw, -L / 2 + rw, W / 2 - rw), (L / 2 - rw, -W / 2 + rw, L / 2, W / 2 - rw)):
-        V.box(x0, y0, h - 0.12, x1, y1, h + 0.04, "int_ru_cherry", faces="+x-x+y-y+z")
-    V.box(-L / 2 + 0.1, -W / 2 + 0.1, h - 0.32, L / 2 - 0.1, W / 2 - 0.1, h - 0.12, "int_ru_cherry",
+        V.box(x0, y0, h - 0.12, x1, y1, h + 0.04, "int_ru_espresso", faces="+x-x+y-y+z")
+    V.box(-L / 2 + 0.1, -W / 2 + 0.1, h - 0.32, L / 2 - 0.1, W / 2 - 0.1, h - 0.12, "int_ru_espresso",
           faces="+x-x+y-y-z")
     for sx in (-1, 1):
         for sy in (-1, 1):
             V.box(sx * L * 0.38 - 0.11, sy * W * 0.3 - 0.11, 0.0, sx * L * 0.38 + 0.11, sy * W * 0.3 + 0.11, h - 0.32,
-                  "int_ru_cherry", faces="+x-x+y-y")
+                  "int_ru_espresso", faces="+x-x+y-y")
     # balls (a triangle rack + cue ball)
     for k, (bx, by) in enumerate([(0.6, 0), (0.66, 0.035), (0.66, -0.035), (0.72, 0.07), (0.72, 0), (0.72, -0.07),
                                   (-0.6, 0.0)]):
@@ -3316,13 +3552,38 @@ def coffee_table(L=1.2, W=0.7, h=0.42, mat="int_ru_fabric_taupe", col=True, top=
     return P
 
 
-def round_table(r=0.9, h=0.75, top="int_ru_tablecloth", chairs=8, chair_mat="int_ru_fabric_navy", seats=True):
-    """Banquet round table (ru_os_grand_ballroom_3/4, ru_os_matthews_1) with chairs around it."""
+def round_table(r=0.9, h=0.75, top="int_ru_tablecloth", chairs=8, chair_mat="int_ru_fabric_navy", seats=True,
+                pedestal=False, leg_mat="int_ru_steel"):
+    """Banquet round table (ru_os_grand_ballroom_3/4, ru_os_matthews_1) with chairs around it.
+    fix round 5 (fidelity-4; ru_os_matthews_1/2): pedestal=True is a bare white top on a pedestal (no floor-length
+    drum) with banquet chairs that have a 5 cm thick padded back and four silver legs (the zero-thickness backs read
+    as scattered navy cards at the gameplay camera). The default (Grand Ballroom: black-draped drums) is unchanged."""
     P = _p("round_table")
     V, C = P.visual, P.collision
-    cyl(V, 0.0, 0.0, r, h - 0.3, h, top, n=10)
-    cyl(V, 0.0, 0.0, r * 0.95, 0.0, h - 0.3, top, n=10, top=False)
-    if seats:
+    if pedestal:
+        cyl(V, 0.0, 0.0, r, h - 0.04, h, top, n=10, bottom=True)
+        cyl(V, 0.0, 0.0, 0.06, 0.05, h - 0.04, leg_mat, n=6, top=False)
+        cyl(V, 0.0, 0.0, 0.32, 0.0, 0.05, leg_mat, n=8)
+    else:
+        cyl(V, 0.0, 0.0, r, h - 0.3, h, top, n=10)
+        cyl(V, 0.0, 0.0, r * 0.95, 0.0, h - 0.3, top, n=10, top=False)
+    if seats and pedestal:
+        for k in range(chairs):
+            a = 2 * math.pi * k / chairs
+            cx, cy = (r + 0.4) * math.cos(a), (r + 0.4) * math.sin(a)
+            fx, fy = -math.cos(a), -math.sin(a)
+            tx, ty = -fy, fx
+
+            def at(u, v, cx=cx, cy=cy, fx=fx, fy=fy, tx=tx, ty=ty):
+                return (cx + tx * u + fx * v, cy + ty * u + fy * v)
+            seat = [at(0.22, -0.22), at(-0.22, -0.22), at(-0.22, 0.22), at(0.22, 0.22)]
+            prism(V, seat, 0.40, 0.47, chair_mat, top=chair_mat)
+            back = [at(0.21, -0.22), at(-0.21, -0.22), at(-0.21, -0.17), at(0.21, -0.17)]
+            prism(V, back, 0.47, 1.0, chair_mat, top=chair_mat)
+            for u_, v_ in ((0.19, -0.19), (-0.19, -0.19), (-0.19, 0.19), (0.19, 0.19)):
+                p_ = at(u_, v_)
+                cyl(V, p_[0], p_[1], 0.016, 0.0, 0.40, leg_mat, n=4, top=False)
+    elif seats:
         for k in range(chairs):
             a = 2 * math.pi * k / chairs
             cx, cy = (r + 0.4) * math.cos(a), (r + 0.4) * math.sin(a)
@@ -3371,7 +3632,16 @@ def chair_rows(rows, per_row, pitch=0.95, seat_w=0.5, aisle_every=0, aisle_w=1.2
         for nb in blocks:
             w = nb * seat_w
             # seat strip
-            V.box(x, y - 0.45, seat_h - 0.06, x + w, y, seat_h, seat_mat, faces="+z+y")
+            if kind == "black":
+                # fix round 5 (fidelity-4, improvement 6): per-seat gaps in the texture (no extra triangles)
+                V.poly([(x, y - 0.45, seat_h), (x + w, y - 0.45, seat_h), (x + w, y, seat_h), (x, y, seat_h)],
+                       "int_ru_seatrow_black", uvs=[(0, 0), (nb / 4.0, 0), (nb / 4.0, 0.7), (0, 0.7)],
+                       normal_hint=(0, 0, 1))
+                V.poly([(x + w, y, seat_h - 0.06), (x, y, seat_h - 0.06), (x, y, seat_h), (x + w, y, seat_h)],
+                       "int_ru_seatrow_black", uvs=[(nb / 4.0, 0.7), (0, 0.7), (0, 1.0), (nb / 4.0, 1.0)],
+                       normal_hint=(0, 1, 0))
+            else:
+                V.box(x, y - 0.45, seat_h - 0.06, x + w, y, seat_h, seat_mat, faces="+z+y")
             # back panel at the rear edge (seen from the back: rear face; from the front: the front face)
             yb = y - 0.45
             V.poly([(x, yb, 0.0), (x + w, yb, 0.0), (x + w, yb, 1.0), (x, yb, 1.0)], rear,
@@ -3672,7 +3942,9 @@ def _kitchen_line(V, xr, xl, depth, oh):
         u = xr + 0.25 + (W0 - 0.5) * (k + 0.5) / 3
         V.box(u - 0.02, -0.33, 1.06, u + 0.02, -0.29, 1.45, "int_ru_steel", faces="+y+x-x")
     V.box(xr + 0.3, -0.4, 1.9, xl - 0.3, -0.05, 1.98, "int_ru_steel", faces="+y-z")
-    V.poly([(xl - 0.35, -0.06, 1.899), (xr + 0.35, -0.06, 1.899), (xr + 0.35, -0.39, 1.899), (xl - 0.35, -0.39, 1.899)],
+    # fix round 5 (fidelity-2): the LED strip hangs 1 cm under the shelf (at 1.899 it exported to the same game unit
+    # as the steel underside: a coplanar pair seen from below)
+    V.poly([(xl - 0.35, -0.06, 1.89), (xr + 0.35, -0.06, 1.89), (xr + 0.35, -0.39, 1.89), (xl - 0.35, -0.39, 1.89)],
            "int_ru_led", glow=True, normal_hint=(0, 0, -1))
     # reach-in fridge at the right (viewer's right = local -x) end, a fryer / grill block at the left
     V.box(xr + 0.25, -depth, 0.0, xr + 1.0, -depth + 0.75, 2.05, "int_ru_steel", faces="+y+x+z")
@@ -4055,6 +4327,33 @@ def high_top(h=1.05, r=0.35, stools=3, backs=True):
             _obox(V, bx - sv * 0.14 * uy, by + sv * 0.14 * ux, ux, uy, 0.016, 0.016, 0.77, 0.92, "int_ru_black",
                   top=False)
         _obox(V, bx, by, ux, uy, 0.018, 0.17, 0.92, 1.1, "int_ru_black")
+    K.col_box(C, -r, -r, 0.0, r, r, h, K.COL_NOCAM)
+    return P
+
+
+def patio_table(r=0.42, h=0.74, seats=4, rot=0.0):
+    """fix round 5 (fidelity-2; ru_south_terrace_seating): a black metal patio table for the Level 1 outdoor dining
+    terrace: a round black top on a centre post with a cross foot, and `seats` attached swing-out seats on curved
+    black arms (round seat pads, a small rectangular back on the far side). One NO_CAM block for the top; the seats
+    are visual only (as the food court's table sets)."""
+    P = _p("patio_table")
+    V, C = P.visual, P.collision
+    cyl(V, 0.0, 0.0, r, h - 0.035, h, "int_ru_black", n=10)
+    cyl(V, 0.0, 0.0, 0.035, 0.03, h - 0.035, "int_ru_black", n=5, top=False)
+    for k in range(seats):
+        a = 2 * math.pi * k / seats + rot + math.pi / seats
+        ux, uy = math.cos(a), math.sin(a)
+        # cross foot (top only: nothing lies on the floor plane)
+        _obox(V, 0.29 * ux, 0.29 * uy, ux, uy, 0.25, 0.025, 0.0, 0.03, "int_ru_black", top=True)
+        a = 2 * math.pi * k / seats + rot
+        ux, uy = math.cos(a), math.sin(a)
+        cx, cy = 0.66 * ux, 0.66 * uy
+        # the arm from the post to under the seat, the seat pad, the back on the outer edge
+        _obox(V, 0.35 * ux, 0.35 * uy, ux, uy, 0.31, 0.02, 0.24, 0.27, "int_ru_black", top=True)
+        cyl(V, cx, cy, 0.025, 0.27, 0.43, "int_ru_black", n=4, top=False)
+        cyl(V, cx, cy, 0.2, 0.43, 0.46, "int_ru_black", n=8, bottom=True)
+        bx, by = cx + 0.2 * ux, cy + 0.2 * uy
+        _obox(V, bx, by, ux, uy, 0.015, 0.16, 0.46, 0.84, "int_ru_black")
     K.col_box(C, -r, -r, 0.0, r, r, h, K.COL_NOCAM)
     return P
 

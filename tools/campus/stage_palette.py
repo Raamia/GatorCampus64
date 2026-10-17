@@ -173,6 +173,7 @@ INTERIOR_MATERIALS.update({
     "int_ms_directory":       {"tex": "int_ms_directory.png",       "tile_m": 0.8, "color": "#34363A", "map": "once"},
     "int_ms_aquarium":        {"tex": "int_ms_aquarium.png",        "tile_m": 1.8, "color": "#0C1812", "map": "once"},
     "int_ms_vending":         {"tex": "int_ms_vending.png",         "tile_m": 1.0, "color": "#6A4E9A", "map": "once"},
+    "int_ms_vend_graphic":    {"tex": "int_ms_vend_graphic.png",    "tile_m": 0.8, "color": "#B05A6A", "map": "once"},
     "int_ms_tv":              {"tex": "int_ms_tv.png",              "tile_m": 1.2, "color": "#18191C", "map": "once"},
     "int_ms_logo":            {"tex": "int_ms_logo.png",            "tile_m": 1.2, "color": "#E6E6E4", "map": "once"},
     "int_ms_tile":            {"tex": "int_ms_tile.png",            "tile_m": 1.2, "color": "#ECEAE4"},
@@ -220,6 +221,10 @@ INTERIOR_MATERIALS.update({
     "int_ms_rug_blue":        {"tex": "int_ms_rug_blue.png",        "tile_m": 2.0, "color": "#2E5A9A", "map": "once"},
     # design fix round 2: Marston's walkable roof deck, a grey single-ply membrane with lap seams on a 2 m tile
     "int_ms_roof_membrane":   {"tex": "int_ms_roof_membrane.png",   "tile_m": 2.0, "color": "#A2A29E"},
+    # iteration 5 (fidelity-1, #69 #37): the floor-1 core's rosier, lighter face brick with pale mortar
+    "int_ms_brick_f1":        {"tex": "int_ms_brick_f1.png",        "tile_m": 0.84, "color": "#C48890"},
+    # iteration 5 (fidelity-4, #98): the sandy ground under the plaza oaks (Marston backdrop)
+    "int_ms_sand":            {"tex": "int_ms_sand.png",            "tile_m": 4.0, "color": "#C8B48E"},
 })
 for _m in INTERIOR_MATERIALS.values():
     _m.setdefault("kind", "opaque")

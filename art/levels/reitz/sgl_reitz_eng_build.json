@@ -5874,8 +5874,8 @@
    "area": 2,
    "module": "tools/campus/interiors/reitz.py",
    "kit_tris": {
-    "visual": 124674,
-    "collision": 12315
+    "visual": 134475,
+    "collision": 12515
    },
    "warp_nodes": [
     {
@@ -6467,12 +6467,12 @@
     "note": "area 2 spawn 0x0A (bhvSpinAirborneWarp) in the Ground-level atrium lounge; only debug warps (warp_to_warpnode / area 2) use it: players walk in through the real doors (instant warps)"
    },
    "pickups": {
-    "coins_placed": 84,
-    "coins_with_goombas": 84,
-    "objects": 39,
+    "coins_placed": 100,
+    "coins_with_goombas": 100,
+    "objects": 43,
     "by_kind": {
-     "coin_line": 12,
-     "coin": 24,
+     "coin_line": 15,
+     "coin": 25,
      "heart": 1,
      "1up": 2
     },
@@ -6816,6 +6816,86 @@
       "bparams": "0x00000000",
       "facing_deg": 0.0,
       "coins": 0,
+      "acts": null
+     },
+     {
+      "kind": "coin_line",
+      "name": "outdoor dining terrace coins",
+      "map_m": [
+       -419.4,
+       -326.0,
+       6.0
+      ],
+      "game": [
+       5060,
+       600,
+       3300
+      ],
+      "behavior": "bhvCoinFormation",
+      "model": "MODEL_NONE",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 5,
+      "acts": null
+     },
+     {
+      "kind": "coin_line",
+      "name": "acc east aisle coins",
+      "map_m": [
+       -448.6,
+       -257.0,
+       -6.0
+      ],
+      "game": [
+       2140,
+       -600,
+       -3600
+      ],
+      "behavior": "bhvCoinFormation",
+      "model": "MODEL_NONE",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 5,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "acc kiln lid coin",
+      "map_m": [
+       -457.9,
+       -266.7,
+       -4.32
+      ],
+      "game": [
+       1210,
+       -432,
+       -2630
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin_line",
+      "name": "game room window coins",
+      "map_m": [
+       -422.8,
+       -309.0,
+       0.0
+      ],
+      "game": [
+       4720,
+       0,
+       1600
+      ],
+      "behavior": "bhvCoinFormation",
+      "model": "MODEL_NONE",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 5,
       "acts": null
      },
      {
@@ -7273,8 +7353,8 @@
      },
      "G": {
       "walls": 253,
-      "doors_open": 26,
-      "doors_closed": 23,
+      "doors_open": 25,
+      "doors_closed": 24,
       "void_edge_fill": 0,
       "void_caps": 0,
       "sealed_backing": 3,
@@ -7283,7 +7363,7 @@
      "L1": {
       "walls": 290,
       "doors_open": 7,
-      "doors_closed": 29,
+      "doors_closed": 28,
       "void_edge_fill": 1,
       "void_caps": 6,
       "sealed_backing": 0,
@@ -7414,16 +7494,24 @@
       "art": 45,
       "plaques": 32
      },
+     "LL_wainscot": {
+      "art": 68,
+      "plaques": 231.3
+     },
      "L2": {
       "art": 111,
       "plaques": 55
+     },
+     "L2_wainscot": {
+      "art": 166,
+      "plaques": 584.9
      },
      "L3": {
       "art": 109,
       "plaques": 58
      }
     },
-    "lights": 1914,
+    "lights": 1919,
     "instant_warps": [
      {
       "index": 0,
@@ -7475,72 +7563,72 @@
    "objects": {
     "reitz LL visual": {
      "group": "LL",
-     "tris": 2740,
+     "tris": 3238,
      "collision": false
     },
     "reitz LL collision": {
      "group": "LL",
-     "tris": 298,
+     "tris": 329,
      "collision": true
     },
     "reitz G visual": {
      "group": "G",
-     "tris": 16720,
+     "tris": 18253,
      "collision": false
     },
     "reitz G collision": {
      "group": "G",
-     "tris": 1500,
+     "tris": 1504,
      "collision": true
     },
     "reitz L1 visual": {
      "group": "L1",
-     "tris": 13618,
+     "tris": 14408,
      "collision": false
     },
     "reitz L1 collision": {
      "group": "L1",
-     "tris": 1200,
+     "tris": 1228,
      "collision": true
     },
     "reitz L2 visual": {
      "group": "L2",
-     "tris": 15996,
+     "tris": 16448,
      "collision": false
     },
     "reitz L2 collision": {
      "group": "L2",
-     "tris": 1809,
+     "tris": 1854,
      "collision": true
     },
     "reitz L3 visual": {
      "group": "L3",
-     "tris": 10543,
+     "tris": 11066,
      "collision": false
     },
     "reitz L3 collision": {
      "group": "L3",
-     "tris": 1093,
+     "tris": 1100,
      "collision": true
     },
     "reitz L4 visual": {
      "group": "L4",
-     "tris": 3279,
+     "tris": 4608,
      "collision": false
     },
     "reitz L4 collision": {
      "group": "L4",
-     "tris": 337,
+     "tris": 354,
      "collision": true
     },
     "reitz L5 visual": {
      "group": "L5",
-     "tris": 2030,
+     "tris": 2082,
      "collision": false
     },
     "reitz L5 collision": {
      "group": "L5",
-     "tris": 205,
+     "tris": 208,
      "collision": true
     },
     "reitz L6 visual": {
@@ -7550,25 +7638,25 @@
     },
     "reitz L6 collision": {
      "group": "L6",
-     "tris": 71,
+     "tris": 72,
      "collision": true
     },
     "reitz ext visual": {
      "group": "ext",
-     "tris": 4194,
+     "tris": 4246,
      "collision": false
     },
     "reitz ext collision": {
      "group": "ext",
-     "tris": 5,
+     "tris": 16,
      "collision": true
     }
    },
-   "vertex_lit_material_lists": 324
+   "vertex_lit_material_lists": 352
   }
  ],
  "export_hygiene": {
-  "geometry_mode_lines_sorted": 756,
+  "geometry_mode_lines_sorted": 812,
   "trailing_ws_lines": 2,
   "max_abs_vertex": 32416,
   "common0_jump_link": true
@@ -7589,30 +7677,30 @@
   },
   "area_2": {
    "vertices": [
-    14182,
-    14034
+    14322,
+    14169
    ],
-   "welded_vertices": 147,
-   "collapsed_tris": 14,
-   "tjunction_splits": 412,
+   "welded_vertices": 152,
+   "collapsed_tris": 25,
+   "tjunction_splits": 422,
    "triangles": [
-    12294,
-    12692
+    12493,
+    12890
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [
-   "12692 static collision triangles in the largest area (22471 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
+   "12890 static collision triangles in the largest area (22669 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
   ],
-  "collision_tris": 22471,
-  "render_tris": 206487,
+  "collision_tris": 22669,
+  "render_tris": 216288,
   "lua_names": [],
   "fog_patched": [
-   210,
-   210
+   224,
+   224
   ]
  },
- "level_dir": "work/interiors/polish3/r4/fidelity-2/reitz_f2/b1/levels/wf"
+ "level_dir": "work/interiors/polish3/r5/design/build2/levels/wf"
 }

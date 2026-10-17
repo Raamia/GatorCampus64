@@ -1096,16 +1096,16 @@
    "map_m": [
     -63.0,
     -83.0,
-    19.3
+    19.2
    ],
    "game": [
     -340,
-    1930,
+    1920,
     -1590
    ],
-   "floor_m": 19.3,
+   "floor_m": 19.2,
    "clearance_m": 3.0,
-   "headroom_m": 4.1,
+   "headroom_m": 4.2,
    "note": "on a north reading-room table (table top 0.76 m)"
   },
   "return_slot": {
@@ -3663,29 +3663,29 @@
    "name": "Group study 201G",
    "door_a_m": [
     -37.5,
-    -91.15
+    -92.05
    ],
    "door_b_m": [
     -37.5,
-    -92.95
+    -93.25
    ],
-   "door_width_m": 1.8,
+   "door_width_m": 1.2,
    "door_head_m": 2.6,
    "facing_deg": 270.0,
    "door": {
     "name": "room_R201G_door",
     "map_m": [
      -37.5,
-     -92.05,
+     -92.65,
      0.0
     ],
     "game": [
      2210,
      0,
-     -685
+     -625
     ],
     "floor_m": 0.0,
-    "clearance_m": 0.9,
+    "clearance_m": 0.6,
     "headroom_m": 2.6,
     "facing_deg": 270.0,
     "game_yaw": "0xC000"
@@ -3694,16 +3694,16 @@
     "name": "room_R201G_inside",
     "map_m": [
      -36.7,
-     -92.05,
+     -92.65,
      0.0
     ],
     "game": [
      2290,
      0,
-     -685
+     -625
     ],
     "floor_m": 0.0,
-    "clearance_m": 1.03,
+    "clearance_m": 0.73,
     "headroom_m": 5.4,
     "facing_deg": 90.0,
     "game_yaw": "0x4000"
@@ -3715,29 +3715,29 @@
    "name": "Group study 201H",
    "door_a_m": [
     -37.5,
-    -94.15
+    -95.15
    ],
    "door_b_m": [
     -37.5,
-    -95.95
+    -96.35
    ],
-   "door_width_m": 1.8,
+   "door_width_m": 1.2,
    "door_head_m": 2.6,
    "facing_deg": 270.0,
    "door": {
     "name": "room_R201H_door",
     "map_m": [
      -37.5,
-     -95.05,
+     -95.75,
      0.0
     ],
     "game": [
      2210,
      0,
-     -385
+     -315
     ],
     "floor_m": 0.0,
-    "clearance_m": 0.9,
+    "clearance_m": 0.6,
     "headroom_m": 2.6,
     "facing_deg": 270.0,
     "game_yaw": "0xC000"
@@ -3746,16 +3746,16 @@
     "name": "room_R201H_inside",
     "map_m": [
      -36.7,
-     -95.05,
+     -95.75,
      0.0
     ],
     "game": [
      2290,
      0,
-     -385
+     -315
     ],
     "floor_m": 0.0,
-    "clearance_m": 1.1,
+    "clearance_m": 0.73,
     "headroom_m": 5.4,
     "facing_deg": 90.0,
     "game_yaw": "0x4000"
@@ -4868,7 +4868,7 @@
     710
    ],
    "floor_m": 12.0,
-   "clearance_m": 3.0,
+   "clearance_m": 1.6,
    "headroom_m": null
   },
   {
@@ -4974,12 +4974,12 @@
   }
  ],
  "pickups": {
-  "coins_placed": 203,
-  "coins_with_goombas": 208,
-  "objects": 102,
+  "coins_placed": 204,
+  "coins_with_goombas": 209,
+  "objects": 103,
   "by_kind": {
    "coin_line": 25,
-   "coin": 62,
+   "coin": 63,
    "coin_ring": 2,
    "heart": 4,
    "1up": 4,
@@ -6239,6 +6239,26 @@
      -1640,
      1922,
      1360
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 terrace planter coin 9",
+    "map_m": [
+     -35.9,
+     -106.0,
+     13.22
+    ],
+    "game": [
+     2370,
+     1322,
+     710
     ],
     "behavior": "bhvYellowCoin",
     "model": "MODEL_YELLOW_COIN",

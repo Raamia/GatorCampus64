@@ -22743,6 +22743,18 @@
    "real": "LL / L2 / L3 corridors and pre-function halls: white walls with framed art rows and room signs beside the doors (ru_os_g310_g320, ru_os_g330); the L1 south hall links to the UF Bookstore through a glass door bank",
    "game": "a navy room-number plaque beside every room door on a corridor, a framed UF print or cork bulletin board every ~5 m on the solid room walls facing a corridor (LL / L2 / L3), two navy lounge groups on rugs in the L2 pre-function hall, lobby benches against the core walls; in the L1 south hall benches, five planters and a UF BOOKSTORE sign on a 0.6 m sign ledge over the link doors (3 coins on the ledge); one plaque design (no per-room numbers at N64 texture size)",
    "why": "design review: 3,902 / 2,440 / 1,114 m2 of reachable L2 / L3 / LL floor had almost no landmarks; the sign ledge is a jump reward. The plaques, prints and boards are generic: no photo shows the exact art on these walls"
+  },
+  {
+   "what": "Orange & Brew front and the void's east-end office fronts (fix round 5, fidelity-1 pass)",
+   "real": "ru_atrium_enr_lounge: a run of tall glazed Orange & Brew bays (dark bronze mullions, warm-lit interiors with posters, a low white ledge) on the lounge's south side under the Level 1 soffit; ru_atrium_enr_vertical: the balconies wrap the void's far (east) end with glass office fronts under the bulkhead",
+   "game": "the slanted SW facade's inner face (-396.93,-282.72)->(-406.18,-291.77) carries 1.25 m glazed cafe bays with a glass door and an ORANGE & BREW fascia sign (visual only, 5-21.5 cm off the wall); the east end walls at Levels 2 / 3 carry 2.7 m glazed office bays between their glass doors (visual only, 4-13 cm off the walls); the gator-skin wall now shows taupe plates on a cream network (0.33 m plates)",
+   "why": "photo fidelity (review round 4, fidelity-1 improvements 2-4); the plan's lounge-facing wall there is the slanted facade, so the storefront follows it (inferred placement)"
+  },
+  {
+   "what": "Matthews Suite south wall and the 2355 / 2365 art wall (fix round 5, fidelity-4 pass)",
+   "real": "ru_os_matthews_1: one window wall at the far (west) end and a solid pale blue-grey long wall carrying a row of four framed photos; ru_os_2355_2365: chairs face a slate-blue END wall, five colourful landscape canvases hang on the long right-hand door wall",
+   "game": "matthews_suite's south exterior wall is solid (window_spec returns None for it) with four frames on its inner face; 2355 / 2365 take the north end wall as the slate-blue accent (ACCENT_DIR) and the canvases on the long door wall (ART_WALL: east in 2355, west in its mirror twin 2365)",
+   "why": "photo fidelity (review round 4, fidelity-4 improvements 1 and 4); the plan has no window data for the L4 tower walls, and 2365's orientation is inferred as the mirror of 2355 (no photo of its own)"
   }
  ],
  "findings": [

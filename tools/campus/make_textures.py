@@ -1451,6 +1451,34 @@ def tx_ms_brick(seed):
     return t
 
 
+def tx_ms_brick_f1(seed):
+    """Iteration 5 (fidelity-1, #69 4317 / #37 4243): the floor-1 brick core and the west passage. The shared
+    int_ms_brick rendered darker and more orange (131 / 77 / 59) than the photos' rosier red with pale mortar
+    (164 / 113 / 114); no tint can lift a texture past its own colour, so F1 gets this rosier, lighter variant. Same
+    layout as int_ms_brick (same tone count, same seed -> same bond); mortar within ~25 luminance of the brick (no
+    mipmaps: no high-contrast 1-texel lines)."""
+    t = Tex(64, 32, hexc("#BAA4AC"), seed)
+    tones = [hexc("#D0828C"), hexc("#C47680"), hexc("#D88C92"), hexc("#BA6E7A"), hexc("#CC8088"),
+             hexc("#B46C76"), hexc("#D48E92"), hexc("#C07882")]
+    mortar = hexc("#BAA4AC")
+    for course in range(8):
+        off = 8 if course % 2 else 0
+        for b in range(5):
+            tone = t.r.choice(tones)
+            x0 = b * 16 - off
+            for y in range(course * 4, course * 4 + 4):
+                for x in range(x0, x0 + 16):
+                    xx = x % 64
+                    if y == course * 4 + 3 or (x - x0) == 15:
+                        t.set(xx, y, mortar)
+                    else:
+                        k = 1.0 + t.r.uniform(-0.05, 0.05)
+                        if y == course * 4:
+                            k *= 1.06
+                        t.set(xx, y, shade(tone, k))
+    return t
+
+
 def tx_ms_copper(seed):
     """Bronze metal cladding of the porch box over the north doors (#1 #2 #3). fidelity-3: smooth dark bronze-brown
     panels with fine horizontal seams 0.6 m apart (16 px at 1.2 m; two-pixel shadow + highlight so they do not
@@ -2256,6 +2284,25 @@ def tx_ms_vending(seed):
     return t
 
 
+def tx_ms_vend_graphic(seed):
+    """iteration 5 (fidelity-2, #73): the supply machine's lower-third photo graphic (a separate panel left of the
+    keypad column): a magenta-to-orange photo wash with pale product / figure shapes on the right, 'SUPPLIES' in
+    white 2x-tall capitals, 'AND MORE' in pale yellow under it. 64 x 32 (the ~0.76 x 0.55 m panel)."""
+    t = Tex(64, 32, hexc("#8A3E9E"), seed)
+    top, bot = (0x8A, 0x3E, 0x9E), (0xE8, 0x74, 0x3A)
+    for y in range(32):
+        f = y / 31.0
+        c = tuple(int(a + (b - a) * f) for a, b in zip(top, bot))
+        t.rect(0, y, 63, y, c)
+    t.noise(6, x0=0, y0=0, x1=63, y1=31)
+    for (x0, y0, x1, y1, c) in ((50, 4, 58, 13, "#F2C8A8"), (52, 14, 57, 27, "#3A5EA8"), (44, 18, 49, 27, "#F4E2B0"),
+                                (59, 16, 62, 27, "#2EA86A"), (51, 2, 57, 4, "#3A2A24")):
+        t.rect(x0, y0, x1, y1, hexc(c))
+    _ms_center(t, "SUPPLIES", 4, hexc("#FFFFFF"), sy=2, x0=1, x1=46)
+    _ms_center(t, "AND MORE", 21, hexc("#FFE680"), x0=1, x1=46)
+    return t
+
+
 def tx_ms_tv(seed):
     """Wall TV / large monitor, off (#44, #45, #77, #78): glossy black with a faint diagonal reflection."""
     t = Tex(32, 32, hexc("#18191C"), seed)
@@ -2367,6 +2414,7 @@ def build_interior_marston():
         "int_ms_diffuser": tx_ms_diffuser(209),
         "int_ms_led": tx_ms_led(210),
         "int_ms_brick": tx_ms_brick(211),
+        "int_ms_brick_f1": tx_ms_brick_f1(211),
         "int_ms_copper": tx_ms_copper(212),
         "int_ms_veneer": tx_ms_veneer(213),
         "int_ms_perf": tx_ms_perf(214),
@@ -2401,6 +2449,7 @@ def build_interior_marston():
         "int_ms_directory": tx_ms_directory(240),
         "int_ms_aquarium": tx_ms_aquarium(241),
         "int_ms_vending": tx_ms_vending(242),
+        "int_ms_vend_graphic": tx_ms_vend_graphic(1242),
         "int_ms_tv": tx_ms_tv(243),
         "int_ms_logo": tx_ms_logo(244),
         "int_ms_tile": tx_ms_tile(246),
@@ -2430,7 +2479,18 @@ def build_interior_marston():
         "int_ms_tv_maker": tx_ms_tv_maker(262),
         "int_ms_rug_blue": tx_ms_rug_blue(263),
         "int_ms_roof_membrane": tx_ms_roof_membrane(264),
+        "int_ms_sand": tx_ms_sand(265),
     }
+
+
+def tx_ms_sand(seed):
+    """iteration 5 (fidelity-4, #98 f4_view_north_century_tower): the bare sandy ground under the plaza oaks north of
+    Marston, seen from the F4 / F5 windows: pale tan sand, a soft low-contrast mottle (no fine high-contrast texels:
+    the backdrop has no mipmaps)."""
+    t = Tex(32, 32, hexc("#C8B48E"), seed)
+    t.noise(4)
+    t.speckle(36, [hexc("#D2C09C"), hexc("#BCA682")])
+    return t
 
 
 def tx_ms_glass_frost(seed):
