@@ -18,6 +18,7 @@ def setup_fast64():
 
     mod.game_data.update(scene.gameEditorMode)
     settings = scene.fast64.settings
+    strip_old_scene_properties_outputs()
     if bpy.app.version >= (4, 2, 0):
         if any(mat.is_f3d for mat in bpy.data.materials) and not settings.internal_fixed_4_2:
             mod.upgrade_f3d_version_all_meshes()
@@ -34,6 +35,25 @@ def setup_fast64():
         # can miss e.g. "GeometryNormal_ViewSpace". Exporting does not need it.
         print(f"SGL: skipped Fast64 preview resync ({e})")
     return mod
+
+
+def strip_old_scene_properties_outputs():
+    """Fast64's createOrUpdateSceneProperties() upgrades an old "SceneProperties" node group
+    by removing its outputs while iterating group.interface.items_tree, which reads freed
+    memory: the intermittent segfault on macOS (about 1 in 14 loads) and a crash on every
+    load on Linux. Remove those outputs here first, one at a time with a fresh lookup each
+    time, so Fast64's loop finds nothing to remove. Fast64 then rebuilds the outputs."""
+    if bpy.app.version < (4, 0, 0):
+        return
+    group = bpy.data.node_groups.get("SceneProperties")
+    if group is None or group.get("version", -1) >= 2:  # Fast64's SCENE_PROPERTIES_VERSION
+        return
+    while True:
+        item = next((i for i in group.interface.items_tree
+                     if i.item_type == "SOCKET" and i.in_out == "OUTPUT"), None)
+        if item is None:
+            break
+        group.interface.remove(item)
 
 
 def migrate_legacy_custom_geo_cmds():
