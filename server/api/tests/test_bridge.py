@@ -264,6 +264,22 @@ def test_events_and_status(client, bridge, conn):
     assert conn.execute("SELECT payload FROM events WHERE t='char'").fetchone()["payload"]["friend"] == "guest_3"
 
 
+def test_events_in_the_bridges_shape(client, bridge, conn):
+    """server/bridge posts {t, payload, at} with the payload's fields repeated at the top level,
+    and adds an `exit` event when the game exits."""
+    def ev(t, **f):
+        return {"t": t, "payload": {"t": t, **f}, "at": "2026-10-17T12:00:00Z", **f}
+    assert client.post("/events", json=ev("hello", version="1.3.0"), headers=bridge).status_code == 202
+    client.post("/events", json=[ev("join", gi=4, name="Cy"), ev("char", gi=4, friend="guest_2"),
+                                 {"t": "join", "payload": {"t": "join", "gi": 5, "name": "Di"}}], headers=bridge)
+    s = client.get("/status").json()
+    assert s["online"] is True and s["version"] == "1.3.0"
+    assert sorted(p["name"] for p in s["players"]) == ["Cy", "Di"]
+    assert conn.execute("SELECT last_played FROM slots WHERE n=2").fetchone()["last_played"] is not None
+    client.post("/events", json=ev("exit"), headers=bridge)
+    assert client.get("/status").json()["online"] is False
+
+
 def test_status_stale(make_client, bridge, conn):
     client = make_client(status_stale_secs=60)
     client.post("/events", json={"t": "hello", "version": "1"}, headers=bridge)

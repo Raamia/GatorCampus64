@@ -55,6 +55,13 @@ class LinkIn(BaseModel):
         return self
 
 
+def event_fields(e: dict) -> dict:
+    """An event's fields. The bridge posts {t, payload, at} with the payload's fields repeated at
+    the top level; top-level wins, the nested payload fills in anything missing."""
+    nested = e.get("payload")
+    return {**nested, **e} if isinstance(nested, dict) else e
+
+
 class DeployResult(BaseModel):
     state: str = Field(..., pattern="^(deployed|failed)$")
     error: str | None = Field(None, max_length=2000)
@@ -194,8 +201,9 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             down = c.execute("SELECT 1 FROM events WHERE t IN ('exit','bye') AND id > %s LIMIT 1",
                              (hello["id"],)).fetchone()
             pres = c.execute(
-                """SELECT DISTINCT ON (payload->>'gi') t, payload FROM events
-                    WHERE t IN ('join','leave') AND id > %s ORDER BY payload->>'gi', id DESC""",
+                """SELECT DISTINCT ON (COALESCE(payload->>'gi', payload->'payload'->>'gi')) t, payload FROM events
+                    WHERE t IN ('join','leave') AND id > %s
+                    ORDER BY COALESCE(payload->>'gi', payload->'payload'->>'gi'), id DESC""",
                 (hello["id"],)).fetchall()
             if s.status_stale_secs > 0:
                 stale = c.execute("SELECT max(at) < now() - make_interval(secs => %s) AS stale FROM events",
@@ -203,9 +211,9 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             else:
                 stale = False
         online = not down and not stale
-        players = [{"gi": p["payload"].get("gi"), "name": p["payload"].get("name")}
-                   for p in pres if p["t"] == "join"] if online else []
-        hp = hello["payload"]
+        players = [{"gi": f.get("gi"), "name": f.get("name")}
+                   for p in pres if p["t"] == "join" for f in [event_fields(p["payload"])]] if online else []
+        hp = event_fields(hello["payload"])
         return {"online": online, "players": players, "player_count": len(players),
                 "version": hp.get("version") or hp.get("v") or hp.get("mod_version"),
                 "since": hello["at"], "last_event_at": last, "slots": slots, "jobs_in_progress": queue,
@@ -395,7 +403,8 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             for e in evs:
                 c.execute("INSERT INTO events (t, payload) VALUES (%s, %s)", (e["t"][:32], Jsonb(e)))
                 if e["t"] == "char":
-                    fid = str(e.get("friend") or e.get("friend_id") or e.get("id") or "")
+                    f = event_fields(e)
+                    fid = str(f.get("friend") or f.get("friend_id") or f.get("id") or "")
                     m = re.fullmatch(r"guest_([1-8])", fid)
                     if m:
                         c.execute("UPDATE slots SET last_played = now() WHERE n = %s", (int(m.group(1)),))
