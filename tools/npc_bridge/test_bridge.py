@@ -170,7 +170,7 @@ class GeminiTest(unittest.TestCase):
 
     def test_blocked_reply_stays_in_character(self):
         g = bridge.GeminiReplier(self.cast, "KEY", urlopen=FakeHTTP({"promptFeedback": {"blockReason": "SAFETY"}}))
-        self.assertIn("P", g.reply("guide", "P", "hi", []))
+        self.assertIn("P", g.reply("albert", "P", "hi", []))
 
     def test_api_key_from_env_file(self):
         d = tempfile.mkdtemp()

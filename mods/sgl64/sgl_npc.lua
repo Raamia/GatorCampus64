@@ -1,25 +1,34 @@
--- Super Gatorlator 64: talking NPCs on the hub (UF characters with vanilla models).
--- Walk up to one and type in chat: the host's tools/npc_bridge/bridge.py asks an AI (Gemini) for the
--- reply, which shows as a speech bubble over the NPC and a chat line for everyone.
+-- Super Gatorlator 64: talking NPCs on the hub. Albert the Alligator (our own actor, actors/albert, generated
+-- by tools/actors/make_albert.py) hosts at the spawn; Libby and Professor Bob use vanilla models.
+-- Walk up to one and type in chat: the host's tools/npc_bridge/bridge.py answers game questions from
+-- tools/npc_bridge/game_guide.md and everything else with Gemini; the reply shows as a speech bubble over the
+-- NPC and a chat line for everyone.
 --
 -- NPCs are local props (spawn_non_sync_object on every client, like the Marston Shushers): they stand
--- still, play their idle animation and turn to face the nearest player within SGL_NPC_FACE_DIST.
+-- still, play their idle animation (Albert has no skeleton: Lua breathes, hops and flaps his jaw) and turn
+-- to face the nearest player within SGL_NPC_FACE_DIST.
 -- Ids must match tools/npc_bridge/npcs.json (tools/luatest/check_npc_ids.py checks this).
 
 SGL_NPC_TALK_DIST = 600      -- chat within 6 m of an NPC goes to it
 SGL_NPC_FACE_DIST = 800      -- NPCs turn toward a player within 8 m
 
 -- y is the hub ground (the generated plaza is flat at 0); yaw in degrees (0 = facing +Z, south)
+-- Albert: about 8 m from the Plaza spawn (8320, -4440), facing it. jaw = his model's GEO_SWITCH_CASE on oAnimState
+-- (0 closed, 1 open); without the model (it failed to load) he falls back to a Yoshi.
+local ALBERT_MODEL = smlua_model_util_get_id("albert_geo")
 SGL_NPCS = {
-    { id = "guide", name = "Tour Guide Koopa", model = E_MODEL_KOOPA_WITH_SHELL, anims = "koopa_seg6_anims_06011364",
-      anim = 9, scale = 1.5, x = 8800, y = 0, z = -3750, yaw = -120, col = { 120, 255, 140 } },
-    { id = "albert", name = "Albert", model = E_MODEL_YOSHI, anims = "yoshi_seg5_anims_05024100",
-      anim = 0, scale = 1.2, x = 8800, y = 0, z = 3050, yaw = 180, col = { 250, 140, 40 } },
+    { id = "albert", name = "Albert", model = ALBERT_MODEL, jaw = true, scale = 1.0,
+      x = 8800, y = 0, z = -3750, yaw = -120, col = { 250, 140, 40 } },
     { id = "libby", name = "Libby", model = E_MODEL_TOAD, anims = "toad_seg6_anims_0600FB58",
       anim = 6, scale = 1.2, x = 8000, y = 0, z = -15550, yaw = 150, col = { 150, 200, 255 } },
     { id = "prof", name = "Professor Bob", model = E_MODEL_BOBOMB_BUDDY, anims = "bobomb_seg8_anims_0802396C",
       anim = 0, scale = 1.3, x = 4050, y = 0, z = 9000, yaw = 30, col = { 255, 160, 210 } },
 }
+
+if ALBERT_MODEL == E_MODEL_ERROR_MODEL then
+    local a = SGL_NPCS[1]
+    a.model, a.jaw, a.anims, a.anim, a.scale = E_MODEL_YOSHI, false, "yoshi_seg5_anims_05024100", 0, 1.2
+end
 
 local sNpcById = {}
 for i, npc in ipairs(SGL_NPCS) do
@@ -54,6 +63,9 @@ end
 ---------------------------------------------------------------------------------------------
 -- the NPC objects (oBehParams = index into SGL_NPCS)
 ---------------------------------------------------------------------------------------------
+local sBubbles = {}           -- npc id -> { text, age, thinking } (every client; chat section below)
+local HOP_FRAMES = 12         -- the little hop when a reply arrives
+
 local function npc_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_ACTIVE_FROM_AFAR
     o.oDrawingDistance = 8000
@@ -79,6 +91,21 @@ local function npc_loop(o)
     if target ~= nil then want = atan2s(target.pos.z - o.oPosZ, target.pos.x - o.oPosX) end
     o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, want, 0x400)
     o.oMoveAngleYaw = o.oFaceAngleYaw
+    -- a hop when a reply arrives; Albert also breathes and flaps his jaw while his bubble is up
+    local y = npc.y
+    if npc.hop ~= nil and npc.hop < HOP_FRAMES then
+        npc.hop = npc.hop + 1
+        local t = npc.hop / HOP_FRAMES
+        y = y + 60 * 4 * t * (1 - t)
+    end
+    o.oPosY = y
+    if npc.jaw then
+        local b = sBubbles[npc.id]
+        local talking = b ~= nil and not b.thinking and b.age < math.min(150, 20 + #b.text * 2)
+        o.oAnimState = (talking and (b.age // 4) % 2 == 0) and 1 or 0
+        local breath = 1 + 0.012 * math.sin(o.oTimer * 0.12)
+        obj_scale_xyz(o, npc.scale, npc.scale * breath, npc.scale)
+    end
 end
 
 id_bhvSglNpc = hook_behavior(nil, OBJ_LIST_DEFAULT, true, npc_init, npc_loop, "bhvSglNpc")
@@ -90,7 +117,7 @@ local function spawn_npcs()
             obj_scale(obj, npc.scale)
             obj.oFaceAngleYaw = degrees_to_sm64(npc.yaw)
         end)
-        local anims = gObjectAnimations[npc.anims]
+        local anims = npc.anims ~= nil and gObjectAnimations[npc.anims] or nil
         if o ~= nil and anims ~= nil then
             o.oAnimations = anims
             obj_init_animation(o, npc.anim)
@@ -123,7 +150,6 @@ local sSeq = 0
 local sPending = {}           -- seq -> { npc, player, age } (host only)
 local sPollTimer = 0
 local sWarned = false
-local sBubbles = {}           -- npc id -> { text, age, thinking } (every client)
 
 local function escape(s)
     return (s:gsub("\\", "\\\\"):gsub("\t", "\\t"):gsub("\n", "\\n"):gsub("\r", ""))
@@ -183,6 +209,7 @@ local function npc_show(id, text, thinking)
     if npc == nil then return end
     sBubbles[id] = { text = text, age = 0, thinking = thinking }
     if thinking then return end
+    npc.hop = 0
     local c = npc.col
     djui_chat_message_create(string.format("\\#%02x%02x%02x\\%s:\\#dcdcdc\\ %s", c[1], c[2], c[3], npc.name, text))
     if in_hub(gNetworkPlayers[0]) and dist2d(gMarioStates[0].pos.x, gMarioStates[0].pos.z, npc.x, npc.z) < 2500 then
