@@ -44,9 +44,11 @@ local sFrame = 0
 -- helpers
 ---------------------------------------------------------------------------------------------
 
--- sgl_bridge.lua's exports, looked up when needed (nil only if the bridge file is missing)
+-- sgl_bridge.lua's exports, looked up when needed (nil only if the bridge file is missing). They are
+-- this mod's globals, which coopdx keeps in the per-mod _ENV table (its __index is the real _G):
+-- _G[name] would always be nil in the game.
 local function bridge(name)
-    return _G[name]
+    return rawget(_ENV, name)
 end
 
 -- send an event through the bridge: false offline / without a headless host
