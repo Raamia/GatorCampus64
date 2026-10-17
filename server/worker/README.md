@@ -9,7 +9,10 @@ character pipeline of `docs/web_platform_spec.md` §5.1 steps 2-6:
 | `face` | `tools/blender/sgl_face_gen.py` → `art/sglguest/textures/` in the job dir | `pipeline.py` |
 | `build` → `export` → `validate` → `preview` | `run_blender.sh build_character.py -- sglguest --art-dir … --build-dir … --actors-dir …` (10 min cap, process group killed on timeout). Its stdout markers (`SGL saved`, `SGL validation`, `SGL_PREVIEW`) move the state. `SGL_BUILD_REPORT` is parsed, then `validate_export.py` runs again outside Blender, also on a copy renamed to `guest_8` | `pipeline.py` |
 | `preview` (step `store`) | 64×64 portrait, upload to `builds/<job>/`, delete `photos/<job>/` (on success or failure) | `portrait.py`, `storage.py` |
-| `ready` / `failed` | `characters.state` = `ready` (+ `spec`) or `failed`; `jobs.step` holds the failing step, and `jobs.log` the last 8000 characters of the log | `db.py`, `worker.py` |
+| `ready` / `failed` | ready: `jobs.artifacts` + `characters.spec` written, then `sgl_assign_slot()` gives the character a slot and queues its deploy. failed: `step` = the failing step, `jobs.error` = one line, `jobs.log` = the last 8000 characters | `db.py`, `worker.py` |
+
+`characters.state` / `characters.step` mirror the job's state / step at every update (same
+transaction), so the API's per-user "in progress" limit and `/me` see the real step.
 
 ## Actor id and guest slots
 
@@ -38,20 +41,33 @@ photo colour samples), `character.json`, `build_report.json`, `previews/{front,b
 `portrait.png` (opaque RGBA 64×64, made from `head.png` and falling back to a crop of `front.png`, on a
 `charselect.lua`-style card colour), `face_sheet.png`, `actors/sglguest/{geo_header.h,geo.inc.c,model.inc.c}`, `log.txt`.
 
-## Assumed database schema (reconcile with `server/api/schema.sql`)
+`jobs.artifacts` (written on success, so the API never lists the bucket) holds the keys:
+`{"build_id": "sglguest", "prefix": "builds/<job>/", "manifest", "character_json", "portrait",
+"previews": [...], "actor_dir": "builds/<job>/actors/sglguest/", "files": [every key]}`.
+`GET /deploys/pending` turns it into the bridge's `files[]`; `GET /jobs/{id}` and the gallery
+presign `previews` and `portrait`.
 
-All SQL lives in `db.py`:
+## Database contract
 
-```
-jobs(id uuid, character_id uuid, state text, step text, log text, started timestamptz,
-     finished timestamptz, worker text, created timestamptz)
-characters(id uuid, owner_sub text, name text, slot int null, state text, spec jsonb,
-           created timestamptz, deployed_at timestamptz)
-```
+The schema is `server/api/schema.sql`; its header is the worker contract and `db.py` holds all of
+the worker's SQL for it (the tests run against that file):
 
-The worker writes `characters.state` ∈ {`building`, `ready`, `failed`} (constants in `db.py`). It
-never touches `slot` or `deployed_at`. On startup it fails any job it had claimed but not finished
-(by `WORKER_NAME`) and deletes that job's photos.
+- **Claim**: oldest `queued` job, `FOR UPDATE OF j, c SKIP LOCKED`; both rows go to
+  `spec`/`spec`, `attempts + 1`, `error` cleared. The photos are exactly the keys in `jobs.photos`
+  (`photos/<job>/<i>.jpg`, written by the API).
+- **States**: `jobs.state` = `characters.state` ∈ queued, spec, face, build, export, validate,
+  preview, ready, failed. `step` uses the same names plus `store` (under state `preview`); on
+  success it is `ready` and on failure the step that failed. Check constraints enforce both sets.
+- **Slots**: the worker never picks one. Its ready transaction takes the slot lock, marks the
+  job and the character ready and calls `sgl_assign_slot()`: a free slot first, else the least
+  recently played unpinned slot whose character is finished. If nothing is free (everything is
+  pinned), the character stays ready without a slot and `sgl_sync_deploys()` slots it on a later
+  bridge poll. Failure calls `sgl_release_slot()`.
+- **Deleted character**: the owner can delete it, and its job by cascade, at any time. A job
+  UPDATE that affects 0 rows raises `db.JobGone`, and the pipeline stops (`JobCancelled`, which
+  kills Blender's process group). Then `photos/<job>/` and `builds/<job>/` are deleted.
+- **Orphans**: on startup the worker fails any job it had claimed but not finished (by
+  `WORKER_NAME`) and deletes that job's photos.
 
 ## Environment
 
@@ -97,10 +113,14 @@ Blender peaks around 1-2 GB, and that leaves about 4 GB of headroom.
 ```
 uv venv /tmp/sglw && VIRTUAL_ENV=/tmp/sglw uv pip install -r server/worker/requirements-dev.txt
 /tmp/sglw/bin/python -m pytest server/worker/tests
-# + the Postgres tests:
-docker run -d --rm --name sglw-pg -e POSTGRES_PASSWORD=pw -p 55432:5432 postgres:16-alpine
-TEST_DATABASE_URL=postgresql://postgres:pw@localhost:55432/postgres /tmp/sglw/bin/python -m pytest server/worker/tests
 ```
+
+The Postgres tests (`test_db.py`, `test_integration_api.py`) apply `server/api/schema.sql` to
+`$TEST_DATABASE_URL` if it is set, else to a throwaway `postgres:16-alpine` container started with
+docker. Without either, they are skipped. `test_integration_api.py` runs the real API (FastAPI,
+moto S3) and the real worker (`db.py`, `worker.handle`, the pipeline with the fake Blender) on one
+database and bucket: upload, claim, build, ready plus slot, then `GET /jobs/{id}` and
+`GET /deploys/pending`.
 
 `tests/fake_blender.py` stands in for `run_blender.sh`. It "exports" the real daniel actor renamed
 to `sglguest` and copies daniel's previews, so the real face generator, `validate_export`, the

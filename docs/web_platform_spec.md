@@ -85,7 +85,10 @@ Fallbacks if refused: gatorlator.courses, herewegators.club. **Not.co** (no long
 
 States: `queued → spec → face → build → export → validate → preview → ready` (or `failed` with the
 step and a log tail). Each step writes its state to Postgres; the web page polls `GET /jobs/{id}`
-every 2 s (SSE later if wanted).
+every 2 s (SSE later if wanted). `jobs.state` and `characters.state` take the same values and the
+worker writes them together. `step` uses the same names plus `store` (the upload, under state
+`preview`); it is `ready` on success and the failing step on failure. The exact SQL is the worker
+contract in the header of `server/api/schema.sql`.
 
 1. **Upload.** `POST /characters` (scope `create:character`) takes a display name (≤ 12 chars,
    printable ASCII, profanity-filtered), a consent checkbox, and 1-4 photos (JPEG/PNG, ≤ 8 MB each,
@@ -121,6 +124,11 @@ every 2 s (SSE later if wanted).
 6. **Store.** Previews, `portrait.png`, `character.json`, `manifest.json` and the
    `actors/sglguest/` export are
    uploaded to `builds/<job>/`. Photos are **deleted** when the job ends (success or failure).
+7. **Ready.** In one transaction the worker writes `jobs.artifacts` (the stored object keys:
+   `build_id`, `prefix`, `manifest`, `character_json`, `portrait`, `previews[]`, `actor_dir`,
+   `files[]`) and `characters.spec`, marks both rows `ready`, and calls `sgl_assign_slot()`
+   (§5.2). If the owner deletes the character mid-job, the worker's next UPDATE affects 0 rows.
+   The worker then stops and deletes `photos/<job>/` and `builds/<job>/`.
 
 The worker claims jobs with `SELECT … FOR UPDATE SKIP LOCKED` (one Blender at a time per GPU VM;
 more VMs scale horizontally). No separate queue service.
@@ -134,19 +142,35 @@ bounded and the Lua static:
   default gator) and a placeholder portrait, so the mod always loads.
 - A deploy overwrites `actors/guest_<n>/` and `textures/sgl_portrait_guest_<n>.png` in the server's
   installed mod and rewrites `mods/sgl64/guests.lua` (generated, display names + owner ids).
-- Slot assignment: free slot first, else the least recently played unpinned slot. Pinned slots
-  (team demo characters) are never evicted.
+- Slot assignment happens **only when a character is ready**, never at claim, so a live gator is
+  never evicted for a build that might fail. The worker calls `sgl_assign_slot()` in its ready
+  transaction, and `sgl_sync_deploys()` (run on every `GET /deploys/pending`) slots any ready,
+  never-evicted character that still has none. The rule is free slot first, else the least
+  recently played unpinned slot whose character is finished. Pinned slots (team demo characters)
+  are never evicted. An evicted character keeps its row (`evicted_at`) and is not re-slotted
+  automatically.
 - Size check before deploy: compiled mod must stay under coopdx's 35 MB download cap
   (`MAX_MOD_SIZE`, compiled `.bin/.lvl/.tex`). **Measure the current mod first** (spike S1).
 
 ### 5.3 Deploy to the server
 
-The bridge polls `GET /deploys/pending` (M2M). When a build is `ready` and slotted:
-1. download artifacts, write them into the installed mod, regenerate `guests.lua`;
+The bridge polls `GET /deploys/pending` (M2M). Each pending deploy is
+`{id, slot, kind, character_id, job_id, name, owner, owner_sub, created, actor, build_id, prefix,
+files[], artifacts}` plus a top-level `roster` of all 8 slots. For `kind: "character"`:
+`actor` = `guest_<slot>`, `build_id` = `sglguest`, `prefix` = `builds/<job>/`, and `files[]` =
+`{path, url}`, with presigned GET URLs and paths relative to `prefix`:
+`actors/sglguest/geo.inc.c`, `actors/sglguest/geo_header.h`, `actors/sglguest/model.inc.c`,
+`character.json`, `manifest.json`, `portrait.png`. The list comes from `jobs.artifacts`, falling
+back to `manifest.json`. For `kind: "placeholder"` (slot freed), `files` is empty: restore the
+shipped placeholder for `guest_<slot>`. When a build is `ready` and slotted:
+1. download the files, rename the actor with `server/worker/actor_rename.py
+   actors/sglguest <mod>/actors guest_<slot>`, copy `portrait.png` to
+   `<mod>/textures/sgl_portrait_guest_<slot>.png`, regenerate `guests.lua`;
 2. if players are online, announce "New gator <name> arrives in 60 s: the server will restart"
    via the inbox (§6.3), wait 60 s (or until empty);
 3. restart the `sgl-game` systemd unit; clients rejoin and download the changed mod;
-4. report `deployed` to the API. Deploys are batched: at most one restart per 5 min.
+4. report `deployed` to the API (`POST /deploys/{id}` `{"state": "deployed"}`, or `"failed"` with
+   an `error`). Deploys are batched: at most one restart per 5 min.
 
 ## 6. Hosted server + bridge (Vultr)
 
@@ -258,10 +282,18 @@ login (`POST /link-codes`) and the player types `/link K7Q2XF`. Same result, no 
 | POST | `/deploys/{id}` | `bridge` | Mark deployed / failed |
 | GET | `/status` | public | Server online, players, version (for `/tv`) |
 
-Postgres tables: `users(sub, nickname, email_uf)`, `characters(id, owner_sub, name, slot, state,
-step, spec jsonb, created, deployed_at)`, `jobs(id, character_id, state, step, log, started,
-finished, worker)`, `slots(n, character_id, pinned, last_played)`, `links(sub, coopdx_name, gi,
-linked_at)`, `events(id, t, payload jsonb, at)`.
+Postgres tables (`server/api/schema.sql` is the source of truth): `users(sub, nickname,
+email_uf)`, `characters(id, owner_sub, name, slot, state, step, spec jsonb, created, deployed_at,
+evicted_at)`, `jobs(id, character_id, state, step, log, error, photos text[], artifacts jsonb,
+attempts, created, started, finished, worker)`, `slots(n, character_id, pinned, last_played,
+assigned_at)`, `links(sub, coopdx_name, gi, via, linked_at)`, `link_codes(code, sub, expires_at,
+used_at)`, `events(id, t, payload jsonb, at)`, `deploys(id, slot, kind, character_id, job_id,
+state, error)`.
+
+`GET /jobs/{id}` returns `state`, `step`, `step_index` (position in `pipeline`; `store` counts as
+`preview`), `log`, `error`, `slot`, `deployed`, and presigned `previews[]` (`{name, url}` for
+`builds/<job>/previews/*.png`) and `portrait` (`builds/<job>/portrait.png`). `POST /events`
+accepts the bridge's `{t, payload, at}` with the fields repeated at the top level (top level wins).
 
 Object Storage: private bucket; the API hands out short-lived presigned GET URLs for previews.
 
