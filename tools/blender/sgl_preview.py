@@ -13,6 +13,7 @@ The F3D materials are replaced by emission materials that emulate how coopdx
     texture size / exported tile size (gsDPSetTileSize), which is what coopdx does:
     a tile that does not match the texture shows up squeezed/stretched here too.
 """
+import json
 import math
 import os
 
@@ -200,6 +201,40 @@ def _eval_bbox(objs):
     return lo, hi
 
 
+def frame_bbox(obj, arm):
+    """World bbox of the posed mesh for framing the standard previews. The wing-cap wings
+    are hidden in the previews but still set the top and back of the frame; a character
+    module's WING_SHIFT moves them (sgl_body.move_wings records each wing's parent bone
+    and armature-space move in obj["sgl_wing_shift"]), so their vertices are counted
+    where the template has them: the preview scale stays that of every other character
+    instead of shrinking the body whenever the wings move out of big hair."""
+    dg = bpy.context.evaluated_depsgraph_get()
+    ev = obj.evaluated_get(dg)
+    me = ev.to_mesh()
+    mw = obj.matrix_world
+    pts = [mw @ v.co for v in me.vertices]
+    ev.to_mesh_clear()
+    try:
+        moves = json.loads(obj.get("sgl_wing_shift", "{}"))
+    except (TypeError, ValueError):
+        moves = {}
+    for group, mv in moves.items():
+        vg = obj.vertex_groups.get(group)
+        pb = arm.pose.bones.get(mv.get("parent", ""))
+        if vg is None or pb is None:
+            continue
+        # every bone of the wing chain moved by delta in rest pose: the posed wing
+        # moves by the parent bone's deform (rotation part) applied to delta
+        deform = pb.matrix @ pb.bone.matrix_local.inverted()
+        off = (arm.matrix_world.to_3x3() @ deform.to_3x3()) @ Vector(mv["delta"])
+        for v in obj.data.vertices:
+            if any(g.group == vg.index and g.weight > 0.4 for g in v.groups):
+                pts[v.index] = pts[v.index] - off
+    lo = Vector((min(p.x for p in pts), min(p.y for p in pts), min(p.z for p in pts)))
+    hi = Vector((max(p.x for p in pts), max(p.y for p in pts), max(p.z for p in pts)))
+    return lo, hi
+
+
 def _group_center(obj, group_name):
     dg = bpy.context.evaluated_depsgraph_get()
     gi = obj.vertex_groups[group_name].index
@@ -319,7 +354,7 @@ def render_character(out_dir, armature="Mario", mesh="Mario Mesh", size=768, eye
     swap_to_preview_materials(body)
 
     cam = setup_scene(size)
-    lo, hi = _eval_bbox([body])
+    lo, hi = frame_bbox(body, arm)
     center = (lo + hi) / 2
     height = hi.z - lo.z
     cam.data.ortho_scale = max(height, hi.x - lo.x, hi.y - lo.y) * 1.12

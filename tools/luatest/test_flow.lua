@@ -1,5 +1,6 @@
 -- Integration tests: the WHOLE mod (every mods/sgl64/*.lua, in coopdx's load order) plus the REAL
--- generated level scripts (levels/castle_grounds, levels/bob) in the offline coopdx simulation.
+-- generated level scripts (levels/castle_grounds, levels/bob, levels/wf) in the offline coopdx simulation.
+-- The built stages are the ones on disk (Sim.built_on_disk), as in the game.
 -- What it pins down (docs/flow.md):
 --   * every file loads with strict globals in strcmp order; no two files register the same chat
 --     command / mod menu button / behaviour; the hooks of all files coexist;
@@ -40,10 +41,11 @@ local function test(name, fn)
     print((failed == before and "PASS " or "FAIL ") .. name)
 end
 
-local HUB, BOB = C.LEVEL_CASTLE_GROUNDS, C.LEVEL_BOB
+local HUB, BOB, WF = C.LEVEL_CASTLE_GROUNDS, C.LEVEL_BOB, C.LEVEL_WF
 local MS = { IDLE = 0, WAITING = 1, INTRO = 2, ACTIVE = 3, SUCCESS = 4, FAILED = 5, DONE = 6 }
 local HUB_SCRIPT = assert(Sim.level_script("castle_grounds"), "levels/castle_grounds/script.c")
 local BOB_SCRIPT = assert(Sim.level_script("bob"), "levels/bob/script.c")
+local WF_SCRIPT = Sim.level_script("wf")      -- nil until course 2 is built
 -- the contract table of docs/flow.md section 2 (door -> slot, level, stars to open)
 local CONTRACT = {
     { door = 1, slot = "bob", level = "LEVEL_BOB", stars = 0 },
@@ -57,6 +59,7 @@ local CONTRACT = {
 local function full_world(opts)
     opts = opts or {}
     opts.files = Sim.ALL_FILES
+    opts.built = opts.built or Sim.built_on_disk()
     return Sim.new(opts)
 end
 
@@ -247,13 +250,13 @@ test("single player: hub -> character select -> door -> act 1 -> star -> back ou
     check(raw(H.ms[0].marioObj)._model == env._G.sglFriends[4].model, "characters.lua swapped the model")
     check(H.ms[0].numLives == 4, "4 lives")
 
-    -- doors: 6 objects from the hub script; only The Swamp is built
+    -- doors: 6 objects from the hub script; with 0 stars only The Swamp's opens (Reitz is built but locked)
     local doors = Sim.objects_with(H, env.id_bhvSglDoor)
     check(#doors == 6, "six hub doors")
     local models = {}
     for _, o in ipairs(doors) do models[(raw(o).oBehParams >> 24) & 0xFF] = raw(o)._model end
     check(models[1] == C.E_MODEL_STAR, "Auditorium door: gold star (open)")
-    check(models[5] == C.E_MODEL_TRANSPARENT_STAR and models[2] == C.E_MODEL_TRANSPARENT_STAR, "unbuilt stages: see-through star")
+    check(models[5] == C.E_MODEL_TRANSPARENT_STAR and models[2] == C.E_MODEL_TRANSPARENT_STAR, "locked / unbuilt stages: see-through star")
     local flames = Sim.objects_with(H, env.id_bhvSglDoorFx)
     local shown = 0
     for _, f in ipairs(flames) do
@@ -322,6 +325,115 @@ test("single player: hub -> character select -> door -> act 1 -> star -> back ou
     H.ms[0].numLives = 2
     w:step(2)
     check(H.ms[0].numLives == 4, "hub tops lives back up to 4")
+end)
+
+test("door 2: The Hub (2 stars) -> Reitz & Engineering act 1 -> star -> back outside The Hub door", function()
+    if WF_SCRIPT == nil then
+        print("  (levels/wf not built: skipped)")
+        return
+    end
+    -- 1 star: built but LOCKED
+    local w = full_world({ starFlags = { [C.COURSE_BOB] = 0x01 } })
+    local H = w:connect("Host")
+    H.strStorage.friend = "josh"
+    w:step(3)
+    w:warp(H, HUB, 1, 0)
+    w:seconds(2)
+    local env = H.env
+    check(env.sgl_stage_ready(env.sgl_stage_by_door(2)), "levels/wf is ours: course 2 is built")
+    check(Sim.hud_has(H, "NEXT: THE SWAMP"), "1 star: the hint still points at The Swamp (act 2)")
+    at_door(H, 2, 600)
+    w:step(2)
+    check(Sim.hud_has(H, "REITZ & ENGINEERING") and Sim.hud_has(H, "LOCKED %- 2 stars %(you have 1%)"), "door 2 label: LOCKED")
+    at_door(H, 2, 50)
+    w:step(3)
+    check(Sim.find(H.popups, "Locked!.-REITZ & ENGINEERING needs 2 stars %(you have 1%)") ~= nil, "locked popup")
+    check(H.action ~= C.ACT_DISAPPEARED and H.level == HUB, "a locked door does not open")
+
+    -- 2 stars (Swamp acts 1 + 2), alone: open, and the hint skips The Swamp's co-op act 3
+    w = full_world({ starFlags = { [C.COURSE_BOB] = 0x03 } })
+    H = w:connect("Host")
+    H.strStorage.friend = "josh"
+    w:step(3)
+    w:warp(H, HUB, 1, 0)
+    w:seconds(2)
+    env = H.env
+    check(Sim.find(H.popups, "Walk into The Hub door to enter REITZ & ENGINEERING!") ~= nil,
+        "first hub visit: 'Walk into The Hub door' (no 'the The Hub')")
+    check(Sim.hud_has(H, "NEXT: REITZ & ENGINEERING") and Sim.hud_has(H, "THE HUB door"),
+        "alone with Swamp acts 1-2: NEXT points at Reitz (Swamp act 3 needs 2 players)")
+    local doors = Sim.objects_with(H, env.id_bhvSglDoor)
+    local model2
+    for _, o in ipairs(doors) do
+        if ((raw(o).oBehParams >> 24) & 0xFF) == 2 then model2 = raw(o)._model end
+    end
+    check(model2 == C.E_MODEL_STAR, "door 2: gold star (open)")
+    at_door(H, 2, 600)
+    w:step(2)
+    check(Sim.hud_has(H, "REITZ & ENGINEERING") and Sim.hud_has(H, "Walk in!"), "door 2 label: Walk in!")
+    at_door(H, 2, 50)
+    w:step(2)
+    local m = H.ms[0]
+    check(H.action == C.ACT_DISAPPEARED and raw(m).actionArg == (C.WARP_OP_WARP_OBJECT << 16) + 2, "door 2: vanilla warp-object entry")
+    local used = raw(m).usedObj
+    check(used ~= nil and ((raw(used).oBehParams >> 16) & 0xFF) == 0x12, "usedObj carries hub node 0x12")
+    local lv, area, node = follow_node(HUB_SCRIPT, 0x12)
+    check(lv == WF and area == 1 and node == 0x0A, "hub 0x12 -> WF 0x0A")
+    local acts = Sim.selectable_acts(w.starFlags[C.COURSE_WF] or 0)
+    check(#acts == 1 and acts[1] == 1, "act select offers act 1 only")
+    H.action = C.ACT_IDLE
+    w:warp(H, lv, area, acts[1])
+    local sp0 = H.levelSpawns[0x0A]
+    check(sp0 and sp0.bhv == "bhvSpinAirborneWarp", "WF entry spawn 0x0A (spin-in)")
+    H.pos.x, H.pos.y, H.pos.z = sp0.x, sp0.y - 100, sp0.z
+    w:step(5)
+    check(Sim.hud_has(H, "REITZ & ENGINEERING %- ACT 1") and Sim.hud_has(H, "ROOFTOP OF THE REITZ"), "act 1 banner")
+    check(Sim.stars_of(H, 0) == 0, "no level-script star: the mission spawns act 1's")
+    check(#Sim.objects_with(H, env.id_bhvSglReitzPlatform) == 1, "the window-washer lift is there")
+    Sim.cmd(H, "campus", "where")
+    -- the spawn in campus map metres (stages.json reitz_eng centre (-470, -293): x = X/100 - 470, y = -Z/100 - 293)
+    local mx, my = sp0.x / 100 - 470, -sp0.z / 100 - 293
+    check(Sim.find(H.chat, string.format("campus map: %.1f m east, %.1f m north", mx, my):gsub("%-", "%%-"):gsub("%.", "%%.")) ~= nil,
+        string.format("/campus where: campus map metres at the spawn (%.1f, %.1f)", mx, my))
+    check(math.abs(mx - (-398.0)) < 0.6 and math.abs(my - (-200.0)) < 0.6, "WF spawn on the North Lawn NE of the Reitz Union")
+    w:seconds(3.5)
+    check(state(H) == MS.ACTIVE, "mission active")
+    local P = env.REITZ_POINTS
+    H.pos.x, H.pos.y, H.pos.z = P.roof_goal.x, P.roof_goal.y, P.roof_goal.z
+    w:step(4)
+    check(state(H) == MS.SUCCESS, "penthouse roof: success")
+    w:step(3)
+    check(#H.starSpawns == 1 and Sim.stars_of(H, 0) == 1, "one star, id 0")
+    local star = Sim.objects_with(H, C.id_bhvStarSpawnCoordinates)[1]
+    Sim.run_hooks(H, C.HOOK_ON_INTERACT, H.ms[0], star, C.INTERACT_STAR_OR_KEY, true)
+    w.starFlags[C.COURSE_WF] = (w.starFlags[C.COURSE_WF] or 0) | (1 << ((raw(star).oBehParams >> 24) & 0xFF))
+    raw(star).activeFlags = C.ACTIVE_FLAG_DEACTIVATED
+    w:step(3)
+    check(state(H) == MS.DONE, "mission DONE")
+    -- star exit: WF 0xF0 -> hub 0x22, outside The Hub door
+    local lv2, a2, n2 = follow_node(WF_SCRIPT, 0xF0)
+    check(lv2 == HUB and n2 == 0x22, "WF 0xF0 -> hub 0x22")
+    w:warp(H, lv2, a2, 0)
+    local sp = H.levelSpawns[n2]
+    check(sp ~= nil and sp.bhv == "bhvPaintingStarCollectWarp", "hub 0x22 is a star-return spawn")
+    local d = HUB_DOORS[2]
+    check(math.sqrt((sp.x - d.x) ^ 2 + (sp.z - d.z) ^ 2) < 400, "0x22 is right outside The Hub door")
+    H.pos.x, H.pos.y, H.pos.z = sp.x, sp.y - 80, sp.z
+    H.face.y = sp.yaw
+    w:step(5)
+    check(H.action ~= C.ACT_DISAPPEARED, "landing outside The Hub does not re-enter the door")
+    check(env.sgl_total_stars() == 3, "3 stars")
+    acts = Sim.selectable_acts(w.starFlags[C.COURSE_WF])
+    check(acts[#acts] == 2 and env.sgl_mission_get(WF, 2).id == "reitz_tokens", "next visit: act 2 = MEAL SWIPE TOKENS")
+    -- death / Exit course: WF 0xF1 -> hub 0x32, the same spot
+    local lv3, _, n3 = follow_node(WF_SCRIPT, 0xF1)
+    check(lv3 == HUB and n3 == 0x32 and H.levelSpawns[0x32].bhv == "bhvPaintingDeathWarp"
+        and H.levelSpawns[0x32].x == sp.x and H.levelSpawns[0x32].z == sp.z, "WF 0xF1 -> hub 0x32 (same spot)")
+    -- with a friend online the co-op Swamp act 3 is doable again: the hint goes back to The Swamp
+    check(env.sgl_next_stage().key == "reitz", "alone: next = Reitz")
+    w:connect("Friend")
+    w:step(3)
+    check(env.sgl_next_stage().key == "swamp", "2 players online: next = The Swamp (its co-op act 3)")
 end)
 
 test("coming soon acts: free roam notice, no mission, no star, no invite; exit works", function()

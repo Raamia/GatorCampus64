@@ -5,7 +5,8 @@
 -- the window's aspect ratio (djui_hud_get_screen_width()). The vanilla HUD sits along the top edge
 -- (lives top-left, coins, stars top-right), so mission UI uses:
 --   left panel      x 8, y 34 ..             (mission name, state, counters)
---   right column    x W-92, y 34 (race timer); results board x W-166, y 84 ..
+--   right column    x W-92, y 34 (race timer, Reitz crane side view x W-84, y 32 .. 192);
+--                   results board x W-166, y 84 ..
 --   toasts          y 34 / 49 / 64, centred in the space between the panel and the right column
 --                   (shrunk to fit), at most 3
 --   banner          centre, y 84 .. 136      (act start: the first seconds of an act / round)
@@ -198,6 +199,12 @@ function sgl_hud_timer(frames, x, y, label, col)
     djui_hud_set_font(FONT_HUD)
     sgl_hud_text(sgl_hud_format_time(frames), x, y + (label and 10 or 0), 0.75, col or SGL_HUD_WHITE, 1)
     djui_hud_set_font(FONT_NORMAL)
+end
+
+-- something is drawn in the right column this frame (race timer, the Reitz crane side view): toasts keep
+-- clear of it
+function sgl_hud_reserve_right()
+    sZone.rightFrame = get_global_timer()
 end
 
 -- bottom-centre prompt (Study Group invites, "stand in the start box", ...); shrinks to fit

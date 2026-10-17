@@ -10,7 +10,8 @@
 --     higher seq), delivered one frame later;
 --   * network_send / network_send_to (reliable, one frame later, to every other connected client);
 --   * spawn_default_star: only legal inside an object's loop (it reads the calling object), de-dup
---     per behParams per level visit, PACKET_SPAWN_STAR to the same level/area/act (no cutscene there);
+--     per behParams per level visit (at most 8 distinct behParams, like coopdx's spawn_star_deduplication),
+--     PACKET_SPAWN_STAR to the same level/area/act (no cutscene there);
 --   * objects as strict proxies (fields checked against coopdx_structs_v151.lua), behaviours run as
 --     init once + loop every frame, warps unload them;
 --   * HUD calls recorded per frame (text), colours must be integers like the real binding wants;
@@ -25,6 +26,7 @@
 --     NetworkPlayer.type is NPT_LOCAL / NPT_SERVER (global index 0) / NPT_CLIENT like coopdx.
 -- Any read of an undefined global fails the test (typos / APIs coopdx does not have).
 -- Sim.ALL_FILES = every top-level mods/sgl64/*.lua in coopdx's load order (strcmp of the names).
+-- Built stages: opts.built (default: the hub + BOB); Sim.built_on_disk() = every slot whose levels/<slot> exists.
 local Sim = {}
 
 local HERE = debug.getinfo(1, "S").source:match("^@(.*/)") or "./"
@@ -139,6 +141,18 @@ Sim.C = C
 for slot, name in pairs({ castle_grounds = "LEVEL_CASTLE_GROUNDS", bob = "LEVEL_BOB", wf = "LEVEL_WF", jrb = "LEVEL_JRB",
     ccm = "LEVEL_CCM", bbh = "LEVEL_BBH", ttc = "LEVEL_TTC" }) do
     Sim.SLOT_OF_LEVEL[C[name]] = slot
+end
+local COURSE_OF_LEVEL = { [C.LEVEL_BOB] = C.COURSE_BOB, [C.LEVEL_WF] = C.COURSE_WF, [C.LEVEL_JRB] = C.COURSE_JRB,
+    [C.LEVEL_CCM] = C.COURSE_CCM, [C.LEVEL_BBH] = C.COURSE_BBH, [C.LEVEL_TTC] = C.COURSE_TTC }
+
+-- the levels our mod replaces right now, as the game would see them: every slot whose
+-- mods/sgl64/levels/<slot>/script.c exists (DynOS compiles those at launch) -> { [LEVEL_X] = true }
+function Sim.built_on_disk()
+    local out = {}
+    for level, slot in pairs(Sim.SLOT_OF_LEVEL) do
+        if Sim.level_script(slot) ~= nil then out[level] = true end
+    end
+    return out
 end
 
 ---------------------------------------------------------------------------------------------
@@ -308,8 +322,9 @@ function World:warp(c, level, area, act)
     for _, o in ipairs(c.objects) do raw(o).activeFlags = C.ACTIVE_FLAG_DEACTIVATED end
     c.objects = {}
     c.dedup = {}
+    c.dedupN = 0
     c.level, c.area, c.act = level, area, act
-    c.course = (level == C.LEVEL_BOB) and C.COURSE_BOB or 0
+    c.course = COURSE_OF_LEVEL[level] or 0
     c.synced = false
     c.syncIn = 2
     if self.levelScripts then self:spawn_level_objects(c) end
@@ -407,7 +422,7 @@ function World:step_client(c)
     ctl.stickX, ctl.stickY, ctl.stickMag = c.stickMag or 0, 0, c.stickMag or 0
     c.pressed = 0
     run_hooks(c, C.HOOK_BEFORE_MARIO_UPDATE, m)
-    c.lastInput = { buttons = ctl.buttonDown, stickMag = ctl.stickMag }
+    c.lastInput = { buttons = ctl.buttonDown, pressed = ctl.buttonPressed, stickMag = ctl.stickMag }
     run_hooks(c, C.HOOK_MARIO_UPDATE, m)
     for i = 1, C.MAX_PLAYERS - 1 do
         if c.giAt[i] ~= nil and c.nps[i].connected then run_hooks(c, C.HOOK_MARIO_UPDATE, c.ms[i]) end
@@ -434,8 +449,9 @@ function World:deliver()
                 elseif msg.kind == "packet" and (msg.to == nil or msg.to == r.gi) then
                     run_hooks(r, C.HOOK_ON_PACKET_RECEIVE, deepcopy(msg.data))
                 elseif msg.kind == "star" and r.level == msg.level and r.area == msg.area and r.act == msg.act then
-                    if not r.dedup[msg.bparams] then
+                    if not r.dedup[msg.bparams] and (r.dedupN or 0) < 8 then
                         r.dedup[msg.bparams] = true
+                        r.dedupN = (r.dedupN or 0) + 1
                         local st = r.spawn_object(C.id_bhvStarSpawnCoordinates, C.E_MODEL_STAR, msg.x, msg.y, msg.z)
                         raw(st).oBehParams = msg.bparams
                         raw(st).oStarSpawnExtCutsceneFlags = 0
@@ -490,7 +506,9 @@ function World:build_env(c)
     for i = 0, C.MAX_PLAYERS - 1 do S.gPlayerSyncTable[i] = {} end
     S.gLevelValues, S.gServerSettings, S.gBehaviorValues = {}, {}, {}
     S.gGlobalSoundSource = { x = 0, y = 0, z = 0 }
-    S.gGlobalObjectCollisionData = { purple_switch_seg8_collision_0800C7A8 = "COL:purple_switch" }
+    -- vanilla collision pointers the mod's objects use (sgl_mission.lua buttons; wf_reitz_missions.lua lift + cranes)
+    S.gGlobalObjectCollisionData = { purple_switch_seg8_collision_0800C7A8 = "COL:purple_switch",
+        checkerboard_platform_seg8_collision_0800D710 = "COL:checkerboard_platform" }
     S.gGlobalSyncTable = setmetatable({}, {
         __index = function(_, k) return c.sync[k] end,
         __newindex = function(_, k, v)
@@ -554,6 +572,8 @@ function World:build_env(c)
     S.play_race_fanfare = function() c.fanfares = c.fanfares + 1 end
     S.is_game_paused = function() return false end
     S.get_global_timer = function() return w.frame end
+    -- coopdx's per-area network timer (the same on every client of the area; c.areaTimerOffset skews one)
+    S.get_network_area_timer = function() return w.frame + (c.areaTimerOffset or 0) end
 
     -- hud
     local function int8(v, what) assert(math.type(v) == "integer" and v >= 0 and v <= 255, what .. " must be an integer 0..255, got " .. tostring(v)) end
@@ -774,8 +794,9 @@ function World:build_env(c)
         assert(select("#", x, y, z) == 3 and type(x) == "number")
         assert(c.cur ~= nil, "spawn_default_star called outside an object's behaviour loop")
         local bp = raw(c.cur).oBehParams
-        if c.dedup[bp] then return nil end
+        if c.dedup[bp] or (c.dedupN or 0) >= 8 then return nil end    -- coopdx: 8 per level visit
         c.dedup[bp] = true
+        c.dedupN = (c.dedupN or 0) + 1
         local st = new_object(C.id_bhvStarSpawnCoordinates, C.E_MODEL_STAR, raw(c.cur).oPosX, raw(c.cur).oPosY, raw(c.cur).oPosZ)
         raw(st).oBehParams = bp
         raw(st).oStarSpawnExtCutsceneFlags = 1

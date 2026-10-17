@@ -549,6 +549,38 @@ test("late joiner after success: star without cutscene; after collection: DONE, 
     check(state(D) == MS.INTRO or state(D) == MS.WAITING, "/mission reset restarts it")
 end)
 
+test("replay: /mission reset after a collected star spawns the next round's star (round in the star bparams)", function()
+    local w, A, B = world_with({ "A", "B" })
+    local P = A.env.SWAMP_POINTS
+    enter(w, A, 3); enter(w, B, 3)
+    w:seconds(4)
+    chorus_win(w, A, B, P)
+    w:step(3)
+    local r1 = Sim.ctx(A).r
+    check(state(A) == MS.SUCCESS and Sim.stars_of(A, 2) == 1 and Sim.stars_of(B, 2) == 1, "round " .. r1 .. ": one star")
+    local bp1 = (A.starSpawns[1] or B.starSpawns[1]).bparams
+    check(bp1 == A.env.sgl_mission_star_bparams(Sim.ctx(A).def, r1) and (bp1 >> 24) == 2 and (bp1 & 0xFFFF) == r1,
+        "star bparams: id 2 in the top byte, the round in the low 16 bits")
+    -- A grabs it: gone on every client (packet_collect_star), DONE
+    local star = Sim.objects_with(A, C.id_bhvStarSpawnCoordinates)[1]
+    Sim.run_hooks(A, C.HOOK_ON_INTERACT, A.ms[0], star, C.INTERACT_STAR_OR_KEY, true)
+    for _, c in ipairs({ A, B }) do
+        for _, o in ipairs(Sim.objects_with(c, C.id_bhvStarSpawnCoordinates)) do raw(o).activeFlags = C.ACTIVE_FLAG_DEACTIVATED end
+    end
+    w:step(4)
+    check(state(B) == MS.DONE and Sim.hud_has(B, "replay: /mission reset"), "DONE, the panel offers /mission reset")
+    Sim.cmd(B, "mission", "reset")
+    w:seconds(4)
+    check(Sim.ctx(A).r == r1 + 1 and state(A) == MS.ACTIVE, "round " .. (r1 + 1) .. " running in the same visit")
+    local nA, nB = #A.starSpawns, #B.starSpawns
+    chorus_win(w, A, B, P)
+    w:step(3)
+    check(state(A) == MS.SUCCESS and Sim.stars_of(A, 2) == 1 and Sim.stars_of(B, 2) == 1,
+        "the replayed round has its star (not swallowed by the per-visit de-dup)")
+    check(#A.starSpawns + #B.starSpawns == nA + nB + 2, "spawned once, received once")
+    check(Sim.hud_has(A, "Grab the star"), "Grab the star")
+end)
+
 ---------------------------------------------------------------------------------------------
 -- engine contract checks
 ---------------------------------------------------------------------------------------------

@@ -9,7 +9,7 @@
 --     next frame, because the state is synced, not held by the leader.
 --   * synced state: gGlobalSyncTable keys namespaced per instance, "sglm_<level>_<area>_<act>_<f>".
 --     Framework fields: s (state), r (round), t (seconds in state), w (fail reason).
---     Mission fields (free use): p, f, a, c, x. Only the leader writes, and only on change. Every
+--     Mission fields (free use): p, f, a, c, x, o, g. Only the leader writes, and only on change. Every
 --     client can write the sync table in coopdx; concurrent writes converge to the writer with the
 --     smaller globalIndex (smlua_sync_table seq rule), i.e. to the leader. Late joiners get the whole
 --     table on join, so nobody needs the host to replay anything.
@@ -19,7 +19,12 @@
 --     with spawn_default_star() FROM INSIDE THE OBJECT LOOP (the function reads the star id from the
 --     calling object's oBehParams >> 24 = act - 1). Never call it from HOOK_UPDATE.
 --     coopdx de-duplicates spawn_default_star per behParams and sends PACKET_SPAWN_STAR to the area,
---     so "every client spawns once" gives exactly one star everywhere.
+--     so "every client spawns once" gives exactly one star everywhere. The de-dup list is only cleared
+--     when a level loads, so the star's bparams carry the round number in their low 16 bits (the star
+--     id stays in the top byte): a /mission reset round gets a new star in the same visit. coopdx keeps
+--     at most 8 such stars per level visit; after that the panel asks to re-enter the act.
+--   * def.starAt(ctx) -> star, starFrom (optional): a star position that depends on the round (e.g.
+--     the last token found), read from synced fields; nil = not known yet (the spawn waits).
 --   * events: ctx:send(ev, data) -> reliable network_send to all + local dispatch. Receivers drop
 --     events of other instances; def.onEvent decides (leader-only effects check ctx.isLeader).
 --   * states: WAITING (fewer than the needed players) -> INTRO (banner, 3 s) -> ACTIVE ->
@@ -45,7 +50,8 @@
 --     a levelStar mission also ends when its level-script star vanishes (collected on another client).
 --     Everyone else in the act gets 10 s to LEAVE TOGETHER: D-pad Up = Pause > EXIT COURSE
 --     (level_trigger_warp(WARP_OP_EXIT): the stage's 0xF1 -> outside its hub door, no life lost).
---   * def.toStart(ctx, m) (race kind: back to the start box): D-pad Down or /mission start.
+--   * def.toStart(ctx, m) (race kind: back to the start box; Reitz act 3: into the robotics lab):
+--     D-pad Down or /mission start. It decides itself in which states it works.
 --   * def.compactPanel: the left panel shrinks to its first line once the act is under way, and opens
 --     up again for a few seconds when something happens (ctx.loc.expandUntil).
 --   * def.onLeave(ctx): called when the player leaves the act (the race stops its music).
@@ -81,8 +87,8 @@ SGL_PARTY_PROMPT_FRAMES = 300            -- Study Group prompt: 10 s
 SGL_PARTY_INVITE_COOLDOWN = 60 * 30      -- one invite per level + act per player per minute
 SGL_PARTY_JOIN_WINDOW = 120 * 30         -- plain /join follows the last invite for 2 minutes
 
-local MISSION_FIELDS = { "p", "f", "a", "c", "x" }
-local ALL_FIELDS = { "s", "r", "t", "w", "p", "f", "a", "c", "x" }
+local MISSION_FIELDS = { "p", "f", "a", "c", "x", "o", "g" }
+local ALL_FIELDS = { "s", "r", "t", "w", "p", "f", "a", "c", "x", "o", "g" }
 
 local function has_bhv(o, id)
     if o == nil then return false end
@@ -122,8 +128,10 @@ SGL_MISSION_LIST = {}    -- registration order (the order is the same on every c
 
 -- def fields: id, level, act, title, objective, star {x,y,z}; optional: area (1), starFrom, minPlayers
 -- (1), probes, starCutsceneRange (units; default 40 m: farther players get no star cutscene),
--- levelStar (the level script places this act's star: never spawn one), kind (a table of callbacks
--- from sgl_mission_kind_*), and the callbacks themselves:
+-- levelStar (the level script places this act's star: never spawn one), starAt(ctx) -> star, starFrom (a
+-- per-round star position; nil while unknown), pointsFile (the file that holds the
+-- mission's coordinates, named in the console when a probe fails; default swamp_missions.lua), kind (a
+-- table of callbacks from sgl_mission_kind_*), and the callbacks themselves:
 -- onReset(ctx), onStart(ctx), leaderTick(ctx), localTick(ctx), onEvent(ctx, ev, data),
 -- needPlayers(ctx), spawnLocal(ctx), panel(ctx) -> lines, hud(ctx). Own callbacks override the kind's.
 function sgl_mission_register(def)
@@ -438,6 +446,23 @@ local function mission_star_exists(def)
 end
 sgl_mission_star_exists = mission_star_exists
 
+-- where this round's star goes: def.starAt(ctx) (per round, from synced fields) or the fixed def.star.
+-- -> star, starFrom, or nil while def.starAt does not know yet
+function sgl_mission_star_pos(ctx)
+    local def = ctx.def
+    if def.starAt == nil then return def.star, def.starFrom end
+    local star, from = def.starAt(ctx)
+    if star == nil then return nil end
+    return star, from or star
+end
+
+-- the bparams of this round's star: the act's star id (top byte) + mission number, and the round in the
+-- low 16 bits, so coopdx's per-visit de-dup (spawn_star_deduplication, cleared only at level load) lets
+-- a /mission reset round spawn its own star
+function sgl_mission_star_bparams(def, round)
+    return def.bparams | (math.floor(round or 0) & 0xFFFF)
+end
+
 -- every client, from the controller's loop (spawn_default_star needs the calling object)
 local function star_tick(ctx, o)
     if ctx.loc.star or ctx.s ~= SGL_MS_SUCCESS then return end
@@ -446,23 +471,31 @@ local function star_tick(ctx, o)
         ctx.loc.star = true
         return
     end
+    local pos, starFrom = sgl_mission_star_pos(ctx)
+    if pos == nil then return end            -- its synced position is still on its way
     -- late joiners (did not see the mission happen) get the star where it lands, without a cutscene
-    local from = ctx.loc.witnessed and def.starFrom or def.star
-    o.oBehParams = def.bparams
+    local from = ctx.loc.witnessed and starFrom or pos
+    o.oBehParams = sgl_mission_star_bparams(def, ctx.r)
     o.oPosX, o.oPosY, o.oPosZ = from.x, from.y, from.z
-    local star = spawn_default_star(def.star.x, def.star.y, def.star.z)
+    local star = spawn_default_star(pos.x, pos.y, pos.z)
     if star ~= nil then
         ctx.loc.star = true
         local m = gMarioStates[0]
-        local dx, dy, dz = m.pos.x - def.star.x, m.pos.y - def.star.y, m.pos.z - def.star.z
+        local dx, dy, dz = m.pos.x - pos.x, m.pos.y - pos.y, m.pos.z - pos.z
         local range = def.starCutsceneRange or SGL_MISSION_STAR_CUTSCENE_RANGE
         if not ctx.loc.witnessed or dx * dx + dy * dy + dz * dz > range * range then
             star.oStarSpawnExtCutsceneFlags = 0
         end
     else
-        -- not in normal play mode yet, or de-duplicated: retry for 2 s, then give up
+        -- not in normal play mode yet, or de-duplicated (coopdx keeps 8 stars per level visit): retry
+        -- for 2 s, then give up and say so (the panel asks to re-enter the act)
         ctx.loc.starTries = ctx.loc.starTries + 1
-        if ctx.loc.starTries > 60 then ctx.loc.star = true end
+        if ctx.loc.starTries > 60 then
+            ctx.loc.star = true
+            ctx.loc.starLost = true
+            log_to_console("[SGL] mission " .. def.id .. ": no star could be spawned in round " .. ctx.r
+                .. " (coopdx spawns at most 8 per level visit): re-enter the act", CONSOLE_MESSAGE_WARNING)
+        end
     end
 end
 
@@ -489,7 +522,8 @@ local function probe(ctx)
             ctx.dormantWhy = string.format("no floor at %s (found y %d, expected %d)", p.name or "probe",
                 math.floor(fy), math.floor(p.y))
             log_to_console("[SGL] mission " .. ctx.def.id .. " sleeps: " .. ctx.dormantWhy
-                .. " - stage geometry does not match swamp_missions.lua coordinates", CONSOLE_MESSAGE_WARNING)
+                .. " - stage geometry does not match " .. (ctx.def.pointsFile or "swamp_missions.lua")
+                .. " coordinates", CONSOLE_MESSAGE_WARNING)
             return
         end
     end
@@ -631,6 +665,9 @@ local function state_line(ctx)
         return { "Get ready...", SGL_HUD_WHITE }
     elseif s == SGL_MS_SUCCESS then
         if ctx.loc.got ~= nil then return { got_text(ctx), SGL_HUD_GREEN } end
+        if ctx.loc.starLost and not mission_star_exists(ctx.def) then
+            return { "Done! (no more stars this visit: re-enter the act)", SGL_HUD_GREEN }
+        end
         return { "Done! Grab the star!", SGL_HUD_GREEN }
     elseif s == SGL_MS_DONE then
         if ctx.def.levelStar then
@@ -691,7 +728,10 @@ local function mission_hud()
         end
     elseif ctx.s == SGL_MS_SUCCESS and ctx.loc.got == nil then
         if ctx.stateAge < 90 then sgl_hud_big("STAR!", SGL_HUD_GOLD, 2.5) end
-        sgl_hud_marker(def.star, "STAR", SGL_HUD_GOLD, gMarioStates[0])
+        local pos = sgl_mission_star_pos(ctx)
+        if pos ~= nil and not (ctx.loc.starLost and not mission_star_exists(def)) then
+            sgl_hud_marker(pos, "STAR", SGL_HUD_GOLD, gMarioStates[0])
+        end
     elseif ctx.s == SGL_MS_FAILED and ctx.stateAge < 90 then
         sgl_hud_big("TRY AGAIN", SGL_HUD_RED, 1.6)
     end
@@ -1025,7 +1065,8 @@ local function on_mission_command(msg)
     chat(string.format("[SGL] %s (%s act %d): %s, round %d, players %d/%d, leader %s%s",
         ctx.def.title, ctx.def.id, ctx.act, SGL_MS_NAMES[ctx.s] or tostring(ctx.s), ctx.r, ctx.n, ctx.need,
         leader, ctx.dormant and (", OFFLINE: " .. (ctx.dormantWhy or "?")) or ""))
-    chat(string.format("[SGL] p %d  f %d  a %d  c %d  x %d  t %d", ctx.p, ctx.f, ctx.a, ctx.c, ctx.x, ctx.t))
+    chat(string.format("[SGL] p %d  f %d  a %d  c %d  x %d  o %d  g %d  t %d", ctx.p, ctx.f, ctx.a, ctx.c, ctx.x,
+        ctx.o, ctx.g, ctx.t))
     return true
 end
 

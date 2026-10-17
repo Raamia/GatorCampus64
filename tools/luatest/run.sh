@@ -11,6 +11,10 @@
 #      scripts: doors, warp nodes, return spawns, act select, stars, character select, Study Group
 #   6. check_swamp_points.py: SWAMP_POINTS still match data/uf/swamp_points.json (the built Swamp)
 #      (skipped when tools/.venv is missing)
+#   7. test_reitz_missions.lua: course 2 (wf_reitz_missions.lua): the rooftop climb + window-washer lift,
+#      the shared token hunt, the co-op robotics cranes (2-4 players), act select, levels/wf contract
+#   8. check_reitz_points.py: REITZ_POINTS vs data/uf/reitz_points.json, and every anchor / crane lane /
+#      console against the built levels/wf collision (skipped when tools/.venv is missing)
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
 # Fixtures (regenerate only for a new coopdx version): coopdx_constants_v151.lua,
 # coopdx_api_v151.lua, coopdx_structs_v151.lua (gen_coopdx_*.py, see their headers).
@@ -42,12 +46,18 @@ echo "== test_missions"
 echo "== test_flow (whole mod + level scripts)"
 "$LUA" "$HERE/test_flow.lua"
 
+echo "== test_reitz_missions (course 2: Reitz Union & Engineering)"
+"$LUA" "$HERE/test_reitz_missions.lua"
+
 PY="$HERE/../.venv/bin/python"
 if [ -x "$PY" ]; then
     echo "== check_swamp_points"
     out="$("$PY" -I "$HERE/check_swamp_points.py")" || { echo "$out"; exit 1; }
     echo "$out"
+    echo "== check_reitz_points"
+    out="$("$PY" -I "$HERE/check_reitz_points.py")" || { echo "$out"; exit 1; }
+    echo "$out"
 else
-    echo "== check_swamp_points skipped (no tools/.venv)"
+    echo "== check_swamp_points / check_reitz_points skipped (no tools/.venv)"
 fi
 echo "== all luatest checks passed"

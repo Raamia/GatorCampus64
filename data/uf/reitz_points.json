@@ -1,0 +1,8318 @@
+{
+ "schema": "sgl64.reitz_points/1",
+ "generated_by": "tools/campus/build_stage.py reitz_eng (stage_points.reitz_points)",
+ "stage": "reitz_eng",
+ "level": "wf",
+ "slot": "wf",
+ "level_const": "LEVEL_WF",
+ "course": "COURSE_WF",
+ "center_m": [
+  -470,
+  -293
+ ],
+ "coordinates": {
+  "map_m": "x = east, y = north, z = metres above grade (the whole stage is flat at grade 0); origin = Century Tower",
+  "game": "X = (x - cx) * 100, Y = z * 100, Z = -(y - cy) * 100 with (cx, cy) = center_m = (-470, -293); Y is the ray-cast collision floor (Mario's feet). Objects that hover (stars, coins) add their own offset.",
+  "game_box": "{x0, x1, z0, z1[, y0, y1]} in game units (x0 < x1, z0 < z1)",
+  "game_yaw": "0 = faces +Z (south), 0x4000 = east, 0x8000 = north, 0xC000 = west",
+  "floor_m": "collision floor measured by ray-casting the built level (STAND_FROM_M above the design height, straight down)"
+ },
+ "note": "Anchor points for the Course 2 mission author (docs/game_design.md 7.2, Reitz Union & Engineering Quad, slot wf / LEVEL_WF, door 2 = The Hub). Re-generated on every `build_stage.py -- reitz_eng` from the built collision. Points with a 'check' key did not measure as designed. 'actN_' keys use the DESIGN act numbers (1 Rooftop of the Reitz, 2 Remote Robotics Lab (2P), 3 Weil Wind Tunnel, 4 Rogue Robot Roundup, 5 Meal Swipe Tokens, 6 Data Packet Relay); the course acts are numbered by course.lua (playable acts 1..n, solo first, docs/flow.md 5.1). The level script has NO level-script star (stars = []): every mission spawns its own (spawn_default_star from the controller loop, star id = course act - 1), or build_stage.py STAGE_STARS gets the act 1 entry.",
+ "spawn": {
+  "name": "spawn_0x0A",
+  "map_m": [
+   -398.0,
+   -200.0,
+   0.0
+  ],
+  "game": [
+   7200,
+   0,
+   -9300
+  ],
+  "floor_m": 0.0,
+  "clearance_m": 3.0,
+  "headroom_m": null,
+  "facing_deg": 214.0,
+  "game_yaw": "0xE7D2",
+  "note": "stage entry spawn (bhvSpinAirborneWarp, MARIO_POS) on the North Lawn strip off the Reitz Union's north colonnade, facing the lawn's radial walks; the object hovers 1 m above this floor",
+  "node": "0x0A",
+  "spawn_object_game": [
+   7200,
+   100,
+   -9300
+  ]
+ },
+ "warp_nodes": [
+  {
+   "id": "0x0A",
+   "dest_level": "LEVEL_WF",
+   "dest_area": 1,
+   "dest_node": "0x0A",
+   "note": "stage entry spawn"
+  },
+  {
+   "id": "0xF0",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x22",
+   "note": "star exit -> hub outside door 2"
+  },
+  {
+   "id": "0xF1",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x32",
+   "note": "death / Exit course -> hub outside door 2"
+  }
+ ],
+ "stars": [],
+ "act1_rooftop": {
+  "note": "Climb the Reitz Union from the ravine side: brick terraces 1.5 / 3.0 / 4.5 -> copper awnings 6.7 / 8.9 / 11.1 -> ballroom roof 13.2 -> AC unit 15.4 -> podium roof 17.6 -> (window-washer lift, its 9 m cable pole, or the four east sunshade ledges 19.8-25.2) -> tower roof 26.4 / parapet 27.0 -> elevator penthouse 28.8 (star). Second route from the South Terrace (2.0 -> canopy 5.6 -> light shelves 7.8 / 10.0 -> food court roof 11.5 -> AC 13.8 -> green roof 16.0 -> podium 17.6). Every rise is <= 2.4 m except the 3.6 m double jump onto the canopy.",
+  "climb_route": [
+   {
+    "name": "rooftop_climb_00",
+    "map_m": [
+     -499.39,
+     -284.25,
+     1.5
+    ],
+    "game": [
+     -2939,
+     150,
+     -875
+    ],
+    "floor_m": 1.5,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_01",
+    "map_m": [
+     -510.37,
+     -282.52,
+     3.0
+    ],
+    "game": [
+     -4037,
+     300,
+     -1048
+    ],
+    "floor_m": 3.0,
+    "clearance_m": 0.4,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_02",
+    "map_m": [
+     -512.85,
+     -281.09,
+     4.5
+    ],
+    "game": [
+     -4285,
+     450,
+     -1191
+    ],
+    "floor_m": 4.5,
+    "clearance_m": 0.8,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_03",
+    "map_m": [
+     -506.1,
+     -281.27,
+     6.7
+    ],
+    "game": [
+     -3610,
+     670,
+     -1173
+    ],
+    "floor_m": 6.7,
+    "clearance_m": 0.9,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_04",
+    "map_m": [
+     -499.1,
+     -281.36,
+     8.9
+    ],
+    "game": [
+     -2910,
+     890,
+     -1164
+    ],
+    "floor_m": 8.9,
+    "clearance_m": 0.9,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_05",
+    "map_m": [
+     -492.1,
+     -281.44,
+     11.1
+    ],
+    "game": [
+     -2210,
+     1110,
+     -1156
+    ],
+    "floor_m": 11.1,
+    "clearance_m": 0.9,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_06",
+    "map_m": [
+     -490.81,
+     -278.06,
+     13.2
+    ],
+    "game": [
+     -2081,
+     1320,
+     -1494
+    ],
+    "floor_m": 13.2,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_07",
+    "map_m": [
+     -466.4,
+     -261.0,
+     15.4
+    ],
+    "game": [
+     360,
+     1540,
+     -3200
+    ],
+    "floor_m": 15.4,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_08",
+    "map_m": [
+     -460.0,
+     -261.0,
+     17.6
+    ],
+    "game": [
+     1000,
+     1760,
+     -3200
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_09",
+    "map_m": [
+     -436.0,
+     -247.0,
+     17.6
+    ],
+    "game": [
+     3400,
+     1760,
+     -4600
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_10",
+    "map_m": [
+     -413.2,
+     -274.5,
+     17.6
+    ],
+    "game": [
+     5680,
+     1760,
+     -1850
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_11",
+    "map_m": [
+     -415.15,
+     -270.5,
+     19.8
+    ],
+    "game": [
+     5485,
+     1980,
+     -2250
+    ],
+    "floor_m": 19.8,
+    "clearance_m": 0.85,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_12",
+    "map_m": [
+     -415.15,
+     -266.5,
+     21.6
+    ],
+    "game": [
+     5485,
+     2160,
+     -2650
+    ],
+    "floor_m": 21.6,
+    "clearance_m": 0.85,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_13",
+    "map_m": [
+     -415.15,
+     -262.5,
+     23.4
+    ],
+    "game": [
+     5485,
+     2340,
+     -3050
+    ],
+    "floor_m": 23.4,
+    "clearance_m": 0.85,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_14",
+    "map_m": [
+     -415.15,
+     -258.5,
+     25.2
+    ],
+    "game": [
+     5485,
+     2520,
+     -3450
+    ],
+    "floor_m": 25.2,
+    "clearance_m": 0.85,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_15",
+    "map_m": [
+     -418.0,
+     -256.0,
+     26.4
+    ],
+    "game": [
+     5200,
+     2640,
+     -3700
+    ],
+    "floor_m": 26.4,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_climb_16",
+    "map_m": [
+     -436.5,
+     -263.0,
+     28.8
+    ],
+    "game": [
+     3350,
+     2880,
+     -3000
+    ],
+    "floor_m": 28.8,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  ],
+  "south_route": [
+   {
+    "name": "rooftop_south_00",
+    "map_m": [
+     -392.0,
+     -297.5,
+     2.0
+    ],
+    "game": [
+     7800,
+     200,
+     450
+    ],
+    "floor_m": 2.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_south_01",
+    "map_m": [
+     -402.44,
+     -298.81,
+     5.6
+    ],
+    "game": [
+     6756,
+     560,
+     581
+    ],
+    "floor_m": 5.6,
+    "clearance_m": 1.91,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_south_02",
+    "map_m": [
+     -403.51,
+     -298.44,
+     7.8
+    ],
+    "game": [
+     6649,
+     780,
+     544
+    ],
+    "floor_m": 7.8,
+    "clearance_m": 0.79,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_south_03",
+    "map_m": [
+     -399.29,
+     -293.62,
+     10.0
+    ],
+    "game": [
+     7071,
+     1000,
+     62
+    ],
+    "floor_m": 10.0,
+    "clearance_m": 0.9,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_south_04",
+    "map_m": [
+     -401.5,
+     -291.0,
+     11.5
+    ],
+    "game": [
+     6850,
+     1150,
+     -200
+    ],
+    "floor_m": 11.5,
+    "clearance_m": 1.0,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_south_05",
+    "map_m": [
+     -404.75,
+     -291.85,
+     13.8
+    ],
+    "game": [
+     6525,
+     1380,
+     -115
+    ],
+    "floor_m": 13.8,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_south_06",
+    "map_m": [
+     -404.75,
+     -286.0,
+     16.0
+    ],
+    "game": [
+     6525,
+     1600,
+     -700
+    ],
+    "floor_m": 16.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "rooftop_south_07",
+    "map_m": [
+     -412.0,
+     -278.0,
+     17.6
+    ],
+    "game": [
+     5800,
+     1760,
+     -1500
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  ],
+  "points": [
+   {
+    "name": "rooftop_goal_penthouse",
+    "map_m": [
+     -436.5,
+     -263.0,
+     28.8
+    ],
+    "game": [
+     3350,
+     2880,
+     -3000
+    ],
+    "floor_m": 28.8,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "top of the elevator penthouse (7 x 6 m) on the tower roof: the goal / star spot",
+    "source": "reitz_reitz_union.py spot roof_star"
+   },
+   {
+    "name": "rooftop_tower_roof_center",
+    "map_m": [
+     -436.0,
+     -256.0,
+     26.4
+    ],
+    "game": [
+     3400,
+     2640,
+     -3700
+    ],
+    "floor_m": 26.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "reitz_reitz_union.py spot tower_roof_center"
+   },
+   {
+    "name": "rooftop_tower_roof_east",
+    "map_m": [
+     -418.0,
+     -256.0,
+     26.4
+    ],
+    "game": [
+     5200,
+     2640,
+     -3700
+    ],
+    "floor_m": 26.4,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "reitz_reitz_union.py spot tower_roof"
+   },
+   {
+    "name": "rooftop_podium_west",
+    "map_m": [
+     -460.0,
+     -261.0,
+     17.6
+    ],
+    "game": [
+     1000,
+     1760,
+     -3200
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "reitz_reitz_union.py spot podium_roof_west"
+   },
+   {
+    "name": "rooftop_podium_north",
+    "map_m": [
+     -436.0,
+     -247.0,
+     17.6
+    ],
+    "game": [
+     3400,
+     1760,
+     -4600
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "reitz_reitz_union.py spot podium_roof_north"
+   },
+   {
+    "name": "rooftop_podium_south",
+    "map_m": [
+     -436.0,
+     -277.5,
+     17.6
+    ],
+    "game": [
+     3400,
+     1760,
+     -1550
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "reitz_reitz_union.py spot podium_roof_south"
+   },
+   {
+    "name": "rooftop_podium_east",
+    "map_m": [
+     -413.2,
+     -274.5,
+     17.6
+    ],
+    "game": [
+     5680,
+     1760,
+     -1850
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "reitz_reitz_union.py spot podium_roof_east"
+   },
+   {
+    "name": "rooftop_ballroom_roof",
+    "map_m": [
+     -492.0,
+     -261.0,
+     13.2
+    ],
+    "game": [
+     -2200,
+     1320,
+     -3200
+    ],
+    "floor_m": 13.2,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "reitz_reitz_union.py spot ballroom_roof_center"
+   },
+   {
+    "name": "rooftop_start_ravine_terrace",
+    "map_m": [
+     -499.39,
+     -284.25,
+     1.5
+    ],
+    "game": [
+     -2939,
+     150,
+     -875
+    ],
+    "floor_m": 1.5,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "first brick terrace (1.5 m) on the W wing's south wall, by the Reitz Union Drive loop: CLIMB HERE",
+    "source": "reitz_reitz_union.py spot ravine_terrace_1"
+   },
+   {
+    "name": "rooftop_green_roof",
+    "map_m": [
+     -380.0,
+     -266.0,
+     16.0
+    ],
+    "game": [
+     9000,
+     1600,
+     -2700
+    ],
+    "floor_m": 16.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "reitz_reitz_union.py spot green_roof_center"
+   },
+   {
+    "name": "rooftop_food_court_roof",
+    "map_m": [
+     -440.0,
+     -305.0,
+     11.5
+    ],
+    "game": [
+     3000,
+     1150,
+     1200
+    ],
+    "floor_m": 11.5,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "reitz_reitz_union.py spot food_court_roof"
+   }
+  ],
+  "star_target": {
+   "name": "rooftop_star_target",
+   "map_m": [
+    -436.5,
+    -263.0,
+    30.0
+   ],
+   "game": [
+    3350,
+    3000,
+    -3000
+   ],
+   "floor_m": 28.8,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "note": "star position (1.2 m over the penthouse floor, the Swamp's STAR_UP_M)"
+  },
+  "window_washer_lift": {
+   "bottom": {
+    "name": "rooftop_lift_bottom",
+    "map_m": [
+     -457.3,
+     -262.0,
+     17.6
+    ],
+    "game": [
+     1270,
+     1760,
+     -3100
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 1.3,
+    "headroom_m": null,
+    "note": "foot of the lift track on the podium roof (the platform's floor height here)"
+   },
+   "top": {
+    "name": "rooftop_lift_top",
+    "map_m": [
+     -457.3,
+     -262.0,
+     27.0
+    ],
+    "game": [
+     1270,
+     2700,
+     -3100
+    ],
+    "air": true,
+    "floor_below_m": 17.6,
+    "height_above_floor_m": 9.4,
+    "note": "top of the track = the tower parapet top (27.0); step east onto the tower roof"
+   },
+   "travel_m": 9.4,
+   "platform_half_m": [
+    1.2,
+    1.6
+   ],
+   "facing_deg": 270.0,
+   "note": "design 7.2 act 1 window-washer lift (moving platform object, e.g. bhvPlatformOnTrack or a custom lift): a vertical track 1.3 m off the tower's west face (platform edge 0.1 m from it, so at the top the rider steps across onto the parapet), from the podium roof (17.6) to the parapet top (27.0); rails + davit are drawn by this module"
+  },
+  "climb_zone": {
+   "x0": -5350,
+   "x1": 11050,
+   "z0": -5150,
+   "z1": 4400,
+   "note": "the Reitz Union footprint bbox (OSM w863211313), game units"
+  },
+  "milestones_m": {
+   "ballroom_roof": 13.2,
+   "podium_roof": 17.6,
+   "tower_roof": 26.4,
+   "penthouse": 28.8
+  }
+ },
+ "act2_robotics_lab": {
+  "note": "Malachowsky's 7-storey vertical commons (atrium 26 x 17 m, 32.2 m tall) through the 6 m north door. The operator console and the crane platform are mission objects; the L7 star ledge (28.0 m, 3.5 m deep along the south wall) cannot be reached on foot (no stair is modelled).",
+  "points": [
+   {
+    "name": "robotics_console",
+    "map_m": [
+     -460.0,
+     -519.5,
+     0.0
+    ],
+    "game": [
+     1000,
+     0,
+     22650
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.5,
+    "headroom_m": null,
+    "note": "operator console spot (atrium floor, west of the entry)",
+    "source": "reitz_malachowsky.py spot atrium_console"
+   },
+   {
+    "name": "robotics_crane_start",
+    "map_m": [
+     -453.0,
+     -524.5,
+     0.0
+    ],
+    "game": [
+     1700,
+     0,
+     23150
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "crane platform start (atrium floor)",
+    "source": "reitz_malachowsky.py spot crane_start"
+   },
+   {
+    "name": "robotics_atrium_center",
+    "map_m": [
+     -453.0,
+     -525.5,
+     0.0
+    ],
+    "game": [
+     1700,
+     0,
+     23250
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "reitz_malachowsky.py spot atrium_floor"
+   },
+   {
+    "name": "robotics_atrium_entry",
+    "map_m": [
+     -452.33,
+     -518.5,
+     0.0
+    ],
+    "game": [
+     1767,
+     0,
+     22550
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "reitz_malachowsky.py spot atrium_entry"
+   },
+   {
+    "name": "robotics_north_entrance",
+    "map_m": [
+     -452.32,
+     -510.01,
+     0.0
+    ],
+    "game": [
+     1768,
+     0,
+     21701
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": 3.95,
+    "source": "reitz_malachowsky.py spot north_entrance"
+   },
+   {
+    "name": "robotics_star_ledge",
+    "map_m": [
+     -453.0,
+     -532.25,
+     28.0
+    ],
+    "game": [
+     1700,
+     2800,
+     23925
+    ],
+    "floor_m": 28.0,
+    "clearance_m": 1.75,
+    "headroom_m": 4.2,
+    "note": "L7 ledge, floor 28.0 m (underside 27.4)",
+    "source": "reitz_malachowsky.py spot star_ledge"
+   },
+   {
+    "name": "robotics_server_alcove",
+    "map_m": [
+     -468.25,
+     -526.0,
+     0.0
+    ],
+    "game": [
+     175,
+     0,
+     23300
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.25,
+    "headroom_m": 4.0,
+    "source": "reitz_malachowsky.py spot server_room_dock"
+   }
+  ],
+  "atrium_box": {
+   "x0": 400,
+   "x1": 3000,
+   "z0": 22400,
+   "z1": 24100,
+   "y0": 0,
+   "y1": 3220,
+   "note": "clear interior of the vertical commons; the generator ground (z = 0) is its floor"
+  },
+  "atrium_floor_check": {
+   "samples_ok": 104,
+   "misses": []
+  },
+  "star_ledge_box": {
+   "x0": 400,
+   "x1": 3000,
+   "z0": 23750,
+   "z1": 24100,
+   "y0": 2800,
+   "y1": 2800,
+   "note": "L7 ledge along the atrium's south wall, underside at 27.4 m"
+  },
+  "crane_shaft": {
+   "column": [
+    {
+     "name": "robotics_crane_shaft_03m",
+     "map_m": [
+      -453.0,
+      -524.5,
+      3.0
+     ],
+     "game": [
+      1700,
+      300,
+      23150
+     ],
+     "air": true,
+     "floor_below_m": 0.0,
+     "height_above_floor_m": 3.0,
+     "clearance_m": 3.0
+    },
+    {
+     "name": "robotics_crane_shaft_07m",
+     "map_m": [
+      -453.0,
+      -524.5,
+      7.0
+     ],
+     "game": [
+      1700,
+      700,
+      23150
+     ],
+     "air": true,
+     "floor_below_m": 0.0,
+     "height_above_floor_m": 7.0,
+     "clearance_m": 3.0
+    },
+    {
+     "name": "robotics_crane_shaft_11m",
+     "map_m": [
+      -453.0,
+      -524.5,
+      11.0
+     ],
+     "game": [
+      1700,
+      1100,
+      23150
+     ],
+     "air": true,
+     "floor_below_m": 0.0,
+     "height_above_floor_m": 11.0,
+     "clearance_m": 3.0
+    },
+    {
+     "name": "robotics_crane_shaft_15m",
+     "map_m": [
+      -453.0,
+      -524.5,
+      15.0
+     ],
+     "game": [
+      1700,
+      1500,
+      23150
+     ],
+     "air": true,
+     "floor_below_m": 0.0,
+     "height_above_floor_m": 15.0,
+     "clearance_m": 3.0
+    },
+    {
+     "name": "robotics_crane_shaft_19m",
+     "map_m": [
+      -453.0,
+      -524.5,
+      19.0
+     ],
+     "game": [
+      1700,
+      1900,
+      23150
+     ],
+     "air": true,
+     "floor_below_m": 0.0,
+     "height_above_floor_m": 19.0,
+     "clearance_m": 3.0
+    },
+    {
+     "name": "robotics_crane_shaft_23m",
+     "map_m": [
+      -453.0,
+      -524.5,
+      23.0
+     ],
+     "game": [
+      1700,
+      2300,
+      23150
+     ],
+     "air": true,
+     "floor_below_m": 0.0,
+     "height_above_floor_m": 23.0,
+     "clearance_m": 3.0
+    },
+    {
+     "name": "robotics_crane_shaft_27m",
+     "map_m": [
+      -453.0,
+      -524.5,
+      27.0
+     ],
+     "game": [
+      1700,
+      2700,
+      23150
+     ],
+     "air": true,
+     "floor_below_m": 0.0,
+     "height_above_floor_m": 27.0,
+     "clearance_m": 3.0
+    },
+    {
+     "name": "robotics_crane_shaft_29m",
+     "map_m": [
+      -453.0,
+      -524.5,
+      29.0
+     ],
+     "game": [
+      1700,
+      2900,
+      23150
+     ],
+     "air": true,
+     "floor_below_m": 0.0,
+     "height_above_floor_m": 29.0,
+     "clearance_m": 3.0
+    }
+   ],
+   "ceiling_m": 32.2,
+   "to_ledge_m": 7.75,
+   "note": "air points straight above crane_start (clearance = room around the column at that height); the ledge edge is to_ledge_m south"
+  },
+  "star_target": {
+   "name": "robotics_star_target",
+   "map_m": [
+    -453.0,
+    -532.25,
+    29.2
+   ],
+   "game": [
+    1700,
+    2920,
+    23925
+   ],
+   "floor_m": 28.0,
+   "clearance_m": 1.75,
+   "headroom_m": 4.2,
+   "note": "star 1.2 m over the L7 ledge"
+  },
+  "server_room_box": {
+   "x0": -50,
+   "x1": 400,
+   "z0": 22850,
+   "z1": 23750,
+   "y0": 0,
+   "y1": 400
+  },
+  "glass_stair_climb": [
+   {
+    "name": "malachowsky_climb_00",
+    "map_m": [
+     -476.49,
+     -508.86,
+     0.0
+    ],
+    "game": [
+     -649,
+     0,
+     21586
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.5,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_01",
+    "map_m": [
+     -472.49,
+     -508.88,
+     1.0
+    ],
+    "game": [
+     -249,
+     100,
+     21588
+    ],
+    "floor_m": 1.0,
+    "clearance_m": 2.22,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_02",
+    "map_m": [
+     -466.79,
+     -508.92,
+     3.28
+    ],
+    "game": [
+     321,
+     328,
+     21592
+    ],
+    "floor_m": 3.28,
+    "clearance_m": 2.22,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_03",
+    "map_m": [
+     -443.22,
+     -509.77,
+     4.94
+    ],
+    "game": [
+     2678,
+     494,
+     21677
+    ],
+    "floor_m": 4.94,
+    "clearance_m": 0.8,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_04",
+    "map_m": [
+     -439.78,
+     -509.79,
+     7.33
+    ],
+    "game": [
+     3022,
+     733,
+     21679
+    ],
+    "floor_m": 7.33,
+    "clearance_m": 1.55,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_05",
+    "map_m": [
+     -434.52,
+     -509.82,
+     9.67
+    ],
+    "game": [
+     3548,
+     967,
+     21682
+    ],
+    "floor_m": 9.67,
+    "clearance_m": 1.56,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_06",
+    "map_m": [
+     -429.25,
+     -509.85,
+     12.0
+    ],
+    "game": [
+     4075,
+     1200,
+     21685
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.57,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_07",
+    "map_m": [
+     -423.99,
+     -511.35,
+     14.33
+    ],
+    "game": [
+     4601,
+     1433,
+     21835
+    ],
+    "floor_m": 14.33,
+    "clearance_m": 2.63,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_08",
+    "map_m": [
+     -418.72,
+     -511.39,
+     16.67
+    ],
+    "game": [
+     5128,
+     1667,
+     21839
+    ],
+    "floor_m": 16.67,
+    "clearance_m": 2.63,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_09",
+    "map_m": [
+     -413.46,
+     -511.42,
+     19.0
+    ],
+    "game": [
+     5654,
+     1900,
+     21842
+    ],
+    "floor_m": 19.0,
+    "clearance_m": 2.64,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_10",
+    "map_m": [
+     -408.19,
+     -511.45,
+     21.33
+    ],
+    "game": [
+     6181,
+     2133,
+     21845
+    ],
+    "floor_m": 21.33,
+    "clearance_m": 2.63,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_11",
+    "map_m": [
+     -402.91,
+     -510.02,
+     23.67
+    ],
+    "game": [
+     6709,
+     2367,
+     21702
+    ],
+    "floor_m": 23.67,
+    "clearance_m": 1.48,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_12",
+    "map_m": [
+     -397.65,
+     -510.05,
+     26.0
+    ],
+    "game": [
+     7235,
+     2600,
+     21705
+    ],
+    "floor_m": 26.0,
+    "clearance_m": 1.49,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_13",
+    "map_m": [
+     -392.38,
+     -510.08,
+     28.33
+    ],
+    "game": [
+     7762,
+     2833,
+     21708
+    ],
+    "floor_m": 28.33,
+    "clearance_m": 1.49,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_14",
+    "map_m": [
+     -386.52,
+     -510.12,
+     30.67
+    ],
+    "game": [
+     8348,
+     3067,
+     21712
+    ],
+    "floor_m": 30.67,
+    "clearance_m": 1.5,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_15",
+    "map_m": [
+     -387.0,
+     -514.0,
+     33.0
+    ],
+    "game": [
+     8300,
+     3300,
+     22100
+    ],
+    "floor_m": 33.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_16",
+    "map_m": [
+     -453.0,
+     -525.5,
+     35.33
+    ],
+    "game": [
+     1700,
+     3533,
+     23250
+    ],
+    "floor_m": 35.33,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "malachowsky_climb_17",
+    "map_m": [
+     -473.75,
+     -531.5,
+     37.67
+    ],
+    "game": [
+     -375,
+     3767,
+     23850
+    ],
+    "floor_m": 37.67,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  ]
+ },
+ "act3_wind_tunnel": {
+  "note": "The wind-tunnel floor vent (stage dressing: a steel grate on a 0.4 m curb, r 2.6 m) east of the Weil Cooling Towers (11 m, roof deck 10.0 inside a 1 m parapet). Mission: a big floor button (button) turns on a vertical-wind column over the vent (SURFACE_VERTICAL_WIND object, ACT_VERTICAL_WIND) that lifts riders past the towers' roof to the star; someone holds the button or the fan spins down. The towers' east face has the generator's climb route (entrance canopy 3 m + ledges 6 / 9 m) up to the roof = the cooling-tower catwalk.",
+  "vent": {
+   "name": "wind_vent_grate",
+   "map_m": [
+    -488.0,
+    -136.0,
+    0.4
+   ],
+   "game": [
+    -1800,
+    40,
+    -15700
+   ],
+   "floor_m": 0.4,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "note": "centre of the vent grate (radius 2.6 m)"
+  },
+  "column": {
+   "points": [
+    {
+     "name": "wind_column_02m",
+     "map_m": [
+      -488.0,
+      -136.0,
+      2.0
+     ],
+     "game": [
+      -1800,
+      200,
+      -15700
+     ],
+     "air": true,
+     "floor_below_m": 0.4,
+     "height_above_floor_m": 1.6,
+     "clearance_m": 6.0
+    },
+    {
+     "name": "wind_column_05m",
+     "map_m": [
+      -488.0,
+      -136.0,
+      5.0
+     ],
+     "game": [
+      -1800,
+      500,
+      -15700
+     ],
+     "air": true,
+     "floor_below_m": 0.4,
+     "height_above_floor_m": 4.6,
+     "clearance_m": 6.0
+    },
+    {
+     "name": "wind_column_08m",
+     "map_m": [
+      -488.0,
+      -136.0,
+      8.0
+     ],
+     "game": [
+      -1800,
+      800,
+      -15700
+     ],
+     "air": true,
+     "floor_below_m": 0.4,
+     "height_above_floor_m": 7.6,
+     "clearance_m": 6.0
+    },
+    {
+     "name": "wind_column_11m",
+     "map_m": [
+      -488.0,
+      -136.0,
+      11.0
+     ],
+     "game": [
+      -1800,
+      1100,
+      -15700
+     ],
+     "air": true,
+     "floor_below_m": 0.4,
+     "height_above_floor_m": 10.6,
+     "clearance_m": 6.0
+    },
+    {
+     "name": "wind_column_14m",
+     "map_m": [
+      -488.0,
+      -136.0,
+      14.0
+     ],
+     "game": [
+      -1800,
+      1400,
+      -15700
+     ],
+     "air": true,
+     "floor_below_m": 0.4,
+     "height_above_floor_m": 13.6,
+     "clearance_m": 6.0
+    },
+    {
+     "name": "wind_column_17m",
+     "map_m": [
+      -488.0,
+      -136.0,
+      17.0
+     ],
+     "game": [
+      -1800,
+      1700,
+      -15700
+     ],
+     "air": true,
+     "floor_below_m": 0.4,
+     "height_above_floor_m": 16.6,
+     "clearance_m": 6.0
+    },
+    {
+     "name": "wind_column_20m",
+     "map_m": [
+      -488.0,
+      -136.0,
+      20.0
+     ],
+     "game": [
+      -1800,
+      2000,
+      -15700
+     ],
+     "air": true,
+     "floor_below_m": 0.4,
+     "height_above_floor_m": 19.6,
+     "clearance_m": 6.0
+    },
+    {
+     "name": "wind_column_24m",
+     "map_m": [
+      -488.0,
+      -136.0,
+      24.0
+     ],
+     "game": [
+      -1800,
+      2400,
+      -15700
+     ],
+     "air": true,
+     "floor_below_m": 0.4,
+     "height_above_floor_m": 23.6,
+     "clearance_m": 6.0
+    }
+   ],
+   "open_sky": true,
+   "note": "air points over the vent; clearance = room around the column (the towers' east wall is the nearest surface)"
+  },
+  "star_target": {
+   "name": "wind_star_above_cooling_towers",
+   "map_m": [
+    -488.0,
+    -136.0,
+    17.0
+   ],
+   "game": [
+    -1800,
+    1700,
+    -15700
+   ],
+   "air": true,
+   "floor_below_m": 0.4,
+   "height_above_floor_m": 16.6,
+   "note": "over the vent, 6 m above the cooling towers' parapet (11 m): the top of the column"
+  },
+  "button": {
+   "name": "wind_button",
+   "map_m": [
+    -488.0,
+    -114.0,
+    0.0
+   ],
+   "game": [
+    -1800,
+    0,
+    -17900
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "note": "big floor button spot (open grade north of the vent; ~20 m apart, so one player holds it while another rides)"
+  },
+  "cooling_tower_roof": {
+   "name": "cooling_tower_roof",
+   "map_m": [
+    -506.67,
+    -136.49,
+    10.0
+   ],
+   "game": [
+    -3667,
+    1000,
+    -15651
+   ],
+   "floor_m": 10.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "note": "Weil Cooling Towers roof deck (OSM w150858524, generic flat roof)"
+  },
+  "cooling_tower_climb": {
+   "facade_mid_m": [
+    -500.0,
+    -136.4
+   ],
+   "canopy_m": [
+    -498.72,
+    -149.88,
+    3.0
+   ],
+   "ledge_tops_m": [
+    6.0,
+    9.0
+   ],
+   "roof_m": 10.0,
+   "facing_deg": 89.0,
+   "canopy": {
+    "name": "cooling_tower_canopy",
+    "map_m": [
+     -498.72,
+     -149.88,
+     3.0
+    ],
+    "game": [
+     -2872,
+     300,
+     -14312
+    ],
+    "floor_m": 3.0,
+    "clearance_m": 1.0,
+    "headroom_m": 6.0
+   }
+  }
+ },
+ "act4_robot_roundup": {
+  "note": "Robots flee across the Reitz North Lawn (OSM w294203169, the open radial-walk lawn); carry them to the charging dock (stage dressing, a 0.25 m concrete pad) on the lawn south-east of Liberty Pond.",
+  "lawn_polygon_game": [
+   [
+    -4031,
+    -6892
+   ],
+   [
+    -4196,
+    -5442
+   ],
+   [
+    -4753,
+    -5331
+   ],
+   [
+    -1522,
+    -5027
+   ],
+   [
+    1204,
+    -5016
+   ],
+   [
+    1208,
+    -4896
+   ],
+   [
+    1562,
+    -4899
+   ],
+   [
+    1564,
+    -5132
+   ],
+   [
+    5963,
+    -5096
+   ],
+   [
+    5959,
+    -4955
+   ],
+   [
+    8609,
+    -4934
+   ],
+   [
+    8670,
+    -5027
+   ],
+   [
+    9106,
+    -5016
+   ],
+   [
+    9128,
+    -5127
+   ],
+   [
+    9913,
+    -5115
+   ],
+   [
+    9949,
+    -5016
+   ],
+   [
+    11037,
+    -5006
+   ],
+   [
+    11012,
+    -3427
+   ],
+   [
+    11570,
+    -3422
+   ],
+   [
+    11524,
+    -3711
+   ],
+   [
+    14348,
+    -3682
+   ],
+   [
+    14346,
+    -3463
+   ],
+   [
+    15852,
+    -3451
+   ],
+   [
+    15795,
+    -3672
+   ],
+   [
+    17316,
+    -3652
+   ],
+   [
+    22080,
+    -5446
+   ],
+   [
+    21881,
+    -5813
+   ],
+   [
+    22228,
+    -6003
+   ],
+   [
+    21391,
+    -7554
+   ],
+   [
+    27000,
+    -11445
+   ],
+   [
+    27000,
+    -9847
+   ],
+   [
+    27000,
+    -10025
+   ],
+   [
+    27000,
+    -8960
+   ],
+   [
+    27000,
+    -10037
+   ],
+   [
+    27000,
+    -10261
+   ],
+   [
+    27000,
+    -20255
+   ],
+   [
+    27000,
+    -20286
+   ],
+   [
+    27000,
+    -21329
+   ],
+   [
+    27000,
+    -21606
+   ],
+   [
+    26063,
+    -19783
+   ],
+   [
+    25510,
+    -19469
+   ],
+   [
+    25463,
+    -19562
+   ],
+   [
+    24597,
+    -19142
+   ],
+   [
+    24657,
+    -19001
+   ],
+   [
+    23676,
+    -18515
+   ],
+   [
+    23623,
+    -18636
+   ],
+   [
+    23013,
+    -18348
+   ],
+   [
+    22931,
+    -18504
+   ],
+   [
+    20460,
+    -17375
+   ],
+   [
+    16044,
+    -15135
+   ],
+   [
+    13247,
+    -15408
+   ],
+   [
+    8395,
+    -15407
+   ],
+   [
+    8406,
+    -14121
+   ],
+   [
+    6999,
+    -14125
+   ],
+   [
+    6680,
+    -13839
+   ],
+   [
+    6119,
+    -14354
+   ],
+   [
+    4930,
+    -14354
+   ],
+   [
+    4585,
+    -14202
+   ],
+   [
+    4614,
+    -12441
+   ],
+   [
+    4424,
+    -12443
+   ],
+   [
+    4424,
+    -12369
+   ],
+   [
+    3616,
+    -12391
+   ],
+   [
+    3620,
+    -11392
+   ],
+   [
+    5822,
+    -11402
+   ],
+   [
+    5825,
+    -10698
+   ],
+   [
+    4723,
+    -10692
+   ],
+   [
+    4725,
+    -10347
+   ],
+   [
+    4879,
+    -10348
+   ],
+   [
+    4882,
+    -9717
+   ],
+   [
+    4685,
+    -9716
+   ],
+   [
+    4690,
+    -8524
+   ],
+   [
+    -385,
+    -8498
+   ],
+   [
+    -433,
+    -8623
+   ],
+   [
+    -1297,
+    -8618
+   ],
+   [
+    -1298,
+    -8858
+   ],
+   [
+    -4052,
+    -8821
+   ]
+  ],
+  "lawn_box": {
+   "x0": -4753,
+   "x1": 27000,
+   "z0": -21606,
+   "z1": -3422
+  },
+  "robot_release_points": [
+   {
+    "name": "robot_release_0",
+    "map_m": [
+     -333.0,
+     -188.0,
+     0.0
+    ],
+    "game": [
+     13700,
+     0,
+     -10500
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "robot_release_1",
+    "map_m": [
+     -309.0,
+     -188.0,
+     0.0
+    ],
+    "game": [
+     16100,
+     0,
+     -10500
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "robot_release_2",
+    "map_m": [
+     -333.0,
+     -212.0,
+     0.0
+    ],
+    "game": [
+     13700,
+     0,
+     -8100
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "robot_release_3",
+    "map_m": [
+     -333.0,
+     -164.0,
+     0.0
+    ],
+    "game": [
+     13700,
+     0,
+     -12900
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "robot_release_4",
+    "map_m": [
+     -357.0,
+     -188.0,
+     0.0
+    ],
+    "game": [
+     11300,
+     0,
+     -10500
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "robot_release_5",
+    "map_m": [
+     -309.0,
+     -212.0,
+     0.0
+    ],
+    "game": [
+     16100,
+     0,
+     -8100
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "robot_release_6",
+    "map_m": [
+     -309.0,
+     -164.0,
+     0.0
+    ],
+    "game": [
+     16100,
+     0,
+     -12900
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "robot_release_7",
+    "map_m": [
+     -357.0,
+     -212.0,
+     0.0
+    ],
+    "game": [
+     11300,
+     0,
+     -8100
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  ],
+  "charging_dock": {
+   "name": "robot_charging_dock",
+   "map_m": [
+    -343.0,
+    -352.0,
+    0.25
+   ],
+   "game": [
+    12700,
+    25,
+    5900
+   ],
+   "floor_m": 0.25,
+   "clearance_m": 0.75,
+   "headroom_m": null,
+   "note": "top of the dock pad (3 x 2.4 m, 0.25 m); post on its north edge"
+  },
+  "lawn_hubs": [
+   {
+    "name": "north_lawn_hub_0",
+    "map_m": [
+     -385.0,
+     -191.0,
+     0.0
+    ],
+    "game": [
+     8500,
+     0,
+     -10200
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "centre of a radial-walk hub of the North Lawn"
+   },
+   {
+    "name": "north_lawn_hub_1",
+    "map_m": [
+     -311.0,
+     -154.0,
+     0.0
+    ],
+    "game": [
+     15900,
+     0,
+     -13900
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "centre of a radial-walk hub of the North Lawn"
+   },
+   {
+    "name": "north_lawn_hub_2",
+    "map_m": [
+     -268.0,
+     -212.0,
+     0.0
+    ],
+    "game": [
+     20200,
+     0,
+     -8100
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "centre of a radial-walk hub of the North Lawn"
+   }
+  ]
+ },
+ "act5_meal_swipe_tokens": {
+  "red_coins": [
+   {
+    "name": "token_gator_corner_patio",
+    "map_m": [
+     -648.0,
+     -117.0,
+     0.76
+    ],
+    "game": [
+     -17800,
+     76,
+     -17600
+    ],
+    "floor_m": 0.76,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "top of a patio table south-east of Gator Corner Dining Center (0.76 m)"
+   },
+   {
+    "name": "token_engineering_plaza_sculpture",
+    "map_m": [
+     -585.97,
+     -70.69,
+     4.0
+    ],
+    "game": [
+     -11597,
+     400,
+     -22231
+    ],
+    "floor_m": 4.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "the steel sculpture's top girder (4.0 m; step plates on its west column)"
+   },
+   {
+    "name": "token_liberty_pond_fountain",
+    "map_m": [
+     -369.37,
+     -335.81,
+     0.3
+    ],
+    "game": [
+     10063,
+     30,
+     4281
+    ],
+    "floor_m": 0.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "the hexagonal fountain float in the middle of Liberty Pond (top 0.3 m over the water)"
+   },
+   {
+    "name": "token_bookstore_awning",
+    "map_m": [
+     -409.49,
+     -353.92,
+     3.0
+    ],
+    "game": [
+     6051,
+     300,
+     6092
+    ],
+    "floor_m": 3.0,
+    "clearance_m": 1.0,
+    "headroom_m": 6.0,
+    "note": "the UF Bookstore's east entrance canopy (3.0 m), facing Liberty Pond"
+   },
+   {
+    "name": "token_ravine_boardwalk",
+    "map_m": [
+     -542.83,
+     -362.9,
+     0.45
+    ],
+    "game": [
+     -7283,
+     45,
+     6990
+    ],
+    "floor_m": 0.45,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "the middle of the Reitz Ravine boardwalk (deck 0.45 m)"
+   },
+   {
+    "name": "token_weil_roof_ridge",
+    "map_m": [
+     -462.75,
+     -47.58,
+     24.0
+    ],
+    "game": [
+     725,
+     2400,
+     -24542
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 1.2,
+    "headroom_m": null,
+    "note": "Weil Hall's 24 m ridge at the end of the roof run (courtyard downspout -> addition roof -> roof stair -> ridge), before the tower deck"
+   },
+   {
+    "name": "token_malachowsky_glass_stair",
+    "map_m": [
+     -429.25,
+     -509.85,
+     12.0
+    ],
+    "game": [
+     4075,
+     1200,
+     21685
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.57,
+    "headroom_m": null,
+    "note": "the 12 m glass box of Malachowsky's stepped glass stair (canopy -> boxes -> roof)"
+   },
+   {
+    "name": "token_cooling_tower_catwalk",
+    "map_m": [
+     -506.67,
+     -148.49,
+     10.0
+    ],
+    "game": [
+     -3667,
+     1000,
+     -14451
+    ],
+    "floor_m": 10.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "the cooling towers' roof deck (catwalk), south half (climb route on the east face)"
+   }
+  ],
+  "star_spot": {
+   "name": "token_star_north_lawn",
+   "map_m": [
+    -385.0,
+    -191.0,
+    0.0
+   ],
+   "game": [
+    8500,
+    0,
+    -10200
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "note": "fallback star spot (the North Lawn hub next to Wertheim): the course act 2 mission drops its star 1.5 m over the token found last (wf_reitz_missions.lua starAt)"
+  },
+  "note": "design 7.2 act 5 locations, in its order (Weil's and Malachowsky's moved up their climbs in the fix round); coin heights are the floor, add the coin's hover"
+ },
+ "act6_packet_relay": {
+  "note": "Carry the packet from Weil Hall's server closet (the lower-floor lab niche on the north facade) to Malachowsky's server alcove (inside the atrium, west side) in 75 s. The route is the shortest ground-level walk on the built collision (A* on a 2 m grid, then straight legs), checked every metre.",
+  "start": {
+   "name": "relay_start_weil_server_closet",
+   "map_m": [
+    -495.81,
+    -38.76,
+    0.0
+   ],
+   "game": [
+    -2581,
+    0,
+    -25424
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.7,
+   "headroom_m": 13.6,
+   "source": "reitz_weil_eng_clocktower.py server_closet"
+  },
+  "finish": {
+   "name": "relay_finish_malachowsky_server_room",
+   "map_m": [
+    -468.25,
+    -526.0,
+    0.0
+   ],
+   "game": [
+    175,
+    0,
+    23300
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.25,
+   "headroom_m": 4.0,
+   "source": "reitz_malachowsky.py server_room_dock"
+  },
+  "route": {
+   "waypoints": [
+    {
+     "name": "relay_wp_00",
+     "map_m": [
+      -495.81,
+      -38.76,
+      0.0
+     ],
+     "game": [
+      -2581,
+      0,
+      -25424
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 0.7,
+     "headroom_m": 13.6
+    },
+    {
+     "name": "relay_wp_01",
+     "map_m": [
+      -498.0,
+      -36.0,
+      0.0
+     ],
+     "game": [
+      -2800,
+      0,
+      -25700
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.06,
+     "headroom_m": null
+    },
+    {
+     "name": "relay_wp_02",
+     "map_m": [
+      -558.0,
+      -30.0,
+      0.0
+     ],
+     "game": [
+      -8800,
+      0,
+      -26300
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 1.8,
+     "headroom_m": null
+    },
+    {
+     "name": "relay_wp_03",
+     "map_m": [
+      -562.0,
+      -32.0,
+      0.0
+     ],
+     "game": [
+      -9200,
+      0,
+      -26100
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.0,
+     "headroom_m": null
+    },
+    {
+     "name": "relay_wp_04",
+     "map_m": [
+      -564.0,
+      -80.0,
+      0.0
+     ],
+     "game": [
+      -9400,
+      0,
+      -21300
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "relay_wp_05",
+     "map_m": [
+      -528.0,
+      -116.0,
+      0.0
+     ],
+     "game": [
+      -5800,
+      0,
+      -17700
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "relay_wp_06",
+     "map_m": [
+      -528.0,
+      -214.0,
+      0.0
+     ],
+     "game": [
+      -5800,
+      0,
+      -7900
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "relay_wp_07",
+     "map_m": [
+      -528.0,
+      -312.0,
+      0.0
+     ],
+     "game": [
+      -5800,
+      0,
+      1900
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "relay_wp_08",
+     "map_m": [
+      -518.0,
+      -332.0,
+      0.0
+     ],
+     "game": [
+      -4800,
+      0,
+      3900
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "relay_wp_09",
+     "map_m": [
+      -512.0,
+      -430.0,
+      0.0
+     ],
+     "game": [
+      -4200,
+      0,
+      13700
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "relay_wp_10",
+     "map_m": [
+      -454.0,
+      -510.0,
+      0.0
+     ],
+     "game": [
+      1600,
+      0,
+      21700
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 1.88,
+     "headroom_m": 3.83
+    },
+    {
+     "name": "relay_wp_11",
+     "map_m": [
+      -454.0,
+      -518.0,
+      0.0
+     ],
+     "game": [
+      1600,
+      0,
+      22500
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 1.88,
+     "headroom_m": null
+    },
+    {
+     "name": "relay_wp_12",
+     "map_m": [
+      -468.25,
+      -526.0,
+      0.0
+     ],
+     "game": [
+      175,
+      0,
+      23300
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.25,
+     "headroom_m": 4.0
+    }
+   ],
+   "game_path": [
+    [
+     -2581,
+     0,
+     -25424
+    ],
+    [
+     -2800,
+     0,
+     -25700
+    ],
+    [
+     -8800,
+     0,
+     -26300
+    ],
+    [
+     -9200,
+     0,
+     -26100
+    ],
+    [
+     -9400,
+     0,
+     -21300
+    ],
+    [
+     -5800,
+     0,
+     -17700
+    ],
+    [
+     -5800,
+     0,
+     -7900
+    ],
+    [
+     -5800,
+     0,
+     1900
+    ],
+    [
+     -4800,
+     0,
+     3900
+    ],
+    [
+     -4200,
+     0,
+     13700
+    ],
+    [
+     1600,
+     0,
+     21700
+    ],
+    [
+     1600,
+     0,
+     22500
+    ],
+    [
+     175,
+     0,
+     23300
+    ]
+   ],
+   "length_m": 606.9,
+   "straight_line_m": 488.0,
+   "path_check": {
+    "name": "relay_path",
+    "length_m": 606.9,
+    "closed": false,
+    "samples": 612,
+    "floor_range_m": [
+     0.0,
+     0.0
+    ],
+    "max_floor_deviation_m": 0.0,
+    "gaps": [],
+    "walls_across": []
+   },
+   "note": "ground level all the way; steps up to 0.5 m (a curb, the boardwalk deck) are walk-ups in SM64 (find_floor reaches 78 units up)"
+  },
+  "cannon": {
+   "spot": {
+    "name": "relay_cannon_north_lawn",
+    "map_m": [
+     -497.0,
+     -224.0,
+     0.0
+    ],
+    "game": [
+     -2700,
+     0,
+     -6900
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "North Lawn cannon (west end of the lawn strip, by Reitz Union Drive)"
+   },
+   "aim_target": {
+    "name": "relay_cannon_target",
+    "map_m": [
+     -536.0,
+     -312.0,
+     0.0
+    ],
+    "game": [
+     -6600,
+     0,
+     1900
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "landing hint: the Reitz Union Drive loop south-west of the Reitz, ~96 m away (a vanilla cannon shot flies ~100 m at 45 degrees, apex ~25 m: it cannot clear the 27 m tower, so it goes round the ravine side)"
+   }
+  }
+ },
+ "landmark_spots": {
+  "reitz_union": {
+   "north_entrance": {
+    "name": "reitz_union_north_entrance",
+    "map_m": [
+     -456.15,
+     -240.6,
+     0.0
+    ],
+    "game": [
+     1385,
+     0,
+     -5240
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.52,
+    "headroom_m": 4.4
+   },
+   "north_colonnade_top": {
+    "name": "reitz_union_north_colonnade_top",
+    "map_m": [
+     -430.0,
+     -239.8,
+     4.4
+    ],
+    "game": [
+     4000,
+     440,
+     -5320
+    ],
+    "floor_m": 4.4,
+    "clearance_m": 2.08,
+    "headroom_m": null
+   },
+   "game_room_door": {
+    "name": "reitz_union_game_room_door",
+    "map_m": [
+     -485.21,
+     -241.05,
+     0.0
+    ],
+    "game": [
+     -1521,
+     0,
+     -5195
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.6,
+    "headroom_m": null
+   },
+   "stair_penthouse_top": {
+    "name": "reitz_union_stair_penthouse_top",
+    "map_m": [
+     -522.25,
+     -264.98,
+     15.6
+    ],
+    "game": [
+     -5225,
+     1560,
+     -2802
+    ],
+    "floor_m": 15.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "ballroom_roof_center": {
+    "name": "reitz_union_ballroom_roof_center",
+    "map_m": [
+     -492.0,
+     -261.0,
+     13.2
+    ],
+    "game": [
+     -2200,
+     1320,
+     -3200
+    ],
+    "floor_m": 13.2,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "podium_roof_north": {
+    "name": "reitz_union_podium_roof_north",
+    "map_m": [
+     -436.0,
+     -247.0,
+     17.6
+    ],
+    "game": [
+     3400,
+     1760,
+     -4600
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "podium_roof_south": {
+    "name": "reitz_union_podium_roof_south",
+    "map_m": [
+     -436.0,
+     -277.5,
+     17.6
+    ],
+    "game": [
+     3400,
+     1760,
+     -1550
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "window_washer_lift_bottom": {
+    "name": "reitz_union_window_washer_lift_bottom",
+    "map_m": [
+     -457.3,
+     -262.0,
+     17.6
+    ],
+    "game": [
+     1270,
+     1760,
+     -3100
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 1.3,
+    "headroom_m": null
+   },
+   "window_washer_lift_top": {
+    "name": "reitz_union_window_washer_lift_top",
+    "map_m": [
+     -457.3,
+     -262.0,
+     27.0
+    ],
+    "game": [
+     1270,
+     2700,
+     -3100
+    ],
+    "air": true,
+    "floor_below_m": 17.6,
+    "height_above_floor_m": 9.4,
+    "note": "not a floor (the lift's top / the tower's roof ridge)"
+   },
+   "tower_roof_center": {
+    "name": "reitz_union_tower_roof_center",
+    "map_m": [
+     -436.0,
+     -256.0,
+     26.4
+    ],
+    "game": [
+     3400,
+     2640,
+     -3700
+    ],
+    "floor_m": 26.4,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "tower_parapet_east": {
+    "name": "reitz_union_tower_parapet_east",
+    "map_m": [
+     -416.2,
+     -255.5,
+     27.0
+    ],
+    "game": [
+     5380,
+     2700,
+     -3750
+    ],
+    "floor_m": 27.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "roof_star": {
+    "name": "reitz_union_roof_star",
+    "map_m": [
+     -436.5,
+     -263.0,
+     28.8
+    ],
+    "game": [
+     3350,
+     2880,
+     -3000
+    ],
+    "floor_m": 28.8,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "green_roof_center": {
+    "name": "reitz_union_green_roof_center",
+    "map_m": [
+     -380.0,
+     -266.0,
+     16.0
+    ],
+    "game": [
+     9000,
+     1600,
+     -2700
+    ],
+    "floor_m": 16.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "skylight_top": {
+    "name": "reitz_union_skylight_top",
+    "map_m": [
+     -395.0,
+     -270.0,
+     16.9
+    ],
+    "game": [
+     7500,
+     1690,
+     -2300
+    ],
+    "floor_m": 16.9,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "food_court_roof": {
+    "name": "reitz_union_food_court_roof",
+    "map_m": [
+     -440.0,
+     -305.0,
+     11.5
+    ],
+    "game": [
+     3000,
+     1150,
+     1200
+    ],
+    "floor_m": 11.5,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "food_court_center": {
+    "name": "reitz_union_food_court_center",
+    "map_m": [
+     -412.0,
+     -305.0,
+     2.0
+    ],
+    "game": [
+     5800,
+     200,
+     1200
+    ],
+    "floor_m": 2.0,
+    "clearance_m": 1.0,
+    "headroom_m": 4.6
+   },
+   "food_court_door_inside": {
+    "name": "reitz_union_food_court_door_inside",
+    "map_m": [
+     -376.04,
+     -287.02,
+     2.0
+    ],
+    "game": [
+     9396,
+     200,
+     -598
+    ],
+    "floor_m": 2.0,
+    "clearance_m": 2.23,
+    "headroom_m": 4.6
+   },
+   "food_court_door_outside": {
+    "name": "reitz_union_food_court_door_outside",
+    "map_m": [
+     -376.09,
+     -290.62,
+     2.0
+    ],
+    "game": [
+     9391,
+     200,
+     -238
+    ],
+    "floor_m": 2.0,
+    "clearance_m": 2.51,
+    "headroom_m": 3.6
+   },
+   "food_court_counter_top": {
+    "name": "reitz_union_food_court_counter_top",
+    "map_m": [
+     -427.0,
+     -300.0,
+     3.1
+    ],
+    "game": [
+     4300,
+     310,
+     700
+    ],
+    "floor_m": 3.1,
+    "clearance_m": 0.65,
+    "headroom_m": 3.5
+   },
+   "food_court_table": {
+    "name": "reitz_union_food_court_table",
+    "map_m": [
+     -413.75,
+     -303.4,
+     2.85
+    ],
+    "game": [
+     5625,
+     285,
+     1040
+    ],
+    "floor_m": 2.85,
+    "clearance_m": 3.0,
+    "headroom_m": 3.75
+   },
+   "se_canopy_top": {
+    "name": "reitz_union_se_canopy_top",
+    "map_m": [
+     -404.25,
+     -301.12,
+     5.6
+    ],
+    "game": [
+     6575,
+     560,
+     812
+    ],
+    "floor_m": 5.6,
+    "clearance_m": 1.56,
+    "headroom_m": null
+   },
+   "ravine_terrace_1": {
+    "name": "reitz_union_ravine_terrace_1",
+    "map_m": [
+     -499.39,
+     -284.25,
+     1.5
+    ],
+    "game": [
+     -2939,
+     150,
+     -875
+    ],
+    "floor_m": 1.5,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "ravine_terrace_2": {
+    "name": "reitz_union_ravine_terrace_2",
+    "map_m": [
+     -510.37,
+     -282.52,
+     3.0
+    ],
+    "game": [
+     -4037,
+     300,
+     -1048
+    ],
+    "floor_m": 3.0,
+    "clearance_m": 0.4,
+    "headroom_m": null
+   },
+   "ravine_terrace_3": {
+    "name": "reitz_union_ravine_terrace_3",
+    "map_m": [
+     -512.85,
+     -281.09,
+     4.5
+    ],
+    "game": [
+     -4285,
+     450,
+     -1191
+    ],
+    "floor_m": 4.5,
+    "clearance_m": 0.8,
+    "headroom_m": null
+   },
+   "awning_1": {
+    "name": "reitz_union_awning_1",
+    "map_m": [
+     -506.1,
+     -281.27,
+     6.7
+    ],
+    "game": [
+     -3610,
+     670,
+     -1173
+    ],
+    "floor_m": 6.7,
+    "clearance_m": 0.9,
+    "headroom_m": null
+   },
+   "awning_2": {
+    "name": "reitz_union_awning_2",
+    "map_m": [
+     -499.1,
+     -281.36,
+     8.9
+    ],
+    "game": [
+     -2910,
+     890,
+     -1164
+    ],
+    "floor_m": 8.9,
+    "clearance_m": 0.9,
+    "headroom_m": null
+   },
+   "awning_3": {
+    "name": "reitz_union_awning_3",
+    "map_m": [
+     -492.1,
+     -281.44,
+     11.1
+    ],
+    "game": [
+     -2210,
+     1110,
+     -1156
+    ],
+    "floor_m": 11.1,
+    "clearance_m": 0.9,
+    "headroom_m": null
+   },
+   "ballroom_roof": {
+    "name": "reitz_union_ballroom_roof",
+    "map_m": [
+     -490.81,
+     -278.06,
+     13.2
+    ],
+    "game": [
+     -2081,
+     1320,
+     -1494
+    ],
+    "floor_m": 13.2,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "ballroom_ac_unit": {
+    "name": "reitz_union_ballroom_ac_unit",
+    "map_m": [
+     -466.4,
+     -261.0,
+     15.4
+    ],
+    "game": [
+     360,
+     1540,
+     -3200
+    ],
+    "floor_m": 15.4,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "podium_roof_west": {
+    "name": "reitz_union_podium_roof_west",
+    "map_m": [
+     -460.0,
+     -261.0,
+     17.6
+    ],
+    "game": [
+     1000,
+     1760,
+     -3200
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "podium_roof_east": {
+    "name": "reitz_union_podium_roof_east",
+    "map_m": [
+     -413.2,
+     -274.5,
+     17.6
+    ],
+    "game": [
+     5680,
+     1760,
+     -1850
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "tower_ledge_1": {
+    "name": "reitz_union_tower_ledge_1",
+    "map_m": [
+     -415.15,
+     -270.5,
+     19.8
+    ],
+    "game": [
+     5485,
+     1980,
+     -2250
+    ],
+    "floor_m": 19.8,
+    "clearance_m": 0.85,
+    "headroom_m": null
+   },
+   "tower_ledge_2": {
+    "name": "reitz_union_tower_ledge_2",
+    "map_m": [
+     -415.15,
+     -266.5,
+     21.6
+    ],
+    "game": [
+     5485,
+     2160,
+     -2650
+    ],
+    "floor_m": 21.6,
+    "clearance_m": 0.85,
+    "headroom_m": null
+   },
+   "tower_ledge_3": {
+    "name": "reitz_union_tower_ledge_3",
+    "map_m": [
+     -415.15,
+     -262.5,
+     23.4
+    ],
+    "game": [
+     5485,
+     2340,
+     -3050
+    ],
+    "floor_m": 23.4,
+    "clearance_m": 0.85,
+    "headroom_m": null
+   },
+   "tower_ledge_4": {
+    "name": "reitz_union_tower_ledge_4",
+    "map_m": [
+     -415.15,
+     -258.5,
+     25.2
+    ],
+    "game": [
+     5485,
+     2520,
+     -3450
+    ],
+    "floor_m": 25.2,
+    "clearance_m": 0.85,
+    "headroom_m": null
+   },
+   "tower_roof": {
+    "name": "reitz_union_tower_roof",
+    "map_m": [
+     -418.0,
+     -256.0,
+     26.4
+    ],
+    "game": [
+     5200,
+     2640,
+     -3700
+    ],
+    "floor_m": 26.4,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "penthouse_top": {
+    "name": "reitz_union_penthouse_top",
+    "map_m": [
+     -436.5,
+     -263.0,
+     28.8
+    ],
+    "game": [
+     3350,
+     2880,
+     -3000
+    ],
+    "floor_m": 28.8,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "south_terrace": {
+    "name": "reitz_union_south_terrace",
+    "map_m": [
+     -392.0,
+     -297.5,
+     2.0
+    ],
+    "game": [
+     7800,
+     200,
+     450
+    ],
+    "floor_m": 2.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "se_canopy": {
+    "name": "reitz_union_se_canopy",
+    "map_m": [
+     -402.44,
+     -298.81,
+     5.6
+    ],
+    "game": [
+     6756,
+     560,
+     581
+    ],
+    "floor_m": 5.6,
+    "clearance_m": 1.91,
+    "headroom_m": null
+   },
+   "light_shelf_1": {
+    "name": "reitz_union_light_shelf_1",
+    "map_m": [
+     -403.51,
+     -298.44,
+     7.8
+    ],
+    "game": [
+     6649,
+     780,
+     544
+    ],
+    "floor_m": 7.8,
+    "clearance_m": 0.79,
+    "headroom_m": null
+   },
+   "light_shelf_2": {
+    "name": "reitz_union_light_shelf_2",
+    "map_m": [
+     -399.29,
+     -293.62,
+     10.0
+    ],
+    "game": [
+     7071,
+     1000,
+     62
+    ],
+    "floor_m": 10.0,
+    "clearance_m": 0.9,
+    "headroom_m": null
+   },
+   "food_court_ac_unit": {
+    "name": "reitz_union_food_court_ac_unit",
+    "map_m": [
+     -404.75,
+     -291.85,
+     13.8
+    ],
+    "game": [
+     6525,
+     1380,
+     -115
+    ],
+    "floor_m": 13.8,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "green_roof": {
+    "name": "reitz_union_green_roof",
+    "map_m": [
+     -404.75,
+     -286.0,
+     16.0
+    ],
+    "game": [
+     6525,
+     1600,
+     -700
+    ],
+    "floor_m": 16.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  },
+  "reitz_amphitheater": {
+   "south_terrace_west": {
+    "name": "reitz_amphitheater_south_terrace_west",
+    "map_m": [
+     -404.3,
+     -309.0,
+     2.0
+    ],
+    "game": [
+     6570,
+     200,
+     1600
+    ],
+    "floor_m": 2.0,
+    "clearance_m": 2.81,
+    "headroom_m": 3.6
+   },
+   "south_terrace_center": {
+    "name": "reitz_amphitheater_south_terrace_center",
+    "map_m": [
+     -392.0,
+     -297.5,
+     2.0
+    ],
+    "game": [
+     7800,
+     200,
+     450
+    ],
+    "floor_m": 2.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "south_terrace_east": {
+    "name": "reitz_amphitheater_south_terrace_east",
+    "map_m": [
+     -366.0,
+     -292.0,
+     2.0
+    ],
+    "game": [
+     10400,
+     200,
+     -100
+    ],
+    "floor_m": 2.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "amphitheater_top_row": {
+    "name": "reitz_amphitheater_amphitheater_top_row",
+    "map_m": [
+     -386.6,
+     -299.71,
+     1.8
+    ],
+    "game": [
+     8340,
+     180,
+     671
+    ],
+    "floor_m": 1.8,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "amphitheater_bottom": {
+    "name": "reitz_amphitheater_amphitheater_bottom",
+    "map_m": [
+     -381.25,
+     -311.27,
+     0.0
+    ],
+    "game": [
+     8875,
+     0,
+     1827
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.24,
+    "headroom_m": null
+   },
+   "veterans_memorial": {
+    "name": "reitz_amphitheater_veterans_memorial",
+    "map_m": [
+     -383.3,
+     -309.6,
+     0.0
+    ],
+    "game": [
+     8670,
+     0,
+     1660
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.58,
+    "headroom_m": null
+   },
+   "liberty_pond_fountain": {
+    "name": "reitz_amphitheater_liberty_pond_fountain",
+    "map_m": [
+     -369.37,
+     -335.81,
+     0.3
+    ],
+    "game": [
+     10063,
+     30,
+     4281
+    ],
+    "floor_m": 0.3,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  },
+  "weil_hall": {
+   "tower_deck": {
+    "name": "weil_hall_tower_deck",
+    "map_m": [
+     -458.5,
+     -45.0,
+     25.6
+    ],
+    "game": [
+     1150,
+     2560,
+     -24800
+    ],
+    "floor_m": 25.6,
+    "clearance_m": 2.65,
+    "headroom_m": null
+   },
+   "tower_deck_north": {
+    "name": "weil_hall_tower_deck_north",
+    "map_m": [
+     -458.5,
+     -41.6,
+     25.6
+    ],
+    "game": [
+     1150,
+     2560,
+     -25140
+    ],
+    "floor_m": 25.6,
+    "clearance_m": 0.8,
+    "headroom_m": null
+   },
+   "ridge_at_tower": {
+    "name": "weil_hall_ridge_at_tower",
+    "map_m": [
+     -462.75,
+     -47.58,
+     24.0
+    ],
+    "game": [
+     725,
+     2400,
+     -24542
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 1.2,
+    "headroom_m": null
+   },
+   "ridge_mid": {
+    "name": "weil_hall_ridge_mid",
+    "map_m": [
+     -510.0,
+     -47.58,
+     24.0
+    ],
+    "game": [
+     -4000,
+     2400,
+     -24542
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "ridge_west_gable": {
+    "name": "weil_hall_ridge_west_gable",
+    "map_m": [
+     -559.0,
+     -47.58,
+     24.0
+    ],
+    "game": [
+     -8900,
+     2400,
+     -24542
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "ridge_wn_north": {
+    "name": "weil_hall_ridge_wn_north",
+    "map_m": [
+     -553.42,
+     -32.8,
+     24.0
+    ],
+    "game": [
+     -8342,
+     2400,
+     -26020
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "ridge_pw_north": {
+    "name": "weil_hall_ridge_pw_north",
+    "map_m": [
+     -468.0,
+     -32.9,
+     24.0
+    ],
+    "game": [
+     200,
+     2400,
+     -26010
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "ridge_east": {
+    "name": "weil_hall_ridge_east",
+    "map_m": [
+     -444.15,
+     -48.75,
+     22.39
+    ],
+    "game": [
+     2585,
+     2239,
+     -24425
+    ],
+    "floor_m": 22.39,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "roof_stair_foot": {
+    "name": "weil_hall_roof_stair_foot",
+    "map_m": [
+     -468.4,
+     -56.1,
+     13.6
+    ],
+    "game": [
+     160,
+     1360,
+     -23690
+    ],
+    "floor_m": 13.6,
+    "clearance_m": 0.45,
+    "headroom_m": null
+   },
+   "roof_stair_top": {
+    "name": "weil_hall_roof_stair_top",
+    "map_m": [
+     -468.4,
+     -48.71,
+     24.0
+    ],
+    "game": [
+     160,
+     2400,
+     -24429
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "south_gutter_mid": {
+    "name": "weil_hall_south_gutter_mid",
+    "map_m": [
+     -497.0,
+     -56.15,
+     13.6
+    ],
+    "game": [
+     -2700,
+     1360,
+     -23685
+    ],
+    "floor_m": 13.6,
+    "clearance_m": 0.5,
+    "headroom_m": null
+   },
+   "south_service_roof": {
+    "name": "weil_hall_south_service_roof",
+    "map_m": [
+     -541.0,
+     -61.0,
+     13.6
+    ],
+    "game": [
+     -7100,
+     1360,
+     -23200
+    ],
+    "floor_m": 13.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "addition_roof": {
+    "name": "weil_hall_addition_roof",
+    "map_m": [
+     -464.0,
+     -68.0,
+     13.6
+    ],
+    "game": [
+     600,
+     1360,
+     -22500
+    ],
+    "floor_m": 13.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "auditorium_roof": {
+    "name": "weil_hall_auditorium_roof",
+    "map_m": [
+     -447.0,
+     -72.0,
+     9.6
+    ],
+    "game": [
+     2300,
+     960,
+     -22100
+    ],
+    "floor_m": 9.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "hvac_top": {
+    "name": "weil_hall_hvac_top",
+    "map_m": [
+     -454.1,
+     -68.5,
+     11.6
+    ],
+    "game": [
+     1590,
+     1160,
+     -22450
+    ],
+    "floor_m": 11.6,
+    "clearance_m": 2.5,
+    "headroom_m": null
+   },
+   "east_gutter": {
+    "name": "weil_hall_east_gutter",
+    "map_m": [
+     -436.25,
+     -48.75,
+     13.6
+    ],
+    "game": [
+     3375,
+     1360,
+     -24425
+    ],
+    "floor_m": 13.6,
+    "clearance_m": 0.5,
+    "headroom_m": null
+   },
+   "north_gutter_bay_1": {
+    "name": "weil_hall_north_gutter_bay_1",
+    "map_m": [
+     -540.5,
+     -39.01,
+     13.6
+    ],
+    "game": [
+     -7050,
+     1360,
+     -25399
+    ],
+    "floor_m": 13.6,
+    "clearance_m": 0.5,
+    "headroom_m": null
+   },
+   "north_gutter_bay_2": {
+    "name": "weil_hall_north_gutter_bay_2",
+    "map_m": [
+     -520.6,
+     -39.01,
+     13.6
+    ],
+    "game": [
+     -5060,
+     1360,
+     -25399
+    ],
+    "floor_m": 13.6,
+    "clearance_m": 0.5,
+    "headroom_m": null
+   },
+   "north_gutter_bay_3": {
+    "name": "weil_hall_north_gutter_bay_3",
+    "map_m": [
+     -500.7,
+     -39.01,
+     13.6
+    ],
+    "game": [
+     -3070,
+     1360,
+     -25399
+    ],
+    "floor_m": 13.6,
+    "clearance_m": 0.5,
+    "headroom_m": null
+   },
+   "north_gutter_bay_4": {
+    "name": "weil_hall_north_gutter_bay_4",
+    "map_m": [
+     -480.8,
+     -39.01,
+     13.6
+    ],
+    "game": [
+     -1080,
+     1360,
+     -25399
+    ],
+    "floor_m": 13.6,
+    "clearance_m": 0.5,
+    "headroom_m": null
+   },
+   "courtyard": {
+    "name": "weil_hall_courtyard",
+    "map_m": [
+     -445.0,
+     -60.5,
+     0.0
+    ],
+    "game": [
+     2500,
+     0,
+     -23250
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "balcony": {
+    "name": "weil_hall_balcony",
+    "map_m": [
+     -561.05,
+     -47.36,
+     9.2
+    ],
+    "game": [
+     -9105,
+     920,
+     -24564
+    ],
+    "floor_m": 9.2,
+    "clearance_m": 0.45,
+    "headroom_m": null
+   },
+   "main_stoop": {
+    "name": "weil_hall_main_stoop",
+    "map_m": [
+     -458.5,
+     -39.3,
+     1.8
+    ],
+    "game": [
+     1150,
+     180,
+     -25370
+    ],
+    "floor_m": 1.8,
+    "clearance_m": 1.8,
+    "headroom_m": null
+   },
+   "main_entrance_recess": {
+    "name": "weil_hall_main_entrance_recess",
+    "map_m": [
+     -458.5,
+     -41.1,
+     1.8
+    ],
+    "game": [
+     1150,
+     180,
+     -25190
+    ],
+    "floor_m": 1.8,
+    "clearance_m": 0.5,
+    "headroom_m": 23.8
+   },
+   "server_closet": {
+    "name": "weil_hall_server_closet",
+    "map_m": [
+     -495.81,
+     -38.76,
+     0.0
+    ],
+    "game": [
+     -2581,
+     0,
+     -25424
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 0.7,
+    "headroom_m": 13.6
+   },
+   "west_entrance": {
+    "name": "weil_hall_west_entrance",
+    "map_m": [
+     -563.8,
+     -47.36,
+     0.0
+    ],
+    "game": [
+     -9380,
+     0,
+     -24564
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.0,
+    "headroom_m": null
+   },
+   "polygonal_bay_top": {
+    "name": "weil_hall_polygonal_bay_top",
+    "map_m": [
+     -468.0,
+     -31.2,
+     14.4
+    ],
+    "game": [
+     200,
+     1440,
+     -26180
+    ],
+    "floor_m": 14.4,
+    "clearance_m": 0.7,
+    "headroom_m": null
+   },
+   "front_steps_foot": {
+    "name": "weil_hall_front_steps_foot",
+    "map_m": [
+     -458.5,
+     -32.2,
+     0.0
+    ],
+    "game": [
+     1150,
+     0,
+     -26080
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.67,
+    "headroom_m": null
+   },
+   "north_lawn_front": {
+    "name": "weil_hall_north_lawn_front",
+    "map_m": [
+     -510.0,
+     -32.0,
+     0.0
+    ],
+    "game": [
+     -4000,
+     0,
+     -26100
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "service_court": {
+    "name": "weil_hall_service_court",
+    "map_m": [
+     -500.0,
+     -62.0,
+     0.0
+    ],
+    "game": [
+     -3000,
+     0,
+     -23100
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": 10.0
+   },
+   "dormer_roof_1": {
+    "name": "weil_hall_dormer_roof_1",
+    "map_m": [
+     -540.5,
+     -40.94,
+     17.06
+    ],
+    "game": [
+     -7050,
+     1706,
+     -25206
+    ],
+    "floor_m": 17.06,
+    "clearance_m": 1.53,
+    "headroom_m": null
+   },
+   "dormer_roof_2": {
+    "name": "weil_hall_dormer_roof_2",
+    "map_m": [
+     -520.6,
+     -40.94,
+     17.06
+    ],
+    "game": [
+     -5060,
+     1706,
+     -25206
+    ],
+    "floor_m": 17.06,
+    "clearance_m": 1.53,
+    "headroom_m": null
+   },
+   "dormer_roof_3": {
+    "name": "weil_hall_dormer_roof_3",
+    "map_m": [
+     -500.7,
+     -40.94,
+     17.06
+    ],
+    "game": [
+     -3070,
+     1706,
+     -25206
+    ],
+    "floor_m": 17.06,
+    "clearance_m": 1.53,
+    "headroom_m": null
+   },
+   "dormer_roof_4": {
+    "name": "weil_hall_dormer_roof_4",
+    "map_m": [
+     -480.8,
+     -40.94,
+     17.06
+    ],
+    "game": [
+     -1080,
+     1706,
+     -25206
+    ],
+    "floor_m": 17.06,
+    "clearance_m": 1.53,
+    "headroom_m": null
+   }
+  },
+  "engineering_clock_tower": {
+   "clock_tower_south": {
+    "name": "engineering_clock_tower_clock_tower_south",
+    "map_m": [
+     -577.75,
+     -49.59,
+     0.0
+    ],
+    "game": [
+     -10775,
+     0,
+     -24341
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.6,
+    "headroom_m": null
+   },
+   "clock_tower_east": {
+    "name": "engineering_clock_tower_clock_tower_east",
+    "map_m": [
+     -574.54,
+     -46.29,
+     0.0
+    ],
+    "game": [
+     -10454,
+     0,
+     -24671
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.5,
+    "headroom_m": null
+   },
+   "clock_tower_north": {
+    "name": "engineering_clock_tower_clock_tower_north",
+    "map_m": [
+     -577.75,
+     -43.09,
+     0.0
+    ],
+    "game": [
+     -10775,
+     0,
+     -24991
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.5,
+    "headroom_m": null
+   },
+   "clock_tower_apex": {
+    "name": "engineering_clock_tower_clock_tower_apex",
+    "map_m": [
+     -577.75,
+     -46.29,
+     8.0
+    ],
+    "game": [
+     -10775,
+     800,
+     -24671
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 8.0,
+    "note": "not a floor (the lift's top / the tower's roof ridge)"
+   }
+  },
+  "engineering_plaza": {
+   "sculpture_top": {
+    "name": "engineering_plaza_sculpture_top",
+    "map_m": [
+     -585.97,
+     -70.69,
+     4.0
+    ],
+    "game": [
+     -11597,
+     400,
+     -22231
+    ],
+    "floor_m": 4.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "sculpture_base": {
+    "name": "engineering_plaza_sculpture_base",
+    "map_m": [
+     -584.71,
+     -68.89,
+     0.0
+    ],
+    "game": [
+     -11471,
+     0,
+     -22411
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.47,
+    "headroom_m": null
+   },
+   "solar_kiosk_top": {
+    "name": "engineering_plaza_solar_kiosk_top",
+    "map_m": [
+     -570.33,
+     -51.33,
+     2.0
+    ],
+    "game": [
+     -10033,
+     200,
+     -24167
+    ],
+    "floor_m": 2.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "plaza_center": {
+    "name": "engineering_plaza_plaza_center",
+    "map_m": [
+     -591.0,
+     -76.0,
+     0.0
+    ],
+    "game": [
+     -12100,
+     0,
+     -21700
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "seating_table": {
+    "name": "engineering_plaza_seating_table",
+    "map_m": [
+     -577.2,
+     -53.4,
+     0.76
+    ],
+    "game": [
+     -10720,
+     76,
+     -23960
+    ],
+    "floor_m": 0.76,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "bike_racks": {
+    "name": "engineering_plaza_bike_racks",
+    "map_m": [
+     -574.6,
+     -64.1,
+     0.0
+    ],
+    "game": [
+     -10460,
+     0,
+     -22890
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "courtyard_walk": {
+    "name": "engineering_plaza_courtyard_walk",
+    "map_m": [
+     -570.0,
+     -42.0,
+     0.0
+    ],
+    "game": [
+     -10000,
+     0,
+     -25100
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  },
+  "malachowsky_hall": {
+   "plaza_center": {
+    "name": "malachowsky_hall_plaza_center",
+    "map_m": [
+     -452.31,
+     -507.61,
+     0.0
+    ],
+    "game": [
+     1769,
+     0,
+     21461
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": 3.95
+   },
+   "north_entrance": {
+    "name": "malachowsky_hall_north_entrance",
+    "map_m": [
+     -452.32,
+     -510.01,
+     0.0
+    ],
+    "game": [
+     1768,
+     0,
+     21701
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": 3.95
+   },
+   "planter_top": {
+    "name": "malachowsky_hall_planter_top",
+    "map_m": [
+     -472.49,
+     -508.88,
+     1.0
+    ],
+    "game": [
+     -249,
+     100,
+     21588
+    ],
+    "floor_m": 1.0,
+    "clearance_m": 2.22,
+    "headroom_m": null
+   },
+   "seat_wall": {
+    "name": "malachowsky_hall_seat_wall",
+    "map_m": [
+     -436.98,
+     -507.4,
+     0.45
+    ],
+    "game": [
+     3302,
+     45,
+     21440
+    ],
+    "floor_m": 0.45,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "canopy_tip": {
+    "name": "malachowsky_hall_canopy_tip",
+    "map_m": [
+     -466.79,
+     -508.92,
+     3.28
+    ],
+    "game": [
+     321,
+     328,
+     21592
+    ],
+    "floor_m": 3.28,
+    "clearance_m": 2.22,
+    "headroom_m": null
+   },
+   "canopy_coin": {
+    "name": "malachowsky_hall_canopy_coin",
+    "map_m": [
+     -452.32,
+     -509.21,
+     4.3
+    ],
+    "game": [
+     1768,
+     430,
+     21621
+    ],
+    "floor_m": 4.3,
+    "clearance_m": 2.04,
+    "headroom_m": null
+   },
+   "canopy_top": {
+    "name": "malachowsky_hall_canopy_top",
+    "map_m": [
+     -443.22,
+     -509.77,
+     4.94
+    ],
+    "game": [
+     2678,
+     494,
+     21677
+    ],
+    "floor_m": 4.94,
+    "clearance_m": 0.8,
+    "headroom_m": null
+   },
+   "recess_terrace": {
+    "name": "malachowsky_hall_recess_terrace",
+    "map_m": [
+     -418.74,
+     -513.15,
+     16.67
+    ],
+    "game": [
+     5126,
+     1667,
+     22015
+    ],
+    "floor_m": 16.67,
+    "clearance_m": 1.2,
+    "headroom_m": 16.33
+   },
+   "recess_floor": {
+    "name": "malachowsky_hall_recess_floor",
+    "map_m": [
+     -416.1,
+     -513.37,
+     0.0
+    ],
+    "game": [
+     5390,
+     0,
+     22037
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.0,
+    "headroom_m": 13.47
+   },
+   "glass_box_top": {
+    "name": "malachowsky_hall_glass_box_top",
+    "map_m": [
+     -386.52,
+     -510.12,
+     30.67
+    ],
+    "game": [
+     8348,
+     3067,
+     21712
+    ],
+    "floor_m": 30.67,
+    "clearance_m": 1.5,
+    "headroom_m": null
+   },
+   "roof_ne": {
+    "name": "malachowsky_hall_roof_ne",
+    "map_m": [
+     -387.0,
+     -514.0,
+     33.0
+    ],
+    "game": [
+     8300,
+     3300,
+     22100
+    ],
+    "floor_m": 33.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "roof_center": {
+    "name": "malachowsky_hall_roof_center",
+    "map_m": [
+     -432.0,
+     -540.0,
+     33.0
+    ],
+    "game": [
+     3800,
+     3300,
+     24700
+    ],
+    "floor_m": 33.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "rooftop_terrace": {
+    "name": "malachowsky_hall_rooftop_terrace",
+    "map_m": [
+     -395.0,
+     -520.9,
+     33.25
+    ],
+    "game": [
+     7500,
+     3325,
+     22790
+    ],
+    "floor_m": 33.25,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "lantern_top": {
+    "name": "malachowsky_hall_lantern_top",
+    "map_m": [
+     -453.0,
+     -525.5,
+     35.33
+    ],
+    "game": [
+     1700,
+     3533,
+     23250
+    ],
+    "floor_m": 35.33,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "penthouse_top": {
+    "name": "malachowsky_hall_penthouse_top",
+    "map_m": [
+     -473.75,
+     -531.5,
+     37.67
+    ],
+    "game": [
+     -375,
+     3767,
+     23850
+    ],
+    "floor_m": 37.67,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "atrium_floor": {
+    "name": "malachowsky_hall_atrium_floor",
+    "map_m": [
+     -453.0,
+     -525.5,
+     0.0
+    ],
+    "game": [
+     1700,
+     0,
+     23250
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "atrium_entry": {
+    "name": "malachowsky_hall_atrium_entry",
+    "map_m": [
+     -452.33,
+     -518.5,
+     0.0
+    ],
+    "game": [
+     1767,
+     0,
+     22550
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "atrium_console": {
+    "name": "malachowsky_hall_atrium_console",
+    "map_m": [
+     -460.0,
+     -519.5,
+     0.0
+    ],
+    "game": [
+     1000,
+     0,
+     22650
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.5,
+    "headroom_m": null
+   },
+   "crane_start": {
+    "name": "malachowsky_hall_crane_start",
+    "map_m": [
+     -453.0,
+     -524.5,
+     0.0
+    ],
+    "game": [
+     1700,
+     0,
+     23150
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "star_ledge": {
+    "name": "malachowsky_hall_star_ledge",
+    "map_m": [
+     -453.0,
+     -532.25,
+     28.0
+    ],
+    "game": [
+     1700,
+     2800,
+     23925
+    ],
+    "floor_m": 28.0,
+    "clearance_m": 1.75,
+    "headroom_m": 4.2
+   },
+   "server_room_dock": {
+    "name": "malachowsky_hall_server_room_dock",
+    "map_m": [
+     -468.25,
+     -526.0,
+     0.0
+    ],
+    "game": [
+     175,
+     0,
+     23300
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.25,
+    "headroom_m": 4.0
+   },
+   "south_entrance": {
+    "name": "malachowsky_hall_south_entrance",
+    "map_m": [
+     -452.86,
+     -551.5,
+     0.0
+    ],
+    "game": [
+     1714,
+     0,
+     25850
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.52,
+    "headroom_m": null
+   },
+   "east_entrance": {
+    "name": "malachowsky_hall_east_entrance",
+    "map_m": [
+     -383.3,
+     -535.0,
+     0.0
+    ],
+    "game": [
+     8670,
+     0,
+     24200
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.53,
+    "headroom_m": null
+   },
+   "loading_dock": {
+    "name": "malachowsky_hall_loading_dock",
+    "map_m": [
+     -483.6,
+     -530.05,
+     0.0
+    ],
+    "game": [
+     -1360,
+     0,
+     23705
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.54,
+    "headroom_m": null
+   },
+   "glass_box_1": {
+    "name": "malachowsky_hall_glass_box_1",
+    "map_m": [
+     -439.78,
+     -509.79,
+     7.33
+    ],
+    "game": [
+     3022,
+     733,
+     21679
+    ],
+    "floor_m": 7.33,
+    "clearance_m": 1.55,
+    "headroom_m": null
+   },
+   "glass_box_2": {
+    "name": "malachowsky_hall_glass_box_2",
+    "map_m": [
+     -434.52,
+     -509.82,
+     9.67
+    ],
+    "game": [
+     3548,
+     967,
+     21682
+    ],
+    "floor_m": 9.67,
+    "clearance_m": 1.56,
+    "headroom_m": null
+   },
+   "glass_box_3": {
+    "name": "malachowsky_hall_glass_box_3",
+    "map_m": [
+     -429.25,
+     -509.85,
+     12.0
+    ],
+    "game": [
+     4075,
+     1200,
+     21685
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.57,
+    "headroom_m": null
+   },
+   "glass_box_4": {
+    "name": "malachowsky_hall_glass_box_4",
+    "map_m": [
+     -423.99,
+     -511.35,
+     14.33
+    ],
+    "game": [
+     4601,
+     1433,
+     21835
+    ],
+    "floor_m": 14.33,
+    "clearance_m": 2.63,
+    "headroom_m": null
+   },
+   "glass_box_5": {
+    "name": "malachowsky_hall_glass_box_5",
+    "map_m": [
+     -418.72,
+     -511.39,
+     16.67
+    ],
+    "game": [
+     5128,
+     1667,
+     21839
+    ],
+    "floor_m": 16.67,
+    "clearance_m": 2.63,
+    "headroom_m": null
+   },
+   "glass_box_6": {
+    "name": "malachowsky_hall_glass_box_6",
+    "map_m": [
+     -413.46,
+     -511.42,
+     19.0
+    ],
+    "game": [
+     5654,
+     1900,
+     21842
+    ],
+    "floor_m": 19.0,
+    "clearance_m": 2.64,
+    "headroom_m": null
+   },
+   "glass_box_7": {
+    "name": "malachowsky_hall_glass_box_7",
+    "map_m": [
+     -408.19,
+     -511.45,
+     21.33
+    ],
+    "game": [
+     6181,
+     2133,
+     21845
+    ],
+    "floor_m": 21.33,
+    "clearance_m": 2.63,
+    "headroom_m": null
+   },
+   "glass_box_8": {
+    "name": "malachowsky_hall_glass_box_8",
+    "map_m": [
+     -402.91,
+     -510.02,
+     23.67
+    ],
+    "game": [
+     6709,
+     2367,
+     21702
+    ],
+    "floor_m": 23.67,
+    "clearance_m": 1.48,
+    "headroom_m": null
+   },
+   "glass_box_9": {
+    "name": "malachowsky_hall_glass_box_9",
+    "map_m": [
+     -397.65,
+     -510.05,
+     26.0
+    ],
+    "game": [
+     7235,
+     2600,
+     21705
+    ],
+    "floor_m": 26.0,
+    "clearance_m": 1.49,
+    "headroom_m": null
+   },
+   "glass_box_10": {
+    "name": "malachowsky_hall_glass_box_10",
+    "map_m": [
+     -392.38,
+     -510.08,
+     28.33
+    ],
+    "game": [
+     7762,
+     2833,
+     21708
+    ],
+    "floor_m": 28.33,
+    "clearance_m": 1.49,
+    "headroom_m": null
+   },
+   "glass_box_11": {
+    "name": "malachowsky_hall_glass_box_11",
+    "map_m": [
+     -386.52,
+     -510.12,
+     30.67
+    ],
+    "game": [
+     8348,
+     3067,
+     21712
+    ],
+    "floor_m": 30.67,
+    "clearance_m": 1.5,
+    "headroom_m": null
+   }
+  },
+  "weil_hall_roof_run": [
+   {
+    "name": "weil_roof_run_00",
+    "map_m": [
+     -445.0,
+     -60.5,
+     0.0
+    ],
+    "game": [
+     2500,
+     0,
+     -23250
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "weil_roof_run_01",
+    "map_m": [
+     -454.2,
+     -57.55,
+     0.0
+    ],
+    "game": [
+     1580,
+     0,
+     -23545
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 0.45,
+    "headroom_m": null,
+    "note": "top of the courtyard downspout pole (handstand 13.8 m), not a floor"
+   },
+   {
+    "name": "weil_roof_run_02",
+    "map_m": [
+     -463.0,
+     -62.0,
+     13.6
+    ],
+    "game": [
+     700,
+     1360,
+     -23100
+    ],
+    "floor_m": 13.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "weil_roof_run_03",
+    "map_m": [
+     -468.4,
+     -56.1,
+     13.6
+    ],
+    "game": [
+     160,
+     1360,
+     -23690
+    ],
+    "floor_m": 13.6,
+    "clearance_m": 0.45,
+    "headroom_m": null
+   },
+   {
+    "name": "weil_roof_run_04",
+    "map_m": [
+     -468.4,
+     -55.02,
+     15.33
+    ],
+    "game": [
+     160,
+     1533,
+     -23798
+    ],
+    "floor_m": 15.33,
+    "clearance_m": 0.63,
+    "headroom_m": null
+   },
+   {
+    "name": "weil_roof_run_05",
+    "map_m": [
+     -468.4,
+     -53.76,
+     17.07
+    ],
+    "game": [
+     160,
+     1707,
+     -23924
+    ],
+    "floor_m": 17.07,
+    "clearance_m": 0.63,
+    "headroom_m": null
+   },
+   {
+    "name": "weil_roof_run_06",
+    "map_m": [
+     -468.4,
+     -52.5,
+     18.8
+    ],
+    "game": [
+     160,
+     1880,
+     -24050
+    ],
+    "floor_m": 18.8,
+    "clearance_m": 0.63,
+    "headroom_m": null
+   },
+   {
+    "name": "weil_roof_run_07",
+    "map_m": [
+     -468.4,
+     -51.23,
+     20.53
+    ],
+    "game": [
+     160,
+     2053,
+     -24177
+    ],
+    "floor_m": 20.53,
+    "clearance_m": 0.63,
+    "headroom_m": null
+   },
+   {
+    "name": "weil_roof_run_08",
+    "map_m": [
+     -468.4,
+     -49.97,
+     22.27
+    ],
+    "game": [
+     160,
+     2227,
+     -24303
+    ],
+    "floor_m": 22.27,
+    "clearance_m": 0.63,
+    "headroom_m": null
+   },
+   {
+    "name": "weil_roof_run_09",
+    "map_m": [
+     -468.4,
+     -48.71,
+     24.0
+    ],
+    "game": [
+     160,
+     2400,
+     -24429
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "weil_roof_run_10",
+    "map_m": [
+     -462.75,
+     -47.58,
+     24.0
+    ],
+    "game": [
+     725,
+     2400,
+     -24542
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 1.2,
+    "headroom_m": null
+   },
+   {
+    "name": "weil_roof_run_11",
+    "map_m": [
+     -458.5,
+     -45.0,
+     25.6
+    ],
+    "game": [
+     1150,
+     2560,
+     -24800
+    ],
+    "floor_m": 25.6,
+    "clearance_m": 2.65,
+    "headroom_m": null
+   }
+  ]
+ },
+ "poles": [
+  {
+   "name": "pole_window_washer_cable",
+   "map_m": [
+    -457.0,
+    -266.6,
+    17.6
+   ],
+   "game": [
+    1300,
+    1760,
+    -2640
+   ],
+   "floor_m": 17.6,
+   "clearance_m": 1.0,
+   "headroom_m": null,
+   "height_m": 9.0,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x005A0000",
+   "note": "the window-washer's cable on the tower's west face: podium (17.6) -> 26.6, hop east onto the tower roof"
+  },
+  {
+   "name": "pole_north_colonnade_lamp",
+   "map_m": [
+    -461.2,
+    -237.2,
+    0.0
+   ],
+   "game": [
+    880,
+    0,
+    -5580
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "height_m": 5.0,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00320000",
+   "note": "lamp post at the colonnade's west end; jump east onto the canopy (4.4)"
+  },
+  {
+   "name": "pole_weil_downspout_courtyard",
+   "map_m": [
+    -454.2,
+    -57.55,
+    0.0
+   ],
+   "game": [
+    1580,
+    0,
+    -23545
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.45,
+   "headroom_m": null,
+   "height_m": 14.8,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00940000",
+   "note": "east courtyard NW corner: handstand ~13.8 m, jump west onto the addition roof (13.6) or north over the 14.3 m parapet into the east range's south gutter"
+  },
+  {
+   "name": "pole_weil_downspout_courtyard_low",
+   "map_m": [
+    -456.15,
+    -63.45,
+    0.0
+   ],
+   "game": [
+    1385,
+    0,
+    -22955
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.45,
+   "headroom_m": null,
+   "height_m": 10.8,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x006C0000",
+   "note": "east courtyard SW corner: onto the auditorium roof (9.6 m), then the HVAC box (11.6) and the 13.6 m addition roof"
+  },
+  {
+   "name": "pole_weil_downspout_north_west",
+   "map_m": [
+    -546.4,
+    -37.66,
+    0.0
+   ],
+   "game": [
+    -7640,
+    0,
+    -25534
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.4,
+   "headroom_m": null,
+   "height_m": 14.8,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00940000",
+   "note": "inside corner of the west wing and the north facade: north box gutter, bay 1"
+  },
+  {
+   "name": "pole_weil_downspout_north_east",
+   "map_m": [
+    -474.9,
+    -37.66,
+    0.0
+   ],
+   "game": [
+    -490,
+    0,
+    -25534
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.4,
+   "headroom_m": null,
+   "height_m": 14.8,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00940000",
+   "note": "inside corner of the entrance wing and the north facade: north box gutter, bay 4"
+  },
+  {
+   "name": "pole_weil_downspout_west",
+   "map_m": [
+    -560.4,
+    -58.2,
+    0.0
+   ],
+   "game": [
+    -9040,
+    0,
+    -23480
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.4,
+   "headroom_m": null,
+   "height_m": 14.8,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00940000",
+   "note": "west facade by the plaza: onto the flat south service roof (13.6 m)"
+  },
+  {
+   "name": "pole_weil_downspout_west_bay",
+   "map_m": [
+    -560.45,
+    -43.25,
+    0.0
+   ],
+   "game": [
+    -9045,
+    0,
+    -24975
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.45,
+   "headroom_m": null,
+   "height_m": 10.4,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00680000",
+   "note": "north inside corner of the west entrance bay: onto the balcony (9.2 m)"
+  },
+  {
+   "name": "pole_weil_downspout_service",
+   "map_m": [
+    -521.9,
+    -57.55,
+    0.0
+   ],
+   "game": [
+    -5190,
+    0,
+    -23545
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.45,
+   "headroom_m": null,
+   "height_m": 14.8,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x00940000",
+   "note": "service court, inside corner of the south projections and the main range: south gutter"
+  }
+ ],
+ "secret_spots": [
+  {
+   "name": "secret_malachowsky_penthouse",
+   "map_m": [
+    -473.75,
+    -531.5,
+    37.67
+   ],
+   "game": [
+    -375,
+    3767,
+    23850
+   ],
+   "floor_m": 37.67,
+   "clearance_m": 3.0,
+   "headroom_m": null
+  },
+  {
+   "name": "secret_weil_tower_deck",
+   "map_m": [
+    -458.5,
+    -45.0,
+    25.6
+   ],
+   "game": [
+    1150,
+    2560,
+    -24800
+   ],
+   "floor_m": 25.6,
+   "clearance_m": 2.65,
+   "headroom_m": null,
+   "source": "reitz_weil_eng_clocktower.py tower_deck"
+  },
+  {
+   "name": "secret_reitz_stair_penthouse",
+   "map_m": [
+    -522.25,
+    -264.98,
+    15.6
+   ],
+   "game": [
+    -5225,
+    1560,
+    -2802
+   ],
+   "floor_m": 15.6,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "source": "reitz_reitz_union.py stair_penthouse_top"
+  },
+  {
+   "name": "secret_malachowsky_rooftop_terrace",
+   "map_m": [
+    -395.0,
+    -520.9,
+    33.25
+   ],
+   "game": [
+    7500,
+    3325,
+    22790
+   ],
+   "floor_m": 33.25,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "source": "reitz_malachowsky.py rooftop_terrace"
+  },
+  {
+   "name": "secret_reitz_colonnade_top",
+   "map_m": [
+    -430.0,
+    -239.8,
+    4.4
+   ],
+   "game": [
+    4000,
+    440,
+    -5320
+   ],
+   "floor_m": 4.4,
+   "clearance_m": 2.08,
+   "headroom_m": null,
+   "source": "reitz_reitz_union.py north_colonnade_top"
+  },
+  {
+   "name": "secret_bookstore_roof",
+   "map_m": [
+    -426.0,
+    -374.6,
+    12.0
+   ],
+   "game": [
+    4400,
+    1200,
+    8160
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 3.0,
+   "headroom_m": null
+  }
+ ],
+ "north_lawn": {
+  "hubs": [
+   {
+    "name": "north_lawn_hub_0",
+    "map_m": [
+     -385.0,
+     -191.0,
+     0.0
+    ],
+    "game": [
+     8500,
+     0,
+     -10200
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "centre of a radial-walk hub of the North Lawn"
+   },
+   {
+    "name": "north_lawn_hub_1",
+    "map_m": [
+     -311.0,
+     -154.0,
+     0.0
+    ],
+    "game": [
+     15900,
+     0,
+     -13900
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "centre of a radial-walk hub of the North Lawn"
+   },
+   {
+    "name": "north_lawn_hub_2",
+    "map_m": [
+     -268.0,
+     -212.0,
+     0.0
+    ],
+    "game": [
+     20200,
+     0,
+     -8100
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "centre of a radial-walk hub of the North Lawn"
+   }
+  ],
+  "area": "w294203169"
+ },
+ "dressing": {
+  "lamps": [
+   [
+    -452.0,
+    -222.0
+   ],
+   [
+    -438.0,
+    -236.0
+   ],
+   [
+    -468.5,
+    -233.0
+   ],
+   [
+    -410.0,
+    -233.0
+   ],
+   [
+    -378.0,
+    -235.5
+   ],
+   [
+    -345.0,
+    -226.0
+   ],
+   [
+    -305.0,
+    -214.0
+   ],
+   [
+    -388.0,
+    -203.0
+   ],
+   [
+    -330.0,
+    -168.0
+   ],
+   [
+    -276.0,
+    -192.0
+   ],
+   [
+    -470.0,
+    -499.0
+   ],
+   [
+    -434.0,
+    -499.0
+   ]
+  ],
+  "benches": [
+   [
+    -425.0,
+    -217.5
+   ],
+   [
+    -398.0,
+    -219.0
+   ],
+   [
+    -360.0,
+    -205.0
+   ],
+   [
+    -300.0,
+    -190.0
+   ]
+  ],
+  "tables": [
+   [
+    -648.0,
+    -117.0,
+    0.76
+   ],
+   [
+    -655.0,
+    -123.0,
+    0.76
+   ],
+   [
+    -641.0,
+    -111.0,
+    0.76
+   ]
+  ],
+  "wind_vent": {
+   "map_m": [
+    -488.0,
+    -136.0
+   ],
+   "radius_m": 2.6,
+   "grate_m": 0.4
+  },
+  "charging_dock": {
+   "map_m": [
+    -343.0,
+    -352.0
+   ],
+   "pad_m": 0.25,
+   "half_m": [
+    1.5,
+    1.2
+   ]
+  },
+  "boardwalk": [
+   {
+    "from_m": [
+     -575.6,
+     -364.97
+    ],
+    "to_m": [
+     -518.85,
+     -331.35
+    ],
+    "length_m": 82.7,
+    "mid_m": [
+     -542.83,
+     -362.9,
+     0.45
+    ],
+    "deck_m": 0.45
+   }
+  ],
+  "skipped": [],
+  "fans": [
+   {
+    "map_m": [
+     -506.67,
+     -130.49
+    ],
+    "top_m": 11.4
+   },
+   {
+    "map_m": [
+     -506.67,
+     -123.49
+    ],
+    "top_m": 11.4
+   }
+  ]
+ },
+ "climb_routes_generic": {
+  "UF Bookstore & Welcome Center": {
+   "facade_mid_m": [
+    -411.0,
+    -374.6
+   ],
+   "canopy_m": [
+    -409.49,
+    -353.92,
+    3.0
+   ],
+   "ledge_tops_m": [
+    6.0,
+    9.0,
+    12.0
+   ],
+   "roof_m": 12.0,
+   "facing_deg": 91.3
+  },
+  "Weil Cooling Towers": {
+   "facade_mid_m": [
+    -500.0,
+    -136.4
+   ],
+   "canopy_m": [
+    -498.72,
+    -149.88,
+    3.0
+   ],
+   "ledge_tops_m": [
+    6.0,
+    9.0
+   ],
+   "roof_m": 10.0,
+   "facing_deg": 89.0
+  }
+ },
+ "pickups": {
+  "coins_placed": 254,
+  "coins_with_goombas": 262,
+  "objects": 140,
+  "by_kind": {
+   "coin": 82,
+   "heart": 4,
+   "1up": 3,
+   "goomba": 8,
+   "coin_line": 20,
+   "coin_ring": 9,
+   "bobomb": 2,
+   "shell": 3,
+   "pole": 9
+  },
+  "skipped": [],
+  "items": [
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 00",
+    "map_m": [
+     -499.39,
+     -284.25,
+     2.1
+    ],
+    "game": [
+     -2939,
+     210,
+     -875
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 01",
+    "map_m": [
+     -510.37,
+     -282.52,
+     3.6
+    ],
+    "game": [
+     -4037,
+     360,
+     -1048
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 02",
+    "map_m": [
+     -512.85,
+     -281.09,
+     5.1
+    ],
+    "game": [
+     -4285,
+     510,
+     -1191
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 03",
+    "map_m": [
+     -506.1,
+     -281.27,
+     7.3
+    ],
+    "game": [
+     -3610,
+     730,
+     -1173
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 04",
+    "map_m": [
+     -499.1,
+     -281.36,
+     9.5
+    ],
+    "game": [
+     -2910,
+     950,
+     -1164
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 05",
+    "map_m": [
+     -492.1,
+     -281.44,
+     11.7
+    ],
+    "game": [
+     -2210,
+     1170,
+     -1156
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 06",
+    "map_m": [
+     -490.81,
+     -278.06,
+     13.8
+    ],
+    "game": [
+     -2081,
+     1380,
+     -1494
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 07",
+    "map_m": [
+     -466.4,
+     -261.0,
+     16.0
+    ],
+    "game": [
+     360,
+     1600,
+     -3200
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 08",
+    "map_m": [
+     -460.0,
+     -261.0,
+     18.2
+    ],
+    "game": [
+     1000,
+     1820,
+     -3200
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 09",
+    "map_m": [
+     -436.0,
+     -247.0,
+     18.2
+    ],
+    "game": [
+     3400,
+     1820,
+     -4600
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 10",
+    "map_m": [
+     -413.2,
+     -274.5,
+     18.2
+    ],
+    "game": [
+     5680,
+     1820,
+     -1850
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 11",
+    "map_m": [
+     -415.15,
+     -270.5,
+     20.4
+    ],
+    "game": [
+     5485,
+     2040,
+     -2250
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 12",
+    "map_m": [
+     -415.15,
+     -266.5,
+     22.2
+    ],
+    "game": [
+     5485,
+     2220,
+     -2650
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 13",
+    "map_m": [
+     -415.15,
+     -262.5,
+     24.0
+    ],
+    "game": [
+     5485,
+     2400,
+     -3050
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 14",
+    "map_m": [
+     -415.15,
+     -258.5,
+     25.8
+    ],
+    "game": [
+     5485,
+     2580,
+     -3450
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 15",
+    "map_m": [
+     -418.0,
+     -256.0,
+     27.0
+    ],
+    "game": [
+     5200,
+     2700,
+     -3700
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz south route coin 01",
+    "map_m": [
+     -402.44,
+     -298.81,
+     6.2
+    ],
+    "game": [
+     6756,
+     620,
+     581
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz south route coin 02",
+    "map_m": [
+     -403.51,
+     -298.44,
+     8.4
+    ],
+    "game": [
+     6649,
+     840,
+     544
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz south route coin 03",
+    "map_m": [
+     -399.29,
+     -293.62,
+     10.6
+    ],
+    "game": [
+     7071,
+     1060,
+     62
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz south route coin 04",
+    "map_m": [
+     -401.5,
+     -291.0,
+     12.1
+    ],
+    "game": [
+     6850,
+     1210,
+     -200
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz south route coin 05",
+    "map_m": [
+     -404.75,
+     -291.85,
+     14.4
+    ],
+    "game": [
+     6525,
+     1440,
+     -115
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz south route coin 06",
+    "map_m": [
+     -404.75,
+     -286.0,
+     16.6
+    ],
+    "game": [
+     6525,
+     1660,
+     -700
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz south route coin 07",
+    "map_m": [
+     -412.0,
+     -278.0,
+     18.2
+    ],
+    "game": [
+     5800,
+     1820,
+     -1500
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart Reitz podium roof",
+    "map_m": [
+     -460.0,
+     -261.0,
+     18.6
+    ],
+    "game": [
+     1000,
+     1860,
+     -3200
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart Reitz South Terrace",
+    "map_m": [
+     -392.0,
+     -297.5,
+     3.0
+    ],
+    "game": [
+     7800,
+     300,
+     450
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up Reitz stair penthouse",
+    "map_m": [
+     -522.25,
+     -264.98,
+     16.2
+    ],
+    "game": [
+     -5225,
+     1620,
+     -2802
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba Reitz podium roof",
+    "map_m": [
+     -436.0,
+     -277.5,
+     17.6
+    ],
+    "game": [
+     3400,
+     1760,
+     -1550
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "food court coins",
+    "map_m": [
+     -412.0,
+     -305.0,
+     2.0
+    ],
+    "game": [
+     5800,
+     200,
+     1200
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "amphitheater coin south_terrace_west",
+    "map_m": [
+     -404.3,
+     -309.0,
+     2.6
+    ],
+    "game": [
+     6570,
+     260,
+     1600
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "amphitheater coin south_terrace_east",
+    "map_m": [
+     -366.0,
+     -292.0,
+     2.6
+    ],
+    "game": [
+     10400,
+     260,
+     -100
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "amphitheater coin amphitheater_top_row",
+    "map_m": [
+     -386.6,
+     -299.71,
+     2.4
+    ],
+    "game": [
+     8340,
+     240,
+     671
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "Liberty Pond fountain coin",
+    "map_m": [
+     -369.37,
+     -335.81,
+     0.9
+    ],
+    "game": [
+     10063,
+     90,
+     4281
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": [
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    "token_act_skipped": true
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 01",
+    "map_m": [
+     -472.49,
+     -508.88,
+     1.6
+    ],
+    "game": [
+     -249,
+     160,
+     21588
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 02",
+    "map_m": [
+     -466.79,
+     -508.92,
+     3.88
+    ],
+    "game": [
+     321,
+     388,
+     21592
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 03",
+    "map_m": [
+     -443.22,
+     -509.77,
+     5.54
+    ],
+    "game": [
+     2678,
+     554,
+     21677
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 04",
+    "map_m": [
+     -439.78,
+     -509.79,
+     7.93
+    ],
+    "game": [
+     3022,
+     793,
+     21679
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 05",
+    "map_m": [
+     -434.52,
+     -509.82,
+     10.27
+    ],
+    "game": [
+     3548,
+     1027,
+     21682
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 06",
+    "map_m": [
+     -429.25,
+     -509.85,
+     12.6
+    ],
+    "game": [
+     4075,
+     1260,
+     21685
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": [
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    "token_act_skipped": true
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 07",
+    "map_m": [
+     -423.99,
+     -511.35,
+     14.93
+    ],
+    "game": [
+     4601,
+     1493,
+     21835
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 08",
+    "map_m": [
+     -418.72,
+     -511.39,
+     17.27
+    ],
+    "game": [
+     5128,
+     1727,
+     21839
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 09",
+    "map_m": [
+     -413.46,
+     -511.42,
+     19.6
+    ],
+    "game": [
+     5654,
+     1960,
+     21842
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 10",
+    "map_m": [
+     -408.19,
+     -511.45,
+     21.93
+    ],
+    "game": [
+     6181,
+     2193,
+     21845
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 11",
+    "map_m": [
+     -402.91,
+     -510.02,
+     24.27
+    ],
+    "game": [
+     6709,
+     2427,
+     21702
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 12",
+    "map_m": [
+     -397.65,
+     -510.05,
+     26.6
+    ],
+    "game": [
+     7235,
+     2660,
+     21705
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 13",
+    "map_m": [
+     -392.38,
+     -510.08,
+     28.93
+    ],
+    "game": [
+     7762,
+     2893,
+     21708
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 14",
+    "map_m": [
+     -386.52,
+     -510.12,
+     31.27
+    ],
+    "game": [
+     8348,
+     3127,
+     21712
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 15",
+    "map_m": [
+     -387.0,
+     -514.0,
+     33.6
+    ],
+    "game": [
+     8300,
+     3360,
+     22100
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 16",
+    "map_m": [
+     -453.0,
+     -525.5,
+     35.93
+    ],
+    "game": [
+     1700,
+     3593,
+     23250
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up Malachowsky penthouse (37.7 m)",
+    "map_m": [
+     -473.75,
+     -531.5,
+     38.27
+    ],
+    "game": [
+     -375,
+     3827,
+     23850
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart Malachowsky recess terrace",
+    "map_m": [
+     -418.74,
+     -513.15,
+     17.67
+    ],
+    "game": [
+     5126,
+     1767,
+     22015
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "malachowsky atrium coins",
+    "map_m": [
+     -453.0,
+     -525.5,
+     0.0
+    ],
+    "game": [
+     1700,
+     0,
+     23250
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "malachowsky plaza coins",
+    "map_m": [
+     -452.31,
+     -498.61,
+     -0.0
+    ],
+    "game": [
+     1769,
+     0,
+     20561
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba Malachowsky plaza",
+    "map_m": [
+     -438.31,
+     -491.61,
+     -0.0
+    ],
+    "game": [
+     3169,
+     0,
+     19861
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 180.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 02",
+    "map_m": [
+     -463.0,
+     -62.0,
+     14.2
+    ],
+    "game": [
+     700,
+     1420,
+     -23100
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 03",
+    "map_m": [
+     -468.4,
+     -56.1,
+     14.2
+    ],
+    "game": [
+     160,
+     1420,
+     -23690
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 04",
+    "map_m": [
+     -468.4,
+     -55.02,
+     15.93
+    ],
+    "game": [
+     160,
+     1593,
+     -23798
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 05",
+    "map_m": [
+     -468.4,
+     -53.76,
+     17.67
+    ],
+    "game": [
+     160,
+     1767,
+     -23924
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 06",
+    "map_m": [
+     -468.4,
+     -52.5,
+     19.4
+    ],
+    "game": [
+     160,
+     1940,
+     -24050
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 07",
+    "map_m": [
+     -468.4,
+     -51.23,
+     21.13
+    ],
+    "game": [
+     160,
+     2113,
+     -24177
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 08",
+    "map_m": [
+     -468.4,
+     -49.97,
+     22.87
+    ],
+    "game": [
+     160,
+     2287,
+     -24303
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 09",
+    "map_m": [
+     -468.4,
+     -48.71,
+     24.6
+    ],
+    "game": [
+     160,
+     2460,
+     -24429
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 10",
+    "map_m": [
+     -462.75,
+     -47.58,
+     24.6
+    ],
+    "game": [
+     725,
+     2460,
+     -24542
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": [
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    "token_act_skipped": true
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin ridge_mid",
+    "map_m": [
+     -510.0,
+     -47.58,
+     24.6
+    ],
+    "game": [
+     -4000,
+     2460,
+     -24542
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin ridge_west_gable",
+    "map_m": [
+     -559.0,
+     -47.58,
+     24.6
+    ],
+    "game": [
+     -8900,
+     2460,
+     -24542
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin ridge_wn_north",
+    "map_m": [
+     -553.42,
+     -32.8,
+     24.6
+    ],
+    "game": [
+     -8342,
+     2460,
+     -26020
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin ridge_pw_north",
+    "map_m": [
+     -468.0,
+     -32.9,
+     24.6
+    ],
+    "game": [
+     200,
+     2460,
+     -26010
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin balcony",
+    "map_m": [
+     -561.05,
+     -47.36,
+     9.8
+    ],
+    "game": [
+     -9105,
+     980,
+     -24564
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin polygonal_bay_top",
+    "map_m": [
+     -468.0,
+     -31.2,
+     15.0
+    ],
+    "game": [
+     200,
+     1500,
+     -26180
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin north_gutter_bay_1",
+    "map_m": [
+     -540.5,
+     -39.01,
+     14.2
+    ],
+    "game": [
+     -7050,
+     1420,
+     -25399
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin north_gutter_bay_2",
+    "map_m": [
+     -520.6,
+     -39.01,
+     14.2
+    ],
+    "game": [
+     -5060,
+     1420,
+     -25399
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin north_gutter_bay_3",
+    "map_m": [
+     -500.7,
+     -39.01,
+     14.2
+    ],
+    "game": [
+     -3070,
+     1420,
+     -25399
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin north_gutter_bay_4",
+    "map_m": [
+     -480.8,
+     -39.01,
+     14.2
+    ],
+    "game": [
+     -1080,
+     1420,
+     -25399
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin dormer_roof_1",
+    "map_m": [
+     -540.5,
+     -40.94,
+     17.66
+    ],
+    "game": [
+     -7050,
+     1766,
+     -25206
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin dormer_roof_2",
+    "map_m": [
+     -520.6,
+     -40.94,
+     17.66
+    ],
+    "game": [
+     -5060,
+     1766,
+     -25206
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin dormer_roof_3",
+    "map_m": [
+     -500.7,
+     -40.94,
+     17.66
+    ],
+    "game": [
+     -3070,
+     1766,
+     -25206
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin dormer_roof_4",
+    "map_m": [
+     -480.8,
+     -40.94,
+     17.66
+    ],
+    "game": [
+     -1080,
+     1766,
+     -25206
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin auditorium_roof",
+    "map_m": [
+     -447.0,
+     -72.0,
+     10.2
+    ],
+    "game": [
+     2300,
+     1020,
+     -22100
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin hvac_top",
+    "map_m": [
+     -454.1,
+     -68.5,
+     12.2
+    ],
+    "game": [
+     1590,
+     1220,
+     -22450
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart Weil roof stair foot",
+    "map_m": [
+     -468.4,
+     -56.1,
+     14.6
+    ],
+    "game": [
+     160,
+     1460,
+     -23690
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up Weil tower deck",
+    "map_m": [
+     -458.5,
+     -45.0,
+     26.2
+    ],
+    "game": [
+     1150,
+     2620,
+     -24800
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "engineering plaza coins",
+    "map_m": [
+     -591.0,
+     -76.0,
+     0.0
+    ],
+    "game": [
+     -12100,
+     0,
+     -21700
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba Engineering Plaza",
+    "map_m": [
+     -585.0,
+     -68.0,
+     0.0
+    ],
+    "game": [
+     -11500,
+     0,
+     -22500
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "engineering plaza coin sculpture_top",
+    "map_m": [
+     -585.97,
+     -70.69,
+     4.6
+    ],
+    "game": [
+     -11597,
+     460,
+     -22231
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": [
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    "token_act_skipped": true
+   },
+   {
+    "kind": "coin",
+    "name": "engineering plaza coin solar_kiosk_top",
+    "map_m": [
+     -570.33,
+     -51.33,
+     2.6
+    ],
+    "game": [
+     -10033,
+     260,
+     -24167
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "north lawn coins from the spawn",
+    "map_m": [
+     -405.83,
+     -211.61,
+     -0.0
+    ],
+    "game": [
+     6417,
+     0,
+     -8139
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 214.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "north lawn coins hub 0",
+    "map_m": [
+     -385.0,
+     -191.0,
+     0.0
+    ],
+    "game": [
+     8500,
+     0,
+     -10200
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "north lawn coins hub 1",
+    "map_m": [
+     -311.0,
+     -154.0,
+     -0.0
+    ],
+    "game": [
+     15900,
+     0,
+     -13900
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "north lawn coins hub 2",
+    "map_m": [
+     -268.0,
+     -212.0,
+     -0.0
+    ],
+    "game": [
+     20200,
+     0,
+     -8100
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "north lawn coins walk 0",
+    "map_m": [
+     -346.21,
+     -176.08,
+     0.0
+    ],
+    "game": [
+     12379,
+     0,
+     -11692
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 63.4,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "north lawn coins walk 1",
+    "map_m": [
+     -292.71,
+     -185.38,
+     0.0
+    ],
+    "game": [
+     17729,
+     0,
+     -10762
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 143.4,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "north lawn coins walk 2",
+    "map_m": [
+     -327.21,
+     -205.44,
+     0.0
+    ],
+    "game": [
+     14279,
+     0,
+     -8756
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 100.2,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba North Lawn 0",
+    "map_m": [
+     -356.8,
+     -184.9,
+     -0.0
+    ],
+    "game": [
+     11320,
+     0,
+     -10810
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 243.4,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba North Lawn 1",
+    "map_m": [
+     -277.05,
+     -196.7,
+     -0.0
+    ],
+    "game": [
+     19295,
+     0,
+     -9630
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 323.4,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba North Lawn 2",
+    "map_m": [
+     -291.25,
+     -211.75,
+     -0.0
+    ],
+    "game": [
+     17875,
+     0,
+     -8125
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 280.2,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "UF Bookstore & Welcome Center canopy coin",
+    "map_m": [
+     -409.49,
+     -353.92,
+     3.6
+    ],
+    "game": [
+     6051,
+     360,
+     6092
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": [
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    "token_act_skipped": true
+   },
+   {
+    "kind": "coin_ring",
+    "name": "UF Bookstore & Welcome Center roof coins",
+    "map_m": [
+     -441.06,
+     -385.09,
+     12.0
+    ],
+    "game": [
+     2894,
+     1200,
+     9209
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "Weil Cooling Towers canopy coin",
+    "map_m": [
+     -498.72,
+     -149.88,
+     3.6
+    ],
+    "game": [
+     -2872,
+     360,
+     -14312
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "Weil Cooling Towers roof coins",
+    "map_m": [
+     -506.67,
+     -136.49,
+     10.0
+    ],
+    "game": [
+     -3667,
+     1000,
+     -15651
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "gator corner patio coins",
+    "map_m": [
+     -641.0,
+     -123.0,
+     0.0
+    ],
+    "game": [
+     -17100,
+     0,
+     -17000
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.0",
+    "map_m": [
+     -572.76,
+     -363.29,
+     0.6
+    ],
+    "game": [
+     -10276,
+     60,
+     7029
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.1",
+    "map_m": [
+     -567.09,
+     -359.93,
+     0.6
+    ],
+    "game": [
+     -9709,
+     60,
+     6693
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.2",
+    "map_m": [
+     -561.41,
+     -356.57,
+     0.6
+    ],
+    "game": [
+     -9141,
+     60,
+     6357
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.3",
+    "map_m": [
+     -555.74,
+     -353.2,
+     0.6
+    ],
+    "game": [
+     -8574,
+     60,
+     6020
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.4",
+    "map_m": [
+     -550.06,
+     -349.84,
+     0.6
+    ],
+    "game": [
+     -8006,
+     60,
+     5684
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.5",
+    "map_m": [
+     -544.39,
+     -346.48,
+     0.6
+    ],
+    "game": [
+     -7439,
+     60,
+     5348
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.6",
+    "map_m": [
+     -538.71,
+     -343.12,
+     0.6
+    ],
+    "game": [
+     -6871,
+     60,
+     5012
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.7",
+    "map_m": [
+     -533.04,
+     -339.75,
+     0.6
+    ],
+    "game": [
+     -6304,
+     60,
+     4676
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.8",
+    "map_m": [
+     -527.36,
+     -336.39,
+     1.05
+    ],
+    "game": [
+     -5736,
+     105,
+     4339
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.9",
+    "map_m": [
+     -521.69,
+     -333.03,
+     1.05
+    ],
+    "game": [
+     -5169,
+     105,
+     4003
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba ravine woods 0",
+    "map_m": [
+     -575.0,
+     -345.0,
+     0.0
+    ],
+    "game": [
+     -10500,
+     0,
+     5200
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 45.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba ravine woods 1",
+    "map_m": [
+     -610.0,
+     -395.0,
+     0.0
+    ],
+    "game": [
+     -14000,
+     0,
+     10200
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "bobomb",
+    "name": "bobomb Reitz ballroom roof",
+    "map_m": [
+     -492.0,
+     -261.0,
+     13.2
+    ],
+    "game": [
+     -2200,
+     1320,
+     -3200
+    ],
+    "behavior": "bhvBobomb",
+    "model": "MODEL_BLACK_BOBOMB",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "bobomb",
+    "name": "bobomb Reitz tower roof",
+    "map_m": [
+     -436.0,
+     -256.0,
+     26.4
+    ],
+    "game": [
+     3400,
+     2640,
+     -3700
+    ],
+    "behavior": "bhvBobomb",
+    "model": "MODEL_BLACK_BOBOMB",
+    "bparams": "0x00000000",
+    "facing_deg": 270.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "shell",
+    "name": "shell North Lawn (spawn)",
+    "map_m": [
+     -393.03,
+     -203.36,
+     -0.0
+    ],
+    "game": [
+     7697,
+     0,
+     -8964
+    ],
+    "behavior": "bhvKoopaShell",
+    "model": "MODEL_KOOPA_SHELL",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "shell",
+    "name": "shell Engineering Plaza",
+    "map_m": [
+     -598.0,
+     -82.0,
+     -0.0
+    ],
+    "game": [
+     -12800,
+     0,
+     -21100
+    ],
+    "behavior": "bhvKoopaShell",
+    "model": "MODEL_KOOPA_SHELL",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "shell",
+    "name": "shell Reitz Union Drive loop",
+    "map_m": [
+     -536.0,
+     -312.0,
+     -0.0
+    ],
+    "game": [
+     -6600,
+     0,
+     1900
+    ],
+    "behavior": "bhvKoopaShell",
+    "model": "MODEL_KOOPA_SHELL",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins spawn -> liberty_pond_fountain 1",
+    "map_m": [
+     -390.84,
+     -233.95,
+     0.0
+    ],
+    "game": [
+     7916,
+     0,
+     -5905
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 168.1,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins bookstore_awning -> malachowsky_glass_stair 2",
+    "map_m": [
+     -419.37,
+     -431.88,
+     -0.0
+    ],
+    "game": [
+     5063,
+     0,
+     13888
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 187.2,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins bookstore_awning -> malachowsky_glass_stair 3",
+    "map_m": [
+     -424.31,
+     -470.87,
+     0.0
+    ],
+    "game": [
+     4569,
+     0,
+     17787
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 187.2,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins malachowsky_glass_stair -> ravine_boardwalk 1",
+    "map_m": [
+     -451.97,
+     -480.46,
+     -0.0
+    ],
+    "game": [
+     1803,
+     0,
+     18746
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 322.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins malachowsky_glass_stair -> ravine_boardwalk 2",
+    "map_m": [
+     -474.68,
+     -451.07,
+     0.0
+    ],
+    "game": [
+     -468,
+     0,
+     15807
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 322.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins malachowsky_glass_stair -> ravine_boardwalk 4",
+    "map_m": [
+     -520.11,
+     -392.29,
+     -0.0
+    ],
+    "game": [
+     -5011,
+     0,
+     9929
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 322.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins ravine_boardwalk -> cooling_tower_catwalk 1",
+    "map_m": [
+     -536.8,
+     -327.16,
+     -0.0
+    ],
+    "game": [
+     -6680,
+     0,
+     3416
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 9.6,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins ravine_boardwalk -> cooling_tower_catwalk 2",
+    "map_m": [
+     -530.78,
+     -291.43,
+     -0.0
+    ],
+    "game": [
+     -6078,
+     0,
+     -157
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 9.6,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins ravine_boardwalk -> cooling_tower_catwalk 3",
+    "map_m": [
+     -524.75,
+     -255.69,
+     -0.0
+    ],
+    "game": [
+     -5475,
+     0,
+     -3731
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 9.6,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins ravine_boardwalk -> cooling_tower_catwalk 4",
+    "map_m": [
+     -518.72,
+     -219.96,
+     -0.0
+    ],
+    "game": [
+     -4872,
+     0,
+     -7304
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 9.6,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins ravine_boardwalk -> cooling_tower_catwalk 5",
+    "map_m": [
+     -512.7,
+     -184.22,
+     0.0
+    ],
+    "game": [
+     -4270,
+     0,
+     -10878
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 9.6,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins cooling_tower_catwalk -> weil_roof_ridge 1",
+    "map_m": [
+     -492.03,
+     -114.85,
+     -0.0
+    ],
+    "game": [
+     -2203,
+     0,
+     -17815
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 23.5,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins cooling_tower_catwalk -> weil_roof_ridge 2",
+    "map_m": [
+     -477.39,
+     -81.22,
+     0.0
+    ],
+    "game": [
+     -739,
+     0,
+     -21178
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 23.5,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "secret coins Reitz north colonnade (line)",
+    "map_m": [
+     -430.0,
+     -239.8,
+     4.4
+    ],
+    "game": [
+     4000,
+     440,
+     -5320
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "secret coins Malachowsky rooftop terrace",
+    "map_m": [
+     -395.0,
+     -520.9,
+     33.25
+    ],
+    "game": [
+     7500,
+     3325,
+     22790
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "pole",
+    "name": "pole window_washer_cable",
+    "map_m": [
+     -457.0,
+     -266.6,
+     17.6
+    ],
+    "game": [
+     1300,
+     1760,
+     -2640
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x005A0000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 9.0,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole north_colonnade_lamp",
+    "map_m": [
+     -461.2,
+     -237.2,
+     0.0
+    ],
+    "game": [
+     880,
+     0,
+     -5580
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00320000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 5.0,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole weil_downspout_courtyard",
+    "map_m": [
+     -454.2,
+     -57.55,
+     0.0
+    ],
+    "game": [
+     1580,
+     0,
+     -23545
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00940000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 14.8,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole weil_downspout_courtyard_low",
+    "map_m": [
+     -456.15,
+     -63.45,
+     0.0
+    ],
+    "game": [
+     1385,
+     0,
+     -22955
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x006C0000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 10.8,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole weil_downspout_north_west",
+    "map_m": [
+     -546.4,
+     -37.66,
+     0.0
+    ],
+    "game": [
+     -7640,
+     0,
+     -25534
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00940000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 14.8,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole weil_downspout_north_east",
+    "map_m": [
+     -474.9,
+     -37.66,
+     0.0
+    ],
+    "game": [
+     -490,
+     0,
+     -25534
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00940000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 14.8,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole weil_downspout_west",
+    "map_m": [
+     -560.4,
+     -58.2,
+     0.0
+    ],
+    "game": [
+     -9040,
+     0,
+     -23480
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00940000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 14.8,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole weil_downspout_west_bay",
+    "map_m": [
+     -560.45,
+     -43.25,
+     0.0
+    ],
+    "game": [
+     -9045,
+     0,
+     -24975
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00680000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 10.4,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole weil_downspout_service",
+    "map_m": [
+     -521.9,
+     -57.55,
+     0.0
+    ],
+    "game": [
+     -5190,
+     0,
+     -23545
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00940000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 14.8,
+    "hanging": false
+   }
+  ]
+ },
+ "checks": []
+}

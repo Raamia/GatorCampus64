@@ -1,0 +1,5877 @@
+{
+ "level": "wf",
+ "stage": "reitz_eng",
+ "center_m": [
+  -470,
+  -293
+ ],
+ "window_m": [
+  -770.0,
+  -593.0,
+  -170.0,
+  7.0
+ ],
+ "play_m": [
+  -740.0,
+  -563.0,
+  -200.0,
+  -23.0
+ ],
+ "extent_half_m": 324.0,
+ "collision_tris": 9626,
+ "visual_tris": 81673,
+ "collision_by_object": {
+  "Ground collision": 1781,
+  "Pond basins collision": 259,
+  "Props collision": 330,
+  "Buildings collision": 2181,
+  "Trees collision": 3450,
+  "Boundary walls": 216,
+  "Dressing collision": 214,
+  "LM malachowsky_hall collision": 204,
+  "LM reitz_union collision": 475,
+  "LM reitz_amphitheater collision": 123,
+  "LM weil_hall collision": 297,
+  "LM engineering_clock_tower collision": 20,
+  "LM engineering_plaza collision": 76
+ },
+ "visual_by_object": {
+  "Ground visual": 10201,
+  "Roads and paths visual": 5090,
+  "Pond basins visual": 263,
+  "Pond water": 157,
+  "Props visual": 350,
+  "Buildings visual": 8141,
+  "Backdrop buildings": 2305,
+  "Trees visual": 47803,
+  "Tree line": 560,
+  "Dressing visual": 2072,
+  "LM malachowsky_hall visual": 1086,
+  "LM malachowsky_hall paving": 24,
+  "LM reitz_union visual": 1663,
+  "LM reitz_amphitheater visual": 397,
+  "LM weil_hall visual": 923,
+  "LM weil_hall courtyard paving": 4,
+  "LM engineering_clock_tower visual": 210,
+  "LM engineering_plaza paving": 32,
+  "LM engineering_plaza visual": 392
+ },
+ "landmark_modules": [
+  {
+   "module": "century_tower_auditorium",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'reitz_eng' (stages: ['hub'])"
+  },
+  {
+   "module": "hub_newell",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'reitz_eng' (stages: ['hub'])"
+  },
+  {
+   "module": "lake_alice_shore",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'reitz_eng' (stages: ['lake_alice'])"
+  },
+  {
+   "module": "lake_alice_water",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'reitz_eng' (stages: ['lake_alice'])"
+  },
+  {
+   "module": "library_west_smathers_plaza",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'reitz_eng' (stages: ['hub'])"
+  },
+  {
+   "module": "marston_turlington",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'reitz_eng' (stages: ['hub'])"
+  },
+  {
+   "module": "reitz_malachowsky",
+   "ok": true,
+   "slugs": [
+    "malachowsky_hall"
+   ],
+   "parts": 3,
+   "collision_tris": 204,
+   "visual_tris": 1110,
+   "budget_collision": 300,
+   "budget_visual": 1200,
+   "per_landmark": {
+    "malachowsky_hall": {
+     "collision_tris": 204,
+     "visual_tris": 1110,
+     "budget_collision": 300,
+     "budget_visual": 1200
+    }
+   }
+  },
+  {
+   "module": "reitz_reitz_union",
+   "ok": true,
+   "slugs": [
+    "reitz_union",
+    "reitz_amphitheater"
+   ],
+   "parts": 4,
+   "collision_tris": 598,
+   "visual_tris": 2060,
+   "budget_collision": 650,
+   "budget_visual": 2300,
+   "per_landmark": {
+    "reitz_union": {
+     "collision_tris": 475,
+     "visual_tris": 1663,
+     "budget_collision": 500,
+     "budget_visual": 1800
+    },
+    "reitz_amphitheater": {
+     "collision_tris": 123,
+     "visual_tris": 397,
+     "budget_collision": 150,
+     "budget_visual": 500
+    }
+   }
+  },
+  {
+   "module": "reitz_weil_eng_clocktower",
+   "ok": true,
+   "slugs": [
+    "weil_hall",
+    "engineering_clock_tower",
+    "engineering_plaza"
+   ],
+   "parts": 8,
+   "collision_tris": 393,
+   "visual_tris": 1561,
+   "budget_collision": 360,
+   "budget_visual": 1300,
+   "per_landmark": {
+    "weil_hall": {
+     "collision_tris": 297,
+     "visual_tris": 927,
+     "budget_collision": 300,
+     "budget_visual": 1000
+    },
+    "engineering_clock_tower": {
+     "collision_tris": 20,
+     "visual_tris": 210,
+     "budget_collision": 60,
+     "budget_visual": 300
+    },
+    "engineering_plaza": {
+     "collision_tris": 76,
+     "visual_tris": 424,
+     "budget_collision": null,
+     "budget_visual": null
+    }
+   }
+  },
+  {
+   "module": "swamp_oconnell_gym",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'reitz_eng' (stages: ['swamp'])"
+  },
+  {
+   "module": "swamp_stadium",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'reitz_eng' (stages: ['swamp'])"
+  }
+ ],
+ "replaced_osm_ids": [
+  "w1094502850",
+  "w445808709",
+  "w481256532",
+  "w863211313"
+ ],
+ "replaced_ways": [
+  "w857655067",
+  "w863456040"
+ ],
+ "replaced_areas": [
+  "w435957942",
+  "w857648945",
+  "w857648949",
+  "w863211344",
+  "w863456041"
+ ],
+ "removed_points": [
+  "w150928196#250",
+  "w150928196#26",
+  "w150928196#30",
+  "w150928196#31",
+  "w150928196#381",
+  "w150928196#57"
+ ],
+ "spawn": {
+  "map_m": [
+   -398.0,
+   -200.0
+  ],
+  "game_units": [
+   7200,
+   100,
+   -9300
+  ],
+  "facing_deg": 214.0,
+  "floor_m": -2.384185791015625e-07,
+  "clearance_m": 3.0
+ },
+ "slot": "wf",
+ "level_script": "level_wf_entry",
+ "warp_nodes": [
+  {
+   "id": "0x0A",
+   "dest_level": "LEVEL_WF",
+   "dest_area": 1,
+   "dest_node": "0x0A",
+   "note": "stage entry spawn"
+  },
+  {
+   "id": "0xF0",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x22",
+   "note": "star exit -> hub outside door 2"
+  },
+  {
+   "id": "0xF1",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x32",
+   "note": "death / Exit course -> hub outside door 2"
+  }
+ ],
+ "spawn_objects": [
+  {
+   "node": "0x0A",
+   "behavior": "bhvSpinAirborneWarp",
+   "game_units": [
+    7200,
+    100,
+    -9300
+   ],
+   "facing_deg": 214.0,
+   "note": "spawn + MARIO_POS"
+  }
+ ],
+ "flow_doors": [],
+ "doors": [],
+ "lua_globals_needed": [],
+ "landmark_extras": {
+  "malachowsky_hall": {
+   "spots": {
+    "plaza_center": [
+     -452.31,
+     -507.61,
+     0.0
+    ],
+    "north_entrance": [
+     -452.32,
+     -510.01,
+     0.0
+    ],
+    "planter_top": [
+     -472.49,
+     -508.88,
+     1.0
+    ],
+    "seat_wall": [
+     -436.98,
+     -507.4,
+     0.45
+    ],
+    "canopy_tip": [
+     -466.79,
+     -508.92,
+     3.28
+    ],
+    "canopy_coin": [
+     -452.32,
+     -509.21,
+     4.3
+    ],
+    "canopy_top": [
+     -443.22,
+     -509.77,
+     4.94
+    ],
+    "recess_terrace": [
+     -418.74,
+     -513.15,
+     16.67
+    ],
+    "recess_floor": [
+     -416.1,
+     -513.37,
+     0.0
+    ],
+    "glass_box_top": [
+     -386.52,
+     -510.12,
+     30.67
+    ],
+    "roof_ne": [
+     -387.0,
+     -514.0,
+     33.0
+    ],
+    "roof_center": [
+     -432.0,
+     -540.0,
+     33.0
+    ],
+    "rooftop_terrace": [
+     -395.0,
+     -520.9,
+     33.25
+    ],
+    "lantern_top": [
+     -453.0,
+     -525.5,
+     35.33
+    ],
+    "penthouse_top": [
+     -473.75,
+     -531.5,
+     37.67
+    ],
+    "atrium_floor": [
+     -453.0,
+     -525.5,
+     0.0
+    ],
+    "atrium_entry": [
+     -452.33,
+     -518.5,
+     0.0
+    ],
+    "atrium_console": [
+     -460.0,
+     -519.5,
+     0.0
+    ],
+    "crane_start": [
+     -453.0,
+     -524.5,
+     0.0
+    ],
+    "star_ledge": [
+     -453.0,
+     -532.25,
+     28.0
+    ],
+    "server_room_dock": [
+     -468.25,
+     -526.0,
+     0.0
+    ],
+    "south_entrance": [
+     -452.86,
+     -551.5,
+     0.0
+    ],
+    "east_entrance": [
+     -383.3,
+     -535.0,
+     0.0
+    ],
+    "loading_dock": [
+     -483.6,
+     -530.05,
+     0.0
+    ],
+    "glass_box_1": [
+     -439.78,
+     -509.79,
+     7.33
+    ],
+    "glass_box_2": [
+     -434.52,
+     -509.82,
+     9.67
+    ],
+    "glass_box_3": [
+     -429.25,
+     -509.85,
+     12.0
+    ],
+    "glass_box_4": [
+     -423.99,
+     -511.35,
+     14.33
+    ],
+    "glass_box_5": [
+     -418.72,
+     -511.39,
+     16.67
+    ],
+    "glass_box_6": [
+     -413.46,
+     -511.42,
+     19.0
+    ],
+    "glass_box_7": [
+     -408.19,
+     -511.45,
+     21.33
+    ],
+    "glass_box_8": [
+     -402.91,
+     -510.02,
+     23.67
+    ],
+    "glass_box_9": [
+     -397.65,
+     -510.05,
+     26.0
+    ],
+    "glass_box_10": [
+     -392.38,
+     -510.08,
+     28.33
+    ],
+    "glass_box_11": [
+     -386.52,
+     -510.12,
+     30.67
+    ]
+   },
+   "climb_route_m": [
+    [
+     -476.49,
+     -508.86,
+     0.0
+    ],
+    [
+     -472.49,
+     -508.88,
+     1.0
+    ],
+    [
+     -466.79,
+     -508.92,
+     3.28
+    ],
+    [
+     -443.22,
+     -509.77,
+     4.94
+    ],
+    [
+     -439.78,
+     -509.79,
+     7.33
+    ],
+    [
+     -434.52,
+     -509.82,
+     9.67
+    ],
+    [
+     -429.25,
+     -509.85,
+     12.0
+    ],
+    [
+     -423.99,
+     -511.35,
+     14.33
+    ],
+    [
+     -418.72,
+     -511.39,
+     16.67
+    ],
+    [
+     -413.46,
+     -511.42,
+     19.0
+    ],
+    [
+     -408.19,
+     -511.45,
+     21.33
+    ],
+    [
+     -402.91,
+     -510.02,
+     23.67
+    ],
+    [
+     -397.65,
+     -510.05,
+     26.0
+    ],
+    [
+     -392.38,
+     -510.08,
+     28.33
+    ],
+    [
+     -386.52,
+     -510.12,
+     30.67
+    ],
+    [
+     -387.0,
+     -514.0,
+     33.0
+    ],
+    [
+     -453.0,
+     -525.5,
+     35.33
+    ],
+    [
+     -473.75,
+     -531.5,
+     37.67
+    ]
+   ],
+   "top_platform": {
+    "z_m": 37.666666666666664,
+    "center_m": [
+     -473.75,
+     -531.5
+    ],
+    "half_m": [
+     6.75,
+     15.0
+    ],
+    "note": "mechanical penthouse roof, the highest point of the stage; reached from the 35.33 m skylight lantern (3 m gap, 2.33 m rise), which is reached from the 33 m roof"
+   },
+   "markers": {
+    "atrium_box_m": {
+     "x": [
+      -466.0,
+      -440.0
+     ],
+     "y": [
+      -534.0,
+      -517.0
+     ],
+     "z": [
+      0.0,
+      32.2
+     ],
+     "note": "clear interior of the vertical commons; the generator ground (z = 0) is its floor"
+    },
+    "star_ledge_m": {
+     "x": [
+      -466.0,
+      -440.0
+     ],
+     "y": [
+      -534.0,
+      -530.5
+     ],
+     "z": 28.0,
+     "note": "L7 ledge along the atrium's south wall, underside at 27.4 m"
+    },
+    "atrium_passage_m": {
+     "x": [
+      -455.33,
+      -449.33
+     ],
+     "y": [
+      -517.0,
+      -511.25
+     ],
+     "z": [
+      0.0,
+      3.6
+     ]
+    },
+    "server_room_m": {
+     "x": [
+      -470.5,
+      -466.0
+     ],
+     "y": [
+      -530.5,
+      -521.5
+     ],
+     "z": [
+      0.0,
+      4.0
+     ]
+    },
+    "glass_stair_m": [
+     {
+      "box": 1,
+      "t0_m": [
+       -442.43,
+       -511.27,
+       7.33
+      ],
+      "t1_m": [
+       -437.16,
+       -511.3,
+       7.33
+      ],
+      "depth_m": 3.0,
+      "top_z_m": 7.33
+     },
+     {
+      "box": 2,
+      "t0_m": [
+       -437.16,
+       -511.3,
+       9.67
+      ],
+      "t1_m": [
+       -431.89,
+       -511.34,
+       9.67
+      ],
+      "depth_m": 3.0,
+      "top_z_m": 9.67
+     },
+     {
+      "box": 3,
+      "t0_m": [
+       -431.89,
+       -511.34,
+       12.0
+      ],
+      "t1_m": [
+       -426.63,
+       -511.37,
+       12.0
+      ],
+      "depth_m": 3.0,
+      "top_z_m": 12.0
+     },
+     {
+      "box": 4,
+      "t0_m": [
+       -426.63,
+       -511.37,
+       14.33
+      ],
+      "t1_m": [
+       -421.36,
+       -511.4,
+       14.33
+      ],
+      "depth_m": 5.94,
+      "top_z_m": 14.33
+     },
+     {
+      "box": 5,
+      "t0_m": [
+       -421.36,
+       -511.4,
+       16.67
+      ],
+      "t1_m": [
+       -416.09,
+       -511.43,
+       16.67
+      ],
+      "depth_m": 5.94,
+      "top_z_m": 16.67
+     },
+     {
+      "box": 6,
+      "t0_m": [
+       -416.09,
+       -511.43,
+       19.0
+      ],
+      "t1_m": [
+       -410.82,
+       -511.47,
+       19.0
+      ],
+      "depth_m": 5.94,
+      "top_z_m": 19.0
+     },
+     {
+      "box": 7,
+      "t0_m": [
+       -410.82,
+       -511.47,
+       21.33
+      ],
+      "t1_m": [
+       -405.56,
+       -511.5,
+       21.33
+      ],
+      "depth_m": 5.94,
+      "top_z_m": 21.33
+     },
+     {
+      "box": 8,
+      "t0_m": [
+       -405.56,
+       -511.5,
+       23.67
+      ],
+      "t1_m": [
+       -400.29,
+       -511.53,
+       23.67
+      ],
+      "depth_m": 3.0,
+      "top_z_m": 23.67
+     },
+     {
+      "box": 9,
+      "t0_m": [
+       -400.29,
+       -511.53,
+       26.0
+      ],
+      "t1_m": [
+       -395.02,
+       -511.57,
+       26.0
+      ],
+      "depth_m": 3.0,
+      "top_z_m": 26.0
+     },
+     {
+      "box": 10,
+      "t0_m": [
+       -395.02,
+       -511.57,
+       28.33
+      ],
+      "t1_m": [
+       -389.75,
+       -511.6,
+       28.33
+      ],
+      "depth_m": 3.0,
+      "top_z_m": 28.33
+     },
+     {
+      "box": 11,
+      "t0_m": [
+       -389.75,
+       -511.6,
+       30.67
+      ],
+      "t1_m": [
+       -383.3,
+       -511.64,
+       30.67
+      ],
+      "depth_m": 3.0,
+      "top_z_m": 30.67
+     }
+    ],
+    "levels_m": {
+     "ground_floor_top": 5.0,
+     "floors": [
+      5.0,
+      9.6,
+      14.2,
+      18.8,
+      23.4,
+      28.0
+     ],
+     "roof": 33.0,
+     "lantern": 35.333333333333336,
+     "penthouse": 37.666666666666664,
+     "rooftop_terrace": 33.25,
+     "canopy": [
+      3.2,
+      5.0
+     ],
+     "planter": 1.0,
+     "seat_wall": 0.45
+    },
+    "note": "map metres (x east, y north, z above grade); the building is flat-sited (real site slopes south)"
+   },
+   "height_m": 33.0
+  },
+  "reitz_union": {
+   "spots": {
+    "north_entrance": [
+     -456.15,
+     -240.6,
+     0.0
+    ],
+    "north_colonnade_top": [
+     -430.0,
+     -239.8,
+     4.4
+    ],
+    "game_room_door": [
+     -485.21,
+     -241.05,
+     0.0
+    ],
+    "stair_penthouse_top": [
+     -522.25,
+     -264.98,
+     15.6
+    ],
+    "ballroom_roof_center": [
+     -492.0,
+     -261.0,
+     13.2
+    ],
+    "podium_roof_north": [
+     -436.0,
+     -247.0,
+     17.6
+    ],
+    "podium_roof_south": [
+     -436.0,
+     -277.5,
+     17.6
+    ],
+    "window_washer_lift_bottom": [
+     -457.3,
+     -262.0,
+     17.6
+    ],
+    "window_washer_lift_top": [
+     -457.3,
+     -262.0,
+     27.0
+    ],
+    "tower_roof_center": [
+     -436.0,
+     -256.0,
+     26.4
+    ],
+    "tower_parapet_east": [
+     -416.2,
+     -255.5,
+     27.0
+    ],
+    "roof_star": [
+     -436.5,
+     -263.0,
+     28.8
+    ],
+    "green_roof_center": [
+     -380.0,
+     -266.0,
+     16.0
+    ],
+    "skylight_top": [
+     -395.0,
+     -270.0,
+     16.9
+    ],
+    "food_court_roof": [
+     -440.0,
+     -305.0,
+     11.5
+    ],
+    "food_court_center": [
+     -412.0,
+     -305.0,
+     2.0
+    ],
+    "food_court_door_inside": [
+     -376.04,
+     -287.02,
+     2.0
+    ],
+    "food_court_door_outside": [
+     -376.09,
+     -290.62,
+     2.0
+    ],
+    "food_court_counter_top": [
+     -427.0,
+     -300.0,
+     3.1
+    ],
+    "food_court_table": [
+     -413.75,
+     -303.4,
+     2.85
+    ],
+    "se_canopy_top": [
+     -404.25,
+     -301.12,
+     5.6
+    ],
+    "suggested_stage_spawn": [
+     -430.0,
+     -222.0,
+     0.0
+    ],
+    "ravine_terrace_1": [
+     -499.39,
+     -284.25,
+     1.5
+    ],
+    "ravine_terrace_2": [
+     -510.37,
+     -282.52,
+     3.0
+    ],
+    "ravine_terrace_3": [
+     -512.85,
+     -281.09,
+     4.5
+    ],
+    "awning_1": [
+     -506.1,
+     -281.27,
+     6.7
+    ],
+    "awning_2": [
+     -499.1,
+     -281.36,
+     8.9
+    ],
+    "awning_3": [
+     -492.1,
+     -281.44,
+     11.1
+    ],
+    "ballroom_roof": [
+     -490.81,
+     -278.06,
+     13.2
+    ],
+    "ballroom_ac_unit": [
+     -466.4,
+     -261.0,
+     15.4
+    ],
+    "podium_roof_west": [
+     -460.0,
+     -261.0,
+     17.6
+    ],
+    "podium_roof_east": [
+     -413.2,
+     -274.5,
+     17.6
+    ],
+    "tower_ledge_1": [
+     -415.15,
+     -270.5,
+     19.8
+    ],
+    "tower_ledge_2": [
+     -415.15,
+     -266.5,
+     21.6
+    ],
+    "tower_ledge_3": [
+     -415.15,
+     -262.5,
+     23.4
+    ],
+    "tower_ledge_4": [
+     -415.15,
+     -258.5,
+     25.2
+    ],
+    "tower_roof": [
+     -418.0,
+     -256.0,
+     26.4
+    ],
+    "penthouse_top": [
+     -436.5,
+     -263.0,
+     28.8
+    ],
+    "south_terrace": [
+     -392.0,
+     -297.5,
+     2.0
+    ],
+    "se_canopy": [
+     -402.44,
+     -298.81,
+     5.6
+    ],
+    "light_shelf_1": [
+     -403.51,
+     -298.44,
+     7.8
+    ],
+    "light_shelf_2": [
+     -399.29,
+     -293.62,
+     10.0
+    ],
+    "food_court_ac_unit": [
+     -404.75,
+     -291.85,
+     13.8
+    ],
+    "green_roof": [
+     -404.75,
+     -286.0,
+     16.0
+    ]
+   },
+   "climb_route_m": [
+    [
+     -499.39,
+     -284.25,
+     1.5
+    ],
+    [
+     -510.37,
+     -282.52,
+     3.0
+    ],
+    [
+     -512.85,
+     -281.09,
+     4.5
+    ],
+    [
+     -506.1,
+     -281.27,
+     6.7
+    ],
+    [
+     -499.1,
+     -281.36,
+     8.9
+    ],
+    [
+     -492.1,
+     -281.44,
+     11.1
+    ],
+    [
+     -490.81,
+     -278.06,
+     13.2
+    ],
+    [
+     -466.4,
+     -261.0,
+     15.4
+    ],
+    [
+     -460.0,
+     -261.0,
+     17.6
+    ],
+    [
+     -436.0,
+     -247.0,
+     17.6
+    ],
+    [
+     -413.2,
+     -274.5,
+     17.6
+    ],
+    [
+     -415.15,
+     -270.5,
+     19.8
+    ],
+    [
+     -415.15,
+     -266.5,
+     21.6
+    ],
+    [
+     -415.15,
+     -262.5,
+     23.4
+    ],
+    [
+     -415.15,
+     -258.5,
+     25.2
+    ],
+    [
+     -418.0,
+     -256.0,
+     26.4
+    ],
+    [
+     -436.5,
+     -263.0,
+     28.8
+    ]
+   ],
+   "top_platform": {
+    "z_m": 28.8,
+    "center_m": [
+     -436.5,
+     -263.0
+    ],
+    "half_m": [
+     3.5,
+     3.0
+    ],
+    "note": "elevator penthouse (7 x 6 m) on the 40 x 22 m tower roof (deck 26.4 m inside a 0.6 m parapet, top 27.0 m); act 1 roof star spot = spots['roof_star']"
+   },
+   "markers": {
+    "poles": [
+     {
+      "name": "window_washer_cable",
+      "base_m": [
+       -457.0,
+       -266.6,
+       17.6
+      ],
+      "height_m": 9.0,
+      "note": "the window-washer's cable on the tower's west face: podium (17.6) -> 26.6, hop east onto the tower roof"
+     },
+     {
+      "name": "north_colonnade_lamp",
+      "base_m": [
+       -461.2,
+       -237.2,
+       0.0
+      ],
+      "height_m": 5.0,
+      "note": "lamp post at the colonnade's west end; jump east onto the canopy (4.4)"
+     }
+    ],
+    "window_washer_lift": {
+     "bottom_m": [
+      -457.3,
+      -262.0,
+      17.6
+     ],
+     "top_m": [
+      -457.3,
+      -262.0,
+      27.0
+     ],
+     "travel_m": 9.4,
+     "platform_half_m": [
+      1.2,
+      1.6
+     ],
+     "facing_deg": 270.0,
+     "note": "design 7.2 act 1 window-washer lift (moving platform object, e.g. bhvPlatformOnTrack or a custom lift): a vertical track 1.3 m off the tower's west face (platform edge 0.1 m from it, so at the top the rider steps across onto the parapet), from the podium roof (17.6) to the parapet top (27.0); rails + davit are drawn by this module"
+    },
+    "climb_route_south_m": [
+     [
+      -392.0,
+      -297.5,
+      2.0
+     ],
+     [
+      -402.44,
+      -298.81,
+      5.6
+     ],
+     [
+      -403.51,
+      -298.44,
+      7.8
+     ],
+     [
+      -399.29,
+      -293.62,
+      10.0
+     ],
+     [
+      -401.5,
+      -291.0,
+      11.5
+     ],
+     [
+      -404.75,
+      -291.85,
+      13.8
+     ],
+     [
+      -404.75,
+      -286.0,
+      16.0
+     ],
+     [
+      -412.0,
+      -278.0,
+      17.6
+     ]
+    ],
+    "levels_m": {
+     "ballroom_roof": 13.2,
+     "stair_penthouse": 15.6,
+     "podium_roof": 17.6,
+     "e_wing_green_roof": 16.0,
+     "food_court_roof": 11.5,
+     "tower_roof": 26.4,
+     "tower_parapet": 27.0,
+     "penthouse": 28.8,
+     "food_court_floor": 2.0,
+     "food_court_ceiling": 6.6,
+     "north_colonnade": 4.4,
+     "se_canopy": 5.6
+    }
+   },
+   "height_m": 27.0
+  },
+  "reitz_amphitheater": {
+   "spots": {
+    "south_terrace_west": [
+     -404.3,
+     -309.0,
+     2.0
+    ],
+    "south_terrace_center": [
+     -392.0,
+     -297.5,
+     2.0
+    ],
+    "south_terrace_east": [
+     -366.0,
+     -292.0,
+     2.0
+    ],
+    "amphitheater_top_row": [
+     -386.6,
+     -299.71,
+     1.8
+    ],
+    "amphitheater_bottom": [
+     -381.25,
+     -311.27,
+     0.0
+    ],
+    "veterans_memorial": [
+     -383.3,
+     -309.6,
+     0.0
+    ],
+    "liberty_pond_fountain": [
+     -369.37,
+     -335.81,
+     0.3
+    ]
+   },
+   "markers": {
+    "memorial_plinths_m": [
+     [
+      -374.23,
+      -308.24,
+      0.0
+     ],
+     [
+      -377.09,
+      -308.89,
+      0.0
+     ],
+     [
+      -379.86,
+      -309.85,
+      0.0
+     ],
+     [
+      -382.52,
+      -311.09,
+      0.0
+     ],
+     [
+      -385.03,
+      -312.6,
+      0.0
+     ],
+     [
+      -387.37,
+      -314.36,
+      0.0
+     ],
+     [
+      -389.51,
+      -316.36,
+      0.0
+     ]
+    ],
+    "fountain_m": [
+     -369.37,
+     -335.81,
+     0.3
+    ],
+    "levels_m": {
+     "south_terrace": 2.0,
+     "amphitheater_bottom": 0.0,
+     "fountain_float": 0.3,
+     "pond_water": -0.3
+    }
+   },
+   "height_m": 2.0
+  },
+  "weil_hall": {
+   "spots": {
+    "tower_deck": [
+     -458.5,
+     -45.0,
+     25.6
+    ],
+    "tower_deck_north": [
+     -458.5,
+     -41.6,
+     25.6
+    ],
+    "ridge_at_tower": [
+     -462.75,
+     -47.58,
+     24.0
+    ],
+    "ridge_mid": [
+     -510.0,
+     -47.58,
+     24.0
+    ],
+    "ridge_west_gable": [
+     -559.0,
+     -47.58,
+     24.0
+    ],
+    "ridge_wn_north": [
+     -553.42,
+     -32.8,
+     24.0
+    ],
+    "ridge_pw_north": [
+     -468.0,
+     -32.9,
+     24.0
+    ],
+    "ridge_east": [
+     -444.15,
+     -48.75,
+     22.39
+    ],
+    "roof_stair_foot": [
+     -468.4,
+     -56.1,
+     13.6
+    ],
+    "roof_stair_top": [
+     -468.4,
+     -48.71,
+     24.0
+    ],
+    "south_gutter_mid": [
+     -497.0,
+     -56.15,
+     13.6
+    ],
+    "south_service_roof": [
+     -541.0,
+     -61.0,
+     13.6
+    ],
+    "addition_roof": [
+     -464.0,
+     -68.0,
+     13.6
+    ],
+    "auditorium_roof": [
+     -447.0,
+     -72.0,
+     9.6
+    ],
+    "hvac_top": [
+     -454.1,
+     -68.5,
+     11.6
+    ],
+    "east_gutter": [
+     -436.25,
+     -48.75,
+     13.6
+    ],
+    "north_gutter_bay_1": [
+     -540.5,
+     -39.01,
+     13.6
+    ],
+    "north_gutter_bay_2": [
+     -520.6,
+     -39.01,
+     13.6
+    ],
+    "north_gutter_bay_3": [
+     -500.7,
+     -39.01,
+     13.6
+    ],
+    "north_gutter_bay_4": [
+     -480.8,
+     -39.01,
+     13.6
+    ],
+    "courtyard": [
+     -445.0,
+     -60.5,
+     0.0
+    ],
+    "balcony": [
+     -561.05,
+     -47.36,
+     9.2
+    ],
+    "main_stoop": [
+     -458.5,
+     -39.3,
+     1.8
+    ],
+    "main_entrance_recess": [
+     -458.5,
+     -41.1,
+     1.8
+    ],
+    "server_closet": [
+     -495.81,
+     -38.76,
+     0.0
+    ],
+    "west_entrance": [
+     -563.8,
+     -47.36,
+     0.0
+    ],
+    "polygonal_bay_top": [
+     -468.0,
+     -31.2,
+     14.4
+    ],
+    "front_steps_foot": [
+     -458.5,
+     -32.2,
+     0.0
+    ],
+    "north_lawn_front": [
+     -510.0,
+     -32.0,
+     0.0
+    ],
+    "service_court": [
+     -500.0,
+     -62.0,
+     0.0
+    ],
+    "dormer_roof_1": [
+     -540.5,
+     -40.94,
+     17.06
+    ],
+    "dormer_roof_2": [
+     -520.6,
+     -40.94,
+     17.06
+    ],
+    "dormer_roof_3": [
+     -500.7,
+     -40.94,
+     17.06
+    ],
+    "dormer_roof_4": [
+     -480.8,
+     -40.94,
+     17.06
+    ]
+   },
+   "climb_route_m": [
+    [
+     -445.0,
+     -60.5,
+     0.0
+    ],
+    [
+     -454.2,
+     -57.55,
+     13.8
+    ],
+    [
+     -463.0,
+     -62.0,
+     13.6
+    ],
+    [
+     -468.4,
+     -56.1,
+     13.6
+    ],
+    [
+     -468.4,
+     -55.01916666666666,
+     15.333333333333332
+    ],
+    [
+     -468.4,
+     -53.7575,
+     17.066666666666666
+    ],
+    [
+     -468.4,
+     -52.49583333333333,
+     18.8
+    ],
+    [
+     -468.4,
+     -51.23416666666667,
+     20.53333333333333
+    ],
+    [
+     -468.4,
+     -49.9725,
+     22.266666666666666
+    ],
+    [
+     -468.4,
+     -48.71083333333333,
+     24.0
+    ],
+    [
+     -462.75,
+     -47.58,
+     24.0
+    ],
+    [
+     -458.5,
+     -45.0,
+     25.6
+    ]
+   ],
+   "top_platform": {
+    "z_m": 25.6,
+    "center_m": [
+     -458.5,
+     -45.0
+    ],
+    "half_m": [
+     2.65,
+     4.2
+    ],
+    "note": "entrance tower deck inside a 0.8 m parapet with crenels W (to the 24 m ridge, 1.6 m up) and E (to the 22.4 m east ridge, 3.2 m up)"
+   },
+   "markers": {
+    "poles": [
+     {
+      "name": "weil_downspout_courtyard",
+      "base_m": [
+       -454.2,
+       -57.55,
+       0.0
+      ],
+      "height_m": 14.8,
+      "note": "east courtyard NW corner: handstand ~13.8 m, jump west onto the addition roof (13.6) or north over the 14.3 m parapet into the east range's south gutter"
+     },
+     {
+      "name": "weil_downspout_courtyard_low",
+      "base_m": [
+       -456.15,
+       -63.45,
+       0.0
+      ],
+      "height_m": 10.8,
+      "note": "east courtyard SW corner: onto the auditorium roof (9.6 m), then the HVAC box (11.6) and the 13.6 m addition roof"
+     },
+     {
+      "name": "weil_downspout_north_west",
+      "base_m": [
+       -546.4,
+       -37.66,
+       0.0
+      ],
+      "height_m": 14.8,
+      "note": "inside corner of the west wing and the north facade: north box gutter, bay 1"
+     },
+     {
+      "name": "weil_downspout_north_east",
+      "base_m": [
+       -474.9,
+       -37.66,
+       0.0
+      ],
+      "height_m": 14.8,
+      "note": "inside corner of the entrance wing and the north facade: north box gutter, bay 4"
+     },
+     {
+      "name": "weil_downspout_west",
+      "base_m": [
+       -560.4,
+       -58.2,
+       0.0
+      ],
+      "height_m": 14.8,
+      "note": "west facade by the plaza: onto the flat south service roof (13.6 m)"
+     },
+     {
+      "name": "weil_downspout_west_bay",
+      "base_m": [
+       -560.45,
+       -43.25,
+       0.0
+      ],
+      "height_m": 10.4,
+      "note": "north inside corner of the west entrance bay: onto the balcony (9.2 m)"
+     },
+     {
+      "name": "weil_downspout_service",
+      "base_m": [
+       -521.9,
+       -57.55,
+       0.0
+      ],
+      "height_m": 14.8,
+      "note": "service court, inside corner of the south projections and the main range: south gutter"
+     }
+    ],
+    "roof_run_m": [
+     [
+      -445.0,
+      -60.5,
+      0.0
+     ],
+     [
+      -454.2,
+      -57.55,
+      13.8
+     ],
+     [
+      -463.0,
+      -62.0,
+      13.6
+     ],
+     [
+      -468.4,
+      -56.1,
+      13.6
+     ],
+     [
+      -468.4,
+      -55.01916666666666,
+      15.333333333333332
+     ],
+     [
+      -468.4,
+      -53.7575,
+      17.066666666666666
+     ],
+     [
+      -468.4,
+      -52.49583333333333,
+      18.8
+     ],
+     [
+      -468.4,
+      -51.23416666666667,
+      20.53333333333333
+     ],
+     [
+      -468.4,
+      -49.9725,
+      22.266666666666666
+     ],
+     [
+      -468.4,
+      -48.71083333333333,
+      24.0
+     ],
+     [
+      -462.75,
+      -47.58,
+      24.0
+     ],
+     [
+      -458.5,
+      -45.0,
+      25.6
+     ]
+    ]
+   },
+   "height_m": 26.4
+  },
+  "engineering_clock_tower": {
+   "spots": {
+    "clock_tower_south": [
+     -577.75,
+     -49.59,
+     0.0
+    ],
+    "clock_tower_east": [
+     -574.54,
+     -46.29,
+     0.0
+    ],
+    "clock_tower_north": [
+     -577.75,
+     -43.09,
+     0.0
+    ],
+    "clock_tower_apex": [
+     -577.75,
+     -46.29,
+     8.0
+    ]
+   },
+   "height_m": 8.0
+  },
+  "engineering_plaza": {
+   "spots": {
+    "sculpture_top": [
+     -585.97,
+     -70.69,
+     4.0
+    ],
+    "sculpture_base": [
+     -584.71,
+     -68.89,
+     0.0
+    ],
+    "solar_kiosk_top": [
+     -570.33,
+     -51.33,
+     2.0
+    ],
+    "plaza_center": [
+     -591.0,
+     -76.0,
+     0.0
+    ],
+    "seating_table": [
+     -577.2,
+     -53.4,
+     0.76
+    ],
+    "bike_racks": [
+     -574.6,
+     -64.1,
+     0.0
+    ],
+    "courtyard_walk": [
+     -570.0,
+     -42.0,
+     0.0
+    ]
+   }
+  }
+ },
+ "pole_objects": [
+  {
+   "kind": "lamp",
+   "map_m": [
+    -452.0,
+    -222.0
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -438.0,
+    -236.0
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -468.5,
+    -233.0
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -410.0,
+    -233.0
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -378.0,
+    -235.5
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -345.0,
+    -226.0
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -305.0,
+    -214.0
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -388.0,
+    -203.0
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -330.0,
+    -168.0
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -276.0,
+    -192.0
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -470.0,
+    -499.0
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -434.0,
+    -499.0
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  }
+ ],
+ "climb_routes": {
+  "UF Bookstore & Welcome Center": {
+   "facade_mid_m": [
+    -411.0,
+    -374.6
+   ],
+   "canopy_m": [
+    -409.49,
+    -353.92,
+    3.0
+   ],
+   "ledge_tops_m": [
+    6.0,
+    9.0,
+    12.0
+   ],
+   "roof_m": 12.0,
+   "facing_deg": 91.3
+  },
+  "Weil Cooling Towers": {
+   "facade_mid_m": [
+    -500.0,
+    -136.4
+   ],
+   "canopy_m": [
+    -498.72,
+    -149.88,
+    3.0
+   ],
+   "ledge_tops_m": [
+    6.0,
+    9.0
+   ],
+   "roof_m": 10.0,
+   "facing_deg": 89.0
+  }
+ },
+ "stars": [],
+ "fog": {
+  "start_m": 200.0,
+  "end_m": 1000.0,
+  "gsSPFogFactor": [
+   31949,
+   -31725
+  ],
+  "color_srgb": [
+   200,
+   206,
+   216
+  ],
+  "far_clip_units": 32767,
+  "override_far_units": 100000,
+  "lua_far_units": 100000
+ },
+ "water_boxes": [
+  {
+   "name": "Graham Pond",
+   "stage_m": [
+    -272.0,
+    -125.46,
+    -265.65,
+    -75.2
+   ],
+   "surface_m": -0.3,
+   "clipped": true
+  },
+  {
+   "name": "Liberty Pond",
+   "stage_m": [
+    77.13,
+    -67.52,
+    124.05,
+    -17.49
+   ],
+   "surface_m": -0.3,
+   "clipped": false
+  }
+ ],
+ "pickups": {
+  "coins_placed": 254,
+  "coins_with_goombas": 262,
+  "objects": 140,
+  "by_kind": {
+   "coin": 82,
+   "heart": 4,
+   "1up": 3,
+   "goomba": 8,
+   "coin_line": 20,
+   "coin_ring": 9,
+   "bobomb": 2,
+   "shell": 3,
+   "pole": 9
+  },
+  "skipped": [],
+  "items": [
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 00",
+    "map_m": [
+     -499.39,
+     -284.25,
+     2.1
+    ],
+    "game": [
+     -2939,
+     210,
+     -875
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 01",
+    "map_m": [
+     -510.37,
+     -282.52,
+     3.6
+    ],
+    "game": [
+     -4037,
+     360,
+     -1048
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 02",
+    "map_m": [
+     -512.85,
+     -281.09,
+     5.1
+    ],
+    "game": [
+     -4285,
+     510,
+     -1191
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 03",
+    "map_m": [
+     -506.1,
+     -281.27,
+     7.3
+    ],
+    "game": [
+     -3610,
+     730,
+     -1173
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 04",
+    "map_m": [
+     -499.1,
+     -281.36,
+     9.5
+    ],
+    "game": [
+     -2910,
+     950,
+     -1164
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 05",
+    "map_m": [
+     -492.1,
+     -281.44,
+     11.7
+    ],
+    "game": [
+     -2210,
+     1170,
+     -1156
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 06",
+    "map_m": [
+     -490.81,
+     -278.06,
+     13.8
+    ],
+    "game": [
+     -2081,
+     1380,
+     -1494
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 07",
+    "map_m": [
+     -466.4,
+     -261.0,
+     16.0
+    ],
+    "game": [
+     360,
+     1600,
+     -3200
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 08",
+    "map_m": [
+     -460.0,
+     -261.0,
+     18.2
+    ],
+    "game": [
+     1000,
+     1820,
+     -3200
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 09",
+    "map_m": [
+     -436.0,
+     -247.0,
+     18.2
+    ],
+    "game": [
+     3400,
+     1820,
+     -4600
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 10",
+    "map_m": [
+     -413.2,
+     -274.5,
+     18.2
+    ],
+    "game": [
+     5680,
+     1820,
+     -1850
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 11",
+    "map_m": [
+     -415.15,
+     -270.5,
+     20.4
+    ],
+    "game": [
+     5485,
+     2040,
+     -2250
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 12",
+    "map_m": [
+     -415.15,
+     -266.5,
+     22.2
+    ],
+    "game": [
+     5485,
+     2220,
+     -2650
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 13",
+    "map_m": [
+     -415.15,
+     -262.5,
+     24.0
+    ],
+    "game": [
+     5485,
+     2400,
+     -3050
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 14",
+    "map_m": [
+     -415.15,
+     -258.5,
+     25.8
+    ],
+    "game": [
+     5485,
+     2580,
+     -3450
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz climb coin 15",
+    "map_m": [
+     -418.0,
+     -256.0,
+     27.0
+    ],
+    "game": [
+     5200,
+     2700,
+     -3700
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz south route coin 01",
+    "map_m": [
+     -402.44,
+     -298.81,
+     6.2
+    ],
+    "game": [
+     6756,
+     620,
+     581
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz south route coin 02",
+    "map_m": [
+     -403.51,
+     -298.44,
+     8.4
+    ],
+    "game": [
+     6649,
+     840,
+     544
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz south route coin 03",
+    "map_m": [
+     -399.29,
+     -293.62,
+     10.6
+    ],
+    "game": [
+     7071,
+     1060,
+     62
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz south route coin 04",
+    "map_m": [
+     -401.5,
+     -291.0,
+     12.1
+    ],
+    "game": [
+     6850,
+     1210,
+     -200
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz south route coin 05",
+    "map_m": [
+     -404.75,
+     -291.85,
+     14.4
+    ],
+    "game": [
+     6525,
+     1440,
+     -115
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz south route coin 06",
+    "map_m": [
+     -404.75,
+     -286.0,
+     16.6
+    ],
+    "game": [
+     6525,
+     1660,
+     -700
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "reitz south route coin 07",
+    "map_m": [
+     -412.0,
+     -278.0,
+     18.2
+    ],
+    "game": [
+     5800,
+     1820,
+     -1500
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart Reitz podium roof",
+    "map_m": [
+     -460.0,
+     -261.0,
+     18.6
+    ],
+    "game": [
+     1000,
+     1860,
+     -3200
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart Reitz South Terrace",
+    "map_m": [
+     -392.0,
+     -297.5,
+     3.0
+    ],
+    "game": [
+     7800,
+     300,
+     450
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up Reitz stair penthouse",
+    "map_m": [
+     -522.25,
+     -264.98,
+     16.2
+    ],
+    "game": [
+     -5225,
+     1620,
+     -2802
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba Reitz podium roof",
+    "map_m": [
+     -436.0,
+     -277.5,
+     17.6
+    ],
+    "game": [
+     3400,
+     1760,
+     -1550
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "food court coins",
+    "map_m": [
+     -412.0,
+     -305.0,
+     2.0
+    ],
+    "game": [
+     5800,
+     200,
+     1200
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "amphitheater coin south_terrace_west",
+    "map_m": [
+     -404.3,
+     -309.0,
+     2.6
+    ],
+    "game": [
+     6570,
+     260,
+     1600
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "amphitheater coin south_terrace_east",
+    "map_m": [
+     -366.0,
+     -292.0,
+     2.6
+    ],
+    "game": [
+     10400,
+     260,
+     -100
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "amphitheater coin amphitheater_top_row",
+    "map_m": [
+     -386.6,
+     -299.71,
+     2.4
+    ],
+    "game": [
+     8340,
+     240,
+     671
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "Liberty Pond fountain coin",
+    "map_m": [
+     -369.37,
+     -335.81,
+     0.9
+    ],
+    "game": [
+     10063,
+     90,
+     4281
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": [
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    "token_act_skipped": true
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 01",
+    "map_m": [
+     -472.49,
+     -508.88,
+     1.6
+    ],
+    "game": [
+     -249,
+     160,
+     21588
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 02",
+    "map_m": [
+     -466.79,
+     -508.92,
+     3.88
+    ],
+    "game": [
+     321,
+     388,
+     21592
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 03",
+    "map_m": [
+     -443.22,
+     -509.77,
+     5.54
+    ],
+    "game": [
+     2678,
+     554,
+     21677
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 04",
+    "map_m": [
+     -439.78,
+     -509.79,
+     7.93
+    ],
+    "game": [
+     3022,
+     793,
+     21679
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 05",
+    "map_m": [
+     -434.52,
+     -509.82,
+     10.27
+    ],
+    "game": [
+     3548,
+     1027,
+     21682
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 06",
+    "map_m": [
+     -429.25,
+     -509.85,
+     12.6
+    ],
+    "game": [
+     4075,
+     1260,
+     21685
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": [
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    "token_act_skipped": true
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 07",
+    "map_m": [
+     -423.99,
+     -511.35,
+     14.93
+    ],
+    "game": [
+     4601,
+     1493,
+     21835
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 08",
+    "map_m": [
+     -418.72,
+     -511.39,
+     17.27
+    ],
+    "game": [
+     5128,
+     1727,
+     21839
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 09",
+    "map_m": [
+     -413.46,
+     -511.42,
+     19.6
+    ],
+    "game": [
+     5654,
+     1960,
+     21842
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 10",
+    "map_m": [
+     -408.19,
+     -511.45,
+     21.93
+    ],
+    "game": [
+     6181,
+     2193,
+     21845
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 11",
+    "map_m": [
+     -402.91,
+     -510.02,
+     24.27
+    ],
+    "game": [
+     6709,
+     2427,
+     21702
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 12",
+    "map_m": [
+     -397.65,
+     -510.05,
+     26.6
+    ],
+    "game": [
+     7235,
+     2660,
+     21705
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 13",
+    "map_m": [
+     -392.38,
+     -510.08,
+     28.93
+    ],
+    "game": [
+     7762,
+     2893,
+     21708
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 14",
+    "map_m": [
+     -386.52,
+     -510.12,
+     31.27
+    ],
+    "game": [
+     8348,
+     3127,
+     21712
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 15",
+    "map_m": [
+     -387.0,
+     -514.0,
+     33.6
+    ],
+    "game": [
+     8300,
+     3360,
+     22100
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "malachowsky climb coin 16",
+    "map_m": [
+     -453.0,
+     -525.5,
+     35.93
+    ],
+    "game": [
+     1700,
+     3593,
+     23250
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up Malachowsky penthouse (37.7 m)",
+    "map_m": [
+     -473.75,
+     -531.5,
+     38.27
+    ],
+    "game": [
+     -375,
+     3827,
+     23850
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart Malachowsky recess terrace",
+    "map_m": [
+     -418.74,
+     -513.15,
+     17.67
+    ],
+    "game": [
+     5126,
+     1767,
+     22015
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "malachowsky atrium coins",
+    "map_m": [
+     -453.0,
+     -525.5,
+     0.0
+    ],
+    "game": [
+     1700,
+     0,
+     23250
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "malachowsky plaza coins",
+    "map_m": [
+     -452.31,
+     -498.61,
+     -0.0
+    ],
+    "game": [
+     1769,
+     0,
+     20561
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba Malachowsky plaza",
+    "map_m": [
+     -438.31,
+     -491.61,
+     -0.0
+    ],
+    "game": [
+     3169,
+     0,
+     19861
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 180.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 02",
+    "map_m": [
+     -463.0,
+     -62.0,
+     14.2
+    ],
+    "game": [
+     700,
+     1420,
+     -23100
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 03",
+    "map_m": [
+     -468.4,
+     -56.1,
+     14.2
+    ],
+    "game": [
+     160,
+     1420,
+     -23690
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 04",
+    "map_m": [
+     -468.4,
+     -55.02,
+     15.93
+    ],
+    "game": [
+     160,
+     1593,
+     -23798
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 05",
+    "map_m": [
+     -468.4,
+     -53.76,
+     17.67
+    ],
+    "game": [
+     160,
+     1767,
+     -23924
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 06",
+    "map_m": [
+     -468.4,
+     -52.5,
+     19.4
+    ],
+    "game": [
+     160,
+     1940,
+     -24050
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 07",
+    "map_m": [
+     -468.4,
+     -51.23,
+     21.13
+    ],
+    "game": [
+     160,
+     2113,
+     -24177
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 08",
+    "map_m": [
+     -468.4,
+     -49.97,
+     22.87
+    ],
+    "game": [
+     160,
+     2287,
+     -24303
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 09",
+    "map_m": [
+     -468.4,
+     -48.71,
+     24.6
+    ],
+    "game": [
+     160,
+     2460,
+     -24429
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil roof run coin 10",
+    "map_m": [
+     -462.75,
+     -47.58,
+     24.6
+    ],
+    "game": [
+     725,
+     2460,
+     -24542
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": [
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    "token_act_skipped": true
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin ridge_mid",
+    "map_m": [
+     -510.0,
+     -47.58,
+     24.6
+    ],
+    "game": [
+     -4000,
+     2460,
+     -24542
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin ridge_west_gable",
+    "map_m": [
+     -559.0,
+     -47.58,
+     24.6
+    ],
+    "game": [
+     -8900,
+     2460,
+     -24542
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin ridge_wn_north",
+    "map_m": [
+     -553.42,
+     -32.8,
+     24.6
+    ],
+    "game": [
+     -8342,
+     2460,
+     -26020
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin ridge_pw_north",
+    "map_m": [
+     -468.0,
+     -32.9,
+     24.6
+    ],
+    "game": [
+     200,
+     2460,
+     -26010
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin balcony",
+    "map_m": [
+     -561.05,
+     -47.36,
+     9.8
+    ],
+    "game": [
+     -9105,
+     980,
+     -24564
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin polygonal_bay_top",
+    "map_m": [
+     -468.0,
+     -31.2,
+     15.0
+    ],
+    "game": [
+     200,
+     1500,
+     -26180
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin north_gutter_bay_1",
+    "map_m": [
+     -540.5,
+     -39.01,
+     14.2
+    ],
+    "game": [
+     -7050,
+     1420,
+     -25399
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin north_gutter_bay_2",
+    "map_m": [
+     -520.6,
+     -39.01,
+     14.2
+    ],
+    "game": [
+     -5060,
+     1420,
+     -25399
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin north_gutter_bay_3",
+    "map_m": [
+     -500.7,
+     -39.01,
+     14.2
+    ],
+    "game": [
+     -3070,
+     1420,
+     -25399
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin north_gutter_bay_4",
+    "map_m": [
+     -480.8,
+     -39.01,
+     14.2
+    ],
+    "game": [
+     -1080,
+     1420,
+     -25399
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin dormer_roof_1",
+    "map_m": [
+     -540.5,
+     -40.94,
+     17.66
+    ],
+    "game": [
+     -7050,
+     1766,
+     -25206
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin dormer_roof_2",
+    "map_m": [
+     -520.6,
+     -40.94,
+     17.66
+    ],
+    "game": [
+     -5060,
+     1766,
+     -25206
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin dormer_roof_3",
+    "map_m": [
+     -500.7,
+     -40.94,
+     17.66
+    ],
+    "game": [
+     -3070,
+     1766,
+     -25206
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin dormer_roof_4",
+    "map_m": [
+     -480.8,
+     -40.94,
+     17.66
+    ],
+    "game": [
+     -1080,
+     1766,
+     -25206
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin auditorium_roof",
+    "map_m": [
+     -447.0,
+     -72.0,
+     10.2
+    ],
+    "game": [
+     2300,
+     1020,
+     -22100
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "weil coin hvac_top",
+    "map_m": [
+     -454.1,
+     -68.5,
+     12.2
+    ],
+    "game": [
+     1590,
+     1220,
+     -22450
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart Weil roof stair foot",
+    "map_m": [
+     -468.4,
+     -56.1,
+     14.6
+    ],
+    "game": [
+     160,
+     1460,
+     -23690
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up Weil tower deck",
+    "map_m": [
+     -458.5,
+     -45.0,
+     26.2
+    ],
+    "game": [
+     1150,
+     2620,
+     -24800
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "engineering plaza coins",
+    "map_m": [
+     -591.0,
+     -76.0,
+     0.0
+    ],
+    "game": [
+     -12100,
+     0,
+     -21700
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba Engineering Plaza",
+    "map_m": [
+     -585.0,
+     -68.0,
+     0.0
+    ],
+    "game": [
+     -11500,
+     0,
+     -22500
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "engineering plaza coin sculpture_top",
+    "map_m": [
+     -585.97,
+     -70.69,
+     4.6
+    ],
+    "game": [
+     -11597,
+     460,
+     -22231
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": [
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    "token_act_skipped": true
+   },
+   {
+    "kind": "coin",
+    "name": "engineering plaza coin solar_kiosk_top",
+    "map_m": [
+     -570.33,
+     -51.33,
+     2.6
+    ],
+    "game": [
+     -10033,
+     260,
+     -24167
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "north lawn coins from the spawn",
+    "map_m": [
+     -405.83,
+     -211.61,
+     -0.0
+    ],
+    "game": [
+     6417,
+     0,
+     -8139
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 214.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "north lawn coins hub 0",
+    "map_m": [
+     -385.0,
+     -191.0,
+     0.0
+    ],
+    "game": [
+     8500,
+     0,
+     -10200
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "north lawn coins hub 1",
+    "map_m": [
+     -311.0,
+     -154.0,
+     -0.0
+    ],
+    "game": [
+     15900,
+     0,
+     -13900
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "north lawn coins hub 2",
+    "map_m": [
+     -268.0,
+     -212.0,
+     -0.0
+    ],
+    "game": [
+     20200,
+     0,
+     -8100
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "north lawn coins walk 0",
+    "map_m": [
+     -346.21,
+     -176.08,
+     0.0
+    ],
+    "game": [
+     12379,
+     0,
+     -11692
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 63.4,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "north lawn coins walk 1",
+    "map_m": [
+     -292.71,
+     -185.38,
+     0.0
+    ],
+    "game": [
+     17729,
+     0,
+     -10762
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 143.4,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "north lawn coins walk 2",
+    "map_m": [
+     -327.21,
+     -205.44,
+     0.0
+    ],
+    "game": [
+     14279,
+     0,
+     -8756
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 100.2,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba North Lawn 0",
+    "map_m": [
+     -356.8,
+     -184.9,
+     -0.0
+    ],
+    "game": [
+     11320,
+     0,
+     -10810
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 243.4,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba North Lawn 1",
+    "map_m": [
+     -277.05,
+     -196.7,
+     -0.0
+    ],
+    "game": [
+     19295,
+     0,
+     -9630
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 323.4,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba North Lawn 2",
+    "map_m": [
+     -291.25,
+     -211.75,
+     -0.0
+    ],
+    "game": [
+     17875,
+     0,
+     -8125
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 280.2,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "UF Bookstore & Welcome Center canopy coin",
+    "map_m": [
+     -409.49,
+     -353.92,
+     3.6
+    ],
+    "game": [
+     6051,
+     360,
+     6092
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": [
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    "token_act_skipped": true
+   },
+   {
+    "kind": "coin_ring",
+    "name": "UF Bookstore & Welcome Center roof coins",
+    "map_m": [
+     -441.06,
+     -385.09,
+     12.0
+    ],
+    "game": [
+     2894,
+     1200,
+     9209
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "Weil Cooling Towers canopy coin",
+    "map_m": [
+     -498.72,
+     -149.88,
+     3.6
+    ],
+    "game": [
+     -2872,
+     360,
+     -14312
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "Weil Cooling Towers roof coins",
+    "map_m": [
+     -506.67,
+     -136.49,
+     10.0
+    ],
+    "game": [
+     -3667,
+     1000,
+     -15651
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "gator corner patio coins",
+    "map_m": [
+     -641.0,
+     -123.0,
+     0.0
+    ],
+    "game": [
+     -17100,
+     0,
+     -17000
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.0",
+    "map_m": [
+     -572.76,
+     -363.29,
+     0.6
+    ],
+    "game": [
+     -10276,
+     60,
+     7029
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.1",
+    "map_m": [
+     -567.09,
+     -359.93,
+     0.6
+    ],
+    "game": [
+     -9709,
+     60,
+     6693
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.2",
+    "map_m": [
+     -561.41,
+     -356.57,
+     0.6
+    ],
+    "game": [
+     -9141,
+     60,
+     6357
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.3",
+    "map_m": [
+     -555.74,
+     -353.2,
+     0.6
+    ],
+    "game": [
+     -8574,
+     60,
+     6020
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.4",
+    "map_m": [
+     -550.06,
+     -349.84,
+     0.6
+    ],
+    "game": [
+     -8006,
+     60,
+     5684
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.5",
+    "map_m": [
+     -544.39,
+     -346.48,
+     0.6
+    ],
+    "game": [
+     -7439,
+     60,
+     5348
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.6",
+    "map_m": [
+     -538.71,
+     -343.12,
+     0.6
+    ],
+    "game": [
+     -6871,
+     60,
+     5012
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.7",
+    "map_m": [
+     -533.04,
+     -339.75,
+     0.6
+    ],
+    "game": [
+     -6304,
+     60,
+     4676
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.8",
+    "map_m": [
+     -527.36,
+     -336.39,
+     1.05
+    ],
+    "game": [
+     -5736,
+     105,
+     4339
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "ravine boardwalk coin 0.9",
+    "map_m": [
+     -521.69,
+     -333.03,
+     1.05
+    ],
+    "game": [
+     -5169,
+     105,
+     4003
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba ravine woods 0",
+    "map_m": [
+     -575.0,
+     -345.0,
+     0.0
+    ],
+    "game": [
+     -10500,
+     0,
+     5200
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 45.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba ravine woods 1",
+    "map_m": [
+     -610.0,
+     -395.0,
+     0.0
+    ],
+    "game": [
+     -14000,
+     0,
+     10200
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "bobomb",
+    "name": "bobomb Reitz ballroom roof",
+    "map_m": [
+     -492.0,
+     -261.0,
+     13.2
+    ],
+    "game": [
+     -2200,
+     1320,
+     -3200
+    ],
+    "behavior": "bhvBobomb",
+    "model": "MODEL_BLACK_BOBOMB",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "bobomb",
+    "name": "bobomb Reitz tower roof",
+    "map_m": [
+     -436.0,
+     -256.0,
+     26.4
+    ],
+    "game": [
+     3400,
+     2640,
+     -3700
+    ],
+    "behavior": "bhvBobomb",
+    "model": "MODEL_BLACK_BOBOMB",
+    "bparams": "0x00000000",
+    "facing_deg": 270.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "shell",
+    "name": "shell North Lawn (spawn)",
+    "map_m": [
+     -393.03,
+     -203.36,
+     -0.0
+    ],
+    "game": [
+     7697,
+     0,
+     -8964
+    ],
+    "behavior": "bhvKoopaShell",
+    "model": "MODEL_KOOPA_SHELL",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "shell",
+    "name": "shell Engineering Plaza",
+    "map_m": [
+     -598.0,
+     -82.0,
+     -0.0
+    ],
+    "game": [
+     -12800,
+     0,
+     -21100
+    ],
+    "behavior": "bhvKoopaShell",
+    "model": "MODEL_KOOPA_SHELL",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "shell",
+    "name": "shell Reitz Union Drive loop",
+    "map_m": [
+     -536.0,
+     -312.0,
+     -0.0
+    ],
+    "game": [
+     -6600,
+     0,
+     1900
+    ],
+    "behavior": "bhvKoopaShell",
+    "model": "MODEL_KOOPA_SHELL",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins spawn -> liberty_pond_fountain 1",
+    "map_m": [
+     -390.84,
+     -233.95,
+     0.0
+    ],
+    "game": [
+     7916,
+     0,
+     -5905
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 168.1,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins bookstore_awning -> malachowsky_glass_stair 2",
+    "map_m": [
+     -419.37,
+     -431.88,
+     -0.0
+    ],
+    "game": [
+     5063,
+     0,
+     13888
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 187.2,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins bookstore_awning -> malachowsky_glass_stair 3",
+    "map_m": [
+     -424.31,
+     -470.87,
+     0.0
+    ],
+    "game": [
+     4569,
+     0,
+     17787
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 187.2,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins malachowsky_glass_stair -> ravine_boardwalk 1",
+    "map_m": [
+     -451.97,
+     -480.46,
+     -0.0
+    ],
+    "game": [
+     1803,
+     0,
+     18746
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 322.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins malachowsky_glass_stair -> ravine_boardwalk 2",
+    "map_m": [
+     -474.68,
+     -451.07,
+     0.0
+    ],
+    "game": [
+     -468,
+     0,
+     15807
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 322.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins malachowsky_glass_stair -> ravine_boardwalk 4",
+    "map_m": [
+     -520.11,
+     -392.29,
+     -0.0
+    ],
+    "game": [
+     -5011,
+     0,
+     9929
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 322.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins ravine_boardwalk -> cooling_tower_catwalk 1",
+    "map_m": [
+     -536.8,
+     -327.16,
+     -0.0
+    ],
+    "game": [
+     -6680,
+     0,
+     3416
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 9.6,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins ravine_boardwalk -> cooling_tower_catwalk 2",
+    "map_m": [
+     -530.78,
+     -291.43,
+     -0.0
+    ],
+    "game": [
+     -6078,
+     0,
+     -157
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 9.6,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins ravine_boardwalk -> cooling_tower_catwalk 3",
+    "map_m": [
+     -524.75,
+     -255.69,
+     -0.0
+    ],
+    "game": [
+     -5475,
+     0,
+     -3731
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 9.6,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins ravine_boardwalk -> cooling_tower_catwalk 4",
+    "map_m": [
+     -518.72,
+     -219.96,
+     -0.0
+    ],
+    "game": [
+     -4872,
+     0,
+     -7304
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 9.6,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins ravine_boardwalk -> cooling_tower_catwalk 5",
+    "map_m": [
+     -512.7,
+     -184.22,
+     0.0
+    ],
+    "game": [
+     -4270,
+     0,
+     -10878
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 9.6,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins cooling_tower_catwalk -> weil_roof_ridge 1",
+    "map_m": [
+     -492.03,
+     -114.85,
+     -0.0
+    ],
+    "game": [
+     -2203,
+     0,
+     -17815
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 23.5,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "hunt coins cooling_tower_catwalk -> weil_roof_ridge 2",
+    "map_m": [
+     -477.39,
+     -81.22,
+     0.0
+    ],
+    "game": [
+     -739,
+     0,
+     -21178
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 23.5,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "secret coins Reitz north colonnade (line)",
+    "map_m": [
+     -430.0,
+     -239.8,
+     4.4
+    ],
+    "game": [
+     4000,
+     440,
+     -5320
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "secret coins Malachowsky rooftop terrace",
+    "map_m": [
+     -395.0,
+     -520.9,
+     33.25
+    ],
+    "game": [
+     7500,
+     3325,
+     22790
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "pole",
+    "name": "pole window_washer_cable",
+    "map_m": [
+     -457.0,
+     -266.6,
+     17.6
+    ],
+    "game": [
+     1300,
+     1760,
+     -2640
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x005A0000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 9.0,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole north_colonnade_lamp",
+    "map_m": [
+     -461.2,
+     -237.2,
+     0.0
+    ],
+    "game": [
+     880,
+     0,
+     -5580
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00320000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 5.0,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole weil_downspout_courtyard",
+    "map_m": [
+     -454.2,
+     -57.55,
+     0.0
+    ],
+    "game": [
+     1580,
+     0,
+     -23545
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00940000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 14.8,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole weil_downspout_courtyard_low",
+    "map_m": [
+     -456.15,
+     -63.45,
+     0.0
+    ],
+    "game": [
+     1385,
+     0,
+     -22955
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x006C0000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 10.8,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole weil_downspout_north_west",
+    "map_m": [
+     -546.4,
+     -37.66,
+     0.0
+    ],
+    "game": [
+     -7640,
+     0,
+     -25534
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00940000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 14.8,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole weil_downspout_north_east",
+    "map_m": [
+     -474.9,
+     -37.66,
+     0.0
+    ],
+    "game": [
+     -490,
+     0,
+     -25534
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00940000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 14.8,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole weil_downspout_west",
+    "map_m": [
+     -560.4,
+     -58.2,
+     0.0
+    ],
+    "game": [
+     -9040,
+     0,
+     -23480
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00940000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 14.8,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole weil_downspout_west_bay",
+    "map_m": [
+     -560.45,
+     -43.25,
+     0.0
+    ],
+    "game": [
+     -9045,
+     0,
+     -24975
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00680000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 10.4,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole weil_downspout_service",
+    "map_m": [
+     -521.9,
+     -57.55,
+     0.0
+    ],
+    "game": [
+     -5190,
+     0,
+     -23545
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00940000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 14.8,
+    "hanging": false
+   }
+  ]
+ },
+ "stats": {
+  "landmark_conflicts": {
+   "trees_removed": [],
+   "trees_shrunk": 3,
+   "pois_removed": [],
+   "barriers_removed": [],
+   "fountains_removed": [],
+   "buildings_overlapped": [],
+   "shadow_hiding_faces": {}
+  },
+  "buildings": [
+   {
+    "id": "r1640985/45719890",
+    "name": "Ben Hill Griffin Stadium",
+    "h": 24.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 23.0,
+    "top": 24.0,
+    "floors": 6,
+    "collision": false
+   },
+   {
+    "id": "r6325345/118208778",
+    "name": "New Physics Building",
+    "h": 13.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": true
+   },
+   {
+    "id": "w150800199",
+    "name": "Parking Garage 5",
+    "h": 13.8,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.8,
+    "top": 13.8,
+    "floors": 3,
+    "collision": false
+   },
+   {
+    "id": "w45719889",
+    "name": "Exactech Arena",
+    "h": 28.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 27.0,
+    "top": 28.0,
+    "floors": 7,
+    "collision": false
+   },
+   {
+    "id": "w150800193",
+    "name": "North Hall",
+    "h": 16.5,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 15.5,
+    "top": 16.5,
+    "floors": 5,
+    "collision": true
+   },
+   {
+    "id": "w150800194",
+    "name": "Riker Hall",
+    "h": 13.4,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.4,
+    "top": 13.4,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w150800196",
+    "name": "Tolbert Hall",
+    "h": 16.5,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 15.5,
+    "top": 16.5,
+    "floors": 5,
+    "collision": false
+   },
+   {
+    "id": "w150800200",
+    "name": "Weaver Hall",
+    "h": 13.4,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.4,
+    "top": 13.4,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w150803323",
+    "name": "East Hall",
+    "h": 16.5,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 15.5,
+    "top": 16.5,
+    "floors": 5,
+    "collision": true
+   },
+   {
+    "id": "w150803324",
+    "name": "Gator Corner Dining Center",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w150821690",
+    "name": "MAE-A",
+    "h": 25.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 24.0,
+    "top": 25.0,
+    "floors": 6,
+    "collision": false
+   },
+   {
+    "id": "w150821701",
+    "name": "UF Bookstore & Welcome Center",
+    "h": 13.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "climb_route": {
+     "facade_mid_m": [
+      -411.0,
+      -374.6
+     ],
+     "canopy_m": [
+      -409.49,
+      -353.92,
+      3.0
+     ],
+     "ledge_tops_m": [
+      6.0,
+      9.0,
+      12.0
+     ],
+     "roof_m": 12.0,
+     "facing_deg": 91.3
+    },
+    "collision": true
+   },
+   {
+    "id": "w150858524",
+    "name": "Weil Cooling Towers",
+    "h": 11.0,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 10.0,
+    "top": 11.0,
+    "floors": 2,
+    "climb_route": {
+     "facade_mid_m": [
+      -500.0,
+      -136.4
+     ],
+     "canopy_m": [
+      -498.72,
+      -149.88,
+      3.0
+     ],
+     "ledge_tops_m": [
+      6.0,
+      9.0
+     ],
+     "roof_m": 10.0,
+     "facing_deg": 89.0
+    },
+    "collision": true
+   },
+   {
+    "id": "w150859391",
+    "name": "Materials Engineering",
+    "h": 17.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w150859395",
+    "name": "MAE-B",
+    "h": 17.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w150859396",
+    "name": "Van Fleet Hall",
+    "h": 9.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 8.0,
+    "top": 9.0,
+    "floors": 2,
+    "collision": true
+   },
+   {
+    "id": "w150924766",
+    "name": "Hume East",
+    "h": 16.5,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 15.5,
+    "top": 16.5,
+    "floors": 5,
+    "collision": false
+   },
+   {
+    "id": "w150927286",
+    "name": "MAE-C",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w150927287",
+    "name": "Nuclear Sciences",
+    "h": 29.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 28.0,
+    "top": 29.0,
+    "floors": 7,
+    "collision": true
+   },
+   {
+    "id": "w150927288",
+    "name": "Rhines Hall",
+    "h": 17.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w425677204",
+    "name": "Phelps Lab",
+    "h": 9.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 8.0,
+    "top": 9.0,
+    "floors": 2,
+    "collision": true
+   },
+   {
+    "id": "w428102708",
+    "name": null,
+    "h": 4.0,
+    "style": "canopy",
+    "roof": "flat",
+    "kind": "canopy",
+    "collision": true
+   },
+   {
+    "id": "w435952120",
+    "name": "Swiming & Diving Complex",
+    "h": 13.0,
+    "style": "canopy",
+    "roof": "flat",
+    "kind": "canopy",
+    "collision": false
+   },
+   {
+    "id": "w445808710",
+    "name": "Reed Laboratory",
+    "h": 17.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w445810539",
+    "name": "Nuclear Training Reactor",
+    "h": 9.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 8.0,
+    "top": 9.0,
+    "floors": 2,
+    "collision": true
+   },
+   {
+    "id": "w481256534",
+    "name": "Weil Chilled Water Plant",
+    "h": 11.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 10.0,
+    "top": 11.0,
+    "floors": 2,
+    "collision": true
+   },
+   {
+    "id": "w481259359",
+    "name": "ROTC Rifle Range",
+    "h": 3.0,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 2.4,
+    "top": 3.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w691686238",
+    "name": "O'Connell Center Pool Plant",
+    "h": 5.0,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w858923136",
+    "name": "Wertheim Laboratory for Engineering Excellence",
+    "h": 21.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 20.0,
+    "top": 21.0,
+    "floors": 5,
+    "collision": true
+   },
+   {
+    "id": "w863211314",
+    "name": "Bookstore & Welcome Center Parking Garage",
+    "h": 10.6,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 9.6,
+    "top": 10.6,
+    "floors": 2,
+    "collision": true
+   },
+   {
+    "id": "w863211325",
+    "name": null,
+    "h": 6.0,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 5.0,
+    "top": 6.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w45719891",
+    "name": "Florida Gym",
+    "h": 14.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 13.0,
+    "top": 14.0,
+    "floors": 3,
+    "collision": false
+   },
+   {
+    "id": "w118249564",
+    "name": "McCarty Hall A",
+    "h": 17.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w150800197",
+    "name": "McCarty Hall C",
+    "h": 17.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w150800198",
+    "name": "McCarty Hall B",
+    "h": 17.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": false
+   },
+   {
+    "id": "w150821681",
+    "name": "Benton Hall",
+    "h": 13.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": false
+   },
+   {
+    "id": "w150821685",
+    "name": "McGuire Pavilion",
+    "h": 9.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 8.0,
+    "top": 9.0,
+    "floors": 2,
+    "collision": true
+   },
+   {
+    "id": "w150821689",
+    "name": "Larsen Hall",
+    "h": 17.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": false
+   },
+   {
+    "id": "w150821696",
+    "name": "Newins-Ziegler Hall",
+    "h": 13.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": true
+   },
+   {
+    "id": "w150821697",
+    "name": "Psychology Building",
+    "h": 17.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": false
+   },
+   {
+    "id": "w150821706",
+    "name": "CLAS Greenhouse",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w150821720",
+    "name": "Botany Greenhouse",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w150821724",
+    "name": "Zoology Greenhouse",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w150858520",
+    "name": "Weimer Hall",
+    "h": 13.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": true
+   },
+   {
+    "id": "w150858521",
+    "name": "Williamson Hall",
+    "h": 13.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": true
+   },
+   {
+    "id": "w150858526",
+    "name": "Microkelvin Laboratory",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w150859389",
+    "name": "McCarty Chilled Water Plant",
+    "h": 9.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 8.0,
+    "top": 9.0,
+    "floors": 2,
+    "collision": false
+   },
+   {
+    "id": "w150859390",
+    "name": "IFAS Information Technologies",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w150859394",
+    "name": "McCarty Cooling Towers",
+    "h": 6.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 5.0,
+    "top": 6.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w150859397",
+    "name": "Wildlife Ecology",
+    "h": 9.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 8.0,
+    "top": 9.0,
+    "floors": 2,
+    "collision": true
+   },
+   {
+    "id": "w150859750",
+    "name": "Carr Hall",
+    "h": 29.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 28.0,
+    "top": 29.0,
+    "floors": 7,
+    "collision": false
+   },
+   {
+    "id": "w150859752",
+    "name": "Frazier-Rogers Hall",
+    "h": 9.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 8.0,
+    "top": 9.0,
+    "floors": 2,
+    "collision": true
+   },
+   {
+    "id": "w150859753",
+    "name": "Botany Greenhouse",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w150926626",
+    "name": "Bryant Space Science Center",
+    "h": 17.0,
+    "style": "band",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": false
+   },
+   {
+    "id": "w150926630",
+    "name": "Newell Hall",
+    "h": 17.0,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 16.0,
+    "top": 16.92,
+    "floors": 4,
+    "collision": false
+   },
+   {
+    "id": "w150926632",
+    "name": "The Hub",
+    "h": 9.0,
+    "style": "glass",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 8.0,
+    "top": 9.0,
+    "floors": 2,
+    "collision": true
+   },
+   {
+    "id": "w154233082",
+    "name": "Dickinson Hall",
+    "h": 9.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 8.0,
+    "top": 9.0,
+    "floors": 2,
+    "collision": false
+   },
+   {
+    "id": "w481256536",
+    "name": "Bus Shelter McCarty Drive North",
+    "h": 3.0,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 2.4,
+    "top": 3.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w481256537",
+    "name": "Bus Shelter McCarty Drive South",
+    "h": 3.0,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 2.4,
+    "top": 3.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w481262057",
+    "name": "UF Substation #12",
+    "h": 5.0,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w481262058",
+    "name": null,
+    "h": 4.6,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.0,
+    "top": 4.6,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w481262060",
+    "name": "Field Lab, Forestry",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w858697956",
+    "name": "UF Information",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w864249478",
+    "name": "Field & Fork Pantry",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w864665705",
+    "name": null,
+    "h": 4.0,
+    "style": "canopy",
+    "roof": "flat",
+    "kind": "canopy",
+    "collision": true
+   }
+  ],
+  "props": [],
+  "dressing_reserved_trees": [
+   "w150928196#26",
+   "w150928196#30",
+   "w150928196#31",
+   "w150928196#57",
+   "w150928196#250",
+   "w150928196#381"
+  ],
+  "trees": {
+   "oak": 447,
+   "pine": 278,
+   "palm": 83,
+   "colliders": 575,
+   "climbable": 0,
+   "beyond_s16": 30,
+   "in_ground_hole": 0
+  },
+  "dressing": {
+   "lamps": [
+    [
+     -452.0,
+     -222.0
+    ],
+    [
+     -438.0,
+     -236.0
+    ],
+    [
+     -468.5,
+     -233.0
+    ],
+    [
+     -410.0,
+     -233.0
+    ],
+    [
+     -378.0,
+     -235.5
+    ],
+    [
+     -345.0,
+     -226.0
+    ],
+    [
+     -305.0,
+     -214.0
+    ],
+    [
+     -388.0,
+     -203.0
+    ],
+    [
+     -330.0,
+     -168.0
+    ],
+    [
+     -276.0,
+     -192.0
+    ],
+    [
+     -470.0,
+     -499.0
+    ],
+    [
+     -434.0,
+     -499.0
+    ]
+   ],
+   "benches": [
+    [
+     -425.0,
+     -217.5
+    ],
+    [
+     -398.0,
+     -219.0
+    ],
+    [
+     -360.0,
+     -205.0
+    ],
+    [
+     -300.0,
+     -190.0
+    ]
+   ],
+   "tables": [
+    [
+     -648.0,
+     -117.0,
+     0.76
+    ],
+    [
+     -655.0,
+     -123.0,
+     0.76
+    ],
+    [
+     -641.0,
+     -111.0,
+     0.76
+    ]
+   ],
+   "wind_vent": {
+    "map_m": [
+     -488.0,
+     -136.0
+    ],
+    "radius_m": 2.6,
+    "grate_m": 0.4
+   },
+   "charging_dock": {
+    "map_m": [
+     -343.0,
+     -352.0
+    ],
+    "pad_m": 0.25,
+    "half_m": [
+     1.5,
+     1.2
+    ]
+   },
+   "boardwalk": [
+    {
+     "from_m": [
+      -575.6,
+      -364.97
+     ],
+     "to_m": [
+      -518.85,
+      -331.35
+     ],
+     "length_m": 82.7,
+     "mid_m": [
+      -542.83,
+      -362.9,
+      0.45
+     ],
+     "deck_m": 0.45
+    }
+   ],
+   "skipped": [],
+   "fans": [
+    {
+     "map_m": [
+      -506.67,
+      -130.49
+     ],
+     "top_m": 11.4
+    },
+    {
+     "map_m": [
+      -506.67,
+      -123.49
+     ],
+     "top_m": 11.4
+    }
+   ]
+  }
+ },
+ "attribution": "Map data (c) OpenStreetMap contributors, ODbL 1.0",
+ "export_hygiene": {
+  "geometry_mode_lines_sorted": 102,
+  "trailing_ws_lines": 4,
+  "max_abs_vertex": 32416,
+  "common0_jump_link": true
+ },
+ "collision_repair": {
+  "area_1": {
+   "vertices": [
+    8081,
+    8079
+   ],
+   "welded_vertices": 2,
+   "collapsed_tris": 0,
+   "tjunction_splits": 115,
+   "triangles": [
+    9626,
+    9741
+   ]
+  }
+ },
+ "validation": {
+  "errors": [],
+  "warnings": [],
+  "collision_tris": 9741,
+  "render_tris": 81673,
+  "lua_names": [],
+  "fog_patched": [
+   48,
+   48
+  ]
+ },
+ "level_dir": "mods/sgl64/levels/wf"
+}

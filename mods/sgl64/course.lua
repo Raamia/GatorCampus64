@@ -6,8 +6,8 @@
 -- Fast64 C export with a level_<slot>_entry script; coopdx compiles it into
 -- levels/level_<slot>_entry.lvl at launch and that .lvl replaces the vanilla level.
 --   hub    castle_grounds  LEVEL_CASTLE_GROUNDS  (tools/campus/build_stage.py hub)
---   door 1 bob             LEVEL_BOB / COURSE_BOB  The Swamp (Auditorium door)
---   door 2 wf              LEVEL_WF  / COURSE_WF   Reitz Union + Engineering (The Hub door)    reserved
+--   door 1 bob             LEVEL_BOB / COURSE_BOB  The Swamp (Auditorium door)                 built
+--   door 2 wf              LEVEL_WF  / COURSE_WF   Reitz Union + Engineering (The Hub door)    built (2 stars)
 --   door 3 jrb             LEVEL_JRB / COURSE_JRB  Lake Alice (Newell Hall door)               reserved
 --   door 4 ccm             LEVEL_CCM / COURSE_CCM  Marston Science Library (Marston door)      reserved
 --   door 5 bbh             LEVEL_BBH / COURSE_BBH  Library West After Dark (Library West door) reserved
@@ -23,6 +23,9 @@
 -- so (sgl_mission.lua) and Pause > EXIT COURSE returns to the hub, so nothing can soft-lock.
 -- The Swamp: 1 Kickoff (design 7.1 act 1), 2 Stair Sprint (design act 5), 3 Chomp Chorus (design act 3,
 -- co-op); design acts 2 (Visiting Mascot), 4 (Tailgate Tokens) and 6 (Flyover!) come later as 4/5/6.
+-- Reitz & Engineering: 1 Rooftop of the Reitz (design 7.2 act 1), 2 Meal Swipe Tokens (design act 5),
+-- 3 Remote Robotics Lab (design act 2, co-op); design acts 3 (Weil Wind Tunnel), 4 (Rogue Robot Roundup)
+-- and 6 (Data Packet Relay) come later as 4/5/6.
 
 ---------------------------------------------------------------------------------------------
 -- warp nodes (area 1 everywhere)
@@ -53,7 +56,15 @@ SGL_STAGES = {
           "COMING SOON - FLYOVER!",       -- design 7.1 "Flyover!" (no mission yet)
       } },
     { door = 2, key = "reitz", slot = "wf", level = LEVEL_WF, course = COURSE_WF, stars = 2,
-      name = "REITZ & ENGINEERING", building = "THE HUB" },
+      name = "REITZ & ENGINEERING", building = "THE HUB",
+      acts = {
+          "ROOFTOP OF THE REITZ",         -- wf_reitz_missions.lua reitz_rooftop (spawns star id 0; no level-script star)
+          "MEAL SWIPE TOKENS",            -- wf_reitz_missions.lua reitz_tokens (8 tokens, shared)
+          "REMOTE ROBOTICS LAB - 2P",     -- wf_reitz_missions.lua reitz_robotics (co-op cranes, 2-4 players)
+          "COMING SOON - WIND TUNNEL",    -- design 7.2 "Weil Wind Tunnel" (no mission yet)
+          "COMING SOON - ROBOT ROUNDUP",  -- design 7.2 "Rogue Robot Roundup" (no mission yet)
+          "COMING SOON - DATA RELAY",     -- design 7.2 "Data Packet Relay" (no mission yet)
+      } },
     { door = 3, key = "alice", slot = "jrb", level = LEVEL_JRB, course = COURSE_JRB, stars = 8,
       name = "LAKE ALICE", building = "NEWELL HALL" },
     { door = 4, key = "marston", slot = "ccm", level = LEVEL_CCM, course = COURSE_CCM, stars = 5,

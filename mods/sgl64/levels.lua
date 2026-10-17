@@ -6,6 +6,8 @@
 --   levels/castle_grounds/  the hub (UF central campus), tools/campus/build_stage.py hub
 --   levels/bob/             course 1, The Swamp (Ben Hill Griffin Stadium + O'Connell Center + Gym),
 --                           tools/campus/build_stage.py swamp (missions: swamp_missions.lua)
+--   levels/wf/              course 2, Reitz Union & Engineering (Reitz Union, Weil Hall, Malachowsky Hall),
+--                           tools/campus/build_stage.py reitz_eng (missions: wf_reitz_missions.lua)
 -- coopdx compiles each folder into levels/level_<slot>_entry.lvl at launch and the .lvl replaces the
 -- vanilla level. sgl_test stays a custom (non-vanilla) test level, registered below.
 --
@@ -21,7 +23,8 @@
 --   "Exit to castle"       gLevelValues.exitCastle* -> hub Plaza spawn 0x0A
 --
 -- Test: /campus where | list | hub [me] | back [me] | test [me] | <stage> [act] [me]
---       (/campus swamp 1 = straight into The Swamp act 1, skipping the door and act select). Only the
+--       (/campus swamp 1 = straight into The Swamp act 1, /campus reitz 2 = Reitz & Engineering act 2,
+--       skipping the door and act select). Only the
 --       host (or a moderator) moves everyone; anyone else's /campus moves only themselves.
 -- Hub hint: once the character menu is out of the way, a "NEXT" panel + marker points at the door of
 --       the next stage with an unstarred playable act (and the first visit's welcome popup).
@@ -490,17 +493,45 @@ local function title_case(text)
     return ((text or ""):lower():gsub("(%a)([%w']*)", function(a, b) return a:upper() .. b end))
 end
 
+-- players online (me included)
+local function players_online()
+    local n = 0
+    for i = 0, MAX_PLAYERS - 1 do
+        local np = gNetworkPlayers[i]
+        if np ~= nil and np.connected then n = n + 1 end
+    end
+    return n
+end
+
+-- the first built, open stage (door order) with a playable act whose star is missing. Acts the players
+-- online can actually do come first: with The Swamp's co-op act 3 left and only you online, the hint
+-- points at the next stage's solo acts instead (e.g. Reitz & Engineering once 2 stars open The Hub door);
+-- with nothing solo left anywhere it falls back to the first missing act of any size.
 function sgl_next_stage()
     local stars = sgl_total_stars()
+    local online = players_online()
+    local fallback = nil
     for _, stage in ipairs(SGL_STAGES) do
         if sgl_stage_ready(stage) and stars >= stage.stars and stage.acts ~= nil then
             local flags = sgl_stage_star_flags(stage)
             for k = 1, 6 do
-                if not sgl_act_is_soon(stage, k) and (flags & (1 << (k - 1))) == 0 then return stage end
+                if not sgl_act_is_soon(stage, k) and (flags & (1 << (k - 1))) == 0 then
+                    -- sgl_mission.lua loads after this file: only looked up at runtime
+                    local def = sgl_mission_get ~= nil and sgl_mission_get(stage.level, k) or nil
+                    if def == nil or (def.minPlayers or 1) <= online then return stage end
+                    fallback = fallback or stage
+                end
             end
         end
     end
-    return nil
+    return fallback
+end
+
+-- "the University Auditorium door", "The Hub door" (no "the The Hub")
+local function door_phrase(building)
+    local name = title_case(building)
+    if name:sub(1, 4) ~= "The " then name = "the " .. name end
+    return name .. " door"
 end
 
 local function hub_hint_update()
@@ -527,8 +558,8 @@ local function hub_hint_update()
         sHubWelcomed = true
         local nxt = sgl_next_stage()
         if nxt ~= nil then
-            djui_popup_create("\\#ffd700\\University of Florida\\#dcdcdc\\\nWalk into the " .. title_case(nxt.building)
-                .. " door to enter " .. nxt.name .. "!", 2)
+            djui_popup_create("\\#ffd700\\University of Florida\\#dcdcdc\\\nWalk into " .. door_phrase(nxt.building)
+                .. " to enter " .. nxt.name .. "!", 2)
         else
             djui_popup_create("\\#ffd700\\University of Florida\\#dcdcdc\\\nWelcome back to campus!", 2)
         end
@@ -579,6 +610,7 @@ end
 SGL_MAP_CENTERS = {
     [LEVEL_CASTLE_GROUNDS] = { -45, 98 },
     [LEVEL_BOB] = { -580, 160 },      -- The Swamp (stages.json swamp window centre; data/uf/swamp_points.json map_m)
+    [LEVEL_WF] = { -470, -293 },      -- Reitz & Engineering (stages.json reitz_eng window centre; data/uf/reitz_points.json)
 }
 
 local function warp_hub()
@@ -706,4 +738,4 @@ hook_event(HOOK_MARIO_UPDATE, lives_mario_update)
 hook_event(HOOK_ON_HUD_RENDER, door_hud)
 hook_event(HOOK_UPDATE, hub_hint_update)
 hook_event(HOOK_ON_HUD_RENDER, hub_hint_hud)
-hook_chat_command("campus", "where | list | hub | back | test | swamp [act] [me] - Super Gatorlator 64 levels", on_campus_command)
+hook_chat_command("campus", "where | list | hub | back | test | swamp | reitz [act] [me] - Super Gatorlator 64 levels", on_campus_command)
