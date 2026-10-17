@@ -306,10 +306,11 @@ login (`POST /link-codes`) and the player types `/link K7Q2XF`. Same result, no 
 | DELETE | `/characters/{id}` | owner or admin | Delete, free its slot |
 | POST | `/link-codes` | user | §7.2 code |
 | POST | `/links` | `bridge` | Device-flow or code link from the bridge |
-| POST | `/events` | `bridge` | Game events (stored; future leaderboard) |
+| POST | `/events` | `bridge` | Game events (stored; `run` events feed the leaderboards, §10.2) |
 | GET | `/deploys/pending` | `bridge` | Builds waiting for the server |
 | POST | `/deploys/{id}` | `bridge` | Mark deployed / failed |
 | GET | `/status` | public | Server online, players, version (for `/tv`) |
+| GET | `/leaderboards`, `/leaderboards/{mission}` | public | Verified leaderboards (§10.2) |
 
 Postgres tables (`server/api/schema.sql` is the source of truth): `users(sub, nickname,
 email_uf)`, `characters(id, owner_sub, name, slot, state, step, spec jsonb, created, deployed_at,
@@ -317,7 +318,7 @@ evicted_at)`, `jobs(id, character_id, state, step, log, error, photos text[], ar
 attempts, created, started, finished, worker)`, `slots(n, character_id, pinned, last_played,
 assigned_at)`, `links(sub, coopdx_name, gi, via, linked_at)`, `link_codes(code, sub, expires_at,
 used_at)`, `events(id, t, payload jsonb, at)`, `deploys(id, slot, kind, character_id, job_id,
-state, error)`.
+state, error)`, `runs` and `run_pushes` (§10.2).
 
 `GET /jobs/{id}` returns `state`, `step`, `step_index` (position in `pipeline`; `store` counts as
 `preview`), `log`, `error`, `slot`, `deployed`, and presigned `previews[]` (`{name, url}` for
@@ -359,16 +360,31 @@ When a mission round ends in success with every player still in the act, the hea
 
 The host measures time itself from the mission state it already receives; a client can only shift a
 result by its network delay. The API rejects a run whose `frames` and `client_frames` differ by more
-than 2 s, or that beats the mission's floor (`par`/gold-derived minimum in the API's mission table).
+than 2 s (60 frames), or that beats the mission's floor (`par`/gold-derived minimum in the API's mission table).
+
+The mission table is `server/api/sgl_api/missions.py`, generated from the Lua sources by
+`tools/gen_api_missions.py` (a test keeps it in sync). Floors, first rule that applies: half the race's
+`gold` time; a third of `par`; a per-mission constant (`lake_bat_census`: 60 s, the fastest possible
+count); else 10 s.
 
 ### 10.2 API
 
-- `runs(id, mission, frames, client_frames, retries, players, subs text[], names text[], coop,
-  created)`. A run is **ranked** when every player in it is linked (Gator Pass, §7); others are
-  stored but shown as unverified.
-- `GET /leaderboards` (public): `{missions: [{mission, title, rows: [{rank, names, frames}]}]}`,
-  top 5 per mission, best run per player set. `GET /leaderboards/{mission}?limit=` (public, ≤ 50).
-- Each ranked run is pushed to the DeepSpace app (§10.4).
+- `runs(id, uid, mission, frames, client_frames, retries, players, gis smallint[], names text[],
+  subs text[], coop, level, act, ranked, reason, player_key, event_id, created)`. Every `run` event is
+  stored; a run is **ranked** when it is valid and every player in it is linked (Gator Pass, §7).
+  A player is linked when the most recent `links` row for their (gi, coopdx name) was made after the
+  latest `hello` event and that gi has not sent a `leave` since. Otherwise `reason` says why:
+  `unknown_mission`, `bad_fields`, `out_of_range` (frames not in 1..108000), `clock_mismatch`,
+  `below_floor`, `player_count` (players ≠ number of distinct gi/name pairs), `duplicate_player`
+  (one account twice), `unlinked`. Invalid runs never fail the bridge's request: `POST /events`
+  answers 202 with `{stored, runs: [{id, mission, ranked, reason}]}` when the batch had `run` events.
+- `GET /leaderboards` (public): `{missions: [{mission, title, rows: [{rank, names, frames, retries,
+  players, at}]}]}`, every mission in the table, top 5 per mission, best run per player set (the
+  sorted subs), ties to the earlier run. `names` are the linked nicknames (else the coopdx name).
+  `GET /leaderboards/{mission}?limit=` (public, default 10, ≤ 50; 404 for an unknown mission) adds
+  `par`, `gold` and `floor_frames`. Responses are cached for `LEADERBOARD_CACHE_SECS` (5 s; a ranked
+  run clears the cache).
+- Each ranked run is pushed to the DeepSpace app (§10.4) through the `run_pushes` outbox.
 
 ### 10.3 Bridge → game: the `leaderboard` inbox command
 
@@ -389,6 +405,23 @@ The Gator Field Board is the web display: the API calls a server-only action (`i
 authenticated with a shared HMAC secret, not a user session) for each ranked run. The public
 `submitGameRun` action no longer feeds the leaderboard: runs it receives are kept as unverified
 "offline" runs and listed separately.
+
+- **Call.** `POST <DEEPSPACE_APP_URL>/api/actions/ingestVerifiedRun`, body `{v: 1, runId (runs.uid),
+  missionId, missionTitle, frames, retries, coop, players: [{name, tag}], level, act, createdAt}`;
+  `tag` is `GP-` + 8 hex of SHA-256 of the Auth0 sub (stable, reveals nothing). Headers
+  `X-SGL-Timestamp` (Unix s), `X-SGL-Nonce` (32 hex, fresh per attempt) and `X-SGL-Signature:
+  v1=<hex HMAC-SHA256(secret, "v1:" + timestamp + ":" + nonce + ":" + body)>` over the exact body bytes.
+- **App.** Verifies in constant time (`crypto.subtle.verify`), accepts ±300 s of clock skew, refuses
+  a nonce it has seen (`ingest_nonces`), and stores the run in `verified_runs` (public read, no
+  client writes) as the app owner, idempotent by `runId`. Answers 200 `{success, data: {duplicate}}`,
+  400 bad body, 401 bad/missing/stale signature, 409 replay, 503 when `DEEPSPACE_INGEST_SECRET` is
+  unset or storage failed.
+- **Delivery.** A ranked run gets a `run_pushes` row in the transaction that stores it. The API sends
+  it after the request and sweeps due rows every `DEEPSPACE_PUSH_INTERVAL` (30 s); failures back off
+  30 s doubling to 1 h, and a row is `failed` after `DEEPSPACE_PUSH_MAX_ATTEMPTS` (20) or a 400/422.
+  Pushing is off unless `DEEPSPACE_APP_URL` and `DEEPSPACE_INGEST_SECRET` are set; rows wait meanwhile.
+- **Boards.** `getGameLeaderboard` returns the verified board (best run per player set) in `rows` and
+  the offline runs in `offlineRows`; the app's `/leaderboard` page shows the same split.
 
 ## 11. Not built
 
