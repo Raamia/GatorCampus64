@@ -119,8 +119,15 @@ end
 test("load: every mod file in coopdx order, strict globals, no duplicate registrations", function()
     local names = table.concat(Sim.ALL_FILES, " ")
     check(#Sim.ALL_FILES >= 8, "found the mod files: " .. names)
-    check(names:find("characters.lua charselect.lua course.lua levels.lua main.lua sgl_hud.lua sgl_mission.lua swamp_missions.lua", 1, true) ~= nil,
-        "strcmp load order: " .. names)
+    -- relative strcmp order of the files whose load order matters (other files may sit in between)
+    local order = { "characters.lua", "charselect.lua", "course.lua", "guests.lua", "levels.lua", "main.lua",
+        "sgl_hud.lua", "sgl_login.lua", "sgl_mission.lua", "sgl_qr.lua", "swamp_missions.lua" }
+    local last = 0
+    for _, f in ipairs(order) do
+        local at = names:find(f, 1, true)
+        check(at ~= nil and at > last, "strcmp load order: " .. f .. " in " .. names)
+        last = at or last
+    end
     local w = full_world()
     local H = w:connect("Host")      -- loading errors (undefined global at load, duplicate command) throw here
     w:step(3)
@@ -131,7 +138,7 @@ test("load: every mod file in coopdx order, strict globals, no duplicate registr
     check(H.env.gLevelValues.entryLevel == HUB and H.env.gLevelValues.exitCastleLevel == HUB
         and H.env.gLevelValues.exitCastleWarpNode == 0x0A, "entry / exit-to-castle = hub Plaza 0x0A")
     check(H.env.gServerSettings.skipIntro == 1, "intro skipped (hub replaces Peach's castle grounds)")
-    check(type(H.env._G.sglFriends) == "table" and #H.env._G.sglFriends == 10, "characters.lua exports 10 friends")
+    check(type(H.env._G.sglFriends) == "table" and #H.env._G.sglFriends == 18, "characters.lua exports 10 friends + 8 guest slots (guests.lua)")
     check(H.env._G.sglOpenCharSelect ~= nil and H.env._G.sglOnFriendSet ~= nil, "charselect.lua exports its hooks")
 end)
 
