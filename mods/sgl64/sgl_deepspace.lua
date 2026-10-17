@@ -58,6 +58,37 @@ local sLeaderboardArmed = false
 local sLeaderboardRepeat = 0
 local sLeaderboardDirection = 0
 local sLeaderboardBoard = nil
+local sLeaderboardMouseDown = 0
+local sLeaderboardMouseX = 0
+local sLeaderboardMouseY = 0
+local sLeaderboardMouseShow = 0
+local sLeaderboardMouseHover = 0
+
+-- Mouse coordinates are always in DJUI units, even when the menu is drawn at N64 resolution.
+local function leaderboard_mouse_point()
+    local resolution = djui_hud_get_resolution()
+    djui_hud_set_resolution(RESOLUTION_DJUI)
+    local djuiH = djui_hud_get_screen_height()
+    local mx, my = djui_hud_get_mouse_x(), djui_hud_get_mouse_y()
+    djui_hud_set_resolution(RESOLUTION_N64)
+    local sw, sh = djui_hud_get_screen_width(), djui_hud_get_screen_height()
+    djui_hud_set_resolution(resolution)
+    return mx * sh / djuiH, my * sh / djuiH, sw, sh
+end
+
+local function leaderboard_button_rect(sw)
+    return (sw - 72) / 2, 5, 72, 16
+end
+
+local function leaderboard_panel_rect(sw, sh)
+    local w = math.min(244, sw - 24)
+    local h = sLeaderboardMenu == "list" and 174 or 190
+    return (sw - w) / 2, (sh - h) / 2, w, h
+end
+
+local function leaderboard_hit(mx, my, x, y, w, h)
+    return mx >= x and mx < x + w and my >= y and my < y + h
+end
 
 local function leaderboard_is_paused()
     return (djui_hud_is_pause_menu_created ~= nil and djui_hud_is_pause_menu_created())
@@ -76,10 +107,12 @@ local function open_leaderboard_menu()
     sLeaderboardRepeat = 0
     sLeaderboardDirection = 0
     sLeaderboardBoard = nil
+    sLeaderboardMouseDown = djui_hud_get_mouse_buttons_down()
+    sLeaderboardMouseX, sLeaderboardMouseY = leaderboard_mouse_point()
+    sLeaderboardMouseShow = 0
+    sLeaderboardMouseHover = 0
     if leaderboard_is_paused() then
         djui_popup_create("Ready. Close all pause menus to view, or use /leaderboard in-game.", 3)
-    else
-        djui_popup_create("Campus leaderboard menu opened.", 2)
     end
 end
 
@@ -113,6 +146,54 @@ local function move_leaderboard_cursor(direction)
     if sLeaderboardCursor > #BOARD_LIST then sLeaderboardCursor = 1 end
 end
 
+local function open_selected_board()
+    sLeaderboardMenu = "board"
+    sLeaderboardBoard = load_cached_board(BOARD_LIST[sLeaderboardCursor])
+    sLeaderboardMouseHover = 0
+end
+
+-- CoopDX also maps left click to B. Consume its controller press while using the mouse.
+local function leaderboard_mouse_input()
+    local mx, my, sw, sh = leaderboard_mouse_point()
+    local down = djui_hud_get_mouse_buttons_down()
+    local clicked = (down & ~sLeaderboardMouseDown & L_MOUSE_BUTTON) ~= 0
+    local busy = down ~= 0 or sLeaderboardMouseDown ~= 0
+    sLeaderboardMouseDown = down
+    if math.abs(mx - sLeaderboardMouseX) > 0.5 or math.abs(my - sLeaderboardMouseY) > 0.5 or clicked then
+        sLeaderboardMouseShow = 90
+    end
+    sLeaderboardMouseX, sLeaderboardMouseY = mx, my
+    if sLeaderboardMouseShow <= 0 then
+        sLeaderboardMouseHover = 0
+        return busy
+    end
+    sLeaderboardMouseShow = sLeaderboardMouseShow - 1
+
+    local x, y, w, h = leaderboard_panel_rect(sw, sh)
+    local hover = 0
+    if sLeaderboardMenu == "list" then
+        for i = 1, #BOARD_LIST do
+            if leaderboard_hit(mx, my, x + 10, y + 39 + (i - 1) * 24, w - 20, 21) then
+                hover = i
+                break
+            end
+        end
+    end
+    if hover > 0 and (hover ~= sLeaderboardMouseHover or clicked) then
+        sLeaderboardCursor = hover
+    end
+    if leaderboard_hit(mx, my, x + 10, y + h - 25, w - 20, 21) then hover = -1 end
+    sLeaderboardMouseHover = hover
+    if clicked then
+        if hover == -1 then
+            if sLeaderboardMenu == "board" then sLeaderboardMenu = "list" else close_leaderboard_menu() end
+        elseif hover > 0 and sLeaderboardMenu == "list" then
+            open_selected_board()
+        end
+    end
+    return busy
+end
+
 local function eat_leaderboard_input(c)
     c.buttonPressed = 0
     c.buttonDown = 0
@@ -131,10 +212,12 @@ local function leaderboard_controller_idle(c)
 end
 
 local function leaderboard_input(c)
+    local mouseBusy = leaderboard_mouse_input()
     if not sLeaderboardArmed then
         if leaderboard_controller_idle(c) then sLeaderboardArmed = true end
         return
     end
+    if mouseBusy then return end
 
     local pressed = c.buttonPressed
     local held = c.buttonDown
@@ -163,13 +246,29 @@ local function leaderboard_input(c)
     elseif (pressed & START_BUTTON) ~= 0 then
         close_leaderboard_menu()
     elseif (pressed & A_BUTTON) ~= 0 and sLeaderboardMenu == "list" then
-        sLeaderboardMenu = "board"
-        sLeaderboardBoard = load_cached_board(BOARD_LIST[sLeaderboardCursor])
+        open_selected_board()
     end
 end
 
 local function on_leaderboard_before_mario_update(m)
-    if m.playerIndex ~= 0 or sLeaderboardMenu == nil then return end
+    if m.playerIndex ~= 0 then return end
+    if sLeaderboardMenu == nil then
+        local mx, my, sw = leaderboard_mouse_point()
+        local down = djui_hud_get_mouse_buttons_down()
+        local clicked = (down & ~sLeaderboardMouseDown & L_MOUSE_BUTTON) ~= 0
+        sLeaderboardMouseDown = down
+        local bx, by, bw, bh = leaderboard_button_rect(sw)
+        local charMenu = _G.sglCharSelectIsOpen
+        if not leaderboard_is_paused() and not (charMenu ~= nil and charMenu())
+            and not (djui_is_chatbox_open ~= nil and djui_is_chatbox_open())
+            and ((clicked and leaderboard_hit(mx, my, bx, by, bw, bh))
+                or ((m.controller.buttonDown & R_TRIG) ~= 0
+                    and (m.controller.buttonPressed & START_BUTTON) ~= 0)) then
+            open_leaderboard_menu()
+            eat_leaderboard_input(m.controller)
+        end
+        return
+    end
     if not leaderboard_is_paused() then leaderboard_input(m.controller) end
     -- Keep movement and pause from leaking through while the custom menu is open.
     if not leaderboard_is_paused() then eat_leaderboard_input(m.controller) end
@@ -185,13 +284,25 @@ local function on_leaderboard_update()
 end
 
 local function draw_leaderboard_menu()
-    if sLeaderboardMenu == nil or leaderboard_is_paused() then return end
+    if sLeaderboardMenu == nil then
+        if leaderboard_is_paused() then return end
+        local charMenu = _G.sglCharSelectIsOpen
+        if charMenu ~= nil and charMenu() then return end
+        if djui_is_chatbox_open ~= nil and djui_is_chatbox_open() then return end
+        djui_hud_set_resolution(RESOLUTION_N64)
+        djui_hud_set_font(FONT_NORMAL)
+        local sw = djui_hud_get_screen_width()
+        local x, y, w, h = leaderboard_button_rect(sw)
+        sgl_hud_rect(x, y, w, h, 7, 17, 38, 210)
+        sgl_hud_rect(x, y, w, 2, 250, 110, 30, 255)
+        sgl_hud_text_center("BOARDS", sw / 2, y + 4, 0.25, { 255, 224, 160 }, 1)
+        return
+    end
+    if leaderboard_is_paused() then return end
     djui_hud_set_resolution(RESOLUTION_N64)
     djui_hud_set_font(FONT_NORMAL)
     local sw, sh = djui_hud_get_screen_width(), djui_hud_get_screen_height()
-    local panelW = math.min(244, sw - 24)
-    local panelH = sLeaderboardMenu == "list" and 174 or 190
-    local x, y = (sw - panelW) / 2, (sh - panelH) / 2
+    local x, y, panelW, panelH = leaderboard_panel_rect(sw, sh)
 
     -- Centered, full menu sheet using the same focus and button rhythm as CoopDX's menus.
     sgl_hud_rect(0, 0, sw, sh, 0, 0, 0, 112)
@@ -213,8 +324,11 @@ local function draw_leaderboard_menu()
                 selected and { 255, 224, 160 } or { 220, 230, 244 }, 1)
         end
         sgl_hud_rect(x + 12, y + panelH - 29, panelW - 24, 1, 76, 105, 143, 230)
-        sgl_hud_text_center("D-PAD: MOVE     A: OPEN     B: CLOSE", sw / 2, y + panelH - 20,
-            0.19, { 155, 183, 216 }, 1)
+        if sLeaderboardMouseHover == -1 then
+            sgl_hud_rect(x + 10, y + panelH - 25, panelW - 20, 21, 35, 73, 116, 255)
+        end
+        sgl_hud_text_center("CLICK / A: OPEN    B: CLOSE    [CLOSE]", sw / 2, y + panelH - 20,
+            0.18, { 155, 183, 216 }, 1)
     else
         local board = sLeaderboardBoard or { label = "GLOBAL BOARD", entries = {} }
         sgl_hud_text_center(board.label, sw / 2, y + 38, 0.28, { 255, 205, 70 }, 1)
@@ -238,8 +352,16 @@ local function draw_leaderboard_menu()
             end
         end
         sgl_hud_rect(x + 12, y + panelH - 29, panelW - 24, 1, 76, 105, 143, 230)
-        sgl_hud_text_center("B: BOARDS     START: CLOSE", sw / 2, y + panelH - 20,
-            0.20, { 155, 183, 216 }, 1)
+        if sLeaderboardMouseHover == -1 then
+            sgl_hud_rect(x + 10, y + panelH - 25, panelW - 20, 21, 35, 73, 116, 255)
+        end
+        sgl_hud_text_center("[BACK TO BOARDS]    START: CLOSE", sw / 2, y + panelH - 20,
+            0.19, { 155, 183, 216 }, 1)
+    end
+
+    if sLeaderboardMouseShow > 0 then
+        sgl_hud_rect(sLeaderboardMouseX + 1, sLeaderboardMouseY + 1, 5, 8, 0, 0, 0, 255)
+        sgl_hud_rect(sLeaderboardMouseX, sLeaderboardMouseY, 4, 7, 255, 255, 255, 255)
     end
 end
 
@@ -254,7 +376,7 @@ if hook_mod_menu_button ~= nil then
 end
 
 if hook_mod_menu_text ~= nil then
-    hook_mod_menu_text("Close the Mods and Pause menus to view the centered board menu.")
+    hook_mod_menu_text("In-game: click BOARDS or press R + START. This Mods button needs Pause closed.")
 end
 
 if hook_chat_command ~= nil then
