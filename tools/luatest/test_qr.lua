@@ -2,8 +2,9 @@
 -- Known vectors:
 --   * "HELLO WORLD", version 1-M: the data + Reed-Solomon codewords published in the thonky.com QR
 --     tutorial (an independent encoder), byte for byte;
---   * the Gator Pass activate URL, version 5-M: the full 37 x 37 module matrix, checked once with an
---     independent decoder (zbarimg 0.23: renders and decodes back to the URL) and pinned here;
+--   * the Gator Pass activate URL (login.gatorcamp.us), version 4-M, and a 66-character URL, version 5-M:
+--     the full module matrices, each checked once with an independent decoder (zbarimg 0.23: renders
+--     and decodes back to the URL) and pinned here;
 --   * structure of every code: finder patterns, timing lines, a format word that is a valid BCH
 --     codeword with the requested EC level, version = (size - 17) / 4.
 -- Run: tools/luatest/run.sh   (or: lua tools/luatest/test_qr.lua)
@@ -99,9 +100,67 @@ local function structure(qr, wantEc, label)
 end
 
 ---------------------------------------------------------------------------------------------
--- 3. the activate URL at M: pinned matrix (decoded by zbarimg when it was pinned)
-local URL = "https://login.chooseyourgator.select/activate?user_code=ABCD-EFGH"
+-- 3. the activate URLs at M: pinned matrices (each rendered and decoded by zbarimg when it was pinned)
+local function matrix_check(q, golden, label)
+    local same = true
+    for y = 1, q.size do
+        local row = {}
+        for x = 1, q.size do row[x] = q.dark[y][x] and "1" or "0" end
+        if table.concat(row) ~= golden[y] then
+            same = false
+            print("    row " .. y .. " got  " .. table.concat(row) .. "\n           want " .. tostring(golden[y]))
+        end
+    end
+    check(same and #golden == q.size, label .. " matrix matches the pinned (zbarimg-decoded) one")
+end
+
+-- the Gator Pass activate URL (Auth0 custom domain login.gatorcamp.us), version 4-M (zbarimg 0.23)
+local URL = "https://login.gatorcamp.us/activate?user_code=ABCD-EFGH"
 local GOLDEN = {
+    "111111100111001010111101101111111",
+    "100000100010000111001110101000001",
+    "101110101010101000100111001011101",
+    "101110101100000100000001101011101",
+    "101110101001101111101011001011101",
+    "100000101100001000001010101000001",
+    "111111101010101010101010101111111",
+    "000000001100000010001100000000000",
+    "101111100000011001000010101111100",
+    "000101010000110010011001001101111",
+    "110010111101011111001110010010110",
+    "110001000010110100010110110011110",
+    "001000110111001110000111110111000",
+    "000000001001100100101101011001111",
+    "010011110111001110101010011010110",
+    "111100010111111100101111011101100",
+    "100111100000110101110011110110001",
+    "101111001001100011111101001101101",
+    "000010101000010110100100000110110",
+    "011111010001011010110111001111101",
+    "010100100010011000100110110011010",
+    "101100000111100111110101010001101",
+    "100110110001001001000100011001110",
+    "101101010010001010101111100000111",
+    "101000110100011001001010111111010",
+    "000000001101010001011110100010111",
+    "111111100111010111001001101010110",
+    "100000101100000001111101100011110",
+    "101110101101001110010110111111001",
+    "101110101101101100101101010011011",
+    "101110101010010110001111001101000",
+    "100000100111011100010100011011100",
+    "111111101010111111000011111101010",
+}
+local qr = env.sgl_qr_encode(URL, 2)
+check(qr ~= nil and qr.version == 4 and qr.size == 33, "activate URL (" .. #URL .. " chars) at M: version 4")
+if qr ~= nil then
+    matrix_check(qr, GOLDEN, "activate URL")
+    structure(qr, 2, "activate URL 4-M")
+end
+
+-- the earlier placeholder domain's URL: a version 5-M vector, kept as a pure encoder test
+local URL5 = "https://login.chooseyourgator.select/activate?user_code=ABCD-EFGH"
+local GOLDEN5 = {
     "1111111010010001001100101010101111111",
     "1000001000001100000011100110001000001",
     "1011101001000000011111010000101011101",
@@ -140,25 +199,16 @@ local GOLDEN = {
     "1000001001101011111111101011000010110",
     "1111111010100110010011000001001100111",
 }
-local qr = env.sgl_qr_encode(URL, 2)
-check(qr ~= nil and qr.version == 5 and qr.size == 37, "activate URL (" .. #URL .. " chars) at M: version 5")
-if qr ~= nil then
-    local same = true
-    for y = 1, qr.size do
-        local row = {}
-        for x = 1, qr.size do row[x] = qr.dark[y][x] and "1" or "0" end
-        if table.concat(row) ~= GOLDEN[y] then
-            same = false
-            print("    row " .. y .. " got  " .. table.concat(row) .. "\n           want " .. GOLDEN[y])
-        end
-    end
-    check(same, "activate URL matrix matches the pinned (zbarimg-decoded) one")
-    structure(qr, 2, "activate URL 5-M")
+local qr5 = env.sgl_qr_encode(URL5, 2)
+check(qr5 ~= nil and qr5.version == 5 and qr5.size == 37, "66-char URL at M: version 5")
+if qr5 ~= nil then
+    matrix_check(qr5, GOLDEN5, "66-char URL")
+    structure(qr5, 2, "66-char URL 5-M")
 end
 
 ---------------------------------------------------------------------------------------------
--- 4. a ~90-character verification_uri_complete fits version 5-6 at L and M
-local LONG = "https://login.chooseyourgator.select/activate?user_code=WXYZ-QRST&from=sgl64&player=SomeName1234"
+-- 4. a longer (86-character) verification_uri_complete fits version 5-6 at L and M
+local LONG = "https://login.gatorcamp.us/activate?user_code=WXYZ-QRST&from=sgl64&player=SomeName1234"
 for ecl = 1, 2 do
     local q = env.sgl_qr_encode(LONG, ecl)
     check(q ~= nil and q.version >= 5 and q.version <= 6, #LONG .. "-char URL at EC " .. ecl .. ": version 5-6 (got " .. tostring(q and q.version) .. ")")
@@ -173,7 +223,8 @@ check(huge == nil and type(err2) == "string", "too long for any version: nil + e
 
 ---------------------------------------------------------------------------------------------
 -- 5. drawing: white square incl. the quiet zone first, then black runs covering exactly the dark modules
-if qr ~= nil then
+if qr5 ~= nil then
+    local qr = qr5
     local total = env.sgl_qr_draw(qr, 10, 20, 3, 4)
     check(total == (37 + 8) * 3, "draw returns the full width incl. quiet zone")
     local bg = draws[1]
