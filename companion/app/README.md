@@ -1,6 +1,6 @@
 # Gator Field Board
 
-A DeepSpace backend for Super Gatorlator 64. The game remains native and authoritative; DeepSpace stores signed-in players' self-reported solo run results and serves mission leaderboards. The Lua mod currently saves completed runs to a local ModFS outbox. A macOS OAuth/sync bridge is still required before those local results reach DeepSpace; the game does not make network requests.
+A DeepSpace backend for Super Gatorlator 64. The game remains native and authoritative; DeepSpace stores signed-in players' self-reported solo run results and serves mission leaderboards. The Lua mod saves completed runs to a local ModFS outbox, and `companion/native-bridge/` provides a macOS OAuth/sync CLI that uploads them after the game closes. The game does not make network requests.
 
 ## Local setup
 
@@ -14,7 +14,7 @@ npx deepspace dev start
 
 The first DeepSpace CLI sign-in opens a browser and requires the account owner to accept DeepSpace's Terms of Service. No credentials belong in this repository. The scaffold uses the DeepSpace account's app namespace when the first app command registers the app. Keep the GitHub repository as the source of truth; do not run `npx deepspace push`.
 
-The local worker starts at `http://localhost:8780`. Anonymous visitors can view a squad room. Signed-in DeepSpace members can append reports to its isolated record room. Squad codes are random 12-character invite codes stored locally and are not sent to the optional service.
+The local worker starts at `http://localhost:8780`. The existing browser UI still contains an older squad-room prototype; it is separate from the native single-player game integration. Build, sign in to, and use the macOS bridge by following [`../native-bridge/README.md`](../native-bridge/README.md). Online leaderboard results are currently viewed from the terminal, not inside the game.
 
 ## Optional sponsor service
 
