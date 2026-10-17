@@ -719,6 +719,8 @@ function World:build_env(c)
     -- used by levels.lua / main.lua (integration test)
     S.camera_set_romhack_override = function() end
     S.camera_set_use_course_specific_settings = function() end
+    S.camera_config_is_mouse_look_enabled = function() return c.mouseLookEnabled ~= false end
+    S.camera_config_enable_mouse_look = function(enabled) c.mouseLookEnabled = enabled end
     local dialogN = 0
     S.smlua_text_utils_allocate_dialog = function() dialogN = dialogN + 1; return 0x100 + dialogN end
     S.smlua_text_utils_dialog_replace = function() end
