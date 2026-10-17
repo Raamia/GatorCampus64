@@ -13,44 +13,44 @@
  "background": "OCEAN_SKY",
  "kit_tris": {
   "total": {
-   "visual": 69323,
-   "collision": 8496
+   "visual": 120696,
+   "collision": 10503
   },
   "by_group": {
    "F1": {
-    "visual": 10602,
-    "collision": 1612
+    "visual": 32638,
+    "collision": 2956
    },
    "F2": {
-    "visual": 8990,
-    "collision": 1150
+    "visual": 17954,
+    "collision": 1800
    },
    "F3": {
-    "visual": 8440,
-    "collision": 1166
+    "visual": 15420,
+    "collision": 1272
    },
    "F4": {
-    "visual": 10148,
-    "collision": 1146
+    "visual": 14586,
+    "collision": 1136
    },
    "F5": {
-    "visual": 10792,
-    "collision": 690
+    "visual": 17782,
+    "collision": 840
    },
    "roof": {
-    "visual": 996,
-    "collision": 242
+    "visual": 966,
+    "collision": 234
    },
    "towers": {
-    "visual": 8756,
-    "collision": 2238
+    "visual": 9012,
+    "collision": 2021
    },
    "atrium": {
-    "visual": 1470,
-    "collision": 252
+    "visual": 2036,
+    "collision": 244
    },
    "backdrop": {
-    "visual": 9129,
+    "visual": 10302,
     "collision": 0
    }
   }
@@ -103,11 +103,11 @@
   "note": "stage entry spawn (bhvSpinAirborneWarp, MARIO_POS) in the lobby just inside the north doors, facing the atrium; the object hovers 1 m above this floor"
  },
  "pickups": {
-  "coins_placed": 169,
-  "coins_with_goombas": 173,
-  "objects": 74,
+  "coins_placed": 164,
+  "coins_with_goombas": 168,
+  "objects": 73,
   "by_kind": {
-   "coin_line": 23,
+   "coin_line": 22,
    "coin": 38,
    "coin_ring": 2,
    "heart": 4,
@@ -133,26 +133,6 @@
     "model": "MODEL_NONE",
     "bparams": "0x00000000",
     "facing_deg": 180.0,
-    "coins": 5,
-    "acts": null
-   },
-   {
-    "kind": "coin_line",
-    "name": "F2 atrium court ring (line)",
-    "map_m": [
-     -56.6,
-     -100.4,
-     0.0
-    ],
-    "game": [
-     300,
-     0,
-     150
-    ],
-    "behavior": "bhvCoinFormation",
-    "model": "MODEL_NONE",
-    "bparams": "0x00000000",
-    "facing_deg": 0.0,
     "coins": 5,
     "acts": null
    },
@@ -360,12 +340,12 @@
     "kind": "coin_line",
     "name": "F1 east study rooms",
     "map_m": [
-     -40.0,
+     -39.2,
      -104.0,
      -6.0
     ],
     "game": [
-     1960,
+     2040,
      -600,
      510
     ],
@@ -381,13 +361,13 @@
     "name": "F1 south study rooms",
     "map_m": [
      -50.0,
-     -118.0,
+     -118.8,
      -6.0
     ],
     "game": [
      960,
      -600,
-     1910
+     1990
     ],
     "behavior": "bhvCoinFormation",
     "model": "MODEL_NONE",
@@ -1601,16 +1581,16 @@
  "stats": {
   "partitions": {
    "F1": {
-    "glass": 28,
-    "solid": 7
+    "glass": 11,
+    "solid": 28
    },
    "F2": {
-    "glass": 15,
-    "solid": 7
+    "glass": 12,
+    "solid": 11
    },
    "F3": {
-    "glass": 6,
-    "solid": 5
+    "glass": 0,
+    "solid": 10
    },
    "F4": {
     "glass": 0,
@@ -1629,11 +1609,11 @@
    "F5": 0
   },
   "ceiling_lights": {
-   "F1": 114,
-   "F2": 69,
-   "F3": 82,
-   "F4": 66,
-   "F5": 38
+   "F1": 155,
+   "F2": 73,
+   "F3": 90,
+   "F4": 61,
+   "F5": 37
   },
   "exterior_wall_runs": {
    "F1": 14,
@@ -1642,18 +1622,140 @@
    "F4": 14,
    "F5": 14
   },
+  "coffers": {
+   "F2": 88,
+   "F3": 143,
+   "F4": 124,
+   "F5": 75
+  },
   "parapet_runs": {
    "F4": 4,
    "F5": 2
   },
   "backdrop": {
    "buildings": 21,
-   "trees": 89,
+   "trees": 108,
    "way_segments": 858,
    "ground_rects": 260
   },
-  "uv_splits": 325,
-  "lights": 545
+  "dressing": {
+   "F1": 60,
+   "F2": 23,
+   "F3": 19,
+   "F4": 0,
+   "F5": 4
+  },
+  "dressing_skipped": 3,
+  "collision_clean": {
+   "back_to_back_dropped": 332,
+   "doubled_dropped": 8,
+   "default_inside_nocam_kept": 0
+  },
+  "finish_swaps": 3129,
+  "uv_splits": 514,
+  "coplanar_overlap": {
+   "m2": 7.38,
+   "pairs": 155,
+   "worst": [
+    [
+     0.38,
+     [
+      "int_ms_wall",
+      "int_plastic"
+     ],
+     [
+      -47.4,
+      -88.8,
+      2.7
+     ]
+    ],
+    [
+     0.38,
+     [
+      "int_metal",
+      "int_ms_wall"
+     ],
+     [
+      -40.1,
+      -87.7,
+      -3.3
+     ]
+    ],
+    [
+     0.38,
+     [
+      "int_metal",
+      "int_ms_wall"
+     ],
+     [
+      -62.0,
+      -71.2,
+      -3.3
+     ]
+    ],
+    [
+     0.38,
+     [
+      "int_metal",
+      "int_ms_wall"
+     ],
+     [
+      -73.7,
+      -63.9,
+      -3.3
+     ]
+    ],
+    [
+     0.38,
+     [
+      "int_metal",
+      "int_ms_wall"
+     ],
+     [
+      -40.1,
+      -87.6,
+      -3.3
+     ]
+    ],
+    [
+     0.31,
+     [
+      "int_ms_wall",
+      "int_stair"
+     ],
+     [
+      -63.2,
+      -104.9,
+      5.9
+     ]
+    ],
+    [
+     0.31,
+     [
+      "int_ms_wall",
+      "int_stair"
+     ],
+     [
+      -63.2,
+      -104.9,
+      5.9
+     ]
+    ],
+    [
+     0.18,
+     [
+      "int_glass",
+      "int_plastic"
+     ],
+     [
+      -77.3,
+      -98.6,
+      -5.0
+     ]
+    ]
+   ]
+  },
+  "lights": 789
  },
  "notes": {
   "scale": "Plan (x, y) 1:1 to the registered UF floor plans (docs/marston_layout.md 3); floors 6.0 m apart in the game (real ~4.2 m, estimate): 5.4 m clear for the SM64 camera.",
@@ -1667,22 +1769,36 @@
    "Book-return chute, vent duct, chandelier ring, out-of-order elevator shaft, booking kiosks: game devices (docs/game_design.md 7.3).",
    "The F1 sorting-room door is on the room's east wall (the layout's south door would open onto the core stair's lowest flight); the Starbucks entry also opens east toward the elevator lobby.",
    "Window bands are taller than the real ribbons (sill 1.0, head 3.6 m) so the campus reads through them.",
-   "The makerspace is open to the Commons on all sides (the layout's partial glass; the Act 5 arena)."
+   "Makerspace (photo pass 2, #50-#60): black-framed glass front on the elevator lobby with a 2.4 m door gap (real: one door leaf), red brick on the Commons side with a 4.8 m opening (the layout's Act 5 arena access; real: solid), full-height light-well glazing on the west (#54 #57).",
+   "Floor-1 west Commons (the layout's Act 5 'Printer Jam' arena, an unbuilt 'coming soon' act) is furnished like the rest of the Commons, as photographed (#36 #39 #40); a future act 5 must clear or use it.",
+   "Walls between two rooms are white drywall; only the open-floor side of a glass room is glass (#38 #44). L136, L308 and the data room have painted walls (#47 #49 #77 #78) although the layout calls them glass.",
+   "Two of the four F2 exhibit cases stand in the entrance lobby (real: 2 x 2 there); the game lobby is narrower (the west core takes its west half), so two are left out.",
+   "Ceiling heights stay 5.4 m (camera), so the coffers (real 10 ft squares, kept 1:1) read flatter than in the photos and the F1 ring pendants hang 0.75 m down from a 5.4 m ceiling (real ~2.9 m).",
+   "Backdrop: the live oaks between Marston and Century Tower are placed on a jittered grid (positions inferred; the photos #99 #104 show an unbroken canopy that OSM does not map).",
+   "Fix round 5: the two F1 emergency exits (plan S2: west wall by the core, north end of the North Lab) are opaque painted-steel door pairs with push bars and EXIT ONLY placards and an EXIT sign over each (unphotographed: the usual type, inferred). The below-grade areaways they open onto are not built.",
+   "Fix round 5: two steel cabinets flank the book chute's outlet in the F1 sorting room (game device), so the low end of the chute's rails is solid from the room side.",
+   "Open door leaves (study rooms, L308, the data room) and chairs are visual only: players pass through them (the door gaps stay clear for co-op traffic). Tables, desks, carrels, counters and shelving have collision.",
+   "Porch: its open north and west sides are invisible walls (camera passes) up to the F4 slab, so nobody steps off into the plaza (the basement runs under it)."
   ],
-  "left_out_for_the_act5_arena": [
-   "commons_tables_01",
-   "commons_tables_02",
-   "commons_tables_03",
-   "commons_tables_05",
-   "commons_tables_06",
-   "commons_tables_07"
+  "sourced_now": [
+   "Starbucks' interior door from the library is real (Alligator 2015: court doors by day, interior doors after sundown and on weekends), not a gameplay invention.",
+   "The floor-1 elevator lobby has two stainless cars in a red brick wall (#69): the two-car core is confirmed for that floor.",
+   "Floor 2 accent colours are teal-blue and golden yellow (#24 #29), not UF orange; floor 3 stack ends are coral (#83 #91), floor 4's steel blue (#84-#86)."
+  ],
+  "photo_pass_2": [
+   "F1 makerspace: black-framed glass front on the north (the elevator lobby side, #39 #51 #69) with a 2.4 m door gap (real: one leaf), the neon inside the glass, brick east wall with a 4.8 m opening to the Commons, islands, pegboard, jellyfish (#50-#60)"
   ],
   "grand_stair": {
    "first_riser_y": -94.66,
    "run_m": 10.24,
    "ramp_deg": 30.0,
    "risers": 34
-  }
+  },
+  "dressing_skipped": [
+   "F1 training_table at (-67.91, -117.1) (near (-66.0, -115.4))",
+   "F1 training_table at (-65.51, -117.1) (near (-66.0, -115.4))",
+   "F3 training_table at (-75.3, -105.5) (near (-75.3, -107.8))"
+  ]
  },
  "fog": {
   "start_m": 200.0,
@@ -1700,92 +1816,92 @@
  "objects": {
   "marston F1 visual": {
    "group": "F1",
-   "tris": 5319,
+   "tris": 16674,
    "collision": false
   },
   "marston F1 collision": {
    "group": "F1",
-   "tris": 806,
+   "tris": 1545,
    "collision": true
   },
   "marston F2 visual": {
    "group": "F2",
-   "tris": 4523,
+   "tris": 9458,
    "collision": false
   },
   "marston F2 collision": {
    "group": "F2",
-   "tris": 578,
+   "tris": 925,
    "collision": true
   },
   "marston F3 visual": {
    "group": "F3",
-   "tris": 4221,
+   "tris": 8169,
    "collision": false
   },
   "marston F3 collision": {
    "group": "F3",
-   "tris": 583,
+   "tris": 652,
    "collision": true
   },
   "marston F4 visual": {
    "group": "F4",
-   "tris": 5084,
+   "tris": 7849,
    "collision": false
   },
   "marston F4 collision": {
    "group": "F4",
-   "tris": 583,
+   "tris": 578,
    "collision": true
   },
   "marston F5 visual": {
    "group": "F5",
-   "tris": 5397,
+   "tris": 9477,
    "collision": false
   },
   "marston F5 collision": {
    "group": "F5",
-   "tris": 346,
+   "tris": 421,
    "collision": true
   },
   "marston roof visual": {
    "group": "roof",
-   "tris": 500,
+   "tris": 485,
    "collision": false
   },
   "marston roof collision": {
    "group": "roof",
-   "tris": 123,
+   "tris": 119,
    "collision": true
   },
   "marston towers visual": {
    "group": "towers",
-   "tris": 4396,
+   "tris": 4524,
    "collision": false
   },
   "marston towers collision": {
    "group": "towers",
-   "tris": 1246,
+   "tris": 1120,
    "collision": true
   },
   "marston atrium visual": {
    "group": "atrium",
-   "tris": 735,
+   "tris": 1088,
    "collision": false
   },
   "marston atrium collision": {
    "group": "atrium",
-   "tris": 124,
+   "tris": 122,
    "collision": true
   },
   "marston backdrop visual": {
    "group": "backdrop",
-   "tris": 6819,
+   "tris": 7829,
    "collision": false
   }
  },
  "export_hygiene": {
-  "geometry_mode_lines_sorted": 176,
+  "geometry_mode_lines_sorted": 336,
   "trailing_ws_lines": 4,
   "max_abs_vertex": 20518,
   "common0_jump_link": true
@@ -1793,27 +1909,27 @@
  "collision_repair": {
   "area_1": {
    "vertices": [
-    6248,
-    6243
+    8119,
+    8108
    ],
-   "welded_vertices": 5,
+   "welded_vertices": 11,
    "collapsed_tris": 0,
-   "tjunction_splits": 359,
+   "tjunction_splits": 392,
    "triangles": [
-    8432,
-    8791
+    10332,
+    10724
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [],
-  "collision_tris": 8791,
-  "render_tris": 69323,
+  "collision_tris": 10724,
+  "render_tris": 120696,
   "lua_names": [],
   "fog_patched": [
-   53,
-   53
+   94,
+   94
   ]
  },
  "level_dir": "mods/sgl64/levels/ccm",

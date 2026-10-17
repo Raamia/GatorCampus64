@@ -49,3 +49,7 @@ art/levels/*/landmarks/
 
 # Before/after comparison renders from polish passes (local only)
 art/*/build/compare/
+
+# Contact sheets and photo-vs-render comparisons contain downloaded third-party photos: local only
+art/levels/*/reference_sheets/
+art/levels/*/compare/
