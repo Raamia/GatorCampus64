@@ -36,6 +36,8 @@
 #      sanity: walkable floor, columns, barriers on the doors, ladder decks, star humps, the arena, the coffee run's par),
 #      and the built levels/bbh collision once it exists, incl. a walk through every door anchor and a
 #      floor-crack scan (skipped when tools/.venv is missing)
+#  15. check_npc_ids.py: the NPCs of sgl_npc.lua match the personas in tools/npc_bridge/npcs.json
+#  16. tools/npc_bridge/test_bridge.py: the NPC chat bridge (modfs protocol, Gemini requests; offline)
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
 # Fixtures (regenerate only for a new coopdx version): coopdx_constants_v151.lua,
 # coopdx_api_v151.lua, coopdx_structs_v151.lua (gen_coopdx_*.py, see their headers).
@@ -99,4 +101,9 @@ if [ -x "$PY" ]; then
 else
     echo "== check_swamp_points / check_reitz_points / check_lake_points / check_marston_points / check_libwest_points skipped (no tools/.venv)"
 fi
+echo "== check_npc_ids"
+python3 -I "$HERE/check_npc_ids.py"
+echo "== npc_bridge tests"
+out="$(python3 -m unittest discover -s "$HERE/../npc_bridge" 2>&1)" || { echo "$out"; exit 1; }
+echo "$out" | tail -1
 echo "== all luatest checks passed"
