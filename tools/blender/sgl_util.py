@@ -9,8 +9,15 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__fi
 TEMPLATE_BLEND = os.path.join(PROJECT_ROOT, "tools", "vendor", "template", "Mario Coop Model Template.blend")
 
 
+def art_root():
+    """Directory holding the per-character art folders (<root>/<id>/character.json):
+    the repo's art/ unless SGL_ART_DIR points somewhere else (e.g. the web worker's
+    per-job temp dir; build_character.py --art-dir sets it)."""
+    return os.path.abspath(os.environ.get("SGL_ART_DIR") or os.path.join(PROJECT_ROOT, "art"))
+
+
 def art_dir(char_id):
-    return os.path.join(PROJECT_ROOT, "art", char_id)
+    return os.path.join(art_root(), char_id)
 
 
 def build_dir(char_id):
