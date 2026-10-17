@@ -20,8 +20,7 @@ STOP = set("""a an the and or but if of to in on at by for with from into onto a
 am do does did doing done have has had having i me mine im ive your youre we us our they them their it its
 this that these those there here what whats which whom whose how hows when where wheres why can could would should
 will shall may might must just so very really please tell show give get got gonna wanna want need know let lets
-some any all out up down off over again then than too also not no yes ok okay hey hi hello yo albert libby professor
-bob thanks thank one""".split())
+some any all out up down off over again then than too also not no yes ok okay hey hi hello yo thanks thank one""".split())
 # kept on purpose: numbers, "my", "who", "you", "act", "door", "star", "level", "next", "first" (they carry meaning here)
 
 SYNONYMS = {
@@ -40,7 +39,8 @@ SYNONYMS = {
     "highscore": "leaderboard", "highscores": "leaderboard", "ranking": "leaderboard", "rankings": "leaderboard",
 }
 
-PLACEHOLDERS = {"player", "stars", "lives", "coins", "here", "character", "players", "next_hint", "stage_stars"}
+PLACEHOLDERS = {"player", "stars", "lives", "coins", "here", "character", "players", "next_hint", "stage_stars",
+                "albert_at", "alberta_at"}
 STAGE_KEYS = ("swamp", "reitz", "alice", "marston", "libwest")
 STAGE_NAMES = {"swamp": "The Swamp", "reitz": "Reitz & Engineering", "alice": "Lake Alice",
                "marston": "Marston", "libwest": "Library West"}
@@ -162,6 +162,8 @@ def fill(answer, player, stats):
         "character": stats.get("char") or "yourself",
         "players": stats.get("players", "?"),
         "next_hint": next_hint(stats),
+        "albert_at": stats.get("albert_at") or "somewhere around campus",
+        "alberta_at": stats.get("alberta_at") or "somewhere around campus",
     }
 
     def sub(m):
@@ -207,8 +209,9 @@ class Guide:
         return max(best, 0.75 * cover)
 
     def match(self, question, k=3, npc=None):
-        """-> [(score, Entry)] best first (top k); entries tied to another NPC are skipped."""
-        q = set(tokens(question))
+        """-> [(score, Entry)] best first (top k); entries tied to another NPC are skipped. The asked NPC's own name
+        is dropped from the question ("hey Albert, how do I ..." is about the how, not about Albert)."""
+        q = set(tokens(question)) - ({npc} if npc else set())
         ranked = sorted(((self.score(q, e), e) for e in self.entries if e.npc in (None, npc)),
                         key=lambda se: -se[0])
         return ranked[:k]

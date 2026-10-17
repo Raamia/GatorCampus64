@@ -159,14 +159,14 @@ class GeminiTest(unittest.TestCase):
     def test_drops_thinking_level_the_model_rejects(self):
         http = FakeHTTP(http_error(400, '{"error": {"message": "thinking_level is not supported"}}'), answer("ok"))
         g = bridge.GeminiReplier(self.cast, "KEY", urlopen=http)
-        self.assertEqual(g.reply("libby", "P", "hi", []), "ok")
+        self.assertEqual(g.reply("alberta", "P", "hi", []), "ok")
         self.assertNotIn("thinkingConfig", http.requests[1][2]["generationConfig"])
         self.assertIsNone(g.thinking)
 
     def test_http_errors_raise_for_the_bridge_to_log(self):
         g = bridge.GeminiReplier(self.cast, "KEY", urlopen=FakeHTTP(http_error(429, "quota")))
         with self.assertRaises(RuntimeError):
-            g.reply("prof", "P", "hi", [])
+            g.reply("alberta", "P", "hi", [])
 
     def test_blocked_reply_stays_in_character(self):
         g = bridge.GeminiReplier(self.cast, "KEY", urlopen=FakeHTTP({"promptFeedback": {"blockReason": "SAFETY"}}))

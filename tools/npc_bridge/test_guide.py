@@ -52,9 +52,14 @@ ROUTES = [
     ("whats the weather like", None),
     ("who won the national championship in 2006", None),
     ("hi", None),
+    ("where is alberta", "where-alberta"),
+    ("hi albert how do i get into marston", "marston-door"),
+    ("where are you", "where-am-i-albert"),
+    ("who else can i talk to", "npcs"),
 ]
 
-STATS = {"stars": "3", "lives": "4", "coins": "12", "here": "THE HUB", "char": "Daniel", "players": "2",
+STATS = {"albert_at": "in The Swamp, near where you arrive", "alberta_at": "on the Plaza of the Americas, right by the spawn",
+         "stars": "3", "lives": "4", "coins": "12", "here": "THE HUB", "char": "Daniel", "players": "2",
          "go": "REITZ & ENGINEERING|THE HUB", "lock": "LAKE ALICE|NEWELL HALL|5",
          "s_swamp": "2", "s_reitz": "1", "s_alice": "0", "s_marston": "0", "s_libwest": "0"}
 
@@ -90,8 +95,10 @@ class GuideFileTest(unittest.TestCase):
         self.assertEqual(wrong, [])
 
     def test_npc_specific_entries(self):
-        score, e = self.g.match("who are you", npc="libby")[0]
-        self.assertFalse(e.id == "who-albert")
+        self.assertEqual(self.g.match("who are you", npc="alberta")[0][1].id, "who-alberta")
+        self.assertEqual(self.g.match("where are you", npc="alberta")[0][1].id, "where-am-i-alberta")
+        self.assertEqual(self.g.match("where is albert", npc="alberta")[0][1].id, "where-albert")
+        self.assertEqual(self.g.match("hey alberta, what are the controls", npc="alberta")[0][1].id, "controls")
 
     def test_malformed_entries_are_rejected(self):
         with self.assertRaises(ValueError):
@@ -110,6 +117,11 @@ class FillTest(unittest.TestCase):
         self.assertIn("Head to The Hub door for Reitz & Engineering!", out)
         self.assertIn("Lake Alice (the Newell Hall door) opens at 5 stars: 2 more to go.", out)
         self.assertNotIn("{", out)
+
+    def test_mascot_spots(self):
+        out = guide.fill("{albert_at} / {alberta_at}", "P", STATS)
+        self.assertEqual(out, "in The Swamp, near where you arrive / on the Plaza of the Americas, right by the spawn")
+        self.assertNotIn("{", guide.fill("{albert_at}", "P", {}))
 
     def test_without_stats(self):
         out = guide.fill("{stars} {next_hint}", "P", {})

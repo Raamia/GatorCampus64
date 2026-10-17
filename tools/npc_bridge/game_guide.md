@@ -1,6 +1,6 @@
 # Super Gatorlator 64: the NPC game guide
 
-The NPCs on the hub answer game questions straight from this file: no AI call, instant, always right.
+Albert and Alberta, the roaming mascot NPCs, answer game questions straight from this file: no AI call, instant, always right.
 Anything this file can't answer (general knowledge, small talk) goes to Gemini instead.
 tools/npc_bridge/guide.py reads it; tools/npc_bridge/test_guide.py and tools/luatest/check_game_guide.py check it.
 
@@ -19,7 +19,7 @@ Live values, filled in from the game when the player asks:
 `{player}` name, `{stars}` team stars, `{lives}`, `{coins}` (this visit), `{here}` where they are,
 `{character}` their friend character, `{players}` players online, `{next_hint}` which door opens next and how
 many more stars it needs, `{stage_stars}` stars per stage, `{stage_stars:KEY}` one stage
-(KEY = swamp, reitz, alice, marston, libwest).
+(KEY = swamp, reitz, alice, marston, libwest), `{albert_at}` / `{alberta_at}` where each mascot is right now.
 
 Questions nobody could answer well land in tools/npc_bridge/unanswered.log: turn them into new entries here.
 
@@ -321,7 +321,7 @@ answer: Yes: on the main menu go to Options, then Controls, to rebind any key. C
 ### What chat commands are there?
 id: commands
 ask: commands, chat commands, slash commands, what commands, list of commands, help commands, cheats
-answer: /char (pick your friend), /join (go to your friends' act), /mission (mission status; /mission start and /mission reset), /campus (where, list, hub, or warp to a stage act) and /school (check the mod is running).
+answer: /albert and /alberta (ask the mascots anything, from anywhere), /char (pick your friend), /join (go to your friends' act), /mission (mission status; /mission start and /mission reset), /campus (where, list, hub, or warp to a stage act) and /school (check the mod is running).
 
 ### How do I warp to a stage?
 id: warp
@@ -374,23 +374,51 @@ id: race-times
 ask: par time, gold time, race times, how fast, race par, time to beat, personal best, pb
 answer: Stadium Stair Sprint (Swamp act 2): par 1'10, gold 0'45. Coffee Run (Library West act 2): par 1'00, gold 0'45. Beat par for the star; gold is for bragging rights. Your personal best is saved.
 
-## The NPCs
+## The mascots (Albert and Alberta)
 
 ### Who are you?
 id: who-albert
 npc: albert
-ask: who are you, who is albert, what are you, are you a gator, mascot, albert the alligator, whats your name, your name, introduce yourself
-answer: I'm Albert the Alligator, UF's official mascot and your host on campus! I stand right by the spawn on the Plaza of the Americas. Ask me anything about the game. CHOMP CHOMP!
+ask: who are you, who is albert, are you a gator, mascot, albert the alligator, whats your name, your name, introduce yourself
+answer: I'm Albert the Alligator, UF's official mascot and one of your two hosts, with Alberta! We roam campus and the stages to help you out. Ask me anything about the game. CHOMP CHOMP!
 
-### Who else can I talk to?
+### Who are you, Alberta?
+id: who-alberta
+npc: alberta
+ask: who are you, who is alberta, are you a gator, mascot, alberta the alligator, whats your name, your name, introduce yourself
+answer: I'm Alberta the Alligator, UF's official mascot alongside Albert and one of your two hosts! I roam the libraries, Lake Alice and the Plaza to help you out. Ask me anything about the game. Go Gators!
+
+### Who can I talk to?
 id: npcs
-ask: other npcs, who else can i talk to, libby, professor bob, npcs, characters to talk to, librarian, professor
-answer: Albert is next to the spawn on the Plaza. Libby the librarian stands under the Library West colonnade (about 115 m north) and Professor Bob is by Century Tower's north door. Walk within 6 m of any of us and type in chat.
+ask: other npcs, who else can i talk to, npcs, characters to talk to, who are the mascots, mascots, albert and alberta, who is alberta, who is albert, guides, helpers
+answer: Albert and Alberta, UF's two alligator mascots, are your guides. One of them is always on the Plaza by the spawn, and the other visits a stage, popping up near where you arrive. They move every few minutes, with a puff of smoke. Walk up to one and type, or ask from anywhere with /albert or /alberta.
 
-### How do I talk to an NPC?
+### Where is Albert?
+id: where-albert
+ask: where is albert, wheres albert, find albert, albert location, where did albert go, where can i find albert
+answer: Albert is {albert_at} right now. He moves every few minutes, but you can always ask him from anywhere with /albert followed by your question.
+
+### Where is Alberta?
+id: where-alberta
+ask: where is alberta, wheres alberta, find alberta, alberta location, where did alberta go, where can i find alberta
+answer: Alberta is {alberta_at} right now. She moves every few minutes, but you can always ask her from anywhere with /alberta followed by your question.
+
+### Where are you, Albert?
+id: where-am-i-albert
+npc: albert
+ask: where are you, where are you now, where are you right now, where will you be, where do you go
+answer: Right now I'm {albert_at}! I hop around campus every few minutes. When I'm away, Alberta is on the Plaza, and you can ask me from anywhere with /albert.
+
+### Where are you, Alberta?
+id: where-am-i-alberta
+npc: alberta
+ask: where are you, where are you now, where are you right now, where will you be, where do you go
+answer: Right now I'm {alberta_at}! I move around every few minutes. When I'm away, Albert is on the Plaza, and you can ask me from anywhere with /alberta.
+
+### How do I talk to Albert or Alberta?
 id: talk-npc
-ask: how do i talk to you, talk to npc, how to talk, talk prompt, speak to albert
-answer: Walk up until "TALK TO ..." shows at the bottom of the screen, press Enter, type your question and press Enter. The answer appears in a speech bubble and in chat for everyone.
+ask: how do i talk to you, talk to npc, how to talk, talk prompt, speak to albert, speak to alberta, ask a question, ask from anywhere
+answer: Walk up until "TALK TO ..." shows at the bottom of the screen, press Enter, type your question and press Enter. The answer appears in a speech bubble and in chat for everyone. From anywhere else, type /albert or /alberta followed by your question.
 
 ## About the campus
 
