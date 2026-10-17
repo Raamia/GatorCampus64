@@ -1,0 +1,612 @@
+{
+  "id": "corina",
+  "name": "Corina",
+  "face_textures": {
+    "source": "art/corina/textures",
+    "kind": "final",
+    "crease_mode": "darken",
+    "crease_texels": {
+      "eyes_open": 28,
+      "eyes_half": 48,
+      "eyes_closed": 28,
+      "eyes_left": 28,
+      "eyes_right": 28,
+      "eyes_up": 28,
+      "eyes_down": 28
+    }
+  },
+  "face_tiles": {
+    "Open Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Half Closed Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Closed Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Left Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Right Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Up Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Down Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Dead Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Mouth (SKIN)": [
+      32,
+      16,
+      5,
+      4
+    ]
+  },
+  "palette": {
+    "skin": "#E0AA8C",
+    "hair": "#2C2624",
+    "top": "#1F2A4A",
+    "top_detail": "#18213A",
+    "pants": "#4A5F80",
+    "shoes": "#F2F2F2",
+    "shoe_soles": "#DADADA",
+    "hands": "#E0AA8C",
+    "button": "#C7CAD2",
+    "cap": "#1F2A4A",
+    "cap_inside": "#13192C",
+    "skin_shadow": "#C99176",
+    "hair_tips": "#4A2A1B"
+  },
+  "body": {
+    "remap": {
+      "Torso:Pants (PANTS)->top": 83,
+      "Torso:Shirt (SHIRT)->top": 25,
+      "Right Forearm:Shirt (SHIRT)->skin": 28,
+      "Left Forearm:Shirt (SHIRT)->skin": 28,
+      "Head DL:Logo (EMBLEM)->cap": 5,
+      "Torso:Buttons (PANTS)->top": 10
+    },
+    "soles": 12,
+    "cap_logos": 59,
+    "sleeve_cuffs": {},
+    "hands_scaled": {
+      "Left Hand Open Mesh": 34,
+      "Mario Mesh:Left Hand DL": 25,
+      "Mario Mesh:Right Hand DL": 25,
+      "Metal Left Hand Open Mesh": 34,
+      "Metal Mario Mesh:Left Hand DL": 25,
+      "Metal Mario Mesh:Right Hand DL": 25,
+      "Metal Right Hand Cap Mesh": 53,
+      "Metal Right Hand Open Mesh": 34,
+      "Metal Right Hand Peace Mesh": 39,
+      "Metal Right Hand Wing Cap Mesh": 65,
+      "Right Hand Cap Mesh": 60,
+      "Right Hand Open Mesh": 34,
+      "Right Hand Peace Mesh": 39,
+      "Right Hand Wing Cap Mesh": 72
+    },
+    "accessories": {
+      "thin_chain_necklace": 42
+    }
+  },
+  "heads": {
+    "style": "long_curly_voluminous_with_curly_bangs + characters/corina.py",
+    "tris_per_head": 420,
+    "meshes": [
+      "Mario Mesh (open)",
+      "Capless Head Closed Mesh (closed)",
+      "Capless Head Dead Mesh (dead)",
+      "Capless Head Down Mesh (down)",
+      "Capless Head Half Closed Mesh (half)",
+      "Capless Head Left Mesh (left)",
+      "Capless Head Mesh (open)",
+      "Capless Head Right Mesh (right)",
+      "Capless Head Up Mesh (up)",
+      "Head Closed Mesh (closed)",
+      "Head Dead Mesh (dead)",
+      "Head Down Mesh (down)",
+      "Head Half Closed Mesh (half)",
+      "Head Left Mesh (left)",
+      "Head Right Mesh (right)",
+      "Head Up Mesh (up)"
+    ]
+  },
+  "loose_vertices_added": 0,
+  "tris": {
+    "Mario Mesh": 1032,
+    "Capless Head Mesh": 420,
+    "Metal Mario Mesh": 1032,
+    "Metal Capless Head Mesh": 420,
+    "Head Closed Mesh": 420
+  },
+  "blend": "art/corina/build/corina.blend",
+  "export": "mods/sgl64/actors/corina",
+  "validation": {
+    "actor": "corina",
+    "ok": true,
+    "errors": [],
+    "notes": [
+      "geo layouts: 56, root: ['corina_geo']",
+      "geo_switch_mario_eyes: [8, 8, 8, 8]",
+      "geo_switch_mario_cap_on_off: [2, 2, 2, 2]",
+      "geo_switch_mario_cap_effect: [2, 4]",
+      "geo_switch_mario_hand: [2, 5, 2, 5, 2, 5, 2, 5]",
+      "geo_switch_mario_stand_run: [1]",
+      "eye switch 0: Open_Eyes | Half_Closed_Eyes | Closed_Eyes | Left_Eyes | Right_Eyes | Up_Eyes | Down_Eyes | Dead_Eyes",
+      "eye switch 1: Open_Eyes | Half_Closed_Eyes | Closed_Eyes | Left_Eyes | Right_Eyes | Up_Eyes | Down_Eyes | Dead_Eyes",
+      "eye switch 2: Open_Eyes | Half_Closed_Eyes | Closed_Eyes | Left_Eyes | Right_Eyes | Up_Eyes | Down_Eyes | Dead_Eyes",
+      "eye switch 3: Open_Eyes | Half_Closed_Eyes | Closed_Eyes | Left_Eyes | Right_Eyes | Up_Eyes | Down_Eyes | Dead_Eyes",
+      "face lights shared by 10 materials: 0x70,0x55,0x46,0xE0,0xAA,0x8C,0x28,0x28,0x28",
+      "texture corina_eyes_open_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_corina_Open_Eyes__SKIN_)",
+      "texture corina_mouth_grin_rgba16 (tile 0): loaded 32x16, tile 32x16, masks 5/4, clamp True/True (mat_corina_Mouth__SKIN_)",
+      "texture corina_wing1_rgba16 (tile 0): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_corina_Wing_Base)",
+      "texture corina_wing_2_rgba16 (tile 0): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_corina_Wing_Tip)",
+      "texture corina_Metal_Shade_rgba16_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp False/False (mat_corina_Metal__METAL_)",
+      "texture corina_Metal_Light_rgba16_rgba16 (tile 1): loaded 64x32, tile 64x32, masks 6/5, clamp False/False (mat_corina_Metal__METAL_)",
+      "texture corina_custom_mario_metal_wing_shade_rgba16 (tile 0): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_corina_Metal_Wing_Base__METAL_)",
+      "texture corina_custom_mario_metal_wing_light_rgba16 (tile 1): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_corina_Metal_Wing_Base__METAL_)",
+      "texture corina_custom_mario_metal_wing_tip_shade_rgba16 (tile 0): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_corina_Metal_Wing_Tip__METAL_)",
+      "texture corina_custom_mario_metal_wing_tip_light_rgba16 (tile 1): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_corina_Metal_Wing_Tip__METAL_)",
+      "texture corina_eyes_half_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_corina_Half_Closed_Eyes__SKIN_)",
+      "texture corina_eyes_closed_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_corina_Closed_Eyes__SKIN_)",
+      "texture corina_eyes_left_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_corina_Left_Eyes__SKIN_)",
+      "texture corina_eyes_right_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_corina_Right_Eyes__SKIN_)",
+      "texture corina_eyes_up_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_corina_Up_Eyes__SKIN_)",
+      "texture corina_eyes_down_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_corina_Down_Eyes__SKIN_)",
+      "texture corina_eyes_dead_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_corina_Dead_Eyes__SKIN_)"
+    ],
+    "display_lists": 203,
+    "total_tris_all_dls": 3726,
+    "textures": [
+      "corina_eyes_open_rgba16",
+      "corina_mouth_grin_rgba16",
+      "corina_wing1_rgba16",
+      "corina_wing_2_rgba16",
+      "corina_Metal_Shade_rgba16_rgba16",
+      "corina_Metal_Light_rgba16_rgba16",
+      "corina_custom_mario_metal_wing_shade_rgba16",
+      "corina_custom_mario_metal_wing_light_rgba16",
+      "corina_custom_mario_metal_wing_tip_shade_rgba16",
+      "corina_custom_mario_metal_wing_tip_light_rgba16",
+      "corina_eyes_half_rgba16",
+      "corina_eyes_closed_rgba16",
+      "corina_eyes_left_rgba16",
+      "corina_eyes_right_rgba16",
+      "corina_eyes_up_rgba16",
+      "corina_eyes_down_rgba16",
+      "corina_eyes_dead_rgba16"
+    ],
+    "lights": [
+      "corina_Pants__PANTS__lights",
+      "corina_Shirt__SHIRT__lights",
+      "corina_Chain__ACC__lights",
+      "corina_Skin__SKIN__lights",
+      "corina_Hair__HAIR__lights",
+      "corina_Open_Eyes__SKIN__lights",
+      "corina_Mouth__SKIN__lights",
+      "corina_Hair_Tips__ACC__lights",
+      "corina_Gloves__GLOVES__lights",
+      "corina_Cap__CAP__lights",
+      "corina_Cap_Inside__CAP__lights",
+      "corina_Shoes__SHOES__lights",
+      "corina_Shoe_Soles__SHOES__lights",
+      "corina_Metal__METAL__lights",
+      "corina_Metal_Wing_Base__METAL__lights",
+      "corina_Metal_Wing_Tip__METAL__lights",
+      "corina_Half_Closed_Eyes__SKIN__lights",
+      "corina_Closed_Eyes__SKIN__lights",
+      "corina_Left_Eyes__SKIN__lights",
+      "corina_Right_Eyes__SKIN__lights",
+      "corina_Up_Eyes__SKIN__lights",
+      "corina_Down_Eyes__SKIN__lights",
+      "corina_Dead_Eyes__SKIN__lights"
+    ],
+    "texture_tiles": [
+      {
+        "material": "mat_corina_Open_Eyes__SKIN_",
+        "texture": "corina_eyes_open_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 308
+      },
+      {
+        "material": "mat_corina_Mouth__SKIN_",
+        "texture": "corina_mouth_grin_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          32,
+          16
+        ],
+        "tile": [
+          32,
+          16
+        ],
+        "masks": [
+          5,
+          4
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 230
+      },
+      {
+        "material": "mat_corina_Wing_Base",
+        "texture": "corina_wing1_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_corina_Wing_Tip",
+        "texture": "corina_wing_2_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_corina_Metal__METAL_",
+        "texture": "corina_Metal_Shade_rgba16_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          false,
+          false
+        ]
+      },
+      {
+        "material": "mat_corina_Metal__METAL_",
+        "texture": "corina_Metal_Light_rgba16_rgba16",
+        "render_tile": 1,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          false,
+          false
+        ]
+      },
+      {
+        "material": "mat_corina_Metal_Wing_Base__METAL_",
+        "texture": "corina_custom_mario_metal_wing_shade_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_corina_Metal_Wing_Base__METAL_",
+        "texture": "corina_custom_mario_metal_wing_light_rgba16",
+        "render_tile": 1,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_corina_Metal_Wing_Tip__METAL_",
+        "texture": "corina_custom_mario_metal_wing_tip_shade_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_corina_Metal_Wing_Tip__METAL_",
+        "texture": "corina_custom_mario_metal_wing_tip_light_rgba16",
+        "render_tile": 1,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_corina_Half_Closed_Eyes__SKIN_",
+        "texture": "corina_eyes_half_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 262
+      },
+      {
+        "material": "mat_corina_Closed_Eyes__SKIN_",
+        "texture": "corina_eyes_closed_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 186
+      },
+      {
+        "material": "mat_corina_Left_Eyes__SKIN_",
+        "texture": "corina_eyes_left_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 308
+      },
+      {
+        "material": "mat_corina_Right_Eyes__SKIN_",
+        "texture": "corina_eyes_right_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 308
+      },
+      {
+        "material": "mat_corina_Up_Eyes__SKIN_",
+        "texture": "corina_eyes_up_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 308
+      },
+      {
+        "material": "mat_corina_Down_Eyes__SKIN_",
+        "texture": "corina_eyes_down_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 308
+      },
+      {
+        "material": "mat_corina_Dead_Eyes__SKIN_",
+        "texture": "corina_eyes_dead_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 180
+      }
+    ]
+  },
+  "previews": {
+    "front": "art/corina/build/previews/front.png",
+    "back": "art/corina/build/previews/back.png",
+    "left": "art/corina/build/previews/left.png",
+    "three_quarter": "art/corina/build/previews/three_quarter.png",
+    "head": "art/corina/build/previews/head.png",
+    "head_side": "art/corina/build/previews/head_side.png",
+    "eye_states": "art/corina/build/previews/eye_states.png"
+  },
+  "seconds": 14.2
+}

@@ -1,0 +1,632 @@
+{
+  "id": "raami",
+  "name": "Raami",
+  "face_textures": {
+    "source": "art/raami/textures",
+    "kind": "final",
+    "crease_mode": "darken",
+    "crease_texels": {
+      "eyes_open": 50,
+      "eyes_half": 50,
+      "eyes_closed": 36,
+      "eyes_left": 50,
+      "eyes_right": 50,
+      "eyes_up": 50,
+      "eyes_down": 50,
+      "mouth_grin": 36
+    }
+  },
+  "face_tiles": {
+    "Open Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Half Closed Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Closed Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Left Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Right Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Up Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Down Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Dead Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Mouth (SKIN)": [
+      32,
+      16,
+      5,
+      4
+    ]
+  },
+  "palette": {
+    "skin": "#D8A07E",
+    "hair": "#2C282B",
+    "top": "#5A6777",
+    "top_detail": "#4C5868",
+    "pants": "#222226",
+    "shoes": "#F2F2F2",
+    "shoe_soles": "#DADADA",
+    "hands": "#D8A07E",
+    "button": "#D6D9DD",
+    "cap": "#5A6777",
+    "cap_inside": "#363E47",
+    "skin_shadow": "#C08766",
+    "eyebrows": "#2A1D1B"
+  },
+  "body": {
+    "remap": {
+      "Torso:Pants (PANTS)->top": 83,
+      "Torso:Shirt (SHIRT)->top": 25,
+      "Head DL:Logo (EMBLEM)->cap": 5,
+      "Torso:Buttons (PANTS)->top": 10
+    },
+    "soles": 12,
+    "cap_logos": 59,
+    "sleeve_cuffs": {
+      "Left Hand Open Mesh": 23,
+      "Mario Mesh": 24,
+      "Right Hand Cap Mesh": 12,
+      "Right Hand Open Mesh": 18,
+      "Right Hand Peace Mesh": 21,
+      "Right Hand Wing Cap Mesh": 12,
+      "Metal Left Hand Open Mesh (geometry only)": 7,
+      "Metal Right Hand Cap Mesh (geometry only)": 3,
+      "Metal Right Hand Open Mesh (geometry only)": 5,
+      "Metal Right Hand Peace Mesh (geometry only)": 6,
+      "Metal Right Hand Wing Cap Mesh (geometry only)": 3
+    },
+    "hands_scaled": {
+      "Left Hand Open Mesh": 34,
+      "Mario Mesh:Left Hand DL": 25,
+      "Mario Mesh:Right Hand DL": 25,
+      "Metal Left Hand Open Mesh": 34,
+      "Metal Mario Mesh:Left Hand DL": 25,
+      "Metal Mario Mesh:Right Hand DL": 25,
+      "Metal Right Hand Cap Mesh": 53,
+      "Metal Right Hand Open Mesh": 34,
+      "Metal Right Hand Peace Mesh": 39,
+      "Metal Right Hand Wing Cap Mesh": 65,
+      "Right Hand Cap Mesh": 60,
+      "Right Hand Open Mesh": 34,
+      "Right Hand Peace Mesh": 39,
+      "Right Hand Wing Cap Mesh": 72
+    },
+    "accessories": {}
+  },
+  "heads": {
+    "style": "tight_curls_voluminous_with_curly_fringe + characters/raami.py",
+    "tris_per_head": 461,
+    "meshes": [
+      "Mario Mesh (open)",
+      "Capless Head Closed Mesh (closed)",
+      "Capless Head Dead Mesh (dead)",
+      "Capless Head Down Mesh (down)",
+      "Capless Head Half Closed Mesh (half)",
+      "Capless Head Left Mesh (left)",
+      "Capless Head Mesh (open)",
+      "Capless Head Right Mesh (right)",
+      "Capless Head Up Mesh (up)",
+      "Head Closed Mesh (closed)",
+      "Head Dead Mesh (dead)",
+      "Head Down Mesh (down)",
+      "Head Half Closed Mesh (half)",
+      "Head Left Mesh (left)",
+      "Head Right Mesh (right)",
+      "Head Up Mesh (up)"
+    ]
+  },
+  "post_build": {
+    "wings_moved": {
+      "vertices": 12,
+      "bones": {
+        "Mario": 8,
+        "Metal Mario": 8
+      }
+    },
+    "crewneck_sweatshirt_collar_tris": 72,
+    "curl_colour": "#312C2D"
+  },
+  "loose_vertices_added": 0,
+  "tris": {
+    "Mario Mesh": 1103,
+    "Capless Head Mesh": 461,
+    "Metal Mario Mesh": 1103,
+    "Metal Capless Head Mesh": 461,
+    "Head Closed Mesh": 461
+  },
+  "blend": "art/raami/build/raami.blend",
+  "export": "mods/sgl64/actors/raami",
+  "validation": {
+    "actor": "raami",
+    "ok": true,
+    "errors": [],
+    "notes": [
+      "geo layouts: 56, root: ['raami_geo']",
+      "geo_switch_mario_eyes: [8, 8, 8, 8]",
+      "geo_switch_mario_cap_on_off: [2, 2, 2, 2]",
+      "geo_switch_mario_cap_effect: [2, 4]",
+      "geo_switch_mario_hand: [2, 5, 2, 5, 2, 5, 2, 5]",
+      "geo_switch_mario_stand_run: [1]",
+      "eye switch 0: Open_Eyes | Half_Closed_Eyes | Closed_Eyes | Left_Eyes | Right_Eyes | Up_Eyes | Down_Eyes | Dead_Eyes",
+      "eye switch 1: Open_Eyes | Half_Closed_Eyes | Closed_Eyes | Left_Eyes | Right_Eyes | Up_Eyes | Down_Eyes | Dead_Eyes",
+      "eye switch 2: Open_Eyes | Half_Closed_Eyes | Closed_Eyes | Left_Eyes | Right_Eyes | Up_Eyes | Down_Eyes | Dead_Eyes",
+      "eye switch 3: Open_Eyes | Half_Closed_Eyes | Closed_Eyes | Left_Eyes | Right_Eyes | Up_Eyes | Down_Eyes | Dead_Eyes",
+      "face lights shared by 10 materials: 0x6C,0x50,0x3F,0xD8,0xA0,0x7E,0x28,0x28,0x28",
+      "texture raami_eyes_open_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_raami_Open_Eyes__SKIN_)",
+      "texture raami_mouth_grin_rgba16 (tile 0): loaded 32x16, tile 32x16, masks 5/4, clamp True/True (mat_raami_Mouth__SKIN_)",
+      "texture raami_wing1_rgba16 (tile 0): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_raami_Wing_Base)",
+      "texture raami_wing_2_rgba16 (tile 0): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_raami_Wing_Tip)",
+      "texture raami_Metal_Shade_rgba16_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp False/False (mat_raami_Metal__METAL_)",
+      "texture raami_Metal_Light_rgba16_rgba16 (tile 1): loaded 64x32, tile 64x32, masks 6/5, clamp False/False (mat_raami_Metal__METAL_)",
+      "texture raami_custom_mario_metal_wing_shade_rgba16 (tile 0): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_raami_Metal_Wing_Base__METAL_)",
+      "texture raami_custom_mario_metal_wing_light_rgba16 (tile 1): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_raami_Metal_Wing_Base__METAL_)",
+      "texture raami_custom_mario_metal_wing_tip_shade_rgba16 (tile 0): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_raami_Metal_Wing_Tip__METAL_)",
+      "texture raami_custom_mario_metal_wing_tip_light_rgba16 (tile 1): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_raami_Metal_Wing_Tip__METAL_)",
+      "texture raami_eyes_half_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_raami_Half_Closed_Eyes__SKIN_)",
+      "texture raami_eyes_closed_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_raami_Closed_Eyes__SKIN_)",
+      "texture raami_eyes_left_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_raami_Left_Eyes__SKIN_)",
+      "texture raami_eyes_right_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_raami_Right_Eyes__SKIN_)",
+      "texture raami_eyes_up_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_raami_Up_Eyes__SKIN_)",
+      "texture raami_eyes_down_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_raami_Down_Eyes__SKIN_)",
+      "texture raami_eyes_dead_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_raami_Dead_Eyes__SKIN_)"
+    ],
+    "display_lists": 211,
+    "total_tris_all_dls": 3950,
+    "textures": [
+      "raami_eyes_open_rgba16",
+      "raami_mouth_grin_rgba16",
+      "raami_wing1_rgba16",
+      "raami_wing_2_rgba16",
+      "raami_Metal_Shade_rgba16_rgba16",
+      "raami_Metal_Light_rgba16_rgba16",
+      "raami_custom_mario_metal_wing_shade_rgba16",
+      "raami_custom_mario_metal_wing_light_rgba16",
+      "raami_custom_mario_metal_wing_tip_shade_rgba16",
+      "raami_custom_mario_metal_wing_tip_light_rgba16",
+      "raami_eyes_half_rgba16",
+      "raami_eyes_closed_rgba16",
+      "raami_eyes_left_rgba16",
+      "raami_eyes_right_rgba16",
+      "raami_eyes_up_rgba16",
+      "raami_eyes_down_rgba16",
+      "raami_eyes_dead_rgba16"
+    ],
+    "lights": [
+      "raami_Shirt__SHIRT__lights",
+      "raami_Shirt_Detail__SHIRT__lights",
+      "raami_Skin__SKIN__lights",
+      "raami_Hair__HAIR__lights",
+      "raami_Open_Eyes__SKIN__lights",
+      "raami_Mouth__SKIN__lights",
+      "raami_Hair_Curl__ACC__lights",
+      "raami_Gloves__GLOVES__lights",
+      "raami_Cap__CAP__lights",
+      "raami_Cap_Inside__CAP__lights",
+      "raami_Pants__PANTS__lights",
+      "raami_Shoes__SHOES__lights",
+      "raami_Shoe_Soles__SHOES__lights",
+      "raami_Metal__METAL__lights",
+      "raami_Metal_Wing_Base__METAL__lights",
+      "raami_Metal_Wing_Tip__METAL__lights",
+      "raami_Half_Closed_Eyes__SKIN__lights",
+      "raami_Closed_Eyes__SKIN__lights",
+      "raami_Left_Eyes__SKIN__lights",
+      "raami_Right_Eyes__SKIN__lights",
+      "raami_Up_Eyes__SKIN__lights",
+      "raami_Down_Eyes__SKIN__lights",
+      "raami_Dead_Eyes__SKIN__lights"
+    ],
+    "texture_tiles": [
+      {
+        "material": "mat_raami_Open_Eyes__SKIN_",
+        "texture": "raami_eyes_open_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 424
+      },
+      {
+        "material": "mat_raami_Mouth__SKIN_",
+        "texture": "raami_mouth_grin_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          32,
+          16
+        ],
+        "tile": [
+          32,
+          16
+        ],
+        "masks": [
+          5,
+          4
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 164
+      },
+      {
+        "material": "mat_raami_Wing_Base",
+        "texture": "raami_wing1_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_raami_Wing_Tip",
+        "texture": "raami_wing_2_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_raami_Metal__METAL_",
+        "texture": "raami_Metal_Shade_rgba16_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          false,
+          false
+        ]
+      },
+      {
+        "material": "mat_raami_Metal__METAL_",
+        "texture": "raami_Metal_Light_rgba16_rgba16",
+        "render_tile": 1,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          false,
+          false
+        ]
+      },
+      {
+        "material": "mat_raami_Metal_Wing_Base__METAL_",
+        "texture": "raami_custom_mario_metal_wing_shade_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_raami_Metal_Wing_Base__METAL_",
+        "texture": "raami_custom_mario_metal_wing_light_rgba16",
+        "render_tile": 1,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_raami_Metal_Wing_Tip__METAL_",
+        "texture": "raami_custom_mario_metal_wing_tip_shade_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_raami_Metal_Wing_Tip__METAL_",
+        "texture": "raami_custom_mario_metal_wing_tip_light_rgba16",
+        "render_tile": 1,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_raami_Half_Closed_Eyes__SKIN_",
+        "texture": "raami_eyes_half_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 376
+      },
+      {
+        "material": "mat_raami_Closed_Eyes__SKIN_",
+        "texture": "raami_eyes_closed_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 252
+      },
+      {
+        "material": "mat_raami_Left_Eyes__SKIN_",
+        "texture": "raami_eyes_left_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 424
+      },
+      {
+        "material": "mat_raami_Right_Eyes__SKIN_",
+        "texture": "raami_eyes_right_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 424
+      },
+      {
+        "material": "mat_raami_Up_Eyes__SKIN_",
+        "texture": "raami_eyes_up_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 424
+      },
+      {
+        "material": "mat_raami_Down_Eyes__SKIN_",
+        "texture": "raami_eyes_down_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 424
+      },
+      {
+        "material": "mat_raami_Dead_Eyes__SKIN_",
+        "texture": "raami_eyes_dead_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 244
+      }
+    ]
+  },
+  "previews": {
+    "front": "art/raami/build/previews/front.png",
+    "back": "art/raami/build/previews/back.png",
+    "left": "art/raami/build/previews/left.png",
+    "three_quarter": "art/raami/build/previews/three_quarter.png",
+    "head": "art/raami/build/previews/head.png",
+    "head_side": "art/raami/build/previews/head_side.png",
+    "eye_states": "art/raami/build/previews/eye_states.png"
+  },
+  "seconds": 11.7
+}

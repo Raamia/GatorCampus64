@@ -5,6 +5,15 @@
 
 local FRIENDS = {
     { id = "daniel", name = "Daniel" },
+    { id = "corina", name = "Corina" },
+    { id = "raami", name = "Raami" },
+    { id = "anh", name = "Anh" },
+    { id = "josh", name = "Josh" },
+    { id = "donald", name = "Donald" },
+    { id = "jaime", name = "Jaime" },
+    { id = "alfred", name = "Alfred" },
+    { id = "vignesh", name = "Vignesh" },
+    { id = "cher", name = "Cher" },
 }
 
 for _, friend in ipairs(FRIENDS) do

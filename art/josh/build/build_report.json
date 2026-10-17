@@ -1,0 +1,614 @@
+{
+  "id": "josh",
+  "name": "Josh",
+  "face_textures": {
+    "source": "art/josh/textures",
+    "kind": "final",
+    "crease_mode": "darken",
+    "crease_texels": {
+      "eyes_open": 32,
+      "eyes_half": 48,
+      "eyes_closed": 20,
+      "eyes_left": 32,
+      "eyes_right": 32,
+      "eyes_up": 32,
+      "eyes_down": 32
+    }
+  },
+  "face_tiles": {
+    "Open Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Half Closed Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Closed Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Left Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Right Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Up Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Down Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Dead Eyes (SKIN)": [
+      64,
+      32,
+      6,
+      5
+    ],
+    "Mouth (SKIN)": [
+      32,
+      16,
+      5,
+      4
+    ]
+  },
+  "palette": {
+    "skin": "#B98262",
+    "hair": "#2C2A2A",
+    "top": "#1D1D21",
+    "top_detail": "#2A2A30",
+    "pants": "#3B4E6E",
+    "shoes": "#F2F2F2",
+    "shoe_soles": "#DADADA",
+    "hands": "#B98262",
+    "button": "#C6C6C8",
+    "cap": "#1D1D21",
+    "cap_inside": "#111114",
+    "skin_shadow": "#9E6B4D",
+    "glasses": "#15161C"
+  },
+  "body": {
+    "remap": {
+      "Torso:Pants (PANTS)->top": 83,
+      "Torso:Shirt (SHIRT)->top": 25,
+      "Right Forearm:Shirt (SHIRT)->skin": 28,
+      "Left Forearm:Shirt (SHIRT)->skin": 28,
+      "Head DL:Logo (EMBLEM)->cap": 5,
+      "Torso:Buttons (PANTS)->top": 10
+    },
+    "soles": 12,
+    "cap_logos": 59,
+    "sleeve_cuffs": {},
+    "hands_scaled": {
+      "Left Hand Open Mesh": 34,
+      "Mario Mesh:Left Hand DL": 25,
+      "Mario Mesh:Right Hand DL": 25,
+      "Metal Left Hand Open Mesh": 34,
+      "Metal Mario Mesh:Left Hand DL": 25,
+      "Metal Mario Mesh:Right Hand DL": 25,
+      "Metal Right Hand Cap Mesh": 53,
+      "Metal Right Hand Open Mesh": 34,
+      "Metal Right Hand Peace Mesh": 39,
+      "Metal Right Hand Wing Cap Mesh": 65,
+      "Right Hand Cap Mesh": 60,
+      "Right Hand Open Mesh": 34,
+      "Right Hand Peace Mesh": 39,
+      "Right Hand Wing Cap Mesh": 72
+    },
+    "accessories": {
+      "glasses_thick_rectangular": 0
+    }
+  },
+  "heads": {
+    "style": "straight_fringe_medium + characters/josh.py",
+    "tris_per_head": 353,
+    "meshes": [
+      "Mario Mesh (open)",
+      "Capless Head Closed Mesh (closed)",
+      "Capless Head Dead Mesh (dead)",
+      "Capless Head Down Mesh (down)",
+      "Capless Head Half Closed Mesh (half)",
+      "Capless Head Left Mesh (left)",
+      "Capless Head Mesh (open)",
+      "Capless Head Right Mesh (right)",
+      "Capless Head Up Mesh (up)",
+      "Head Closed Mesh (closed)",
+      "Head Dead Mesh (dead)",
+      "Head Down Mesh (down)",
+      "Head Half Closed Mesh (half)",
+      "Head Left Mesh (left)",
+      "Head Right Mesh (right)",
+      "Head Up Mesh (up)"
+    ]
+  },
+  "post_build": {
+    "tee_sleeve_end_tris": 40
+  },
+  "loose_vertices_added": 0,
+  "tris": {
+    "Mario Mesh": 963,
+    "Capless Head Mesh": 353,
+    "Metal Mario Mesh": 963,
+    "Metal Capless Head Mesh": 353,
+    "Head Closed Mesh": 353
+  },
+  "blend": "art/josh/build/josh.blend",
+  "export": "mods/sgl64/actors/josh",
+  "validation": {
+    "actor": "josh",
+    "ok": true,
+    "errors": [],
+    "notes": [
+      "geo layouts: 56, root: ['josh_geo']",
+      "geo_switch_mario_eyes: [8, 8, 8, 8]",
+      "geo_switch_mario_cap_on_off: [2, 2, 2, 2]",
+      "geo_switch_mario_cap_effect: [2, 4]",
+      "geo_switch_mario_hand: [2, 5, 2, 5, 2, 5, 2, 5]",
+      "geo_switch_mario_stand_run: [1]",
+      "eye switch 0: Open_Eyes | Half_Closed_Eyes | Closed_Eyes | Left_Eyes | Right_Eyes | Up_Eyes | Down_Eyes | Dead_Eyes",
+      "eye switch 1: Open_Eyes | Half_Closed_Eyes | Closed_Eyes | Left_Eyes | Right_Eyes | Up_Eyes | Down_Eyes | Dead_Eyes",
+      "eye switch 2: Open_Eyes | Half_Closed_Eyes | Closed_Eyes | Left_Eyes | Right_Eyes | Up_Eyes | Down_Eyes | Dead_Eyes",
+      "eye switch 3: Open_Eyes | Half_Closed_Eyes | Closed_Eyes | Left_Eyes | Right_Eyes | Up_Eyes | Down_Eyes | Dead_Eyes",
+      "face lights shared by 10 materials: 0x5C,0x41,0x31,0xB9,0x82,0x62,0x28,0x28,0x28",
+      "texture josh_eyes_open_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_josh_Open_Eyes__SKIN_)",
+      "texture josh_mouth_grin_rgba16 (tile 0): loaded 32x16, tile 32x16, masks 5/4, clamp True/True (mat_josh_Mouth__SKIN_)",
+      "texture josh_wing1_rgba16 (tile 0): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_josh_Wing_Base)",
+      "texture josh_wing_2_rgba16 (tile 0): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_josh_Wing_Tip)",
+      "texture josh_Metal_Shade_rgba16_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp False/False (mat_josh_Metal__METAL_)",
+      "texture josh_Metal_Light_rgba16_rgba16 (tile 1): loaded 64x32, tile 64x32, masks 6/5, clamp False/False (mat_josh_Metal__METAL_)",
+      "texture josh_custom_mario_metal_wing_shade_rgba16 (tile 0): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_josh_Metal_Wing_Base__METAL_)",
+      "texture josh_custom_mario_metal_wing_light_rgba16 (tile 1): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_josh_Metal_Wing_Base__METAL_)",
+      "texture josh_custom_mario_metal_wing_tip_shade_rgba16 (tile 0): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_josh_Metal_Wing_Tip__METAL_)",
+      "texture josh_custom_mario_metal_wing_tip_light_rgba16 (tile 1): loaded 32x64, tile 32x64, masks 5/6, clamp True/True (mat_josh_Metal_Wing_Tip__METAL_)",
+      "texture josh_eyes_half_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_josh_Half_Closed_Eyes__SKIN_)",
+      "texture josh_eyes_closed_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_josh_Closed_Eyes__SKIN_)",
+      "texture josh_eyes_left_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_josh_Left_Eyes__SKIN_)",
+      "texture josh_eyes_right_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_josh_Right_Eyes__SKIN_)",
+      "texture josh_eyes_up_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_josh_Up_Eyes__SKIN_)",
+      "texture josh_eyes_down_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_josh_Down_Eyes__SKIN_)",
+      "texture josh_eyes_dead_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_josh_Dead_Eyes__SKIN_)"
+    ],
+    "display_lists": 202,
+    "total_tris_all_dls": 3454,
+    "textures": [
+      "josh_eyes_open_rgba16",
+      "josh_mouth_grin_rgba16",
+      "josh_wing1_rgba16",
+      "josh_wing_2_rgba16",
+      "josh_Metal_Shade_rgba16_rgba16",
+      "josh_Metal_Light_rgba16_rgba16",
+      "josh_custom_mario_metal_wing_shade_rgba16",
+      "josh_custom_mario_metal_wing_light_rgba16",
+      "josh_custom_mario_metal_wing_tip_shade_rgba16",
+      "josh_custom_mario_metal_wing_tip_light_rgba16",
+      "josh_eyes_half_rgba16",
+      "josh_eyes_closed_rgba16",
+      "josh_eyes_left_rgba16",
+      "josh_eyes_right_rgba16",
+      "josh_eyes_up_rgba16",
+      "josh_eyes_down_rgba16",
+      "josh_eyes_dead_rgba16"
+    ],
+    "lights": [
+      "josh_Pants__PANTS__lights",
+      "josh_Shirt__SHIRT__lights",
+      "josh_Skin__SKIN__lights",
+      "josh_Hair__HAIR__lights",
+      "josh_Open_Eyes__SKIN__lights",
+      "josh_Mouth__SKIN__lights",
+      "josh_Glasses__ACC__lights",
+      "josh_Gloves__GLOVES__lights",
+      "josh_Cap__CAP__lights",
+      "josh_Cap_Inside__CAP__lights",
+      "josh_Shoes__SHOES__lights",
+      "josh_Shoe_Soles__SHOES__lights",
+      "josh_Metal__METAL__lights",
+      "josh_Metal_Wing_Base__METAL__lights",
+      "josh_Metal_Wing_Tip__METAL__lights",
+      "josh_Half_Closed_Eyes__SKIN__lights",
+      "josh_Closed_Eyes__SKIN__lights",
+      "josh_Left_Eyes__SKIN__lights",
+      "josh_Right_Eyes__SKIN__lights",
+      "josh_Up_Eyes__SKIN__lights",
+      "josh_Down_Eyes__SKIN__lights",
+      "josh_Dead_Eyes__SKIN__lights"
+    ],
+    "texture_tiles": [
+      {
+        "material": "mat_josh_Open_Eyes__SKIN_",
+        "texture": "josh_eyes_open_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 196
+      },
+      {
+        "material": "mat_josh_Mouth__SKIN_",
+        "texture": "josh_mouth_grin_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          32,
+          16
+        ],
+        "tile": [
+          32,
+          16
+        ],
+        "masks": [
+          5,
+          4
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 48
+      },
+      {
+        "material": "mat_josh_Wing_Base",
+        "texture": "josh_wing1_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_josh_Wing_Tip",
+        "texture": "josh_wing_2_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_josh_Metal__METAL_",
+        "texture": "josh_Metal_Shade_rgba16_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          false,
+          false
+        ]
+      },
+      {
+        "material": "mat_josh_Metal__METAL_",
+        "texture": "josh_Metal_Light_rgba16_rgba16",
+        "render_tile": 1,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          false,
+          false
+        ]
+      },
+      {
+        "material": "mat_josh_Metal_Wing_Base__METAL_",
+        "texture": "josh_custom_mario_metal_wing_shade_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_josh_Metal_Wing_Base__METAL_",
+        "texture": "josh_custom_mario_metal_wing_light_rgba16",
+        "render_tile": 1,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_josh_Metal_Wing_Tip__METAL_",
+        "texture": "josh_custom_mario_metal_wing_tip_shade_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_josh_Metal_Wing_Tip__METAL_",
+        "texture": "josh_custom_mario_metal_wing_tip_light_rgba16",
+        "render_tile": 1,
+        "loaded": [
+          32,
+          64
+        ],
+        "tile": [
+          32,
+          64
+        ],
+        "masks": [
+          5,
+          6
+        ],
+        "clamp": [
+          true,
+          true
+        ]
+      },
+      {
+        "material": "mat_josh_Half_Closed_Eyes__SKIN_",
+        "texture": "josh_eyes_half_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 160
+      },
+      {
+        "material": "mat_josh_Closed_Eyes__SKIN_",
+        "texture": "josh_eyes_closed_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 68
+      },
+      {
+        "material": "mat_josh_Left_Eyes__SKIN_",
+        "texture": "josh_eyes_left_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 196
+      },
+      {
+        "material": "mat_josh_Right_Eyes__SKIN_",
+        "texture": "josh_eyes_right_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 196
+      },
+      {
+        "material": "mat_josh_Up_Eyes__SKIN_",
+        "texture": "josh_eyes_up_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 196
+      },
+      {
+        "material": "mat_josh_Down_Eyes__SKIN_",
+        "texture": "josh_eyes_down_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 196
+      },
+      {
+        "material": "mat_josh_Dead_Eyes__SKIN_",
+        "texture": "josh_eyes_dead_rgba16",
+        "render_tile": 0,
+        "loaded": [
+          64,
+          32
+        ],
+        "tile": [
+          64,
+          32
+        ],
+        "masks": [
+          6,
+          5
+        ],
+        "clamp": [
+          true,
+          true
+        ],
+        "opaque_texels": 104
+      }
+    ]
+  },
+  "previews": {
+    "front": "art/josh/build/previews/front.png",
+    "back": "art/josh/build/previews/back.png",
+    "left": "art/josh/build/previews/left.png",
+    "three_quarter": "art/josh/build/previews/three_quarter.png",
+    "head": "art/josh/build/previews/head.png",
+    "head_side": "art/josh/build/previews/head_side.png",
+    "eye_states": "art/josh/build/previews/eye_states.png"
+  },
+  "seconds": 13.9
+}

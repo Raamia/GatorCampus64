@@ -6,7 +6,7 @@
   "colors": {
     "skin": "#DCA588",
     "skin_shadow": "#C48C70",
-    "hair": "#4A362C",
+    "hair": "#3D2B22",
     "hair_highlight": "#6B4E3E",
     "eyebrows": "#241A17",
     "top": "#F2EDE6",
@@ -15,6 +15,7 @@
     "headphones": "#D6D2CB",
     "headphones_shadow": "#A8A39A",
     "chain": "#C8CCD0",
+    "bracelet": "#3B2B24",
     "shoes": "#F2F2F2",
     "shoe_soles": "#DADADA"
   },
