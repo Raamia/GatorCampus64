@@ -1,45 +1,51 @@
 import CryptoKit
 import Foundation
-import XCTest
+import Testing
 @testable import BridgeCore
 
-final class BridgeCoreTests: XCTestCase {
-    func testParsesGameOutboxRowsAndAssistedFlag() throws {
-        let runs = try parseOutbox("sgl_125_1|reitz_treasure|900|2|0|0.1.0\nsgl_190_2|marston_sprint|1200|0|1|0.1.0\n")
-        XCTAssertEqual(runs.count, 2)
-        XCTAssertEqual(runs[0].elapsedFrames, 900)
-        XCTAssertFalse(runs[0].assisted)
-        XCTAssertTrue(runs[1].assisted)
-    }
+@Test func parsesGameOutboxRowsAndAssistedFlag() throws {
+    let runs = try parseOutbox("sgl_125_1|reitz_rooftop|900|2|0|0.1.0\nsgl_190_2|marston_climb|1200|0|1|0.1.0\n")
+    #expect(runs.count == 2)
+    #expect(runs[0].elapsedFrames == 900)
+    #expect(!runs[0].assisted)
+    #expect(runs[1].assisted)
+}
 
-    func testRejectsMalformedOutboxInsteadOfSkippingIt() {
-        XCTAssertThrowsError(try parseOutbox("sgl_1|bad|0|0|0|0.1.0"))
-        XCTAssertThrowsError(try parseOutbox("sgl_12345678|badMission|100|0|0|0.1.0"))
-    }
+@Test func rejectsMalformedOutboxInsteadOfSkippingIt() {
+    #expect(throws: BridgeError.self) { try parseOutbox("sgl_1|bad|0|0|0|0.1.0") }
+    #expect(throws: BridgeError.self) { try parseOutbox("sgl_12345678|badMission|100|0|0|0.1.0") }
+}
 
-    func testOAuthURLUsesS256AndExactLoopbackRedirect() throws {
-        let origin = try normalizedAppOrigin("https://gator-field-board.app.space/")
-        let verifier = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-._~"
-        let url = try XCTUnwrap(oauthStartURL(appOrigin: origin, redirectURI: "http://127.0.0.1:45173/callback", state: "random-state", verifier: verifier))
-        let components = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: false))
-        let items = Dictionary(uniqueKeysWithValues: (components.queryItems ?? []).map { ($0.name, $0.value ?? "") })
-        let expected = base64URL(Data(SHA256.hash(data: Data(verifier.utf8))))
-        XCTAssertEqual(items["code_challenge"], expected)
-        XCTAssertEqual(items["code_challenge_method"], "S256")
-        XCTAssertEqual(items["redirect_uri"], "http://127.0.0.1:45173/callback")
-    }
+@Test func oauthURLUsesS256AndExactLoopbackRedirect() throws {
+    let origin = try normalizedAppOrigin("https://gator-field-board.app.space/")
+    let verifier = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-._~"
+    let url = try #require(oauthStartURL(appOrigin: origin, redirectURI: "http://127.0.0.1:45173/callback", state: "random-state", verifier: verifier))
+    let components = try #require(URLComponents(url: url, resolvingAgainstBaseURL: false))
+    let items = Dictionary(uniqueKeysWithValues: (components.queryItems ?? []).map { ($0.name, $0.value ?? "") })
+    let expected = base64URL(Data(SHA256.hash(data: Data(verifier.utf8))))
+    #expect(items["code_challenge"] == expected)
+    #expect(items["code_challenge_method"] == "S256")
+    #expect(items["redirect_uri"] == "http://127.0.0.1:45173/callback")
+}
 
-    func testCallbackRequiresMatchingState() throws {
-        let callback = try XCTUnwrap(URL(string: "http://127.0.0.1:45173/callback?code=abcdefgh1234&state=right"))
-        XCTAssertEqual(try parseOAuthCallback(callback, expectedState: "right"), "abcdefgh1234")
-        XCTAssertThrowsError(try parseOAuthCallback(callback, expectedState: "wrong"))
-        XCTAssertThrowsError(try parseOAuthCallback(URL(string: "http://localhost:45173/callback?code=abcdefgh1234&state=right")!, expectedState: "right"))
-        XCTAssertThrowsError(try parseOAuthCallback(URL(string: "http://127.0.0.1:45174/callback?code=abcdefgh1234&state=right")!, expectedState: "right"))
+@Test func callbackRequiresMatchingStateAndLoopbackAddress() throws {
+    let callback = try #require(URL(string: "http://127.0.0.1:45173/callback?code=abcdefgh1234&state=right"))
+    #expect(try parseOAuthCallback(callback, expectedState: "right") == "abcdefgh1234")
+    #expect(throws: BridgeError.self) { try parseOAuthCallback(callback, expectedState: "wrong") }
+    #expect(throws: BridgeError.self) {
+        try parseOAuthCallback(URL(string: "http://localhost:45173/callback?code=abcdefgh1234&state=right")!, expectedState: "right")
     }
+    #expect(throws: BridgeError.self) {
+        try parseOAuthCallback(URL(string: "http://127.0.0.1:45174/callback?code=abcdefgh1234&state=right")!, expectedState: "right")
+    }
+}
 
-    func testAppURLRejectsNonHTTPAndCredentials() {
-        XCTAssertThrowsError(try normalizedAppOrigin("file:///tmp"))
-        XCTAssertThrowsError(try normalizedAppOrigin("https://user:pass@example.com"))
-        XCTAssertThrowsError(try normalizedAppOrigin("http://example.com"))
-    }
+@Test func appURLRejectsInsecureRemoteHostsAndCredentials() {
+    #expect(throws: BridgeError.self) { try normalizedAppOrigin("file:///tmp") }
+    #expect(throws: BridgeError.self) { try normalizedAppOrigin("https://user:pass@example.com") }
+    #expect(throws: BridgeError.self) { try normalizedAppOrigin("http://example.com") }
+}
+
+@Test func oauthVerifierHasPkceCompatibleLength() throws {
+    #expect((43...128).contains(try createVerifier().count))
 }

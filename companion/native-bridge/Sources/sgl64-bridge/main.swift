@@ -30,6 +30,7 @@ private enum CLIError: Error, LocalizedError {
     case usage
     case keychain(OSStatus)
     case http(Int, String)
+    case processFailed(String)
     case gameRunning
     case noModFS
     case ambiguousModFS([String])
@@ -41,6 +42,7 @@ private enum CLIError: Error, LocalizedError {
         case .usage: return usageText
         case .keychain(let status): return "macOS Keychain error (\(status))."
         case .http(let status, let text): return "DeepSpace returned HTTP \(status): \(text)"
+        case .processFailed(let message): return message
         case .gameRunning: return "Close SM64CoopDX before syncing so the .modfs save is stable, then retry."
         case .noModFS: return "No ModFS containing pending_runs.txt was found. Pass --modfs /path/to/mod.modfs."
         case .ambiguousModFS(let files): return "Several ModFS archives contain the outbox; pass --modfs explicitly:\n" + files.joined(separator: "\n")
@@ -184,7 +186,12 @@ private func startLogin(appURL: String) async throws {
     // Start the listener before opening the browser so fast redirects are not lost.
     let ready = DispatchSemaphore(value: 0)
     let listener = Task.detached { try callbackCode(expectedState: state, ready: ready) }
-    guard ready.wait(timeout: .now() + 5) == .success else {
+    let readyStatus = await withCheckedContinuation { continuation in
+        DispatchQueue.global().async {
+            continuation.resume(returning: ready.wait(timeout: .now() + 5))
+        }
+    }
+    guard readyStatus == .success else {
         listener.cancel()
         throw CLIError.processFailed("Could not start the local OAuth callback listener.")
     }

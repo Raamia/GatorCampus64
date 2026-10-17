@@ -22,21 +22,19 @@ Deploy the app through its normal DeepSpace workflow after making that change. T
 From this directory:
 
 ```sh
-swift test
-swift build -c release
-```
-
-Configure the installed app URL and sign in with Google. This launches the system browser and uses PKCE; the long-lived session token is stored in macOS Keychain. The app URL is saved without credentials under `~/Library/Application Support/SGL64Bridge/config.json`.
-
-```sh
-.build/release/sgl64-bridge login --app-url https://gator-field-board.app.space
-```
-
-You can copy the executable to a directory on your `PATH`:
-
-```sh
+brew install swift
+SWIFT_TOOLCHAIN="$(brew --prefix swift)/Swift-6.4.xctoolchain/usr/bin/swift"
+"$SWIFT_TOOLCHAIN" test
+"$SWIFT_TOOLCHAIN" build -c release
+BIN_DIR="$("$SWIFT_TOOLCHAIN" build --show-bin-path -c release)"
 mkdir -p "$HOME/.local/bin"
-cp .build/release/sgl64-bridge "$HOME/.local/bin/"
+cp "$BIN_DIR/sgl64-bridge" "$HOME/.local/bin/"
+```
+
+The explicit toolchain path is useful when the system SwiftPM toolchain is unavailable or mismatched. Configure the installed app URL and sign in with Google. This launches the system browser and uses PKCE; the long-lived session token is stored in macOS Keychain. The app URL is saved without credentials under `~/Library/Application Support/SGL64Bridge/config.json`.
+
+```sh
+sgl64-bridge login --app-url https://gator-field-board.app.space
 ```
 
 ## Sync after closing the game
