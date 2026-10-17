@@ -1913,6 +1913,12 @@ def _wall_run(RZ, F, V, C, CW, pa, pb, left, right, doors, stats, accent=(), col
             # leaves standing open into the L2 / L3 corridors)
             jret = "int_ru_wall" if _meeting_door(fid, left[1], right[1]) else \
                 ("int_ru_wood_panel" if (kind == "open" and not vest) else "int_ru_steel")
+            # iteration 8 (technical improvement 4): a jamb return that lies on a cross wall's face (a door at a wall
+            # junction, e.g. L2 door 77 at plan x -463.3) stands 1.2 cm into the opening: it was coplanar with that
+            # face (wall x wood_panel, 1.82 m2 visible). Visual only; the collision jamb stays.
+            if _jamb_on_cross_face(F, p, dir_):
+                q0 = (q0[0] + dir_[0] * 0.012, q0[1] + dir_[1] * 0.012)
+                q1 = (q1[0] + dir_[0] * 0.012, q1[1] + dir_[1] * 0.012)
             V.poly([(q0[0], q0[1], z), (q1[0], q1[1], z), (q1[0], q1[1], z + hd), (q0[0], q0[1], z + hd)],
                    jret,
                    normal_hint=(dir_[0], dir_[1], 0))
@@ -1921,6 +1927,26 @@ def _wall_run(RZ, F, V, C, CW, pa, pb, left, right, doors, stats, accent=(), col
         if kind == "open":
             zl = left[1].style["floor"] if left[1] and left[1].style else "int_ru_terrazzo"
             threshold(V, C, da, db, n, z, 2 * t + 0.5, zl)
+
+
+def _jamb_on_cross_face(F, p, d):
+    """True when a plan wall perpendicular to the door's run (parallel to the jamb normal d's plane) has a face
+    within 1 cm of the jamb point p and covers it along its length (iteration 8)."""
+    for w in F.walls:
+        a, b = (w[0], w[1]), (w[2], w[3])
+        L = math.dist(a, b)
+        if L < 0.05:
+            continue
+        ux, uy = (b[0] - a[0]) / L, (b[1] - a[1]) / L
+        if abs(ux * d[0] + uy * d[1]) > 0.05:          # the cross wall runs across the jamb normal
+            continue
+        s_ = (p[0] - a[0]) * ux + (p[1] - a[1]) * uy
+        if s_ < -0.16 or s_ > L + 0.16:
+            continue
+        off = abs((p[0] - a[0]) * uy - (p[1] - a[1]) * ux)
+        if any(abs(off - h_) < 0.01 for h_ in (WALL_T / 2, EXT_T / 2)):
+            return True
+    return False
 
 
 def _storefront_holes(fa, fb, z, near=0.5, h=None):
@@ -2981,7 +3007,7 @@ def atrium_stairs(RZ):
         # its balcony side (+n). The L1 flight (void on both sides at its foot) stays inner-only + the 0.4 m head.
         roh_ = {"G": (None, None), "L1": 0.4, "L2": (0.4, None)}[lo]
         f1 = R.stair_flight(V, C, a_se, b_se, z0, zl, STAIR_W, stringer=STAIR_STRINGER, rail_outer_head=roh_,
-                            rail_cap_foot=(lo in ("G", "L2")))
+                            rail_cap_foot=(lo in ("G", "L2")), rail_skirt=(1.9 if lo == "G" else None))
         f2 = R.stair_flight(V, C, a_ne, b_ne, zl, z1, STAIR_W, stringer=STAIR_STRINGER)
         # a coin trail up both flights (design pass: landing to landing; the landing coins are in PICKUPS)
         for nm, pa_, pb_, za, zb_ in (("se", a_se, b_se, z0, zl), ("ne", a_ne, b_ne, zl, z1)):
@@ -4657,6 +4683,7 @@ def _span_y(poly, x):
     return (min(ys), max(ys)) if len(ys) >= 2 else None
 
 
+AUD_BACK_STRIP = 1.35     # iteration 8: the back strip (Gallery door + stair) depth behind the top row, m
 AUD_CROSS_ROW = 6        # fix round 5 (fidelity-4): the row left out as the railed cross aisle (6 front rows, 4 rear)
 
 
@@ -4732,12 +4759,19 @@ def auditorium(RZ):
                 q_ = (a[0] + dx * sk, a[1] + dy * sk)
                 if any(math.dist(q_, dm) < 1.0 for dm in ad_):
                     continue
+                # iteration 8 (technical improvement 4): 8 cm off the edge line (at 0.03 the strips lay 0-0.25 u off
+                # the slightly slanted wall_aud face once their ends were rounded to whole units, and z-fought; at 0.05
+                # some still sat only 1.3-1.9 u proud)
                 _wall_strip(V, (q_[0] - dx * 0.13, q_[1] - dy * 0.13), (q_[0] + dx * 0.13, q_[1] + dy * 0.13),
-                            z + 0.1, zc - 0.6, "int_ru_wood_panel", off=0.03)
+                            z + 0.1, zc - 0.6, "int_ru_wood_panel", off=0.08)
     # raked seating: rows step up 0.18 m toward the east; continuous rows (no centre aisle), side aisles >= 1.2 m,
     # each row as wide as the room allows at its depth (the north-east corner is cut on the diagonal)
     nrows = 11
-    row_d = (x1 - x0 - 6.0) / nrows
+    # iteration 8 (technical blocking): the back strip behind the top row (the Gallery door's landing and the stair
+    # foot) is 1.35 m from the zone edge = 1.25 m clear of the wall face (was 1.0 / 0.9 m: under coopdx's ground push
+    # the 90 u turn between the rake back face and the door's jamb stub stopped every walk in from the Gallery;
+    # DOOR_COL_MIN is 1.12 m). The rows are 2.7 cm shallower each.
+    row_d = (x1 - x0 - 5.0 - AUD_BACK_STRIP) / nrows
     for r in range(nrows):
         rx0 = x0 + 5.0 + r * row_d
         zr = z + 0.18 * r
@@ -5865,11 +5899,15 @@ def _hotel_516(RZ, F, zn, mx, my, fx, fy):
     C.poly([(bx1, by0, z), (bx1, by1, z), (bx1, by1, zt), (bx1, by0, zt)], K.COL)     # the only exposed face (+x)
     door_leaves(V, (bx1, by0 + 0.1), (bx1, by0 + 0.95), z, 2.2, "int_ru_door_hotel")
     # dresser (1.8 m, cherry, drawer reveals) on the blue face, the TV on the wall above it
-    yd0, yd1 = by0 + 1.15, by0 + 2.95
+    # iteration 8 (technical improvement 1): 1.35 m (was 1.8 m from by0 + 1.15): its north-east corner stood 71 u
+    # from the corridor door's east jamb, too tight to walk in under coopdx's push; now it clears the 1.12 x 1.0 m
+    # swath inside the door
+    yd0, yd1 = by0 + 1.05, by0 + 2.4
     V.box(bx1, yd0, z, bx1 + 0.55, yd1, z + 0.86, "int_ru_cherry", faces="+x+y-y+z")
     K.col_box(C, bx1, yd0, z, bx1 + 0.55, yd1, z + 0.86, K.COL_NOCAM)
     for k in range(1, 3):
-        R.panel(V, (bx1 + 0.555, yd0 + 0.02), (bx1 + 0.555, yd1 - 0.02), z + 0.28 * k, z + 0.28 * k + 0.02,
+        # iteration 8: the drawer reveals 1.5 cm proud of the dresser front (at 0.5 cm they z-fought with it)
+        R.panel(V, (bx1 + 0.565, yd0 + 0.02), (bx1 + 0.565, yd1 - 0.02), z + 0.28 * k, z + 0.28 * k + 0.02,
                 "int_ru_black", off=0.0)
     ym = (yd0 + yd1) / 2
     V.box(bx1, ym - 0.72, z + 1.18, bx1 + 0.03, ym + 0.72, z + 2.02, "int_ru_black", faces="+y-y+z-z")
@@ -6541,6 +6579,29 @@ def circulation_dress(RZ):
 
 
 DRESSERS.extend([circulation_dress])
+
+
+# iteration 8 (technical improvement 10): a wall face with no back face where a straight walk from walkable floor
+# crosses it under coopdx's ground push (it skips a wall facing away from the move; vanilla's plane push is
+# two-sided): l3_corridor_11 at plan (-440.2, -273.5) gets the same quad facing the other way (collision only).
+# Game-unit vertices of the exported face, plan normal. The second one (ll_room_13 / ll_corridor_04 at
+# (-403.2, -260.2), the x 6690..6700 wall) was tried and left out: its back face, which ends 35 u from LL door 23,
+# blocked that door from ll_corridor_04 under dx151 (doorpass8 6/9 -> 0/9).
+ONEWAY_BACKFACES = [
+    # (1 u in front of the face: a back face on the very same 4 vertices is merged away as a duplicate face)
+    ("L3", ((3020, 1800, -1969), (2940, 1800, -1969), (2940, 2340, -1969), (3020, 2340, -1969)), (0.0, -1.0)),
+]
+
+
+def oneway_backfaces(RZ):
+    for fid, quad, nrm in ONEWAY_BACKFACES:
+        P = K.Prop(f"oneway_back_{fid}")
+        q = [(gx / 100.0 - 470.0, -gz / 100.0 - 293.0, gy / 100.0) for gx, gy, gz in quad]
+        P.collision.poly(q, K.COL, normal_hint=(nrm[0], nrm[1], 0.0))
+        RZ.kit_add(P, fid, tag=f"oneway_back_{fid}")
+
+
+DRESSERS.extend([oneway_backfaces])
 
 
 # ================================================================== preview cameras (photo-matched)

@@ -578,7 +578,7 @@ extern Vtx wf_dl_reitz_G_visual_mesh_layer_1_vtx_1[4003];
 extern Gfx wf_dl_reitz_G_visual_mesh_layer_1_tri_1[];
 extern Vtx wf_dl_reitz_G_visual_mesh_layer_1_vtx_2[70];
 extern Gfx wf_dl_reitz_G_visual_mesh_layer_1_tri_2[];
-extern Vtx wf_dl_reitz_G_visual_mesh_layer_1_vtx_3[2292];
+extern Vtx wf_dl_reitz_G_visual_mesh_layer_1_vtx_3[2304];
 extern Gfx wf_dl_reitz_G_visual_mesh_layer_1_tri_3[];
 extern Vtx wf_dl_reitz_G_visual_mesh_layer_1_vtx_4[3746];
 extern Gfx wf_dl_reitz_G_visual_mesh_layer_1_tri_4[];

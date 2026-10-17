@@ -101,6 +101,9 @@ GLASS_T = 0.10
 PART_T = 0.20                           # solid partitions
 BULK_Z = 2.9                            # fidelity-1: F1 study-room fronts: glass to 2.9 m, white bulkhead above (#38)
 STUDY_FILM = (1.05, 1.40)               # fidelity-1: the pale blue film band on the study-room glass (#38 #36)
+# iteration 8 (fidelity-1 blocking): the F1 glass rooms whose door stands OPEN (gameplay inside: act 3's star room,
+# locked by the mission until the booking); every other F1 study room shows its closed honey door (#36 #38)
+STUDY_OPEN_F1 = ("L129",)
 # collision thickness of the thin things (fix round): an AIRBORNE Mario is pushed to the front of every wall
 # plane within 50 units (coopdx v1.5.1 keeps the vanilla push in the air), so a two-faced wall thinner than the
 # distance he moves in a quarter step (a 48 u/f long jump or dive: 12) throws him through it, into the next
@@ -3528,14 +3531,25 @@ def study_rooms(M, fid, P):
         # (R201G/H, L115-L117), and Mario walked straight through them (visual only, 12 of 12 walks). Each now rests
         # 3 cm off a wall inside its room: swung 90 degrees against the side wall next to the door, or folded flat
         # back against the door wall (study_leaf_pose); the old pose only where neither fits
-        pose = study_leaf_pose(M, fid, (x0, y0, x1, y1), d, (fx, fy))
-        od, lw = (-95.0, 0.92) if pose is None else (0.0, pose[5])
+        if fid == "F1" and r["id"] not in STUDY_OPEN_F1:
+            # iteration 8 (fidelity-1 blocking, #36 #38): every F1 glass room shows a CLOSED full-height honey door in
+            # its bay (the row's strongest cue after the glass); since iteration 6 the leaves lay folded flat behind
+            # the glass and each doorway read as an empty gap. Closed now, with a glass sidelight and a real
+            # collision block; only the rooms with gameplay (STUDY_OPEN_F1: act 3's star room) keep an open leaf
+            P.merge(closed_study_door(d, (x0, y0, x1, y1)))
+            M.stats.setdefault("study_leaf_poses", []).append(f"{fid} {r['id']} closed")
+            pose = "closed"
+        else:
+            pose = study_leaf_pose(M, fid, (x0, y0, x1, y1), d, (fx, fy))
+        od, lw = (-95.0, 0.92) if pose is None else (0.0, 0.92 if pose == "closed" else pose[5])
         # fidelity-1: F1 doors are honey maple (#38 door ~ (232, 179, 130)), not the dark copper veneer
         leaf = MP.door_leaf(lw, DOOR_H - 0.3, open_deg=od, mat="int_ms_maple", tint=(1.0, 0.86, 0.78)) \
             if fid == "F1" else MP.door_leaf(lw, DOOR_H - 0.3, open_deg=od, mat="int_ms_wall",
                                              tint=(0.97, 0.97, 0.96)) if r["id"] in ("R201G", "R201H") \
             else MP.door_leaf(lw, DOOR_H - 0.3, open_deg=od)    # iteration 5: R201G/H white doors (#24)
-        if pose is None:
+        if pose == "closed":
+            pass
+        elif pose is None:
             P.merge(leaf, hinge[0], hinge[1], 0.0, (along - 90.0) % 360.0)
         else:
             P.merge(leaf, pose[0], pose[1], pose[2], pose[3])
@@ -3623,6 +3637,69 @@ def study_rooms(M, fid, P):
                                    tint=MP.T_TEAL_WALL)
                 P.merge(accent, sx, sy, 0.0, face)
         k += 1
+
+
+def closed_study_door(d, rb, leaf_w=0.95, t=0.045):
+    """iteration 8 (fidelity-1 blocking, #36 #38): a study room's doorway (d: its door record, rb: the room's bbox)
+    CLOSED as photographed: a full-height honey-maple leaf (0.95 m, as the real doors) hung at the jamb with less of
+    the room's glass beside it, then an aluminium mullion and a clear sidelight with the film band and a frame sill to
+    the other jamb, so the bay reads 'glass wall with a wood door' (the number plaque stays on the glass at the other
+    side). Built in map metres on the partition's centre plane (the gap d['a']..d['b'] of thin_partition, its 12 cm
+    jamb posts at both ends, the head rail's soffit at head - 0.06). Nothing is coplanar: the leaf stops 2 cm short of
+    the jamb post and the rail, its faces are 2.25 cm off the centre plane (the sidelight pane is on it, beyond the
+    mullion), the film 2 cm off. Collision: one NO_CAM block over the whole gap, 0.20 m thick (the airborne thin-wall
+    rule), its ends 3 cm into the partition's 0.24 m blocks and its top 3 cm into the head block (no end / top faces
+    on theirs)."""
+    P = K.Prop("study_door_closed", col_closed=True)
+    V = P.visual
+    (ax, ay), (bx, by) = d["a"], d["b"]
+    L = math.dist(d["a"], d["b"])
+    head = d["head"]
+    x0, y0, x1, y1 = rb
+
+    def room_left(px, py, wx, wy):                         # this room's front length beyond (px, py) along w
+        return ((x1 - px) if wx > 0.5 else (px - x0) if wx < -0.5 else (y1 - py) if wy > 0.5 else (py - y0))
+    ux, uy = (bx - ax) / L, (by - ay) / L
+    # (study_rooms puts the number plaque at b when room_left(b, u) >= room_left(a, -u): the leaf goes at a then)
+    if room_left(bx, by, ux, uy) >= room_left(ax, ay, -ux, -uy):
+        ox, oy, dx, dy = ax, ay, ux, uy
+    else:
+        ox, oy, dx, dy = bx, by, -ux, -uy
+    nx, ny = -dy, dx
+
+    def at(s, side=0.0):
+        return (ox + dx * s + nx * side, oy + dy * s + ny * side)
+
+    def abox(s0_, s1_, h0, h1, z0_, z1_, mat, faces="+x-x+y-y"):   # axis-aligned box from s / side ranges
+        p, q = at(s0_, h0), at(s1_, h1)
+        V.box(min(p[0], q[0]), min(p[1], q[1]), z0_, max(p[0], q[0]), max(p[1], q[1]), z1_, mat, faces=faces)
+    honey, edge = (1.18, 0.99, 0.90), (0.94, 0.79, 0.72)   # (brighter than the open leaves: #38 ~ (231, 185, 139))
+    h = head - 0.08
+    s0, s1 = 0.08, 0.08 + leaf_w
+    th = t / 2
+    V.wall(at(s1, th), at(s0, th), 0.0, h, "int_ms_maple", tint=honey)
+    V.wall(at(s0, -th), at(s1, -th), 0.0, h, "int_ms_maple", tint=honey)
+    V.wall(at(s0, th), at(s0, -th), 0.0, h, "int_ms_maple", tint=edge)
+    V.wall(at(s1, -th), at(s1, th), 0.0, h, "int_ms_maple", tint=edge)
+    V.poly([(*at(s0, -th), h), (*at(s1, -th), h), (*at(s1, th), h), (*at(s0, th), h)], "int_ms_maple",
+           normal_hint=(0, 0, 1), tint=edge)
+    abox(s1 - 0.11, s1 - 0.05, -0.06, 0.06, 1.0, 1.08, "int_metal", "+x-x+y-y+z")   # the lever, both faces
+    sm = s1 + 0.01 + 0.035                                 # the mullion beside the leaf's free edge
+    abox(sm - 0.035, sm + 0.035, -0.035, 0.035, 0.0, head - 0.06, "int_metal")
+    sa, sb = sm + 0.035, L - 0.06                          # the sidelight, mullion to the far jamb post
+    if sb - sa > 0.1:
+        gt = GLASS_T / 2
+        V.wall(at(sa), at(sb), 0.10, head - 0.06, "int_ms_glass_clear", ao=1.0)
+        V.wall(at(sb, 0.02), at(sa, 0.02), STUDY_FILM[0], STUDY_FILM[1], "int_drywall", ao=1.0, tint=(0.80, 0.90, 1.02))
+        V.wall(at(sa, -0.02), at(sb, -0.02), STUDY_FILM[0], STUDY_FILM[1], "int_drywall", ao=1.0,
+               tint=(0.80, 0.90, 1.02))
+        V.wall(at(sb, gt), at(sa, gt), 0.0, 0.10, "int_metal")
+        V.wall(at(sa, -gt), at(sb, -gt), 0.0, 0.10, "int_metal")
+        V.poly([(*at(sa, gt), 0.1), (*at(sa, -gt), 0.1), (*at(sb, -gt), 0.1), (*at(sb, gt), 0.1)], "int_metal",
+               normal_hint=(0, 0, 1))
+    foot = ccw([at(-0.03, 0.10), at(L + 0.03, 0.10), at(L + 0.03, -0.10), at(-0.03, -0.10)])
+    P.collision.prism(foot, 0.0, head + 0.03, K.COL_NOCAM, top=None, bottom=None)
+    return P
 
 
 def study_leaf_pose(M, fid, rb, d, f, w=0.92, t=0.045):
@@ -6434,6 +6511,8 @@ def plan_points(M):
     pts["group_study_rooms"] = [
         {"room": d["room"], "floor": d["floor"], "name": d["room_name"], "door_a_m": list(d["a"]), "door_b_m": list(d["b"]),
          "door_width_m": d["width"], "door_head_m": d["head"], "facing_deg": d["facing"],
+         # iteration 8: the F1 rooms' doors are closed (a solid leaf), except STUDY_OPEN_F1's
+         "door_closed": d["floor"] == "F1" and d["room"] not in STUDY_OPEN_F1,
          "door": g(f"room_{d['room']}_door", (*d["centre"], Z[d["floor"]]), facing=d["facing"]),
          "inside": g(f"room_{d['room']}_inside", _inside_point(M, d), facing=(d["facing"] + 180) % 360, clear=0.45)}
         for fl in FLOORS for d in M.doors[fl] if d["type"] == "group_study"]

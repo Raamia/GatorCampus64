@@ -40,7 +40,9 @@ course 4, LEVEL_CCM, an interior stage) against its sources and, once it exists,
    vanilla walk passes. Every door of data/uf/marston_points.json (group-study rooms, rooms) and every open layout
    door is walked perpendicular, both ways, at three lateral offsets and two speeds, with both pushes: no walk that
    crosses the door line (by 60 units) with the vanilla push may be blocked with the coopdx push, and every room door
-   is crossed both ways with the coopdx push.
+   is crossed both ways with the coopdx push. Iteration 8: the stair-hall and core doors (TOWER_DOORS) are walked too
+   and must be crossed both ways; a must-cross door with no floor at any start point fails; a CLOSED study-room door
+   (marston_points.json door_closed: the F1 glass rooms show their closed honey leaves) must stop every walk.
 6. The level script's act gating (iteration 7): no Goomba stands on the silent 5th floor in act 2 (the Shushers'
    stealth act: OBJECT_WITH_ACTS without ACT_2), and every act keeps at least 120 coins (yellow coins, coin lines of
    5, rings / arrows of 8, a coin per Goomba) so the 100-coin star stays reachable.
@@ -1083,17 +1085,25 @@ def walls_ground_dx(air, pos, off_y, radius):
     pos[2] += dz
 
 
+# iteration 8 (technical r7 #2): the stair-hall and core doors (were only in a one-off scratch tool): (floor, name, a, b)
+TOWER_DOORS = ([("F%d" % i, "ne_hall", (-52.3, -79.0), (-49.7, -79.0)) for i in (1, 2, 3, 4)] +
+               [("F5", "ne_hall_w", (-52.6, -78.7), (-52.6, -76.3)), ("F5", "ne_hall_e", (-46.0, -79.0), (-43.6, -79.0)),
+                ("ROOF", "ne_hall_roof", (-52.6, -78.7), (-52.6, -76.3)),
+                ("F1", "sw_hall", (-80.2, -110.4), (-80.2, -112.8)), ("F2", "sw_hall", (-79.46, -108.4), (-79.46, -110.6)),
+                ("F3", "sw_hall", (-79.46, -109.6), (-79.46, -112.0)), ("F4", "sw_hall", (-82.0, -107.8), (-80.0, -107.8)),
+                ("F5", "sw_hall", (-82.0, -107.8), (-80.0, -107.8))] +
+               [(f, "core", (-69.7, -86.4), (-69.7, -84.0)) for f in ("F1", "F2", "F3", "F4", "F5")])
 DOOR_BACK, DOOR_PAST = 150, 60          # a door walk starts 1.5 m before the door line and must get 0.6 m past it
 
 
-def door_walk(air, push, x, z, ux, uz, y, speed):
+def door_walk(air, push, x, z, ux, uz, y, speed, back=DOOR_BACK):
     """perform_ground_step-like walk (quarter steps, lower 30/24 then upper 60/50 wall checks) -> crossed the line?
     None when there is no floor at the start (a stair hall, a terrace step): not a walk"""
     fh, fl = air.find_floor(x, y + 50, z)
     if fl is None or abs(fh - y) > 30:
         return None
     pos = [x, fh, z]
-    for _ in range(int((DOOR_BACK + DOOR_PAST + 60) / speed) + 3):
+    for _ in range(int((back + DOOR_PAST + 60) / speed) + 3):
         for _q in range(4):
             nxt = [pos[0] + ux * speed / 4, pos[1], pos[2] + uz * speed / 4]
             push(nxt, 30.0, 24.0)
@@ -1102,7 +1112,7 @@ def door_walk(air, push, x, z, ux, uz, y, speed):
             if f2 is None or abs(h2 - y) > 60 or h2 + 160 >= air.find_ceil(nxt[0], h2 + 80, nxt[2]):
                 return False
             pos = [nxt[0], h2, nxt[2]]
-        if (pos[0] - x) * ux + (pos[2] - z) * uz >= DOOR_BACK + DOOR_PAST:
+        if (pos[0] - x) * ux + (pos[2] - z) * uz >= back + DOOR_PAST:
             return True
     return False
 
@@ -1111,9 +1121,11 @@ def check_doors_dx(air, bad):
     pts = json.load(open(POINTS_JSON)) if os.path.exists(POINTS_JSON) else {}
     lay = json.load(open(LAYOUT))
     cx, cy = pts.get("center_m") or (-59.6, -98.9)
-    doors = []                                          # (name, floor, a_m, b_m, must cross both ways)
+    doors = []                                          # (name, floor, a_m, b_m, must cross both ways, closed)
     for r in pts.get("group_study_rooms", []):
-        doors.append((r["room"], r["floor"], r["door_a_m"], r["door_b_m"], True))
+        # iteration 8: most F1 study-room doors are closed leaves (door_closed): no walk may cross those
+        closed = bool(r.get("door_closed"))
+        doors.append((r["room"], r["floor"], r["door_a_m"], r["door_b_m"], not closed, closed))
     for r in pts.get("rooms", []):
         d = r.get("door") or {}
         if "map_m" in d and "facing_deg" in d:
@@ -1121,15 +1133,19 @@ def check_doors_dx(air, bad):
             tx, ty = math.cos(f), -math.sin(f)          # along the wall (facing: compass degrees, 0 = north = +y)
             mx, my = d["map_m"][:2]
             # the anchor is the door's centre (the vestibule's is its middle mullion): walks at it and 0.4 m either side
-            doors.append((r["room"], r["floor"], (mx - tx * 0.95, my - ty * 0.95), (mx + tx * 0.95, my + ty * 0.95), True))
+            doors.append((r["room"], r["floor"], (mx - tx * 0.95, my - ty * 0.95), (mx + tx * 0.95, my + ty * 0.95), True,
+                          False))
     for f in lay["floors"]:
         for o in f.get("openings", []):
             if o["type"] in ("door", "door_open", "entrance"):
-                doors.append((o["id"], f["id"], o["a_m"], o["b_m"], False))
+                doors.append((o["id"], f["id"], o["a_m"], o["b_m"], False, False))
+    # iteration 8 (technical r7 #2): the stair-hall and core doors (act 1's stairs), must cross both ways
+    doors += [(n, fid, a, b, True, False) for fid, n, a, b in TOWER_DOORS]
     walks = regress = 0
     blocked, regressed = [], []
-    for name, fid, a, b, must in doors:
-        y = FLOOR_Z[fid] * 100
+    leaks = []
+    for name, fid, a, b, must, closed in doors:
+        y = FLOOR_Z.get(fid, 24.0) * 100                # (ROOF: the NE hall's roof landing, 24 m)
         ax, az = (a[0] - cx) * 100, -(a[1] - cy) * 100
         bx, bz = (b[0] - cx) * 100, -(b[1] - cy) * 100
         w = math.hypot(bx - ax, bz - az)
@@ -1142,20 +1158,27 @@ def check_doors_dx(air, bad):
         for sgn in (1, -1):
             crossed = None
             for o in (-lat, 0.0, lat):
-                sx, sz = mx + tx * o - sgn * nx * DOOR_BACK, mz + tz * o - sgn * nz * DOOR_BACK
+                # (iteration 8: a stair landing shorter than 1.5 m starts the walk nearer the door)
+                for bk in (DOOR_BACK, 90, 60):
+                    sx, sz = mx + tx * o - sgn * nx * bk, mz + tz * o - sgn * nz * bk
+                    if door_walk(air, air.walls_air, sx, sz, sgn * nx, sgn * nz, y, 16.0, bk) is not None:
+                        break
                 for sp in (16.0, 32.0):
-                    v = door_walk(air, air.walls_air, sx, sz, sgn * nx, sgn * nz, y, sp)
+                    v = door_walk(air, air.walls_air, sx, sz, sgn * nx, sgn * nz, y, sp, bk)
                     if v is None:
                         continue
                     walks += 1
                     d = door_walk(air, lambda p, oy, r: walls_ground_dx(air, p, oy, r), sx, sz, sgn * nx, sgn * nz,
-                                  y, sp)
+                                  y, sp, bk)
                     crossed = bool(crossed) or d
+                    if closed and (v or d):
+                        leaks.append((fid, name, sgn, round(o), sp))
                     if v and not d:
                         regress += 1
                         regressed.append((fid, name, sgn, round(o), sp))
-            if must and crossed is False:
-                blocked.append((fid, name, sgn))
+            # (iteration 8, technical r7 #2: a must-cross door with no floor at any start point is a failure too)
+            if must and not crossed:
+                blocked.append((fid, name, sgn) if crossed is False else (fid, name, sgn, "no floor at the starts"))
     if regressed:
         print("DOOR (coopdx push) %d walk(s) cross a door with the vanilla ground push but are blocked with coopdx's "
               "rounded-corner push (widen the collision opening), e.g. %s" % (regress, regressed[:4]))
@@ -1164,8 +1187,13 @@ def check_doors_dx(air, bad):
         print("DOOR (coopdx push) %d room-door direction(s) cannot be crossed with coopdx's ground push, e.g. %s"
               % (len(blocked), blocked[:4]))
         bad += 1
-    print("check_marston_points: coopdx ground-push door walks: %d doors, %d walks, %d blocked only by the coopdx push, "
-          "%d room-door directions closed" % (len(doors), walks, regress, len(blocked)))
+    if leaks:
+        print("DOOR %d walk(s) cross a CLOSED study-room door (door_closed: its leaf must block), e.g. %s"
+              % (len(leaks), leaks[:4]))
+        bad += 1
+    print("check_marston_points: coopdx ground-push door walks: %d doors (%d closed), %d walks, %d blocked only by the "
+          "coopdx push, %d room-door directions closed, %d walks through closed doors"
+          % (len(doors), sum(1 for d in doors if d[5]), walks, regress, len(blocked), len(leaks)))
     return bad
 
 

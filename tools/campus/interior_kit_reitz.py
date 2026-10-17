@@ -4551,7 +4551,7 @@ if __name__ == "__main__":
 # ================================================================== stairs
 def stair_flight(V, C, a, b, z0, z1, width, steps=None, tread_mat="int_ru_terrazzo", side_mat="int_ru_white",
                  soffit=True, rails=True, rail_h=1.07, col_mat="COL notslip", stringer=0.35, rail_outer_head=None,
-                 rail_cap_foot=False):
+                 rail_cap_foot=False, rail_skirt=None):
     """Open stair flight from a (bottom, z0) to b (top, z1) in plan, `width` wide (photos: white stringers and
     soffit, terrazzo treads, silver picket railings). Collision: one ramp (no-slip) + the two railings.
     rail_outer_head: None = each railing is a closed 14 cm slab (inner + outer face) along the whole flight; a length
@@ -4627,6 +4627,39 @@ def stair_flight(V, C, a, b, z0, z1, width, steps=None, tread_mat="int_ru_terraz
                     cq = [(pa[0] - nx * 0.07, pa[1] - ny * 0.07, pa[2] - 0.3), (pa[0] + nx * 0.07, pa[1] + ny * 0.07, pa[2] - 0.3),
                           (pa[0] + nx * 0.07, pa[1] + ny * 0.07, pa[2] + rail_h), (pa[0] - nx * 0.07, pa[1] - ny * 0.07, pa[2] + rail_h)]
                     C.poly(cq, K.COL_NOCAM, normal_hint=(-dx, -dy, 0))
+        # iteration 8 (technical improvement 2): rail_skirt = a height in m above z0. Over the flight's lower
+        # stretch (ramp below z0 + rail_skirt) each rail's outer face comes down to the storey floor as one NOCAM
+        # triangle under the band's lower edge, and a cross cap closes the pocket under the treads at that point:
+        # from the floor beside the Ground flight Mario walked under the band (its lower edge above his +60 wall
+        # check beyond s ~ 1.55 m) into the space under the treads and stepped up through them (railside7c 88)
+        if rails and rail_skirt:
+            s1 = L * min(1.0, rail_skirt / h)
+            sa = L * min(1.0, 0.25 / h)
+            zb = z0 - 0.05
+            zs1 = z0 + h * s1 / L - 0.3
+            if s1 > sa + 0.2:
+                for off in (-w2 + 0.05, w2 - 0.05):
+                    sgn = 1 if off > 0 else -1
+                    o = off + 0.07 * sgn
+                    if sgn > 0:
+                        tri = [P(sa, o, zb), P(s1, o, zb), P(s1, o, zs1)]
+                    else:
+                        tri = [P(s1, o, zb), P(sa, o, zb), P(s1, o, zs1)]
+                    C.poly(tri, K.COL_NOCAM, normal_hint=(nx * sgn, ny * sgn, 0))
+                cap = [P(s1, -w2 - 0.02, zb), P(s1, w2 + 0.02, zb), P(s1, w2 + 0.02, zs1), P(s1, -w2 - 0.02, zs1)]
+                C.poly(cap, K.COL_NOCAM, normal_hint=(dx, dy, 0))
+                # rendered too (no invisible wall): a white side panel under each stringer down to the floor (its
+                # top on the stringer's lower edge, 2 cm outside the stringer plane) and the cap's face
+                sv = L * min(1.0, (stringer - 0.05) / h)
+                zv1 = z0 + h * s1 / L - stringer
+                if s1 > sv + 0.2:
+                    for off in (-w2 + 0.05, w2 - 0.05):
+                        sgn = 1 if off > 0 else -1
+                        o = off + 0.07 * sgn
+                        V.poly([P(sv, o, zb), P(s1, o, zb), P(s1, o, zv1)], side_mat,
+                               normal_hint=(nx * sgn, ny * sgn, 0), ao=0.85)
+                    V.poly([P(s1 + 0.01, -w2 - 0.02, zb), P(s1 + 0.01, w2 + 0.02, zb), P(s1 + 0.01, w2 + 0.02, zv1),
+                            P(s1 + 0.01, -w2 - 0.02, zv1)], side_mat, normal_hint=(dx, dy, 0), ao=0.7)
     return {"len": L, "angle_deg": math.degrees(math.atan2(h, L)), "steps": n}
 
 

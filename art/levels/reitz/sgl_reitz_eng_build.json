@@ -5874,8 +5874,8 @@
    "area": 2,
    "module": "tools/campus/interiors/reitz.py",
    "kit_tris": {
-    "visual": 136762,
-    "collision": 12517
+    "visual": 136766,
+    "collision": 12523
    },
    "warp_nodes": [
     {
@@ -7735,12 +7735,12 @@
     },
     "reitz G visual": {
      "group": "G",
-     "tris": 19427,
+     "tris": 19430,
      "collision": false
     },
     "reitz G collision": {
      "group": "G",
-     "tris": 1544,
+     "tris": 1547,
      "collision": true
     },
     "reitz L1 visual": {
@@ -7770,7 +7770,7 @@
     },
     "reitz L3 collision": {
      "group": "L3",
-     "tris": 1072,
+     "tris": 1073,
      "collision": true
     },
     "reitz L4 visual": {
@@ -7839,30 +7839,30 @@
   },
   "area_2": {
    "vertices": [
-    14318,
-    14170
+    14328,
+    14176
    ],
-   "welded_vertices": 147,
+   "welded_vertices": 151,
    "collapsed_tris": 24,
    "tjunction_splits": 422,
    "triangles": [
-    12495,
-    12893
+    12501,
+    12899
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [
-   "12893 static collision triangles in the largest area (22672 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
+   "12899 static collision triangles in the largest area (22678 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
   ],
-  "collision_tris": 22672,
-  "render_tris": 218575,
+  "collision_tris": 22678,
+  "render_tris": 218579,
   "lua_names": [],
   "fog_patched": [
    228,
    228
   ]
  },
- "level_dir": "work/interiors/polish3/r7/design/b3/levels/wf"
+ "level_dir": "mods/sgl64/levels/wf"
 }

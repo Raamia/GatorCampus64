@@ -851,6 +851,29 @@ Each change carries an `iteration 7 (design...)` comment in `tools/campus/interi
 - The thin walls (improvement 8).
 - The L3 rail-end stub.
 
+### Fix round 8 (blocking pass: the Auditorium entry under coopdx, then technical improvements)
+
+Each change carries an `iteration 8` comment in `tools/campus/interiors/reitz.py` / `tools/campus/interior_kit_reitz.py`.
+
+- **Auditorium entry (technical blocking + extra item 1):** the strip behind the top row (the Gallery door's landing and the foot of the stair up to the top row) is now `AUD_BACK_STRIP` = 1.35 m deep from the zone edge, which leaves 1.25 m clear of the east wall face (it was 1.0 / 0.9 m). Under coopdx's ground push, the 90 u turn between the rake's back face (x 3710) and the door's jamb stub (3800, -4309) stopped every walk in from the Gallery. The rows are 2.7 cm shallower each, so the rake, its back face, the rail and the stair all move together; collision and render stay matched. audflood.py, dx151 auditorium-side cells: 0 -> 2,822 (vanilla 2,750 -> 2,646, because the rake is 0.35 m shorter). audx.py, door then aisle: dx 0 / 144 -> 144 / 144, vanilla 68 / 144 -> 140 / 144.
+- **Room 516 (technical improvement 1):** the cherry dresser (its drawer reveals now 1.5 cm proud, they were 0.5 cm) on the blue entry-block face is 1.35 m (was 1.8 m), from by0 + 1.05. Its north-east corner stood 71 u from the corridor door's east jamb. It now clears the 1.12 x 1.0 m swath inside the door. doorpass8 (dx151): L5 door 10 goes from stuck both ways to pass both ways.
+- **Ground SE flight, under-rail entry (technical improvement 2):** `stair_flight(rail_skirt=1.9)` on the Ground flight. Where the ramp is below 1.9 m, each rail's outer face comes down to the storey floor as one NO_CAM triangle under the band's lower edge, and a cross cap closes the pocket under the treads at that point. Collision only. railside7c: dx 88 / 1,020 -> 0 / 732, vanilla 151 / 1,428 -> 131 / 1,188 (some start points now stand inside the skirted pocket and are no longer counted).
+- **Auditorium wood strips (technical improvement 4):** the long side walls' honey-wood strips stand 8 cm off the edge line (were 3 cm), which is 3-4 u in front of the slanted wall_aud face. Once their ends were rounded to whole units, they lay 0 to 0.25 u off the slightly slanted wall_aud face and z-fought.
+- **Jamb returns on a cross wall's face (technical improvement 4, second pair):** a door's jamb return that lies on a perpendicular wall's face (`_jamb_on_cross_face`; 6 jambs, including L2 door 77 at plan x -463.3) now stands 1.2 cm into the opening. It is visual only; the collision jamb is unchanged.
+- **One-way wall (technical improvement 10):** `ONEWAY_BACKFACES`: the L3 wall at l3_corridor_11, plan (-440.2, -273.5), gets a back face (collision only). coopdx skips a wall that faces away from the move, while vanilla's plane push is two-sided. A back face on the very same four vertices is merged away in the export, so this one is placed 1 u in front. The LL one (ll_room_13 / ll_corridor_04, (-403.2, -260.2)) was tried and left out. Its back face ends 35 u from LL door 23, and it blocked that door from ll_corridor_04 under dx151 (doorpass8: 6 / 9 -> 0 / 9).
+- **Door sweep on coopdx rules (extra items 2 and 3):** the regression suite (`runqa.sh`) now runs doorpass8.py. It walks all 783 layout doors under dx151 and vanilla, with floor-relative heights (the hotel floors sit 60 u above `z_game_m`, so doorpass7b gave 'nofloor' on every L5 / L6 door). It walks both ways from 130 u back at 3 lateral offsets and 3 speeds, and from standing still on the threshold. The suite also runs a prop-clearance swath, audflood / audx, railside7c, and the floodx + floodx2 per-zone reach (zonereach.py). Vanilla-only door sides: 4 -> 2. The 2 left are L2 doors 133 / 134, which lead from the closed back room `l2_room_45` into the Grand Ballroom. You cannot get into that room from the ballroom in either model, so they are not routes.
+- **Housekeeping (technical improvement 8):** `art/levels/reitz/sgl_reitz_eng_build.json` now comes from this build, with `level_dir` set to the installed `mods/sgl64/levels/wf`. `data/uf/reitz_points.json` is unchanged apart from the timestamp, so it is not rewritten.
+- **Interior camera:** `levels.lua` `SGL_STAGE_CAMERA[LEVEL_WF]` was already area-aware (`area = 2`), and `test_reitz_missions.lua` already checks it, so there is no change.
+
+### Still open after fix round 8
+
+- Collision budget: area 2 has 12,901 triangles against the 12,288 soft line (+6 this round: the skirts and the L3 back face).
+- The L3 rail-end stub (7379..7382, 1800..1913, -2748..-2688). It is inside the corner post's footprint.
+- The South Terrace lane at x 8220 next to the glazed west bay. It is 10 u from the glass edge, so it stops at the glass in both models.
+- The vanilla-only residuals (improvement 9), which are 0 under dx151.
+- The LL one-way wall at (6680, -600, -3284), ll_room_13 / ll_corridor_04. It needs a back face that stops short of LL door 23.
+- The auditorium-side cells in the vanilla flood dropped 2,750 -> 2,646, because the rake is 0.35 m shorter. This is expected.
+
 ## 10. Open questions (`open_questions`)
 
 - Real floor elevations, and the ceiling heights of the Grand Ballroom and Rion Ballroom.

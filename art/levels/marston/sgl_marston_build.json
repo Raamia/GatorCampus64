@@ -13,13 +13,13 @@
  "background": "OCEAN_SKY",
  "kit_tris": {
   "total": {
-   "visual": 146050,
-   "collision": 11495
+   "visual": 146410,
+   "collision": 11655
   },
   "by_group": {
    "F1": {
-    "visual": 45779,
-    "collision": 3598
+    "visual": 46139,
+    "collision": 3758
    },
    "F2": {
     "visual": 19866,
@@ -2327,27 +2327,27 @@
    "F5": 0
   },
   "study_leaf_poses": [
-   "F1 L115 flat",
-   "F1 L116 flat",
-   "F1 L117 flat",
-   "F1 L118 flat",
-   "F1 L119 flat",
-   "F1 L120 flat",
-   "F1 L121 side",
-   "F1 L122 flat",
-   "F1 L123 flat",
-   "F1 L124 flat",
-   "F1 L125 flat",
-   "F1 L126 flat",
-   "F1 L127 side",
-   "F1 L128 flat",
+   "F1 L115 closed",
+   "F1 L116 closed",
+   "F1 L117 closed",
+   "F1 L118 closed",
+   "F1 L119 closed",
+   "F1 L120 closed",
+   "F1 L121 closed",
+   "F1 L122 closed",
+   "F1 L123 closed",
+   "F1 L124 closed",
+   "F1 L125 closed",
+   "F1 L126 closed",
+   "F1 L127 closed",
+   "F1 L128 closed",
    "F1 L129 flat",
-   "F1 L130 flat",
-   "F1 L131 flat",
-   "F1 L132 flat",
-   "F1 L133 flat",
-   "F1 L134 flat",
-   "F1 L135 flat",
+   "F1 L130 closed",
+   "F1 L131 closed",
+   "F1 L132 closed",
+   "F1 L133 closed",
+   "F1 L134 closed",
+   "F1 L135 closed",
    "F2 R201D flat",
    "F2 R201E flat",
    "F2 R201F side",
@@ -2409,7 +2409,7 @@
    "doubled_dropped": 8,
    "default_inside_nocam_kept": 0
   },
-  "finish_swaps": 3726,
+  "finish_swaps": 3766,
   "f1_core_brick_polys": 73,
   "uv_splits": 637,
   "coplanar_overlap": {
@@ -2607,12 +2607,12 @@
  "objects": {
   "marston F1 visual": {
    "group": "F1",
-   "tris": 23883,
+   "tris": 24063,
    "collision": false
   },
   "marston F1 collision": {
    "group": "F1",
-   "tris": 1909,
+   "tris": 1989,
    "collision": true
   },
   "marston F2 visual": {
@@ -2705,23 +2705,23 @@
  "collision_repair": {
   "area_1": {
    "vertices": [
-    8866,
-    8855
+    9026,
+    9015
    ],
    "welded_vertices": 11,
    "collapsed_tris": 0,
    "tjunction_splits": 439,
    "triangles": [
-    11298,
-    11737
+    11458,
+    11897
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [],
-  "collision_tris": 11737,
-  "render_tris": 146050,
+  "collision_tris": 11897,
+  "render_tris": 146410,
   "lua_names": [],
   "fog_patched": [
    119,
@@ -2730,5 +2730,26 @@
  },
  "level_dir": "mods/sgl64/levels/ccm",
  "points_file": "data/uf/marston_points.json",
- "point_checks": []
+ "point_checks": [
+  "room_L115_door: clearance 0.10",
+  "room_L116_door: clearance 0.10",
+  "room_L117_door: clearance 0.10",
+  "room_L118_door: clearance 0.10",
+  "room_L119_door: clearance 0.10",
+  "room_L120_door: clearance 0.10",
+  "room_L121_door: clearance 0.10",
+  "room_L122_door: clearance 0.10",
+  "room_L123_door: clearance 0.10",
+  "room_L124_door: clearance 0.10",
+  "room_L125_door: clearance 0.10",
+  "room_L126_door: clearance 0.10",
+  "room_L127_door: clearance 0.10",
+  "room_L128_door: clearance 0.10",
+  "room_L130_door: clearance 0.10",
+  "room_L131_door: clearance 0.10",
+  "room_L132_door: clearance 0.10",
+  "room_L133_door: clearance 0.10",
+  "room_L134_door: clearance 0.10",
+  "room_L135_door: clearance 0.10"
+ ]
 }
