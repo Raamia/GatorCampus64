@@ -34,6 +34,8 @@ The game's Lua can't reach the internet, so **the host** runs a small helper nex
    ```
    Without a key, `python3 tools/npc_bridge/bridge.py --fake` answers with canned lines. `--model` picks another Gemini model (default `gemini-3.8-flash`).
 
+**Online (play.gatorcamp.us)** nobody runs this helper: the server's own bridge (`server/bridge`) answers for Albert and Alberta with the same guide and Gemini code. The headless host prints each question as an `npc_ask` event, and the reply comes back in the same `sav/sgl64_npc.modfs` file. The Gemini key lives in the server's `/etc/sgl/bridge.env` (`GEMINI_API_KEY=`), never in the repo. Without a key the guide still answers game questions, and everything else gets a canned line. Setup: "NPC chat" in `server/bridge/README.md`.
+
 Only the host needs the bridge, and friends who join talk to the same NPCs. If the bridge isn't running, the NPC answers "ask me again in a bit" after 15 s, and the host sees a reminder in chat. The bridge prints each question with the route it took (`[guide: my-stars 1.00]` or `[ai]`). The personas live in `tools/npc_bridge/npcs.json` and the NPCs (models, places) in `mods/sgl64/sgl_npc.lua`. Their ids must match, and the guide must agree with `course.lua` (doors, star counts, acts); `tools/luatest/run.sh` checks both.
 
 Both models are generated without Blender by `tools/actors/make_gators.py`: low-poly gators built from primitives on one shared 10-joint skeleton (root, hips, torso, head, jaw, arms, tail, legs), written as DynOS actors in `mods/sgl64/actors/albert/` and `mods/sgl64/actors/alberta/`. To change their look, edit the script and re-run it with `python3 -I tools/actors/make_gators.py`. Their shared animations (idle, walk, talk, think, wave and Gator Chomp) are pose functions in `mods/sgl64/sgl_albert.lua`, sampled into keyframes when the mod loads. Their behaviour, spots and routes are in `sgl_npc.lua`; `tools/luatest/check_npc_spots.py` checks every spot against the built level (flat, clear ground) and that one mascot is always on the hub.
@@ -198,8 +200,9 @@ With `python3 tools/npc_bridge/bridge.py --fake` (or a real key) running on the 
 1. **Join**: sm64coopdx → **Join** → Direct Connect `play.gatorcamp.us`, port 7777. The mod downloads from the server.
 2. **Gator Pass**: type `/login`. A QR code and a code appear; scan it (or open `login.gatorcamp.us/activate` and type the code) and approve on your phone. You get a gold `*` before your name tag and "GATOR PASS" in the player list, and if you made a gator on the website it is selected for you. `/link <code>` with the code from gatorcamp.us/link does the same without a QR; `/login cancel` or B closes the panel.
 3. **Gatorize Me**: on gatorcamp.us, log in, upload 1-4 photos and watch the build. Once it is ready, the server announces the new gator, restarts within about a minute, and it appears on character select page 2.
+4. **Albert and Alberta**: walk up to Albert next to the spawn and type "how many stars do I have", then `/alberta what's the capital of France?`. The first answer comes from the guide right away and the second from Gemini in a few seconds. Every player sees both. On the server, `journalctl -u sgl-bridge -f | grep npc` shows each question and the route it took. If the mascot answers "ask me again in a bit", look for `NPC chat` in the same log.
 
-Offline checks: `tools/luatest/run.sh` covers the mod side (`test_bridge`, `test_login`, `test_qr`); `server/api`, `server/worker` and `server/bridge` each have a pytest suite (the database tests start a throwaway Postgres in Docker; `server/worker/README.md` has the commands).
+Offline checks: `tools/luatest/run.sh` covers the mod side (`test_bridge`, `test_login`, `test_qr`, `test_npc`); `server/api`, `server/worker` and `server/bridge` each have a pytest suite (the database tests start a throwaway Postgres in Docker; `server/worker/README.md` has the commands).
 
 ## Campus data
 

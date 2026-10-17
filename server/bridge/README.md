@@ -7,6 +7,7 @@ This is the game host's bridge (docs/web_platform_spec.md §5.3, §6.2-§6.4, §
 - **Login.** A `login_req` event starts the Auth0 device flow: `/oauth/device/code`, then polling `/oauth/token`, then ID token checks (RS256 via JWKS, `iss`, `aud` = the Gator Pass client id, `exp`), then `POST /links`, then an inbox `verified`. A `link_req` sends `POST /links {code}`. A `login_cancel` or a `leave` stops polling.
 - **Inbox (bridge to game).** The bridge writes `<savepath>/sav/sgl64.modfs` atomically (temp file, then rename). The mod reloads it every second.
 - **Deploys.** The bridge applies guest character deploys, with at most one game restart every 5 minutes.
+- **NPC chat.** The bridge answers Albert and Alberta's `npc_ask` events with `tools/npc_bridge`'s code (game guide, then Gemini). See NPC chat below.
 
 ```
 python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
@@ -19,9 +20,10 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
    - `server/bridge/`
    - `server/worker/actor_rename.py`
    - `mods/sgl64/` (fallback source for the guest placeholders)
+   - `tools/npc_bridge/` (NPC chat: `bridge.py`, `guide.py`, `game_guide.md`, `npcs.json`)
 
    Then `python3 -m venv /opt/sgl/server/bridge/.venv && /opt/sgl/server/bridge/.venv/bin/pip install -r /opt/sgl/server/bridge/requirements.txt`.
-2. Copy `server/deploy/bridge.env.example` to `/etc/sgl/bridge.env` (mode 600) and fill in the Auth0, M2M and API values.
+2. Copy `server/deploy/bridge.env.example` to `/etc/sgl/bridge.env` (mode 600) and fill in the Auth0, M2M and API values, plus `GEMINI_API_KEY` for NPC chat.
 3. Copy `server/deploy/sgl-bridge.service` to `/etc/systemd/system/`, then run `systemctl daemon-reload && systemctl disable --now sgl-game && systemctl enable --now sgl-bridge`.
    **Once the bridge takes over, sgl-game stays disabled.** The bridge launches the game itself, and both units would bind UDP 7777; the unit also declares `Conflicts=sgl-game.service`.
    Logs for both the bridge and the game: `journalctl -u sgl-bridge -f`.
@@ -39,6 +41,7 @@ Each event is one line, `SGLEVT {"t":"<type>",...}`. `t` comes first, the other 
 | login_req | gi, name |
 | link_req | gi, name, code |
 | login_cancel | gi, name (optional; sent by sgl_login.lua if it wants) |
+| npc_ask | session, seq, npc (albert, alberta), player, text, stats ("k=v;k=v", see sgl_npc.lua my_stats). Answered here, not sent to the API |
 | exit | code (added by the bridge when the game process ends, not printed by the game) |
 
 `POST /events` body: `{t, payload, at}` plus a copy of the payload's fields at the top level, because server/api reads `friend` from the top level.
@@ -84,6 +87,16 @@ I verified these points against the v1.5.1 source (`src/pc/mods/mod_fs.cpp`, `mo
 - **Test coverage.** `tests/test_modfs_miniz.py` compiles coopdx's own miniz and reads the bridge's archive with the same calls as `mod_fs_read`. It is skipped unless `/tmp/sm64coopdx` (or `SM64COOPDX_SRC`) and a C compiler are present.
 
 Checked on the live server (sgl-host): the game starts under the bridge with the inbox in place, the bridge (user `sgl`) writes it with mode 644, and the game's `hello` event reaches the bridge. Still to confirm with a client connected: a replaced inbox is picked up on the next reload and its popup appears.
+
+## NPC chat (Albert and Alberta)
+
+On a player's machine, `tools/npc_bridge/bridge.py` reads the mod's questions from `sav/sgl64.modfs` (`npc_out.txt`). On this server that file is the bridge's inbox. The bridge rewrites the whole file, and the mod reloads it every second, so a second writer would lose questions and could put back a stale `inbox.json` with login codes in it. So on a headless host, `sgl_npc.lua` writes nothing there. It prints each question as an `npc_ask` event instead, and `sglbridge/npc.py` answers it:
+
+1. **Queue.** The event goes on a queue (32 at most, the newest dropped when full). `npc_ask` events are not forwarded to `POST /events`, because player chat does not belong in the API.
+2. **Answer.** One `npc` thread answers questions one at a time with `tools/npc_bridge/bridge.py`'s `Bridge.handle()`, the same code as the local helper. Game questions are answered from `game_guide.md` with the asker's live stats, and everything else goes to Gemini (`GEMINI_API_KEY`, `SGL_NPC_MODEL`). Without a key, non-guide questions get a canned line from `npcs.json`.
+3. **Reply.** The reply goes to `<savepath>/sav/sgl64_npc.modfs` (`replies.txt`, a public modfs), the file the mod already polls. The host relays it to every player. A game restart (new session) drops the queue, and the mod ignores replies from an old session.
+
+Setup: copy `tools/npc_bridge/` to `/opt/sgl` (install step 1), put `GEMINI_API_KEY=<key>` in `/etc/sgl/bridge.env`, then run `systemctl restart sgl-bridge`. The key stays in that root-owned mode-600 file and is never committed. At start the journal shows `NPC chat on (Gemini gemini-3.8-flash; game guide: N entries; ...)`, and then one line per question with its route (`[guide: my-stars 1.00]`, `[ai]`). Game questions the guide couldn't answer well are appended to `$SGL_BRIDGE_STATE/npc_unanswered.log` (`/srv/sgl/bridge/`, since `/opt` is read-only under `ProtectSystem=strict`). If the mascots answer "ask me again in a bit", check the journal for `NPC chat off`, Gemini HTTP errors or a full queue. They also give that answer if the game runs as plain `sgl-game.service` without the bridge.
 
 ## Deploys (spec §5.3)
 
