@@ -20,10 +20,23 @@ public struct GameRun: Codable, Equatable, Sendable {
     }
 }
 
+public struct CachedLeaderboardRow: Equatable, Sendable {
+    public let playerTag: String
+    public let elapsedFrames: Int
+    public let retries: Int
+
+    public init(playerTag: String, elapsedFrames: Int, retries: Int) {
+        self.playerTag = playerTag
+        self.elapsedFrames = elapsedFrames
+        self.retries = retries
+    }
+}
+
 public enum BridgeError: Error, LocalizedError {
     case invalidRun(line: Int)
     case invalidCallback
     case invalidAppURL
+    case invalidLeaderboardCache
     case processFailed(String)
 
     public var errorDescription: String? {
@@ -31,6 +44,7 @@ public enum BridgeError: Error, LocalizedError {
         case .invalidRun(let line): return "Outbox line \(line) has invalid fields. The file was left unchanged."
         case .invalidCallback: return "OAuth callback had a missing code or incorrect state."
         case .invalidAppURL: return "Use the deployed app origin, such as https://gator-field-board.app.space."
+        case .invalidLeaderboardCache: return "The leaderboard response contained invalid data; the game cache was left unchanged."
         case .processFailed(let message): return message
         }
     }
@@ -63,6 +77,70 @@ public func parseOutbox(_ text: String) throws -> [GameRun] {
                               retries: retries, assisted: fields[4] == "1", gameVersion: fields[5]))
     }
     return result
+}
+
+/// Create safe `mod_storage` key/value updates consumed by the Lua game mod.
+public func leaderboardStorageUpdates(
+    missionID: String,
+    rows: [CachedLeaderboardRow],
+    updatedAt: Int64
+) throws -> [String: String] {
+    let playerTagPattern = try! NSRegularExpression(pattern: "^[A-Za-z0-9_-]{1,32}$")
+    guard matches(missionIdPattern, missionID), rows.count <= 10, updatedAt > 0 else {
+        throw BridgeError.invalidLeaderboardCache
+    }
+    let prefix = "sgl_ds_lb_\(missionID)_"
+    var updates = [
+        prefix + "count": String(rows.count),
+        prefix + "updated": String(updatedAt),
+    ]
+    for (index, row) in rows.enumerated() {
+        guard matches(playerTagPattern, row.playerTag),
+              (1...108_000).contains(row.elapsedFrames), (0...100).contains(row.retries) else {
+            throw BridgeError.invalidLeaderboardCache
+        }
+        updates[prefix + String(index + 1)] = "\(row.playerTag)|\(row.elapsedFrames)|\(row.retries)"
+    }
+    return updates
+}
+
+/// Merge leaderboard keys into the game's plain-text mod-storage save, removing stale rows
+/// for the specified key prefixes while preserving unrelated settings and mod data.
+public func mergeModStorage(_ text: String, updates: [String: String], clearingPrefixes: [String]) -> String {
+    var lines = text.components(separatedBy: "\n")
+    let hadFinalNewline = lines.last == ""
+    if hadFinalNewline { lines.removeLast() }
+
+    var storageHeader: Int?
+    var storageEnd = lines.count
+    for index in lines.indices {
+        if lines[index] == "[storage]" {
+            storageHeader = index
+            if index + 1 < lines.count {
+                storageEnd = ((index + 1)..<lines.count).first(where: { lines[$0].hasPrefix("[") }) ?? lines.count
+            }
+            break
+        }
+    }
+
+    if storageHeader == nil {
+        if !lines.isEmpty && !lines.last!.isEmpty { lines.append("") }
+        lines.append("[storage]")
+        storageHeader = lines.count - 1
+        storageEnd = lines.count
+    }
+
+    guard let header = storageHeader else { return text }
+    let valueStart = header + 1
+    let originalStorage = Array(lines[valueStart..<storageEnd])
+    let retained = originalStorage.filter { line in
+        guard let equals = line.firstIndex(of: "=") else { return true }
+        let key = String(line[..<equals])
+        return !clearingPrefixes.contains { key.hasPrefix($0) }
+    }
+    let replacement = updates.keys.sorted().map { "\($0)=\(updates[$0]!)" }
+    lines.replaceSubrange(valueStart..<storageEnd, with: retained + replacement)
+    return lines.joined(separator: "\n") + (hadFinalNewline || !lines.isEmpty ? "\n" : "")
 }
 
 public func normalizedAppOrigin(_ value: String) throws -> URL {

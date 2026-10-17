@@ -49,3 +49,29 @@ import Testing
 @Test func oauthVerifierHasPkceCompatibleLength() throws {
     #expect((43...128).contains(try createVerifier().count))
 }
+
+@Test func leaderboardCacheUpdatesAreValidatedAndMergedIntoStorage() throws {
+    let updates = try leaderboardStorageUpdates(
+        missionID: "reitz_rooftop",
+        rows: [CachedLeaderboardRow(playerTag: "GATOR-AB12CD34", elapsedFrames: 900, retries: 2)],
+        updatedAt: 1_800_000_000
+    )
+    #expect(updates["sgl_ds_lb_reitz_rooftop_count"] == "1")
+    #expect(updates["sgl_ds_lb_reitz_rooftop_1"] == "GATOR-AB12CD34|900|2")
+
+    let original = "[storage]\nfriend=raami\nsgl_ds_run_sequence=4\nsgl_ds_lb_reitz_rooftop_1=STALE|1000|0\n[other]\nkeep=yes\n"
+    let merged = mergeModStorage(original, updates: updates, clearingPrefixes: ["sgl_ds_lb_reitz_rooftop_"])
+    #expect(merged.contains("friend=raami\n"))
+    #expect(merged.contains("sgl_ds_run_sequence=4\n"))
+    #expect(merged.contains("sgl_ds_lb_reitz_rooftop_1=GATOR-AB12CD34|900|2\n"))
+    #expect(merged.contains("[other]\nkeep=yes\n"))
+    #expect(!merged.contains("STALE"))
+}
+
+@Test func leaderboardCacheRejectsUnsafeRows() {
+    #expect(throws: BridgeError.self) {
+        try leaderboardStorageUpdates(missionID: "reitz_rooftop", rows: [
+            CachedLeaderboardRow(playerTag: "bad|tag", elapsedFrames: 900, retries: 0)
+        ], updatedAt: 1_800_000_000)
+    }
+}

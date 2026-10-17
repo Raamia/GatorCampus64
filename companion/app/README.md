@@ -14,7 +14,7 @@ npx deepspace dev start
 
 The first DeepSpace CLI sign-in opens a browser and requires the account owner to accept DeepSpace's Terms of Service. No credentials belong in this repository. The scaffold uses the DeepSpace account's app namespace when the first app command registers the app. Keep the GitHub repository as the source of truth; do not run `npx deepspace push`.
 
-The local worker starts at `http://localhost:8780`. The existing browser UI still contains an older squad-room prototype; it is separate from the native single-player game integration. Build, sign in to, and use the macOS bridge by following [`../native-bridge/README.md`](../native-bridge/README.md). Online leaderboard results are currently viewed from the terminal, not inside the game.
+The local worker starts at `http://localhost:8780`. The existing browser UI still contains an older squad-room prototype; it is separate from the native single-player game integration. Build, sign in to, and use the macOS bridge by following [`../native-bridge/README.md`](../native-bridge/README.md). The bridge can refresh leaderboard snapshots into the native game's local save; the SGL64 mod displays them from its Mods menu.
 
 ## Optional sponsor service
 

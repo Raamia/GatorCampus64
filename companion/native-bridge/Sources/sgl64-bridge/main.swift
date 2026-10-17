@@ -43,7 +43,7 @@ private enum CLIError: Error, LocalizedError {
         case .keychain(let status): return "macOS Keychain error (\(status))."
         case .http(let status, let text): return "DeepSpace returned HTTP \(status): \(text)"
         case .processFailed(let message): return message
-        case .gameRunning: return "Close SM64CoopDX before syncing so the .modfs save is stable, then retry."
+        case .gameRunning: return "Close SM64CoopDX before syncing or refreshing the in-game leaderboard, then retry."
         case .noModFS: return "No ModFS containing pending_runs.txt was found. Pass --modfs /path/to/mod.modfs."
         case .ambiguousModFS(let files): return "Several ModFS archives contain the outbox; pass --modfs explicitly:\n" + files.joined(separator: "\n")
         case .unzip(let message): return message
@@ -58,6 +58,7 @@ SGL64 DeepSpace bridge
   sgl64-bridge login --app-url https://gator-field-board.app.space
   sgl64-bridge sync [--modfs /path/to/mod.modfs]
   sgl64-bridge leaderboard <mission-id>
+  sgl64-bridge refresh-leaderboard
   sgl64-bridge logout
 
 Sign-in opens Google OAuth in the system browser and listens only on
@@ -366,6 +367,50 @@ private func showLeaderboard(missionId: String) async throws {
     }
 }
 
+private func refreshLeaderboardCache() async throws {
+    guard !gameIsRunning() else { throw CLIError.gameRunning }
+    let missions = ["reitz_rooftop", "marston_climb"]
+    let (origin, token, _) = try await authenticatedContext()
+    var updates: [String: String] = [:]
+    var rowCounts: [String: Int] = [:]
+    let updatedAt = Int64(Date().timeIntervalSince1970)
+
+    // Fetch and validate both boards before touching the game save, so a partial failure
+    // never leaves one board fresher than the other.
+    for missionID in missions {
+        let result = try await action(origin: origin, accessToken: token, name: "getGameLeaderboard",
+                                      body: ["missionId": missionID, "limit": 10])
+        guard let data = result["data"] as? [String: Any],
+              let payloadRows = data["rows"] as? [[String: Any]] else {
+            throw CLIError.processFailed("Leaderboard response for \(missionID) was missing rows.")
+        }
+        let rows = try payloadRows.map { item -> CachedLeaderboardRow in
+            guard let playerTag = item["playerTag"] as? String,
+                  let elapsedFrames = item["elapsedFrames"] as? Int,
+                  let retries = item["retries"] as? Int else {
+                throw BridgeError.invalidLeaderboardCache
+            }
+            return CachedLeaderboardRow(playerTag: playerTag, elapsedFrames: elapsedFrames, retries: retries)
+        }
+        updates.merge(try leaderboardStorageUpdates(missionID: missionID, rows: rows, updatedAt: updatedAt)) { _, new in new }
+        rowCounts[missionID] = rows.count
+    }
+
+    guard !gameIsRunning() else { throw CLIError.gameRunning }
+    let saveURL = FileManager.default.homeDirectoryForCurrentUser
+        .appending(path: "Library/Application Support/sm64coopdx/sav/sgl64.sav")
+    let original: String
+    if let data = try? Data(contentsOf: saveURL), let text = String(data: data, encoding: .utf8) {
+        original = text
+    } else {
+        original = "[storage]\n"
+    }
+    let merged = mergeModStorage(original, updates: updates, clearingPrefixes: ["sgl_ds_lb_reitz_rooftop_", "sgl_ds_lb_marston_climb_"])
+    try Data(merged.utf8).write(to: saveURL, options: .atomic)
+    print("Refreshed in-game leaderboard cache: Reitz \(rowCounts["reitz_rooftop", default: 0]) row(s), Marston \(rowCounts["marston_climb", default: 0]) row(s).")
+    print("Launch SM64CoopDX, open the Mods menu, then choose the SGL64 leaderboard buttons.")
+}
+
 @main
 private struct SGL64Bridge {
     static func main() async {
@@ -386,6 +431,9 @@ private struct SGL64Bridge {
             case "leaderboard":
                 guard args.count == 2 else { throw CLIError.usage }
                 try await showLeaderboard(missionId: args[1])
+            case "refresh-leaderboard":
+                guard args.count == 1 else { throw CLIError.usage }
+                try await refreshLeaderboardCache()
             case "logout":
                 let config = try readConfig()
                 let origin = try normalizedAppOrigin(config.appURL)

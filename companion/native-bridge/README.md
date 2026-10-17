@@ -1,6 +1,6 @@
 # SGL64 DeepSpace native bridge
 
-This small macOS command-line helper syncs single-player run records after a game session and displays the online leaderboard. It keeps gameplay local and does not run a web game or a background service.
+This small macOS command-line helper syncs single-player run records after a game session and refreshes the online leaderboard cache used by the game. It keeps gameplay local and does not run a web game or a background service.
 
 ## Requirements
 
@@ -48,7 +48,15 @@ sgl64-bridge sync --modfs "$HOME/Library/Application Support/sm64coopdx/sav/<sgl
 
 Successful run IDs are checkpointed per DeepSpace app and account in `~/Library/Application Support/SGL64Bridge/sync-checkpoints.json`. The checkpoint is local metadata, not a credential. If the helper exits after DeepSpace accepts a run but before saving the checkpoint, retrying is safe because the server treats each `(account, run ID)` as unique. Malformed outbox rows stop the sync and remain untouched.
 
-The game outbox may grow over time; the bridge intentionally does not prune or rewrite it. The game currently has no transport for live requests, so this release cannot update an in-game leaderboard. Fetch the online leaderboard from the terminal:
+The game outbox may grow over time; the bridge intentionally does not prune or rewrite it. The game does not make live network requests. To show the latest online scores in-game, close SM64CoopDX and refresh the local cache:
+
+```sh
+sgl64-bridge refresh-leaderboard
+```
+
+Launch the game, open **Mods**, and choose **Reitz leaderboard** or **Marston leaderboard**. The popup shows up to five scores from the last refresh. Refresh again while the game is closed to update the snapshot. The command updates only leaderboard keys in `~/Library/Application Support/sm64coopdx/sav/sgl64.sav`; it preserves other mod-storage settings and local run data.
+
+You can still fetch a board directly in the terminal:
 
 ```sh
 sgl64-bridge leaderboard reitz_rooftop

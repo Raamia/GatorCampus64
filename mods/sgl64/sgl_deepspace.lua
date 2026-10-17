@@ -42,3 +42,34 @@ function sgl_deepspace_queue_run(run)
     if not fs:save() then return false end
     return true
 end
+
+local function show_cached_leaderboard(label, mission_id)
+    local prefix = "sgl_ds_lb_" .. mission_id .. "_"
+    local count = mod_storage_load_integer(prefix .. "count", 0)
+    if count <= 0 then
+        djui_popup_create(label .. " leaderboard\nNo unassisted scores cached yet.", 5)
+        return
+    end
+
+    local message = label .. " leaderboard"
+    for rank = 1, math.min(count, 5) do
+        local entry = mod_storage_load(prefix .. rank)
+        local tag, frames, retries
+        if type(entry) == "string" then
+            tag, frames, retries = entry:match("^([^|]+)|(%d+)|(%d+)$")
+        end
+        if tag ~= nil then
+            message = message .. string.format("\n#%d %s  %.2fs  retry %s", rank, tag, tonumber(frames) / 30, retries)
+        end
+    end
+    djui_popup_create(message, 8)
+end
+
+if hook_mod_menu_button ~= nil then
+    hook_mod_menu_button("Reitz leaderboard", function()
+        show_cached_leaderboard("Reitz", "reitz_rooftop")
+    end)
+    hook_mod_menu_button("Marston leaderboard", function()
+        show_cached_leaderboard("Marston", "marston_climb")
+    end)
+end
