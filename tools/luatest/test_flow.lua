@@ -119,7 +119,7 @@ end
 test("load: every mod file in coopdx order, strict globals, no duplicate registrations", function()
     local names = table.concat(Sim.ALL_FILES, " ")
     check(#Sim.ALL_FILES >= 8, "found the mod files: " .. names)
-    check(names:find("characters.lua charselect.lua course.lua levels.lua main.lua sgl_hud.lua sgl_mission.lua swamp_missions.lua", 1, true) ~= nil,
+    check(names:find("characters.lua charselect.lua course.lua levels.lua main.lua sgl_deepspace.lua sgl_hud.lua sgl_mission.lua sgl_status_hud.lua swamp_missions.lua", 1, true) ~= nil,
         "strcmp load order: " .. names)
     local w = full_world()
     local H = w:connect("Host")      -- loading errors (undefined global at load, duplicate command) throw here
@@ -252,7 +252,20 @@ test("single player: hub -> character select -> door -> act 1 -> star -> back ou
     check(H.strStorage.friend == "anh" and env.gPlayerSyncTable[0].friend == 4, "pick saved + synced (Anh)")
     w:step(2)
     check(raw(H.ms[0].marioObj)._model == env._G.sglFriends[4].model, "characters.lua swapped the model")
+    check(raw(H.ms[0].marioObj).hookRender == 1, "selected character checks its model before rendering")
+    raw(H.ms[0].marioObj)._model = C.E_MODEL_MARIO -- engine restores the base model after Mario update
+    Sim.run_hooks(H, C.HOOK_ON_OBJECT_RENDER, H.ms[0].marioObj)
+    check(raw(H.ms[0].marioObj)._model == env._G.sglFriends[4].model,
+        "character model restored before the Mario frame is drawn")
     check(H.ms[0].numLives == 4, "4 lives")
+    check((H.hudFlags & (C.HUD_DISPLAY_FLAGS_LIVES | C.HUD_DISPLAY_FLAGS_STAR_COUNT)) == 0,
+        "vanilla Mario and star HUD icons hidden")
+    local portraitDrawn, coinDrawn = false, false
+    for _, d in ipairs(H.draw) do
+        if d.k == "tex" and d.name == "sgl_portrait_anh" then portraitDrawn = true end
+        if d.k == "tex" and d.name == "sgl_gator_coin" then coinDrawn = true end
+    end
+    check(portraitDrawn and coinDrawn, "chosen friend portrait and gator coin replace the HUD icons")
 
     -- doors: 6 objects from the hub script; with 0 stars only The Swamp's opens (Reitz is built but locked)
     local doors = Sim.objects_with(H, env.id_bhvSglDoor)

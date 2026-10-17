@@ -628,7 +628,8 @@ test("HUD: every state renders without errors", function()
 end)
 
 test("integration: with levels.lua + main.lua loaded, /campus swamp 3 starts the co-op mission", function()
-    local files = { "course.lua", "levels.lua", "main.lua", "sgl_hud.lua", "sgl_mission.lua", "swamp_missions.lua" }
+    local files = { "course.lua", "levels.lua", "main.lua", "sgl_deepspace.lua", "sgl_hud.lua",
+        "sgl_mission.lua", "swamp_missions.lua" }
     local w = Sim.new({ files = files })
     local H, A = w:connect("Host"), w:connect("A")
     w:step(3)

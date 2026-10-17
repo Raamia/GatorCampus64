@@ -580,6 +580,10 @@ function World:build_env(c)
         c.menu[name] = fn
         return 0
     end
+    S.hook_mod_menu_text = function(text)
+        assert(c.loading and type(text) == "string")
+        return 0
+    end
     S.define_custom_obj_fields = function() assert(c.loading) end
 
     -- text / ui / logging
@@ -604,7 +608,12 @@ function World:build_env(c)
 
     -- hud
     local function int8(v, what) assert(math.type(v) == "integer" and v >= 0 and v <= 255, what .. " must be an integer 0..255, got " .. tostring(v)) end
-    S.djui_hud_set_resolution = function(r) assert(r == C.RESOLUTION_N64 or r == C.RESOLUTION_DJUI) end
+    c.resolution = C.RESOLUTION_N64
+    S.djui_hud_set_resolution = function(r)
+        assert(r == C.RESOLUTION_N64 or r == C.RESOLUTION_DJUI)
+        c.resolution = r
+    end
+    S.djui_hud_get_resolution = function() return c.resolution end
     S.djui_hud_set_font = function(f) assert(math.type(f) == "integer"); c.font = f end
     S.djui_hud_get_screen_width = function() return 427 end
     S.djui_hud_get_screen_height = function() return 240 end
@@ -779,9 +788,20 @@ function World:build_env(c)
         return true
     end
     c.hudHidden = false
+    c.hudFlags = C.HUD_DISPLAY_DEFAULT
     S.hud_hide = function() c.hudHidden = true end
     S.hud_show = function() c.hudHidden = false end
     S.hud_is_hidden = function() return c.hudHidden end
+    S.hud_get_value = function(which)
+        if which == C.HUD_DISPLAY_FLAGS then return c.hudFlags end
+        if which == C.HUD_DISPLAY_LIVES then return c.ms[0].numLives end
+        if which == C.HUD_DISPLAY_STARS then return c.ms[0].numStars end
+        return 0
+    end
+    S.hud_set_value = function(which, value)
+        assert(which == C.HUD_DISPLAY_FLAGS and math.type(value) == "integer")
+        c.hudFlags = value
+    end
     S.djui_hud_get_mouse_x = function() return 0 end
     S.djui_hud_get_mouse_y = function() return 0 end
     S.djui_hud_get_mouse_buttons_down = function() return 0 end
@@ -836,6 +856,13 @@ function World:build_env(c)
     S.obj_has_behavior_id = function(o, bhv) return (o ~= nil and raw(o).behavior == bhv) and 1 or 0 end
     S.obj_mark_for_deletion = function(o) raw(o).activeFlags = C.ACTIVE_FLAG_DEACTIVATED end
     S.obj_set_model_extended = function(o, m) raw(o)._model = m end
+    S.obj_has_model_extended = function(o, m) return raw(o)._model == m and 1 or 0 end
+    S.get_mario_state_from_object = function(o)
+        for i = 0, C.MAX_PLAYERS - 1 do
+            if c.ms[i].marioObj == o then return c.ms[i] end
+        end
+        return nil
+    end
     S.obj_set_billboard = function(o) raw(o)._billboard = true end
     S.obj_scale = function(o, s) local g = raw(o).header.gfx.scale; g.x, g.y, g.z = s, s, s end
     S.obj_scale_xyz = function(o, x, y, z) local g = raw(o).header.gfx.scale; g.x, g.y, g.z = x, y, z end
