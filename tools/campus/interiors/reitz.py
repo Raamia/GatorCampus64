@@ -313,6 +313,11 @@ def zone_style(z):
                  accent="int_ru_wall_royal" if fid == "G" else "int_ru_wall_slateblue")
         if zid == "meeting_G315":
             s["accent"] = "int_ru_wall_paleblue"     # fix round 4 (fidelity-3 blocking; ru_os_g315 'pale blue accent wall')
+        if zid == "meeting_3310":
+            # iteration 9 (fidelity-4 improvement 8; ru_os_3310): warm cream walls (photo ~174, 159, 139; the white
+            # int_ru_wall baked a cool grey). Not 3305: its south wall's run end overlaps the l3_corridor_08 wall
+            # face by 0.2 m in one plane at the T with its east wall, which only stays invisible while both are white
+            s["wall"] = "int_ru_wall_warm"
         if fid in ("G", "L2", "L3"):
             # dropped lay-in ceiling (ru_os_2315_2330, ru_os_3315_3320: ~2.7-3 m real): drawn + a collision ceiling at
             # ceil_h; the walls and the plain ceiling above stay at the floor's clear height, so the wall collision
@@ -360,7 +365,9 @@ def zone_style(z):
     elif t == "hotel_room":
         # fix round 4 (fidelity-4 pass, improvement 8): white walls (ru_hotel_room, ru_hotel_suite; the cream baked a
         # dull beige-grey)
-        s.update(floor="int_ru_carpet_hotel", wall="int_ru_wall", accent="int_ru_wall_royal", light="lamp",
+        # iteration 9 (fidelity-4 improvement 5; ru_hotel_room, ru_hotel_suite): the guest rooms' own warm taupe
+        # carpet (the navy diamond int_ru_carpet_hotel stays on the corridors)
+        s.update(floor="int_ru_carpet_hotelroom", wall="int_ru_wall", accent="int_ru_wall_royal", light="lamp",
                  ceil="int_ru_white")
     elif t == "balcony":
         s.update(floor="int_ru_paving", wall="int_ru_brick", ceil="int_ru_soffit", light="none")
@@ -1994,6 +2001,11 @@ def _door_mat(zn, ozn, kind):
     return "int_ru_door"
 
 
+# (floor, plan point at the block's end, trim m). Iteration 9 tried ("L3", (-396.2, -265.8), 0.2) for technical
+# improvement 5 and left it out: falls_fast found 4 new walk-off points at (7386, 1800, -2707) through the gap
+RAIL_END_TRIM = []
+
+
 def _rail_strip(V, a, b, z0, z1, holes, nrm, mat="int_ru_white"):
     L = math.dist(a, b)
     if L < 0.1:
@@ -2173,6 +2185,17 @@ def _balcony_edge(V, C, a, b, z, F):
                 if t1 < q1:
                     nsg.append((t1, q1, True))
             segs = nsg
+        # iteration 9 (technical improvement 5; rscan): hook to trim a thick block's end back (RAIL_END_TRIM; empty:
+        # the L3 stub at plan (-396.2, -265.8) trimmed 0.2 m opened a walk-off, so it needs a rendered return instead)
+        for fid_, tp_, tr_ in RAIL_END_TRIM:
+            if fid_ != F.id or not segs:
+                continue
+            q0, q1, th = segs[0]
+            if th and math.dist((a[0] + ux * q0, a[1] + uy * q0), tp_) < 0.35 and q1 - q0 > tr_ + 0.3:
+                segs[0] = (q0 + tr_, q1, th)
+            q0, q1, th = segs[-1]
+            if th and math.dist((a[0] + ux * q1, a[1] + uy * q1), tp_) < 0.35 and q1 - q0 > tr_ + 0.3:
+                segs[-1] = (q0, q1 - tr_, th)
         for q0, q1, thick in segs:
             if q1 - q0 < 0.02:
                 continue
@@ -2486,6 +2509,7 @@ def build(backdrop=True, dress=True):
         build_lights(RZ, RZ.floors[fid], skip=RZ.lights_skip)
     if backdrop:
         build_backdrop(RZ)
+    _trim_unreachable_collision(RZ)
     # lighting: one bake per group (the floor's own fixtures; daylight ambient)
     groups = RZ.kit.groups()
     by_group = {g: [] for g in groups}
@@ -2518,6 +2542,117 @@ def build(backdrop=True, dress=True):
     RZ.stats["goomba_spots"] = len(GOOMBA_SPOTS)
     _arm_goomba_placer()
     return RZ
+
+
+HIGH_HALLS = ("grand_ballroom",)     # big double-height halls with no wall-kick shaft (the small 11.4 m rooms keep theirs)
+
+
+def _sealed_at(F, q):
+    """A plan point inside a sealed room that nothing brings Mario into (the elevator cars are S zones too, but the
+    elevator warps land Mario in them, so they keep every face)."""
+    c, zn = F.cls_at(q)
+    return c == "S" and zn is not None and zn.type != "elevator"
+
+
+def _segx(p1, p2, p3, p4):
+    d1 = (p2[0] - p1[0]) * (p3[1] - p1[1]) - (p2[1] - p1[1]) * (p3[0] - p1[0])
+    d2 = (p2[0] - p1[0]) * (p4[1] - p1[1]) - (p2[1] - p1[1]) * (p4[0] - p1[0])
+    d3 = (p4[0] - p3[0]) * (p1[1] - p3[1]) - (p4[1] - p3[1]) * (p1[0] - p3[0])
+    d4 = (p4[0] - p3[0]) * (p2[1] - p3[1]) - (p4[1] - p3[1]) * (p2[0] - p3[0])
+    return d1 * d2 < 0.0 and d3 * d4 < 0.0
+
+
+def _poly_sealed(F, pts2):
+    """True when the plan polygon pts2 lies wholly in sealed rooms: its centroid and nudged corners are sealed, and
+    no other zone or void (a W elevator car inside a sealed block, a corridor) overlaps it at all."""
+    cx = sum(q[0] for q in pts2) / len(pts2)
+    cy = sum(q[1] for q in pts2) / len(pts2)
+    smp = [(cx, cy)] + [(q[0] + (cx - q[0]) * 0.1, q[1] + (cy - q[1]) * 0.1) for q in pts2]
+    if not all(_sealed_at(F, q_) for q_ in smp):
+        return False
+    bx0, bx1 = min(q[0] for q in pts2), max(q[0] for q in pts2)
+    by0, by1 = min(q[1] for q in pts2), max(q[1] for q in pts2)
+    others = [zn.poly for zn in F.zones if not (zn.cls == "S" and zn.type != "elevator")] + list(F.voids)
+    for op in others:
+        if max(q[0] for q in op) < bx0 or min(q[0] for q in op) > bx1 or max(q[1] for q in op) < by0 or \
+                min(q[1] for q in op) > by1:
+            continue
+        oc = (sum(q[0] for q in op) / len(op), sum(q[1] for q in op) / len(op))
+        if any(R.pip(q, pts2) for q in op) or R.pip(oc, pts2) or any(R.pip(q, op) for q in pts2):
+            return False
+        for i in range(len(pts2)):
+            for j in range(len(op)):
+                if _segx(pts2[i - 1], pts2[i], op[j - 1], op[j]):
+                    return False
+    return True
+
+
+def _trim_unreachable_collision(RZ):
+    """iteration 9 (technical improvement 3: area 2 was 12,899 collision tris, 611 over the 12,288 soft line): the
+    floor shells drop collision Mario can never touch: ceilings over sealed (S) rooms, ceilings 9 m or more above
+    their floor (the double-height Grand Ballroom's 11.4 m ceiling: no jump from its 0.6 m stage reaches 7.5 m),
+    walls with sealed rooms on both sides, and exact duplicate faces. Visual geometry is untouched."""
+    def nz_(pts):
+        a, b, c = pts[0], pts[1], pts[2]
+        return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
+    stats = {"ceil_sealed": 0, "ceil_high": 0, "floor_sealed": 0, "wall_sealed": 0, "dup": 0}
+    seen = {}
+    for t, g, p in RZ.kit.items:
+        if g not in RZ.floors:
+            continue
+        F = RZ.floors[g]
+        keep = []
+        sg_ = seen.setdefault(g, set())
+        shell = t.startswith("shell_")
+        for pl in p.collision.polys:
+            pts = pl.pts
+            n_t = len(pts) - 2
+            key = (tuple(sorted((round(q[0], 3), round(q[1], 3), round(q[2], 3)) for q in pts)),
+                   round(nz_(pts), 4), getattr(pl, "mat", None))
+            if key in sg_:
+                stats["dup"] += n_t
+                continue
+            sg_.add(key)
+            if not shell:
+                keep.append(pl)
+                continue
+            zs = [q[2] for q in pts]
+            cx = sum(q[0] for q in pts) / len(pts)
+            cy = sum(q[1] for q in pts) / len(pts)
+            if max(zs) - min(zs) < 0.01:
+                smp = [(cx, cy)] + [(q[0] + (cx - q[0]) * 0.1, q[1] + (cy - q[1]) * 0.1) for q in pts]
+                if nz_(pts) < 0.0:
+                    if zs[0] - F.z >= 9.0 and all((F.cls_at(q_)[1] is not None and F.cls_at(q_)[1].id in HIGH_HALLS)
+                                                  for q_ in smp):
+                        stats["ceil_high"] += n_t
+                        continue
+                    # (sealed-room ceilings / floors were tried and left out: the QA door sweep showed walks
+                    # passing INTO several S rooms (G #23, #39, L1 #4, L2 #23, #27, #141, L3 #34, #35, L6 #38),
+                    # which then found no floor)
+            else:
+                # a vertical face: both sides sealed at a quarter and three quarters of its length
+                lo = min(range(len(pts)), key=lambda i: (pts[i][2], i))
+                hz = [q for q in pts if abs(q[2] - zs[0]) < 0.01 or True]
+                xs_ = sorted(set((round(q[0], 4), round(q[1], 4)) for q in hz))
+                if len(xs_) >= 2:
+                    e0 = min(xs_, key=lambda q: (q[0], q[1]))
+                    e1 = max(xs_, key=lambda q: math.dist(q, e0))
+                    L = math.dist(e0, e1)
+                    if L > 0.05:
+                        ux, uy = (e1[0] - e0[0]) / L, (e1[1] - e0[1]) / L
+                        sealed = True
+                        for f_ in (0.25, 0.5, 0.75):
+                            mx, my = e0[0] + ux * L * f_, e0[1] + uy * L * f_
+                            for sg in (-1.0, 1.0):
+                                if F.cls_at((mx - uy * 0.4 * sg, my + ux * 0.4 * sg))[0] != "S":
+                                    sealed = False
+                        if sealed:
+                            stats["wall_sealed"] += n_t
+                            continue
+            keep.append(pl)
+        p.collision.polys[:] = keep
+    RZ.stats["collision_trim"] = stats
+    print("REITZ collision trim:", stats)
 
 
 def report(M):
@@ -2856,8 +2991,13 @@ def build_backdrop(RZ):
             R.quad_wall(V, pb, pa, z + 4.2, z + 4.4, "int_ru_white", ao=0.9)
             L = math.dist(pa, pb)
             if L > 0.5:
-                V.poly([(pa[0], pa[1], z), (pb[0], pb[1], z), (pb[0], pb[1], z + RAIL_H), (pa[0], pa[1], z + RAIL_H)],
-                       "int_ru_picket", uvs=[(0, 0), (L / 1.1, 0), (L / 1.1, 1), (0, 1)])
+                # iteration 9 (fidelity-4 sweep): the rail + piers stop at the plan doors on this edge (L1 #19, #20,
+                # #178, #181: the picket ran across the glass doors onto the walkway)
+                for f0, f1 in _free_runs(F1, pa, pb, clear=0.1, min_len=0.3):
+                    ra, rb = _sub(pa, pb, f0, f1)
+                    Lr = f1 - f0
+                    V.poly([(ra[0], ra[1], z), (rb[0], rb[1], z), (rb[0], rb[1], z + RAIL_H), (ra[0], ra[1], z + RAIL_H)],
+                           "int_ru_picket", uvs=[(f0 / 1.1, 0), ((f0 + Lr) / 1.1, 0), ((f0 + Lr) / 1.1, 1), (f0 / 1.1, 1)])
             # canopy piers (fidelity pass 2): square white piers on the outer edge, <= 6.5 m apart, so the west
             # glass of the food court looks out on the covered walkway to the Bookstore
             if L > 3.0:
@@ -2866,6 +3006,8 @@ def build_backdrop(RZ):
                 inx, iny = -uy, ux              # left of pa -> pb on a CCW zone: into the walkway
                 for k in range(n_p + 1):
                     if k == 0 and L < 6.0:
+                        continue
+                    if not _slot_clear(F1, pa, pb, L * k / n_p - 0.25, L * k / n_p + 0.25, 0.1):
                         continue
                     px = pa[0] + ux * L * k / n_p + inx * 0.35
                     py = pa[1] + uy * L * k / n_p + iny * 0.35
@@ -2945,6 +3087,13 @@ def selftest():
     worst.sort(reverse=True)
     print(f"   room furniture: {len(worst)} sets, worst outside share "
           f"{', '.join(f'{t} {o:.1%}' for o, t in worst[:3]) or 'none'}")
+    # iteration 9 (fidelity-4 blocking 1-3): no dressing face may stand inside a plan door opening (the slate band,
+    # art boards and wall panels covered 27 doorways: invisible exits that Mario walked through)
+    din = _decor_in_doors(M)
+    print(f"   decor in door openings: {len(din)} faces"
+          + (f" ({', '.join(sorted(set(f'{t}/{m}@{f}#{i}' for t, m, f, i in din))[:8])})" if din else ""))
+    for t, m, f, i in din:
+        probs.append((t, f"{m} stands in door {f}#{i}"))
     print("problems:", probs[:10] or "none")
     return probs
 
@@ -4445,6 +4594,153 @@ def _room_inside_edges(zn, inset=0.1):
     return R.edges(cwp)
 
 
+# iteration 9 (fidelity-4 blocking 1-3, one root cause): decorative wall dressing laid along whole room edges (the
+# Grand Ballroom slate band + pilasters, the Gallery art boards, the Rion Ballroom panels, ...) covered doorways.
+# Every edge-run dressing call asks these helpers for the door spans on its line and keeps DOOR_CLEAR off each jamb.
+DOOR_CLEAR = 0.3
+
+
+# plan doors that are listed in the layout data but not built (no opening, nothing behind): dressing may cross them
+DOOR_NOT_BUILT = {("L1", 196)}       # the free-standing walkway glass pair removed in fidelity-2 (build_backdrop)
+
+
+def _door_spans(F, a, b, clear=DOOR_CLEAR, tol=0.5):
+    """Merged [(s0, s1)] along a -> b (0..L) covered by a plan door on (or within tol of, parallel to) that line,
+    each widened by clear on both sides."""
+    L = math.dist(a, b)
+    if L < 0.05:
+        return []
+    dx, dy = (b[0] - a[0]) / L, (b[1] - a[1]) / L
+    nx, ny = dy, -dx
+    raw = []
+    for di, d in enumerate(F.doors):
+        p, q = (d[0], d[1]), (d[2], d[3])
+        if math.dist(p, q) < 0.3 or (F.id, di) in DOOR_NOT_BUILT:
+            continue
+        cp = (p[0] - a[0]) * nx + (p[1] - a[1]) * ny
+        cq = (q[0] - a[0]) * nx + (q[1] - a[1]) * ny
+        if abs(cp) > tol or abs(cq) > tol:
+            continue
+        s0 = (p[0] - a[0]) * dx + (p[1] - a[1]) * dy
+        s1 = (q[0] - a[0]) * dx + (q[1] - a[1]) * dy
+        s0, s1 = min(s0, s1) - clear, max(s0, s1) + clear
+        if s1 < 0.0 or s0 > L:
+            continue
+        raw.append((max(0.0, s0), min(L, s1)))
+    raw.sort()
+    out = []
+    for s0, s1 in raw:
+        if out and s0 <= out[-1][1]:
+            out[-1] = (out[-1][0], max(out[-1][1], s1))
+        else:
+            out.append((s0, s1))
+    return out
+
+
+def _free_runs(F, a, b, clear=DOOR_CLEAR, s_lo=0.0, s_hi=None, min_len=0.05):
+    """The complement of _door_spans inside [s_lo, s_hi] (default the whole edge): [(s0, s1)]."""
+    L = math.dist(a, b)
+    s_hi = L if s_hi is None else s_hi
+    out, cur = [], s_lo
+    for d0, d1 in _door_spans(F, a, b, clear):
+        if d1 <= cur:
+            continue
+        if d0 >= s_hi:
+            break
+        if d0 - cur >= min_len:
+            out.append((cur, d0))
+        cur = max(cur, d1)
+    if s_hi - cur >= min_len:
+        out.append((cur, s_hi))
+    return out
+
+
+def _slot_clear(F, a, b, s0, s1, clear=DOOR_CLEAR):
+    """True when [s0, s1] along a -> b stays clear of every plan door on that line (plus clear)."""
+    return all(s1 <= d0 or s0 >= d1 for d0, d1 in _door_spans(F, a, b, clear))
+
+
+def _sub(a, b, s0, s1):
+    """The piece [s0, s1] of segment a -> b."""
+    L = math.dist(a, b)
+    dx, dy = (b[0] - a[0]) / L, (b[1] - a[1]) / L
+    return (a[0] + dx * s0, a[1] + dy * s0), (a[0] + dx * s1, a[1] + dy * s1)
+
+
+def _wall_strip_d(F, V, a, b, z0, z1, mat, off=0.02, clear=DOOR_CLEAR, min_len=0.05, **kw):
+    """_wall_strip with the plan doors on its line cut out (the strip stops clear off each jamb). Returns the runs."""
+    runs = _free_runs(F, a, b, clear, min_len=min_len)
+    for s0, s1 in runs:
+        pa, pb = _sub(a, b, s0, s1)
+        _wall_strip(V, pa, pb, z0, z1, mat, off=off, **kw)
+    return runs
+
+
+# the dressing materials that must never stand inside a plan door opening (selftest _decor_in_doors)
+DECOR_MATS = ("int_ru_wall_slate", "int_ru_art", "int_ru_acoustic", "int_ru_wood_panel", "int_ru_wall_navy",
+              "int_ru_white", "int_ru_drape", "int_ru_drape_gold", "int_ru_proj_screen", "int_ru_led", "int_ru_black",
+              "int_ru_counter_navy", "int_ru_mirror", "int_ru_paint_lime", "int_ru_paint_sky", "int_ru_picket",
+              "int_ru_art_gal_a", "int_ru_art_gal_b")    # iteration 9: the Gallery's discrete pieces
+
+
+def _decor_in_doors(M, mats=DECOR_MATS, clear_along=0.12, half_depth=0.32, zlo=0.3, zhi=2.2):
+    """[(prop tag, material, floor, door index)] for every rendered face of a dressing prop (not the floor shells,
+    which build the doors themselves) that stands inside a plan door opening's volume: within half_depth of the door
+    line, inside its width less clear_along at each jamb, between zlo and zhi above the floor (the face is clipped
+    to the door's width first, so a long strip that only passes the door is caught too)."""
+    doors = []
+    grid = {}
+    for fid, F in M.floors.items():
+        for i, d in enumerate(F.doors):
+            a, b = (d[0], d[1]), (d[2], d[3])
+            L = math.dist(a, b)
+            if L < 0.3 or (fid, i) in DOOR_NOT_BUILT:
+                continue
+            k = len(doors)
+            doors.append((fid, i, a, b, L, F.z))
+            mx, my = (a[0] + b[0]) / 2, (a[1] + b[1]) / 2
+            grid.setdefault((int(mx // 4), int(my // 4)), []).append(k)
+    out = []
+    for t, g, p in M.kit.items:
+        if t.startswith("shell_"):
+            continue
+        for poly in p.visual.polys:
+            if poly.mat not in mats:
+                continue
+            pts = poly.pts
+            xs, ys = [q[0] for q in pts], [q[1] for q in pts]
+            cand = set()
+            for gx in range(int(min(xs) // 4) - 1, int(max(xs) // 4) + 2):
+                for gy in range(int(min(ys) // 4) - 1, int(max(ys) // 4) + 2):
+                    cand.update(grid.get((gx, gy), ()))
+            for k in cand:
+                fid, i, a, b, L, z = doors[k]
+                dx, dy = (b[0] - a[0]) / L, (b[1] - a[1]) / L
+                nx, ny = dy, -dx
+                loc = [((q[0] - a[0]) * dx + (q[1] - a[1]) * dy, (q[0] - a[0]) * nx + (q[1] - a[1]) * ny, q[2])
+                       for q in pts]
+                for lim, sg in ((clear_along, 1.0), (L - clear_along, -1.0)):
+                    nl = []
+                    for j in range(len(loc)):
+                        p0, p1 = loc[j - 1], loc[j]
+                        i0, i1 = sg * (p0[0] - lim) >= 0.0, sg * (p1[0] - lim) >= 0.0
+                        if i0 != i1:
+                            t_ = (lim - p0[0]) / (p1[0] - p0[0])
+                            nl.append(tuple(p0[c] + (p1[c] - p0[c]) * t_ for c in range(3)))
+                        if i1:
+                            nl.append(p1)
+                    loc = nl
+                    if not loc:
+                        break
+                if len(loc) < 3 or max(abs(q[1]) for q in loc) > half_depth:
+                    continue
+                o_al = max(q[0] for q in loc) - min(q[0] for q in loc)
+                o_z = min(max(q[2] for q in loc), z + zhi) - max(min(q[2] for q in loc), z + zlo)
+                if o_al > 0.12 and o_z > 0.12:
+                    out.append((t, poly.mat, fid, i))
+    return out
+
+
 def grand_ballroom(RZ):
     """Grand Ballroom (L2, west wing, double height; ru_os_grand_ballroom_1..4): royal-blue wave carpet, light-grey
     walls with a darker dado, walnut doors (the plan's doors), then the upper wall: big drop-down screens (about twice
@@ -4468,11 +4764,11 @@ def grand_ballroom(RZ):
     sw = 7.0                            # screen width (16:10-ish, ru_os_grand_ballroom_1)
     xe = x1 - GB_END_D                  # west edge of the end soffit
 
-    def pil(a, dx, dy, nx, ny, sk, ztop):
+    def pil(a, dx, dy, nx, ny, sk, ztop, zb=None):
         px, py = a[0] + dx * sk, a[1] + dy * sk
         q0, q1 = (px - dx * 0.3, py - dy * 0.3), (px + dx * 0.3, py + dy * 0.3)
-        R.seg_box(V, (q0[0] + nx * 0.12, q0[1] + ny * 0.12), (q1[0] + nx * 0.12, q1[1] + ny * 0.12), 0.12, z + 0.1, ztop,
-                  "int_ru_white", faces="sideends")
+        R.seg_box(V, (q0[0] + nx * 0.12, q0[1] + ny * 0.12), (q1[0] + nx * 0.12, q1[1] + ny * 0.12), 0.12,
+                  z + 0.1 if zb is None else zb, ztop, "int_ru_white", faces="sideends" if zb is None else "sideends_bot")
 
     HB = _built_wall_index(RZ)
     for a, b in _room_inside_edges(zn, 0.11):
@@ -4489,8 +4785,17 @@ def grand_ballroom(RZ):
         # wall; the acoustic / clerestory strips on the east wall likewise)
         sh = _strip_shift(HB, a, b, z + 0.1, ztop)
         a, b = (a[0] + nx * sh, a[1] + ny * sh), (b[0] + nx * sh, b[1] + ny * sh)
-        _wall_strip(V, a, b, z + 0.1, z + 3.3, "int_ru_wall_slate", off=0.0)
+        # iteration 9 (fidelity-4 blocking 1): the slate band stops 0.3 m off each door jamb (it ran 18 cm in front
+        # of all 10 walk-through perimeter doors: no exits visible from inside, Mario walked through the slate)
+        _wall_strip_d(F, V, a, b, z + 0.1, z + 3.3, "int_ru_wall_slate", off=0.0, min_len=0.25)
         _wall_strip(V, a, b, z + 3.3, z + 3.4, "int_ru_white", off=0.01)
+        if L > 20.0 and not east and mid_y < y0 + 1.0:
+            # the stage's black pipe-and-drape (ru_os_grand_ballroom_2), 11 m centred behind the stage, in front of
+            # the pilasters, clear of the backstage doors
+            sc_ = ((x0 + x1) / 2 - a[0]) * dx + (y0 - a[1]) * dy
+            for f0, f1 in _free_runs(F, a, b, s_lo=max(0.0, sc_ - 5.5), s_hi=min(L, sc_ + 5.5), min_len=0.3):
+                pa_, pb_ = _sub(a, b, f0, f1)
+                _wall_strip(V, pa_, pb_, z + 0.02, z + 3.0, "int_ru_drape", off=0.27)
         screens = []
         if L > 20.0 and not east:
             gap = (L - 4 * sw) / 5.0
@@ -4520,7 +4825,9 @@ def grand_ballroom(RZ):
                     piers.append(g0 + (g1 - g0) * k / n)
         for sk in piers:
             if 0.3 < sk < L - 0.3:
-                pil(a, dx, dy, nx, ny, sk, ztop)
+                # iteration 9: a pilaster over a doorway starts above the band (the upper-wall rhythm stays)
+                pil(a, dx, dy, nx, ny, sk, ztop,
+                    zb=None if _slot_clear(F, a, b, sk - 0.3, sk + 0.3, 0.15) else z + 3.4)
         # acoustic bays: full height between the pilasters (no blank band up to the soffit)
         za0, za1 = z + 3.6, ztop - 0.02
         if east:
@@ -4543,7 +4850,11 @@ def grand_ballroom(RZ):
                      bay=1.8, t=0.05)
     # stage + podium (south wall, centre) and theatre rows facing it
     cxs = (x0 + x1) / 2
-    RZ.kit_add(R.stage_platform(9.0, 3.2, h=0.6), "L2", tag="gb_stage", x=cxs, y=y0 + 2.0, z=z, facing=0.0)
+    # iteration 9 (fidelity-4 sweep; technical doorpass8 L2 #133 / #134): the stage stood 0.1 m off the two
+    # backstage doors (blocked under coopdx) and its drape hung across them and door 54. The stage is 2.2 m deep with
+    # a 1.3 m passage behind it; the pipe-and-drape is hung on the wall, split around the doors (south-wall loop above)
+    RZ.kit_add(R.stage_platform(9.0, 2.2, h=0.6, drape=False), "L2", tag="gb_stage", x=cxs, y=y0 + 2.5, z=z,
+               facing=0.0)
     # fidelity-4 r2: the podium stands centre-front on the stage, on the axis of the wide centre aisle
     # (ru_os_grand_ballroom_1); 0.75 m clear of the stage coin line at y0 + 2.0
     RZ.kit_add(R.podium(), "L2", tag="gb_podium", x=cxs, y=y0 + 3.0, z=z + 0.6, facing=0.0)
@@ -4639,6 +4950,8 @@ def rion_ballroom(RZ):
         n = int(L / 2.0)
         for k in range(1, n):
             sk = L * k / n
+            if not _slot_clear(F, a, b, sk - 0.3, sk + 0.3):
+                continue          # iteration 9 (fidelity-4 blocking 3): no panel across a doorway (44, 51, 54, ...)
             p0 = (a[0] + dx * (sk - 0.3), a[1] + dy * (sk - 0.3))
             p1 = (a[0] + dx * (sk + 0.3), a[1] + dy * (sk + 0.3))
             _wall_strip(V, p0, p1, z + 0.6, zc - 0.9, "int_ru_wall_slate", off=0.03)
@@ -4666,7 +4979,9 @@ def rion_ballroom(RZ):
     RZ.kit_add(R.stage_platform(8.0, 2.6, h=0.5, drape_h=4.0), "L3", tag="rion_stage", x=(x0 + x1) / 2, y=y0 + 2.0,
                z=z, facing=0.0)
     # fix round 4 (fidelity-4 pass): dark navy pads in cherry frames (ru_os_rion_ballroom; were royal-blue banquet)
-    RZ.kit_add(R.chair_rows(16, 36, pitch=0.95, aisle_every=12, aisle_w=1.6, kind="rion"), "L3", tag="rion_rows",
+    # iteration 9 (fidelity-4 improvement 13; ru_os_rion_ballroom): fewer, narrower rows (were 16 x 36) so open
+    # maple floor shows round the seating as in the photo
+    RZ.kit_add(R.chair_rows(12, 30, pitch=0.95, aisle_every=10, aisle_w=1.6, kind="rion"), "L3", tag="rion_rows",
                x=(x0 + x1) / 2, y=y0 + 5.7, z=z, facing=180.0)
     RZ.kit_add(P, "L3", tag="rion")
     RZ.lights_skip.add("rion_ballroom")
@@ -4734,13 +5049,23 @@ def auditorium(RZ):
                 # plan door leaf on the north stage-end wall and z-fought with it)
                 # iteration 6 (technical improvement 2a): 1.5 cm off the wall (at 0.005 it lay 0.05-0.48 u off wall_aud
                 # on the angled short walls beside the screen and z-fought); the door leaves moved out to 0.19 to match
-                _wall_strip(V, a, b, z + 0.1, zc - 0.3, "int_ru_wood_panel", off=0.015)
+                # iteration 9 (technical improvement 1): the strip stands 2 cm proud of the BUILT (rounded, ~0.7 deg
+                # slanted) wall_aud face, measured, not 1.5 cm off the plan line (it cut into the face: 1.85 m2 of
+                # z-fight at (-454.5, -248.2)); fidelity-4 sweep: strip + block stop at the plan door on the wall
+                # (151 / 153 were covered), whose leaves the block's exit door now frames
+                sh_ = _strip_shift(_built_wall_index(RZ), a, b, z + 0.1, zc - 0.3, gap=0.02, cap=0.1)
+                _wall_strip_d(F, V, a, b, z + 0.1, zc - 0.3, "int_ru_wood_panel", off=max(0.015, sh_), clear=0.05)
+                pd_ = _door_spans(F, a, b, clear=0.0)
                 if L > 2.4:
                     # the honey-wood block: proud of the wall, an exit door + EXIT sign on its outer half
                     nx, ny = dy, -dx
-                    R.panel(V, a, b, z + 0.1, z + 3.4, "int_ru_wood_panel", off=0.12)
+                    for f0, f1 in _free_runs(F, a, b, clear=0.05, min_len=0.1):
+                        pa_, pb_ = _sub(a, b, f0, f1)
+                        R.panel(V, pa_, pb_, z + 0.1, z + 3.4, "int_ru_wood_panel", off=0.12)
                     side = 0.72 if (a[1] + b[1]) / 2 > (y0 + y1) / 2 else 0.28
                     sc = L * side
+                    if pd_:
+                        sc = (pd_[0][0] + pd_[0][1]) / 2           # the exit door on the plan door
                     # fix round 5 (fidelity-4 blocking): the leaves stand 0.17 off the wall line (8 cm proud of the
                     # block): at 0.13 the north leaf lay 0.5 mm off the next short wall's wood strip and z-fought
                     da = (a[0] + dx * (sc - 0.5) + nx * 0.19, a[1] + dy * (sc - 0.5) + ny * 0.19)
@@ -4878,14 +5203,27 @@ def gallery(RZ):
     zc = z + zn.style["clear"]
     P = K.Prop("gallery")
     V = P.visual
+    kb = 0
     for a, b in _room_inside_edges(zn, 0.12):
         L = math.dist(a, b)
         if L < 3.5:
             continue
         dx, dy = (b[0] - a[0]) / L, (b[1] - a[1]) / L
         m = 0.8
-        R.panel(V, (a[0] + dx * m, a[1] + dy * m), (b[0] - dx * m, b[1] - dy * m), z + 1.1, z + 2.7, "int_ru_art",
-                off=0.02, u0=0.0, u1=max(1.0, round((L - 2 * m) / 3.0)))
+        # iteration 9 (fidelity-4 blocking 2 + improvement 9): discrete large boards (ru_os_gallery: 3-4 big pieces
+        # per wall, not one continuous strip), split around every doorway with 0.3 m clear of each jamb (the strip
+        # hung across doors 62, 63, 66, 75 and 119; Mario walked through the paintings)
+        for f0, f1 in _free_runs(F, a, b, s_lo=m, s_hi=L - m, min_len=1.2):
+            nb = max(1, int(round((f1 - f0 + 0.6) / 3.4)))
+            w = (f1 - f0 - 0.6 * (nb - 1)) / nb
+            for j in range(nb):
+                g0 = f0 + j * (w + 0.6)
+                pa, pb = _sub(a, b, g0, g0 + w)
+                # iteration 9 (fidelity-4 improvement 9; ru_the_gallery): one large piece per board, alternating
+                # the big blue canvas and the multicolour / photo-grid / landscape board (was the generic int_ru_art
+                # row of small squares, repeated)
+                R.panel(V, pa, pb, z + 1.1, z + 2.7, ("int_ru_art_gal_a", "int_ru_art_gal_b")[kb % 2], off=0.02)
+                kb += 1
     x0, y0, x1, y1 = R.bbox(zn.poly)
     for k in range(4):
         tx = x0 + 1.5 + (x1 - x0 - 3.0) * k / 3
@@ -5610,6 +5948,7 @@ def _matthews_anteroom(F, an, V, z):
     zc = z + an.style.get("ceil_h", an.style["clear"])
     doors = _room_doors(F, an)
     kf = 0
+    closets_done = False      # iteration 9 (fidelity-4 improvement 4; ru_os_matthews_3 / _4): ONE closet wall
     for a, b in _room_inside_edges(an, 0.12):
         L = math.dist(a, b)
         if L < 0.8:
@@ -5647,8 +5986,10 @@ def _matthews_anteroom(F, an, V, z):
             R.panel(V, at(sc - hw), at(sc + hw), z0, z1, "int_ru_photos", off=0.02, u0=0.5 * (kf % 2),
                     u1=0.5 * (kf % 2) + 0.5)
             kf += 1
-        if L > 6.0 and gaps:
-            # the long wall with the wood door: two white double closets right beside it (ru_os_matthews_3)
+        if L > 6.0 and gaps and not closets_done:
+            # the long wall with the wood door: two white double closets right beside it (ru_os_matthews_3); the
+            # other long wall keeps only its framed photo groups (ru_os_matthews_4; both walls had closets)
+            closets_done = True
             g0, g1 = min(gaps, key=lambda g: abs((g[0] + g[1]) / 2 - L / 2))
             side = 1.0 if (L - g1) > g0 else -1.0
             s_ = g1 if side > 0 else g0
@@ -5825,6 +6166,16 @@ def _hotel_suite(RZ, F, zn):
     V.box(xw, ys0 - 0.015, z, xe, ys0, z + 0.1, "int_ru_black", faces="-y+z")
     V.box(xw, ys1, z, xe, ys1 + 0.015, z + 0.1, "int_ru_black", faces="+y+z")
     K.col_box(C, xw, ys0, z, xe, ys1, zc, K.COL)
+    # iteration 9 (fidelity-4 improvement 2; ru_hotel_suite: plain white wall there): the zone-less 0.6 x 2.7 m
+    # plan notch (x -440.5..-439.8, y -284.6..-281.9, a chase between the suite and room 520) is lined as a facade,
+    # so its three faces showed ribbon windows onto brick. Plain white panels 2 cm in front of each built wall face
+    # cover the window band (visual only; the glass collision 15 cm behind stays the wall)
+    for pa_, pb_ in (((-440.65, -281.8), (-440.65, -284.7)),          # west face (the bedroom side)
+                     ((-439.7, -281.75), (-440.6, -281.75))):         # north face (the bedroom's east strip)
+        R.panel(V, pa_, pb_, z + 0.86, z + 3.24, "int_ru_wall", off=0.02)
+    # south face (seen from the sitting room past the partition end): full height above the base and 6 cm longer
+    # at its west end, so no brick shows in the crack at the partition end either
+    R.panel(V, (-440.682, -284.722), (-439.826, -284.864), z + 0.12, zc - 0.02, "int_ru_wall", off=0.02)
     # sitting room: back (east) wall face x -440.0, window wall face y -289.25
     xb, yw = -440.0, -289.25
     yc = (yw + ys0) / 2
@@ -5847,7 +6198,9 @@ def _hotel_suite(RZ, F, zn):
     RZ.kit_add(R.loveseat_round(), "L5", tag="suite_loveseat_s", x=-442.35, y=yw + 0.47, z=z, facing=340.0)
     # window wall: navy valance across, gold drapes at both ends (the east one over the balcony slider), a sheer
     V.box(-445.78, yw, z + 3.0, xb, yw + 0.22, z + 3.45, "int_ru_valance_navy", faces="+y-z")
-    _pleats(V, -441.05, xb - 0.03, yw, z + 0.02, z + 3.0, "int_ru_drape_gold", 4)
+    # iteration 9 (fidelity-4 sweep): the east drape is drawn back into the corner, clear of the balcony slider
+    # (plan door L5 #22, x -441.1 .. -440.3; the drape hung across it and Mario walked through the cloth)
+    _pleats(V, -440.25, xb - 0.03, yw, z + 0.02, z + 3.0, "int_ru_drape_gold", 2)
     _pleats(V, -445.74, -445.0, yw, z + 0.02, z + 3.0, "int_ru_drape_gold", 3)
     _pleats(V, -442.3, -441.05, yw, z + 0.02, z + 3.0, "int_ru_bed", 5, d0=0.02, d1=0.06)
     P.lights.append(K.Light((-442.6, yc, z + 3.2), radius=6.0, strength=0.3, color=LIGHT_WARM))
@@ -6589,7 +6942,10 @@ DRESSERS.extend([circulation_dress])
 # blocked that door from ll_corridor_04 under dx151 (doorpass8 6/9 -> 0/9).
 ONEWAY_BACKFACES = [
     # (1 u in front of the face: a back face on the very same 4 vertices is merged away as a duplicate face)
-    ("L3", ((3020, 1800, -1969), (2940, 1800, -1969), (2940, 2340, -1969), (3020, 2340, -1969)), (0.0, -1.0)),
+    # iteration 9 (technical improvement 2): 15 u in front (z -1955), not 1 u: the exporter welded the 1 u face onto
+    # the original (a two-sided wall with no thickness) and a jump from l3_corridor_11 under the vanilla summed air
+    # push still went through 75/84 times
+    ("L3", ((3020, 1800, -1955), (2940, 1800, -1955), (2940, 2340, -1955), (3020, 2340, -1955)), (0.0, -1.0)),
 ]
 
 

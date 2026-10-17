@@ -47,23 +47,23 @@ RU_MATERIALS = {
     "int_ru_fc_checker":   {"size": (32, 32), "tile_m": 1.7, "color": "#9A7E5E"},
     "int_ru_fc_tile":      {"size": (32, 32), "tile_m": 1.2, "color": "#E0DEDA"},
     "int_ru_carpet_meeting": {"size": (64, 32), "tile_m": 2.4, "color": "#56688E"},
-    "int_ru_carpet_ballroom": {"size": (64, 32), "tile_m": 2.6, "color": "#2252B0"},   # fidelity-4 pass: was 3.6
+    "int_ru_carpet_ballroom": {"size": (64, 32), "tile_m": 2.6, "color": "#3A72C4"},   # fidelity-4 pass: was 3.6
     "int_ru_maple":        {"size": (64, 32), "tile_m": 1.6, "color": "#CC9C66"},
     "int_ru_dance":        {"size": (32, 32), "tile_m": 2.0, "color": "#2C2C30"},
     "int_ru_carpet_olive": {"size": (32, 32), "tile_m": 1.2, "color": "#5C5838"},
     "int_ru_carpet_grey":  {"size": (32, 32), "tile_m": 1.2, "color": "#9C9A96"},
     "int_ru_carpet_hotel": {"size": (32, 32), "tile_m": 1.2, "color": "#5C6688"},
-    "int_ru_carpet_aud":   {"size": (32, 32), "tile_m": 1.6, "color": "#46567E"},
-    "int_ru_concrete_dark": {"size": (32, 32), "tile_m": 2.0, "color": "#424448"},   # fix round 5: was #5C5C5E
+    "int_ru_carpet_aud":   {"size": (32, 32), "tile_m": 1.6, "color": "#434A5C"},
+    "int_ru_concrete_dark": {"size": (32, 32), "tile_m": 2.0, "color": "#5E4E44"},   # fix round 5: was #5C5C5E
     "int_ru_paving":       {"size": (32, 32), "tile_m": 3.0, "color": "#C2BEB4"},
     # ---- walls
     "int_ru_wall":         {"size": (32, 32), "tile_m": 2.0, "color": "#EDEBE6"},
-    "int_ru_wall_greyblue": {"size": (32, 32), "tile_m": 2.0, "color": "#A6B2C4"},
+    "int_ru_wall_greyblue": {"size": (32, 32), "tile_m": 2.0, "color": "#CFCCC6"},
     "int_ru_wall_royal":   {"size": (32, 32), "tile_m": 2.0, "color": "#1E3CA0"},
     "int_ru_wall_navy":    {"size": (32, 32), "tile_m": 2.0, "color": "#22283A"},
     "int_ru_wall_grey":    {"size": (32, 32), "tile_m": 2.0, "color": "#B2B4B6"},
     # fix round 4 (fidelity-4 pass; ru_os_auditorium_1..3): the auditorium's mid-grey fabric wall panels
-    "int_ru_wall_aud":     {"size": (32, 32), "tile_m": 2.0, "color": "#707274"},   # fix round 5: darker (was #86888A)
+    "int_ru_wall_aud":     {"size": (32, 32), "tile_m": 2.0, "color": "#5E6064"},   # fix round 5: darker (was #86888A)
     # fix round 4 (fidelity-4 pass; ru_os_2345_2350): the boardroom's pale maple laminate table top
     "int_ru_maple_light":  {"size": (32, 32), "tile_m": 1.2, "color": "#DCC8A8"},
     "int_ru_wall_slate":   {"size": (32, 32), "tile_m": 2.0, "color": "#80848A"},
@@ -174,7 +174,7 @@ RU_MATERIALS = {
     "int_ru_prints":       {"size": (64, 32), "tile_m": 1.0, "color": "#B8B0A0", "map": "once"},
     "int_ru_wood_lvt":     {"size": (32, 32), "tile_m": 1.6, "color": "#6E5440"},
     # ---- fidelity pass 4 (ballrooms, upstairs meeting rooms, hotel, elevators, Level 4)
-    "int_ru_wall_slateblue": {"size": (32, 32), "tile_m": 2.0, "color": "#7F90AC"},   # fidelity-4 r2: +15 % value
+    "int_ru_wall_slateblue": {"size": (32, 32), "tile_m": 2.0, "color": "#8E95A8"},   # fidelity-4 r2: +15 % value
     "int_ru_door_elev":    {"size": (32, 64), "tile_m": 2.2, "color": "#B4B8BC", "map": "once"},
     "int_ru_door_hotel":   {"size": (32, 64), "tile_m": 2.2, "color": "#7A4A2C", "map": "once"},
     "int_ru_call_button":  {"size": (16, 32), "tile_m": 0.4, "color": "#B4B8BC", "map": "once"},
@@ -277,6 +277,17 @@ RU_MATERIALS = {
     # drum is bright polished silver with a vertical highlight, not the matte grey int_ru_metal_panel (kept for the
     # drum's soffit and the wall behind it)
     "int_ru_drum_panel":   {"size": (32, 32), "tile_m": 1.5, "color": "#CDD0D6"},
+    # iteration 9 (fidelity-4 improvement 5; ru_hotel_room, ru_hotel_suite): the guest rooms' warm light grey-taupe
+    # patterned carpet (photo ~178, 160, 153); the navy int_ru_carpet_hotel stays on the L5 / L6 corridors
+    "int_ru_carpet_hotelroom": {"size": (32, 32), "tile_m": 1.2, "color": "#A89A92"},
+    # iteration 9 (fidelity-4 improvement 9; ru_the_gallery / ru_os_gallery): the Gallery's large discrete pieces, one
+    # per ~3 x 1.6 m board (mapped once): (a) the large deep-blue canvas, (b) a tall multicolour piece between a grid of
+    # small photos and a row of small landscapes
+    "int_ru_art_gal_a":    {"size": (64, 32), "tile_m": 3.0, "color": "#5A6AA8", "map": "once"},
+    "int_ru_art_gal_b":    {"size": (64, 32), "tile_m": 3.0, "color": "#B8A48C", "map": "once"},
+    # iteration 9 (fidelity-4 improvement 8; ru_os_3305 / ru_os_3310: ~174, 159, 139): a warmer cream than
+    # int_ru_wall_cream (which bakes near-white under the meeting rooms' cool linear lights)
+    "int_ru_wall_warm":    {"size": (32, 32), "tile_m": 2.0, "color": "#EAD8BC"},
 }
 for _m in RU_MATERIALS.values():
     _m["tex"] = None
@@ -829,7 +840,9 @@ def tx_carpet_ballroom(seed):
     flowing lines that meander lengthwise (v, north-south: toward the stage wall) and cross now and then. 64 x 32 at
     3.6 m: ~5.6 cm texels across the lines; each line is drawn by its true distance (about 5 cm wide, anti-aliased
     over one texel), so it reads as a thin line instead of a chain of 1-px dashes (fidelity-4)."""
-    t = Tex(64, 32, hexc("#2152B2"), seed)
+    # iteration 9 (fidelity-4 improvement 11; photo ~45, 108, 170 vs the baked render ~21, 58, 136): base ~30 %
+    # lighter (was #2152B2; speckles #173E92 / #3466C6)
+    t = Tex(64, 32, hexc("#3A72C4"), seed)
     t.noise(3)
     # fix round 4 (fidelity-4 pass, improvement 7): the tile shrinks 3.6 -> 2.6 m, so the 2-texel minimum line is
     # ~8 cm instead of ~11 cm (thinner, crisper lines up close; the same share of white over the floor)
@@ -858,7 +871,7 @@ def tx_carpet_ballroom(seed):
                 c = t.get(px % 64, y)
                 a = min(1.0, cov * 1.15)
                 t.set(px % 64, y, tuple(int(c[i] * (1 - a) + col[i] * a) for i in range(3)))
-    t.speckle(16, [hexc("#173E92"), hexc("#3466C6")])
+    t.speckle(16, [hexc("#2C5CAC"), hexc("#4A82D2")])
     return t
 
 
@@ -1286,12 +1299,14 @@ def tx_row(kind, seed):
             t.rect(x0 + 1, 21, x0 + 1, 31, frame)
             t.rect(x0 + 10, 21, x0 + 10, 31, frame)
     elif kind == "rion":     # fix round 4 (fidelity-4 pass; ru_os_rion_ballroom): dark navy pad, cherry frame + legs
-        back, frame = hexc("#1E2442"), hexc("#6A3424")
+        # iteration 9 (fidelity-4 improvement 13; ru_os_rion_ballroom): near-black plum frame + back (~15, 3, 5;
+        # were navy pad / cherry frame), the royal-blue seat edge kept
+        back, frame, seat = hexc("#24100F"), hexc("#160608"), hexc("#2A3C96")
         for i in range(4):
             x0 = i * 16 + 2
             t.rect(x0, 2, x0 + 11, 17, frame)
             t.rect(x0 + 2, 4, x0 + 9, 16, back)
-            t.rect(x0, 18, x0 + 11, 20, shade(back, 0.85))
+            t.rect(x0, 18, x0 + 11, 20, seat)
             t.rect(x0 + 1, 21, x0 + 2, 31, frame)
             t.rect(x0 + 9, 21, x0 + 10, 31, frame)
     elif kind == "black":    # stacking chairs (meeting rooms): black shell, chrome legs
@@ -2224,12 +2239,16 @@ TEXTURES = {
     "int_ru_carpet_olive": lambda s: tx_carpet_pattern("#5C5838", "#6E6A44", s, "diamond"),
     "int_ru_carpet_grey": lambda s: tx_carpet_pattern("#9C9A96", "#B4B2AE", s, "loop"),
     "int_ru_carpet_hotel": lambda s: tx_carpet_pattern("#5C6688", "#8A7A5A", s, "diamond"),
-    "int_ru_carpet_aud": lambda s: tx_carpet_pattern("#46567E", "#5E6E96", s, "tri"),
+    # iteration 9 (fidelity-4 improvement 6b/6d; ru_os_auditorium_1..3): a darker, less saturated slate (the room
+    # measured about twice as bright as the photos; was #46567E / #5E6E96)
+    "int_ru_carpet_aud": lambda s: tx_carpet_pattern("#434A5C", "#555D70", s, "tri"),
     # fix round 5 (fidelity-4, improvement 9d; ru_the_gallery): dark polished concrete (the mid-grey read matte)
-    "int_ru_concrete_dark": lambda s: _flat("#424448", s, 4),
+    # iteration 9 (fidelity-4 improvement 9; ru_os_gallery): warm dark-brown polished concrete (was cool #424448)
+    "int_ru_concrete_dark": lambda s: _flat("#5E4E44", s, 4),
     "int_ru_paving": tx_paving,
     "int_ru_wall": lambda s: _flat("#EDEBE6", s, 2),
-    "int_ru_wall_greyblue": lambda s: _flat("#A6B2C4", s, 2),
+    # iteration 9 (fidelity-4 improvement 3; ru_os_matthews_1/3/4): light warm grey (the #A6B2C4 read periwinkle)
+    "int_ru_wall_greyblue": lambda s: _flat("#CFCCC6", s, 2),
     "int_ru_wall_royal": lambda s: _flat("#1E3CA0", s, 3),
     "int_ru_wall_navy": lambda s: _flat("#22283A", s, 3),
     "int_ru_wall_grey": lambda s: _flat("#B2B4B6", s, 2),
@@ -2335,7 +2354,8 @@ TEXTURES = {
     "int_ru_wainscot": tx_wainscot,
     "int_ru_prints": tx_prints,
     "int_ru_wood_lvt": lambda s: tx_wood("#6E5440", s, stripe=4, gap_k=0.72, vertical=False),
-    "int_ru_wall_slateblue": lambda s: _flat("#7F90AC", s, 2),      # fidelity-4 r2 (was #6E7D96)
+    # iteration 9 (fidelity-4 improvement 10; ru_os_2315..2360): muted grey-lavender (#7F90AC was too saturated)
+    "int_ru_wall_slateblue": lambda s: _flat("#8E95A8", s, 2),      # fidelity-4 r2 (was #6E7D96)
     "int_ru_door_elev": tx_door_elev,
     "int_ru_door_hotel": tx_door_hotel,
     "int_ru_call_button": tx_call_button,
@@ -2394,7 +2414,8 @@ TEXTURES = {
     # last: texture seeds go by position in this dict (append only)
     # fix round 4 (fidelity-4 pass): appended last so the seeds of every earlier recipe stay the same
     "int_ru_row_rion": lambda s: tx_row("rion", s),
-    "int_ru_wall_aud": lambda s: _flat("#707274", s, 3),
+    # iteration 9 (fidelity-4 improvement 6b; ru_os_auditorium_1..3 median ~16-29 vs render ~48-54): darker again
+    "int_ru_wall_aud": lambda s: _flat("#5E6064", s, 3),
     "int_ru_maple_light": tx_maple_light,
     # fix round 5 (fidelity-1): appended last (every earlier recipe keeps its seed)
     "int_ru_cafe_bay": tx_cafe_bay,                                     # Orange & Brew glazed bays
@@ -2415,7 +2436,44 @@ TEXTURES = {
     # iteration 7 (appended LAST: earlier recipes keep their seeds)
     "int_ru_glass_door": lambda s: _flat("#C6DCE4", s, 1),              # the outer north door leaves (tinted)
     "int_ru_drum_panel": lambda s: tx_drum_panel(s),                    # the atrium's polished-silver east drum
+    # iteration 9 (appended LAST: earlier recipes keep their seeds): guest-room taupe carpet, a soft low-contrast
+    # diamond (the line only ~8 % lighter than the base: no shimmer at 3.75 cm texels)
+    "int_ru_carpet_hotelroom": lambda s: tx_carpet_pattern("#A89A92", "#B9ACA3", s, "diamond"),
+    "int_ru_art_gal_a": lambda s: tx_art_gallery("a", s),               # the Gallery: large blue canvas
+    "int_ru_art_gal_b": lambda s: tx_art_gallery("b", s),               # ... tall multicolour + photo grid + landscapes
+    "int_ru_wall_warm": lambda s: _flat("#EAD8BC", s, 2),               # 3305 / 3310 warm cream walls
 }
+
+
+def tx_art_gallery(kind, seed):
+    """iteration 9 (fidelity-4 improvement 9; ru_the_gallery): one large piece per board on the white wall, 64 x 32
+    over ~3 x 1.6 m (~5 cm texels; every edge and gap >= 2 texels). a: the big deep-blue canvas with a few pale flecks;
+    b: a tall multicolour abstract in the middle, a 3 x 3 grid of small photos left, a column of small landscapes right."""
+    t = Tex(64, 32, hexc("#F0EEE8"), seed)
+    if kind == "a":
+        t.rect(9, 3, 54, 28, hexc("#14247A"))
+        t.rect(11, 5, 52, 26, hexc("#1A2E8E"))
+        for x_, y_ in ((20, 12), (21, 12), (38, 19), (39, 19), (30, 8), (44, 14)):
+            t.set(x_, y_, hexc("#5A70C0"))
+    else:
+        cols = ["#D8402A", "#F0B030", "#2A8AC8", "#3AA05A", "#8A3AA0", "#E87AA0", "#F4E2A0"]
+        t.rect(25, 1, 38, 30, hexc("#2A2420"))
+        for y in range(2, 30):
+            for x in range(26, 38):
+                k = int((x * 0.55 + y * 0.35 + 2.0 * math.sin(y * 0.4)) / 2.2) % len(cols)
+                t.set(x, y, hexc(cols[k]))
+        for gy in range(3):
+            for gx in range(3):
+                x0_, y0_ = 3 + gx * 7, 6 + gy * 7
+                t.rect(x0_, y0_, x0_ + 4, y0_ + 4, hexc("#2A2420"))
+                t.rect(x0_ + 1, y0_ + 1, x0_ + 3, y0_ + 3, shade(hexc(("#8A8478", "#6A7A8A", "#A89070")[(gx + gy) % 3]), 1.0))
+        for j in range(3):
+            y0_ = 5 + j * 8
+            t.rect(44, y0_, 59, y0_ + 5, hexc("#2A2420"))
+            t.rect(45, y0_ + 1, 58, y0_ + 2, hexc("#8AB4D8"))
+            t.rect(45, y0_ + 3, 58, y0_ + 4, hexc("#5A8A4A"))
+    t.noise(2)
+    return t
 
 
 def tx_cedar_soft(seed):
@@ -3772,7 +3830,9 @@ def loveseat_round(L=1.45, D=0.88, mat="int_ru_leather_tan"):
     V, C = P.visual, P.collision
     ai = L / 2 - 0.2
     V.box(-ai, 0.18, 0.0, ai, D - 0.02, 0.44, mat, faces="+y+z")
-    V.box(-ai, D - 0.06, 0.0, ai, D - 0.02, 0.06, "int_ru_black", faces="+y")
+    # iteration 9 (fidelity-4 improvement 7): the black toe strip stands 1.5 cm proud of the seat front (it lay in
+    # the seat's +y face plane and z-fought, 0.13 m2 in the suite)
+    V.box(-ai, D - 0.06, 0.0, ai, D - 0.005, 0.06, "int_ru_black", faces="+y")
     # back: rolled top (profile in y, z; CCW seen from +x)
     back = [(0.0, 0.05), (0.26, 0.05), (0.30, 0.62), (0.24, 0.80), (0.12, 0.86), (0.02, 0.80)]
     extrude_x(V, back, -ai, ai, mat, caps=False)
@@ -4310,7 +4370,10 @@ def cafe_table_set(table_w=0.75, h=0.75, chairs=4, chair_mat="int_ru_fabric_navy
               faces="+z+x-x+y-y" if seat_box else "+z")
         b0 = (cx - fx * 0.2 + tx * 0.2, cy - fy * 0.2 + ty * 0.2)
         b1 = (cx - fx * 0.2 - tx * 0.2, cy - fy * 0.2 - ty * 0.2)
-        for (za, zb_, m) in ((0.0, 0.44, "int_ru_black"), (0.56 if seat_box else 0.62, 0.95 if seat_box else 0.88, frame)):
+        # iteration 9 (fidelity-4 improvement 7): with seat_box the black leg panel stops at the cushion's underside
+        # (0.42; to 0.44 it lay in the cushion's back face plane and z-fought, 0.90 m2 in Arredondo)
+        for (za, zb_, m) in ((0.0, 0.42 if seat_box else 0.44, "int_ru_black"),
+                             (0.56 if seat_box else 0.62, 0.95 if seat_box else 0.88, frame)):
             V.poly([(b0[0], b0[1], za), (b1[0], b1[1], za), (b1[0], b1[1], zb_), (b0[0], b0[1], zb_)], m,
                    normal_hint=(fx, fy, 0))
             V.poly([(b1[0], b1[1], za), (b0[0], b0[1], za), (b0[0], b0[1], zb_), (b1[0], b1[1], zb_)], m,

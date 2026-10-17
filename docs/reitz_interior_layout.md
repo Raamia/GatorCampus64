@@ -874,6 +874,63 @@ Each change carries an `iteration 8` comment in `tools/campus/interiors/reitz.py
 - The LL one-way wall at (6680, -600, -3284), ll_room_13 / ll_corridor_04. It needs a back face that stops short of LL door 23.
 - The auditorium-side cells in the vanilla flood dropped 2,750 -> 2,646, because the rake is 0.35 m shorter. This is expected.
 
+### Fix round 9 (blocking pass: dressing across doorways, then technical improvements)
+
+Each change carries an `iteration 9` comment in `tools/campus/interiors/reitz.py`.
+
+- **One root cause for the three fidelity-4 blocking items:** the edge-run dressing ignored the plan doors. New helpers `_door_spans` / `_free_runs` / `_slot_clear` / `_wall_strip_d` find every plan door on (or within 0.5 m of, parallel to) a dressing line and keep `DOOR_CLEAR` = 0.3 m off each jamb. Every edge-run dressing call uses them:
+  - Grand Ballroom: the slate band stops at all perimeter doors (it ran 18 cm in front of 29 of them). A pilaster over a doorway now starts above the band, at 3.4 m, with a closed bottom.
+  - Gallery: the one continuous art strip is now discrete boards, about 2.8-3.4 m each with 0.6 m gaps (as in the photo), split around doors 62, 63, 66, 75 and 119.
+  - Rion Ballroom: no grey panel slot within 0.3 m of a door (12 doors were crossed, including 44, 51 and 54).
+- **Sweep of every room (extra item 3):** the selftest found 4 more cases, all now fixed:
+  - Grand Ballroom stage: the stage stood 0.1 m off backstage doors 133 / 134, and its drape hung across them and door 54. The stage is now 2.2 m deep with a 1.3 m passage behind it. Its pipe-and-drape hangs on the wall, split around the doors. The podium and the stage coin line stay on the stage top.
+  - Auditorium stage-end short walls: the wood strip and the honey block stop at plan doors 151 / 153. The block's exit door now sits on the plan door.
+  - Hotel suite: the east gold drape is drawn back clear of the balcony slider (L5 #22).
+  - L1 outdoor walkway: the picket rail and canopy piers stop at L1 doors 19, 20, 178 and 181. `DOOR_NOT_BUILT` lists L1 #196, the removed free-standing glass pair, which the rail still crosses.
+- **Selftest (extra item 2):** `_decor_in_doors` fails the selftest when any face of a dressing prop (every prop except the floor shells) in a `DECOR_MATS` material stands inside a plan door's opening volume. The volume is the door's width less 0.12 m per jamb, within 0.32 m of the door line, from 0.3 to 2.2 m above the floor. Each face is clipped to the door's width first, so a long strip that only passes the door is caught too. Before the fix: 70 door hits. After: 0.
+- **Auditorium z-fight (technical improvement 1):** the stage-end wood strip stands 2 cm proud of the BUILT, slightly slanted wall_aud face (`_strip_shift`). Before, it was 1.5 cm off the plan line, which cut into the face at (-454.5, -248.2).
+- **L3 one-way wall (technical improvement 2):** the back face moves 15 u in front of the original (z -1955), so the exporter no longer welds it onto that face.
+- **Collision budget (technical improvement 3):** `_trim_unreachable_collision` drops two kinds of collision. It drops the Grand Ballroom's 11.4 m ceiling (`HIGH_HALLS`, 250 tris), because no jump from the 0.6 m stage gets near it. It also drops exact duplicate faces (4 tris). Visual geometry is untouched. Area 2 goes from 12,899 to 12,649 triangles.
+  - Two other trims were tried and left out. The door sweep showed walks passing into several S rooms that have no floor: G #23 / #39, L1 #4, L2 #23 / #27 / #141, L3 #34 / #35, L6 #38. Ceilings 9 m or more up in small rooms were also left in place, because a wall-kick shaft could reach them.
+  - A centroid-only test had also removed the L6 elevator car floor under its pad. The pad-height diff in `script.c` caught it.
+- **L3 rail-end stub (technical improvement 5):** a 0.2 m trim of the thick block was tried (`RAIL_END_TRIM`, now empty) and left out. falls_fast found 4 new walk-off points through the gap at (7386, 1800, -2707).
+
+### Fix round 9, fidelity-4 pass (fidelity-4 improvements 2-5, 6b/6d, 7-11, 13)
+
+The three fidelity-4 blocking items were closed by the blocking pass above. This pass works down the same reviewer's improvement list. Each change carries an `iteration 9` comment in `tools/campus/interiors/reitz.py` or `tools/campus/interior_kit_reitz.py`.
+
+- **Colours matched to the photos** (texture recipes only, no geometry):
+  - Matthews Suite and anteroom walls: `int_ru_wall_greyblue` is now a light warm grey, #CFCCC6 (the #A6B2C4 read periwinkle).
+  - Meeting-room accent walls (L2 / L3): `int_ru_wall_slateblue` is now a muted grey-lavender, #8E95A8 (was #7F90AC).
+  - Gallery floor: `int_ru_concrete_dark` is now a warm dark-brown polished concrete, #5E4E44 (was a cool #424448). The portable stages' decks share it.
+  - Grand Ballroom carpet: the base is about 30 % lighter, #3A72C4 (was #2152B2), with matching speckles.
+  - Auditorium: a darker, less saturated slate carpet, #434A5C, and darker fabric walls, #5E6064. The photos measure about half the render's brightness.
+  - Rion Ballroom chairs: near-black plum frames and backs, with the royal-blue seat edge kept.
+- **New materials** (appended last, so earlier recipes keep their seeds):
+  - `int_ru_carpet_hotelroom`: the guest rooms' warm taupe carpet, #A89A92, with a soft diamond. The navy `int_ru_carpet_hotel` stays on the L5 / L6 corridors.
+  - `int_ru_wall_warm`: a warm cream, #EAD8BC, for room 3310. `int_ru_wall_cream` bakes near-white under the meeting rooms' cool lights. Room 3305 stays white: its south wall's run end overlaps the l3_corridor_08 wall face by 0.2 m in one plane, which z-fights once the two materials differ.
+  - `int_ru_art_gal_a` / `_b`: the Gallery's boards now carry one large piece each, alternating. One is the big deep-blue canvas; the other is a tall multicolour piece between a grid of small photos and a column of small landscapes. Both are in `DECOR_MATS`, so the doorway selftest guards them.
+- **Hotel suite 501 / 502 notch:** the zone-less 0.6 x 2.7 m chase (x -440.5..-439.8, y -284.6..-281.9) was lined as a facade, so ribbon windows onto brick showed in it. Plain white panels now stand 2 cm in front of its three built wall faces over the window band. They are visual only; the glass collision 15 cm behind them is the wall.
+- **Matthews anteroom:** the white double closets are on one long wall only, beside the wood door (ru_os_matthews_3). The other wall keeps its framed photo groups (ru_os_matthews_4).
+- **Rion Ballroom density:** 12 rows of 30 seats (was 16 x 36), so open maple floor shows round the seating as in the photo.
+- **Z-fights:**
+  - Arredondo chairs: the black leg panel stops at the cushion's underside (0.90 m2 of black vs seat_tan).
+  - Suite loveseats: the black toe strip stands 1.5 cm proud of the seat front (0.13 m2 of black vs leather_tan).
+
+### Still open after fix round 9
+
+- Collision budget: 12,649 against the 12,288 soft line. Several S rooms can be walked into (see above), so their floors and ceilings stay.
+- The L3 rail-end stub (7379..7382, 1800..1913, -2748..-2688). Trimming it opens a walk-off, so a rendered picket return is the way to fix it.
+- South Terrace lanes x 8220 / 8240 at the glazed west bay jamb (technical improvement 6), and the coopdx zonereach whitelist (improvement 4).
+- meeting_2355 chair-row collision slab (improvement 8). It is left as is to keep the collision budget.
+- Fidelity-4 items not done in the round-9 fidelity pass:
+  - Auditorium: wider navy pilasters beside the screen (6a) and gently arced rows (6c).
+  - The navy draped table in 2315 / 2360, and 2355's in its north-east corner (10, 12).
+  - The first chair row's continuous front edge (12).
+  - The 2345 TV width, the bare suite bedroom 502 and the 1.35 m room 516 dresser (14).
+  - Room 3305's warm walls and the 3310 frame's position (8).
+  - The Grand Ballroom carpet's crisper white wave lines (11).
+
 ## 10. Open questions (`open_questions`)
 
 - Real floor elevations, and the ceiling heights of the Grand Ballroom and Rion Ballroom.
