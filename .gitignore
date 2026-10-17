@@ -13,6 +13,7 @@ download/
 *.blend2
 
 .DS_Store
+**/.build/
 
 # Raw reference photos of friends and the school stay local (only game textures get committed)
 reference/

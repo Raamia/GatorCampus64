@@ -321,7 +321,7 @@ answer: Yes: on the main menu go to Options, then Controls, to rebind any key. C
 ### What chat commands are there?
 id: commands
 ask: commands, chat commands, slash commands, what commands, list of commands, help commands, cheats
-answer: /albert and /alberta (ask the mascots anything, from anywhere), /char (pick your friend), /join (go to your friends' act), /mission (mission status; /mission start and /mission reset), /campus (where, list, hub, or warp to a stage act) and /school (check the mod is running).
+answer: /albert and /alberta (ask the mascots anything, from anywhere), /leaderboard (the campus leaderboards), /char (pick your friend), /join (go to your friends' act), /mission (mission status; /mission start and /mission reset), /campus (where, list, hub, or warp to a stage act) and /school (check the mod is running).
 
 ### How do I warp to a stage?
 id: warp
@@ -366,8 +366,8 @@ answer: Yes, stars count for the whole team. When a friend grabs the star you se
 
 ### Is there a leaderboard?
 id: leaderboard
-ask: leaderboard, high scores, rankings, best times, records, who is the best, scoreboard, top players
-answer: Races show a results board with everyone's times when the race ends, and the game saves your personal best ("New personal best!"). A campus-wide leaderboard is in the works.
+ask: leaderboard, leaderboards, high scores, rankings, best times, records, who is the best, scoreboard, top players, campus leaderboards, boards
+answer: Yes! Open the CAMPUS LEADERBOARDS with R + START (Right Shift + Space on a keyboard), the on-screen BOARDS button, or /leaderboard. There are boards for the Reitz rooftop, the Marston climb, the Stadium Stair Sprint and the Skybox Climb. Races also show a results board with everyone's times, and the game saves your personal best.
 
 ### What are the race par and gold times?
 id: race-times

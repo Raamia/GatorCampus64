@@ -37,11 +37,12 @@ Albert's model is generated without Blender by `tools/actors/make_albert.py`: a 
 
 ## Layout
 
-- `mods/sgl64/` holds the main mod: Lua scripts, friend models (`actors/`), portraits (`textures/`) and levels (`levels/castle_grounds` = the hub, `levels/bob` = The Swamp, `levels/wf` = Reitz Union & Engineering, `levels/jrb` = Lake Alice, `levels/ccm` = the Marston Science Library interior, `levels/bbh` = Library West After Dark, the Library West interior at night, `levels/sgl_test`). Each stage's missions are in their own file (`swamp_missions.lua`, `wf_reitz_missions.lua`, `uf_lake_missions.lua`, `uf_marston_missions.lua`, `uf_west_library_missions.lua`).
-- `docs/flow.md` is the level-flow contract (doors, warp nodes, stars, act order, load order); `docs/game_design.md` is the full design.
-- `tools/campus/` builds the stages from campus data (`build_stage.py` for the outdoor stages, `build_interior.py` + `interiors/marston.py` / `interiors/libwest.py` for the Marston and Library West interiors; `stage_pickups.py`: the coins, hearts, 1-ups, Goombas and poles of a stage); `tools/luatest/` checks the Lua offline.
-- `mods/sgl64/sgl_npc.lua` holds the talking hub NPCs; `tools/npc_bridge/` is the host-side helper that answers for them (`game_guide.md` + `guide.py` for game questions, Gemini for the rest; see NPC chat above); `tools/actors/make_albert.py` generates Albert's model.
+- `mods/sgl64/` holds the main mod: Lua scripts, friend models (`actors/`), portraits (`textures/`) and levels (`levels/castle_grounds` = the hub, `levels/bob` = The Swamp, `levels/wf` = Reitz Union & Engineering, `levels/jrb` = Lake Alice, `levels/ccm` = Marston, `levels/bbh` = the Library West night course, `levels/sgl_test`). Only Reitz and Marston are enterable in the solo gameplay scope; the existing Library West interior assets are legacy and should be replaced by the exterior-only design in `docs/singleplayer_campaign.md`.
+- `docs/flow.md` is the level-flow contract (doors, warp nodes, stars, act order, load order); `docs/game_design.md` is the original full design; `docs/singleplayer_campaign.md` is the detailed solo gameplay proposal for review before implementation.
+- `tools/campus/` builds the stages from campus data (`build_stage.py` for the outdoor stages, `build_interior.py` + `interiors/marston.py` for Marston; `interiors/libwest.py` remains a legacy prototype); `stage_pickups.py` places coins, hearts, 1-ups, Goombas, and poles; `tools/luatest/` checks the Lua offline.
+- `mods/sgl64/sgl_npc.lua` holds the roaming mascot NPCs (Albert and Alberta; animations in `sgl_albert.lua`); `tools/npc_bridge/` is the host-side helper that answers for them (`game_guide.md` + `guide.py` for game questions, Gemini for the rest; see NPC chat above); `tools/actors/make_gators.py` generates their models.
 - `install-mods.sh` copies `mods/` into the game's mods folder.
+- `companion/app/` is an optional DeepSpace web dashboard prototype. It is separate from the native game and is not required to play.
 
 ## Testing
 
