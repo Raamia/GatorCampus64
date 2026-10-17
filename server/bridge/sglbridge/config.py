@@ -35,6 +35,7 @@ class Config:
     deploy_poll: float
     deploy_gap: float
     announce_wait: float
+    leaderboard_poll: float = 60.0
 
     @property
     def login_enabled(self) -> bool:
@@ -82,4 +83,5 @@ def from_env(env: dict[str, str] | None = None) -> Config:
         deploy_poll=float(g("SGL_DEPLOY_POLL") or 30),
         deploy_gap=float(g("SGL_DEPLOY_MIN_GAP") or 300),
         announce_wait=float(g("SGL_DEPLOY_ANNOUNCE") or 60),
+        leaderboard_poll=float(g("SGL_LEADERBOARD_POLL") or 60),
     )

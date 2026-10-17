@@ -55,6 +55,9 @@
 --   * def.compactPanel: the left panel shrinks to its first line once the act is under way, and opens
 --     up again for a few seconds when something happens (ctx.loc.expandUntil).
 --   * def.onLeave(ctx): called when the player leaves the act (the race stops its music).
+--   * verified runs (hosted server, sgl_bridge.lua): every client keeps its own count of the round's
+--     ACTIVE time (ctx.rc, round_clock) and calls _G.sglOnRoundSuccess(def, round, frames, full) when it
+--     sees the round succeed; the headless host times the round itself from the synced state.
 --
 -- Adding a mission (another stage, or Swamp acts 4 / 5 / 6): in a <stage>_missions.lua that sorts
 -- after this file, call sgl_mission_register({ id, level = LEVEL_X, act = k, title = <the act name
@@ -446,10 +449,38 @@ local function queue_completed_run(ctx)
     end
 end
 
+-- this round's ACTIVE time on my own clock (game frames, summed over co-op pauses), for the hosted
+-- server's run check (sgl_bridge.lua: the headless host measures the same round itself and compares).
+-- full = I saw the round before it went active (an arrival mid-round only has a partial count). Every
+-- client in the act reports once per round, when it sees the round succeed (ACTIVE -> SUCCESS / DONE).
+local function round_clock(ctx, old, new)
+    local rc = ctx.rc
+    if rc == nil or rc.r ~= ctx.r then
+        rc = { r = ctx.r, frames = 0, since = nil, reported = false,
+            full = new ~= SGL_MS_ACTIVE and new ~= SGL_MS_SUCCESS and new ~= SGL_MS_DONE }
+        ctx.rc = rc
+        if new == SGL_MS_ACTIVE then rc.since = get_global_timer() end
+    end
+    if old == new then return end
+    local now = get_global_timer()
+    if old == SGL_MS_ACTIVE and rc.since ~= nil then
+        rc.frames = rc.frames + math.max(0, now - rc.since)
+        rc.since = nil
+    end
+    if new == SGL_MS_ACTIVE then rc.since = now end
+    if old == SGL_MS_ACTIVE and (new == SGL_MS_SUCCESS or new == SGL_MS_DONE) and not rc.reported then
+        rc.reported = true
+        if _G.sglOnRoundSuccess ~= nil then _G.sglOnRoundSuccess(ctx.def, rc.r, rc.frames, rc.full) end
+    end
+end
+
 local function local_tick(ctx)
     local def = ctx.def
     if ctx.loc.round ~= ctx.r then
         ctx.loc = { round = ctx.r, star = false, starTries = 0, witnessed = false }
+    end
+    if ctx.rc == nil or ctx.rc.r ~= ctx.r or ctx.s ~= ctx.lastState then
+        round_clock(ctx, ctx.rc ~= nil and ctx.rc.r == ctx.r and ctx.lastState or -1, ctx.s)
     end
     if ctx.s ~= ctx.lastState then
         on_state_change(ctx, ctx.lastState, ctx.s)
@@ -1608,7 +1639,9 @@ SGL_RACE_FAIL_PAR = 1
 SGL_RACE_MUSIC_PRIORITY = 4     -- SEQUENCE_ARGS(4, seq): above the level music, like Koopa the Quick's race
 
 function sgl_mission_kind_race(spec)
-    local K = { tickAfterSuccess = true }
+    -- raceTiming: the hosted server's host times a race from GO (phase RACING) to the winning "fin"
+    -- event, not from the round going active (the lobby wait is not part of a race time)
+    local K = { tickAfterSuccess = true, raceTiming = true }
     local cps = spec.checkpoints
     local nCp = #cps
     local grace = spec.finishGrace or 45
