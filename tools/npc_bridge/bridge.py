@@ -14,6 +14,8 @@ escaped as \\\\ \\t \\n):
 <sid> changes every time the mod loads; <seq> counts up within a session.
 
 Usage (from anywhere):
+  python3 tools/npc_bridge/bridge.py               Gemini replies (GEMINI_API_KEY in the environment or
+                                                   tools/npc_bridge/.env; free key: aistudio.google.com/apikey)
   python3 tools/npc_bridge/bridge.py --fake        canned replies, no API key needed
   python3 tools/npc_bridge/bridge.py --once ...    handle what is pending once, then exit
 """
@@ -23,6 +25,8 @@ import os
 import random
 import sys
 import time
+import urllib.error
+import urllib.request
 import zipfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -32,6 +36,8 @@ IN_MODFS = "sgl64_npc.modfs"      # read by the mod with mod_fs_reload("sgl64_np
 IN_FILE = "replies.txt"
 KEEP_REPLIES = 16                 # replies kept in replies.txt (the game skips the ones it has shown)
 MAX_REPLY = 200                   # characters; the speech bubble wraps about 4 lines of this
+DEFAULT_MODEL = "gemini-3.8-flash"
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent"
 
 
 def default_sav_dir():
@@ -127,6 +133,70 @@ class FakeReplier:
         return lines[k].replace("%s", player)
 
 
+class GeminiReplier:
+    """In-character replies from the Gemini API (generateContent, standard library HTTP)."""
+
+    def __init__(self, cast, api_key, model=DEFAULT_MODEL, thinking="low", timeout=20, urlopen=urllib.request.urlopen):
+        self.cast = cast
+        self.api_key = api_key
+        self.model = model
+        self.thinking = thinking      # None: leave thinking at the model's default
+        self.timeout = timeout
+        self.urlopen = urlopen
+
+    def system_prompt(self, npc):
+        c = self.cast
+        return "\n\n".join([c["rules"], c["npcs"][npc]["persona"], c["world"]])
+
+    def body(self, npc, player, message, history):
+        contents = []
+        for role, text in history:
+            contents.append({"role": role, "parts": [{"text": ("%s says: %s" % (player, text)) if role == "user" else text}]})
+        contents.append({"role": "user", "parts": [{"text": "%s says: %s" % (player, message)}]})
+        config = {"maxOutputTokens": 1024, "temperature": 1.0}
+        if self.thinking:
+            config["thinkingConfig"] = {"thinkingLevel": self.thinking}
+        return {"systemInstruction": {"parts": [{"text": self.system_prompt(npc)}]},
+                "contents": contents, "generationConfig": config}
+
+    def post(self, body):
+        req = urllib.request.Request(GEMINI_URL % self.model, data=json.dumps(body).encode(), method="POST",
+                                     headers={"Content-Type": "application/json", "x-goog-api-key": self.api_key})
+        with self.urlopen(req, timeout=self.timeout) as resp:
+            return json.loads(resp.read().decode())
+
+    def reply(self, npc, player, message, history):
+        body = self.body(npc, player, message, history)
+        try:
+            data = self.post(body)
+        except urllib.error.HTTPError as e:
+            detail = e.read().decode(errors="replace")
+            if e.code == 400 and self.thinking and "thinking" in detail.lower():
+                self.thinking = None   # this model takes no thinking level: drop it from now on
+                body["generationConfig"].pop("thinkingConfig", None)
+                data = self.post(body)
+            else:
+                raise RuntimeError("Gemini HTTP %d: %s" % (e.code, detail[:300]))
+        cands = data.get("candidates") or []
+        parts = (cands[0].get("content") or {}).get("parts") or [] if cands else []
+        text = " ".join(p.get("text", "") for p in parts if not p.get("thought"))
+        if not text.strip():   # blocked or empty: stay in character instead of going silent
+            return "Hmm, let's talk about something else, %s!" % player
+        return text
+
+
+def load_api_key(path=os.path.join(HERE, ".env")):
+    key = os.environ.get("GEMINI_API_KEY", "").strip()
+    if key or not os.path.exists(path):
+        return key
+    with open(path) as f:
+        for line in f:
+            name, _, value = line.strip().partition("=")
+            if name.strip() == "GEMINI_API_KEY":
+                return value.strip().strip("'\"")
+    return ""
+
+
 class Bridge:
     def __init__(self, sav_dir, replier, cast, log=print):
         self.sav_dir = sav_dir
@@ -179,15 +249,26 @@ def load_cast(path=os.path.join(HERE, "npcs.json")):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--fake", action="store_true", help="canned replies, no API key needed")
+    ap.add_argument("--model", default=DEFAULT_MODEL, help="Gemini model id (default %(default)s)")
+    ap.add_argument("--thinking", default="low", help="Gemini thinking level: low, medium, high, or none")
     ap.add_argument("--sav-dir", default=default_sav_dir(), help="sm64coopdx's sav folder")
     ap.add_argument("--interval", type=float, default=0.25, help="seconds between polls")
     ap.add_argument("--once", action="store_true", help="handle pending requests once, then exit")
     args = ap.parse_args(argv)
 
     cast = load_cast()
-    replier = FakeReplier(cast)
+    if args.fake:
+        replier, mode = FakeReplier(cast), "fake replies"
+    else:
+        key = load_api_key()
+        if not key:
+            print("[npc] no GEMINI_API_KEY: set it in the environment or in tools/npc_bridge/.env\n"
+                  "      (free key: https://aistudio.google.com/apikey), or run with --fake")
+            return 1
+        thinking = None if args.thinking.lower() == "none" else args.thinking
+        replier, mode = GeminiReplier(cast, key, args.model, thinking), "Gemini " + args.model
     bridge = Bridge(args.sav_dir, replier, cast)
-    print("[npc] bridge up (fake replies), watching %s" % args.sav_dir)
+    print("[npc] bridge up (%s), watching %s" % (mode, args.sav_dir))
     while True:
         bridge.poll()
         if args.once:

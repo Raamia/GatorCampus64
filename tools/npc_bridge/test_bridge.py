@@ -1,10 +1,12 @@
 """Offline tests for bridge.py: python3 -m unittest discover -s tools/npc_bridge"""
+import io
 import json
 import os
 import shutil
 import sys
 import tempfile
 import unittest
+import urllib.error
 import zipfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -108,6 +110,85 @@ class ProtocolTest(unittest.TestCase):
         self.b.poll()
         text, _ = read_inbox(self.sav)
         self.assertEqual(len(text.splitlines()), 1 + bridge.KEEP_REPLIES)
+
+
+class FakeHTTP:
+    """Stands in for urllib.request.urlopen: records requests, answers from a list of responses."""
+
+    def __init__(self, *responses):
+        self.responses = list(responses)
+        self.requests = []
+
+    def __call__(self, req, timeout=None):
+        self.requests.append((req.full_url, dict(req.header_items()), json.loads(req.data)))
+        r = self.responses.pop(0)
+        if isinstance(r, Exception):
+            raise r
+        return io.BytesIO(json.dumps(r).encode())
+
+
+def answer(*texts, thought=None):
+    parts = ([{"text": thought, "thought": True}] if thought else []) + [{"text": t} for t in texts]
+    return {"candidates": [{"content": {"role": "model", "parts": parts}}]}
+
+
+def http_error(code, body):
+    return urllib.error.HTTPError("https://x", code, "err", {}, io.BytesIO(body.encode()))
+
+
+class GeminiTest(unittest.TestCase):
+    def setUp(self):
+        self.cast = bridge.load_cast()
+
+    def test_request_shape(self):
+        http = FakeHTTP(answer("CHOMP! Go Gators!", thought="planning"))
+        g = bridge.GeminiReplier(self.cast, "KEY", "gemini-test", urlopen=http)
+        out = g.reply("albert", "Pranav", "hi", [("user", "yo"), ("model", "Hey!")])
+        self.assertEqual(out, "CHOMP! Go Gators!")   # thought parts are dropped
+        url, headers, body = http.requests[0]
+        self.assertTrue(url.endswith("/models/gemini-test:generateContent"))
+        self.assertEqual(headers["X-goog-api-key"], "KEY")
+        self.assertNotIn("KEY", url)                  # the key never goes in the URL
+        sys_text = body["systemInstruction"]["parts"][0]["text"]
+        self.assertIn("Albert the Alligator", sys_text)
+        self.assertIn("Newell Hall", sys_text)
+        self.assertEqual([c["role"] for c in body["contents"]], ["user", "model", "user"])
+        self.assertEqual(body["contents"][-1]["parts"][0]["text"], "Pranav says: hi")
+        self.assertEqual(body["generationConfig"]["thinkingConfig"], {"thinkingLevel": "low"})
+
+    def test_drops_thinking_level_the_model_rejects(self):
+        http = FakeHTTP(http_error(400, '{"error": {"message": "thinking_level is not supported"}}'), answer("ok"))
+        g = bridge.GeminiReplier(self.cast, "KEY", urlopen=http)
+        self.assertEqual(g.reply("libby", "P", "hi", []), "ok")
+        self.assertNotIn("thinkingConfig", http.requests[1][2]["generationConfig"])
+        self.assertIsNone(g.thinking)
+
+    def test_http_errors_raise_for_the_bridge_to_log(self):
+        g = bridge.GeminiReplier(self.cast, "KEY", urlopen=FakeHTTP(http_error(429, "quota")))
+        with self.assertRaises(RuntimeError):
+            g.reply("prof", "P", "hi", [])
+
+    def test_blocked_reply_stays_in_character(self):
+        g = bridge.GeminiReplier(self.cast, "KEY", urlopen=FakeHTTP({"promptFeedback": {"blockReason": "SAFETY"}}))
+        self.assertIn("P", g.reply("guide", "P", "hi", []))
+
+    def test_api_key_from_env_file(self):
+        d = tempfile.mkdtemp()
+        try:
+            path = os.path.join(d, ".env")
+            with open(path, "w") as f:
+                f.write("# key\nGEMINI_API_KEY = 'abc123'\n")
+            old = os.environ.pop("GEMINI_API_KEY", None)
+            try:
+                self.assertEqual(bridge.load_api_key(path), "abc123")
+                os.environ["GEMINI_API_KEY"] = "fromenv"
+                self.assertEqual(bridge.load_api_key(path), "fromenv")
+            finally:
+                os.environ.pop("GEMINI_API_KEY", None)
+                if old is not None:
+                    os.environ["GEMINI_API_KEY"] = old
+        finally:
+            shutil.rmtree(d)
 
 
 class FakeTest(unittest.TestCase):
