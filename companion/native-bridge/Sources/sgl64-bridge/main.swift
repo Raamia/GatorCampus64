@@ -372,6 +372,7 @@ private func refreshLeaderboardCache() async throws {
     let missions = [
         (id: "reitz_rooftop", label: "Reitz"),
         (id: "marston_climb", label: "Marston"),
+        (id: "swamp_skybox", label: "Skybox"),
         (id: "swamp_sprint", label: "Stadium"),
     ]
     let (origin, token, _) = try await authenticatedContext()

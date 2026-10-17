@@ -75,4 +75,7 @@ if hook_mod_menu_button ~= nil then
     hook_mod_menu_button("Stadium leaderboard", function()
         show_cached_leaderboard("Stadium Stair Sprint", "swamp_sprint")
     end)
+    hook_mod_menu_button("Skybox Climb leaderboard", function()
+        show_cached_leaderboard("Skybox Climb", "swamp_skybox")
+    end)
 end

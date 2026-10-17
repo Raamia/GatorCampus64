@@ -79,4 +79,6 @@ import Testing
 @Test func stadiumLeaderboardMissionIsSupportedByCache() throws {
     let updates = try leaderboardStorageUpdates(missionID: "swamp_sprint", rows: [], updatedAt: 1_800_000_000)
     #expect(updates["sgl_ds_lb_swamp_sprint_count"] == "0")
+    let skybox = try leaderboardStorageUpdates(missionID: "swamp_skybox", rows: [], updatedAt: 1_800_000_000)
+    #expect(skybox["sgl_ds_lb_swamp_skybox_count"] == "0")
 }
