@@ -47,6 +47,8 @@ BLEND="$(find tools/vendor/character-template -name '*.blend' | grep -i mario | 
 [ -n "$BLEND" ] || { echo "no Mario .blend in character-template" >&2; exit 1; }
 ln -sfn "$(pwd)/$BLEND" "tools/vendor/template/Mario Coop Model Template.blend"
 echo "template -> $BLEND"
+# the worker container (uid 1001) mounts the repo read-only but Fast64 writes into its add-on folder
+chown -R 1001:1001 tools/blender-scripts
 
 # Blender
 DEST="/opt/blender-$BLENDER_VERSION"
