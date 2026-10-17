@@ -14,7 +14,10 @@ Our school in Super Mario 64, with online co-op and playable versions of our fri
 
 ## NPC chat (Gemini)
 
-Four UF characters stand on the hub and chat with you, with replies from Google's Gemini API: **Tour Guide Koopa** next to the spawn, **Albert** the Alligator by the University Auditorium, **Professor Bob** by Century Tower and **Libby** the librarian by Library West. Walk up to one (the prompt "TALK TO …" appears within 6 m), press Enter and type. The answer pops up in a speech bubble over the NPC and as a chat line everyone sees.
+Three UF characters stand on the hub and chat with you: **Albert** the Alligator, your host, right next to the spawn on the Plaza (in his orange-and-blue Gators jersey), **Professor Bob** by Century Tower and **Libby** the librarian by Library West. Walk up to one (the prompt "TALK TO …" appears within 6 m), press Enter and type. The answer pops up in a speech bubble over the NPC and as a chat line everyone sees.
+
+- **Game questions** ("how do I unlock Lake Alice?", "how many stars do I have?", "what are the controls?") are answered instantly from **`tools/npc_bridge/game_guide.md`**, a deep-dive guide to everything in the game: stages, doors, every act and how to finish it, secrets, controls, commands, characters, multiplayer and your live stats. No AI call is made for these. To teach the NPCs something new, add an entry to that file (the top of the file explains the format). Game questions the guide couldn't answer well are logged to `tools/npc_bridge/unanswered.log`, a to-do list for new entries.
+- **Everything else** (general knowledge, small talk) goes to Google's Gemini API, in character.
 
 The game's Lua can't reach the internet, so **the host** runs a small helper next to the game. The helper relays chat through two files in the game's `sav` folder (details in `tools/npc_bridge/bridge.py`):
 
@@ -28,14 +31,16 @@ The game's Lua can't reach the internet, so **the host** runs a small helper nex
    ```
    Without a key, `python3 tools/npc_bridge/bridge.py --fake` answers with canned lines. `--model` picks another Gemini model (default `gemini-3.8-flash`).
 
-Only the host needs the bridge, and friends who join talk to the same NPCs. If the bridge isn't running, the NPC answers "ask me again in a bit" after 15 s, and the host sees a reminder in chat. The personas live in `tools/npc_bridge/npcs.json` and the NPCs (models, places) in `mods/sgl64/sgl_npc.lua`. Their ids must match, which `tools/luatest/run.sh` checks.
+Only the host needs the bridge, and friends who join talk to the same NPCs. If the bridge isn't running, the NPC answers "ask me again in a bit" after 15 s, and the host sees a reminder in chat. The bridge prints each question with the route it took (`[guide: my-stars 1.00]` or `[ai]`). The personas live in `tools/npc_bridge/npcs.json` and the NPCs (models, places) in `mods/sgl64/sgl_npc.lua`. Their ids must match, and the guide must agree with `course.lua` (doors, star counts, acts); `tools/luatest/run.sh` checks both.
+
+Albert's model is generated without Blender by `tools/actors/make_albert.py` (a low-poly gator built from primitives, written as a DynOS actor in `mods/sgl64/actors/albert/`). Edit the script and re-run it with `python3 -I tools/actors/make_albert.py` to change his look.
 
 ## Layout
 
 - `mods/sgl64/` holds the main mod: Lua scripts, friend models (`actors/`), portraits (`textures/`) and levels (`levels/castle_grounds` = the hub, `levels/bob` = The Swamp, `levels/wf` = Reitz Union & Engineering, `levels/jrb` = Lake Alice, `levels/ccm` = the Marston Science Library interior, `levels/bbh` = Library West After Dark, the Library West interior at night, `levels/sgl_test`). Each stage's missions are in their own file (`swamp_missions.lua`, `wf_reitz_missions.lua`, `uf_lake_missions.lua`, `uf_marston_missions.lua`, `uf_west_library_missions.lua`).
 - `docs/flow.md` is the level-flow contract (doors, warp nodes, stars, act order, load order); `docs/game_design.md` is the full design.
 - `tools/campus/` builds the stages from campus data (`build_stage.py` for the outdoor stages, `build_interior.py` + `interiors/marston.py` / `interiors/libwest.py` for the Marston and Library West interiors; `stage_pickups.py`: the coins, hearts, 1-ups, Goombas and poles of a stage); `tools/luatest/` checks the Lua offline.
-- `mods/sgl64/sgl_npc.lua` holds the talking hub NPCs; `tools/npc_bridge/` is the host-side helper that gets their replies from Gemini (see NPC chat above).
+- `mods/sgl64/sgl_npc.lua` holds the talking hub NPCs; `tools/npc_bridge/` is the host-side helper that answers for them (`game_guide.md` + `guide.py` for game questions, Gemini for the rest; see NPC chat above); `tools/actors/make_albert.py` generates Albert's model.
 - `install-mods.sh` copies `mods/` into the game's mods folder.
 
 ## Testing
@@ -175,11 +180,12 @@ Shortcuts: `/campus swamp 1|2|3 [me]`, `/campus reitz 1|2|3 [me]`, `/campus alic
 
 With `python3 tools/npc_bridge/bridge.py --fake` (or a real key) running on the host:
 
-1. **NPCs**: on the Plaza, Tour Guide Koopa stands about 8 m south-east of the spawn with his name over his head. He turns to face you as you come near, and "TALK TO TOUR GUIDE KOOPA" shows at the bottom of the screen.
-2. **A reply**: press Enter and type "hi". A "..." bubble appears over him, then within a second or two (a few seconds with Gemini) the reply shows as a bubble and as a chat line. The bridge's terminal prints the exchange.
-3. **The others**: Albert stands just east of the Auditorium door, Professor Bob by Century Tower's north door, Libby under the Library West colonnade. Each answers in character.
-4. **No bridge**: stop the bridge and ask again. After 15 s the NPC says "Hmm... ask me again in a bit" and the host gets a chat reminder to start the bridge.
-5. **With a friend**: the friend walks up and types. Both of you see the same bubble and chat line, while only the host runs the bridge.
+1. **Albert**: on the Plaza, Albert the Alligator stands about 8 m south-east of the spawn with his name over his head: a green gator with a long toothy snout, big eyes, an orange "UF" jersey, blue shorts and a tail. He turns to face you as you come near and breathes gently, and "TALK TO ALBERT" shows at the bottom of the screen. (If his model failed to load he's a Yoshi: send the console line.)
+2. **A game question**: press Enter and type "how many stars do I have". The answer comes from the guide almost at once, with your real star count and the next door to open; Albert hops and flaps his jaw while he talks. Long answers show their first sentences in the bubble and the rest in chat. Try "how do I unlock lake alice", "what are the controls", "how do I do the coffee run", "my stats".
+3. **A general question**: "what's the capital of France?" goes to Gemini (with `--fake`, a canned line) and takes a few seconds. The bridge's terminal prints each exchange with its route.
+4. **The others**: Professor Bob stands by Century Tower's north door and Libby under the Library West colonnade. They answer game questions from the same guide, in their own voice, and "who are you?" in character.
+5. **No bridge**: stop the bridge and ask again. After 15 s the NPC says "Hmm... ask me again in a bit" and the host gets a chat reminder to start the bridge.
+6. **With a friend**: the friend walks up and types. Both of you see the same bubble and chat line, while only the host runs the bridge.
 
 ## Campus data
 

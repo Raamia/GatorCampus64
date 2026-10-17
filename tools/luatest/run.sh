@@ -109,6 +109,8 @@ echo "== test_npc (talking hub NPCs)"
 "$LUA" "$HERE/test_npc.lua"
 echo "== check_npc_ids"
 python3 -I "$HERE/check_npc_ids.py"
+echo "== check_game_guide"
+python3 -I "$HERE/check_game_guide.py"
 echo "== npc_bridge tests"
 out="$(python3 -m unittest discover -s "$HERE/../npc_bridge" 2>&1)" || { echo "$out"; exit 1; }
 echo "$out" | tail -1
