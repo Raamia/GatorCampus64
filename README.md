@@ -12,6 +12,16 @@ Our school in Super Mario 64, with online co-op and playable versions of our fri
    ```
 4. Restart the game, choose **Host**, open **Mods**, enable **Super Gatorlator 64**, and start the game.
 
+## Multiplayer (our server)
+
+No repo or mod install needed: the server sends the mod when you join.
+
+1. Install [sm64coopdx v1.5.1](https://github.com/coop-deluxe/sm64coopdx/releases) for your OS and launch it once with your own **US** ROM (`.z64`).
+2. **Join** → **Direct Connect** → `play.gatorcamp.us`, port `7777` (or `64.177.55.205` if the name doesn't resolve).
+3. Wait for the mod download, then pick your gator. L / R in the menu shows page 2, **GUEST GATORS**.
+
+Report anything odd (crashes, `[SGL]` lines in the console via the ` key, lag) in Discord. `/login` answers "unavailable" until Gator Pass goes live.
+
 ## NPC chat (Gemini)
 
 **Albert** and **Alberta**, UF's two alligator mascots, roam the game as your guides. Albert wears an orange "UF" jersey and blue shorts; Alberta wears a blue "UF" top, an orange skirt and a hair bow.
