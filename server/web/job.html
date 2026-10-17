@@ -48,7 +48,7 @@
       document.title = j.name + " · " + (STEP_LABELS[j.state] || j.state);
       document.getElementById("name").textContent = j.name;
       const failed = j.state === "failed";
-      const idx = failed ? j.pipeline.indexOf(j.step) : j.pipeline.indexOf(j.state);
+      const idx = j.step_index ?? (failed ? j.pipeline.indexOf(j.step) : j.pipeline.indexOf(j.state));
       document.getElementById("pipe").replaceChildren(...j.pipeline.map((st, i) => {
         let cls = "st";
         if (failed && i === idx) cls += " fail";

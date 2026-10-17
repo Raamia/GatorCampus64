@@ -3,6 +3,7 @@
 Run:  uvicorn --factory sgl_api.app:create_app --host 127.0.0.1 --port 8000   (from server/api/)
 """
 
+import json
 import logging
 import re
 import secrets
@@ -26,6 +27,9 @@ log = logging.getLogger("sgl_api")
 
 PIPELINE = ["queued", "spec", "face", "build", "export", "validate", "preview", "ready"]
 IN_PROGRESS = ("queued", "spec", "face", "build", "export", "validate", "preview")
+SUBSTEPS = {"store": "preview"}  # jobs.step values finer than jobs.state (schema.sql header)
+BUILD_ID = "sglguest"            # neutral actor id every job is built under (server/worker/actor_rename.py)
+DEPLOY_TOP_FILES = ("portrait.png", "character.json", "manifest.json")
 CODE_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"  # no 0/O/1/I: typed from a phone into chat
 CODE_LEN = 6
 MAX_PHOTOS = 4
@@ -297,10 +301,12 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             raise HTTPException(404, "no such job")
         keys, portrait = preview_keys(j, allow_list=True)
         step = j["step"] or j["state"]
+        # position in PIPELINE: the failing step for failed jobs, else the state (store → preview)
+        phase = SUBSTEPS.get(step, step) if j["state"] == "failed" else j["state"]
         return {
             "id": j["id"], "character_id": j["character_id"], "name": j["name"], "state": j["state"],
             "step": step, "pipeline": PIPELINE,
-            "step_index": PIPELINE.index(step) if step in PIPELINE else None,
+            "step_index": PIPELINE.index(phase) if phase in PIPELINE else None,
             "log": (j["log"] or "")[-LOG_TAIL:], "error": j["error"],
             "created": j["created"], "started": j["started"], "finished": j["finished"],
             "slot": j["slot"], "deployed": j["deployed_at"] is not None, "deploy_state": j["deploy_state"],
@@ -419,17 +425,30 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             d["files"] = []
             if r["kind"] == "character" and r["job_id"]:
                 prefix = f"builds/{r['job_id']}/"
+                arts = r["artifacts"] or {}
+                build_id = arts.get("build_id") or BUILD_ID
                 d["prefix"] = prefix
-                try:
-                    for k in ST().list(prefix):
-                        rel = k[len(prefix):]
-                        if rel.startswith(("actors/", "sgl_portrait_", "character.json")):
-                            d["files"].append({"path": rel, "url": ST().presign(k)})
-                except Exception:  # noqa: BLE001
-                    log.exception("listing %s", prefix)
+                d["build_id"] = build_id
+                d["files"] = [{"path": rel, "url": ST().presign(prefix + rel)}
+                              for rel in deploy_files(prefix, build_id, arts)]
                 d["artifacts"] = r["artifacts"]
             out.append(d)
         return {"deploys": out, "roster": ros}
+
+    def deploy_files(prefix: str, build_id: str, arts: dict) -> list[str]:
+        """Paths (relative to builds/<job>/) the bridge needs: the actor export and the top-level
+        portrait/spec/manifest. Keys come from jobs.artifacts (written by the worker on success),
+        else from the stored manifest.json; never from listing the bucket."""
+        keys = arts.get("files") if isinstance(arts.get("files"), list) else None
+        if keys is None:
+            try:
+                keys = json.loads(ST().get(prefix + "manifest.json")).get("files") or []
+            except Exception:  # noqa: BLE001 - no manifest: nothing deployable
+                log.exception("reading %smanifest.json", prefix)
+                keys = []
+        actor = f"actors/{build_id}/"
+        rels = {k[len(prefix):] for k in keys if isinstance(k, str) and k.startswith(prefix)}
+        return sorted(r for r in rels if r in DEPLOY_TOP_FILES or (r.startswith(actor) and "/" not in r[len(actor):]))
 
     @app.post("/deploys/{deploy_id}")
     def deploy_result(deploy_id: int, body: DeployResult, _p: Annotated[Principal, Depends(scoped(SCOPE_BRIDGE))]):

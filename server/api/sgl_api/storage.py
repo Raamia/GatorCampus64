@@ -24,6 +24,9 @@ class Storage:
     def put(self, key: str, data: bytes, content_type: str) -> None:
         self.s3.put_object(Bucket=self.bucket, Key=key, Body=data, ContentType=content_type)
 
+    def get(self, key: str) -> bytes:
+        return self.s3.get_object(Bucket=self.bucket, Key=key)["Body"].read()
+
     def list(self, prefix: str) -> list[str]:
         keys: list[str] = []
         token = None

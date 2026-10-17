@@ -126,6 +126,7 @@
     export: "Packing for the N64",
     validate: "Checking every polygon",
     preview: "Rendering previews",
+    store: "Saving your gator",
     ready: "Ready!",
     failed: "Something broke",
   };

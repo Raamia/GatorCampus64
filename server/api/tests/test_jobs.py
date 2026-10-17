@@ -79,7 +79,11 @@ def test_get_job_progress_and_previews(client, auth, conn, s3):
     r = client.get(f"/jobs/{jid}", headers=h).json()
     assert r["state"] == "queued" and r["step_index"] == 0 and r["previews"] == [] and r["pipeline"][-1] == "ready"
     j = claim(conn)
-    assert client.get(f"/jobs/{jid}", headers=h).json()["step"] == "spec"
+    r = client.get(f"/jobs/{jid}", headers=h).json()
+    assert r["step"] == "spec" and r["step_index"] == 1 and r["slot"] is None
+    conn.execute("UPDATE jobs SET state='preview', step='store' WHERE id=%s", (j["id"],))
+    r = client.get(f"/jobs/{jid}", headers=h).json()
+    assert r["state"] == "preview" and r["step"] == "store" and r["step_index"] == 6
     finish(conn, s3, j)
     r = client.get(f"/jobs/{jid}", headers=h).json()
     assert r["state"] == "ready" and r["step_index"] == 7 and r["slot"] == 1 and not r["deployed"]

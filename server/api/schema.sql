@@ -5,43 +5,62 @@
 -- (`python -m sgl_api.schema` or SGL_APPLY_SCHEMA=1). Postgres >= 13 (gen_random_uuid built in).
 -- Adding a column later: append an `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` at the bottom.
 --
--- ── Job / character states (jobs.state and characters.state use the same set) ─────────────────
---   queued    created by POST /characters, photos are in Object Storage under photos/<job_id>/
+-- ── Job / character states ─────────────────────────────────────────────────────────────────────
+-- jobs.state and characters.state use the same set. The worker writes both in one transaction
+-- at every step, so characters.state always mirrors its job's state:
+--   queued    created by POST /characters, photos are in Object Storage (jobs.photos)
 --   spec      worker: vision model → character.json         ┐
---   face      worker: sgl_face_gen.py guest_<slot>           │ "in progress"
+--   face      worker: sgl_face_gen.py sglguest               │ "in progress"
 --   build     worker: build_character.py                     │ (the worker moves through these
---   export    worker: Fast64 export                          │  in order and writes `step` too)
---   validate  worker: validate_export.py                     │
+--   export    worker: Fast64 export                          │  in order)
+--   validate  worker: validate_export.py (also renamed)      │
 --   preview   worker: previews + 64x64 portrait + upload     ┘
 --   ready     worker: artifacts are in builds/<job_id>/ (terminal, success)
 --   failed    worker: `step` = the step that failed, jobs.log = log tail (terminal)
+-- jobs.step / characters.step take the same names plus `store` (the upload, a sub-step of state
+-- `preview`). While running: the current step. On success: 'ready'. On failure: the step that
+-- failed (never 'failed').
 --
--- ── Worker contract ────────────────────────────────────────────────────────────────────────────
+-- ── Worker contract (server/worker/db.py implements it) ────────────────────────────────────────
+-- Every job builds under the neutral actor id `sglguest`, and the worker never reads or writes a
+-- slot. Slots are handed out only when a character is ready, so a live gator is never evicted for
+-- a build that might fail. The bridge renames sglguest → guest_<slot> when it deploys.
 --   Claim (one transaction):
---     SELECT j.id, j.character_id, j.photos FROM jobs j
---      WHERE j.state = 'queued' ORDER BY j.created LIMIT 1 FOR UPDATE SKIP LOCKED;
---     SELECT sgl_assign_slot(<character_id>);   -- the build needs guest_<slot>; NULL = no slot free,
---                                                -- build anyway and let the api slot it when ready
---     UPDATE jobs SET state='spec', step='spec', started=now(), worker=<host>, attempts=attempts+1
---      WHERE id=<job_id>;
+--     SELECT j.id, j.character_id, j.photos, c.name FROM jobs j JOIN characters c ON c.id = j.character_id
+--      WHERE j.state = 'queued' ORDER BY j.created LIMIT 1 FOR UPDATE OF j, c SKIP LOCKED;
+--     UPDATE jobs SET state='spec', step='spec', started=now(), finished=NULL, worker=<host>,
+--            log='', error=NULL, attempts=attempts+1 WHERE id=<job_id>;
 --     UPDATE characters SET state='spec', step='spec' WHERE id=<character_id>;
---     COMMIT;
---   Each step: UPDATE jobs SET state=<s>, step=<s>, log=<tail>  and  characters SET state=<s>, step=<s>.
---   Ready: characters.spec = character.json (jsonb), jobs.artifacts = {"previews": [keys...],
---     "portrait": key, "character_json": key, "actors_prefix": "builds/<job>/actors/guest_<n>/"},
---     jobs.finished=now(), both states 'ready'. Optionally SELECT sgl_sync_deploys().
---   Failed: both states 'failed', step = failing step, jobs.log = tail, jobs.error = one line,
---     jobs.finished=now(). Then SELECT sgl_release_slot(<character_id>).
+--   Photos: download exactly the keys in jobs.photos (photos/<job_id>/<i>.jpg).
+--   Each step: UPDATE jobs SET state=<s>, step=<step>, log=<tail>  and  characters SET state=<s>, step=<step>.
+--   Ready (one transaction; take pg_advisory_xact_lock(hashtext('sgl_slots')) first):
+--     UPDATE jobs SET state='ready', step='ready', log=<tail>, error=NULL, finished=now(), artifacts=<below>;
+--     UPDATE characters SET state='ready', step='ready', spec=<character.json>;
+--     SELECT sgl_assign_slot(<character_id>);    -- slot + pending deploy, or NULL when every slot is
+--                                                -- pinned/busy: sgl_sync_deploys() retries on each bridge poll
+--   jobs.artifacts (object keys, all under builds/<job_id>/):
+--     {"build_id": "sglguest", "prefix": "builds/<job>/", "manifest": ".../manifest.json",
+--      "character_json": ".../character.json", "portrait": ".../portrait.png",
+--      "previews": [".../previews/front.png", ...], "actor_dir": ".../actors/sglguest/",
+--      "files": [every stored key, manifest.json and log.txt included]}
+--   Failed: jobs state='failed', step=<failing step>, log=<tail>, error=<one line>, finished=now();
+--     characters state='failed', step=<failing step>; SELECT sgl_release_slot(<character_id>).
 --   Always delete photos/<job_id>/ when the job ends.
---   The character (and its job, via ON DELETE CASCADE) may be deleted by its owner at any time:
---   treat "UPDATE ... affected 0 rows" as "abort this job".
+--   The character (and its job, via ON DELETE CASCADE) may be deleted by its owner at any time.
+--   An UPDATE of the job that affects 0 rows means "abort this job": stop, then delete
+--   photos/<job_id>/ and builds/<job_id>/.
 --
 -- ── Object Storage layout (private bucket) ─────────────────────────────────────────────────────
---   photos/<job_id>/<i>.jpg                      EXIF-stripped, longest side ≤ 1024 (api)
---   builds/<job_id>/previews/*.png               builder previews (worker)
---   builds/<job_id>/sgl_portrait_guest_<n>.png   64x64 portrait (worker)
---   builds/<job_id>/character.json               (worker)
---   builds/<job_id>/actors/guest_<n>/...          DynOS actor export (worker)
+--   photos/<job_id>/<i>.jpg                         EXIF-stripped, longest side ≤ 1024 (api)
+--   builds/<job_id>/manifest.json                   build index (worker)
+--   builds/<job_id>/character.json                  spec, "id": "sglguest" (worker)
+--   builds/<job_id>/build_report.json, log.txt      (worker)
+--   builds/<job_id>/previews/*.png                  builder previews: front, back, head, ... (worker)
+--   builds/<job_id>/portrait.png                    64x64 character-select portrait (worker)
+--   builds/<job_id>/face_sheet.png                  face texture sheet (worker)
+--   builds/<job_id>/actors/sglguest/{geo_header.h,geo.inc.c,model.inc.c}   DynOS actor export (worker)
+--   Deploy (bridge): server/worker/actor_rename.py actors/sglguest → <mod>/actors/guest_<slot>,
+--   portrait.png → <mod>/textures/sgl_portrait_guest_<slot>.png.
 --
 -- ── Deploy states (deploys.state) ──────────────────────────────────────────────────────────────
 --   pending     waiting for the bridge (GET /deploys/pending)
@@ -66,7 +85,8 @@ CREATE TABLE IF NOT EXISTS characters (
     slot        smallint CHECK (slot BETWEEN 1 AND 8),  -- mirror of slots.n (kept in sync by the functions below)
     state       text NOT NULL DEFAULT 'queued' CHECK (state IN
                   ('queued','spec','face','build','export','validate','preview','ready','failed')),
-    step        text,                                   -- current / failing step
+    step        text CONSTRAINT characters_step_check CHECK (step IN          -- current / failing step
+                  ('queued','spec','face','build','export','validate','preview','store','ready')),
     spec        jsonb,                                  -- character.json once known
     created     timestamptz NOT NULL DEFAULT now(),
     deployed_at timestamptz,                            -- last successful deploy into its slot; NULL = not on the server
@@ -80,8 +100,9 @@ CREATE TABLE IF NOT EXISTS jobs (
     character_id uuid NOT NULL REFERENCES characters(id) ON DELETE CASCADE,
     state        text NOT NULL DEFAULT 'queued' CHECK (state IN
                    ('queued','spec','face','build','export','validate','preview','ready','failed')),
-    step         text,
-    log          text,                                  -- log tail (worker keeps it ≤ ~8 KB)
+    step         text CONSTRAINT jobs_step_check CHECK (step IN               -- current / failing step
+                   ('queued','spec','face','build','export','validate','preview','store','ready')),
+    log          text,                                 -- log tail (worker keeps it ≤ ~8 KB)
     error        text,                                  -- one-line failure reason
     photos       text[] NOT NULL DEFAULT '{}',          -- object keys under photos/<id>/
     artifacts    jsonb,                                 -- see worker contract above
@@ -148,10 +169,12 @@ CREATE INDEX IF NOT EXISTS deploys_pending_idx ON deploys (created) WHERE state 
 -- All slot changes serialize on one transaction-scoped advisory lock, so the api and any number
 -- of workers can call these concurrently. Callable from plain SQL: SELECT sgl_assign_slot(id).
 
--- Give a character a guest slot: free slot first (lowest n), else the least recently played
--- unpinned slot whose character is finished (ready/failed). The evicted character keeps its row
--- (state ready, slot NULL, evicted_at set). Returns the slot, or NULL if nothing can be evicted.
--- If the character is already slotted, returns that slot. If it is ready, queues a deploy.
+-- Give a READY character a guest slot and queue its deploy: free slot first (lowest n), else the
+-- least recently played unpinned slot whose character is finished (ready/failed). The evicted
+-- character keeps its row (state ready, slot NULL, evicted_at set). Returns the slot, or NULL if
+-- nothing can be evicted or the character is not ready (in-progress builds never hold a slot:
+-- the worker calls this right after marking the character ready, and sgl_sync_deploys() catches
+-- up on every bridge poll). If the character is already slotted, returns that slot.
 CREATE OR REPLACE FUNCTION sgl_assign_slot(cid uuid) RETURNS smallint
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -167,7 +190,7 @@ BEGIN
     IF s IS NOT NULL THEN
         RETURN s;
     END IF;
-    IF cstate = 'failed' THEN
+    IF cstate <> 'ready' THEN
         RETURN NULL;
     END IF;
 
@@ -186,9 +209,7 @@ BEGIN
 
     UPDATE slots SET character_id = cid, assigned_at = now(), last_played = now() WHERE n = s;  -- grace: not evicted first
     UPDATE characters SET slot = s, evicted_at = NULL WHERE id = cid;
-    IF cstate = 'ready' THEN
-        PERFORM sgl_queue_deploy(s, 'character', cid);
-    END IF;
+    PERFORM sgl_queue_deploy(s, 'character', cid);
     RETURN s;
 END $$;
 
@@ -236,8 +257,9 @@ BEGIN
     RETURN d;
 END $$;
 
--- Lazy reconciliation, called by GET /deploys/pending (and optionally by the worker after
--- `ready`): slot every ready, never-evicted, unslotted character (oldest first), and queue a
+-- Lazy reconciliation, called by GET /deploys/pending (the worker already calls
+-- sgl_assign_slot when a character becomes ready; this catches the ones that found no slot
+-- then): slot every ready, never-evicted, unslotted character (oldest first), and queue a
 -- deploy for every ready slotted character that has no pending/deployed deploy for its slot.
 CREATE OR REPLACE FUNCTION sgl_sync_deploys() RETURNS integer
 LANGUAGE plpgsql AS $$
@@ -261,4 +283,18 @@ BEGIN
         queued := queued + 1;
     END LOOP;
     RETURN queued;
+END $$;
+
+-- ── Migrations for databases created before a change above (idempotent) ───────────────────────
+-- step check constraints: NOT VALID, so rows written by older builds don't block the upgrade.
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'characters_step_check') THEN
+        ALTER TABLE characters ADD CONSTRAINT characters_step_check CHECK (step IN
+            ('queued','spec','face','build','export','validate','preview','store','ready')) NOT VALID;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'jobs_step_check') THEN
+        ALTER TABLE jobs ADD CONSTRAINT jobs_step_check CHECK (step IN
+            ('queued','spec','face','build','export','validate','preview','store','ready')) NOT VALID;
+    END IF;
 END $$;

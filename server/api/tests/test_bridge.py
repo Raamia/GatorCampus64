@@ -56,16 +56,27 @@ def test_slots_free_first_then_lru_unpinned(conn):
     assert conn.execute("SELECT sgl_assign_slot(%s) AS s", (extra[0],)).fetchone()["s"] is None
 
 
-def test_in_progress_slots_are_not_evicted(conn):
-    busy = _make_chars(conn, 8, state="build")
-    for i in busy:
+def test_only_ready_characters_get_slots(conn):
+    for st in ("queued", "spec", "build", "preview", "failed"):
+        c = _make_chars(conn, 1, state=st, owner=f"auth0|{st}")
+        assert conn.execute("SELECT sgl_assign_slot(%s) AS s", (c[0],)).fetchone()["s"] is None, st
+    assert conn.execute("SELECT count(*) AS n FROM slots WHERE character_id IS NOT NULL").fetchone()["n"] == 0
+    assert conn.execute("SELECT count(*) AS n FROM deploys").fetchone()["n"] == 0
+
+
+def test_unfinished_slot_holders_are_not_evicted(conn):
+    held = _make_chars(conn, 8)
+    for i in held:
         conn.execute("SELECT sgl_assign_slot(%s)", (i,))
+    conn.execute("UPDATE characters SET state = 'build' WHERE id = ANY(%s)", (held,))  # e.g. a future rebuild
     new = _make_chars(conn, 1, state="ready", owner="auth0|n")
     assert conn.execute("SELECT sgl_assign_slot(%s) AS s", (new[0],)).fetchone()["s"] is None
+    conn.execute("UPDATE characters SET state = 'ready' WHERE id = %s", (held[3],))
+    assert conn.execute("SELECT sgl_assign_slot(%s) AS s", (new[0],)).fetchone()["s"] == 4
 
 
 def test_concurrent_assignment_is_transactional(pg, conn):
-    ids = _make_chars(conn, 16, state="build")
+    ids = _make_chars(conn, 16)   # all ready: the last 8 assignments each evict an earlier one
     results, errors = [], []
 
     def worker(chunk):
@@ -82,11 +93,17 @@ def test_concurrent_assignment_is_transactional(pg, conn):
     for t in ts:
         t.join()
     assert not errors
-    got = sorted(r for r in results if r is not None)
-    assert got == list(range(1, 9))  # 8 distinct slots, the other 8 get NULL (all busy)
+    assert len(results) == 16 and None not in results and set(results) == set(range(1, 9))
     rows = conn.execute("SELECT n, character_id FROM slots ORDER BY n").fetchall()
+    assert len({r["character_id"] for r in rows}) == 8
     for r in rows:
         assert conn.execute("SELECT slot FROM characters WHERE id=%s", (r["character_id"],)).fetchone()["slot"] == r["n"]
+    c = conn.execute("SELECT count(*) FILTER (WHERE slot IS NOT NULL) AS slotted, "
+                     "count(*) FILTER (WHERE evicted_at IS NOT NULL) AS evicted FROM characters").fetchone()
+    assert c["slotted"] == 8 and c["evicted"] == 8
+    # one pending deploy per slot (older ones superseded)
+    assert conn.execute("SELECT count(DISTINCT slot) AS n, count(*) AS m FROM deploys "
+                        "WHERE state = 'pending'").fetchone() == {"n": 8, "m": 8}
 
 
 def test_deploy_flow(client, auth, conn, s3, bridge):
@@ -98,10 +115,11 @@ def test_deploy_flow(client, auth, conn, s3, bridge):
     d = r["deploys"][0]
     assert d["slot"] == j["slot"] == 1 and d["kind"] == "character" and d["actor"] == "guest_1"
     assert d["name"] == "Ally" and d["owner"] == "Ali"
-    paths = sorted(f["path"] for f in d["files"])
-    assert paths == ["actors/guest_1/geo.inc.c", "actors/guest_1/model.inc.c", "character.json",
-                     "sgl_portrait_guest_1.png"]
-    assert all("Signature" in f["url"] for f in d["files"])
+    assert d["build_id"] == "sglguest" and d["prefix"] == f"builds/{j['id']}/"
+    paths = [f["path"] for f in d["files"]]
+    assert paths == ["actors/sglguest/geo.inc.c", "actors/sglguest/geo_header.h", "actors/sglguest/model.inc.c",
+                     "character.json", "manifest.json", "portrait.png"]
+    assert all("Signature" in f["url"] and f"builds/{j['id']}/" in f["url"] for f in d["files"])
     assert r["roster"][0]["name"] == "Ally" and r["roster"][1]["name"] is None
     # polling again doesn't duplicate
     assert len(client.get("/deploys/pending", headers=bridge).json()["deploys"]) == 1
@@ -114,15 +132,42 @@ def test_deploy_flow(client, auth, conn, s3, bridge):
     assert client.get("/characters").json()["characters"][0]["deployed"] is True
 
 
-def test_lazy_slotting_when_worker_did_not(client, auth, conn, s3, bridge):
-    """A character that became ready without a slot (all were busy at claim) is slotted on poll."""
+def test_claim_takes_no_slot_ready_does(client, auth, conn, s3, bridge):
     upload(client, auth())
     j = claim(conn)
-    conn.execute("SELECT sgl_release_slot(%s, false)", (j["character_id"],))
-    finish(conn, s3, {**j, "slot": None})
+    assert conn.execute("SELECT slot, state FROM characters").fetchone() == {"slot": None, "state": "spec"}
+    assert conn.execute("SELECT count(*) AS n FROM slots WHERE character_id IS NOT NULL").fetchone()["n"] == 0
+    assert finish(conn, s3, j)["slot"] == 1
+    assert conn.execute("SELECT slot FROM characters").fetchone()["slot"] == 1
+    assert conn.execute("SELECT slot, kind, job_id FROM deploys WHERE state='pending'").fetchone() == \
+        {"slot": 1, "kind": "character", "job_id": j["id"]}
+
+
+def test_lazy_slotting_when_worker_did_not(client, auth, conn, s3, bridge):
+    """A character that became ready without a slot (none was free then) is slotted on poll."""
+    upload(client, auth())
+    finish(conn, s3, claim(conn), assign=False)
     assert conn.execute("SELECT slot FROM characters").fetchone()["slot"] is None
     d = client.get("/deploys/pending", headers=bridge).json()["deploys"]
-    assert [x["slot"] for x in d] == [1]
+    assert [x["slot"] for x in d] == [1] and len(d[0]["files"]) == 6
+
+
+def test_deploy_files_fall_back_to_manifest(client, auth, conn, s3, bridge):
+    """No jobs.artifacts (an older worker): the file list comes from builds/<job>/manifest.json."""
+    import json
+
+    from .conftest import BUCKET
+    from .helpers import artifacts
+    upload(client, auth())
+    j = finish(conn, s3, claim(conn), write_artifacts=False)
+    s3.put_object(Bucket=BUCKET, Key=f"builds/{j['id']}/manifest.json",
+                  Body=json.dumps({"files": artifacts(j["id"])["files"]}).encode())
+    d = client.get("/deploys/pending", headers=bridge).json()["deploys"][0]
+    assert d["actor"] == "guest_1" and [f["path"] for f in d["files"]] == [
+        "actors/sglguest/geo.inc.c", "actors/sglguest/geo_header.h", "actors/sglguest/model.inc.c",
+        "character.json", "manifest.json", "portrait.png"]
+    s3.delete_object(Bucket=BUCKET, Key=f"builds/{j['id']}/manifest.json")
+    assert client.get("/deploys/pending", headers=bridge).json()["deploys"][0]["files"] == []
 
 
 def test_eviction_queues_new_deploy_and_superseding(client, conn, bridge):
