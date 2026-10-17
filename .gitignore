@@ -35,3 +35,6 @@ art/*/judging/
 __pycache__/
 tools/blender-scripts/
 art/*/build/tex/
+
+# Raw OpenStreetMap tiles (re-downloadable; data/uf/campus.json is the processed copy)
+data/uf/tiles/

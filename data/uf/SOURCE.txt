@@ -1,0 +1,1 @@
+https://api.openstreetmap.org/api/0.6/map (6 tiles, bbox -82.372,29.630,-82.336,29.656)

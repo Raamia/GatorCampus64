@@ -20,3 +20,10 @@ Our school in Super Mario 64, with online co-op and playable versions of our fri
 ## Testing
 
 In game, type `/school` in chat. It should reply with "Super Gatorlator 64 is working!"
+
+## Campus data
+
+The UF campus stages are generated from [OpenStreetMap](https://www.openstreetmap.org/) data.
+Map data © OpenStreetMap contributors, available under the
+[Open Database License (ODbL)](https://www.openstreetmap.org/copyright).
+`tools/campus/osm_extract.py` turns the raw tiles (see `data/uf/SOURCE.txt`) into `data/uf/campus.json`.
