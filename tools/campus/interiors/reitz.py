@@ -82,6 +82,14 @@ SUITE_ID = "hotel_room_501_502"        # hotel suite: sitting room (501, south) 
 SUITE_SPLIT_Y = -284.52                # ... the partition between them (fidelity-4 round 2), centre line
 MEETING_CLEAR = 3.9                    # G / L2 / L3 meeting rooms + Senate Chamber: dropped lay-in ceiling (photos ~2.7-3 m)
 GLASS_DOOR_H = 3.0
+# iteration 7 (technical blocking): coopdx v1.5.1 with gLevelValues.fixCollisionBugs = 1 (levels.lua) pushes Mario
+# off a wall's CLOSEST POINT on the ground (rounded corners), so a doorway narrower than his 100 u body is a wall:
+# 0.8 / 0.9 m plan doors blocked (doorpass.py under lib_dx: 81 doors vanilla-only). Every open / entrance doorway
+# keeps its rendered frame at plan width but its COLLISION opening is at least DOOR_COL_MIN (the jamb collision is
+# cut back behind the rendered frame, symmetrically, clamped to the wall run).
+DOOR_COL_MIN = 1.12
+# iteration 7 (fidelity-1 improvement 4): collinear plan-wall joints whose two runs must not overlap (floor, point)
+SEAM_JOINTS = [("G", (-416.8, -261.3))]          # the Senate Chamber vestibule: int_ru_wall | int_ru_wall_cream
 RAIL_H = 1.07                          # 42" guard rail
 FLOOR_STEP = 4.5                       # visual floor / ceiling split (vertex-colour bake resolution)
 CEIL_STEP = 6.0
@@ -704,7 +712,7 @@ def door_leaves(V, a, b, z0, h, mat, off=0.03, frame="int_ru_steel"):
             off=off + 0.01)
 
 
-def _entrance_door_pair(V, a, b, z0, leaf_h=2.45, top=GLASS_DOOR_H):
+def _entrance_door_pair(V, a, b, z0, leaf_h=2.45, top=GLASS_DOOR_H, glass="int_ru_glass_door"):
     """fix round 2 (fidelity, ru_ribbon_cutting_doors): one bay of the north entrance door bank, VISUAL only (the
     opening stays walkable: the warp strip is just outside): a pair of glazed leaves in white / light aluminium with
     WIDE stiles and a deep bottom rail, tall steel pulls on both faces by the meeting stiles, a white transom bar at
@@ -720,11 +728,22 @@ def _entrance_door_pair(V, a, b, z0, leaf_h=2.45, top=GLASS_DOOR_H):
         return (a[0] + dx * s_, a[1] + dy * s_)
     # fix round 2 (design): the door bank is the first thing seen on arrival: clear glass (alpha 0.14, neutral)
     # fix round 5 (design, improvement 3): the leaves (no collision) take the faint glass (alpha 0.08, no sheen)
-    R.panel(V, a, b, z0, z0 + top, "int_ru_glass_faint")
-    R.panel(V, b, a, z0, z0 + top, "int_ru_glass_faint")
-    st, hl = 0.11, 0.035                    # stile width, half depth
+    # iteration 7 (fidelity-1 improvement 3): the OUTER bank (this call) takes the tinted int_ru_glass_door
+    R.panel(V, a, b, z0, z0 + top, glass)
+    R.panel(V, b, a, z0, z0 + top, glass)
+    # iteration 7 (design improvement 5, a_north_arrive): the arrival camera looks through this bank and the
+    # vestibule's inner bank for the first ~10 m and the two rows of 11 cm white stiles + standing pull bars read as
+    # a fence. ru_ribbon_cutting_doors shows slim light-metal stiles: 11 -> 6 cm here (the inner bank keeps its own
+    # leaves), and the pulls below lose their off-face standoffs (a slim bar 2.5 cm proud of the stile face instead)
+    st, hl = 0.06, 0.035                    # stile width, half depth
     for k in range(n):
         s0, s1 = w * k / n, w * (k + 1) / n
+        # the two end stiles start 4.5 cm in from the bay ends: the vestibule's steel frame members (+-4 cm round
+        # the bay ends) have faces in the plane of the stile faces (a coplanar white / steel pair at the overlap)
+        if k == 0:
+            s0 += 0.045
+        if k == n - 1:
+            s1 -= 0.045
         for (u0, u1) in ((s0, s0 + st), (s1 - st, s1)):
             R.seg_box(V, at(u0), at(u1), hl, z0, z0 + leaf_h, "int_ru_white", faces="sideends", ao=0.95)
         R.seg_box(V, at(s0 + st), at(s1 - st), hl, z0, z0 + 0.26, "int_ru_white", faces="sidetop", ao=0.95)
@@ -733,16 +752,14 @@ def _entrance_door_pair(V, a, b, z0, leaf_h=2.45, top=GLASS_DOOR_H):
         # bottom rail of ru_ribbon_cutting_doors stay)
         R.seg_box(V, at(s0 + st), at(s1 - st), hl, z0 + leaf_h - 0.05, z0 + leaf_h, "int_ru_white", faces="sidebot",
                   ao=0.95)
-        # pull: a tall steel bar standing off both faces, beside the meeting stile (or the latch side)
-        sp = s1 - st - 0.1 if (k == 0 and n == 2) else s0 + st + 0.1
+        # pull: a slim steel bar on both faces of the meeting stile (or the latch side), 4.5-6.5 cm off the glass
+        # plane, i.e. 1 cm clear of the stile's 3.5 cm face (no coplanar or touching faces)
+        sp = s1 - st * 0.5 if (k == 0 and n == 2) else s0 + st * 0.5
         px, py = at(sp)
         for sg in (-1, 1):
-            cx, cy = px + nx * sg * 0.08, py + ny * sg * 0.08
-            V.box(cx - 0.018, cy - 0.018, z0 + 0.85, cx + 0.018, cy + 0.018, z0 + 1.95, "int_ru_steel",
-                  faces="+x-x+y-y")
-            for zz in (z0 + 0.95, z0 + 1.85):
-                R.seg_box(V, (px + nx * sg * 0.035, py + ny * sg * 0.035), (cx, cy), 0.012, zz - 0.012, zz + 0.012,
-                          "int_ru_steel", faces="side")
+            q0 = (px + nx * sg * 0.055 - dx * 0.01, py + ny * sg * 0.055 - dy * 0.01)
+            q1 = (px + nx * sg * 0.055 + dx * 0.01, py + ny * sg * 0.055 + dy * 0.01)
+            R.seg_box(V, q0, q1, 0.01, z0 + 0.95, z0 + 1.85, "int_ru_steel", faces="sideendstopbot")
     # transom bar over the leaves, transom glass above (to the opening head)
     R.seg_box(V, at(0.0), at(w), 0.06, z0 + leaf_h, z0 + leaf_h + 0.06, "int_ru_white", faces="sidebot", ao=0.95)
     R.seg_box(V, at(0.0), at(w), 0.05, z0 + top - 0.08, z0 + top, "int_ru_white", faces="sidebot", ao=0.95)
@@ -1191,8 +1208,13 @@ def build_floor(RZ, F):
             continue
         dx, dy = (b[0] - a[0]) / L0, (b[1] - a[1]) / L0
         ext = WALL_T / 2
-        a2 = (a[0] - dx * ext, a[1] - dy * ext)
-        b2 = (b[0] + dx * ext, b[1] + dy * ext)
+        # iteration 7 (fidelity-1 improvement 4): at a SEAM_JOINTS point two collinear plan walls meet end to end;
+        # both used to run WALL_T / 2 past it, so their faces overlapped in a 0.2 m coplanar strip (two materials:
+        # z-fight). There each ends exactly at the joint (faces abut, no overlap)
+        ea = 0.0 if any(fs == F.id and math.dist(a, pj) < 0.02 for fs, pj in SEAM_JOINTS) else ext
+        eb = 0.0 if any(fs == F.id and math.dist(b, pj) < 0.02 for fs, pj in SEAM_JOINTS) else ext
+        a2 = (a[0] - dx * ea, a[1] - dy * ea)
+        b2 = (b[0] + dx * eb, b[1] + dy * eb)
         runs = _side_samples(F, a, b, 0.35)
         doors = _door_cuts(F, a, b)
         L = math.dist(a2, b2)
@@ -1200,6 +1222,7 @@ def build_floor(RZ, F):
         if any(R.pip(mid, nw) for nw in F.no_walls):
             continue
         open_ww = any(R.pip(mid, ow) for ow in F.open_ww)
+        n_before = len(runs_all)
         for s0, s1, (cl, zl), (cr, zr) in runs:
             if open_ww and cl == "W" and cr == "W":
                 continue
@@ -1209,14 +1232,14 @@ def build_floor(RZ, F):
                 continue
             if "W" not in (cl, cr) and "V" not in (cl, cr) and cl == cr:
                 continue
-            r0 = 0.0 if s0 < 1e-6 else s0 + ext
-            r1 = L if s1 > L0 - 1e-6 else s1 + ext
+            r0 = 0.0 if s0 < 1e-6 else s0 + ea
+            r1 = L if s1 > L0 - 1e-6 else s1 + ea
             pa = (a2[0] + dx * r0, a2[1] + dy * r0)
             pb = (a2[0] + dx * r1, a2[1] + dy * r1)
             RL = math.dist(pa, pb)
             dl = []
             for d0, d1, di, dext in doors:
-                q0, q1 = d0 + ext - r0, d1 + ext - r0
+                q0, q1 = d0 + ea - r0, d1 + ea - r0
                 if q1 <= 0.05 or q0 >= RL - 0.05:
                     continue
                 # fix round 4 (technical blocking): a door that straddles a class change belongs to the run holding
@@ -1229,7 +1252,10 @@ def build_floor(RZ, F):
                         and {own[2][0], own[3][0]} != {cl, cr} and {own[2][0], own[3][0]} - {"W"}:
                     continue
                 dl.append((max(0.0, q0), min(RL, q1), di, dext))
-            runs_all.append({"pa": pa, "pb": pb, "L": (cl, zl), "R": (cr, zr), "doors": dl, "accent": set()})
+            runs_all.append({"pa": pa, "pb": pb, "L": (cl, zl), "R": (cr, zr), "doors": dl, "accent": set(),
+                             "r0": r0, "RL": RL, "col_spans": {}, "col_cuts": []})
+
+    _door_col_plan(F, runs_all)
     # accent wall per meeting / hotel room: its longest run without a door, facing away from the corridor.
     # Ground meeting rooms (ru_os_g310_g320, ru_os_g330): the royal blue is the CORRIDOR end wall, the one with the
     # two honey-wood doors (EXIT signs) at its ends; the long side walls stay white with art + wainscot
@@ -1369,7 +1395,8 @@ def build_floor(RZ, F):
             zn.style["accent_wall"] = (best[1]["pa"], best[1]["pb"])
     F.balc_segs = []
     for r in runs_all:
-        _wall_run(RZ, F, V, C, CW, r["pa"], r["pb"], r["L"], r["R"], r["doors"], stats, r["accent"])
+        _wall_run(RZ, F, V, C, CW, r["pa"], r["pb"], r["L"], r["R"], r["doors"], stats, r["accent"],
+                  col_spans=r["col_spans"], col_cuts=r["col_cuts"])
     stats["void_edge_fill"] = _void_edge_fill(F, V, C, CW)
     stats["void_caps"] = _void_caps(F, above, V, CC)
     stats["sealed_backing"] = _sealed_backing(F, V)
@@ -1495,7 +1522,113 @@ def _closed_look(F):
     return out
 
 
-def _wall_run(RZ, F, V, C, CW, pa, pb, left, right, doors, stats, accent=()):
+def _in_entrance(ent, pa, pb, RL, d0, d1, min_w=0.9):
+    """True when at least min_w of door interval d0..d1 on run pa -> pb lies within the entrance's a .. b span."""
+    ux, uy = (pb[0] - pa[0]) / RL, (pb[1] - pa[1]) / RL
+    sa = (ent["a"][0] - pa[0]) * ux + (ent["a"][1] - pa[1]) * uy
+    sb = (ent["b"][0] - pa[0]) * ux + (ent["b"][1] - pa[1]) * uy
+    lo, hi = max(d0, min(sa, sb)), min(d1, max(sa, sb))
+    return hi - lo >= min(min_w, d1 - d0 - 1e-6)
+
+
+def _door_col_span(d0, d1, lo, hi):
+    """A doorway's collision interval: at least DOOR_COL_MIN wide, centred, shifted to stay within lo .. hi."""
+    if d1 - d0 >= DOOR_COL_MIN:
+        return d0, d1
+    m = (d0 + d1) / 2
+    c0, c1 = m - DOOR_COL_MIN / 2, m + DOOR_COL_MIN / 2
+    if c0 < lo:
+        c0, c1 = lo, lo + DOOR_COL_MIN
+    if c1 > hi:
+        c0, c1 = max(lo, hi - DOOR_COL_MIN), hi
+    return min(c0, d0), max(c1, d1)
+
+
+def _door_col_plan(F, runs_all):
+    """iteration 7 (technical blocking; coopdx ground push, doorpass.py + lib_dx): every open / entrance doorway's
+    COLLISION opening is widened to DOOR_COL_MIN along its wall line. The wall line is the chain of collinear runs
+    that touch the door's run (the plan often splits one wall into several pieces); the opening stays 0.25 m inside
+    the chain's ends (the walls that meet it there). The part beyond the door's own run is cut from the collinear
+    neighbours' collision (r["col_cuts"]); the door's own run gets r["col_spans"][door index]."""
+    for r in runs_all:
+        r.setdefault("col_spans", {})
+        r.setdefault("col_cuts", [])
+    for r in runs_all:
+        if not r["doors"]:
+            continue
+        pa, RL = r["pa"], r["RL"]
+        u = ((r["pb"][0] - pa[0]) / RL, (r["pb"][1] - pa[1]) / RL)
+
+        def T(p_):
+            return (p_[0] - pa[0]) * u[0] + (p_[1] - pa[1]) * u[1]
+
+        def off(p_):
+            return abs((p_[0] - pa[0]) * u[1] - (p_[1] - pa[1]) * u[0])
+        col = []
+        for ro in runs_all:
+            uo = ((ro["pb"][0] - ro["pa"][0]) / ro["RL"], (ro["pb"][1] - ro["pa"][1]) / ro["RL"])
+            if abs(uo[0] * u[0] + uo[1] * u[1]) < 0.9998 or off(ro["pa"]) > 0.02 or off(ro["pb"]) > 0.02:
+                continue
+            t0, t1 = sorted((T(ro["pa"]), T(ro["pb"])))
+            col.append((t0, t1, ro))
+        for q0, q1, di, dext in r["doors"]:
+            kind_ = _door_kind(F, pa, r["pb"], RL, r["L"], r["R"], q0, q1, di)
+            if kind_ not in ("open", "entrance"):
+                continue
+            lo, hi = 0.0, RL
+            grew = True
+            while grew:
+                grew = False
+                for t0, t1, ro in col:
+                    if t1 >= lo - 0.02 and t0 <= hi + 0.02 and (t0 < lo - 1e-6 or t1 > hi + 1e-6):
+                        lo, hi = min(lo, t0), max(hi, t1)
+                        grew = True
+            c0, c1 = _door_col_span(q0, q1, min(q0, lo + 0.25), max(q1, hi - 0.25))
+            r["col_spans"][di] = (c0, c1)
+            hd_ = DOOR_H if kind_ == "open" else GLASS_DOOR_H
+            for t0, t1, ro in col:
+                if ro is r:
+                    continue
+                # the widened span in ro's own run coordinates
+                p0 = (pa[0] + u[0] * c0, pa[1] + u[1] * c0)
+                p1 = (pa[0] + u[0] * c1, pa[1] + u[1] * c1)
+                uo = ((ro["pb"][0] - ro["pa"][0]) / ro["RL"], (ro["pb"][1] - ro["pa"][1]) / ro["RL"])
+                s0_, s1_ = sorted(((p_[0] - ro["pa"][0]) * uo[0] + (p_[1] - ro["pa"][1]) * uo[1]) for p_ in (p0, p1))
+                s0_, s1_ = max(0.0, s0_), min(ro["RL"], s1_)
+                if s1_ - s0_ > 0.01:
+                    ro["col_cuts"].append((s0_, s1_, hd_))
+
+
+def _door_kind(F, pa, pb, RL, left, right, d0, d1, di):
+    """What a plan door d0 .. d1 (run coordinates) on run pa -> pb becomes: 'open', 'entrance', 'closed',
+    'closed_ext', 'glazed' or None (no walkable side). Shared by the run assembly (DOOR_COL_MIN spans) and _wall_run."""
+    fid = F.id
+    kinds = {left[0], right[0]}
+    ent = entrance_at(fid, (pa[0] + (pb[0] - pa[0]) * d0 / RL, pa[1] + (pb[1] - pa[1]) * d0 / RL),
+                      (pa[0] + (pb[0] - pa[0]) * d1 / RL, pa[1] + (pb[1] - pa[1]) * d1 / RL))
+    mid = (pa[0] + (pb[0] - pa[0]) * (d0 + d1) / 2 / RL, pa[1] + (pb[1] - pa[1]) * (d0 + d1) / 2 / RL)
+    open_ext = any(R.seg_point_dist(mid, (od[0], od[1]), (od[2], od[3])) < 0.6
+                   for e in ENTRANCES if e["floor"] == fid for od in e.get("open_doors", ()))
+    open_ext = open_ext or _terrace_door(fid, mid)
+    if open_ext and ent is None:
+        ent = True
+    if kinds == {"W"} and di in _closed_look(F):
+        return "closed"                                 # fidelity-4 r2: a meeting room's second door, closed
+    if kinds == {"W"}:
+        return "open"
+    if "W" in kinds and ent is not None and isinstance(ent, dict) and not _in_entrance(ent, pa, pb, RL, d0, d1):
+        # iteration 7 (technical improvement 6; terr.py): a plan door bay that lies mostly OUTSIDE its entrance's
+        # warp strip (the South Terrace's west bay, x -389.5 .. -387.7 vs the strip from -388.2) is glazed: no
+        # opening (the wall's curtain glass + collision fill it); Mario stood stuck in it, outside, unwarped
+        return "glazed"
+    if "W" in kinds and ent is not None:
+        return "entrance"
+    if "W" in kinds:
+        return "closed_ext" if "O" in kinds else "closed"
+    return None
+
+
+def _wall_run(RZ, F, V, C, CW, pa, pb, left, right, doors, stats, accent=(), col_spans=None, col_cuts=()):
     fid, z = F.id, F.z
     RL = math.dist(pa, pb)
     if RL < 0.05:
@@ -1506,31 +1639,25 @@ def _wall_run(RZ, F, V, C, CW, pa, pb, left, right, doors, stats, accent=()):
     t = (EXT_T if ext_wall else WALL_T) / 2
     # door handling on this run
     holes = []          # (s0, s1, z0 rel, z1 rel) in run coordinates, for both faces
+    col_holes = []      # the same doorways in collision (widened to DOOR_COL_MIN)
     door_recs = []
     for d0, d1, di, dext in doors:
-        kinds = {left[0], right[0]}
-        ent = entrance_at(fid, (pa[0] + (pb[0] - pa[0]) * d0 / RL, pa[1] + (pb[1] - pa[1]) * d0 / RL),
-                          (pa[0] + (pb[0] - pa[0]) * d1 / RL, pa[1] + (pb[1] - pa[1]) * d1 / RL))
-        open_ext = any(R.seg_point_dist(((pa[0] + (pb[0] - pa[0]) * (d0 + d1) / 2 / RL),
-                                          (pa[1] + (pb[1] - pa[1]) * (d0 + d1) / 2 / RL)), (od[0], od[1]), (od[2], od[3])) < 0.6
-                       for e in ENTRANCES if e["floor"] == fid for od in e.get("open_doors", ()))
-        open_ext = open_ext or _terrace_door(fid, (pa[0] + (pb[0] - pa[0]) * (d0 + d1) / 2 / RL,
-                                                   pa[1] + (pb[1] - pa[1]) * (d0 + d1) / 2 / RL))
-        if open_ext and ent is None:
-            ent = True
-        if kinds == {"W"} and di in _closed_look(F):
-            door_recs.append(("closed", d0, d1))         # fidelity-4 r2: a meeting room's second door, closed
+        kind_ = _door_kind(F, pa, pb, RL, left, right, d0, d1, di)
+        if kind_ in ("open", "entrance"):
+            hd_ = DOOR_H if kind_ == "open" else GLASS_DOOR_H
+            holes.append((d0, d1, 0.0, hd_))
+            c0_, c1_ = (col_spans or {}).get(di, (d0, d1))
+            col_holes.append((max(0.0, c0_), min(RL, c1_), 0.0, hd_))
+            door_recs.append((kind_, d0, d1))
+            if kind_ == "open":
+                stats["doors_open"] += 1
+        elif kind_ in ("closed", "closed_ext"):
+            door_recs.append((kind_, d0, d1))
             stats["doors_closed"] += 1
-        elif kinds == {"W"}:
-            holes.append((d0, d1, 0.0, DOOR_H))
-            door_recs.append(("open", d0, d1))
-            stats["doors_open"] += 1
-        elif "W" in kinds and ent is not None:
-            holes.append((d0, d1, 0.0, GLASS_DOOR_H))
-            door_recs.append(("entrance", d0, d1))
-        elif "W" in kinds:
-            door_recs.append(("closed_ext" if "O" in kinds else "closed", d0, d1))
-            stats["doors_closed"] += 1
+    # iteration 7: collision-only cuts from a neighbouring run's widened doorway (same plan wall, DOOR_COL_MIN)
+    for c0_, c1_, hd_ in col_cuts:
+        if c1_ - c0_ > 0.01:
+            col_holes.append((c0_, c1_, 0.0, hd_))
     for side in ("L", "R"):
         cls, zn = sides[side]
         ocls, ozn = sides["R" if side == "L" else "L"]
@@ -1539,6 +1666,7 @@ def _wall_run(RZ, F, V, C, CW, pa, pb, left, right, doors, stats, accent=()):
         def S(s):
             return s if side == "R" else RL - s
         hs = [(min(S(h[0]), S(h[1])), max(S(h[0]), S(h[1])), z + h[2], z + h[3]) for h in holes]
+        hs_col = [(min(S(h[0]), S(h[1])), max(S(h[0]), S(h[1])), z + h[2], z + h[3]) for h in col_holes]
         if cls == "W" and ocls == "V":
             # an atrium balcony edge: no wall, no doors (the plan's segments on the void line are the railing);
             # the V side builds the open edge (_balcony_edge: fascia, picket rail, slab edge)
@@ -1650,7 +1778,7 @@ def _wall_run(RZ, F, V, C, CW, pa, pb, left, right, doors, stats, accent=()):
                           faces="-z+x-x+y-y", glow=True)
             else:
                 wall_face(V, fa, fb, z, z + h, mat, base=st["base"] if st["base"] else base, holes=hh)
-            col_face(CW, fa, fb, z, z + h, holes=[x for x in hs],
+            col_face(CW, fa, fb, z, z + h, holes=[x for x in hs_col],
                      mat=K.COL_NOCAM if (not any(r[0] in ("open", "entrance") for r in door_recs)
                                          and _nocam_wall(fid, zn, ocls, fa, fb, core=_core_room(F, ozn))) else K.COL)
             if win is not None:
@@ -1766,13 +1894,19 @@ def _wall_run(RZ, F, V, C, CW, pa, pb, left, right, doors, stats, accent=()):
         rw = right[1].style["clear"] if right[0] == "W" and right[1] and right[1].style else F.clear
         top = min(lw, rw)
         R.seg_box(V, da, db, t, z + hd, z + top, "int_ru_wall", faces="bot")
-        C.poly([(da[0] - n[0] * t, da[1] - n[1] * t, z + hd), (db[0] - n[0] * t, db[1] - n[1] * t, z + hd),
-                (db[0] + n[0] * t, db[1] + n[1] * t, z + hd), (da[0] + n[0] * t, da[1] + n[1] * t, z + hd)],
+        c0_, c1_ = (col_spans or {}).get(next((di_ for e0_, e1_, di_, _x in doors if abs(e0_ - d0) < 1e-9
+                                               and abs(e1_ - d1) < 1e-9), None), (d0, d1))
+        ca_ = (pa[0] + (pb[0] - pa[0]) * c0_ / RL, pa[1] + (pb[1] - pa[1]) * c0_ / RL)
+        cb_ = (pa[0] + (pb[0] - pa[0]) * c1_ / RL, pa[1] + (pb[1] - pa[1]) * c1_ / RL)
+        C.poly([(ca_[0] - n[0] * t, ca_[1] - n[1] * t, z + hd), (cb_[0] - n[0] * t, cb_[1] - n[1] * t, z + hd),
+                (cb_[0] + n[0] * t, cb_[1] + n[1] * t, z + hd), (ca_[0] + n[0] * t, ca_[1] + n[1] * t, z + hd)],
                K.COL, normal_hint=(0, 0, -1))
         # jamb faces (wall thickness) visual + collision
-        for p, sgn in ((da, 1), (db, -1)):
+        for p, sgn, cp_ in ((da, 1, ca_), (db, -1, cb_)):
             q0 = (p[0] + n[0] * t, p[1] + n[1] * t)
             q1 = (p[0] - n[0] * t, p[1] - n[1] * t)
+            k0_ = (cp_[0] + n[0] * t, cp_[1] + n[1] * t)          # the jamb's collision face (DOOR_COL_MIN)
+            k1_ = (cp_[0] - n[0] * t, cp_[1] - n[1] * t)
             dir_ = ((pb[0] - pa[0]) / RL * sgn, (pb[1] - pa[1]) / RL * sgn)
             vest = "vestibule" in (getattr(left[1], "type", None), getattr(right[1], "type", None))
             # fidelity-4 r2: the meeting rooms' open doorways get painted returns (the wood returns read as door
@@ -1782,7 +1916,7 @@ def _wall_run(RZ, F, V, C, CW, pa, pb, left, right, doors, stats, accent=()):
             V.poly([(q0[0], q0[1], z), (q1[0], q1[1], z), (q1[0], q1[1], z + hd), (q0[0], q0[1], z + hd)],
                    jret,
                    normal_hint=(dir_[0], dir_[1], 0))
-            C.poly([(q0[0], q0[1], z), (q1[0], q1[1], z), (q1[0], q1[1], z + hd), (q0[0], q0[1], z + hd)], K.COL,
+            C.poly([(k0_[0], k0_[1], z), (k1_[0], k1_[1], z), (k1_[0], k1_[1], z + hd), (k0_[0], k0_[1], z + hd)], K.COL,
                    normal_hint=(dir_[0], dir_[1], 0))
         if kind == "open":
             zl = left[1].style["floor"] if left[1] and left[1].style else "int_ru_terrazzo"
@@ -2030,6 +2164,17 @@ def _balcony_edge(V, C, a, b, z, F):
             qb_ = (a[0] + ux * q1 + nx * 0.325, a[1] + uy * q1 + ny * 0.325)
             V.poly([(qa_[0], qa_[1], z), (qb_[0], qb_[1], z), (qb_[0], qb_[1], z + RAIL_H), (qa_[0], qa_[1], z + RAIL_H)],
                    "int_ru_picket", uvs=[(0, 0), (0.29 / 1.1, 0), (0.29 / 1.1, 1), (0, 1)], ao=1.0)
+            R.seg_box(V, qa_, qb_, 0.035, z + RAIL_H, z + RAIL_H + 0.06, "int_ru_steel", faces="sidetop")
+        # iteration 7 (technical improvement 3; rscan): where a run ENDS at a scissor-flight gap on a 0.6 m block, its
+        # 0.6 m end cap was the last invisible stub (L2 NE head plan (-393.2, -265.5), L3 (-396.2, -265.9)): the rail
+        # turns down the flight's side there too (picket return + steel cap from the rail line to the cap's outer edge)
+        for q_e, th_, cut_ in ((segs[0][0], segs[0][2], r0 > 1e-3), (segs[-1][1], segs[-1][2], r1 < L - 1e-3)):
+            if not (th_ and cut_):
+                continue
+            qa_ = (a[0] + ux * q_e - nx * 0.12, a[1] + uy * q_e - ny * 0.12)
+            qb_ = (a[0] + ux * q_e + nx * 0.325, a[1] + uy * q_e + ny * 0.325)
+            V.poly([(qa_[0], qa_[1], z), (qb_[0], qb_[1], z), (qb_[0], qb_[1], z + RAIL_H), (qa_[0], qa_[1], z + RAIL_H)],
+                   "int_ru_picket", uvs=[(0, 0), (0.445 / 1.1, 0), (0.445 / 1.1, 1), (0, 1)], ao=1.0)
             R.seg_box(V, qa_, qb_, 0.035, z + RAIL_H, z + RAIL_H + 0.06, "int_ru_steel", faces="sidetop")
     # collision: slab edge into the void
     C.poly([(a[0], a[1], z - SLAB), (b[0], b[1], z - SLAB), (b[0], b[1], z), (a[0], a[1], z)], K.COL)
@@ -2344,6 +2489,8 @@ def build(backdrop=True, dress=True):
     RZ.views = [(n, c, t, m, f) for n, c, t, m, f, _ in make_views(RZ)]
     RZ.stats["lights"] = sum(len(v) for v in by_group.values())
     RZ.stats["instant_warps"] = [{"index": i, "area1_to_area2_units": list(o)} for i, o in instant_warps()]
+    RZ.stats["goomba_spots"] = len(GOOMBA_SPOTS)
+    _arm_goomba_placer()
     return RZ
 
 
@@ -2391,14 +2538,40 @@ PICKUPS = [
     {"kind": "coin_line", "name": "game room window coins", "pos": (-422.8, -309.0, 0.0), "facing": 0.0},
 ]
 # fix round 4 (design pass, improvement 2): Goomba spots checked in the reachability flood (>= 2 m of open floor all
-# round). NOT placed: build_interior.build_area (the area-module path, shared with other stages, not this module's
-# to edit) has no "goomba" branch in its pickup loop, so kind "goomba" in PICKUPS would be dropped silently. Adding
-# `elif k == "goomba": Pl.goomba(name, p, it.get("facing", 0.0))` there and appending these to PICKUPS places them.
+# round). build_interior.build_area (the area-module path, shared with other stages, not this module's to edit) has
+# no "goomba" branch in its pickup loop, so kind "goomba" in PICKUPS would be dropped silently.
+# iteration 7 (design improvement 1): placed through _arm_goomba_placer() (below), called at the end of build().
 GOOMBA_SPOTS = [
     {"kind": "goomba", "name": "game room goomba 1", "pos": (-423.5, -304.5, 0.0), "facing": 0.0},
     {"kind": "goomba", "name": "game room goomba 2", "pos": (-424.5, -312.5, 0.0), "facing": 180.0},
     {"kind": "goomba", "name": "ll corridor goomba", "pos": (-407.5, -272.5, -6.0), "facing": 90.0},
 ]
+
+
+def _arm_goomba_placer():
+    """iteration 7 (design improvement 1: area 2 had no enemies, play was a coin walk). build_stage calls build() and
+    then build_interior.build_area(), which makes this area's stage_pickups.Placer(S, probe) with S.key == KEY and runs
+    the PICKUPS loop (coin / coin_line / coin_ring / heart / 1up only). A one-shot Placer subclass is armed here: when
+    that Placer is made for this area it puts back the stock class and places GOOMBA_SPOTS with the stock
+    Placer.goomba (floor probe on the area's own collision + 1.2 m head room; vanilla bhvGoomba / MODEL_GOOMBA, which
+    the level loads with common0; one coin each when stomped). Any other Placer (area 1, another stage) is a plain
+    Placer: the subclass checks S.key. Nothing in build_interior.py changes."""
+    try:
+        import stage_pickups as SP
+    except Exception:                       # outside Blender (selftest): nothing to place
+        return
+    base = getattr(SP.Placer, "_sgl_base", SP.Placer)
+
+    class _ReitzAreaPlacer(base):
+        _sgl_base = base
+
+        def __init__(self, S, probe):
+            super().__init__(S, probe)
+            if getattr(S, "key", None) == KEY:
+                SP.Placer = base
+                for it in GOOMBA_SPOTS:
+                    self.goomba(it["name"], it["pos"], it.get("facing", 0.0))
+    SP.Placer = _ReitzAreaPlacer
 EXTRA_PICKUPS = []      # filled by the room builders during build() (stairs, Grand Ballroom stage, billiards)
 
 
@@ -2803,7 +2976,12 @@ def atrium_stairs(RZ):
         # face only over the top 0.4 m (the 14 cm two-faced rail threw Mario through itself at the L1 SE flight foot:
         # falls_fast 19 -> 0, spotfall_r L2 SE foot 1 -> 0). The NE flights keep the full closed rail: at the L2 NE
         # head the short outer face made the plug junction's 3-wall push worse (spotfall_r 1 -> 3)
-        f1 = R.stair_flight(V, C, a_se, b_se, z0, zl, STAIR_W, stringer=STAIR_STRINGER, rail_outer_head=0.4)
+        # iteration 7 (technical blocking): the outer face comes back wherever walkable floor lies beside the
+        # flight's lower stretch (side walk-through, railside3.py): the Ground flight on both sides, the L2 flight on
+        # its balcony side (+n). The L1 flight (void on both sides at its foot) stays inner-only + the 0.4 m head.
+        roh_ = {"G": (None, None), "L1": 0.4, "L2": (0.4, None)}[lo]
+        f1 = R.stair_flight(V, C, a_se, b_se, z0, zl, STAIR_W, stringer=STAIR_STRINGER, rail_outer_head=roh_,
+                            rail_cap_foot=(lo in ("G", "L2")))
         f2 = R.stair_flight(V, C, a_ne, b_ne, zl, z1, STAIR_W, stringer=STAIR_STRINGER)
         # a coin trail up both flights (design pass: landing to landing; the landing coins are in PICKUPS)
         for nm, pa_, pb_, za, zb_ in (("se", a_se, b_se, z0, zl), ("ne", a_ne, b_ne, zl, z1)):
@@ -2978,8 +3156,13 @@ def atrium_top(RZ):
         mx_, my_ = (pa[0] + pb[0]) / 2, (pa[1] + pb[1]) / 2
         nh = (cen[0] - mx_, cen[1] - my_, 0.0)
         Lh = math.hypot(nh[0], nh[1])
-        V.poly([(pa[0], pa[1], z0), (pb[0], pb[1], z0), (pb[0], pb[1], zt), (pa[0], pa[1], zt)], "int_ru_metal_panel",
-               normal_hint=(nh[0] / Lh, nh[1] / Lh, 0.0), ao=0.9)
+        # iteration 7 (fidelity-1 improvement 5; ru_atrium_hdr_flickr): polished silver, not matte grey: the bright
+        # int_ru_drum_panel, and a soft vertical highlight down the drum (per-facet shade 0.80 .. 1.0, peaking a little
+        # north of mid-width where the photos catch the skylight)
+        u_ = (my_ - ya_) / max(0.01, yb_ - ya_)
+        ao_ = 0.80 + 0.20 * math.exp(-((u_ - 0.42) / 0.2) ** 2)
+        V.poly([(pa[0], pa[1], z0), (pb[0], pb[1], z0), (pb[0], pb[1], zt), (pa[0], pa[1], zt)], "int_ru_drum_panel",
+               normal_hint=(nh[0] / Lh, nh[1] / Lh, 0.0), ao=ao_)
     soff = R.ccw(list(arc) + list(reversed(back)))
     R.floor_poly(V, R.clean(soff, 0.01, 0.0), z0, "int_ru_metal_panel", step=3.0, down=True, ao=0.85)
     for u in range(2, nb - 1):
@@ -3197,7 +3380,10 @@ OB_ROUTE = [(-410.0, -279.5), (-416.5, -292.5), (-425.3, -293.1)]
 OB_SEAT_A, OB_SEAT_B = (-396.93, -282.72), (-406.18, -291.77)       # the storefront line (orange_brew_front)
 OB_HIGHTOPS = [(0.9, 2.3), (5.6, 2.3), (8.3, 2.3), (11.0, 2.3)]      # (s along the front, offset into the hall)
 OB_BOOTHS = [(6.9, 4.4), (10.1, 4.2)]
-OB_COUNTER = [(-413.29, -300.58), (-417.70, -296.80), (-420.64, -296.80)]   # front face line (hall side), plan object
+# iteration 7 (technical improvement 9): the front's west run sits 4 cm north of the plan line (y -296.76): at -296.80
+# it lay in the plane of the O&B / Game Room partition's far face (vanilla push dragged a run along it into the
+# counter body or through the partition)
+OB_COUNTER = [(-413.29, -300.58), (-417.70, -296.76), (-420.64, -296.76)]   # front face line (hall side), plan object
 
 
 def _ob_at(s_, o_):
@@ -3218,9 +3404,13 @@ def ob_cafe(RZ, z):
         x, y = _ob_at(s_, o_)
         # a solid octagonal pedestal (r 0.3) under the round top: the collision box (+-0.3) stays within 12 cm of a
         # rendered face (a box round the thin-pole version read as an invisible wall to the QA scan)
+        # iteration 7 (fidelity-1 improvement 6): the r 0.3 black pedestal read as a bin with a lid; a slim steel post
+        # (r 0.13) on a dark foot disc (r 0.27, 3 cm), the collision box +-0.15 round the post (every point of it within
+        # 9 cm of the post: no invisible wall; Mario's 50 u radius keeps him 0.65 m off the post, outside the top)
         R.cyl(V, x, y, 0.42, z + 1.0, z + 1.05, "int_ru_maple_panel", n=8, top=True, bottom=True)
-        R.cyl(V, x, y, 0.3, z, z + 1.0, "int_ru_black", n=8, top=False, bottom=False)
-        K.col_box(C, x - 0.3, y - 0.3, z, x + 0.3, y + 0.3, z + 1.05, K.COL_NOCAM)
+        R.cyl(V, x, y, 0.13, z + 0.03, z + 1.0, "int_ru_steel", n=8, top=False, bottom=False)
+        R.cyl(V, x, y, 0.27, z, z + 0.03, "int_ru_black", n=8, top=True, bottom=False)
+        K.col_box(C, x - 0.15, y - 0.15, z, x + 0.15, y + 0.15, z + 1.05, K.COL_NOCAM)
         for j in (0, 1):
             a_ = math.radians(45.0 + 180.0 * j + 90.0 * (k % 2))
             sx, sy = x + 0.72 * math.cos(a_), y + 0.72 * math.sin(a_)
@@ -3299,6 +3489,33 @@ def ob_cafe(RZ, z):
             R.cyl(V, sx, yy, 0.2, z + 0.7, z + 0.76, "int_ru_leather_orange", n=8, top=True, bottom=True)
             R.cyl(V, sx, yy, 0.03, z, z + 0.7, "int_ru_steel", n=6, top=False, bottom=False)
             R.cyl(V, sx, yy, 0.17, z + 0.26, z + 0.29, "int_ru_steel", n=8, top=True, bottom=True)
+    # iteration 7 (design improvement 4, ob_from_lounge / ob_in_w): the lounge half of the hall (its NE part, open
+    # along y -277.8 to g_corridor_02 / the atrium) was bare terrazzo. Two more high-tops of the same kit (maple top,
+    # steel post, orange stools set east-west, not into the walk) 1.6 m in from that open edge at x -401.5 / -405.5:
+    # they mark the cafe's edge, stay >= 1.7 m off the walk from the lounge corner (-398, -279) SW to the Game Room
+    # door, >= 3.4 m off OB_ROUTE's start (-410, -279.5) and >= 4 m off the storefront row. A coin on the far one
+    # (a hop-up). A double-faced ORANGE & BREW sign hangs over the hall's NE corner (x -399; 2.9-3.62 m, over
+    # Mario's head and 3 m north of the walk line; steel rods to the 5.4 m tile ceiling) for wayfinding from the
+    # lounge (east face) and from the cafe (west face). Visual only apart from the two table boxes (NO_CAM).
+    for k, x in enumerate((-401.5, -405.5)):
+        y = -279.4
+        R.cyl(V, x, y, 0.42, z + 1.0, z + 1.05, "int_ru_maple_panel", n=8, top=True, bottom=True)
+        R.cyl(V, x, y, 0.13, z + 0.03, z + 1.0, "int_ru_steel", n=8, top=False, bottom=False)
+        R.cyl(V, x, y, 0.27, z, z + 0.03, "int_ru_black", n=8, top=True, bottom=False)
+        K.col_box(C, x - 0.15, y - 0.15, z, x + 0.15, y + 0.15, z + 1.05, K.COL_NOCAM)
+        for sx_ in (-0.72, 0.72):
+            R.cyl(V, x + sx_, y, 0.2, z + 0.7, z + 0.76, "int_ru_leather_orange", n=8, top=True, bottom=True)
+            R.cyl(V, x + sx_, y, 0.03, z, z + 0.7, "int_ru_steel", n=6, top=False, bottom=False)
+            R.cyl(V, x + sx_, y, 0.17, z + 0.26, z + 0.29, "int_ru_steel", n=8, top=True, bottom=True)
+        if k == 1:
+            EXTRA_PICKUPS.append({"kind": "coin", "name": "orange and brew north high-top coin", "pos": (x, y, z + 1.05)})
+    xb, yb0, yb1 = -399.0, -279.8, -278.3
+    # the sign's black edge frame (no +-x faces), the sign on both faces 0.5 cm outside it, two rods to the ceiling
+    V.box(xb - 0.02, yb0 - 0.05, z + 2.85, xb + 0.02, yb1 + 0.05, z + 3.67, "int_ru_black", faces="+y-y+z-z")
+    R.panel(V, (xb, yb0), (xb, yb1), z + 2.9, z + 3.62, "int_ru_sign_ob", off=0.025, glow=True)
+    R.panel(V, (xb, yb1), (xb, yb0), z + 2.9, z + 3.62, "int_ru_sign_ob", off=0.025, glow=True)
+    for yr in (yb0 + 0.15, yb1 - 0.15):
+        V.box(xb - 0.012, yr - 0.012, z + 3.67, xb + 0.012, yr + 0.012, z + CLEAR["G"], "int_ru_steel", faces="+x-x+y-y")
     for (s_, o_) in OB_HIGHTOPS[1:3]:
         x, y = _ob_at(s_, o_)
         P.lights.append(K.Light((x, y, z + 2.6), radius=3.0, strength=0.2, color=(1.0, 0.78, 0.5)))
@@ -3340,9 +3557,24 @@ def orange_brew_front(V, P, z):
                       faces="sideends_top")
         R.seg_box(V, at(0.0, 0.1075), at(L2, 0.1075), 0.0425, z + 2.98, z + 3.1, "int_ru_slat_dark",
                   faces="sideends_top_bot")                                              # the transom bar
+        # iteration 7 (fidelity-1 improvement 2; right third of ru_atrium_enr_lounge): the bays run up to a WHITE
+        # BULKHEAD with a cove LED line on its lower edge (it was ~2.4 m of blank cream wall up to the 5.4 m tile
+        # ceiling); the sign moves onto the bulkhead. Visual only (inside Mario's 50 u wall radius). Front face 31 cm off
+        # the wall line, LED face 1 cm behind it, sign 1.5 cm proud of it, no face on another (z-fight rule)
+        zb_, zt_ = z + 3.2, z + CLEAR["G"] - 0.02
+        s0_, s1_ = -ia, L2 + ib                          # the whole run: the two bulkheads meet at the corner
+        R.quad_wall(V, at(s0_, 0.31), at(s1_, 0.31), zb_, zt_, "int_ru_white", ao=0.95)
+        R.quad_wall(V, at(s0_, 0.07), at(s0_, 0.31), zb_, zt_, "int_ru_white", ao=0.9)
+        R.quad_wall(V, at(s1_, 0.31), at(s1_, 0.07), zb_, zt_, "int_ru_white", ao=0.9)
+        V.poly([(*at(s0_, 0.07), zb_), (*at(s1_, 0.07), zb_), (*at(s1_, 0.31), zb_), (*at(s0_, 0.31), zb_)],
+               "int_ru_white", normal_hint=(0, 0, -1), ao=0.85)
+        R.panel(V, at(s0_ + 0.03, 0.0), at(s1_ - 0.03, 0.0), zb_ - 0.035, zb_, "int_ru_led", off=0.30, glow=True)
+        V.poly([(*at(s0_ + 0.03, 0.27), zb_ - 0.035), (*at(s1_ - 0.03, 0.27), zb_ - 0.035),
+                (*at(s1_ - 0.03, 0.30), zb_ - 0.035), (*at(s0_ + 0.03, 0.30), zb_ - 0.035)], "int_ru_led",
+               normal_hint=(0, 0, -1), glow=True)
         if door is not None:
             c0 = (door + 0.5) * w
-            R.panel(V, at(c0 - 1.0, 0.0), at(c0 + 1.0, 0.0), z + 3.3, z + 4.3, "int_ru_sign_ob", off=0.05)
+            R.panel(V, at(c0 - 1.0, 0.0), at(c0 + 1.0, 0.0), z + 3.6, z + 4.6, "int_ru_sign_ob", off=0.325)
         for i in range(0, nb, 2):
             P.lights.append(K.Light(at((i + 0.5) * w, 1.2)[:2] + (z + 2.3,), radius=3.2, strength=0.22,
                                     color=LIGHT_WARM))
@@ -3399,7 +3631,10 @@ def level1_extras(RZ):
     F = RZ.floors["L1"]
     z = F.z
     # plan object 'Info Desk': 2.7 x 1.0 m at (-399.1..-396.4, -261.3..-260.3); a curved navy counter (inferred)
-    RZ.kit_add(R.info_desk(3.12, d=0.7, front="int_ru_wall_navy"), "L1", tag="info_desk", x=-397.75, y=-261.0, z=z,
+    # iteration 7 (fidelity-1 improvement 7; no photo, inferred): an orange UF band round the navy front and two staff
+    # screens on the top (it read as a bare navy counter); the top now covers the whole counter (kit fix)
+    RZ.kit_add(R.info_desk(3.12, d=0.7, front="int_ru_wall_navy", stripe="int_ru_orange_uf", monitors=2), "L1",
+               tag="info_desk", x=-397.75, y=-261.0, z=z,
                facing=180.0)
     P = K.Prop("l1_extras")
     V, C = P.visual, P.collision
@@ -6132,8 +6367,22 @@ def _corridor_wainscot(RZ, F, P):
     for oz in F.zones:
         if oz.type in SOLID_TYPES and oz.cls in ("S", "W"):
             cands.extend((pa, pb, oz) for pa, pb in R.edges(oz.poly))
+    def _touches_void(cz):
+        # iteration 7 (fidelity-1 regression): a corridor zone that holds / touches an atrium void is a BALCONY (the
+        # L2 atrium balcony, l2_corridor_08): its back walls stay white / glazed (ru_atrium_enr_vertical)
+        for vp in F.voids:
+            if any(R.pip(p_, cz.poly) for p_ in vp) or any(R.pip(p_, vp) for p_ in cz.poly):
+                return True
+            if any(R.seg_point_dist(p_, a_, b_) < 0.3 for p_ in vp for a_, b_ in R.edges(cz.poly)):
+                return True
+        return False
+    bays_ = [(a_, b_) for a_, b_ in EAST_END_OFFICES.get(F.id, ())]
+
+    def _office_bay(q_):
+        # ... and never across the glazed east office bays (int_ru_office_bay panels)
+        return any(R.seg_point_dist(q_, a_, b_) < 0.6 for a_, b_ in bays_)
     for cz in F.zones:
-        if WAINSCOT_CORE and cz.type == "corridor" and cz.cls == "W":
+        if WAINSCOT_CORE and cz.type == "corridor" and cz.cls == "W" and not _touches_void(cz):
             ccw_ = R.signed_area(cz.poly) > 0
             cands.extend(((pb, pa) if ccw_ else (pa, pb)) + (None,) for pa, pb in R.edges(cz.poly))
             # ... and the outer side of a corridor's edge when that side is another corridor (a big corridor polygon
@@ -6177,7 +6426,8 @@ def _corridor_wainscot(RZ, F, P):
             for sv in ss:
                 q = (pa[0] + u[0] * sv, pa[1] + u[1] * sv)
                 qb = (q[0] - nout[0] * 0.45, q[1] - nout[1] * 0.45)
-                good = (_corridor_at(F, (q[0] + nout[0] * 0.6, q[1] + nout[1] * 0.6)) is not None and
+                good = (not _office_bay(q) and
+                        _corridor_at(F, (q[0] + nout[0] * 0.6, q[1] + nout[1] * 0.6)) is not None and
                         (F.zone_at(qb) is oz if oz is not None else _far_core(qb)) and
                         _span_clear_of_doors(F, pa, u, sv - 0.01, sv + 0.01, pad=0.35) and
                         _face_off(F, q, nout, gap=0.025, default=-99.0) != -99.0)

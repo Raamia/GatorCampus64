@@ -13,21 +13,21 @@
  "background": "OCEAN_SKY",
  "kit_tris": {
   "total": {
-   "visual": 146012,
-   "collision": 11665
+   "visual": 146050,
+   "collision": 11495
   },
   "by_group": {
    "F1": {
-    "visual": 45761,
-    "collision": 3688
+    "visual": 45779,
+    "collision": 3598
    },
    "F2": {
-    "visual": 19862,
+    "visual": 19866,
     "collision": 1912
    },
    "F3": {
-    "visual": 17302,
-    "collision": 1260
+    "visual": 17318,
+    "collision": 1180
    },
    "F4": {
     "visual": 16742,
@@ -2389,7 +2389,7 @@
    "way_segments": 858,
    "ground_rects": 325
   },
-  "welded_pairs": 5,
+  "welded_pairs": 8,
   "dressing": {
    "F1": 78,
    "F2": 29,
@@ -2607,17 +2607,17 @@
  "objects": {
   "marston F1 visual": {
    "group": "F1",
-   "tris": 23874,
+   "tris": 23883,
    "collision": false
   },
   "marston F1 collision": {
    "group": "F1",
-   "tris": 1954,
+   "tris": 1909,
    "collision": true
   },
   "marston F2 visual": {
    "group": "F2",
-   "tris": 10562,
+   "tris": 10564,
    "collision": false
   },
   "marston F2 collision": {
@@ -2627,12 +2627,12 @@
   },
   "marston F3 visual": {
    "group": "F3",
-   "tris": 9283,
+   "tris": 9291,
    "collision": false
   },
   "marston F3 collision": {
    "group": "F3",
-   "tris": 646,
+   "tris": 606,
    "collision": true
   },
   "marston F4 visual": {
@@ -2705,23 +2705,23 @@
  "collision_repair": {
   "area_1": {
    "vertices": [
-    9002,
-    8991
+    8866,
+    8855
    ],
    "welded_vertices": 11,
    "collapsed_tris": 0,
    "tjunction_splits": 439,
    "triangles": [
-    11468,
-    11907
+    11298,
+    11737
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [],
-  "collision_tris": 11907,
-  "render_tris": 146012,
+  "collision_tris": 11737,
+  "render_tris": 146050,
   "lua_names": [],
   "fog_patched": [
    119,

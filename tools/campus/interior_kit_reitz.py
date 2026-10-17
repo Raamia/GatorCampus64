@@ -270,6 +270,13 @@ RU_MATERIALS = {
     "int_ru_canvas":       {"size": (64, 32), "tile_m": 1.2, "color": "#C89A4A", "map": "once"},
     # fix round 5 (fidelity-4; meeting-room chair rows): black stacking-chair seats, 4 per repeat, 6 cm gaps
     "int_ru_seatrow_black": {"size": (64, 32), "tile_m": 2.0, "color": "#1E1E22", "map": "once"},
+    # iteration 7 (fidelity-1 improvement 3; ru_ribbon_cutting_doors): the OUTER north door leaves get a light
+    # cyan-grey tint (alpha 0.13; the faint 0.08 glass read as empty white frames); the inner vestibule bank stays faint
+    "int_ru_glass_door":   {"size": (32, 32), "tile_m": 3.0, "color": "#C6DCE4", "kind": "water", "alpha": 0.13},
+    # iteration 7 (fidelity-1 improvement 5; ru_atrium_hdr_flickr, ru_atrium_construction_2015): the east bulkhead
+    # drum is bright polished silver with a vertical highlight, not the matte grey int_ru_metal_panel (kept for the
+    # drum's soffit and the wall behind it)
+    "int_ru_drum_panel":   {"size": (32, 32), "tile_m": 1.5, "color": "#CDD0D6"},
 }
 for _m in RU_MATERIALS.values():
     _m["tex"] = None
@@ -529,6 +536,21 @@ def tx_metal_panel(seed):
     t.rect(0, 0, 31, 1, hexc("#A2A6AC"))
     t.rect(0, 0, 1, 31, hexc("#A2A6AC"))
     t.rect(2, 2, 31, 2, hexc("#BEC2C6"))
+    return t
+
+
+def tx_drum_panel(seed):
+    """iteration 7 (fidelity-1 improvement 5): the east bulkhead drum's polished silver panels, (205,208,214), each
+    panel with a soft vertical highlight (a 5-step column gradient, steps of 8 so RGBA16 keeps them) and soft 2-texel
+    seams of low contrast (no 1-texel lines: no mipmaps)."""
+    t = _flat("#CDD0D6", seed, 2)
+    ramp = {9: 8, 10: 16, 11: 24, 12: 24, 13: 16, 14: 8, 22: -8, 23: -8}
+    for x, dv in ramp.items():
+        for y in range(2, 32):
+            c = (min(255, 205 + dv), min(255, 208 + dv), min(255, 214 + dv))
+            t.set(x, y, c)
+    t.rect(0, 0, 31, 1, hexc("#BABEC5"))
+    t.rect(0, 0, 1, 31, hexc("#BABEC5"))
     return t
 
 
@@ -2390,6 +2412,9 @@ TEXTURES = {
     "int_ru_clay": lambda s: _flat("#B0603A", s, 4),                    # ... terracotta clay on the pottery wheels
     # fix iteration 6 (appended LAST: the recipe seed is 1000 + 7 * its index, earlier textures keep theirs)
     "int_ru_fabric_mustard": lambda s: tx_fabric("#D8A030", s),         # the ACC's mustard-yellow chairs
+    # iteration 7 (appended LAST: earlier recipes keep their seeds)
+    "int_ru_glass_door": lambda s: _flat("#C6DCE4", s, 1),              # the outer north door leaves (tinted)
+    "int_ru_drum_panel": lambda s: tx_drum_panel(s),                    # the atrium's polished-silver east drum
 }
 
 
@@ -3930,6 +3955,26 @@ def gator_head(scale=1.0):
             xo = sx * (0.335 - 0.13 * (y / s - 0.1) / 1.25) * s + sx * 0.005
             V.poly([(xo, y, z + 0.16 * s), (xo, y + 0.09 * s, z + 0.16 * s), (xo, y + 0.045 * s, z + 0.08 * s)],
                    "int_ru_white", normal_hint=(sx, 0, 0))
+    # iteration 7 (fidelity-1 improvement 7; no photo, inferred): snout-on (from the lounge) it read as a green block
+    # with two eyes. Front teeth across both jaw tips (1 cm proud of the tip faces), a pale cream under-jaw band
+    # (2 cm proud of the lower jaw's sides), black nostrils on the nostril bumps, a black slit pupil on each eye
+    # (both 1.5 cm proud)
+    for k in range(4):
+        x_ = (-0.15 + 0.1 * k) * s
+        V.poly([(x_ - 0.04 * s, 1.36 * s, z + 0.16 * s), (x_ + 0.04 * s, 1.36 * s, z + 0.16 * s),
+                (x_, 1.36 * s, z + 0.09 * s)], "int_ru_white", normal_hint=(0, 1, 0))
+    for k in range(3):
+        x_ = (-0.09 + 0.09 * k) * s
+        V.poly([(x_ - 0.035 * s, 1.21 * s, z + 0.08 * s), (x_, 1.21 * s, z + 0.14 * s),
+                (x_ + 0.035 * s, 1.21 * s, z + 0.08 * s)], "int_ru_white", normal_hint=(0, 1, 0))
+    for a_, b_ in edges([(-0.32 * s, 0.1 * s), (0.32 * s, 0.1 * s), (0.19 * s, 1.22 * s), (-0.19 * s, 1.22 * s)]):
+        if a_[1] > 0.5 * s or b_[1] > 0.5 * s:
+            quad_wall(V, a_, b_, z + 0.01 * s, z + 0.05 * s, "int_ru_wall_cream")
+    for sx in (-1, 1):
+        V.box(sx * 0.09 * s - 0.025 * s, 1.17 * s, z + 0.325 * s, sx * 0.09 * s + 0.025 * s, 1.21 * s, z + 0.335 * s,
+              "int_ru_black", faces="+z")
+        V.box(sx * 0.26 * s - 0.012 * s, -0.035 * s, z + 0.47 * s, sx * 0.26 * s + 0.012 * s, -0.025 * s,
+              z + 0.55 * s, "int_ru_black", faces="+y")
     K.col_box(C, -0.6 * s, -0.6 * s, 0.0, 0.6 * s, 0.6 * s, 0.9 * s, K.COL_NOCAM)
     return P
 
@@ -4394,9 +4439,12 @@ def free_library(w=1.2, h=1.6):
     return P
 
 
-def info_desk(L=3.6, d=0.8, h=1.07, front="int_ru_uf_blue"):
+def info_desk(L=3.6, d=0.8, h=1.07, front="int_ru_uf_blue", stripe=None, monitors=0):
     """Information desk (no photo found: a curved white counter with a navy front and UF-blue sign, inferred).
-    Footprint: 0.866 L wide, 0.3 + d deep (local +y is the curved front)."""
+    Footprint: 0.866 L wide, 0.3 + d deep (local +y is the curved front).
+    iteration 7 (fidelity-1 improvement 7): the white top covers every segment (it was one segment's quad, laid twice:
+    the rest of the counter was open from above); optional `stripe` (a material: a band round the curved front 1.5 cm
+    proud, under the lip) and `monitors` (that many staff screens on the top, their dark backs to the visitors)."""
     P = _p("info_desk")
     V, C = P.visual, P.collision
     n = 6
@@ -4407,15 +4455,23 @@ def info_desk(L=3.6, d=0.8, h=1.07, front="int_ru_uf_blue"):
         quad_wall(V, b, a, 0.0, 0.12, "int_ru_black")
         # white top lip proud of the front
         quad_wall(V, (b[0] * 1.02, b[1] + 0.04), (a[0] * 1.02, a[1] + 0.04), h - 0.06, h + 0.02, "int_ru_white")
+        if stripe:
+            quad_wall(V, (b[0] * 1.012, b[1] + 0.015), (a[0] * 1.012, a[1] + 0.015), h - 0.22, h - 0.14, stripe)
+        a2 = (a[0] * 0.8, a[1] - d)
+        b2 = (b[0] * 0.8, b[1] - d)
+        V.poly([(a[0], a[1], h), (b[0], b[1], h), (b2[0], b2[1], h), (a2[0], a2[1], h)], "int_ru_white",
+               normal_hint=(0, 0, 1))
     for e in (pts[0], pts[-1]):          # end panels, facing out sideways (normal on the right of a -> b)
         if e[0] > 0:
             quad_wall(V, (e[0] * 0.8, e[1] - d), (e[0], e[1]), 0.0, h, front)
         else:
             quad_wall(V, (e[0], e[1]), (e[0] * 0.8, e[1] - d), 0.0, h, front)
-        a2 = (a[0] * 0.8, a[1] - d)
-        b2 = (b[0] * 0.8, b[1] - d)
-        V.poly([(a[0], a[1], h), (b[0], b[1], h), (b2[0], b2[1], h), (a2[0], a2[1], h)], "int_ru_white",
-               normal_hint=(0, 0, 1))
+    for k in range(monitors):
+        mx = (k + 0.5 - monitors / 2) * min(0.9, 0.8 * L / max(1, monitors))
+        V.box(mx - 0.27, -0.2, h + 0.1, mx + 0.27, -0.16, h + 0.42, "int_ru_black", faces="+x-x+y-y+z")
+        V.box(mx - 0.25, -0.215, h + 0.12, mx + 0.25, -0.21, h + 0.4, "int_ru_led", faces="-y", glow=True)
+        V.box(mx - 0.03, -0.16, h + 0.005, mx + 0.03, -0.1, h + 0.1, "int_ru_black", faces="+x-x+y-y")
+        V.box(mx - 0.12, -0.22, h + 0.005, mx + 0.12, -0.04, h + 0.015, "int_ru_black", faces="+x-x+y-y+z")
     xs = [p[0] for p in pts]
     K.col_box(C, min(xs), min(p[1] for p in pts) - d, 0.0, max(xs), max(p[1] for p in pts), h, K.COL_NOCAM)
     return P
@@ -4494,7 +4550,8 @@ if __name__ == "__main__":
 
 # ================================================================== stairs
 def stair_flight(V, C, a, b, z0, z1, width, steps=None, tread_mat="int_ru_terrazzo", side_mat="int_ru_white",
-                 soffit=True, rails=True, rail_h=1.07, col_mat="COL notslip", stringer=0.35, rail_outer_head=None):
+                 soffit=True, rails=True, rail_h=1.07, col_mat="COL notslip", stringer=0.35, rail_outer_head=None,
+                 rail_cap_foot=False):
     """Open stair flight from a (bottom, z0) to b (top, z1) in plan, `width` wide (photos: white stringers and
     soffit, terrazzo treads, silver picket railings). Collision: one ramp (no-slip) + the two railings.
     rail_outer_head: None = each railing is a closed 14 cm slab (inner + outer face) along the whole flight; a length
@@ -4550,13 +4607,26 @@ def stair_flight(V, C, a, b, z0, z1, width, steps=None, tread_mat="int_ru_terraz
                 for sgn in (1, -1):
                     o = 0.07 * sgn
                     qa = pa
-                    if rail_outer_head is not None and (sgn > 0) == (off > 0):     # the outer (void-side) face
-                        if rail_outer_head <= 0:
+                    # iteration 7: rail_outer_head may be a pair (-n side, +n side), each None (full) or a length
+                    roh = rail_outer_head
+                    if isinstance(roh, (tuple, list)):
+                        roh = roh[1] if off > 0 else roh[0]
+                    if roh is not None and (sgn > 0) == (off > 0):     # the outer (void-side) face
+                        if roh <= 0:
                             continue
-                        qa = P(max(0.0, L - rail_outer_head), off, z1 - h * min(1.0, rail_outer_head / L))
+                        qa = P(max(0.0, L - roh), off, z1 - h * min(1.0, roh / L))
                     q = [(qa[0] + nx * o, qa[1] + ny * o, qa[2] - 0.3), (pb[0] + nx * o, pb[1] + ny * o, pb[2] - 0.3),
                          (pb[0] + nx * o, pb[1] + ny * o, pb[2] + rail_h), (qa[0] + nx * o, qa[1] + ny * o, qa[2] + rail_h)]
                     C.poly(q, K.COL_NOCAM, normal_hint=(nx * sgn, ny * sgn, 0))
+                # iteration 7: a rail closed on both faces from its foot gets a foot end cap across its 14 cm (walking
+                # in along the rail line from the floor beside the foot, Mario entered the open slab end and both faces
+                # held him inside it up the ramp, onto the balcony block top: spotfall_r L2 SE foot 1 walk)
+                roh_ = rail_outer_head[1] if isinstance(rail_outer_head, (tuple, list)) and off > 0 else \
+                    (rail_outer_head[0] if isinstance(rail_outer_head, (tuple, list)) else rail_outer_head)
+                if roh_ is None and rail_cap_foot:
+                    cq = [(pa[0] - nx * 0.07, pa[1] - ny * 0.07, pa[2] - 0.3), (pa[0] + nx * 0.07, pa[1] + ny * 0.07, pa[2] - 0.3),
+                          (pa[0] + nx * 0.07, pa[1] + ny * 0.07, pa[2] + rail_h), (pa[0] - nx * 0.07, pa[1] - ny * 0.07, pa[2] + rail_h)]
+                    C.poly(cq, K.COL_NOCAM, normal_hint=(-dx, -dy, 0))
     return {"len": L, "angle_deg": math.degrees(math.atan2(h, L)), "steps": n}
 
 

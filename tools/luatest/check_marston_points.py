@@ -34,6 +34,16 @@ course 4, LEVEL_CCM, an interior stage) against its sources and, once it exists,
    c. no wall at least 2 m tall that is thinner than 12 units (two opposite faces closer than a 48 u/f long jump's
       quarter step) stands between two open floor spaces: an airborne player would be thrown through it (glass rooms
       such as L129, act 3's lock). Fix round 5: zero-thickness walls (two opposite faces on one plane) count too.
+5. Doors under coopdx v1.5.1's GROUND push (iteration 7): levels.lua sets gLevelValues.fixCollisionBugs = 1, so on
+   the ground a wall pushes Mario radially off its CLOSEST POINT (rounded corners, one-sided: skipped when he is
+   behind it), not off its plane as in vanilla; an opening narrower than about 100 units blocks there although a
+   vanilla walk passes. Every door of data/uf/marston_points.json (group-study rooms, rooms) and every open layout
+   door is walked perpendicular, both ways, at three lateral offsets and two speeds, with both pushes: no walk that
+   crosses the door line (by 60 units) with the vanilla push may be blocked with the coopdx push, and every room door
+   is crossed both ways with the coopdx push.
+6. The level script's act gating (iteration 7): no Goomba stands on the silent 5th floor in act 2 (the Shushers'
+   stealth act: OBJECT_WITH_ACTS without ACT_2), and every act keeps at least 120 coins (yellow coins, coin lines of
+   5, rings / arrows of 8, a coin per Goomba) so the 100-coin star stays reachable.
 Usage (from anywhere):
   tools/.venv/bin/python -I tools/luatest/check_marston_points.py          check, exit 1 on any finding
   tools/.venv/bin/python -I tools/luatest/check_marston_points.py --print  print the source values (Lua syntax)
@@ -1006,8 +1016,201 @@ def check_airborne(col, bad):
         bad += 1
     print("check_marston_points: airborne checks: %d slab-edge faces into their holes, %d chute-hatch step-offs on the "
           "slide, %d thin walls" % (edges, trials - len(missed), len(thin)))
+    return check_doors_dx(air, bad)
+
+
+
+# ------------------------------------------------------------------------------------------- coopdx ground push (doors)
+def _closest_tri(p, a, b, c):
+    """closest point of triangle abc to p (Ericson, Real-Time Collision Detection 5.1.5)"""
+    def sub(u, v): return (u[0] - v[0], u[1] - v[1], u[2] - v[2])
+    def dot(u, v): return u[0] * v[0] + u[1] * v[1] + u[2] * v[2]
+    ab, ac, ap = sub(b, a), sub(c, a), sub(p, a)
+    d1, d2 = dot(ab, ap), dot(ac, ap)
+    if d1 <= 0 and d2 <= 0:
+        return a
+    bp = sub(p, b)
+    d3, d4 = dot(ab, bp), dot(ac, bp)
+    if d3 >= 0 and d4 <= d3:
+        return b
+    vc = d1 * d4 - d3 * d2
+    if vc <= 0 and d1 >= 0 and d3 <= 0:
+        t = d1 / (d1 - d3)
+        return (a[0] + ab[0] * t, a[1] + ab[1] * t, a[2] + ab[2] * t)
+    cp = sub(p, c)
+    d5, d6 = dot(ab, cp), dot(ac, cp)
+    if d6 >= 0 and d5 <= d6:
+        return c
+    vb = d5 * d2 - d1 * d6
+    if vb <= 0 and d2 >= 0 and d6 <= 0:
+        t = d2 / (d2 - d6)
+        return (a[0] + ac[0] * t, a[1] + ac[1] * t, a[2] + ac[2] * t)
+    va = d3 * d6 - d5 * d4
+    if va <= 0 and (d4 - d3) >= 0 and (d5 - d6) >= 0:
+        t = (d4 - d3) / ((d4 - d3) + (d5 - d6))
+        return (b[0] + (c[0] - b[0]) * t, b[1] + (c[1] - b[1]) * t, b[2] + (c[2] - b[2]) * t)
+    den = 1.0 / (va + vb + vc)
+    v, w = vb * den, vc * den
+    return (a[0] + ab[0] * v + ac[0] * w, a[1] + ab[1] * v + ac[1] * w, a[2] + ab[2] * v + ac[2] * w)
+
+
+def walls_ground_dx(air, pos, off_y, radius):
+    """coopdx v1.5.1 find_wall_collisions on the ground with fixCollisionBugs (rounded corners): push radially off the
+    closest point of each wall within `radius`, skipped when Mario is behind the wall (dot(normal, dir) < -0.9)"""
+    x, z, y = pos[0], pos[2], pos[1] + off_y
+    dx = dz = 0.0
+    for s in air.walls.get(air._cell(x, z), ()):
+        if y < s["lo"] or y > s["hi"]:
+            continue
+        vs = s["v"]
+        if x < min(v[0] for v in vs) - radius or x > max(v[0] for v in vs) + radius or \
+                z < min(v[2] for v in vs) - radius or z > max(v[2] for v in vs) + radius:
+            continue
+        cx, cy, cz = _closest_tri((x, y, z), *vs)
+        if abs(cy - y) > 1:
+            continue
+        ddx, ddz = x - cx, z - cz
+        dist = math.hypot(ddx, ddz)
+        if dist > radius:
+            continue
+        nx, _, nz = s["n"]
+        ux, uz = (nx, nz) if dist < 1e-6 else (ddx / dist, ddz / dist)
+        if nx * ux + nz * uz < -0.9:
+            continue
+        dx += ux * (radius - dist)
+        dz += uz * (radius - dist)
+    pos[0] += dx
+    pos[2] += dz
+
+
+DOOR_BACK, DOOR_PAST = 150, 60          # a door walk starts 1.5 m before the door line and must get 0.6 m past it
+
+
+def door_walk(air, push, x, z, ux, uz, y, speed):
+    """perform_ground_step-like walk (quarter steps, lower 30/24 then upper 60/50 wall checks) -> crossed the line?
+    None when there is no floor at the start (a stair hall, a terrace step): not a walk"""
+    fh, fl = air.find_floor(x, y + 50, z)
+    if fl is None or abs(fh - y) > 30:
+        return None
+    pos = [x, fh, z]
+    for _ in range(int((DOOR_BACK + DOOR_PAST + 60) / speed) + 3):
+        for _q in range(4):
+            nxt = [pos[0] + ux * speed / 4, pos[1], pos[2] + uz * speed / 4]
+            push(nxt, 30.0, 24.0)
+            push(nxt, 60.0, 50.0)
+            h2, f2 = air.find_floor(nxt[0], nxt[1] + 100, nxt[2])
+            if f2 is None or abs(h2 - y) > 60 or h2 + 160 >= air.find_ceil(nxt[0], h2 + 80, nxt[2]):
+                return False
+            pos = [nxt[0], h2, nxt[2]]
+        if (pos[0] - x) * ux + (pos[2] - z) * uz >= DOOR_BACK + DOOR_PAST:
+            return True
+    return False
+
+
+def check_doors_dx(air, bad):
+    pts = json.load(open(POINTS_JSON)) if os.path.exists(POINTS_JSON) else {}
+    lay = json.load(open(LAYOUT))
+    cx, cy = pts.get("center_m") or (-59.6, -98.9)
+    doors = []                                          # (name, floor, a_m, b_m, must cross both ways)
+    for r in pts.get("group_study_rooms", []):
+        doors.append((r["room"], r["floor"], r["door_a_m"], r["door_b_m"], True))
+    for r in pts.get("rooms", []):
+        d = r.get("door") or {}
+        if "map_m" in d and "facing_deg" in d:
+            f = math.radians(d["facing_deg"])
+            tx, ty = math.cos(f), -math.sin(f)          # along the wall (facing: compass degrees, 0 = north = +y)
+            mx, my = d["map_m"][:2]
+            # the anchor is the door's centre (the vestibule's is its middle mullion): walks at it and 0.4 m either side
+            doors.append((r["room"], r["floor"], (mx - tx * 0.95, my - ty * 0.95), (mx + tx * 0.95, my + ty * 0.95), True))
+    for f in lay["floors"]:
+        for o in f.get("openings", []):
+            if o["type"] in ("door", "door_open", "entrance"):
+                doors.append((o["id"], f["id"], o["a_m"], o["b_m"], False))
+    walks = regress = 0
+    blocked, regressed = [], []
+    for name, fid, a, b, must in doors:
+        y = FLOOR_Z[fid] * 100
+        ax, az = (a[0] - cx) * 100, -(a[1] - cy) * 100
+        bx, bz = (b[0] - cx) * 100, -(b[1] - cy) * 100
+        w = math.hypot(bx - ax, bz - az)
+        if w < 1:
+            continue
+        tx, tz = (bx - ax) / w, (bz - az) / w
+        nx, nz = tz, -tx
+        mx, mz = (ax + bx) / 2, (az + bz) / 2
+        lat = min(w / 4, max(0.0, w / 2 - 55))
+        for sgn in (1, -1):
+            crossed = None
+            for o in (-lat, 0.0, lat):
+                sx, sz = mx + tx * o - sgn * nx * DOOR_BACK, mz + tz * o - sgn * nz * DOOR_BACK
+                for sp in (16.0, 32.0):
+                    v = door_walk(air, air.walls_air, sx, sz, sgn * nx, sgn * nz, y, sp)
+                    if v is None:
+                        continue
+                    walks += 1
+                    d = door_walk(air, lambda p, oy, r: walls_ground_dx(air, p, oy, r), sx, sz, sgn * nx, sgn * nz,
+                                  y, sp)
+                    crossed = bool(crossed) or d
+                    if v and not d:
+                        regress += 1
+                        regressed.append((fid, name, sgn, round(o), sp))
+            if must and crossed is False:
+                blocked.append((fid, name, sgn))
+    if regressed:
+        print("DOOR (coopdx push) %d walk(s) cross a door with the vanilla ground push but are blocked with coopdx's "
+              "rounded-corner push (widen the collision opening), e.g. %s" % (regress, regressed[:4]))
+        bad += 1
+    if blocked:
+        print("DOOR (coopdx push) %d room-door direction(s) cannot be crossed with coopdx's ground push, e.g. %s"
+              % (len(blocked), blocked[:4]))
+        bad += 1
+    print("check_marston_points: coopdx ground-push door walks: %d doors, %d walks, %d blocked only by the coopdx push, "
+          "%d room-door directions closed" % (len(doors), walks, regress, len(blocked)))
     return bad
 
+
+# ------------------------------------------------------------------------------------------- level script act gating
+SCRIPT = os.environ.get("SGL_CCM_SCRIPT") or os.path.join(ROOT, "mods", "sgl64", "levels", "ccm", "script.c")
+F5_Y = (1750, 2350)                    # the silent 5th floor (F5 1800, up to its 5.4 m ceiling)
+MIN_ACT_COINS = 120
+
+
+def check_script_acts(bad):
+    if not os.path.exists(SCRIPT):
+        return bad
+    objs = []
+    for line in open(SCRIPT).read().splitlines():
+        m = re.search(r"OBJECT(_WITH_ACTS)?\(\s*\w+,\s*(-?\d+),\s*(-?\d+),\s*(-?\d+),\s*-?\d+,\s*-?\d+,\s*-?\d+,"
+                      r"\s*(0x[0-9A-Fa-f]+|\d+),\s*(\w+)(?:,\s*([A-Z_0-9| ]+))?\)", line)
+        if not m:
+            continue
+        acts = set(range(1, 7))
+        if m.group(1):
+            acts = {int(a.strip()[4:]) for a in m.group(7).split("|") if a.strip().startswith("ACT_")}
+        objs.append((m.group(6), int(m.group(3)), int(m.group(5), 0), acts))
+    worst = None
+    for act in range(1, 7):
+        coins = 0
+        for bhv, y, bp, acts in objs:
+            if act not in acts:
+                continue
+            if bhv == "bhvYellowCoin" or bhv == "bhvGoomba":
+                coins += 1
+            elif bhv == "bhvCoinFormation":
+                coins += 5 if ((bp >> 16) & 0xFF) & 0x7 < 2 else 8
+        worst = coins if worst is None else min(worst, coins)
+        if coins < MIN_ACT_COINS:
+            print("COINS act %d: only %d coins in the level script (the 100-coin star needs a margin: >= %d)"
+                  % (act, coins, MIN_ACT_COINS))
+            bad += 1
+    f5 = [y for bhv, y, bp, acts in objs if bhv == "bhvGoomba" and F5_Y[0] <= y < F5_Y[1] and 2 in acts]
+    if f5:
+        print("GOOMBA %d Goomba(s) on the silent 5th floor in act 2 (Y %s): gate them with OBJECT_WITH_ACTS without "
+              "ACT_2" % (len(f5), f5))
+        bad += 1
+    print("check_marston_points: level script: %d objects, fewest coins in an act %s, %d F5 Goomba(s) in act 2"
+          % (len(objs), worst, len(f5)))
+    return bad
 
 def col_type_of(col, rec):
     return col.types.get(rec["v"])
@@ -1047,6 +1250,7 @@ def main():
     bad = compare(src, lua)
     bad += layout_sanity(lua, info)
     bad = check_built(lua, bad)
+    bad = check_script_acts(bad)
     n = sum(len(v) if isinstance(v, (list, dict)) else 1 for v in src.values())
     if bad:
         print("check_marston_points: %d finding(s) (MARSTON_POINTS vs %s)" % (bad, where))

@@ -5874,8 +5874,8 @@
    "area": 2,
    "module": "tools/campus/interiors/reitz.py",
    "kit_tris": {
-    "visual": 136303,
-    "collision": 12577
+    "visual": 136762,
+    "collision": 12517
    },
    "warp_nodes": [
     {
@@ -6467,17 +6467,78 @@
     "note": "area 2 spawn 0x0A (bhvSpinAirborneWarp) in the Ground-level atrium lounge; only debug warps (warp_to_warpnode / area 2) use it: players walk in through the real doors (instant warps)"
    },
    "pickups": {
-    "coins_placed": 103,
-    "coins_with_goombas": 103,
-    "objects": 47,
+    "coins_placed": 104,
+    "coins_with_goombas": 107,
+    "objects": 51,
     "by_kind": {
+     "goomba": 3,
      "coin_line": 15,
-     "coin": 28,
+     "coin": 29,
      "heart": 1,
      "1up": 3
     },
     "skipped": [],
     "items": [
+     {
+      "kind": "goomba",
+      "name": "game room goomba 1",
+      "map_m": [
+       -423.5,
+       -304.5,
+       0.0
+      ],
+      "game": [
+       4650,
+       0,
+       1150
+      ],
+      "behavior": "bhvGoomba",
+      "model": "MODEL_GOOMBA",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "goomba",
+      "name": "game room goomba 2",
+      "map_m": [
+       -424.5,
+       -312.5,
+       -0.0
+      ],
+      "game": [
+       4550,
+       0,
+       1950
+      ],
+      "behavior": "bhvGoomba",
+      "model": "MODEL_GOOMBA",
+      "bparams": "0x00000000",
+      "facing_deg": 180.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "goomba",
+      "name": "ll corridor goomba",
+      "map_m": [
+       -407.5,
+       -272.5,
+       -6.0
+      ],
+      "game": [
+       6250,
+       -600,
+       -2050
+      ],
+      "behavior": "bhvGoomba",
+      "model": "MODEL_GOOMBA",
+      "bparams": "0x00000000",
+      "facing_deg": 90.0,
+      "coins": 1,
+      "acts": null
+     },
      {
       "kind": "coin_line",
       "name": "food court coins",
@@ -7140,16 +7201,36 @@
      },
      {
       "kind": "coin",
+      "name": "orange and brew north high-top coin",
+      "map_m": [
+       -405.5,
+       -279.4,
+       1.65
+      ],
+      "game": [
+       6450,
+       165,
+       -1360
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
       "name": "orange and brew counter coin 0",
       "map_m": [
-       -414.51,
-       -300.04,
+       -414.52,
+       -300.03,
        1.66
       ],
       "game": [
-       5549,
+       5548,
        166,
-       704
+       703
       ],
       "behavior": "bhvYellowCoin",
       "model": "MODEL_YELLOW_COIN",
@@ -7163,13 +7244,13 @@
       "name": "orange and brew counter coin 1",
       "map_m": [
        -415.75,
-       -298.99,
+       -298.96,
        1.66
       ],
       "game": [
        5425,
        166,
-       599
+       596
       ],
       "behavior": "bhvYellowCoin",
       "model": "MODEL_YELLOW_COIN",
@@ -7182,14 +7263,14 @@
       "kind": "coin",
       "name": "orange and brew counter coin 2",
       "map_m": [
-       -416.98,
-       -297.93,
+       -416.99,
+       -297.9,
        1.66
       ],
       "game": [
-       5302,
+       5301,
        166,
-       493
+       490
       ],
       "behavior": "bhvYellowCoin",
       "model": "MODEL_YELLOW_COIN",
@@ -7583,8 +7664,8 @@
       "plaques": 55
      },
      "L2_wainscot": {
-      "art": 216,
-      "plaques": 882.5
+      "art": 190,
+      "plaques": 758.1
      },
      "L3": {
       "art": 109,
@@ -7625,7 +7706,8 @@
        0
       ]
      }
-    ]
+    ],
+    "goomba_spots": 3
    },
    "notes": {
     "frame": "Area 2 shares area 1's frame (centre (-470, -293)); the doors line up in plan, instant warps add only the vertical offset between area 1's flattened grade and the real level (+6 north entrance, -2 South Terrace, +4 Level 1 south exit, 0 Ground north door).",
@@ -7648,22 +7730,22 @@
     },
     "reitz LL collision": {
      "group": "LL",
-     "tris": 344,
+     "tris": 334,
      "collision": true
     },
     "reitz G visual": {
      "group": "G",
-     "tris": 19080,
+     "tris": 19427,
      "collision": false
     },
     "reitz G collision": {
      "group": "G",
-     "tris": 1548,
+     "tris": 1544,
      "collision": true
     },
     "reitz L1 visual": {
      "group": "L1",
-     "tris": 14412,
+     "tris": 14420,
      "collision": false
     },
     "reitz L1 collision": {
@@ -7673,22 +7755,22 @@
     },
     "reitz L2 visual": {
      "group": "L2",
-     "tris": 16560,
+     "tris": 16512,
      "collision": false
     },
     "reitz L2 collision": {
      "group": "L2",
-     "tris": 1847,
+     "tris": 1837,
      "collision": true
     },
     "reitz L3 visual": {
      "group": "L3",
-     "tris": 11070,
+     "tris": 11074,
      "collision": false
     },
     "reitz L3 collision": {
      "group": "L3",
-     "tris": 1078,
+     "tris": 1072,
      "collision": true
     },
     "reitz L4 visual": {
@@ -7732,11 +7814,11 @@
      "collision": true
     }
    },
-   "vertex_lit_material_lists": 356
+   "vertex_lit_material_lists": 360
   }
  ],
  "export_hygiene": {
-  "geometry_mode_lines_sorted": 820,
+  "geometry_mode_lines_sorted": 828,
   "trailing_ws_lines": 2,
   "max_abs_vertex": 32416,
   "common0_jump_link": true
@@ -7757,30 +7839,30 @@
   },
   "area_2": {
    "vertices": [
-    14380,
-    14228
+    14318,
+    14170
    ],
-   "welded_vertices": 151,
+   "welded_vertices": 147,
    "collapsed_tris": 24,
    "tjunction_splits": 422,
    "triangles": [
-    12555,
-    12953
+    12495,
+    12893
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [
-   "12953 static collision triangles in the largest area (22732 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
+   "12893 static collision triangles in the largest area (22672 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
   ],
-  "collision_tris": 22732,
-  "render_tris": 218116,
+  "collision_tris": 22672,
+  "render_tris": 218575,
   "lua_names": [],
   "fog_patched": [
-   226,
-   226
+   228,
+   228
   ]
  },
- "level_dir": "work/interiors/polish3/r6/reitz-design-review/build/levels/wf"
+ "level_dir": "work/interiors/polish3/r7/design/b3/levels/wf"
 }

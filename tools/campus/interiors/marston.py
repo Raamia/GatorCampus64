@@ -2171,9 +2171,22 @@ def place_layout_props(M, fid, P, z):
                 P.merge(MP.exhibit_case(Lg, Wd, 1.1), cx, cy, 0.0, fac)        # cherry cases (#26), in the lobby
             else:
                 n = max(1, int(Lg // 1.05))                        # F3: grey microform cabinets (#94)
+                # iteration 7 (technical r6 #4: the 12 cm slots between the 1.35 m tops dropped slow top walks):
+                # the cabinets keep their visuals and the row gets ONE collision block, with a steel strip over
+                # each slot, edge to edge with the tops (no inner walls, no slot)
+                dd = min(Wd, 0.8)
                 for k in range(n):
-                    P.merge(MP.microfiche_cabinet(1.0, min(Wd, 0.8), 1.35), cx,
+                    P.merge(MP.microfiche_cabinet(1.0, dd, 1.35, col=False), cx,
                             cy - Lg / 2 + (k + 0.5) * Lg / n, 0.0, 90.0)
+                ya, yb_ = cy - Lg / 2 + 0.5 * Lg / n - 0.5, cy + Lg / 2 - 0.5 * Lg / n + 0.5
+                K.col_box(P.collision, cx - dd / 2, ya, 0.0, cx + dd / 2, yb_, 1.35, MP.NOCAM)
+                for k in range(n - 1):
+                    g0 = cy - Lg / 2 + (k + 0.5) * Lg / n + 0.5
+                    g1 = cy - Lg / 2 + (k + 1.5) * Lg / n - 0.5
+                    if g1 - g0 > 1e-3:
+                        P.visual.poly([(cx - dd / 2, g0, 1.35), (cx + dd / 2, g0, 1.35), (cx + dd / 2, g1, 1.35),
+                                       (cx - dd / 2, g1, 1.35)], "int_metal", tint=(0.86, 0.88, 0.9),
+                                      normal_hint=(0, 0, 1))
         elif typ == "counter":
             if pid == "sbux_counter":
                 cc = cafe_counter_ms(Lg, Wd)
@@ -4157,9 +4170,19 @@ def makerspace(M, P):
                       uvs=K.ONCE, ao=1.0)
     P.merge(tv_on, MAKER_TV_X, y0 + PART_T / 2 + 0.02, 0.0, 0.0)
     # the perimeter work bench along the brick (#54 #56)
+    # iteration 7 (technical r6 #4: the two 3.3 m benches stand 0.10 m apart, a slot 8-11 u wide along the 0.92 m top
+    # at x -76.6 that a walk along the top dropped into): the benches keep their visuals, and ONE collision block
+    # spans both (no slot, no inner walls) with a butcher-block strip over the gap, edge to edge with both tops
+    byc = y0 + PART_T / 2 + 0.415
     for k, xc in enumerate((-78.25, -74.85)):
-        P.merge(MP.maker_island2(3.3, 0.75, MAKER_ISLAND_H, chairs_per_side=0), xc, y0 + PART_T / 2 + 0.415, 0.0,
-                0.0)
+        bench = MP.maker_island2(3.3, 0.75, MAKER_ISLAND_H, chairs_per_side=0)
+        bench.collision.polys.clear()
+        P.merge(bench, xc, byc, 0.0, 0.0)
+    K.col_box(P.collision, -78.25 - 1.65, byc - 0.375, 0.0, -74.85 + 1.65, byc + 0.375, MAKER_ISLAND_H, MP.NOCAM)
+    P.visual.poly([(-76.6, byc - 0.375, MAKER_ISLAND_H), (-76.5, byc - 0.375, MAKER_ISLAND_H),
+                   (-76.5, byc + 0.375, MAKER_ISLAND_H), (-76.6, byc + 0.375, MAKER_ISLAND_H)], "int_ms_butcher",
+                  normal_hint=(0, 0, 1))
+    for k, xc in enumerate((-78.25, -74.85)):
         # iteration 5 (fidelity-2, #59): the soldering benches' kit along the back of the top (visual only)
         P.merge(MP.solder_bench_kit(3.3, 0.75, seed=k), xc, y0 + PART_T / 2 + 0.415, MAKER_ISLAND_H, 0.0)
     # ---- six islands in two N-S rows, chairs both sides (#54 #56); the act 4 red coin sits on the NW one (-78.0, -99.0)
@@ -4260,8 +4283,11 @@ def conference_l136(M, P):
         for y in (y0 + 1.20, y0 + 3.13, y0 + 5.06, y0 + 6.99):
             if x == x0 + 5.7 and y == y0 + 6.99:
                 continue
-            furnish(M, "F1", MP.training_table(1.83, 0.6, 0.74, chairs=2), x, y, 90.0, room="L136",
-                    note="training_table", margin=0.08)
+            if furnish(M, "F1", MP.training_table(1.83, 0.6, 0.74, chairs=2), x, y, 90.0, room="L136",
+                       note="training_table", margin=0.08):
+                # iteration 7 (technical r6 #1: the 0.10 m slots between the end-to-end tops dropped 72 of 72 slow
+                # top walks 74 u): each row welds into one collision block over its consecutive tables (place_dressing)
+                M.dressing[-1]["weld"] = ("L136", round(x, 3))
 
 
 def dress_f2(M, P, z):
@@ -4547,8 +4573,13 @@ def dress_f3_l308_hall(M, P):
       panel read as a giant TV)."""
     sk = K.Prop("l308_white_skin", col_closed=True)
     yb = -107.5 + 0.012
-    sk.visual.wall((-79.448, yb), (-80.10, yb), 0.0, L308_CEIL - 0.01, "int_ms_wall")
-    sk.visual.wall((-79.448, -107.70), (-79.448, yb), 0.0, L308_CEIL - 0.01, "int_ms_wall")
+    # iteration 7 (fidelity-4 blocking, cu_l308_s / g4_L308_ne): tower_band_walls' convex-corner filler (iteration 6)
+    # carries the SW hall's brick on 0.30 m east of the nub (faces at y -107.50 and x -79.16), past the skin's old end
+    # at x -79.448: the red strip was back. The skin now wraps the filler too, 1.2 cm in front of both of its faces
+    # (the filler keeps its collision; visual only)
+    sxe = -79.16 + 0.012
+    sk.visual.wall((sxe, yb), (-80.10, yb), 0.0, L308_CEIL - 0.01, "int_ms_wall")
+    sk.visual.wall((sxe, -107.70), (sxe, yb), 0.0, L308_CEIL - 0.01, "int_ms_wall")
     P.merge(sk, 0.0, 0.0, 0.0, 0.0)
     cx, L, h = SCIFI_L308
     wy = L308_RECT[1] - PART_T / 2                 # the corridor face of L308's south wall
@@ -4735,33 +4766,56 @@ def place_dressing(M):
         D.collision.polys.extend(pl.collision.polys)
     # iteration 6 (technical): a welded pair of placed pieces (back-to-back table tops) gets ONE axis-aligned
     # collision block over both (no slot between them, no coincident inner walls); a lone piece keeps its own block
-    for (fid, _), pls in welds.items():
+    # iteration 7 (technical r6 #1, L136): a weld group of N pieces in one row is split into runs of consecutive pieces
+    # (end gap under WELD_MAX_GAP; a piece the keep-out dropped leaves a real aisle) and each run welds as a pair did
+    def _bbox(pl):
+        qs = [q for p in pl.collision.polys for q in p.pts]
+        return (min(q[0] for q in qs), min(q[1] for q in qs), max(q[0] for q in qs), max(q[1] for q in qs))
+
+    def _runs(pls):
+        if len(pls) < 2:
+            return [pls]
+        bxs = [_bbox(pl) for pl in pls]
+        for ax in (1, 0):                  # a row along y (same x span) or along x (same y span)
+            o = 1 - ax
+            if all(abs(b[o] - bxs[0][o]) < 1e-3 and abs(b[o + 2] - bxs[0][o + 2]) < 1e-3 for b in bxs):
+                order = sorted(range(len(pls)), key=lambda i: bxs[i][ax])
+                runs, cur = [], [order[0]]
+                for i in order[1:]:
+                    if 0.0 < bxs[i][ax] - bxs[cur[-1]][ax + 2] < WELD_MAX_GAP:
+                        cur.append(i)
+                    else:
+                        runs.append(cur)
+                        cur = [i]
+                runs.append(cur)
+                return [[pls[i] for i in r] for r in runs]
+        return [[pl] for pl in pls]
+    for (fid, _), group in welds.items():
         D = groups[fid]
-        if len(pls) != 2:
-            for pl in pls:
-                D.collision.polys.extend(pl.collision.polys)
-            continue
-        pts = [q for pl in pls for p in pl.collision.polys for q in p.pts]
-        bx = [(min(q[0] for p in pl.collision.polys for q in p.pts), min(q[1] for p in pl.collision.polys for q in p.pts),
-               max(q[0] for p in pl.collision.polys for q in p.pts), max(q[1] for p in pl.collision.polys for q in p.pts))
-              for pl in pls]
-        zt = max(q[2] for q in pts)
-        K.col_box(D.collision, min(q[0] for q in pts), min(q[1] for q in pts), min(q[2] for q in pts),
-                  max(q[0] for q in pts), max(q[1] for q in pts), zt, MP.NOCAM)
-        # the slot between the two tops gets a top strip edge to edge with both (the block spans it: no collision
-        # without a face over it)
-        (a0, b0, a1, b1), (c0, d0, c1, d1) = sorted(bx, key=lambda r: (r[0], r[1]))
-        if abs(a0 - c0) < 1e-3 and abs(a1 - c1) < 1e-3 and b1 < d0:
-            gap = (a0, b1, a1, d0)
-        elif abs(b0 - d0) < 1e-3 and abs(b1 - d1) < 1e-3 and a1 < c0:
-            gap = (a1, b0, c0, b1)
-        else:
-            gap = None
-        if gap:
-            gx0, gy0, gx1, gy1 = gap
-            D.visual.poly([(gx0, gy0, zt), (gx1, gy0, zt), (gx1, gy1, zt), (gx0, gy1, zt)], "int_ms_maple",
-                          normal_hint=(0, 0, 1))
-        M.stats["welded_pairs"] = M.stats.get("welded_pairs", 0) + 1
+        for pls in _runs(group):
+            if len(pls) < 2:
+                for pl in pls:
+                    D.collision.polys.extend(pl.collision.polys)
+                continue
+            pts = [q for pl in pls for p in pl.collision.polys for q in p.pts]
+            bx = sorted((_bbox(pl) for pl in pls), key=lambda r: (r[0], r[1]))
+            zt = max(q[2] for q in pts)
+            K.col_box(D.collision, min(q[0] for q in pts), min(q[1] for q in pts), min(q[2] for q in pts),
+                      max(q[0] for q in pts), max(q[1] for q in pts), zt, MP.NOCAM)
+            # each slot between two consecutive tops gets a top strip edge to edge with both (the block spans it: no
+            # collision without a face over it)
+            for (a0, b0, a1, b1), (c0, d0, c1, d1) in zip(bx, bx[1:]):
+                if abs(a0 - c0) < 1e-3 and abs(a1 - c1) < 1e-3 and b1 < d0:
+                    gap = (a0, b1, a1, d0)
+                elif abs(b0 - d0) < 1e-3 and abs(b1 - d1) < 1e-3 and a1 < c0:
+                    gap = (a1, b0, c0, b1)
+                else:
+                    gap = None
+                if gap:
+                    gx0, gy0, gx1, gy1 = gap
+                    D.visual.poly([(gx0, gy0, zt), (gx1, gy0, zt), (gx1, gy1, zt), (gx0, gy1, zt)], "int_ms_maple",
+                                  normal_hint=(0, 0, 1))
+            M.stats["welded_pairs"] = M.stats.get("welded_pairs", 0) + 1
     for fid, D in groups.items():
         M.add(D, 0.0, 0.0, Z[fid], 0.0, tag=f"dress_{fid}", group=fid)
     M.stats["dressing"] = {f: sum(1 for it in M.dressing if it["floor"] == f) for f in FLOORS}
@@ -4955,6 +5009,7 @@ def tower_band_walls(M, V, C, edge_list, z0, z1, level, doors, in_mat="int_ms_wa
                 C.wall(pm, pc, za, zt, K.COL)
 
 
+WELD_MAX_GAP = 0.30                     # iteration 7: place_dressing welds pieces closer than this end to end
 STAIR_EDGE_INSET = 0.02                 # fix round 5: landing / floor-box edges behind the stair flights' top lips
 
 
@@ -5596,6 +5651,11 @@ def build_porch(M):
     V.box(px0, py0, 0.0, px1, py1, ph, "int_ms_brick", faces="+x-x+y", ao=0.95)
     V.box(px0, py0, ph, px1, py1, hh, "leaves_oak", faces="+x-x+y+z", tint=(0.80, 0.95, 0.70))
     C.box(px0, py0, 0.0, px1, py1, hh, K.COL_NOCAM, faces="+x-x+y+z")
+    # iteration 7 (technical r6 #5): seen from inside through the clear storefront glass the planter was a floating
+    # hedge-top rectangle: its back (-y) faces, visual only, 1 cm in front of the storefront plane (not coplanar)
+    yk = py0 + 0.01
+    V.wall((px0, yk), (px1, yk), 0.0, ph, "int_ms_brick", ao=0.95)
+    V.wall((px0, yk), (px1, yk), ph, hh, "leaves_oak", ao=1.0, tint=(0.80, 0.95, 0.70))
     # brick bands in the paving (#1 #2): along the storefront and out from the doors
     for (x0, y0, x1, y1) in ((-71.0, yo + 0.55, -52.6, yo + 0.95), (-67.45, yo + 0.95, -67.05, -69.0),
                              (-58.6, yo + 0.95, -58.2, -69.0)):

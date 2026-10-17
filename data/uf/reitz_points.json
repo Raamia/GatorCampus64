@@ -8905,17 +8905,78 @@
    }
   ],
   "pickups": {
-   "coins_placed": 103,
-   "coins_with_goombas": 103,
-   "objects": 47,
+   "coins_placed": 104,
+   "coins_with_goombas": 107,
+   "objects": 51,
    "by_kind": {
+    "goomba": 3,
     "coin_line": 15,
-    "coin": 28,
+    "coin": 29,
     "heart": 1,
     "1up": 3
    },
    "skipped": [],
    "items": [
+    {
+     "kind": "goomba",
+     "name": "game room goomba 1",
+     "map_m": [
+      -423.5,
+      -304.5,
+      0.0
+     ],
+     "game": [
+      4650,
+      0,
+      1150
+     ],
+     "behavior": "bhvGoomba",
+     "model": "MODEL_GOOMBA",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
+     "coins": 1,
+     "acts": null
+    },
+    {
+     "kind": "goomba",
+     "name": "game room goomba 2",
+     "map_m": [
+      -424.5,
+      -312.5,
+      -0.0
+     ],
+     "game": [
+      4550,
+      0,
+      1950
+     ],
+     "behavior": "bhvGoomba",
+     "model": "MODEL_GOOMBA",
+     "bparams": "0x00000000",
+     "facing_deg": 180.0,
+     "coins": 1,
+     "acts": null
+    },
+    {
+     "kind": "goomba",
+     "name": "ll corridor goomba",
+     "map_m": [
+      -407.5,
+      -272.5,
+      -6.0
+     ],
+     "game": [
+      6250,
+      -600,
+      -2050
+     ],
+     "behavior": "bhvGoomba",
+     "model": "MODEL_GOOMBA",
+     "bparams": "0x00000000",
+     "facing_deg": 90.0,
+     "coins": 1,
+     "acts": null
+    },
     {
      "kind": "coin_line",
      "name": "food court coins",
@@ -9578,16 +9639,36 @@
     },
     {
      "kind": "coin",
+     "name": "orange and brew north high-top coin",
+     "map_m": [
+      -405.5,
+      -279.4,
+      1.65
+     ],
+     "game": [
+      6450,
+      165,
+      -1360
+     ],
+     "behavior": "bhvYellowCoin",
+     "model": "MODEL_YELLOW_COIN",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
+     "coins": 1,
+     "acts": null
+    },
+    {
+     "kind": "coin",
      "name": "orange and brew counter coin 0",
      "map_m": [
-      -414.51,
-      -300.04,
+      -414.52,
+      -300.03,
       1.66
      ],
      "game": [
-      5549,
+      5548,
       166,
-      704
+      703
      ],
      "behavior": "bhvYellowCoin",
      "model": "MODEL_YELLOW_COIN",
@@ -9601,13 +9682,13 @@
      "name": "orange and brew counter coin 1",
      "map_m": [
       -415.75,
-      -298.99,
+      -298.96,
       1.66
      ],
      "game": [
       5425,
       166,
-      599
+      596
      ],
      "behavior": "bhvYellowCoin",
      "model": "MODEL_YELLOW_COIN",
@@ -9620,14 +9701,14 @@
      "kind": "coin",
      "name": "orange and brew counter coin 2",
      "map_m": [
-      -416.98,
-      -297.93,
+      -416.99,
+      -297.9,
       1.66
      ],
      "game": [
-      5302,
+      5301,
       166,
-      493
+      490
      ],
      "behavior": "bhvYellowCoin",
      "model": "MODEL_YELLOW_COIN",
