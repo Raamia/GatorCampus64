@@ -22,11 +22,38 @@ No repo or mod install needed: the server sends the mod when you join.
 
 Report anything odd (crashes, `[SGL]` lines in the console via the ` key, lag) in Discord. `/login` answers "unavailable" until Gator Pass goes live.
 
+## NPC chat (Gemini)
+
+**Albert** and **Alberta**, UF's two alligator mascots, roam the game as your guides. Albert wears an orange "UF" jersey and blue shorts; Alberta wears a blue "UF" top, an orange skirt and a hair bow.
+
+- **Where they are:** one of them is always on the Plaza of the Americas, next to the spawn. The other visits a stage and stands near where you arrive: Albert covers The Swamp, Reitz & Engineering and Lake Alice, and Alberta covers Marston, Library West and Lake Alice. The host moves them one step along their routes every 4 minutes, and every player sees the same thing. They vanish in a puff of mist and pop up at their next spot, but never while someone is standing near or talking to them.
+- **Talking to them:** walk up to one (the prompt "TALK TO …" appears within 6 m), press Enter and type. From anywhere, use **`/albert <question>`** or **`/alberta <question>`**. On its own, `/albert` says where he is right now. The answer pops up in a speech bubble over the mascot and as a chat line everyone sees.
+
+- **Game questions** ("how do I unlock Lake Alice?", "how many stars do I have?", "what are the controls?") are answered instantly from **`tools/npc_bridge/game_guide.md`**, a deep-dive guide to everything in the game: stages, doors, every act and how to finish it, secrets, controls, commands, characters, multiplayer and your live stats. No AI call is made for these. To teach the NPCs something new, add an entry to that file (the top of the file explains the format). Game questions the guide couldn't answer well are logged to `tools/npc_bridge/unanswered.log`, a to-do list for new entries.
+- **Everything else** (general knowledge, small talk) goes to Google's Gemini API, in character.
+
+The game's Lua can't reach the internet, so **the host** runs a small helper next to the game. The helper relays chat through two files in the game's `sav` folder (details in `tools/npc_bridge/bridge.py`):
+
+1. Get a free API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey) and put it in `tools/npc_bridge/.env` (gitignored, never commit it):
+   ```
+   GEMINI_API_KEY=your-key-here
+   ```
+2. Start the bridge and leave it running while you play:
+   ```bash
+   python3 tools/npc_bridge/bridge.py
+   ```
+   Without a key, `python3 tools/npc_bridge/bridge.py --fake` answers with canned lines. `--model` picks another Gemini model (default `gemini-3.8-flash`).
+
+Only the host needs the bridge, and friends who join talk to the same NPCs. If the bridge isn't running, the NPC answers "ask me again in a bit" after 15 s, and the host sees a reminder in chat. The bridge prints each question with the route it took (`[guide: my-stars 1.00]` or `[ai]`). The personas live in `tools/npc_bridge/npcs.json` and the NPCs (models, places) in `mods/sgl64/sgl_npc.lua`. Their ids must match, and the guide must agree with `course.lua` (doors, star counts, acts); `tools/luatest/run.sh` checks both.
+
+Both models are generated without Blender by `tools/actors/make_gators.py`: low-poly gators built from primitives on one shared 10-joint skeleton (root, hips, torso, head, jaw, arms, tail, legs), written as DynOS actors in `mods/sgl64/actors/albert/` and `mods/sgl64/actors/alberta/`. To change their look, edit the script and re-run it with `python3 -I tools/actors/make_gators.py`. Their shared animations (idle, walk, talk, think, wave and Gator Chomp) are pose functions in `mods/sgl64/sgl_albert.lua`, sampled into keyframes when the mod loads. Their behaviour, spots and routes are in `sgl_npc.lua`; `tools/luatest/check_npc_spots.py` checks every spot against the built level (flat, clear ground) and that one mascot is always on the hub.
+
 ## Layout
 
 - `mods/sgl64/` holds the main mod: Lua scripts, friend models (`actors/`), portraits (`textures/`) and levels (`levels/castle_grounds` = the hub, `levels/bob` = The Swamp, `levels/wf` = Reitz Union & Engineering, `levels/jrb` = Lake Alice, `levels/ccm` = Marston, `levels/bbh` = the Library West night course, `levels/sgl_test`). Only Reitz and Marston are enterable in the solo gameplay scope; the existing Library West interior assets are legacy and should be replaced by the exterior-only design in `docs/singleplayer_campaign.md`.
 - `docs/flow.md` is the level-flow contract (doors, warp nodes, stars, act order, load order); `docs/game_design.md` is the original full design; `docs/singleplayer_campaign.md` is the detailed solo gameplay proposal for review before implementation.
 - `tools/campus/` builds the stages from campus data (`build_stage.py` for the outdoor stages, `build_interior.py` + `interiors/marston.py` for Marston; `interiors/libwest.py` remains a legacy prototype); `stage_pickups.py` places coins, hearts, 1-ups, Goombas, and poles; `tools/luatest/` checks the Lua offline.
+- `mods/sgl64/sgl_npc.lua` holds the roaming mascot NPCs (Albert and Alberta; animations in `sgl_albert.lua`); `tools/npc_bridge/` is the host-side helper that answers for them (`game_guide.md` + `guide.py` for game questions, Gemini for the rest; see NPC chat above); `tools/actors/make_gators.py` generates their models.
 - `install-mods.sh` copies `mods/` into the game's mods folder.
 - `server/` is the online side at [gatorcamp.us](https://gatorcamp.us) (`docs/web_platform_spec.md`): `api/` (FastAPI + Postgres) and `web/` (the website), `worker/` (Gatorize Me: photos → a playable guest gator on a Vultr GPU), `bridge/` (runs the headless game server, Gator Pass login and guest deploys) and `deploy/` (provisioning, systemd units, Caddyfile).
 - `companion/app/` is an optional DeepSpace web dashboard prototype. It is separate from the native game and is not required to play.
@@ -163,6 +190,18 @@ The second indoor stage: Library West at night, six floors 6 m apart (real: abou
 9. **Shared acts**: in act 1 both of you see the ladders in the same place (each of you is chased by your own Boos); in act 2 you race each other and see each other's cup.
 
 Shortcuts: `/campus swamp 1|2|3 [me]`, `/campus reitz 1|2|3 [me]`, `/campus alice 1|2|3 [me]`, `/campus marston 1|2|3 [me]`, `/campus libwest 1|2|3 [me]`, `/campus hub`, `/campus where`, `/mission`, `/mission reset`, `/mission start`, `/join [name]`. The Reitz Union interior has no shortcut of its own: `/campus reitz 4 me`, then walk in through a door.
+
+### NPC chat
+
+With `python3 tools/npc_bridge/bridge.py --fake` (or a real key) running on the host:
+
+1. **The mascots**: right after hosting, Albert hangs out about 8 m south-east of the spawn with his name over his head: a green gator with a long toothy snout, big eyes, an orange "UF" jersey, blue shorts and a tail. With nobody near he strolls around his spot, swishing his tail and now and then breaking into the Gator Chomp. Walk up and he waves, then turns to face you; "TALK TO ALBERT" shows at the bottom of the screen. (If his model failed to load he's a still Yoshi: send the console line.)
+2. **A game question**: press Enter and type "how many stars do I have". The answer comes from the guide almost at once, with your real star count and the next door to open. While the bridge works Albert strokes his chin; then he hops, gestures and flaps his jaw while he talks, and sometimes celebrates with a Gator Chomp. Long answers show their first sentences in the bubble and the rest in chat. Try "how do I unlock lake alice", "what are the controls", "where is alberta", "my stats".
+3. **A general question**: "what's the capital of France?" goes to Gemini (with `--fake`, a canned line) and takes a few seconds. The bridge's terminal prints each exchange with its route.
+4. **From anywhere**: `/alberta how do I do the coffee run` shows "<you> asks Alberta: …" to everyone, and her answer arrives in chat even though she's far away. `/albert` alone says where Albert is.
+5. **On the move**: Alberta starts in Marston's lobby (`/campus marston 1 me`: she's a few metres ahead when you arrive). Stay away from both mascots for 4 minutes: they vanish in a puff of mist, Albert reappears in The Swamp and Alberta on the Plaza. Stand next to one when the 4 minutes are up: they wait until you walk away.
+6. **No bridge**: stop the bridge and ask again. After 15 s the NPC says "Hmm... ask me again in a bit" and the host gets a chat reminder to start the bridge.
+7. **With a friend**: the friend walks up and types. Both of you see the same bubble and chat line, and the mascots move for both of you at the same moment, while only the host runs the bridge.
 
 ### Online (play.gatorcamp.us)
 

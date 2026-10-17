@@ -55,6 +55,10 @@ art/*/build/compare/
 art/levels/*/reference_sheets/
 art/levels/*/compare/
 
+# Gemini API key for tools/npc_bridge (never commit it)
+tools/npc_bridge/.env
+tools/npc_bridge/unanswered.log
+
 # Server venvs, caches and local env files (server/*/.env.example are the templates)
 server/**/.venv
 .pytest_cache/

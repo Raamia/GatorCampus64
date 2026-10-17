@@ -122,7 +122,7 @@ test("load: every mod file in coopdx order, strict globals, no duplicate registr
     -- relative order of the files whose load order matters (other files may sit in between)
     local pos, ordered = 0, true
     for _, f in ipairs({ "characters.lua", "charselect.lua", "course.lua", "guests.lua", "levels.lua", "main.lua",
-        "sgl_bridge.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_login.lua", "sgl_mission.lua", "sgl_qr.lua",
+        "sgl_albert.lua", "sgl_bridge.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_login.lua", "sgl_mission.lua", "sgl_npc.lua", "sgl_qr.lua",
         "sgl_status_hud.lua", "swamp_missions.lua" }) do
         local at = nil
         for i, g in ipairs(Sim.ALL_FILES) do if g == f then at = i end end
