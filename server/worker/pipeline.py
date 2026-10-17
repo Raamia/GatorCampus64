@@ -69,6 +69,11 @@ class StepFailed(Exception):
         self.step = step
 
 
+class JobCancelled(Exception):
+    """Raised by the progress callback when the job's row is gone (the owner deleted the
+    character). run_job stops, deletes photos/<job>/ and builds/<job>/, and re-raises it."""
+
+
 @dataclass
 class JobLog:
     """Job log + progress reporting: progress(state, step, log_text) is called on every step
@@ -112,23 +117,31 @@ def run_streaming(cmd, timeout, on_line, cwd=None, env=None):
         q.put(None)
 
     threading.Thread(target=pump, daemon=True).start()
-    deadline = time.monotonic() + timeout
-    while True:
-        left = deadline - time.monotonic()
-        if left <= 0:
-            try:
-                os.killpg(proc.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-            proc.wait()
-            raise TimeoutError(f"{os.path.basename(cmd[0])} timed out after {timeout:.0f} s")
+    def kill():
         try:
-            line = q.get(timeout=min(1.0, left))
-        except queue.Empty:
-            continue
-        if line is None:
-            break
-        on_line(line.rstrip("\n"))
+            os.killpg(proc.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        proc.wait()
+
+    deadline = time.monotonic() + timeout
+    try:
+        while True:
+            left = deadline - time.monotonic()
+            if left <= 0:
+                kill()
+                raise TimeoutError(f"{os.path.basename(cmd[0])} timed out after {timeout:.0f} s")
+            try:
+                line = q.get(timeout=min(1.0, left))
+            except queue.Empty:
+                continue
+            if line is None:
+                break
+            on_line(line.rstrip("\n"))
+    except BaseException:
+        if proc.poll() is None:  # on_line raised (e.g. JobCancelled): don't leave Blender running
+            kill()
+        raise
     return proc.wait()
 
 
@@ -149,8 +162,12 @@ def parse_build_report(lines):
 
 
 # ------------------------------------------------------------------ steps
-def step_photos(storage, job_id, work, log):
-    keys = [k for k in storage.list(f"photos/{job_id}/") if k.lower().endswith(PHOTO_EXTS)]
+def step_photos(storage, job_id, work, log, keys=None):
+    """Download the job's photos: the keys from jobs.photos (the API's photos/<job>/<i>.jpg), or,
+    when the row has none, whatever is under photos/<job>/."""
+    if not keys:
+        keys = storage.list(f"photos/{job_id}/")
+    keys = [k for k in keys if k.lower().endswith(PHOTO_EXTS)]
     if not keys:
         raise StepFailed("spec", f"no photos under photos/{job_id}/")
     out = []
@@ -299,11 +316,21 @@ def step_store(storage, job_id, work, spec, report, spec_info, previews, portrai
     return manifest
 
 
+def artifacts_of(manifest):
+    """jobs.artifacts (schema.sql worker contract): object keys only, so the API never lists S3."""
+    prefix = f"builds/{manifest['job']}/"
+    return {"build_id": manifest["build_id"], "prefix": prefix, "manifest": prefix + "manifest.json",
+            "character_json": prefix + "character.json", "portrait": manifest["portrait"],
+            "previews": sorted(manifest["previews"].values()), "actor_dir": manifest["actor_dir"],
+            "files": list(manifest["files"])}
+
+
 # ------------------------------------------------------------------ job
-def run_job(job_id, name, storage, backend, cfg, progress=None):
-    """Run every step. Returns {"spec", "manifest", "log"}; raises StepFailed with .log (photos
-    are deleted and the work dir removed either way). progress(state, step, log_text) reports
-    as it goes."""
+def run_job(job_id, name, storage, backend, cfg, progress=None, photos=None):
+    """Run every step. Returns {"spec", "manifest", "artifacts", "log"}; raises StepFailed with
+    .log (photos are deleted and the work dir removed either way). progress(state, step,
+    log_text) reports as it goes; if it raises JobCancelled the job stops, builds/<job>/ is
+    deleted too, and JobCancelled propagates. photos: the object keys from jobs.photos."""
     jlog = JobLog(progress)
     work = os.path.join(cfg.work_root, str(job_id))
     shutil.rmtree(work, ignore_errors=True)
@@ -321,8 +348,8 @@ def run_job(job_id, name, storage, backend, cfg, progress=None):
 
     try:
         jlog.set("spec")
-        photos = step_photos(storage, job_id, work, jlog)
-        spec, spec_info = step_spec(photos, name, backend, cfg, work, jlog)
+        photo_data = step_photos(storage, job_id, work, jlog, photos)
+        spec, spec_info = step_spec(photo_data, name, backend, cfg, work, jlog)
         jlog.set("face")
         step_face(cfg, work, jlog)
         report = step_build(cfg, work, jlog)  # build -> export -> validate -> preview (markers)
@@ -333,7 +360,14 @@ def run_job(job_id, name, storage, backend, cfg, progress=None):
         jlog.set("preview", "store")
         jlog(f"build done in {time.monotonic() - t0:.0f} s")
         manifest = step_store(storage, job_id, work, spec, report, spec_info, previews, pinfo, jlog)
+    except JobCancelled:
+        jlog.progress = None  # the row is gone: nothing more to report
+        jlog(f"cancelled at {jlog.step}: the character was deleted")
+        cleanup(False)
+        discard_build(storage, job_id, jlog)
+        raise
     except Exception as e:
+        jlog.progress = None  # the caller writes the final state + log (finish_job)
         err = e if isinstance(e, StepFailed) else StepFailed(jlog.step, f"{type(e).__name__}: {e}")
         jlog(f"FAILED at {err.step}: {err}")
         cleanup(False)
@@ -341,5 +375,15 @@ def run_job(job_id, name, storage, backend, cfg, progress=None):
         if err is e:
             raise
         raise err from e
+    jlog.progress = None
     cleanup(True)
-    return {"spec": spec, "manifest": manifest, "log": jlog.text()}
+    return {"spec": spec, "manifest": manifest, "artifacts": artifacts_of(manifest), "log": jlog.text()}
+
+
+def discard_build(storage, job_id, log=print):
+    """Delete builds/<job>/ (the job was cancelled: nothing may outlive the deleted character)."""
+    try:
+        n = storage.delete_prefix(f"builds/{job_id}/")
+        log(f"builds: deleted {n} object(s)")
+    except Exception as e:  # noqa: BLE001 - storage lifecycle rules catch strays
+        log(f"builds: DELETE FAILED: {e}")

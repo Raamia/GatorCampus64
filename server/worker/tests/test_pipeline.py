@@ -3,6 +3,7 @@ real validate_export, real portrait; storage on a temp dir)."""
 import json
 import os
 import sys
+import time
 
 import numpy as np
 import pytest
@@ -76,6 +77,45 @@ def test_pipeline_ok(env):
     assert np.asarray(im)[..., 3].min() == 255
     assert "SGL validation OK" in res["log"] and "photos: deleted 2" in res["log"]
     assert not os.path.exists(os.path.join(cfg.work_root, JOB))
+
+
+def test_pipeline_artifacts_and_photo_keys(env):
+    store, cfg = env
+    res = pipeline.run_job(JOB, "Pat", store, spec_ai.StaticBackend(GOOD), cfg,
+                           photos=[f"photos/{JOB}/1.png"])  # jobs.photos: only these are read
+    assert "spec: 1 photo(s)" in res["log"]
+    p = f"builds/{JOB}/"
+    a = res["artifacts"]
+    assert a["build_id"] == "sglguest" and a["prefix"] == p and a["actor_dir"] == p + "actors/sglguest/"
+    assert a["portrait"] == p + "portrait.png" and a["manifest"] == p + "manifest.json"
+    assert p + "previews/front.png" in a["previews"] and a["previews"] == sorted(a["previews"])
+    assert set(a["files"]) == set(store.list(p))
+
+
+def test_pipeline_cancel_kills_blender_and_discards(env, monkeypatch):
+    store, cfg = env
+    monkeypatch.setenv("FAKE_BLENDER_MODE", "hang")
+
+    def progress(state, step, text):
+        if state == "build":
+            raise pipeline.JobCancelled(JOB)
+
+    t0 = time.monotonic()
+    with pytest.raises(pipeline.JobCancelled):
+        pipeline.run_job(JOB, "Pat", store, spec_ai.StaticBackend(GOOD), cfg, progress)
+    assert time.monotonic() - t0 < 15
+    assert store.list(f"photos/{JOB}/") == [] and store.list(f"builds/{JOB}/") == []
+    assert not os.path.exists(os.path.join(cfg.work_root, JOB))
+
+
+def test_run_streaming_kills_child_when_callback_raises():
+    def boom(line):
+        raise RuntimeError("stop")
+    t0 = time.monotonic()
+    with pytest.raises(RuntimeError):
+        pipeline.run_streaming([sys.executable, "-c", "import time; print('x', flush=True); time.sleep(30)"],
+                               60, boom)
+    assert time.monotonic() - t0 < 10
 
 
 def test_pipeline_validation_failure(env, monkeypatch):

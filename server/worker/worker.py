@@ -33,27 +33,43 @@ def _on_signal(signum, _frame):
 
 
 def handle(conn, job, store, backend, cfg, log=print):
+    """Run one claimed job and write its result. Returns True if it ended ready, False if it
+    failed or was cancelled (character deleted mid-job: photos and builds/<job>/ are deleted)."""
     job_id, char_id = job["id"], job["character_id"]
     log(f"worker: job {job_id} ({job['name']!r})")
 
     def progress(state, step, text):
         try:
-            db.update_job(conn, job_id, state=state, step=step, log=text)
+            db.update_job(conn, job_id, char_id, state=state, step=step, log=text)
+        except db.JobGone as e:
+            raise pipeline.JobCancelled(str(job_id)) from e
         except Exception as e:  # noqa: BLE001 - progress is best effort; the result write is not
             log(f"worker: progress update failed: {e}")
-            try:
-                conn.rollback()
-            except Exception:  # noqa: BLE001
-                pass
+
+    def cancelled():
+        log(f"worker: job {job_id} cancelled: its character was deleted")
+        return False
 
     try:
-        result = pipeline.run_job(job_id, job["name"], store, backend, cfg, progress)
+        result = pipeline.run_job(job_id, job["name"], store, backend, cfg, progress, photos=job.get("photos"))
+    except pipeline.JobCancelled:
+        return cancelled()
     except pipeline.StepFailed as e:
-        db.finish_job(conn, job_id, char_id, False, getattr(e, "log", str(e)), step=e.step)
+        try:
+            db.finish_job(conn, job_id, char_id, False, getattr(e, "log", str(e)), step=e.step,
+                          error=str(e).splitlines()[0] if str(e) else None)
+        except db.JobGone:
+            return cancelled()
         log(f"worker: job {job_id} FAILED at {e.step}: {e}")
         return False
-    db.finish_job(conn, job_id, char_id, True, result["log"], step="done", spec=result["spec"])
-    log(f"worker: job {job_id} ready -> builds/{job_id}/")
+    try:
+        slot = db.finish_job(conn, job_id, char_id, True, result["log"], spec=result["spec"],
+                             artifacts=result["artifacts"])
+    except db.JobGone:
+        pipeline.discard_build(store, job_id, log)
+        return cancelled()
+    log(f"worker: job {job_id} ready -> builds/{job_id}/, "
+        + (f"slot guest_{slot}" if slot else "no slot free yet (the API slots it later)"))
     return True
 
 
@@ -64,8 +80,11 @@ def recover(conn, worker, store, log=print):
             store.delete_prefix(f"photos/{j['id']}/")
         except Exception as e:  # noqa: BLE001
             log(f"worker: photo cleanup for {j['id']} failed: {e}")
-        db.finish_job(conn, j["id"], j["character_id"], False,
-                      f"worker {worker} restarted during step {j['step']}; please retry", step=j["step"])
+        msg = f"worker {worker} restarted during step {j['step']}; please retry"
+        try:
+            db.finish_job(conn, j["id"], j["character_id"], False, msg, step=j["step"], error=msg)
+        except db.JobGone:
+            continue
         log(f"worker: marked orphaned job {j['id']} failed")
 
 

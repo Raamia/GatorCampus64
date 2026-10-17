@@ -1,110 +1,196 @@
-"""db.py + worker.handle against a real Postgres (the ASSUMED schema from db.py's docstring).
-Skipped unless TEST_DATABASE_URL is set, e.g.
-  docker run -d --rm --name sglw-pg -e POSTGRES_PASSWORD=pw -p 55432:5432 postgres:16-alpine
-  TEST_DATABASE_URL=postgresql://postgres:pw@localhost:55432/postgres pytest server/worker/tests
-"""
-import json
-import os
+"""db.py + worker.handle against a real Postgres with the API's schema (server/api/schema.sql).
+Uses $TEST_DATABASE_URL, else starts postgres:16-alpine with docker (see conftest.py)."""
 import uuid
 
+import psycopg
 import pytest
 
 import db
 import pipeline
 import worker
 
-URL = os.environ.get("TEST_DATABASE_URL")
-pytestmark = pytest.mark.skipif(not URL, reason="TEST_DATABASE_URL not set")
-
-SCHEMA = """
-DROP TABLE IF EXISTS jobs; DROP TABLE IF EXISTS characters;
-CREATE TABLE characters (id uuid PRIMARY KEY, owner_sub text NOT NULL, name text NOT NULL, slot int,
-    state text NOT NULL, spec jsonb, created timestamptz NOT NULL DEFAULT now(), deployed_at timestamptz);
-CREATE TABLE jobs (id uuid PRIMARY KEY, character_id uuid NOT NULL REFERENCES characters(id),
-    state text NOT NULL, step text, log text, started timestamptz, finished timestamptz, worker text,
-    created timestamptz NOT NULL DEFAULT now());
-"""
+QUIET = {"log": lambda m: None}
 
 
 @pytest.fixture
-def conn():
-    c = db.connect(URL)
-    c.execute(SCHEMA)
+def conn(pg):
+    c = db.connect(pg)
     yield c
     c.close()
 
 
-def add_job(conn, name="Pat", created="now()"):
+def add_job(conn, name="Pat", created="now()", owner="auth0|x"):
     cid, jid = uuid.uuid4(), uuid.uuid4()
-    conn.execute("INSERT INTO characters (id, owner_sub, name, state) VALUES (%s, 'auth0|x', %s, 'queued')",
-                 (cid, name))
-    conn.execute(f"INSERT INTO jobs (id, character_id, state, created) VALUES (%s, %s, 'queued', {created})",
-                 (jid, cid))
+    conn.execute("INSERT INTO users (sub) VALUES (%s) ON CONFLICT DO NOTHING", (owner,))
+    conn.execute("INSERT INTO characters (id, owner_sub, name, state, step) VALUES (%s, %s, %s, 'queued', 'queued')",
+                 (cid, owner, name))
+    conn.execute(f"INSERT INTO jobs (id, character_id, state, step, photos, created) "
+                 f"VALUES (%s, %s, 'queued', 'queued', %s, {created})",
+                 (jid, cid, [f"photos/{jid}/0.jpg", f"photos/{jid}/1.jpg"]))
     return jid, cid
 
 
-def test_claim_oldest_and_skip_locked(conn):
+def row(conn, table, id_):
+    return conn.execute(f"SELECT * FROM {table} WHERE id = %s", (id_,)).fetchone()
+
+
+class Store:
+    def __init__(self):
+        self.deleted = []
+
+    def delete_prefix(self, p):
+        self.deleted.append(p)
+        return 0
+
+
+def ok_result(job_id, name):
+    p = f"builds/{job_id}/"
+    files = [p + k for k in ("actors/sglguest/geo.inc.c", "actors/sglguest/geo_header.h",
+                             "actors/sglguest/model.inc.c", "character.json", "manifest.json", "portrait.png",
+                             "previews/front.png", "log.txt")]
+    return {"spec": {"id": "sglguest", "name": name}, "manifest": {}, "log": "all good",
+            "artifacts": {"build_id": "sglguest", "prefix": p, "portrait": p + "portrait.png",
+                          "previews": [p + "previews/front.png"], "files": files}}
+
+
+def test_claim_oldest_and_skip_locked(conn, pg):
     j_new, _ = add_job(conn, "New")
-    j_old, _ = add_job(conn, "Old", "now() - interval '1 minute'")
-    other = db.connect(URL)
+    j_old, c_old = add_job(conn, "Old", "now() - interval '1 minute'")
+    other = psycopg.connect(pg)
     # another worker holds the oldest row locked: we get the next one
-    other.execute("BEGIN")
     other.execute("SELECT id FROM jobs WHERE id = %s FOR UPDATE", (j_old,))
     got = db.claim_job(conn, "w1")
     assert got["id"] == j_new and got["name"] == "New"
-    other.execute("ROLLBACK")
+    assert got["photos"] == [f"photos/{j_new}/0.jpg", f"photos/{j_new}/1.jpg"] and got["attempts"] == 1
+    other.rollback()
     got2 = db.claim_job(conn, "w1")
     assert got2["id"] == j_old
     assert db.claim_job(conn, "w1") is None
-    row = conn.execute("SELECT state, step, worker, started FROM jobs WHERE id = %s", (j_old,)).fetchone()
-    assert row["state"] == "spec" and row["worker"] == "w1" and row["started"] is not None
+    j = row(conn, "jobs", j_old)
+    assert (j["state"], j["step"], j["worker"], j["attempts"], j["error"]) == ("spec", "spec", "w1", 1, None)
+    assert j["started"] is not None
+    c = row(conn, "characters", c_old)
+    assert (c["state"], c["step"], c["slot"]) == ("spec", "spec", None)  # no slot while building
     other.close()
 
 
-def test_handle_success_and_failure(conn, monkeypatch):
+def test_progress_mirrors_state_to_character(conn):
+    jid, cid = add_job(conn)
+    db.claim_job(conn, "w1")
+    db.update_job(conn, jid, cid, state="preview", step="store", log="x" * 9000)
+    j, c = row(conn, "jobs", jid), row(conn, "characters", cid)
+    assert (j["state"], j["step"], len(j["log"])) == ("preview", "store", db.LOG_TAIL)
+    assert (c["state"], c["step"]) == ("preview", "store")
+    with pytest.raises(ValueError):
+        db.update_job(conn, jid, cid, state="building")
+    with pytest.raises(psycopg.errors.CheckViolation):  # the schema agrees
+        conn.execute("UPDATE jobs SET step = 'done' WHERE id = %s", (jid,))
+
+
+def test_handle_success_assigns_slot_and_writes_artifacts(conn, monkeypatch):
+    jid, cid = add_job(conn)
+    job = db.claim_job(conn, "w1")
+    seen = {}
+
+    def fake_run(job_id, name, store, backend, cfg, progress, photos=None):
+        seen["photos"] = photos
+        progress("build", "build", "line\n" * 5000)
+        assert row(conn, "characters", cid)["state"] == "build"
+        return ok_result(job_id, name)
+
+    monkeypatch.setattr(pipeline, "run_job", fake_run)
+    assert worker.handle(conn, job, Store(), None, None, **QUIET)
+    assert seen["photos"] == job["photos"]
+    j, c = row(conn, "jobs", jid), row(conn, "characters", cid)
+    assert (j["state"], j["step"], j["log"], j["error"]) == ("ready", "ready", "all good", None)
+    assert j["finished"] is not None and j["artifacts"]["build_id"] == "sglguest"
+    assert (c["state"], c["step"], c["slot"]) == ("ready", "ready", 1) and c["spec"]["name"] == "Pat"
+    d = conn.execute("SELECT slot, kind, character_id, job_id, state FROM deploys").fetchall()
+    assert d == [{"slot": 1, "kind": "character", "character_id": cid, "job_id": jid, "state": "pending"}]
+
+
+def test_handle_failure(conn, monkeypatch):
     jid, cid = add_job(conn)
     job = db.claim_job(conn, "w1")
 
-    def fake_run(job_id, name, store, backend, cfg, progress):
-        progress("build", "build", "line\n" * 5000)
-        assert conn.execute("SELECT state FROM jobs WHERE id = %s", (job_id,)).fetchone()["state"] == "build"
-        return {"spec": {"id": "sglguest", "name": name}, "manifest": {}, "log": "all good"}
-
-    monkeypatch.setattr(pipeline, "run_job", fake_run)
-    assert worker.handle(conn, job, None, None, None, log=lambda m: None)
-    j = conn.execute("SELECT * FROM jobs WHERE id = %s", (jid,)).fetchone()
-    c = conn.execute("SELECT * FROM characters WHERE id = %s", (cid,)).fetchone()
-    assert j["state"] == "ready" and j["finished"] is not None and j["log"] == "all good"
-    assert c["state"] == db.CHAR_READY and c["spec"]["name"] == "Pat"
-
-    jid2, cid2 = add_job(conn)
-    job2 = db.claim_job(conn, "w1")
-
     def failing(*a, **k):
-        e = pipeline.StepFailed("validate", "boom")
+        e = pipeline.StepFailed("validate", "boom\nmore detail")
         e.log = "x" * 20000
         raise e
 
     monkeypatch.setattr(pipeline, "run_job", failing)
-    assert not worker.handle(conn, job2, None, None, None, log=lambda m: None)
-    j = conn.execute("SELECT * FROM jobs WHERE id = %s", (jid2,)).fetchone()
-    assert j["state"] == "failed" and j["step"] == "validate" and len(j["log"]) == db.LOG_TAIL
-    assert conn.execute("SELECT state FROM characters WHERE id = %s", (cid2,)).fetchone()["state"] == db.CHAR_FAILED
+    assert not worker.handle(conn, job, Store(), None, None, **QUIET)
+    j, c = row(conn, "jobs", jid), row(conn, "characters", cid)
+    assert (j["state"], j["step"], j["error"]) == ("failed", "validate", "validate: boom")
+    assert len(j["log"]) == db.LOG_TAIL and j["finished"] is not None
+    assert (c["state"], c["step"], c["slot"]) == ("failed", "validate", None)
+    assert conn.execute("SELECT count(*) AS n FROM deploys").fetchone()["n"] == 0
+
+
+def test_no_free_slot_still_ready(conn, monkeypatch):
+    """All 8 slots pinned: the character is ready without a slot (the API slots it later)."""
+    holders = []
+    for i in range(8):
+        _, c = add_job(conn, f"h{i}", owner=f"auth0|h{i}")
+        conn.execute("UPDATE characters SET state = 'ready' WHERE id = %s", (c,))
+        conn.execute("UPDATE jobs SET state = 'ready', step = 'ready' WHERE character_id = %s", (c,))
+        assert conn.execute("SELECT sgl_assign_slot(%s) AS s", (c,)).fetchone()["s"] == i + 1
+        holders.append(c)
+    conn.execute("UPDATE slots SET pinned = true")
+    jid, cid = add_job(conn)
+    job = db.claim_job(conn, "w1")
+    monkeypatch.setattr(pipeline, "run_job", lambda job_id, name, *a, **k: ok_result(job_id, name))
+    assert worker.handle(conn, job, Store(), None, None, **QUIET)
+    c = row(conn, "characters", cid)
+    assert c["state"] == "ready" and c["slot"] is None and c["evicted_at"] is None
+    conn.execute("UPDATE slots SET pinned = false WHERE n = 5")
+    conn.execute("SELECT sgl_sync_deploys()")
+    assert row(conn, "characters", cid)["slot"] == 5
+    assert row(conn, "characters", holders[4])["evicted_at"] is not None
+
+
+def test_deleted_character_cancels_job(conn, monkeypatch):
+    jid, cid = add_job(conn)
+    job = db.claim_job(conn, "w1")
+    calls = []
+
+    def run(job_id, name, store, backend, cfg, progress, photos=None):
+        progress("face", "face", "ok")
+        conn.execute("DELETE FROM characters WHERE id = %s", (cid,))  # the owner deletes it
+        with pytest.raises(pipeline.JobCancelled):
+            progress("build", "build", "...")
+        calls.append("cancelled")
+        raise pipeline.JobCancelled(str(job_id))
+
+    monkeypatch.setattr(pipeline, "run_job", run)
+    assert worker.handle(conn, job, Store(), None, None, **QUIET) is False
+    assert calls == ["cancelled"]
+    with pytest.raises(db.JobGone):
+        db.update_job(conn, jid, cid, log="x")
+
+    # deleted after the pipeline finished: finish_job notices, the build is discarded
+    jid2, cid2 = add_job(conn)
+    job2 = db.claim_job(conn, "w1")
+
+    def run_then_delete(job_id, name, *a, **k):
+        conn.execute("DELETE FROM characters WHERE id = %s", (cid2,))
+        return ok_result(job_id, name)
+
+    monkeypatch.setattr(pipeline, "run_job", run_then_delete)
+    s = Store()
+    assert worker.handle(conn, job2, s, None, None, **QUIET) is False
+    assert s.deleted == [f"builds/{jid2}/"]
+    assert conn.execute("SELECT count(*) AS n FROM slots WHERE character_id IS NOT NULL").fetchone()["n"] == 0
 
 
 def test_recover_orphans(conn):
-    class Store:
-        deleted = []
-
-        def delete_prefix(self, p):
-            self.deleted.append(p)
-            return 0
     jid, cid = add_job(conn)
     db.claim_job(conn, "w1")
-    db.update_job(conn, jid, state="build", step="build")
+    db.update_job(conn, jid, cid, state="build", step="build")
     s = Store()
-    worker.recover(conn, "w1", s, log=lambda m: None)
-    j = conn.execute("SELECT state, step, log FROM jobs WHERE id = %s", (jid,)).fetchone()
-    assert j["state"] == "failed" and j["step"] == "build" and "restarted" in j["log"]
+    worker.recover(conn, "w1", s, **QUIET)
+    j = conn.execute("SELECT state, step, log, error FROM jobs WHERE id = %s", (jid,)).fetchone()
+    assert j["state"] == "failed" and j["step"] == "build" and "restarted" in j["log"] and "restarted" in j["error"]
+    assert row(conn, "characters", cid)["state"] == "failed"
     assert s.deleted == [f"photos/{jid}/"]
-    assert json.dumps(db.orphaned_jobs(conn, "w1")) == "[]"
+    assert db.orphaned_jobs(conn, "w1") == []
