@@ -1,26 +1,35 @@
-"""Generate Albert the Alligator (the hub's NPC host) as a coopdx DynOS actor, without Blender.
+"""Generate Albert and Alberta, the UF mascots (the game's roaming NPC hosts), as coopdx DynOS actors, without Blender.
 
 The friend models come from Blender + Fast64 (tools/blender/), which needs a Blender install. Albert is an NPC
 prop, not a player model, so a low-poly mesh built from primitives is enough: this script writes Fast64-style C
-that DynOS compiles at launch into actors/albert_geo.bin (smlua_model_util_get_id("albert_geo")).
+that DynOS compiles at launch into actors/<name>_geo.bin (smlua_model_util_get_id("albert_geo"), "alberta_geo").
+Both share one skeleton (JOINTS), so the animations of mods/sgl64/sgl_albert.lua drive either. Albert: orange
+"UF" jersey, blue shorts. Alberta: blue top with an orange "UF", an orange skirt, a hair bow and eyelashes.
+Each writes mods/sgl64/actors/<name>/:
 
-  mods/sgl64/actors/albert/model.inc.c   lights, materials (the lit solid-colour Fast64 pattern of the friend
+  model.inc.c   lights, materials (the lit solid-colour Fast64 pattern of the friend
                                           models), vertices, display lists
-  mods/sgl64/actors/albert/geo.inc.c     albert_geo: shadow -> a skeleton of GEO_ANIMATED_PART joints (JOINTS:
+  geo.inc.c     <name>_geo: shadow -> a skeleton of GEO_ANIMATED_PART joints (JOINTS:
                                           root, hips, torso, head, jaw, arms, tail, legs), animated by the
                                           keyframes of mods/sgl64/sgl_albert.lua
-  mods/sgl64/actors/albert/geo_header.h  extern declarations
+  geo_header.h  extern declarations
 
 Units are game units (1 = 1 cm), +Y up, he faces +Z (an object's yaw 0). About 1.9 m tall.
-Usage: python3 -I tools/actors/make_albert.py [--out DIR]
+Usage: python3 -I tools/actors/make_gators.py [--out DIR]   (DIR/albert and DIR/alberta)
 """
 import argparse
 import math
 import os
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
-OUT = os.path.join(ROOT, "mods", "sgl64", "actors", "albert")
-NAME = "albert"
+OUT = os.path.join(ROOT, "mods", "sgl64", "actors")
+NAMES = ("albert", "alberta")
+
+# what tells the two mascots apart (material names from COLORS)
+VARIANTS = {
+    "albert": {"top": "jersey", "trim": "blue", "letters": "blue", "skirt": False, "shoe": "shoe", "bow": False},
+    "alberta": {"top": "blue", "trim": "jersey", "letters": "jersey", "skirt": True, "shoe": "white", "bow": True},
+}
 MAX_LOAD = 32   # vertices per gsSPVertex load (F3DEX2 vertex buffer)
 
 # Florida Gators palette + gator greens
@@ -181,29 +190,34 @@ JOINTS = [
 PIVOT = {name: pivot for name, _, pivot in JOINTS}
 
 
-def build_body(P):
+def build_body(P, v):
     # sneakers (orange, white soles) and green legs
     for s, leg in ((1, "leg_l"), (-1, "leg_r")):
         m = P[leg]
         x = 17 * s
         m.box("white", x - 11, x + 11, 0, 4, -10, 22)
-        m.box("shoe", x - 11, x + 11, 4, 13, -10, 22)
+        m.box(v["shoe"], x - 11, x + 11, 4, 13, -10, 22)
         m.box("skin", x - 8, x + 8, 13, 50, -7, 9)
-    # blue shorts
-    P["hips"].taper("blue", 42, 68, (-31, 31, -18, 18), (-29, 29, -18, 18))
+    if v["skirt"]:
+        # orange skirt flaring out over the hips, with a blue hem
+        P["hips"].taper("jersey", 40, 68, (-40, 40, -27, 27), (-30, 30, -19, 19))
+        P["hips"].taper("blue", 36, 41, (-41, 41, -28, 28), (-40, 40, -27, 27))
+    else:
+        # blue shorts
+        P["hips"].taper("blue", 42, 68, (-31, 31, -18, 18), (-29, 29, -18, 18))
     m = P["torso"]
     # orange jersey: a torso that widens to the shoulders, with a round tummy in front
-    m.taper("jersey", 64, 126, (-30, 30, -19, 19), (-36, 36, -20, 20))
-    m.ball("jersey", (0, 84, 6), (25, 18, 15))
+    m.taper(v["top"], 64, 126, (-30, 30, -19, 19), (-36, 36, -20, 20))
+    m.ball(v["top"], (0, 84, 6), (25, 18, 15))
     # blue collar and sleeve caps
-    m.taper("blue", 122, 130, (-24, 24, -15, 15), (-18, 18, -12, 12))
+    m.taper(v["trim"], 122, 130, (-24, 24, -15, 15), (-18, 18, -12, 12))
     for s in (-1, 1):
-        m.box("blue", 34 * s - 9, 34 * s + 9, 106, 126, -13, 13)
+        m.box(v["trim"], 34 * s - 9, 34 * s + 9, 106, 126, -13, 13)
     # "UF" in blue block letters on the chest (z just in front of the jersey)
     z0, z1 = 20.5, 23
     for x0, x1, y0, y1 in ((-19, -15, 102, 121), (-9, -5, 102, 121), (-19, -5, 102, 106),   # U
                            (3, 7, 102, 121), (3, 18, 117, 121), (3, 14, 110, 114)):         # F
-        m.box("blue", x0, x1, y0, y1, z0, z1)
+        m.box(v["letters"], x0, x1, y0, y1, z0, z1)
     # neck
     m.taper("skin", 126, HEAD_Y + 4, (-16, 16, -13, 11), (-17, 17, -14, 12))
     # green arms hanging a little outward, white claws
@@ -229,7 +243,7 @@ def build_body(P):
                   (0, y + 7 - i, z))
 
 
-def build_head(m):
+def build_head(m, v):
     y0 = HEAD_Y
     # skull: a wide rounded block
     m.taper("skin", y0, y0 + 30, (-25, 25, -20, 16), (-21, 21, -16, 12))
@@ -261,6 +275,21 @@ def build_head(m):
                                 (x - 1.6, y0 + 8, z + 2)], (x, y0 + 2.5, z))
 
 
+    if v["bow"]:
+        # eyelashes: three black flicks over each eye, and an orange hair bow with a blue knot on top
+        for s in (-1, 1):
+            ex = 12 * s
+            for k in (-1, 0, 1):
+                x = ex + 4 * k
+                m.box("black", x - 0.8, x + 0.8, y0 + 46, y0 + 51, 12 + 2 * k * s, 14 + 2 * k * s,
+                      rot_z(-14 * k, (x, y0 + 46, 0)))
+        knot = (0, y0 + 47, -8)
+        for s in (-1, 1):
+            m.pyramid("jersey", [(22 * s, y0 + 36, -15), (22 * s, y0 + 36, -1), (22 * s, y0 + 58, -1), (22 * s, y0 + 58, -15)],
+                      knot)
+        m.ball("blue", knot, (5, 5, 5))
+
+
 def build_jaw(m):
     """The lower jaw (pale belly green) + the mouth's red inside; the jaw joint opens it."""
     y0 = HEAD_Y
@@ -275,11 +304,12 @@ def build_jaw(m):
                                 (x - 1.5, y0 + 7, z + 2)], (x, y0 + 12, z))
 
 
-def build_parts():
-    """-> {joint name: Mesh in world coordinates at rest}."""
-    P = {name: Mesh() for name, _, _ in JOINTS}
-    build_body(P)
-    build_head(P["head"])
+def build_parts(name="albert"):
+    """-> {joint name: Mesh in world coordinates at rest} of one mascot."""
+    v = VARIANTS[name]
+    P = {joint: Mesh() for joint, _, _ in JOINTS}
+    build_body(P, v)
+    build_head(P["head"], v)
     build_jaw(P["jaw"])
     return P
 
@@ -295,7 +325,7 @@ def normal_bytes(n):
     return [max(-127, min(127, int(round(c * 127)))) for c in n]
 
 
-def emit_mesh(mesh, part, out_vtx, out_dl, used_mats, pivot=(0, 0, 0)):
+def emit_mesh(NAME, mesh, part, out_vtx, out_dl, used_mats, pivot=(0, 0, 0)):
     """Vertex arrays + triangle lists of one part (vertices relative to pivot); returns its display list name."""
     top = "%s_%s_mesh_layer_1" % (NAME, part)
     body = []
@@ -328,7 +358,7 @@ def emit_mesh(mesh, part, out_vtx, out_dl, used_mats, pivot=(0, 0, 0)):
     return top
 
 
-def materials(used):
+def materials(NAME, used):
     out = []
     for mat in sorted(used):
         r, g, b = COLORS[mat]
@@ -349,7 +379,7 @@ def materials(used):
     return out
 
 
-def geo_layout(tops):
+def geo_layout(NAME, tops):
     """albert_geo: the joints as nested GEO_ANIMATED_PARTs (translation = offset from the parent's pivot)."""
     children = {}
     for name, parent, _ in JOINTS:
@@ -370,7 +400,7 @@ def geo_layout(tops):
                 part(k, depth + 1)
             lines.append(tab + "GEO_CLOSE_NODE(),")
     part("root", 3)
-    return ("// GENERATED by tools/actors/make_albert.py. Do not edit; edit the script and re-run it.\n\n"
+    return ("// GENERATED by tools/actors/make_gators.py. Do not edit; edit the script and re-run it.\n\n"
             "const GeoLayout %s_geo[] = {\n"
             "\tGEO_NODE_START(),\n"
             "\tGEO_OPEN_NODE(),\n"
@@ -383,15 +413,15 @@ def geo_layout(tops):
             "};\n") % (NAME, "\n".join(lines))
 
 
-def build():
-    """-> (model.inc.c text, geo.inc.c text, geo_header.h text, triangle count)."""
-    parts = build_parts()
+def build(NAME="albert"):
+    """-> (model.inc.c text, geo.inc.c text, geo_header.h text, triangle count) of one mascot."""
+    parts = build_parts(NAME)
     vtx, dls, used = [], [], set()
-    tops = {name: emit_mesh(parts[name], name, vtx, dls, used, PIVOT[name])
+    tops = {name: emit_mesh(NAME, parts[name], name, vtx, dls, used, PIVOT[name])
             for name, _, _ in JOINTS if parts[name].tris}
-    model = "// GENERATED by tools/actors/make_albert.py. Do not edit; edit the script and re-run it.\n\n"
-    model += "\n".join(materials(used)) + "\n" + "\n".join(vtx) + "\n" + "\n".join(dls)
-    geo = geo_layout(tops)
+    model = "// GENERATED by tools/actors/make_gators.py. Do not edit; edit the script and re-run it.\n\n"
+    model += "\n".join(materials(NAME, used)) + "\n" + "\n".join(vtx) + "\n" + "\n".join(dls)
+    geo = geo_layout(NAME, tops)
     header = ["extern const GeoLayout %s_geo[];" % NAME]
     for mat in sorted(used):
         header += ["extern Lights1 %s_%s_lights;" % (NAME, mat), "extern Gfx mat_%s_%s[];" % (NAME, mat),
@@ -406,14 +436,16 @@ def build():
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--out", default=OUT, help="actor folder (default mods/sgl64/actors/albert)")
+    ap.add_argument("--out", default=OUT, help="actors folder (default mods/sgl64/actors)")
     args = ap.parse_args(argv)
-    model, geo, header, ntris = build()
-    os.makedirs(args.out, exist_ok=True)
-    for name, text in (("model.inc.c", model), ("geo.inc.c", geo), ("geo_header.h", header)):
-        with open(os.path.join(args.out, name), "w") as f:
-            f.write(text)
-    print("make_albert: %d triangles -> %s" % (ntris, os.path.relpath(args.out, ROOT)))
+    for name in NAMES:
+        model, geo, header, ntris = build(name)
+        folder = os.path.join(args.out, name)
+        os.makedirs(folder, exist_ok=True)
+        for fname, text in (("model.inc.c", model), ("geo.inc.c", geo), ("geo_header.h", header)):
+            with open(os.path.join(folder, fname), "w") as f:
+                f.write(text)
+        print("make_gators: %s: %d triangles -> %s" % (name, ntris, os.path.relpath(folder, ROOT)))
     return 0
 
 
