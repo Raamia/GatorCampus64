@@ -1,0 +1,33 @@
+# Super Gatorlator 64 bridge (server/bridge): runs the headless coopdx server as its child process,
+# reads its SGLEVT lines, writes the modfs inbox, runs the Auth0 device flow and applies guest deploys.
+# Logs (bridge + every game stdout line): journalctl -u sgl-bridge -f
+# Replaces sgl-game.service: once this unit is enabled, `systemctl disable --now sgl-game` (both would
+# bind UDP 7777). Stopping this unit stops the game too (KillMode=control-group).
+# Layout (see server/bridge/README.md): repo subset in /opt/sgl (server/bridge, server/worker/actor_rename.py,
+# mods/sgl64 = pristine placeholders), venv in /opt/sgl/server/bridge/.venv, secrets in /etc/sgl/bridge.env.
+[Unit]
+Description=Super Gatorlator 64 bridge + headless coopdx server
+After=network-online.target
+Wants=network-online.target
+ConditionPathExistsGlob=/srv/sgl/*.z64
+Conflicts=sgl-game.service
+
+[Service]
+User=sgl
+Group=sgl
+WorkingDirectory=/opt/sgl/server/bridge
+EnvironmentFile=/etc/sgl/bridge.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/sgl/server/bridge/.venv/bin/python /opt/sgl/server/bridge/bridge.py
+Restart=always
+RestartSec=5
+KillMode=control-group
+TimeoutStopSec=40
+NoNewPrivileges=yes
+ProtectSystem=strict
+ReadWritePaths=/srv/sgl
+ProtectHome=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

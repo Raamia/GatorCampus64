@@ -36,14 +36,22 @@
 #      sanity: walkable floor, columns, barriers on the doors, ladder decks, star humps, the arena, the coffee run's par),
 #      and the built levels/bbh collision once it exists, incl. a walk through every door anchor and a
 #      floor-crack scan (skipped when tools/.venv is missing)
-#  15. test_npc.lua: the roaming mascots (sgl_npc.lua): Albert and Alberta in the level of their spot, chat ->
+#  15. test_qr.lua: sgl_qr.lua (vendored QR encoder) against known vectors (thonky.com HELLO WORLD 1-M codewords,
+#      a pinned zbarimg-decoded 5-M matrix of the Gator Pass URL), QR structure, the HUD draw helper
+#  16. test_login.lua: web platform mod side: guests.lua slots in characters.lua, charselect.lua paging,
+#      sgl_login.lua (/login, /link, QR panel, login_cancel, verified marks + resend) against the real
+#      sgl_bridge.lua with a simulated headless host, and a guests.lua rendered by server/bridge's
+#      deploy.py (needs python3, or $PYTHON) loaded into characters.lua
+#  17. test_bridge.lua: sgl_bridge.lua (hosted server bridge): JSON encoder / decoder, SGLEVT events (host prints,
+#      client relay), inbox sequencing + routing, inert without a headless host
+#  18. test_npc.lua: the roaming mascots (sgl_npc.lua): Albert and Alberta in the level of their spot, chat ->
 #      outbox with the asker's live stats, /albert and /alberta, the bridge's replies relayed to everyone, the host's
 #      synced moves (poofs, held while someone is near), their animations, timeouts
-#  16. check_npc_ids.py: the NPCs of sgl_npc.lua match the personas in tools/npc_bridge/npcs.json
-#  16b. check_npc_spots.py: every mascot spot stands on flat, clear floor in the built level; routes keep exactly
+#  19. check_npc_ids.py: the NPCs of sgl_npc.lua match the personas in tools/npc_bridge/npcs.json
+#  20. check_npc_spots.py: every mascot spot stands on flat, clear floor in the built level; routes keep exactly
 #      one mascot on the hub
-#  17. check_game_guide.py: tools/npc_bridge/game_guide.md covers every stage, door, star count and act of course.lua
-#  18. tools/npc_bridge/test_*.py: the NPC chat bridge and the game guide (modfs protocol, routing, Gemini requests;
+#  21. check_game_guide.py: tools/npc_bridge/game_guide.md covers every stage, door, star count and act of course.lua
+#  22. tools/npc_bridge/test_*.py: the NPC chat bridge and the game guide (modfs protocol, routing, Gemini requests;
 #      offline) and tools/actors/test_make_gators.py (the generated Albert and Alberta actors are valid and up to date)
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
 # Fixtures (regenerate only for a new coopdx version): coopdx_constants_v151.lua,
@@ -88,6 +96,14 @@ echo "== test_marston_missions (course 4: Marston Science Library)"
 echo "== test_libwest_missions (course 5: Library West After Dark)"
 "$LUA" "$HERE/test_libwest_missions.lua"
 
+echo "== test_qr (sgl_qr.lua: QR encoder known vectors)"
+"$LUA" "$HERE/test_qr.lua"
+
+echo "== test_login (guest slots, character select pages, Gator Pass login)"
+"$LUA" "$HERE/test_login.lua"
+echo "== test_bridge (sgl_bridge.lua: events, inbox)"
+"$LUA" "$HERE/test_bridge.lua"
+
 PY="$HERE/../.venv/bin/python"
 if [ -x "$PY" ]; then
     echo "== check_swamp_points"
@@ -108,7 +124,7 @@ if [ -x "$PY" ]; then
 else
     echo "== check_swamp_points / check_reitz_points / check_lake_points / check_marston_points / check_libwest_points skipped (no tools/.venv)"
 fi
-echo "== test_npc (talking hub NPCs)"
+echo "== test_npc (roaming mascots Albert and Alberta)"
 "$LUA" "$HERE/test_npc.lua"
 echo "== check_npc_ids"
 python3 -I "$HERE/check_npc_ids.py"

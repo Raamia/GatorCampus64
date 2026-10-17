@@ -13,6 +13,7 @@ workflow always takes precedence.
 
 Run standalone (no Blender needed):
     python3 sgl_face_gen.py <character_id> [out_dir]
+(reads art/<id>/character.json, or $SGL_ART_DIR/<id>/character.json when set)
 """
 import math
 import os

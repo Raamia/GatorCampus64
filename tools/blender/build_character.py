@@ -5,6 +5,8 @@ Usage (headless, project-local Fast64):
       --python-exit-code 1 --python tools/blender/build_character.py -- <character_id> [--no-export] [--no-preview]
       [--build-dir DIR]   (write the .blend/textures/previews somewhere else, e.g. for test builds)
       [--actors-dir DIR]  (export somewhere other than mods/sgl64/actors/, e.g. for test builds)
+      [--art-dir DIR]     (read <DIR>/<id>/character.json (+ textures/) instead of art/<id>/;
+                           same as SGL_ART_DIR=DIR, used by the web worker's per-job builds)
   tools/blender/run_blender.sh wraps this command and retries when Blender crashes
   (Fast64's material upgrade segfaults on roughly 1 in 14 template loads).
 
@@ -34,8 +36,11 @@ from sgl_util import TEMPLATE_BLEND, actors_dir, build_dir, load_spec  # noqa: E
 def parse_args():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     if not argv:
-        sys.exit("usage: -- <character_id> [--no-export] [--no-preview] [--build-dir DIR] [--actors-dir DIR]")
+        sys.exit("usage: -- <character_id> [--no-export] [--no-preview] [--build-dir DIR] [--actors-dir DIR] "
+                 "[--art-dir DIR]")
     out = actors = None
+    if "--art-dir" in argv:  # read by sgl_util.art_dir (load_spec, face textures)
+        os.environ["SGL_ART_DIR"] = os.path.abspath(argv[argv.index("--art-dir") + 1])
     if "--build-dir" in argv:
         out = os.path.abspath(argv[argv.index("--build-dir") + 1])
     if "--actors-dir" in argv:

@@ -1770,6 +1770,8 @@ function sgl_mission_kind_race(spec)
         end
         if L.newPb then sgl_hud_toast("New personal best!", 5, SGL_HUD_GOLD) end
         ctx:send("fin", { race = ctx.f, fr = L.frames, nm = gNetworkPlayers[0].name })
+        -- sgl_bridge.lua: report the finish to a hosted server's bridge (inert offline)
+        if _G.sglOnRaceFinish ~= nil then _G.sglOnRaceFinish(spec.pbKey, L.frames) end
     end
 
     K.localTick = function(ctx)

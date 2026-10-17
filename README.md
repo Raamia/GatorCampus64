@@ -45,6 +45,7 @@ Both models are generated without Blender by `tools/actors/make_gators.py`: low-
 - `tools/campus/` builds the stages from campus data (`build_stage.py` for the outdoor stages, `build_interior.py` + `interiors/marston.py` for Marston; `interiors/libwest.py` remains a legacy prototype); `stage_pickups.py` places coins, hearts, 1-ups, Goombas, and poles; `tools/luatest/` checks the Lua offline.
 - `mods/sgl64/sgl_npc.lua` holds the roaming mascot NPCs (Albert and Alberta; animations in `sgl_albert.lua`); `tools/npc_bridge/` is the host-side helper that answers for them (`game_guide.md` + `guide.py` for game questions, Gemini for the rest; see NPC chat above); `tools/actors/make_gators.py` generates their models.
 - `install-mods.sh` copies `mods/` into the game's mods folder.
+- `server/` is the online side at [gatorcamp.us](https://gatorcamp.us) (`docs/web_platform_spec.md`): `api/` (FastAPI + Postgres) and `web/` (the website), `worker/` (Gatorize Me: photos → a playable guest gator on a Vultr GPU), `bridge/` (runs the headless game server, Gator Pass login and guest deploys) and `deploy/` (provisioning, systemd units, Caddyfile).
 - `companion/app/` is an optional DeepSpace web dashboard prototype. It is separate from the native game and is not required to play.
 
 ## Testing
@@ -71,7 +72,7 @@ Then start sm64coopdx → **Host** → an **unused save slot** (0 stars) → Mod
 ### Single player
 
 1. **Spawn**: you land standing on the Plaza of the Americas facing south, with the University Auditorium ahead and no Peach intro (a fresh start has no spin-in; `/campus hub` and Pause → Exit to castle spin you in). The popup "Welcome to Super Gatorlator 64, <you>!" appears. The console shows no `[SGL]` errors.
-2. **Character select** (first time only, about 1 s after landing): "CHOOSE YOUR GATOR!" with 10 cards, and nothing else drawn over it. Move with the D-pad, stick or arrow keys and pick with A (keyboard L). The menu says "HERE WE GO, <NAME>!", closes, and your model changes. L + START (keyboard Left Shift + Space), `/char` or Pause → Mods → "Choose your friend" reopens it; B or START closes it.
+2. **Character select** (first time only, about 1 s after landing): "CHOOSE YOUR GATOR!" with 10 cards, and nothing else drawn over it. Move with the D-pad, stick or arrow keys and pick with A (keyboard L). L / R (or D-pad right past Cher) turns to page 2, "GUEST GATORS": 8 guest slots (placeholder "?" gators until the hosted server deploys characters made on the website); the footer shows "L 1 2 R". The menu says "HERE WE GO, <NAME>!", closes, and your model changes. L + START (keyboard Left Shift + Space), `/char` or Pause → Mods → "Choose your friend" reopens it; B or START closes it.
 3. **Where to go**: about 1.5 s after the menu closes, the popup "Walk into the University Auditorium door to enter THE SWAMP!" and, for 20 s, a "NEXT: THE SWAMP" panel with a gold marker over the door (an arrow on the screen edge if the door is behind you).
 4. `/campus list` shows `hub(castle_grounds)=ours, swamp(bob, door 1, 0*)=ours, reitz(wf, door 2, 2*)=ours, alice(jrb, door 3, 5*)=ours, marston(ccm, door 4, 8*)=ours, libwest(bbh, door 5, 11*)=ours, tower(ttc, door 6, 14*)=vanilla` and `stars 0, lives 4`.
 5. **A shut door**: walk about 145 m south-south-west, behind the Auditorium, to Century Tower's north door. Above it are a see-through spinning star and red flames, with the label "CENTURY TOWER / Coming soon". Walking into it gives "CENTURY TOWER is coming soon (opens at 14 stars)" and a buzz, and you stay put. The Hub's, Newell Hall's, Marston's and Library West's doors look alike but say LOCKED: they open at 2, 5, 8 and 11 stars (see the stage sections below; Library West is about 115 m north of the spawn), and each door's signpost says the same number.
@@ -191,6 +192,14 @@ With `python3 tools/npc_bridge/bridge.py --fake` (or a real key) running on the 
 5. **On the move**: Alberta starts in Marston's lobby (`/campus marston 1 me`: she's a few metres ahead when you arrive). Stay away from both mascots for 4 minutes: they vanish in a puff of mist, Albert reappears in The Swamp and Alberta on the Plaza. Stand next to one when the 4 minutes are up: they wait until you walk away.
 6. **No bridge**: stop the bridge and ask again. After 15 s the NPC says "Hmm... ask me again in a bit" and the host gets a chat reminder to start the bridge.
 7. **With a friend**: the friend walks up and types. Both of you see the same bubble and chat line, and the mascots move for both of you at the same moment, while only the host runs the bridge.
+
+### Online (play.gatorcamp.us)
+
+1. **Join**: sm64coopdx → **Join** → Direct Connect `play.gatorcamp.us`, port 7777. The mod downloads from the server.
+2. **Gator Pass**: type `/login`. A QR code and a code appear; scan it (or open `login.gatorcamp.us/activate` and type the code) and approve on your phone. You get a gold `*` before your name tag and "GATOR PASS" in the player list, and if you made a gator on the website it is selected for you. `/link <code>` with the code from gatorcamp.us/link does the same without a QR; `/login cancel` or B closes the panel.
+3. **Gatorize Me**: on gatorcamp.us, log in, upload 1-4 photos and watch the build. Once it is ready, the server announces the new gator, restarts within about a minute, and it appears on character select page 2.
+
+Offline checks: `tools/luatest/run.sh` covers the mod side (`test_bridge`, `test_login`, `test_qr`); `server/api`, `server/worker` and `server/bridge` each have a pytest suite (the database tests start a throwaway Postgres in Docker; `server/worker/README.md` has the commands).
 
 ## Campus data
 

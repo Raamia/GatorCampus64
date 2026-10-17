@@ -1,0 +1,2 @@
+# server/bridge runtime deps (Python 3.12). Everything else is the standard library.
+PyJWT[crypto]>=2.8,<3
