@@ -1,0 +1,124 @@
+#include <ultra64.h>
+#include "sm64.h"
+#include "behavior_data.h"
+#include "model_ids.h"
+#include "seq_ids.h"
+#include "dialog_ids.h"
+#include "segment_symbols.h"
+#include "level_commands.h"
+
+#include "game/level_update.h"
+
+#include "levels/scripts.h"
+
+#include "make_const_nonconst.h"
+#include "levels/ccm/header.h"
+
+/* Fast64 begin persistent block [scripts] */
+/* Fast64 end persistent block [scripts] */
+
+const LevelScript level_ccm_entry[] = {
+	INIT_LEVEL(),
+	LOAD_MIO0(0x07, _ccm_segment_7SegmentRomStart, _ccm_segment_7SegmentRomEnd),
+	LOAD_MIO0(0x0A, _water_skybox_mio0SegmentRomStart, _water_skybox_mio0SegmentRomEnd),
+	ALLOC_LEVEL_POOL(),
+	MARIO(MODEL_MARIO, 0x00000001, bhvMario),
+	JUMP_LINK(script_func_global_1),
+	/* Fast64 begin persistent block [level commands] */
+	/* Fast64 end persistent block [level commands] */
+
+	AREA(1, ccm_area_1),
+		WARP_NODE(0x0A, LEVEL_CCM, 0x01, 0x0A, WARP_NO_CHECKPOINT),
+		WARP_NODE(0xF0, LEVEL_CASTLE_GROUNDS, 0x01, 0x24, WARP_NO_CHECKPOINT),
+		WARP_NODE(0xF1, LEVEL_CASTLE_GROUNDS, 0x01, 0x34, WARP_NO_CHECKPOINT),
+		OBJECT(MODEL_1UP, 1350, 3030, -2590, 0, -180, 0, 0x00000000, bhv1Up),
+		OBJECT(MODEL_1UP, -80, 1560, 150, 0, -180, 0, 0x00000000, bhv1Up),
+		OBJECT(MODEL_1UP, -2258, -280, -4310, 0, -180, 0, 0x00000000, bhv1Up),
+		OBJECT(MODEL_NONE, 320, -600, -1090, 0, -180, 0, 0x00020000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, 580, -600, 910, 0, 90, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, 1960, -600, 510, 0, -180, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, -1740, -600, -3590, 0, -180, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, 960, -600, 1910, 0, 90, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_YELLOW_COIN, -2250, -280, -2890, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -2250, -280, -4090, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_NONE, -920, -600, 10, 0, -180, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, 1200, 0, -1630, 0, 90, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, 300, 0, 150, 0, -180, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_YELLOW_COIN, -365, 118, -338, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -365, 217, -168, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -365, 315, 3, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -365, 414, 174, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -365, 512, 344, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -365, 611, 515, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_NONE, -780, 0, -1030, 0, 0, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, -50, 0, 2210, 0, -180, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, 910, 600, 110, 0, -180, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, 2180, 600, 10, 0, 90, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, -1540, 600, -630, 0, 90, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, 320, 600, -1010, 0, -180, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_YELLOW_COIN, -366, 890, -1055, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 92, 960, -1100, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 549, 890, -1055, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 1006, 960, -1100, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 1463, 890, -1055, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -366, 890, 1590, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 92, 960, 1635, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 549, 890, 1590, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 1006, 960, 1635, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 1463, 890, 1590, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 1285, 890, 552, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_NONE, 320, 600, 1600, 0, -180, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, 2160, 1200, 710, 0, -180, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, 2160, 1200, 2010, 0, -180, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_YELLOW_COIN, -366, 1490, -1470, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 549, 1490, -1470, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -1780, 1440, 370, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -1280, 1490, 1355, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -823, 1560, 1400, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -366, 1490, 1355, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 92, 1560, 1400, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 549, 1490, 1355, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -1280, 1490, 370, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -823, 1560, 415, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_NONE, -40, 1200, 2150, 0, 90, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, -2490, 1200, -90, 0, -180, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, 1240, 1800, -690, 0, -180, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, -140, 1800, -1830, 0, 90, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, -190, 1800, -2770, 0, 90, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, -640, 1800, 1310, 0, 90, 0, 0x00000000, bhvCoinFormation),
+		MARIO_POS(0x01, 0, -790, 100, -1510),
+		OBJECT(MODEL_NONE, -790, 100, -1510, 0, 0, 0, 0x000A0000, bhvSpinAirborneWarp),
+		OBJECT(MODEL_GOOMBA, 160, -600, 110, 0, 90, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 1560, -600, -490, 0, 90, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 320, 600, -1090, 0, 90, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, -1050, 1200, 310, 0, 90, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_HEART, -40, -500, -690, 0, -180, 0, 0x00000000, bhvRecoveryHeart),
+		OBJECT(MODEL_HEART, -740, 700, 110, 0, -180, 0, 0x00000000, bhvRecoveryHeart),
+		OBJECT(MODEL_HEART, 260, 1900, -790, 0, -180, 0, 0x00000000, bhvRecoveryHeart),
+		OBJECT(MODEL_HEART, -1040, 2500, -1990, 0, -180, 0, 0x00000000, bhvRecoveryHeart),
+		OBJECT(MODEL_NONE, -140, 2400, -1690, 0, -180, 0, 0x00020000, bhvCoinFormation),
+		OBJECT(MODEL_NONE, -2440, 2400, -290, 0, -180, 0, 0x00000000, bhvCoinFormation),
+		OBJECT(MODEL_YELLOW_COIN, 1350, -240, -2900, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 1350, 360, -2900, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 1350, 960, -2900, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 1350, 1560, -2900, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, 1350, 2160, -2900, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -2940, -240, 1448, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -2940, 360, 1448, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -2940, 960, 1448, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		OBJECT(MODEL_YELLOW_COIN, -2940, 1560, 1448, 0, -180, 0, 0x00000000, bhvYellowCoin),
+		TERRAIN(ccm_area_1_collision),
+		MACRO_OBJECTS(ccm_area_1_macro_objs),
+		SET_BACKGROUND_MUSIC(0x00, SEQ_LEVEL_INSIDE_CASTLE),
+		TERRAIN_TYPE(TERRAIN_STONE),
+		/* Fast64 begin persistent block [area commands] */
+		/* Fast64 end persistent block [area commands] */
+	END_AREA(),
+	FREE_LEVEL_POOL(),
+	MARIO_POS(0x01, 0, -790, 100, -1510),
+	CALL(0, lvl_init_or_update),
+	CALL_LOOP(1, lvl_init_or_update),
+	CLEAR_LEVEL(),
+	SLEEP_BEFORE_EXIT(1),
+	EXIT(),
+};

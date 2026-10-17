@@ -1,5 +1,6 @@
 -- Integration tests: the WHOLE mod (every mods/sgl64/*.lua, in coopdx's load order) plus the REAL
--- generated level scripts (levels/castle_grounds, levels/bob, levels/wf, levels/jrb) in the offline coopdx simulation.
+-- generated level scripts (levels/castle_grounds, levels/bob, levels/wf, levels/jrb, levels/ccm) in the offline coopdx
+-- simulation.
 -- The built stages are the ones on disk (Sim.built_on_disk), as in the game.
 -- What it pins down (docs/flow.md):
 --   * every file loads with strict globals in strcmp order; no two files register the same chat
@@ -41,12 +42,13 @@ local function test(name, fn)
     print((failed == before and "PASS " or "FAIL ") .. name)
 end
 
-local HUB, BOB, WF, JRB = C.LEVEL_CASTLE_GROUNDS, C.LEVEL_BOB, C.LEVEL_WF, C.LEVEL_JRB
+local HUB, BOB, WF, JRB, CCM = C.LEVEL_CASTLE_GROUNDS, C.LEVEL_BOB, C.LEVEL_WF, C.LEVEL_JRB, C.LEVEL_CCM
 local MS = { IDLE = 0, WAITING = 1, INTRO = 2, ACTIVE = 3, SUCCESS = 4, FAILED = 5, DONE = 6 }
 local HUB_SCRIPT = assert(Sim.level_script("castle_grounds"), "levels/castle_grounds/script.c")
 local BOB_SCRIPT = assert(Sim.level_script("bob"), "levels/bob/script.c")
 local WF_SCRIPT = Sim.level_script("wf")      -- nil until course 2 is built
 local JRB_SCRIPT = Sim.level_script("jrb")    -- nil until course 3 is built
+local CCM_SCRIPT = Sim.level_script("ccm")    -- nil until course 4 is built
 -- the contract table of docs/flow.md section 2 (door -> slot, level, stars to open)
 local CONTRACT = {
     { door = 1, slot = "bob", level = "LEVEL_BOB", stars = 0 },
@@ -549,6 +551,150 @@ test("door 3: Newell Hall (5 stars) -> Lake Alice act 1 -> star -> back outside 
     Sim.cmd(H, "campus", "alice 2")
     w:step(3)
     check(H.level == JRB and H.act == 2, "/campus alice 2 -> Lake Alice act 2")
+end)
+
+test("door 4: Marston (8 stars) -> Marston Science Library act 1 -> star -> back outside the Marston door", function()
+    if CCM_SCRIPT == nil then
+        print("  (levels/ccm not built: skipped)")
+        return
+    end
+    -- the engine names the Marston props use (Toad librarians, flying bookends, a book's hit): stubbed per client as in
+    -- test_marston_missions.lua's prep, which tests the acts themselves
+    local function marston_stubs(c)
+        c.stubs.gObjectAnimations = { toad_seg6_anims_0600FB58 = "ANIM:toad", bookend_seg5_anims_05002540 = "ANIM:bookend",
+            swoop_seg6_anims_060070D0 = "ANIM:swoop", sushi_seg5_anims_0500AE54 = "ANIM:sushi" }
+        c.stubs.obj_init_animation = function(o, i) raw(o)._anim = i end
+        c.stubs.hurt_and_set_mario_action = function(m, action) raw(m).action = action return 1 end
+        -- levels.lua's interior camera (coopdx v1.5.1 rom-hack camera getters / setters): recorded in c.cam
+        c.cam = { zoomed_in_dist = 900, zoomed_out_dist = 1400, zoomed_in_height = 300, zoomed_out_height = 450, collisions = 0 }
+        for f in pairs(c.cam) do
+            c.stubs["camera_romhack_get_" .. f] = function() return c.cam[f] end
+            c.stubs["camera_romhack_set_" .. f] = function(v) assert(math.type(v) == "integer"); c.cam[f] = v end
+        end
+    end
+    -- 7 stars (every playable act of courses 1-2, Lake Alice act 1): built but LOCKED
+    local w = full_world({ starFlags = { [C.COURSE_BOB] = 0x07, [C.COURSE_WF] = 0x07, [C.COURSE_JRB] = 0x01 } })
+    local H = w:connect("Host")
+    H.strStorage.friend = "josh"
+    marston_stubs(H)
+    -- the door signposts (rewritten on every hub visit) take their star counts from course.lua
+    local signs = {}
+    H.stubs.smlua_text_utils_dialog_replace = function(id, _, _, _, _, text) signs[id] = text end
+    w:step(3)
+    w:warp(H, HUB, 1, 0)
+    w:seconds(2)
+    local env = H.env
+    local function sign_says(building, line)
+        for _, t in pairs(signs) do
+            if t:find(building, 1, true) == 1 and t:find(line, 1, true) ~= nil then return true end
+        end
+        return false
+    end
+    check(sign_says("MARSTON SCIENCE LIBRARY", "Opens at 8 stars.") and sign_says("MARSTON SCIENCE LIBRARY", "Walk into the door"),
+        "Marston's signpost: opens at 8 stars, walk in (built)")
+    check(sign_says("NEWELL HALL", "Opens at 5 stars.") and sign_says("THE HUB", "Opens at 2 stars."),
+        "Newell Hall's and The Hub's signposts match their doors (5 and 2 stars)")
+    check(env.sgl_stage_ready(env.sgl_stage_by_door(4)), "levels/ccm is ours: course 4 is built")
+    check(env.sgl_total_stars() == 7, "7 stars")
+    check(env.sgl_next_stage() ~= env.sgl_stage_by_door(4), "Marston locked: the NEXT stage is not Marston")
+    at_door(H, 4, 600)
+    w:step(2)
+    check(Sim.hud_has(H, "MARSTON LIBRARY") and Sim.hud_has(H, "LOCKED %- 8 stars %(you have 7%)"), "door 4 label: LOCKED")
+    at_door(H, 4, 50)
+    w:step(3)
+    check(Sim.find(H.popups, "Locked!.-MARSTON LIBRARY needs 8 stars %(you have 7%)") ~= nil, "locked popup")
+    check(H.action ~= C.ACT_DISAPPEARED and H.level == HUB, "a locked door does not open")
+
+    -- 9 stars (every playable act of courses 1-3): open, and the hint points at the Marston door
+    w = full_world({ starFlags = { [C.COURSE_BOB] = 0x07, [C.COURSE_WF] = 0x07, [C.COURSE_JRB] = 0x07 } })
+    H = w:connect("Host")
+    H.strStorage.friend = "josh"
+    marston_stubs(H)
+    w:step(3)
+    w:warp(H, HUB, 1, 0)
+    w:seconds(2)
+    env = H.env
+    check(env.sgl_total_stars() == 9, "9 stars")
+    check(Sim.find(H.popups, "Walk into the Marston Science Library door to enter MARSTON LIBRARY!") ~= nil,
+        "first hub visit: door hint names the Marston Science Library door")
+    check(Sim.hud_has(H, "NEXT: MARSTON LIBRARY") and Sim.hud_has(H, "MARSTON SCIENCE LIBRARY door"), "hub NEXT panel: Marston")
+    local model4
+    for _, o in ipairs(Sim.objects_with(H, env.id_bhvSglDoor)) do
+        if ((raw(o).oBehParams >> 24) & 0xFF) == 4 then model4 = raw(o)._model end
+    end
+    check(model4 == C.E_MODEL_STAR, "door 4: gold star (open)")
+    at_door(H, 4, 600)
+    w:step(2)
+    check(Sim.hud_has(H, "MARSTON LIBRARY") and Sim.hud_has(H, "Walk in!"), "door 4 label: Walk in!")
+    at_door(H, 4, 50)
+    w:step(2)
+    local m = H.ms[0]
+    check(H.action == C.ACT_DISAPPEARED and raw(m).actionArg == (C.WARP_OP_WARP_OBJECT << 16) + 2, "door 4: vanilla warp-object entry")
+    local used = raw(m).usedObj
+    check(used ~= nil and ((raw(used).oBehParams >> 16) & 0xFF) == 0x14, "usedObj carries hub node 0x14")
+    local lv, area, node = follow_node(HUB_SCRIPT, 0x14)
+    check(lv == CCM and area == 1 and node == 0x0A, "hub 0x14 -> CCM 0x0A")
+    local acts = Sim.selectable_acts(w.starFlags[C.COURSE_CCM] or 0)
+    check(#acts == 1 and acts[1] == 1, "act select offers act 1 only")
+    H.action = C.ACT_IDLE
+    w:warp(H, lv, area, acts[1])
+    local sp0 = H.levelSpawns[0x0A]
+    check(sp0 and sp0.bhv == "bhvSpinAirborneWarp", "CCM entry spawn 0x0A (spin-in)")
+    H.pos.x, H.pos.y, H.pos.z = sp0.x, sp0.y - 100, sp0.z
+    w:step(5)
+    check(Sim.hud_has(H, "MARSTON LIBRARY %- ACT 1") and Sim.hud_has(H, "OUT%-OF%-ORDER ELEVATOR"), "act 1 banner")
+    check(Sim.stars_of(H, 0) == 0, "no level-script star: the mission spawns act 1's")
+    local P = env.MARSTON_POINTS
+    check(sp0.x == P.spawn.x and sp0.z == P.spawn.z and sp0.y - 100 == P.spawn.y, "MARSTON_POINTS.spawn = the level script's spawn")
+    Sim.cmd(H, "campus", "where")
+    -- the spawn in campus map metres (stages.json marston centre (-59.6, -98.9): x = X/100 - 59.6, y = -Z/100 - 98.9)
+    local mx, my = sp0.x / 100 - 59.6, -sp0.z / 100 - 98.9
+    check(Sim.find(H.chat, string.format("campus map: %.1f m east, %.1f m north", mx, my):gsub("%-", "%%-"):gsub("%.", "%%.")) ~= nil,
+        string.format("/campus where: campus map metres at the spawn (%.1f, %.1f)", mx, my))
+    check(math.abs(mx - (-67.5)) < 0.6 and math.abs(my - (-83.8)) < 0.6, "CCM spawn in the Marston lobby (layout entrance.spawn)")
+    w:seconds(3.5)
+    check(state(H) == MS.ACTIVE, "mission active")
+    check(H.cam.zoomed_in_dist == env.SGL_STAGE_CAMERA[CCM].inDist and H.cam.collisions == 1,
+        "inside Marston: the interior rom-hack camera (closer, collision on)")
+    check(#Sim.objects_with(H, env.id_bhvSglMarstonSolid) == #P.stair_doors, "act 1: the stair barriers stand")
+    H.pos.x, H.pos.y, H.pos.z = P.climb_goal.x, P.climb_goal.y, P.climb_goal.z
+    w:step(4)
+    check(state(H) == MS.SUCCESS, "in the 5th-floor reading room: success")
+    w:step(3)
+    check(#H.starSpawns == 1 and Sim.stars_of(H, 0) == 1, "one star, id 0")
+    local star = Sim.objects_with(H, C.id_bhvStarSpawnCoordinates)[1]
+    Sim.run_hooks(H, C.HOOK_ON_INTERACT, H.ms[0], star, C.INTERACT_STAR_OR_KEY, true)
+    w.starFlags[C.COURSE_CCM] = (w.starFlags[C.COURSE_CCM] or 0) | (1 << ((raw(star).oBehParams >> 24) & 0xFF))
+    raw(star).activeFlags = C.ACTIVE_FLAG_DEACTIVATED
+    w:step(3)
+    check(state(H) == MS.DONE, "mission DONE")
+    -- star exit: CCM 0xF0 -> hub 0x24, outside the Marston door
+    local lv2, a2, n2 = follow_node(CCM_SCRIPT, 0xF0)
+    check(lv2 == HUB and n2 == 0x24, "CCM 0xF0 -> hub 0x24")
+    w:warp(H, lv2, a2, 0)
+    local sp = H.levelSpawns[n2]
+    check(sp ~= nil and sp.bhv == "bhvPaintingStarCollectWarp", "hub 0x24 is a star-return spawn")
+    local d = HUB_DOORS[4]
+    check(math.sqrt((sp.x - d.x) ^ 2 + (sp.z - d.z) ^ 2) < 400, "0x24 is right outside the Marston door")
+    H.pos.x, H.pos.y, H.pos.z = sp.x, sp.y - 80, sp.z
+    H.face.y = sp.yaw
+    w:step(5)
+    check(H.action ~= C.ACT_DISAPPEARED, "landing outside Marston does not re-enter the door")
+    check(H.cam.zoomed_in_dist == 900 and H.cam.zoomed_out_height == 450 and H.cam.collisions == 0,
+        "back in the hub: the player's own camera settings")
+    check(env.sgl_total_stars() == 10, "10 stars")
+    acts = Sim.selectable_acts(w.starFlags[C.COURSE_CCM])
+    check(acts[#acts] == 2 and env.sgl_mission_get(CCM, 2).id == "marston_quiet", "next visit: act 2 = SHHH! LOST TEXTBOOKS")
+    check(env.sgl_next_stage().key == "marston", "the hint stays on Marston (act 2)")
+    -- death / Exit course: CCM 0xF1 -> hub 0x34, the same spot
+    local lv3, _, n3 = follow_node(CCM_SCRIPT, 0xF1)
+    check(lv3 == HUB and n3 == 0x34 and H.levelSpawns[0x34].bhv == "bhvPaintingDeathWarp"
+        and H.levelSpawns[0x34].x == sp.x and H.levelSpawns[0x34].z == sp.z, "CCM 0xF1 -> hub 0x34 (same spot)")
+    -- /campus marston 2 from the host: straight into act 2 (the door lock and act select skipped, as for the other stages)
+    Sim.cmd(H, "campus", "marston 2")
+    w:step(3)
+    check(H.level == CCM and H.act == 2, "/campus marston 2 -> Marston act 2")
+    check(#Sim.objects_with(H, env.id_bhvSglMarstonSolid) == 0, "act 2: no stair barriers")
 end)
 
 test("coming soon acts: free roam notice, no mission, no star, no invite; exit works", function()

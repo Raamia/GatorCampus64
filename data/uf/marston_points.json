@@ -1,0 +1,6480 @@
+{
+ "schema": "sgl64.marston_points/1",
+ "generated_by": "tools/campus/build_interior.py marston (tools/campus/interiors/marston.py)",
+ "stage": "marston",
+ "level": "ccm",
+ "slot": "ccm",
+ "level_const": "LEVEL_CCM",
+ "course": "COURSE_CCM",
+ "door": 4,
+ "center_m": [
+  -59.6,
+  -98.9
+ ],
+ "coordinates": {
+  "map_m": "x = east, y = north, z = metres above the hub's grade (F2 entrance floor = 0; F1 basement -6, F3 6, F4 12, F5 18, roof 24); origin = Century Tower",
+  "game": "X = (x - cx) * 100, Y = z * 100, Z = -(y - cy) * 100 with (cx, cy) = center_m; Y is the ray-cast collision floor (Mario's feet). Objects that hover (stars, coins) add their own offset.",
+  "game_yaw": "0 = faces +Z (south), 0x4000 = east, 0x8000 = north, 0xC000 = west",
+  "floor_m": "collision floor measured by ray-casting the built level (1.5 m above the design height, straight down)"
+ },
+ "note": "Anchor points for the Course 4 mission author (docs/game_design.md 7.3), measured on the built collision of levels/ccm. 'actN_' keys use the design act numbers (7.3: 1 Out-of-Order Elevator, 2 Quiet Floor, 3 Group Study Room Booking (co-op), 4 Lost Lab Notebook Pages = the 8 'lost textbook' red-coin spots, 5 Printer Jam, 6 Overdue Book Express); course act order is the mission author's (docs/flow.md 5.1: solo acts first, co-op last). Points with a 'check' key did not measure as designed. No level-script star: every mission spawns its own (spawn_default_star from the controller, star id act - 1).",
+ "spawn": {
+  "name": "spawn_0x0A",
+  "map_m": [
+   -67.5,
+   -83.8,
+   0.0
+  ],
+  "game": [
+   -790,
+   0,
+   -1510
+  ],
+  "floor_m": 1.1920928955078125e-07,
+  "clearance_m": 1.9,
+  "facing_deg": 180.0,
+  "game_yaw": "0x0000",
+  "node": "0x0A",
+  "spawn_object_game": [
+   -790,
+   100,
+   -1510
+  ],
+  "note": "stage entry spawn (bhvSpinAirborneWarp, MARIO_POS) in the lobby just inside the north doors, facing the atrium; the object hovers 1 m above this floor"
+ },
+ "warp_nodes": [
+  {
+   "id": "0x0A",
+   "dest_level": "LEVEL_CCM",
+   "dest_area": 1,
+   "dest_node": "0x0A",
+   "note": "stage entry spawn"
+  },
+  {
+   "id": "0xF0",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x24",
+   "note": "star exit -> hub outside door 4"
+  },
+  {
+   "id": "0xF1",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x34",
+   "note": "death / Exit course -> hub outside door 4"
+  }
+ ],
+ "stars": [],
+ "act1_out_of_order_elevator": {
+  "start": {
+   "name": "act1_start",
+   "map_m": [
+    -67.5,
+    -86.0,
+    0.0
+   ],
+   "game": [
+    -790,
+    0,
+    -1290
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.69,
+   "headroom_m": 5.4,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  "star_target": {
+   "name": "act1_star_target",
+   "map_m": [
+    -62.5,
+    -73.0,
+    18.0
+   ],
+   "game": [
+    -290,
+    1800,
+    -2590
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 0.33,
+   "headroom_m": 5.4,
+   "note": "between the north reading tables by the view windows; hover the star ~1.2 m up"
+  },
+  "elevator_doors": [
+   {
+    "name": "act1_elevator1_door_F2",
+    "map_m": [
+     -75.25,
+     -91.2,
+     0.0
+    ],
+    "game": [
+     -1565,
+     0,
+     -770
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.63,
+    "headroom_m": 5.4,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   {
+    "name": "act1_elevator1_door_F3",
+    "map_m": [
+     -75.25,
+     -91.2,
+     6.0
+    ],
+    "game": [
+     -1565,
+     600,
+     -770
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.63,
+    "headroom_m": 5.4,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   {
+    "name": "act1_elevator1_door_F4",
+    "map_m": [
+     -75.25,
+     -91.2,
+     12.0
+    ],
+    "game": [
+     -1565,
+     1200,
+     -770
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.63,
+    "headroom_m": 5.4,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   {
+    "name": "act1_elevator1_door_F5",
+    "map_m": [
+     -75.25,
+     -91.2,
+     18.0
+    ],
+    "game": [
+     -1565,
+     1800,
+     -770
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 1.63,
+    "headroom_m": 5.4,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   }
+  ],
+  "shaft": {
+   "name": "act1_shaft_bottom",
+   "map_m": [
+    -75.25,
+    -89.4,
+    0.0
+   ],
+   "game": [
+    -1565,
+    0,
+    -950
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.0,
+   "headroom_m": 23.1,
+   "note": "inside elevator 1 (out of order): wall-kick shaft to the F5 door; inner size [2.3, 2.0]"
+  },
+  "chandelier_top": {
+   "name": "act1_chandelier_top",
+   "map_m": [
+    -56.4,
+    -100.4,
+    15.0
+   ],
+   "game": [
+    320,
+    1500,
+    150
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 3.0,
+   "headroom_m": 11.08
+  },
+  "book_cart_tracks": [
+   {
+    "name": "act1_cart_track_F2_0",
+    "map_m": [
+     -60.9,
+     -95.5,
+     0.0
+    ],
+    "game": [
+     -130,
+     0,
+     -340
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 0.53,
+    "headroom_m": 25.14,
+    "note": "ground cart (moving platform) across the atrium floor (starts east of the grand stair)",
+    "end": [
+     -52.8,
+     -95.5
+    ]
+   },
+   {
+    "name": "act1_cart_track_F3_1",
+    "map_m": [
+     -58.4,
+     -93.0,
+     6.0
+    ],
+    "game": [
+     120,
+     600,
+     -590
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 6.0,
+    "note": "cart rail bridging the void N-S",
+    "end": [
+     -58.4,
+     -107.8
+    ]
+   },
+   {
+    "name": "act1_cart_track_F4_2",
+    "map_m": [
+     -65.0,
+     -100.4,
+     12.0
+    ],
+    "game": [
+     -540,
+     1200,
+     150
+    ],
+    "air": true,
+    "floor_below_m": 7.0,
+    "height_above_floor_m": 5.0,
+    "note": "cart rail bridging the void W-E",
+    "end": [
+     -51.83,
+     -100.4
+    ]
+   }
+  ],
+  "encyclopedias": [
+   {
+    "name": "act1_encyclopedia_F3",
+    "map_m": [
+     -60.97,
+     -90.9,
+     6.0
+    ],
+    "game": [
+     -137,
+     600,
+     -800
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.69,
+    "headroom_m": 2.23,
+    "note": "Thwomp reskin in the north periodicals aisle (on the aisle centre line, clear of the module column)"
+   },
+   {
+    "name": "act1_encyclopedia_F4",
+    "map_m": [
+     -60.97,
+     -84.6,
+     12.0
+    ],
+    "game": [
+     -137,
+     1200,
+     -1430
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.69,
+    "headroom_m": 5.4,
+    "note": "Thwomp reskin in the A-QC aisle (on the aisle centre line, clear of the module column)"
+   }
+  ],
+  "renovation_barriers": [
+   {
+    "name": "act1_barrier_ne_stair_F2_landing",
+    "map_m": [
+     -49.2,
+     -77.6,
+     0.0
+    ],
+    "game": [
+     1040,
+     0,
+     -2130
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.4,
+    "headroom_m": 5.7
+   },
+   {
+    "name": "act1_barrier_sw_stair_F2_landing",
+    "map_m": [
+     -81.0,
+     -113.38,
+     0.0
+    ],
+    "game": [
+     -2140,
+     0,
+     1447
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.54,
+    "headroom_m": 5.7
+   },
+   {
+    "name": "act1_barrier_core_stair_F2_landing",
+    "map_m": [
+     -70.8,
+     -85.6,
+     0.0
+    ],
+    "game": [
+     -1120,
+     0,
+     -1330
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.56,
+    "headroom_m": 5.7
+   }
+  ]
+ },
+ "act2_quiet_floor": {
+  "start": {
+   "name": "act2_start",
+   "map_m": [
+    -54.0,
+    -77.5,
+    18.0
+   ],
+   "game": [
+    560,
+    1800,
+    -2140
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.7,
+   "headroom_m": 5.4,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000"
+  },
+  "goal_window_desk": {
+   "name": "act2_goal",
+   "map_m": [
+    -87.2,
+    -99.0,
+    18.0
+   ],
+   "game": [
+    -2760,
+    1800,
+    10
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 0.75,
+   "headroom_m": 5.4,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000"
+  },
+  "shusher_patrols": [
+   {
+    "name": "act2_patrol_0",
+    "note": "north reading room",
+    "points": [
+     {
+      "name": "act2_patrol_0_0",
+      "map_m": [
+       -69.0,
+       -80.0,
+       18.0
+      ],
+      "game": [
+       -940,
+       1800,
+       -1890
+      ],
+      "floor_m": 18.0,
+      "clearance_m": 2.83,
+      "headroom_m": 5.4
+     },
+     {
+      "name": "act2_patrol_0_1",
+      "map_m": [
+       -56.0,
+       -80.0,
+       18.0
+      ],
+      "game": [
+       360,
+       1800,
+       -1890
+      ],
+      "floor_m": 18.0,
+      "clearance_m": 2.54,
+      "headroom_m": 5.4
+     },
+     {
+      "name": "act2_patrol_0_2",
+      "map_m": [
+       -56.0,
+       -90.5,
+       18.0
+      ],
+      "game": [
+       360,
+       1800,
+       -840
+      ],
+      "floor_m": 18.0,
+      "clearance_m": 2.32,
+      "headroom_m": 5.4
+     },
+     {
+      "name": "act2_patrol_0_3",
+      "map_m": [
+       -69.0,
+       -90.5,
+       18.0
+      ],
+      "game": [
+       -940,
+       1800,
+       -840
+      ],
+      "floor_m": 18.0,
+      "clearance_m": 0.7,
+      "headroom_m": 5.4
+     }
+    ]
+   },
+   {
+    "name": "act2_patrol_1",
+    "note": "between carrel rows",
+    "points": [
+     {
+      "name": "act2_patrol_1_0",
+      "map_m": [
+       -83.2,
+       -94.5,
+       18.0
+      ],
+      "game": [
+       -2360,
+       1800,
+       -440
+      ],
+      "floor_m": 18.0,
+      "clearance_m": 1.98,
+      "headroom_m": 5.4
+     },
+     {
+      "name": "act2_patrol_1_1",
+      "map_m": [
+       -83.2,
+       -106.8,
+       18.0
+      ],
+      "game": [
+       -2360,
+       1800,
+       790
+      ],
+      "floor_m": 18.0,
+      "clearance_m": 0.7,
+      "headroom_m": 5.4
+     },
+     {
+      "name": "act2_patrol_1_2",
+      "map_m": [
+       -74.2,
+       -106.8,
+       18.0
+      ],
+      "game": [
+       -1460,
+       1800,
+       790
+      ],
+      "floor_m": 18.0,
+      "clearance_m": 1.0,
+      "headroom_m": 5.4
+     },
+     {
+      "name": "act2_patrol_1_3",
+      "map_m": [
+       -74.2,
+       -94.5,
+       18.0
+      ],
+      "game": [
+       -1460,
+       1800,
+       -440
+      ],
+      "floor_m": 18.0,
+      "clearance_m": 1.98,
+      "headroom_m": 5.4
+     }
+    ]
+   },
+   {
+    "name": "act2_patrol_2",
+    "note": "corridor past the core (back and forth)",
+    "points": [
+     {
+      "name": "act2_patrol_2_0",
+      "map_m": [
+       -78.8,
+       -91.8,
+       18.0
+      ],
+      "game": [
+       -1920,
+       1800,
+       -710
+      ],
+      "floor_m": 18.0,
+      "clearance_m": 1.7,
+      "headroom_m": 5.4
+     },
+     {
+      "name": "act2_patrol_2_1",
+      "map_m": [
+       -66.0,
+       -91.8,
+       18.0
+      ],
+      "game": [
+       -640,
+       1800,
+       -710
+      ],
+      "floor_m": 18.0,
+      "clearance_m": 1.44,
+      "headroom_m": 5.4
+     }
+    ]
+   }
+  ],
+  "librarian_patrol_f4": {
+   "name": "f4_librarian_patrol",
+   "note": "the QUIET floor (F4) loop: A-QC aisle -> quiet study -> QC-Z south aisle -> west reading tables",
+   "points": [
+    {
+     "name": "f4_patrol_0",
+     "map_m": [
+      -61.0,
+      -82.0,
+      12.0
+     ],
+     "game": [
+      -140,
+      1200,
+      -1690
+     ],
+     "floor_m": 12.0,
+     "clearance_m": 1.66,
+     "headroom_m": 5.4
+    },
+    {
+     "name": "f4_patrol_1",
+     "map_m": [
+      -47.2,
+      -82.0,
+      12.0
+     ],
+     "game": [
+      1240,
+      1200,
+      -1690
+     ],
+     "floor_m": 12.0,
+     "clearance_m": 1.3,
+     "headroom_m": 5.4
+    },
+    {
+     "name": "f4_patrol_2",
+     "map_m": [
+      -47.2,
+      -110.5,
+      12.0
+     ],
+     "game": [
+      1240,
+      1200,
+      1160
+     ],
+     "floor_m": 12.0,
+     "clearance_m": 1.8,
+     "headroom_m": 5.4
+    },
+    {
+     "name": "f4_patrol_3",
+     "map_m": [
+      -65.5,
+      -112.2,
+      12.0
+     ],
+     "game": [
+      -590,
+      1200,
+      1330
+     ],
+     "floor_m": 12.0,
+     "clearance_m": 1.64,
+     "headroom_m": 5.4
+    },
+    {
+     "name": "f4_patrol_4",
+     "map_m": [
+      -75.0,
+      -108.0,
+      12.0
+     ],
+     "game": [
+      -1540,
+      1200,
+      910
+     ],
+     "floor_m": 12.0,
+     "clearance_m": 2.55,
+     "headroom_m": 5.4
+    },
+    {
+     "name": "f4_patrol_5",
+     "map_m": [
+      -80.5,
+      -95.0,
+      12.0
+     ],
+     "game": [
+      -2090,
+      1200,
+      -390
+     ],
+     "floor_m": 12.0,
+     "clearance_m": 1.54,
+     "headroom_m": 5.4
+    },
+    {
+     "name": "f4_patrol_6",
+     "map_m": [
+      -66.0,
+      -92.0,
+      12.0
+     ],
+     "game": [
+      -640,
+      1200,
+      -690
+     ],
+     "floor_m": 12.0,
+     "clearance_m": 1.33,
+     "headroom_m": 5.4
+    }
+   ]
+  },
+  "sent_back_to": {
+   "name": "act2_sent_back",
+   "map_m": [
+    -54.0,
+    -77.5,
+    18.0
+   ],
+   "game": [
+    560,
+    1800,
+    -2140
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.7,
+   "headroom_m": 5.4
+  }
+ },
+ "act3_group_study_room_booking": {
+  "kiosks": {
+   "K1": {
+    "name": "act3_kiosk_K1",
+    "map_m": [
+     -40.0,
+     -114.2,
+     -6.0
+    ],
+    "game": [
+     1960,
+     -600,
+     1530
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 3.0,
+    "headroom_m": 5.4,
+    "note": "kiosk spot (layout); the act 3 mission spawns the kiosk itself (no level geometry)"
+   },
+   "K2": {
+    "name": "act3_kiosk_K2",
+    "map_m": [
+     -56.0,
+     -94.2,
+     0.0
+    ],
+    "game": [
+     360,
+     0,
+     -470
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.24,
+    "headroom_m": 24.55,
+    "note": "kiosk spot (layout); the act 3 mission spawns the kiosk itself (no level geometry)"
+   },
+   "K3": {
+    "name": "act3_kiosk_K3",
+    "map_m": [
+     -72.6,
+     -93.2,
+     6.0
+    ],
+    "game": [
+     -1300,
+     600,
+     -570
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 2.6,
+    "headroom_m": 5.4,
+    "note": "kiosk spot (layout); the act 3 mission spawns the kiosk itself (no level geometry)"
+   },
+   "K4": {
+    "name": "act3_kiosk_K4",
+    "map_m": [
+     -85.0,
+     -91.0,
+     18.0
+    ],
+    "game": [
+     -2540,
+     1800,
+     -790
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 2.25,
+    "headroom_m": 5.4,
+    "note": "kiosk spot (layout); the act 3 mission spawns the kiosk itself (no level geometry)"
+   },
+   "K3_f4": {
+    "name": "act3_kiosk_K3_f4",
+    "map_m": [
+     -45.5,
+     -105.0,
+     12.0
+    ],
+    "game": [
+     1410,
+     1200,
+     610
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 2.3,
+    "headroom_m": 5.4,
+    "note": "K3 as uf_marston_missions.lua places it (4th-floor quiet study, between carrel rows 4 and 5): the layout's F3 K3 is too close to K2 for the 4 s window"
+   }
+  },
+  "use_order_by_players": {
+   "2": [
+    "K1",
+    "K4"
+   ],
+   "3": [
+    "K1",
+    "K3",
+    "K4"
+   ],
+   "4": [
+    "K1",
+    "K2",
+    "K3",
+    "K4"
+   ]
+  },
+  "star_room": "L129",
+  "star_room_door": {
+   "a_m": [
+    -37.5,
+    -120.5
+   ],
+   "b_m": [
+    -37.5,
+    -118.9
+   ],
+   "width_m": 1.6,
+   "head_m": 2.6,
+   "facing_deg": 270.0,
+   "centre": {
+    "name": "act3_star_room_door",
+    "map_m": [
+     -37.5,
+     -119.7,
+     -6.0
+    ],
+    "game": [
+     2210,
+     -600,
+     2080
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.63,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   }
+  },
+  "star_target": {
+   "name": "act3_star_target",
+   "map_m": [
+    -35.5,
+    -121.9,
+    -6.0
+   ],
+   "game": [
+    2410,
+    -600,
+    2300
+   ],
+   "floor_m": -6.0,
+   "clearance_m": 1.88,
+   "headroom_m": 5.4,
+   "note": "inside glass room L129; hover the star ~1.2 m up"
+  }
+ },
+ "act4_lost_lab_notebook_pages": {
+  "red_coins": [
+   {
+    "name": "act4_red_1",
+    "map_m": [
+     -58.68,
+     -83.75,
+     15.0
+    ],
+    "game": [
+     92,
+     1500,
+     -1515
+    ],
+    "floor_m": 15.0,
+    "clearance_m": 3.0,
+    "headroom_m": 2.4,
+    "note": "top of the 3.6 m A-QC range aqc_02 (stacks)",
+    "float_m": 0.6
+   },
+   {
+    "name": "act4_red_2",
+    "map_m": [
+     -78.0,
+     -99.0,
+     -4.8
+    ],
+    "game": [
+     -1840,
+     -480,
+     10
+    ],
+    "floor_m": -4.8,
+    "clearance_m": 2.2,
+    "headroom_m": 4.2,
+    "note": "makerspace 3D-printer bench",
+    "float_m": 0.6
+   },
+   {
+    "name": "act4_red_3",
+    "map_m": [
+     -82.17,
+     -64.0,
+     -3.4
+    ],
+    "game": [
+     -2257,
+     -340,
+     -3490
+    ],
+    "floor_m": -3.4,
+    "clearance_m": 0.92,
+    "headroom_m": 2.0,
+    "note": "inside the vent duct (duct floor at z -3.4)",
+    "float_m": 0.6
+   },
+   {
+    "name": "act4_red_4",
+    "map_m": [
+     -56.4,
+     -100.4,
+     15.0
+    ],
+    "game": [
+     320,
+     1500,
+     150
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 15.0,
+    "note": "on the atrium chandelier ring (z 15.0), over the void",
+    "float_m": 0.6
+   },
+   {
+    "name": "act4_red_5",
+    "map_m": [
+     -74.33,
+     -77.2,
+     -4.0
+    ],
+    "game": [
+     -1473,
+     -400,
+     -2170
+    ],
+    "air": true,
+    "floor_below_m": -6.0,
+    "height_above_floor_m": 2.0,
+    "note": "halfway down the book-return chute (0.5 m above the slide)",
+    "float_m": 0.6
+   },
+   {
+    "name": "act4_red_6",
+    "map_m": [
+     -73.5,
+     -96.3,
+     7.45
+    ],
+    "game": [
+     -1390,
+     745,
+     -260
+    ],
+    "floor_m": 7.45,
+    "clearance_m": 0.88,
+    "headroom_m": 3.95,
+    "note": "on the fish tank lid",
+    "float_m": 0.6
+   },
+   {
+    "name": "act4_red_7",
+    "map_m": [
+     -74.6,
+     -99.25,
+     1.07
+    ],
+    "game": [
+     -1500,
+     107,
+     35
+    ],
+    "floor_m": 1.07,
+    "clearance_m": 0.98,
+    "headroom_m": 4.33,
+    "note": "on the Starbucks counter",
+    "float_m": 0.6
+   },
+   {
+    "name": "act4_red_8",
+    "map_m": [
+     -47.0,
+     -100.0,
+     18.0
+    ],
+    "game": [
+     1260,
+     1800,
+     110
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "upper east terrace (outdoors)",
+    "float_m": 0.6
+   }
+  ]
+ },
+ "act5_printer_jam": {
+  "arena_poly_m": [
+   [
+    -80.2,
+    -115.4
+   ],
+   [
+    -56.0,
+    -115.4
+   ],
+   [
+    -56.0,
+    -96.8
+   ],
+   [
+    -80.2,
+    -96.8
+   ]
+  ],
+  "floor_z": -6.0,
+  "centre": {
+   "name": "act5_arena_centre",
+   "map_m": [
+    -68.1,
+    -106.1,
+    -6.0
+   ],
+   "game": [
+    -850,
+    -600,
+    720
+   ],
+   "floor_m": -6.0,
+   "clearance_m": 3.0,
+   "headroom_m": 5.4
+  },
+  "heads_start": [
+   {
+    "name": "act5_head_0",
+    "map_m": [
+     -73.0,
+     -104.0,
+     -6.0
+    ],
+    "game": [
+     -1340,
+     -600,
+     510
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.6,
+    "headroom_m": 5.4
+   },
+   {
+    "name": "act5_head_1",
+    "map_m": [
+     -63.0,
+     -108.0,
+     -6.0
+    ],
+    "game": [
+     -340,
+     -600,
+     910
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 3.0,
+    "headroom_m": 5.4
+   }
+  ],
+  "gantry_rail_z": -1.4000000000000004,
+  "note": "the arena floor is clear: the commons tables inside it are not built (static level geometry cannot be act-masked); columns at the module grid points stay as cover",
+  "tables_left_out": [
+   "commons_tables_01",
+   "commons_tables_02",
+   "commons_tables_03",
+   "commons_tables_05",
+   "commons_tables_06",
+   "commons_tables_07"
+  ]
+ },
+ "act6_overdue_book_express": {
+  "book": {
+   "name": "act6_book",
+   "map_m": [
+    -63.0,
+    -83.0,
+    18.76
+   ],
+   "game": [
+    -340,
+    1876,
+    -1590
+   ],
+   "floor_m": 18.76,
+   "clearance_m": 3.0,
+   "headroom_m": 4.64,
+   "note": "on a north reading-room table (table top 0.76 m)"
+  },
+  "return_slot": {
+   "name": "act6_return_slot",
+   "map_m": [
+    -68.5,
+    -77.2,
+    0.0
+   ],
+   "game": [
+    -890,
+    0,
+    -2170
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.58,
+   "headroom_m": 5.4,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000",
+   "note": "stand here (vestibule) facing the slot in the west glass wall (slot 1.0 m up)",
+   "slot_m": [
+    -68.9,
+    -77.2,
+    0.0
+   ]
+  },
+  "throw_line_f5": {
+   "name": "act6_throw_rail_f5",
+   "map_m": [
+    -58.4,
+    -92.4,
+    18.0
+   ],
+   "game": [
+    120,
+    1800,
+    -650
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 0.42,
+   "headroom_m": 5.4,
+   "note": "at the F5 north atrium railing; the F2 court is 18 m below"
+  },
+  "catch_f2": {
+   "name": "act6_catch_f2",
+   "map_m": [
+    -58.4,
+    -97.0,
+    0.0
+   ],
+   "game": [
+    120,
+    0,
+    -190
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.8,
+   "headroom_m": 25.82
+  }
+ },
+ "stack_tops": [
+  {
+   "name": "f2_reserves",
+   "map_m": [
+    -50.0,
+    -111.55,
+    2.3
+   ],
+   "game": [
+    960,
+    230,
+    1265
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Course Reserves",
+   "length_m": 6.3,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f2_reserves_step1",
+   "map_m": [
+    -50.0,
+    -107.95,
+    1.07
+   ],
+   "game": [
+    960,
+    107,
+    905
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Course Reserves",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_scifi_1",
+   "map_m": [
+    -68.1,
+    -121.45,
+    2.3
+   ],
+   "game": [
+    -850,
+    230,
+    2255
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Science Fiction",
+   "length_m": 5.9,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f2_scifi_1_step1",
+   "map_m": [
+    -68.1,
+    -118.05,
+    1.07
+   ],
+   "game": [
+    -850,
+    107,
+    1915
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Science Fiction",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_scifi_2",
+   "map_m": [
+    -63.7,
+    -121.45,
+    2.3
+   ],
+   "game": [
+    -410,
+    230,
+    2255
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Science Fiction",
+   "length_m": 5.9,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f2_scifi_2_step1",
+   "map_m": [
+    -63.7,
+    -118.05,
+    1.07
+   ],
+   "game": [
+    -410,
+    107,
+    1915
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Science Fiction",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_scifi_3",
+   "map_m": [
+    -55.5,
+    -121.45,
+    2.3
+   ],
+   "game": [
+    410,
+    230,
+    2255
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Science Fiction",
+   "length_m": 5.9,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f2_scifi_3_step1",
+   "map_m": [
+    -55.5,
+    -118.05,
+    1.07
+   ],
+   "game": [
+    410,
+    107,
+    1915
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Science Fiction",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_per_n_01",
+   "map_m": [
+    -63.26,
+    -88.35,
+    8.3
+   ],
+   "game": [
+    -366,
+    830,
+    -1055
+   ],
+   "floor_m": 8.3,
+   "clearance_m": 1.94,
+   "headroom_m": 3.1,
+   "note": "Periodicals",
+   "length_m": 6.3,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_per_n_01_step1",
+   "map_m": [
+    -63.26,
+    -91.95,
+    7.07
+   ],
+   "game": [
+    -366,
+    707,
+    -695
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_per_n_02",
+   "map_m": [
+    -58.68,
+    -87.9,
+    9.0
+   ],
+   "game": [
+    92,
+    900,
+    -1100
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "Periodicals",
+   "length_m": 5.4,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f3_per_n_02_step1",
+   "map_m": [
+    -58.68,
+    -91.05,
+    8.29
+   ],
+   "game": [
+    92,
+    829,
+    -785
+   ],
+   "floor_m": 8.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f3_per_n_02_step2",
+   "map_m": [
+    -58.68,
+    -91.95,
+    7.07
+   ],
+   "game": [
+    92,
+    707,
+    -695
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_per_n_03",
+   "map_m": [
+    -54.11,
+    -88.35,
+    8.3
+   ],
+   "game": [
+    549,
+    830,
+    -1055
+   ],
+   "floor_m": 8.3,
+   "clearance_m": 1.93,
+   "headroom_m": 3.1,
+   "note": "Periodicals",
+   "length_m": 6.3,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_per_n_03_step1",
+   "map_m": [
+    -54.11,
+    -91.95,
+    7.07
+   ],
+   "game": [
+    549,
+    707,
+    -695
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_per_n_04",
+   "map_m": [
+    -49.54,
+    -87.9,
+    9.0
+   ],
+   "game": [
+    1006,
+    900,
+    -1100
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "Periodicals",
+   "length_m": 5.4,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f3_per_n_04_step1",
+   "map_m": [
+    -49.54,
+    -91.05,
+    8.29
+   ],
+   "game": [
+    1006,
+    829,
+    -785
+   ],
+   "floor_m": 8.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f3_per_n_04_step2",
+   "map_m": [
+    -49.54,
+    -91.95,
+    7.07
+   ],
+   "game": [
+    1006,
+    707,
+    -695
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_per_n_05",
+   "map_m": [
+    -44.97,
+    -88.35,
+    8.3
+   ],
+   "game": [
+    1463,
+    830,
+    -1055
+   ],
+   "floor_m": 8.3,
+   "clearance_m": 1.94,
+   "headroom_m": 3.1,
+   "note": "Periodicals",
+   "length_m": 6.3,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_per_n_05_step1",
+   "map_m": [
+    -44.97,
+    -91.95,
+    7.07
+   ],
+   "game": [
+    1463,
+    707,
+    -695
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_per_s_01",
+   "map_m": [
+    -63.26,
+    -114.8,
+    8.3
+   ],
+   "game": [
+    -366,
+    830,
+    1590
+   ],
+   "floor_m": 8.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Periodicals",
+   "length_m": 5.6,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_per_s_01_step1",
+   "map_m": [
+    -63.26,
+    -111.55,
+    7.07
+   ],
+   "game": [
+    -366,
+    707,
+    1265
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_per_s_02",
+   "map_m": [
+    -58.68,
+    -115.25,
+    9.0
+   ],
+   "game": [
+    92,
+    900,
+    1635
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "Periodicals",
+   "length_m": 4.7,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f3_per_s_02_step1",
+   "map_m": [
+    -58.68,
+    -112.45,
+    8.29
+   ],
+   "game": [
+    92,
+    829,
+    1355
+   ],
+   "floor_m": 8.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f3_per_s_02_step2",
+   "map_m": [
+    -58.68,
+    -111.55,
+    7.07
+   ],
+   "game": [
+    92,
+    707,
+    1265
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_per_s_03",
+   "map_m": [
+    -54.11,
+    -114.8,
+    8.3
+   ],
+   "game": [
+    549,
+    830,
+    1590
+   ],
+   "floor_m": 8.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Periodicals",
+   "length_m": 5.6,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_per_s_03_step1",
+   "map_m": [
+    -54.11,
+    -111.55,
+    7.07
+   ],
+   "game": [
+    549,
+    707,
+    1265
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_per_s_04",
+   "map_m": [
+    -49.54,
+    -115.25,
+    9.0
+   ],
+   "game": [
+    1006,
+    900,
+    1635
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "Periodicals",
+   "length_m": 4.7,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f3_per_s_04_step1",
+   "map_m": [
+    -49.54,
+    -112.45,
+    8.29
+   ],
+   "game": [
+    1006,
+    829,
+    1355
+   ],
+   "floor_m": 8.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f3_per_s_04_step2",
+   "map_m": [
+    -49.54,
+    -111.55,
+    7.07
+   ],
+   "game": [
+    1006,
+    707,
+    1265
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_per_s_05",
+   "map_m": [
+    -44.97,
+    -114.8,
+    8.3
+   ],
+   "game": [
+    1463,
+    830,
+    1590
+   ],
+   "floor_m": 8.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Periodicals",
+   "length_m": 5.6,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_per_s_05_step1",
+   "map_m": [
+    -44.97,
+    -111.55,
+    7.07
+   ],
+   "game": [
+    1463,
+    707,
+    1265
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_theses_01",
+   "map_m": [
+    -46.75,
+    -104.42,
+    8.3
+   ],
+   "game": [
+    1285,
+    830,
+    552
+   ],
+   "floor_m": 8.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Theses",
+   "length_m": 2.9,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_theses_01_step1",
+   "map_m": [
+    -48.65,
+    -104.42,
+    7.07
+   ],
+   "game": [
+    1095,
+    707,
+    552
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Theses",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_theses_02",
+   "map_m": [
+    -46.75,
+    -99.85,
+    8.3
+   ],
+   "game": [
+    1285,
+    830,
+    95
+   ],
+   "floor_m": 8.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Theses",
+   "length_m": 2.9,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_theses_02_step1",
+   "map_m": [
+    -48.65,
+    -99.85,
+    7.07
+   ],
+   "game": [
+    1095,
+    707,
+    95
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Theses",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f4_aqc_01",
+   "map_m": [
+    -63.26,
+    -84.2,
+    14.3
+   ],
+   "game": [
+    -366,
+    1430,
+    -1470
+   ],
+   "floor_m": 14.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "A-QC",
+   "length_m": 9.2,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f4_aqc_01_step1",
+   "map_m": [
+    -63.26,
+    -89.25,
+    13.07
+   ],
+   "game": [
+    -366,
+    1307,
+    -965
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "A-QC",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f4_aqc_02",
+   "map_m": [
+    -58.68,
+    -83.75,
+    15.0
+   ],
+   "game": [
+    92,
+    1500,
+    -1515
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "A-QC",
+   "length_m": 8.3,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f4_aqc_02_step1",
+   "map_m": [
+    -58.68,
+    -88.35,
+    14.29
+   ],
+   "game": [
+    92,
+    1429,
+    -1055
+   ],
+   "floor_m": 14.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "A-QC",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f4_aqc_02_step2",
+   "map_m": [
+    -58.68,
+    -89.25,
+    13.07
+   ],
+   "game": [
+    92,
+    1307,
+    -965
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "A-QC",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f4_aqc_03",
+   "map_m": [
+    -54.11,
+    -84.2,
+    14.3
+   ],
+   "game": [
+    549,
+    1430,
+    -1470
+   ],
+   "floor_m": 14.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "A-QC",
+   "length_m": 9.2,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f4_aqc_03_step1",
+   "map_m": [
+    -54.11,
+    -89.25,
+    13.07
+   ],
+   "game": [
+    549,
+    1307,
+    -965
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "A-QC",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f4_oversize",
+   "map_m": [
+    -77.4,
+    -102.6,
+    13.8
+   ],
+   "game": [
+    -1780,
+    1380,
+    370
+   ],
+   "floor_m": 13.8,
+   "clearance_m": 3.0,
+   "headroom_m": 3.6,
+   "note": "Oversize",
+   "length_m": 8.4,
+   "height_m": 1.8,
+   "main": true
+  },
+  {
+   "name": "f4_oversize_step1",
+   "map_m": [
+    -77.4,
+    -97.95,
+    13.07
+   ],
+   "game": [
+    -1780,
+    1307,
+    -95
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Oversize",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f4_qcz_w_01",
+   "map_m": [
+    -72.4,
+    -102.6,
+    14.3
+   ],
+   "game": [
+    -1280,
+    1430,
+    370
+   ],
+   "floor_m": 14.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "QC-Z",
+   "length_m": 8.4,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f4_qcz_w_01_step1",
+   "map_m": [
+    -72.4,
+    -97.95,
+    13.07
+   ],
+   "game": [
+    -1280,
+    1307,
+    -95
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "QC-Z",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f4_qcz_w_02",
+   "map_m": [
+    -67.83,
+    -103.05,
+    15.0
+   ],
+   "game": [
+    -823,
+    1500,
+    415
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "QC-Z",
+   "length_m": 7.5,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f4_qcz_w_02_step1",
+   "map_m": [
+    -67.83,
+    -98.85,
+    14.29
+   ],
+   "game": [
+    -823,
+    1429,
+    -5
+   ],
+   "floor_m": 14.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "QC-Z",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f4_qcz_w_02_step2",
+   "map_m": [
+    -67.83,
+    -97.95,
+    13.07
+   ],
+   "game": [
+    -823,
+    1307,
+    -95
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "QC-Z",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f4_qcz_s_01",
+   "map_m": [
+    -72.4,
+    -112.45,
+    14.3
+   ],
+   "game": [
+    -1280,
+    1430,
+    1355
+   ],
+   "floor_m": 14.3,
+   "clearance_m": 1.98,
+   "headroom_m": 3.1,
+   "note": "QC-Z",
+   "length_m": 4.9,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f4_qcz_s_01_step1",
+   "map_m": [
+    -72.4,
+    -109.55,
+    13.07
+   ],
+   "game": [
+    -1280,
+    1307,
+    1065
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "QC-Z",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f4_qcz_s_02",
+   "map_m": [
+    -67.83,
+    -112.9,
+    15.0
+   ],
+   "game": [
+    -823,
+    1500,
+    1400
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "QC-Z",
+   "length_m": 4.0,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f4_qcz_s_02_step1",
+   "map_m": [
+    -67.83,
+    -110.45,
+    14.29
+   ],
+   "game": [
+    -823,
+    1429,
+    1155
+   ],
+   "floor_m": 14.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "QC-Z",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f4_qcz_s_02_step2",
+   "map_m": [
+    -67.83,
+    -109.55,
+    13.07
+   ],
+   "game": [
+    -823,
+    1307,
+    1065
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "QC-Z",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f4_qcz_s_03",
+   "map_m": [
+    -63.26,
+    -112.45,
+    14.3
+   ],
+   "game": [
+    -366,
+    1430,
+    1355
+   ],
+   "floor_m": 14.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "QC-Z",
+   "length_m": 4.9,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f4_qcz_s_03_step1",
+   "map_m": [
+    -63.26,
+    -109.55,
+    13.07
+   ],
+   "game": [
+    -366,
+    1307,
+    1065
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "QC-Z",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f4_qcz_s_04",
+   "map_m": [
+    -58.68,
+    -112.9,
+    15.0
+   ],
+   "game": [
+    92,
+    1500,
+    1400
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "QC-Z",
+   "length_m": 4.0,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f4_qcz_s_04_step1",
+   "map_m": [
+    -58.68,
+    -110.45,
+    14.29
+   ],
+   "game": [
+    92,
+    1429,
+    1155
+   ],
+   "floor_m": 14.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "QC-Z",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f4_qcz_s_04_step2",
+   "map_m": [
+    -58.68,
+    -109.55,
+    13.07
+   ],
+   "game": [
+    92,
+    1307,
+    1065
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "QC-Z",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f4_qcz_s_05",
+   "map_m": [
+    -54.11,
+    -112.45,
+    14.3
+   ],
+   "game": [
+    549,
+    1430,
+    1355
+   ],
+   "floor_m": 14.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "QC-Z",
+   "length_m": 4.9,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f4_qcz_s_05_step1",
+   "map_m": [
+    -54.11,
+    -109.55,
+    13.07
+   ],
+   "game": [
+    549,
+    1307,
+    1065
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "QC-Z",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  }
+ ],
+ "group_study_rooms": [
+  {
+   "room": "L115",
+   "floor": "F1",
+   "name": "Group study L115",
+   "door_a_m": [
+    -72.6,
+    -65.9
+   ],
+   "door_b_m": [
+    -70.8,
+    -65.9
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 180.0,
+   "door": {
+    "name": "room_L115_door",
+    "map_m": [
+     -71.7,
+     -65.9,
+     -6.0
+    ],
+    "game": [
+     -1210,
+     -600,
+     -3300
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   "inside": {
+    "name": "room_L115_inside",
+    "map_m": [
+     -71.7,
+     -65.1,
+     -6.0
+    ],
+    "game": [
+     -1210,
+     -600,
+     -3380
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.1,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "L116",
+   "floor": "F1",
+   "name": "Group study L116",
+   "door_a_m": [
+    -68.7,
+    -65.9
+   ],
+   "door_b_m": [
+    -66.9,
+    -65.9
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 180.0,
+   "door": {
+    "name": "room_L116_door",
+    "map_m": [
+     -67.8,
+     -65.9,
+     -6.0
+    ],
+    "game": [
+     -820,
+     -600,
+     -3300
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   "inside": {
+    "name": "room_L116_inside",
+    "map_m": [
+     -67.8,
+     -65.1,
+     -6.0
+    ],
+    "game": [
+     -820,
+     -600,
+     -3380
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.1,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "L117",
+   "floor": "F1",
+   "name": "Group study L117",
+   "door_a_m": [
+    -64.85,
+    -65.9
+   ],
+   "door_b_m": [
+    -63.05,
+    -65.9
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 180.0,
+   "door": {
+    "name": "room_L117_door",
+    "map_m": [
+     -63.95,
+     -65.9,
+     -6.0
+    ],
+    "game": [
+     -435,
+     -600,
+     -3300
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   "inside": {
+    "name": "room_L117_inside",
+    "map_m": [
+     -63.95,
+     -65.1,
+     -6.0
+    ],
+    "game": [
+     -435,
+     -600,
+     -3380
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.1,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "L118",
+   "floor": "F1",
+   "name": "Group study L118",
+   "door_a_m": [
+    -59.9,
+    -73.3
+   ],
+   "door_b_m": [
+    -58.1,
+    -73.3
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 180.0,
+   "door": {
+    "name": "room_L118_door",
+    "map_m": [
+     -59.0,
+     -73.3,
+     -6.0
+    ],
+    "game": [
+     60,
+     -600,
+     -2560
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   "inside": {
+    "name": "room_L118_inside",
+    "map_m": [
+     -59.0,
+     -72.5,
+     -6.0
+    ],
+    "game": [
+     60,
+     -600,
+     -2640
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.2,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "L119",
+   "floor": "F1",
+   "name": "Group study L119",
+   "door_a_m": [
+    -46.8,
+    -85.0
+   ],
+   "door_b_m": [
+    -46.8,
+    -86.8
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_L119_door",
+    "map_m": [
+     -46.8,
+     -85.9,
+     -6.0
+    ],
+    "game": [
+     1280,
+     -600,
+     -1300
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_L119_inside",
+    "map_m": [
+     -46.0,
+     -85.9,
+     -6.0
+    ],
+    "game": [
+     1360,
+     -600,
+     -1300
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.14,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "L120",
+   "floor": "F1",
+   "name": "Group study L120",
+   "door_a_m": [
+    -46.8,
+    -88.85
+   ],
+   "door_b_m": [
+    -46.8,
+    -90.65
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_L120_door",
+    "map_m": [
+     -46.8,
+     -89.75,
+     -6.0
+    ],
+    "game": [
+     1280,
+     -600,
+     -915
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_L120_inside",
+    "map_m": [
+     -46.0,
+     -89.75,
+     -6.0
+    ],
+    "game": [
+     1360,
+     -600,
+     -915
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.27,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "L121",
+   "floor": "F1",
+   "name": "Group study L121",
+   "door_a_m": [
+    -39.6,
+    -91.8
+   ],
+   "door_b_m": [
+    -37.8,
+    -91.8
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 180.0,
+   "door": {
+    "name": "room_L121_door",
+    "map_m": [
+     -38.7,
+     -91.8,
+     -6.0
+    ],
+    "game": [
+     2090,
+     -600,
+     -710
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   "inside": {
+    "name": "room_L121_inside",
+    "map_m": [
+     -38.7,
+     -91.0,
+     -6.0
+    ],
+    "game": [
+     2090,
+     -600,
+     -790
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.27,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "L122",
+   "floor": "F1",
+   "name": "Group study L122",
+   "door_a_m": [
+    -37.5,
+    -93.3
+   ],
+   "door_b_m": [
+    -37.5,
+    -95.1
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_L122_door",
+    "map_m": [
+     -37.5,
+     -94.2,
+     -6.0
+    ],
+    "game": [
+     2210,
+     -600,
+     -470
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_L122_inside",
+    "map_m": [
+     -36.7,
+     -94.2,
+     -6.0
+    ],
+    "game": [
+     2290,
+     -600,
+     -470
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.02,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "L123",
+   "floor": "F1",
+   "name": "Group study L123",
+   "door_a_m": [
+    -37.5,
+    -97.6
+   ],
+   "door_b_m": [
+    -37.5,
+    -99.4
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_L123_door",
+    "map_m": [
+     -37.5,
+     -98.5,
+     -6.0
+    ],
+    "game": [
+     2210,
+     -600,
+     -40
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_L123_inside",
+    "map_m": [
+     -36.7,
+     -98.5,
+     -6.0
+    ],
+    "game": [
+     2290,
+     -600,
+     -40
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.02,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "L124",
+   "floor": "F1",
+   "name": "Group study L124",
+   "door_a_m": [
+    -37.5,
+    -101.55
+   ],
+   "door_b_m": [
+    -37.5,
+    -103.35
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_L124_door",
+    "map_m": [
+     -37.5,
+     -102.45,
+     -6.0
+    ],
+    "game": [
+     2210,
+     -600,
+     355
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_L124_inside",
+    "map_m": [
+     -36.7,
+     -102.45,
+     -6.0
+    ],
+    "game": [
+     2290,
+     -600,
+     355
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.02,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "L125",
+   "floor": "F1",
+   "name": "Group study L125",
+   "door_a_m": [
+    -37.5,
+    -105.55
+   ],
+   "door_b_m": [
+    -37.5,
+    -107.35
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_L125_door",
+    "map_m": [
+     -37.5,
+     -106.45,
+     -6.0
+    ],
+    "game": [
+     2210,
+     -600,
+     755
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_L125_inside",
+    "map_m": [
+     -36.7,
+     -106.45,
+     -6.0
+    ],
+    "game": [
+     2290,
+     -600,
+     755
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.02,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "L126",
+   "floor": "F1",
+   "name": "Group study L126",
+   "door_a_m": [
+    -37.5,
+    -109.55
+   ],
+   "door_b_m": [
+    -37.5,
+    -111.35
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_L126_door",
+    "map_m": [
+     -37.5,
+     -110.45,
+     -6.0
+    ],
+    "game": [
+     2210,
+     -600,
+     1155
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_L126_inside",
+    "map_m": [
+     -36.7,
+     -110.45,
+     -6.0
+    ],
+    "game": [
+     2290,
+     -600,
+     1155
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.02,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "L127",
+   "floor": "F1",
+   "name": "Group study L127",
+   "door_a_m": [
+    -37.5,
+    -112.85
+   ],
+   "door_b_m": [
+    -37.5,
+    -114.65
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_L127_door",
+    "map_m": [
+     -37.5,
+     -113.75,
+     -6.0
+    ],
+    "game": [
+     2210,
+     -600,
+     1485
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_L127_inside",
+    "map_m": [
+     -36.7,
+     -113.75,
+     -6.0
+    ],
+    "game": [
+     2290,
+     -600,
+     1485
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.13,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "L128",
+   "floor": "F1",
+   "name": "Group study L128",
+   "door_a_m": [
+    -37.5,
+    -116.05
+   ],
+   "door_b_m": [
+    -37.5,
+    -117.85
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_L128_door",
+    "map_m": [
+     -37.5,
+     -116.95,
+     -6.0
+    ],
+    "game": [
+     2210,
+     -600,
+     1805
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_L128_inside",
+    "map_m": [
+     -36.7,
+     -116.95,
+     -6.0
+    ],
+    "game": [
+     2290,
+     -600,
+     1805
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.02,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "L129",
+   "floor": "F1",
+   "name": "Group study L129 (corner) - the Act 3 star room",
+   "door_a_m": [
+    -37.5,
+    -120.5
+   ],
+   "door_b_m": [
+    -37.5,
+    -118.9
+   ],
+   "door_width_m": 1.6,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_L129_door",
+    "map_m": [
+     -37.5,
+     -119.7,
+     -6.0
+    ],
+    "game": [
+     2210,
+     -600,
+     2080
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.63,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_L129_inside",
+    "map_m": [
+     -36.7,
+     -119.7,
+     -6.0
+    ],
+    "game": [
+     2290,
+     -600,
+     2080
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.63,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "L130",
+   "floor": "F1",
+   "name": "Group study L130",
+   "door_a_m": [
+    -38.5,
+    -120.6
+   ],
+   "door_b_m": [
+    -40.3,
+    -120.6
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 0.0,
+   "door": {
+    "name": "room_L130_door",
+    "map_m": [
+     -39.4,
+     -120.6,
+     -6.0
+    ],
+    "game": [
+     2020,
+     -600,
+     2170
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   },
+   "inside": {
+    "name": "room_L130_inside",
+    "map_m": [
+     -39.4,
+     -121.4,
+     -6.0
+    ],
+    "game": [
+     2020,
+     -600,
+     2250
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.24,
+    "headroom_m": 5.4,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   }
+  },
+  {
+   "room": "L131",
+   "floor": "F1",
+   "name": "Group study L131",
+   "door_a_m": [
+    -42.3,
+    -120.6
+   ],
+   "door_b_m": [
+    -44.1,
+    -120.6
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 0.0,
+   "door": {
+    "name": "room_L131_door",
+    "map_m": [
+     -43.2,
+     -120.6,
+     -6.0
+    ],
+    "game": [
+     1640,
+     -600,
+     2170
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   },
+   "inside": {
+    "name": "room_L131_inside",
+    "map_m": [
+     -43.2,
+     -121.4,
+     -6.0
+    ],
+    "game": [
+     1640,
+     -600,
+     2250
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.24,
+    "headroom_m": 5.4,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   }
+  },
+  {
+   "room": "L132",
+   "floor": "F1",
+   "name": "Group study L132",
+   "door_a_m": [
+    -46.15,
+    -120.6
+   ],
+   "door_b_m": [
+    -47.95,
+    -120.6
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 0.0,
+   "door": {
+    "name": "room_L132_door",
+    "map_m": [
+     -47.05,
+     -120.6,
+     -6.0
+    ],
+    "game": [
+     1255,
+     -600,
+     2170
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   },
+   "inside": {
+    "name": "room_L132_inside",
+    "map_m": [
+     -47.05,
+     -121.4,
+     -6.0
+    ],
+    "game": [
+     1255,
+     -600,
+     2250
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.24,
+    "headroom_m": 5.4,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   }
+  },
+  {
+   "room": "L133",
+   "floor": "F1",
+   "name": "Group study L133",
+   "door_a_m": [
+    -49.9,
+    -120.6
+   ],
+   "door_b_m": [
+    -51.7,
+    -120.6
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 0.0,
+   "door": {
+    "name": "room_L133_door",
+    "map_m": [
+     -50.8,
+     -120.6,
+     -6.0
+    ],
+    "game": [
+     880,
+     -600,
+     2170
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   },
+   "inside": {
+    "name": "room_L133_inside",
+    "map_m": [
+     -50.8,
+     -121.4,
+     -6.0
+    ],
+    "game": [
+     880,
+     -600,
+     2250
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.24,
+    "headroom_m": 5.4,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   }
+  },
+  {
+   "room": "L134",
+   "floor": "F1",
+   "name": "Group study L134",
+   "door_a_m": [
+    -53.85,
+    -120.6
+   ],
+   "door_b_m": [
+    -55.65,
+    -120.6
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 0.0,
+   "door": {
+    "name": "room_L134_door",
+    "map_m": [
+     -54.75,
+     -120.6,
+     -6.0
+    ],
+    "game": [
+     485,
+     -600,
+     2170
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   },
+   "inside": {
+    "name": "room_L134_inside",
+    "map_m": [
+     -54.75,
+     -121.4,
+     -6.0
+    ],
+    "game": [
+     485,
+     -600,
+     2250
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.24,
+    "headroom_m": 5.4,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   }
+  },
+  {
+   "room": "L135",
+   "floor": "F1",
+   "name": "Group study L135",
+   "door_a_m": [
+    -57.95,
+    -120.6
+   ],
+   "door_b_m": [
+    -59.75,
+    -120.6
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 0.0,
+   "door": {
+    "name": "room_L135_door",
+    "map_m": [
+     -58.85,
+     -120.6,
+     -6.0
+    ],
+    "game": [
+     75,
+     -600,
+     2170
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   },
+   "inside": {
+    "name": "room_L135_inside",
+    "map_m": [
+     -58.85,
+     -121.4,
+     -6.0
+    ],
+    "game": [
+     75,
+     -600,
+     2250
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.24,
+    "headroom_m": 5.4,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   }
+  },
+  {
+   "room": "R201D",
+   "floor": "F2",
+   "name": "Group study 201D",
+   "door_a_m": [
+    -45.95,
+    -90.6
+   ],
+   "door_b_m": [
+    -44.15,
+    -90.6
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 180.0,
+   "door": {
+    "name": "room_R201D_door",
+    "map_m": [
+     -45.05,
+     -90.6,
+     0.0
+    ],
+    "game": [
+     1455,
+     0,
+     -830
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   "inside": {
+    "name": "room_R201D_inside",
+    "map_m": [
+     -45.05,
+     -89.8,
+     0.0
+    ],
+    "game": [
+     1455,
+     0,
+     -910
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 0.8,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "R201E",
+   "floor": "F2",
+   "name": "Group study 201E",
+   "door_a_m": [
+    -41.75,
+    -90.6
+   ],
+   "door_b_m": [
+    -39.95,
+    -90.6
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 180.0,
+   "door": {
+    "name": "room_R201E_door",
+    "map_m": [
+     -40.85,
+     -90.6,
+     0.0
+    ],
+    "game": [
+     1875,
+     0,
+     -830
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   "inside": {
+    "name": "room_R201E_inside",
+    "map_m": [
+     -40.85,
+     -89.8,
+     0.0
+    ],
+    "game": [
+     1875,
+     0,
+     -910
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 0.8,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "R201F",
+   "floor": "F2",
+   "name": "Group study 201F",
+   "door_a_m": [
+    -38.8,
+    -90.6
+   ],
+   "door_b_m": [
+    -37.6,
+    -90.6
+   ],
+   "door_width_m": 1.2,
+   "door_head_m": 2.6,
+   "facing_deg": 180.0,
+   "door": {
+    "name": "room_R201F_door",
+    "map_m": [
+     -38.2,
+     -90.6,
+     0.0
+    ],
+    "game": [
+     2140,
+     0,
+     -830
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 0.58,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   "inside": {
+    "name": "room_R201F_inside",
+    "map_m": [
+     -38.2,
+     -89.8,
+     0.0
+    ],
+    "game": [
+     2140,
+     0,
+     -910
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 0.78,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "R201G",
+   "floor": "F2",
+   "name": "Group study 201G",
+   "door_a_m": [
+    -37.5,
+    -91.15
+   ],
+   "door_b_m": [
+    -37.5,
+    -92.95
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_R201G_door",
+    "map_m": [
+     -37.5,
+     -92.05,
+     0.0
+    ],
+    "game": [
+     2210,
+     0,
+     -685
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_R201G_inside",
+    "map_m": [
+     -36.7,
+     -92.05,
+     0.0
+    ],
+    "game": [
+     2290,
+     0,
+     -685
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.02,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "R201H",
+   "floor": "F2",
+   "name": "Group study 201H",
+   "door_a_m": [
+    -37.5,
+    -94.15
+   ],
+   "door_b_m": [
+    -37.5,
+    -95.95
+   ],
+   "door_width_m": 1.8,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_R201H_door",
+    "map_m": [
+     -37.5,
+     -95.05,
+     0.0
+    ],
+    "game": [
+     2210,
+     0,
+     -385
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 0.9,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_R201H_inside",
+    "map_m": [
+     -36.7,
+     -95.05,
+     0.0
+    ],
+    "game": [
+     2290,
+     0,
+     -385
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.02,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  }
+ ],
+ "rooms": [
+  {
+   "room": "L136",
+   "floor": "F1",
+   "type": "conference",
+   "name": "L136 Conference & Meeting Room (visualization)",
+   "door": {
+    "name": "room_L136_door",
+    "map_m": [
+     -66.0,
+     -115.4,
+     -6.0
+    ],
+    "game": [
+     -640,
+     -600,
+     1650
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.2,
+    "headroom_m": 2.6,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "sorting_room",
+   "floor": "F1",
+   "type": "sorting_room",
+   "name": "Book sorting room (staff space in reality)",
+   "door": {
+    "name": "room_sorting_room_door",
+    "map_m": [
+     -69.7,
+     -79.4,
+     -6.0
+    ],
+    "game": [
+     -1010,
+     -600,
+     -1950
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.2,
+    "headroom_m": 2.6,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "vestibule",
+   "floor": "F2",
+   "type": "vestibule",
+   "name": "Entrance vestibule",
+   "door": {
+    "name": "room_vestibule_door",
+    "map_m": [
+     -67.2,
+     -78.8,
+     0.0
+    ],
+    "game": [
+     -760,
+     0,
+     -2010
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.88,
+    "headroom_m": 3.0,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   }
+  },
+  {
+   "room": "sbux_entry",
+   "floor": "F2",
+   "type": "cafe",
+   "name": "Starbucks entry",
+   "door": {
+    "name": "room_sbux_entry_door",
+    "map_m": [
+     -79.46,
+     -90.2,
+     0.0
+    ],
+    "game": [
+     -1986,
+     0,
+     -870
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.2,
+    "headroom_m": 2.6,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "starbucks",
+   "floor": "F2",
+   "type": "cafe",
+   "name": "Starbucks (the Marston cafe)",
+   "door": {
+    "name": "room_starbucks_door",
+    "map_m": [
+     -73.5,
+     -105.8,
+     0.0
+    ],
+    "game": [
+     -1390,
+     0,
+     690
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.2,
+    "headroom_m": 2.6,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "L308",
+   "floor": "F3",
+   "type": "classroom",
+   "name": "Library classroom L308",
+   "door": {
+    "name": "room_L308_door",
+    "map_m": [
+     -75.3,
+     -107.8,
+     6.0
+    ],
+    "game": [
+     -1570,
+     600,
+     890
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.2,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   }
+  },
+  {
+   "room": "wellness",
+   "floor": "F3",
+   "type": "wellness",
+   "name": "Wellness room L307 (prayer, meditation, lactation)",
+   "door": {
+    "name": "room_wellness_door",
+    "map_m": [
+     -77.0,
+     -95.85,
+     6.0
+    ],
+    "game": [
+     -1740,
+     600,
+     -305
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 0.7,
+    "headroom_m": 2.6,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "data_room",
+   "floor": "F3",
+   "type": "data_room",
+   "name": "Data consultation room",
+   "door": {
+    "name": "room_data_room_door",
+    "map_m": [
+     -66.7,
+     -85.6,
+     6.0
+    ],
+    "game": [
+     -710,
+     600,
+     -1330
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.05,
+    "headroom_m": 2.6,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  }
+ ],
+ "service_desk": {
+  "counter": {
+   "name": "service_desk_counter",
+   "map_m": [
+    -58.7,
+    -92.0,
+    1.1
+   ],
+   "game": [
+    90,
+    110,
+    -690
+   ],
+   "floor_m": 1.1,
+   "clearance_m": 3.0,
+   "headroom_m": 4.3
+  },
+  "patron": {
+   "name": "service_desk_patron",
+   "map_m": [
+    -58.7,
+    -93.6,
+    0.0
+   ],
+   "game": [
+    90,
+    0,
+    -530
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.2,
+   "headroom_m": 24.27,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  }
+ },
+ "cafe": {
+  "counter_top": {
+   "name": "cafe_counter_top",
+   "map_m": [
+    -74.6,
+    -99.25,
+    1.07
+   ],
+   "game": [
+    -1500,
+    107,
+    35
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.98,
+   "headroom_m": 4.33
+  },
+  "customer": {
+   "name": "cafe_customer",
+   "map_m": [
+    -76.2,
+    -99.25,
+    0.0
+   ],
+   "game": [
+    -1660,
+    0,
+    35
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.15,
+   "headroom_m": 5.4,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  }
+ },
+ "circulation": [
+  {
+   "name": "chute_bottom",
+   "map_m": [
+    -79.6,
+    -77.2,
+    -6.0
+   ],
+   "game": [
+    -2000,
+    -600,
+    -2170
+   ],
+   "floor_m": -6.0,
+   "clearance_m": 1.13,
+   "headroom_m": 5.4,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000"
+  },
+  {
+   "name": "chute_mid",
+   "map_m": [
+    -74.33,
+    -77.2,
+    -4.0
+   ],
+   "game": [
+    -1473,
+    -400,
+    -2170
+   ],
+   "air": true,
+   "floor_below_m": -6.0,
+   "height_above_floor_m": 2.0
+  },
+  {
+   "name": "chute_top",
+   "map_m": [
+    -70.4,
+    -77.2,
+    0.0
+   ],
+   "game": [
+    -1080,
+    0,
+    -2170
+   ],
+   "air": true,
+   "floor_below_m": -2.25,
+   "height_above_floor_m": 2.25
+  },
+  {
+   "name": "core_stair_F1_landing",
+   "map_m": [
+    -70.8,
+    -85.6,
+    -6.0
+   ],
+   "game": [
+    -1120,
+    -600,
+    -1330
+   ],
+   "floor_m": -6.0,
+   "clearance_m": 1.56,
+   "headroom_m": 5.7,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "core_stair_F2_landing",
+   "map_m": [
+    -70.8,
+    -85.6,
+    0.0
+   ],
+   "game": [
+    -1120,
+    0,
+    -1330
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.56,
+   "headroom_m": 5.7,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "core_stair_F3_landing",
+   "map_m": [
+    -70.8,
+    -85.6,
+    6.0
+   ],
+   "game": [
+    -1120,
+    600,
+    -1330
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.56,
+   "headroom_m": 5.7,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "core_stair_F4_landing",
+   "map_m": [
+    -70.8,
+    -85.6,
+    12.0
+   ],
+   "game": [
+    -1120,
+    1200,
+    -1330
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 1.56,
+   "headroom_m": 5.7,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "core_stair_F5_landing",
+   "map_m": [
+    -70.8,
+    -85.6,
+    18.0
+   ],
+   "game": [
+    -1120,
+    1800,
+    -1330
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.56,
+   "headroom_m": 5.4,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "duct_end",
+   "map_m": [
+    -82.17,
+    -55.8,
+    -3.4
+   ],
+   "game": [
+    -2257,
+    -340,
+    -4310
+   ],
+   "floor_m": -3.4,
+   "clearance_m": 0.7,
+   "headroom_m": 2.0,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "duct_mid",
+   "map_m": [
+    -82.17,
+    -64.65,
+    -3.4
+   ],
+   "game": [
+    -2257,
+    -340,
+    -3425
+   ],
+   "floor_m": -3.4,
+   "clearance_m": 0.92,
+   "headroom_m": 2.0,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "duct_mouth",
+   "map_m": [
+    -82.17,
+    -73.7,
+    -3.4
+   ],
+   "game": [
+    -2257,
+    -340,
+    -2520
+   ],
+   "floor_m": -3.4,
+   "clearance_m": 0.68,
+   "headroom_m": 2.0,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "duct_step_sorting_table",
+   "map_m": [
+    -82.1,
+    -75.4,
+    -4.8
+   ],
+   "game": [
+    -2250,
+    -480,
+    -2350
+   ],
+   "floor_m": -4.8,
+   "clearance_m": 0.78,
+   "headroom_m": 4.2,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "grand_stair_bottom",
+   "map_m": [
+    -63.25,
+    -93.66,
+    0.0
+   ],
+   "game": [
+    -365,
+    0,
+    -524
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.88,
+   "headroom_m": 24.3,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "grand_stair_top",
+   "map_m": [
+    -63.25,
+    -106.1,
+    6.0
+   ],
+   "game": [
+    -365,
+    600,
+    720
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.57,
+   "headroom_m": 18.77,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "ne_stair_F1_landing",
+   "map_m": [
+    -49.2,
+    -77.6,
+    -6.0
+   ],
+   "game": [
+    1040,
+    -600,
+    -2130
+   ],
+   "floor_m": -6.0,
+   "clearance_m": 1.4,
+   "headroom_m": 5.7,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "ne_stair_F1_turn",
+   "map_m": [
+    -46.1,
+    -69.9,
+    -3.0
+   ],
+   "game": [
+    1350,
+    -300,
+    -2900
+   ],
+   "floor_m": -3.0,
+   "clearance_m": 2.5,
+   "headroom_m": 5.75,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "ne_stair_F2_landing",
+   "map_m": [
+    -49.2,
+    -77.6,
+    0.0
+   ],
+   "game": [
+    1040,
+    0,
+    -2130
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.4,
+   "headroom_m": 5.7,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "ne_stair_F2_turn",
+   "map_m": [
+    -46.1,
+    -69.9,
+    3.0
+   ],
+   "game": [
+    1350,
+    300,
+    -2900
+   ],
+   "floor_m": 3.0,
+   "clearance_m": 2.5,
+   "headroom_m": 5.75,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "ne_stair_F3_landing",
+   "map_m": [
+    -49.2,
+    -77.6,
+    6.0
+   ],
+   "game": [
+    1040,
+    600,
+    -2130
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.4,
+   "headroom_m": 5.7,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "ne_stair_F3_turn",
+   "map_m": [
+    -46.1,
+    -69.9,
+    9.0
+   ],
+   "game": [
+    1350,
+    900,
+    -2900
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 2.5,
+   "headroom_m": 5.75,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "ne_stair_F4_landing",
+   "map_m": [
+    -49.2,
+    -77.6,
+    12.0
+   ],
+   "game": [
+    1040,
+    1200,
+    -2130
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 1.4,
+   "headroom_m": 5.7,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "ne_stair_F4_turn",
+   "map_m": [
+    -46.1,
+    -69.9,
+    15.0
+   ],
+   "game": [
+    1350,
+    1500,
+    -2900
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 2.5,
+   "headroom_m": 5.75,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "ne_stair_F5_landing",
+   "map_m": [
+    -49.2,
+    -77.6,
+    18.0
+   ],
+   "game": [
+    1040,
+    1800,
+    -2130
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.4,
+   "headroom_m": 5.7,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "ne_stair_F5_turn",
+   "map_m": [
+    -46.1,
+    -69.9,
+    21.0
+   ],
+   "game": [
+    1350,
+    2100,
+    -2900
+   ],
+   "floor_m": 21.0,
+   "clearance_m": 2.5,
+   "headroom_m": 8.1,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "ne_stair_ROOF_landing",
+   "map_m": [
+    -49.2,
+    -77.6,
+    24.0
+   ],
+   "game": [
+    1040,
+    2400,
+    -2130
+   ],
+   "floor_m": 24.0,
+   "clearance_m": 1.4,
+   "headroom_m": 5.1,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000"
+  },
+  {
+   "name": "sw_stair_F1_landing",
+   "map_m": [
+    -81.0,
+    -113.38,
+    -6.0
+   ],
+   "game": [
+    -2140,
+    -600,
+    1447
+   ],
+   "floor_m": -6.0,
+   "clearance_m": 0.8,
+   "headroom_m": 5.7,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "sw_stair_F1_turn",
+   "map_m": [
+    -89.0,
+    -113.38,
+    -3.0
+   ],
+   "game": [
+    -2940,
+    -300,
+    1447
+   ],
+   "floor_m": -3.0,
+   "clearance_m": 1.82,
+   "headroom_m": 5.75,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000"
+  },
+  {
+   "name": "sw_stair_F2_landing",
+   "map_m": [
+    -81.0,
+    -113.38,
+    0.0
+   ],
+   "game": [
+    -2140,
+    0,
+    1447
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.54,
+   "headroom_m": 5.7,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "sw_stair_F2_turn",
+   "map_m": [
+    -89.0,
+    -113.38,
+    3.0
+   ],
+   "game": [
+    -2940,
+    300,
+    1447
+   ],
+   "floor_m": 3.0,
+   "clearance_m": 1.82,
+   "headroom_m": 5.75,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000"
+  },
+  {
+   "name": "sw_stair_F3_landing",
+   "map_m": [
+    -81.0,
+    -113.38,
+    6.0
+   ],
+   "game": [
+    -2140,
+    600,
+    1447
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.54,
+   "headroom_m": 5.7,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "sw_stair_F3_turn",
+   "map_m": [
+    -89.0,
+    -113.38,
+    9.0
+   ],
+   "game": [
+    -2940,
+    900,
+    1447
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 1.82,
+   "headroom_m": 5.75,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000"
+  },
+  {
+   "name": "sw_stair_F4_landing",
+   "map_m": [
+    -81.0,
+    -113.38,
+    12.0
+   ],
+   "game": [
+    -2140,
+    1200,
+    1447
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 1.54,
+   "headroom_m": 5.7,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "sw_stair_F4_turn",
+   "map_m": [
+    -89.0,
+    -113.38,
+    15.0
+   ],
+   "game": [
+    -2940,
+    1500,
+    1447
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 1.82,
+   "headroom_m": 8.4,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000"
+  },
+  {
+   "name": "sw_stair_F5_landing",
+   "map_m": [
+    -81.0,
+    -113.38,
+    18.0
+   ],
+   "game": [
+    -2140,
+    1800,
+    1447
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.54,
+   "headroom_m": 5.4,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  }
+ ],
+ "landmarks": [
+  {
+   "name": "atrium_court_centre",
+   "map_m": [
+    -56.6,
+    -100.4,
+    0.0
+   ],
+   "game": [
+    300,
+    0,
+    150
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.7,
+   "headroom_m": 14.82,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "chandelier_centre",
+   "map_m": [
+    -58.4,
+    -100.4,
+    15.0
+   ],
+   "game": [
+    120,
+    1500,
+    150
+   ],
+   "air": true,
+   "floor_below_m": 1.2,
+   "height_above_floor_m": 13.8
+  },
+  {
+   "name": "duct_step_sorting_table",
+   "map_m": [
+    -82.1,
+    -75.4,
+    -4.8
+   ],
+   "game": [
+    -2250,
+    -480,
+    -2350
+   ],
+   "floor_m": -4.8,
+   "clearance_m": 0.78,
+   "headroom_m": 4.2,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "fish_tank_lid",
+   "map_m": [
+    -73.5,
+    -96.3,
+    7.45
+   ],
+   "game": [
+    -1390,
+    745,
+    -260
+   ],
+   "floor_m": 7.45,
+   "clearance_m": 0.88,
+   "headroom_m": 3.95,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "ne_tower_top",
+   "map_m": [
+    -46.1,
+    -73.0,
+    29.7
+   ],
+   "game": [
+    1350,
+    2970,
+    -2590
+   ],
+   "floor_m": 29.7,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "roof_ne_step1",
+   "map_m": [
+    -57.8,
+    -72.6,
+    25.4
+   ],
+   "game": [
+    180,
+    2540,
+    -2630
+   ],
+   "floor_m": 25.4,
+   "clearance_m": 1.0,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "roof_ne_step2",
+   "map_m": [
+    -55.8,
+    -72.6,
+    26.8
+   ],
+   "game": [
+    380,
+    2680,
+    -2630
+   ],
+   "floor_m": 26.8,
+   "clearance_m": 1.0,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "roof_ne_step3",
+   "map_m": [
+    -53.88,
+    -72.6,
+    28.2
+   ],
+   "game": [
+    573,
+    2820,
+    -2630
+   ],
+   "floor_m": 28.2,
+   "clearance_m": 0.97,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "roof_sw_step1",
+   "map_m": [
+    -85.4,
+    -105.92,
+    25.4
+   ],
+   "game": [
+    -2580,
+    2540,
+    702
+   ],
+   "floor_m": 25.4,
+   "clearance_m": 1.0,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "roof_sw_step2",
+   "map_m": [
+    -83.4,
+    -105.92,
+    26.8
+   ],
+   "game": [
+    -2380,
+    2680,
+    702
+   ],
+   "floor_m": 26.8,
+   "clearance_m": 1.0,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "roof_sw_step3",
+   "map_m": [
+    -81.4,
+    -105.92,
+    28.2
+   ],
+   "game": [
+    -2180,
+    2820,
+    702
+   ],
+   "floor_m": 28.2,
+   "clearance_m": 1.57,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "sw_tower_top",
+   "map_m": [
+    -85.14,
+    -113.38,
+    30.2
+   ],
+   "game": [
+    -2554,
+    3020,
+    1447
+   ],
+   "floor_m": 30.2,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  }
+ ],
+ "terraces": [
+  {
+   "name": "terrace_e4",
+   "map_m": [
+    -38.0,
+    -106.0,
+    12.0
+   ],
+   "game": [
+    2160,
+    1200,
+    710
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 3.0,
+   "headroom_m": null
+  },
+  {
+   "name": "terrace_s4",
+   "map_m": [
+    -57.0,
+    -120.5,
+    12.0
+   ],
+   "game": [
+    260,
+    1200,
+    2160
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 3.0,
+   "headroom_m": null
+  },
+  {
+   "name": "terrace_e5",
+   "map_m": [
+    -47.2,
+    -97.0,
+    18.0
+   ],
+   "game": [
+    1240,
+    1800,
+    -190
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 3.0,
+   "headroom_m": null
+  },
+  {
+   "name": "terrace_s5",
+   "map_m": [
+    -66.0,
+    -111.8,
+    18.0
+   ],
+   "game": [
+    -640,
+    1800,
+    1290
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 3.0,
+   "headroom_m": null
+  },
+  {
+   "name": "roof_deck",
+   "map_m": [
+    -62.0,
+    -82.0,
+    24.0
+   ],
+   "game": [
+    -240,
+    2400,
+    -1690
+   ],
+   "floor_m": 24.0,
+   "clearance_m": 3.0,
+   "headroom_m": null
+  },
+  {
+   "name": "porch",
+   "map_m": [
+    -62.0,
+    -72.2,
+    0.0
+   ],
+   "game": [
+    -240,
+    0,
+    -2670
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 3.0,
+   "headroom_m": 11.4
+  }
+ ],
+ "views": [
+  {
+   "name": "view_f5_north_window",
+   "map_m": [
+    -62.5,
+    -71.4,
+    18.0
+   ],
+   "game": [
+    -290,
+    1800,
+    -2750
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 0.85,
+   "headroom_m": 5.4,
+   "facing_deg": 31.0,
+   "game_yaw": "0x69F5",
+   "note": "Century Tower 114 m NNE through the 5th floor view windows"
+  }
+ ],
+ "pickups": {
+  "coins_placed": 169,
+  "coins_with_goombas": 173,
+  "objects": 74,
+  "by_kind": {
+   "coin_line": 23,
+   "coin": 38,
+   "coin_ring": 2,
+   "heart": 4,
+   "1up": 3,
+   "goomba": 4
+  },
+  "skipped": [],
+  "items": [
+   {
+    "kind": "coin_line",
+    "name": "F2 lobby to the atrium",
+    "map_m": [
+     -67.4,
+     -88.6,
+     0.0
+    ],
+    "game": [
+     -780,
+     0,
+     -1030
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 180.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F2 atrium court ring (line)",
+    "map_m": [
+     -56.6,
+     -100.4,
+     0.0
+    ],
+    "game": [
+     300,
+     0,
+     150
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 grand stair coin 1",
+    "map_m": [
+     -63.25,
+     -95.52,
+     1.18
+    ],
+    "game": [
+     -365,
+     118,
+     -338
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 grand stair coin 2",
+    "map_m": [
+     -63.25,
+     -97.22,
+     2.17
+    ],
+    "game": [
+     -365,
+     217,
+     -168
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 grand stair coin 3",
+    "map_m": [
+     -63.25,
+     -98.93,
+     3.15
+    ],
+    "game": [
+     -365,
+     315,
+     3
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 grand stair coin 4",
+    "map_m": [
+     -63.25,
+     -100.64,
+     4.14
+    ],
+    "game": [
+     -365,
+     414,
+     173
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 grand stair coin 5",
+    "map_m": [
+     -63.25,
+     -102.34,
+     5.12
+    ],
+    "game": [
+     -365,
+     512,
+     344
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 grand stair coin 6",
+    "map_m": [
+     -63.25,
+     -104.05,
+     6.11
+    ],
+    "game": [
+     -365,
+     611,
+     515
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F2 science fiction aisle",
+    "map_m": [
+     -60.1,
+     -121.0,
+     0.0
+    ],
+    "game": [
+     -50,
+     0,
+     2210
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F2 NE hall",
+    "map_m": [
+     -47.6,
+     -82.6,
+     -0.0
+    ],
+    "game": [
+     1200,
+     0,
+     -1630
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "F1 commons ring north",
+    "map_m": [
+     -56.4,
+     -88.0,
+     -6.0
+    ],
+    "game": [
+     320,
+     -600,
+     -1090
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 commons ring south (line)",
+    "map_m": [
+     -53.8,
+     -108.0,
+     -6.0
+    ],
+    "game": [
+     580,
+     -600,
+     910
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 east study rooms",
+    "map_m": [
+     -40.0,
+     -104.0,
+     -6.0
+    ],
+    "game": [
+     1960,
+     -600,
+     510
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 south study rooms",
+    "map_m": [
+     -50.0,
+     -118.0,
+     -6.0
+    ],
+    "game": [
+     960,
+     -600,
+     1910
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 north lab",
+    "map_m": [
+     -77.0,
+     -63.0,
+     -6.0
+    ],
+    "game": [
+     -1740,
+     -600,
+     -3590
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 west commons",
+    "map_m": [
+     -68.8,
+     -99.0,
+     -6.0
+    ],
+    "game": [
+     -920,
+     -600,
+     10
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 vent duct coin 1",
+    "map_m": [
+     -82.1,
+     -70.0,
+     -2.8
+    ],
+    "game": [
+     -2250,
+     -280,
+     -2890
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 vent duct coin 3",
+    "map_m": [
+     -82.1,
+     -58.0,
+     -2.8
+    ],
+    "game": [
+     -2250,
+     -280,
+     -4090
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F3 north periodicals aisle",
+    "map_m": [
+     -56.4,
+     -88.8,
+     6.0
+    ],
+    "game": [
+     320,
+     600,
+     -1010
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F3 south periodicals aisle",
+    "map_m": [
+     -56.4,
+     -114.9,
+     6.0
+    ],
+    "game": [
+     320,
+     600,
+     1600
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F3 atrium balcony east",
+    "map_m": [
+     -50.5,
+     -100.0,
+     6.0
+    ],
+    "game": [
+     910,
+     600,
+     110
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F3 east tables",
+    "map_m": [
+     -37.8,
+     -99.0,
+     6.0
+    ],
+    "game": [
+     2180,
+     600,
+     10
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F3 elevator lobby",
+    "map_m": [
+     -75.0,
+     -92.6,
+     6.0
+    ],
+    "game": [
+     -1540,
+     600,
+     -630
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_per_n_01",
+    "map_m": [
+     -63.26,
+     -88.35,
+     8.9
+    ],
+    "game": [
+     -366,
+     890,
+     -1055
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_per_n_02",
+    "map_m": [
+     -58.68,
+     -87.9,
+     9.6
+    ],
+    "game": [
+     92,
+     960,
+     -1100
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_per_n_03",
+    "map_m": [
+     -54.11,
+     -88.35,
+     8.9
+    ],
+    "game": [
+     549,
+     890,
+     -1055
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_per_n_04",
+    "map_m": [
+     -49.54,
+     -87.9,
+     9.6
+    ],
+    "game": [
+     1006,
+     960,
+     -1100
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_per_n_05",
+    "map_m": [
+     -44.97,
+     -88.35,
+     8.9
+    ],
+    "game": [
+     1463,
+     890,
+     -1055
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_per_s_01",
+    "map_m": [
+     -63.26,
+     -114.8,
+     8.9
+    ],
+    "game": [
+     -366,
+     890,
+     1590
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_per_s_02",
+    "map_m": [
+     -58.68,
+     -115.25,
+     9.6
+    ],
+    "game": [
+     92,
+     960,
+     1635
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_per_s_03",
+    "map_m": [
+     -54.11,
+     -114.8,
+     8.9
+    ],
+    "game": [
+     549,
+     890,
+     1590
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_per_s_04",
+    "map_m": [
+     -49.54,
+     -115.25,
+     9.6
+    ],
+    "game": [
+     1006,
+     960,
+     1635
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_per_s_05",
+    "map_m": [
+     -44.97,
+     -114.8,
+     8.9
+    ],
+    "game": [
+     1463,
+     890,
+     1590
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_theses_01",
+    "map_m": [
+     -46.75,
+     -104.42,
+     8.9
+    ],
+    "game": [
+     1285,
+     890,
+     552
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 range top f4_aqc_01",
+    "map_m": [
+     -63.26,
+     -84.2,
+     14.9
+    ],
+    "game": [
+     -366,
+     1490,
+     -1470
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 range top f4_aqc_03",
+    "map_m": [
+     -54.11,
+     -84.2,
+     14.9
+    ],
+    "game": [
+     549,
+     1490,
+     -1470
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 range top f4_oversize",
+    "map_m": [
+     -77.4,
+     -102.6,
+     14.4
+    ],
+    "game": [
+     -1780,
+     1440,
+     370
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 range top f4_qcz_w_01",
+    "map_m": [
+     -72.4,
+     -102.6,
+     14.9
+    ],
+    "game": [
+     -1280,
+     1490,
+     370
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 range top f4_qcz_w_02",
+    "map_m": [
+     -67.83,
+     -103.05,
+     15.6
+    ],
+    "game": [
+     -823,
+     1560,
+     415
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 range top f4_qcz_s_01",
+    "map_m": [
+     -72.4,
+     -112.45,
+     14.9
+    ],
+    "game": [
+     -1280,
+     1490,
+     1355
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 range top f4_qcz_s_02",
+    "map_m": [
+     -67.83,
+     -112.9,
+     15.6
+    ],
+    "game": [
+     -823,
+     1560,
+     1400
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 range top f4_qcz_s_03",
+    "map_m": [
+     -63.26,
+     -112.45,
+     14.9
+    ],
+    "game": [
+     -366,
+     1490,
+     1355
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 range top f4_qcz_s_04",
+    "map_m": [
+     -58.68,
+     -112.9,
+     15.6
+    ],
+    "game": [
+     92,
+     1560,
+     1400
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 range top f4_qcz_s_05",
+    "map_m": [
+     -54.11,
+     -112.45,
+     14.9
+    ],
+    "game": [
+     549,
+     1490,
+     1355
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 west reading tables",
+    "map_m": [
+     -84.5,
+     -98.0,
+     12.0
+    ],
+    "game": [
+     -2490,
+     1200,
+     -90
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 east terrace",
+    "map_m": [
+     -38.0,
+     -106.0,
+     12.0
+    ],
+    "game": [
+     2160,
+     1200,
+     710
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 east terrace south",
+    "map_m": [
+     -38.0,
+     -119.0,
+     12.0
+    ],
+    "game": [
+     2160,
+     1200,
+     2010
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 south terrace",
+    "map_m": [
+     -60.0,
+     -120.4,
+     12.0
+    ],
+    "game": [
+     -40,
+     1200,
+     2150
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F5 north reading room",
+    "map_m": [
+     -61.0,
+     -80.6,
+     18.0
+    ],
+    "game": [
+     -140,
+     1800,
+     -1830
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F5 north windows",
+    "map_m": [
+     -61.5,
+     -71.2,
+     18.0
+    ],
+    "game": [
+     -190,
+     1800,
+     -2770
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F5 east terrace",
+    "map_m": [
+     -47.2,
+     -92.0,
+     18.0
+    ],
+    "game": [
+     1240,
+     1800,
+     -690
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F5 south terrace",
+    "map_m": [
+     -66.0,
+     -112.0,
+     18.0
+    ],
+    "game": [
+     -640,
+     1800,
+     1310
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "roof ring",
+    "map_m": [
+     -61.0,
+     -82.0,
+     24.0
+    ],
+    "game": [
+     -140,
+     2400,
+     -1690
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "roof west",
+    "map_m": [
+     -84.0,
+     -96.0,
+     24.0
+    ],
+    "game": [
+     -2440,
+     2400,
+     -290
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing ne_stair_F1_turn",
+    "map_m": [
+     -46.1,
+     -69.9,
+     -2.4
+    ],
+    "game": [
+     1350,
+     -240,
+     -2900
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing ne_stair_F2_turn",
+    "map_m": [
+     -46.1,
+     -69.9,
+     3.6
+    ],
+    "game": [
+     1350,
+     360,
+     -2900
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing ne_stair_F3_turn",
+    "map_m": [
+     -46.1,
+     -69.9,
+     9.6
+    ],
+    "game": [
+     1350,
+     960,
+     -2900
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing ne_stair_F4_turn",
+    "map_m": [
+     -46.1,
+     -69.9,
+     15.6
+    ],
+    "game": [
+     1350,
+     1560,
+     -2900
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing ne_stair_F5_turn",
+    "map_m": [
+     -46.1,
+     -69.9,
+     21.6
+    ],
+    "game": [
+     1350,
+     2160,
+     -2900
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing sw_stair_F1_turn",
+    "map_m": [
+     -89.0,
+     -113.38,
+     -2.4
+    ],
+    "game": [
+     -2940,
+     -240,
+     1447
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing sw_stair_F2_turn",
+    "map_m": [
+     -89.0,
+     -113.38,
+     3.6
+    ],
+    "game": [
+     -2940,
+     360,
+     1447
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing sw_stair_F3_turn",
+    "map_m": [
+     -89.0,
+     -113.38,
+     9.6
+    ],
+    "game": [
+     -2940,
+     960,
+     1447
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing sw_stair_F4_turn",
+    "map_m": [
+     -89.0,
+     -113.38,
+     15.6
+    ],
+    "game": [
+     -2940,
+     1560,
+     1447
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart F1 commons",
+    "map_m": [
+     -60.0,
+     -92.0,
+     -5.0
+    ],
+    "game": [
+     -40,
+     -500,
+     -690
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart F3 west balcony",
+    "map_m": [
+     -67.0,
+     -100.0,
+     7.0
+    ],
+    "game": [
+     -740,
+     700,
+     110
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart F5 north reading room",
+    "map_m": [
+     -57.0,
+     -91.0,
+     19.0
+    ],
+    "game": [
+     260,
+     1900,
+     -790
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart roof",
+    "map_m": [
+     -70.0,
+     -79.0,
+     25.0
+    ],
+    "game": [
+     -1040,
+     2500,
+     -1990
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up NE tower top",
+    "map_m": [
+     -46.1,
+     -73.0,
+     30.3
+    ],
+    "game": [
+     1350,
+     3030,
+     -2590
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up chandelier ring",
+    "map_m": [
+     -60.4,
+     -100.4,
+     15.6
+    ],
+    "game": [
+     -80,
+     1560,
+     150
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up vent duct end",
+    "map_m": [
+     -82.17,
+     -55.8,
+     -2.8
+    ],
+    "game": [
+     -2257,
+     -280,
+     -4310
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba F1 commons",
+    "map_m": [
+     -58.0,
+     -100.0,
+     -6.0
+    ],
+    "game": [
+     160,
+     -600,
+     110
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba F1 east",
+    "map_m": [
+     -44.0,
+     -94.0,
+     -6.0
+    ],
+    "game": [
+     1560,
+     -600,
+     -490
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba F3 north aisle",
+    "map_m": [
+     -56.4,
+     -88.0,
+     6.0
+    ],
+    "game": [
+     320,
+     600,
+     -1090
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba F4 QC-Z aisle",
+    "map_m": [
+     -70.1,
+     -102.0,
+     12.0
+    ],
+    "game": [
+     -1050,
+     1200,
+     310
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": null
+   }
+  ]
+ },
+ "checks": []
+}

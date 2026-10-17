@@ -9,7 +9,7 @@
 --   door 1 bob             LEVEL_BOB / COURSE_BOB  The Swamp (Auditorium door)                 built
 --   door 2 wf              LEVEL_WF  / COURSE_WF   Reitz Union + Engineering (The Hub door)    built (2 stars)
 --   door 3 jrb             LEVEL_JRB / COURSE_JRB  Lake Alice (Newell Hall door)               built (5 stars)
---   door 4 ccm             LEVEL_CCM / COURSE_CCM  Marston Science Library (Marston door)      reserved
+--   door 4 ccm             LEVEL_CCM / COURSE_CCM  Marston Science Library (Marston door)      built (8 stars; an interior)
 --   door 5 bbh             LEVEL_BBH / COURSE_BBH  Library West After Dark (Library West door) reserved
 --   door 6 ttc             LEVEL_TTC / COURSE_TTC  Century Tower interior (tower base door)    reserved
 --
@@ -28,7 +28,11 @@
 -- and 6 (Data Packet Relay) come later as 4/5/6.
 -- Lake Alice: 1 Boardwalk Welcome (design 7.4 act 1), 2 Gator Hop (design act 2), 3 Bat Census at Dusk (design
 -- act 4, co-op); design acts 3 (Shell Surf Regatta), 5 (Lost Hatchling) and 6 (Lily Pad Red Coins) come later
--- as 4/5/6. Its acts stay unreachable until levels/jrb is built (the door says "Coming soon" until then).
+-- as 4/5/6.
+-- Marston Science Library: 1 Out-of-Order Elevator (design 7.3 act 1), 2 Shhh! Lost Textbooks (design acts 2 + 4: the
+-- quiet floor's Shushers guarding 8 textbooks), 3 Study Room Booking (design act 3, co-op); design acts 4 (Lost Lab
+-- Notebook Pages), 5 (Printer Jam) and 6 (Overdue Book Express) come later as 4/5/6. Built: levels/ccm (an interior,
+-- tools/campus/build_interior.py marston).
 
 ---------------------------------------------------------------------------------------------
 -- warp nodes (area 1 everywhere)
@@ -79,7 +83,15 @@ SGL_STAGES = {
           "COMING SOON - RED COINS",      -- design 7.4 act 6 "Lily Pad Red Coins" (no mission yet)
       } },
     { door = 4, key = "marston", slot = "ccm", level = LEVEL_CCM, course = COURSE_CCM, stars = 8,
-      name = "MARSTON LIBRARY", building = "MARSTON SCIENCE LIBRARY" },
+      name = "MARSTON LIBRARY", building = "MARSTON SCIENCE LIBRARY",
+      acts = {
+          "OUT-OF-ORDER ELEVATOR",        -- uf_marston_missions.lua marston_climb (atrium lifts to the 5th floor; spawns star id 0)
+          "SHHH! LOST TEXTBOOKS",         -- uf_marston_missions.lua marston_quiet (8 books on the silent floor, Shusher patrols)
+          "STUDY ROOM BOOKING - 2P",      -- uf_marston_missions.lua marston_booking (co-op kiosks, 2-4 players)
+          "COMING SOON - NOTEBOOK PAGES", -- design 7.3 act 4 "Lost Lab Notebook Pages" (no mission yet)
+          "COMING SOON - PRINTER JAM",    -- design 7.3 act 5 "Printer Jam" (no mission yet)
+          "COMING SOON - BOOK EXPRESS",   -- design 7.3 act 6 "Overdue Book Express" (no mission yet)
+      } },
     { door = 5, key = "libwest", slot = "bbh", level = LEVEL_BBH, course = COURSE_BBH, stars = 14,
       name = "LIBRARY WEST AFTER DARK", building = "LIBRARY WEST" },
     { door = 6, key = "tower", slot = "ttc", level = LEVEL_TTC, course = COURSE_TTC, stars = 20,

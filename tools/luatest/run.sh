@@ -20,6 +20,12 @@
 #  10. check_lake_points.py: LAKE_POINTS vs data/uf/lake_points.json or the lake landmark modules, lake
 #      depth / clearance of the gators, and the built levels/jrb collision + water boxes once it exists
 #      (skipped when tools/.venv is missing)
+#  11. test_marston_missions.lua: course 4 (uf_marston_missions.lua): the atrium climb (stair barriers, book-cart lifts,
+#      flying books), the silent floor's textbooks + Shusher patrols (noise, sight, pauses, lures), the co-op study
+#      room booking (2-4 kiosks, 4 s window, count-in), act select, levels/ccm contract once built
+#  12. check_marston_points.py: MARSTON_POINTS vs data/uf/marston_points.json or data/uf/marston_layout.json (layout
+#      sanity: walkable floor, patrol clearance, lifts in the void, kiosk reach), and the built levels/ccm collision
+#      once it exists (skipped when tools/.venv is missing)
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
 # Fixtures (regenerate only for a new coopdx version): coopdx_constants_v151.lua,
 # coopdx_api_v151.lua, coopdx_structs_v151.lua (gen_coopdx_*.py, see their headers).
@@ -57,6 +63,9 @@ echo "== test_reitz_missions (course 2: Reitz Union & Engineering)"
 echo "== test_lake_missions (course 3: Lake Alice)"
 "$LUA" "$HERE/test_lake_missions.lua"
 
+echo "== test_marston_missions (course 4: Marston Science Library)"
+"$LUA" "$HERE/test_marston_missions.lua"
+
 PY="$HERE/../.venv/bin/python"
 if [ -x "$PY" ]; then
     echo "== check_swamp_points"
@@ -68,7 +77,10 @@ if [ -x "$PY" ]; then
     echo "== check_lake_points"
     out="$("$PY" -I "$HERE/check_lake_points.py")" || { echo "$out"; exit 1; }
     echo "$out"
+    echo "== check_marston_points"
+    out="$("$PY" -I "$HERE/check_marston_points.py")" || { echo "$out"; exit 1; }
+    echo "$out"
 else
-    echo "== check_swamp_points / check_reitz_points / check_lake_points skipped (no tools/.venv)"
+    echo "== check_swamp_points / check_reitz_points / check_lake_points / check_marston_points skipped (no tools/.venv)"
 fi
 echo "== all luatest checks passed"

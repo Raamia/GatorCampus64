@@ -20,6 +20,7 @@ from PIL import Image, ImageDraw
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from stage_palette import MATERIALS, TEXTURE_DIR  # noqa: E402
+from stage_palette import INTERIOR_MATERIALS  # noqa: E402  (interior kit, written after the outdoor set)
 
 
 def hexc(h):
@@ -600,6 +601,621 @@ def build_all():
     return T
 
 
+# ================================================================== interior kit textures
+# Recipes for stage_palette.INTERIOR_MATERIALS (the int_* materials of tools/campus/interior_kit.py:
+# Marston, later Library West and the Century Tower interior). Kept apart from build_all() so the
+# outdoor textures (and every outdoor stage build) are untouched; main() writes both sets.
+# Scale: "tile" textures repeat every stage_palette tile_m metres; "once" textures (signs, screens,
+# doors, the window view) are mapped whole onto one panel by the kit's builders. Row 0 = top (v = 1).
+
+# 5 x 7 pixel font for the interior signs (the hub's GLYPHS above are 6 x 10 and only know THE HUB)
+FONT5 = {
+    "A": [".###.", "#...#", "#...#", "#####", "#...#", "#...#", "#...#"],
+    "B": ["####.", "#...#", "#...#", "####.", "#...#", "#...#", "####."],
+    "C": [".###.", "#...#", "#....", "#....", "#....", "#...#", ".###."],
+    "D": ["####.", "#...#", "#...#", "#...#", "#...#", "#...#", "####."],
+    "E": ["#####", "#....", "#....", "####.", "#....", "#....", "#####"],
+    "F": ["#####", "#....", "#....", "####.", "#....", "#....", "#...."],
+    "G": [".###.", "#...#", "#....", "#.###", "#...#", "#...#", ".####"],
+    "H": ["#...#", "#...#", "#...#", "#####", "#...#", "#...#", "#...#"],
+    "I": [".###.", "..#..", "..#..", "..#..", "..#..", "..#..", ".###."],
+    "J": ["..###", "...#.", "...#.", "...#.", "...#.", "#..#.", ".##.."],
+    "K": ["#...#", "#..#.", "#.#..", "##...", "#.#..", "#..#.", "#...#"],
+    "L": ["#....", "#....", "#....", "#....", "#....", "#....", "#####"],
+    "M": ["#...#", "##.##", "#.#.#", "#.#.#", "#...#", "#...#", "#...#"],
+    "N": ["#...#", "#...#", "##..#", "#.#.#", "#..##", "#...#", "#...#"],
+    "O": [".###.", "#...#", "#...#", "#...#", "#...#", "#...#", ".###."],
+    "P": ["####.", "#...#", "#...#", "####.", "#....", "#....", "#...."],
+    "Q": [".###.", "#...#", "#...#", "#...#", "#.#.#", "#..#.", ".##.#"],
+    "R": ["####.", "#...#", "#...#", "####.", "#.#..", "#..#.", "#...#"],
+    "S": [".####", "#....", "#....", ".###.", "....#", "....#", "####."],
+    "T": ["#####", "..#..", "..#..", "..#..", "..#..", "..#..", "..#.."],
+    "U": ["#...#", "#...#", "#...#", "#...#", "#...#", "#...#", ".###."],
+    "V": ["#...#", "#...#", "#...#", "#...#", "#...#", ".#.#.", "..#.."],
+    "W": ["#...#", "#...#", "#...#", "#.#.#", "#.#.#", "#.#.#", ".#.#."],
+    "X": ["#...#", "#...#", ".#.#.", "..#..", ".#.#.", "#...#", "#...#"],
+    "Y": ["#...#", "#...#", ".#.#.", "..#..", "..#..", "..#..", "..#.."],
+    "Z": ["#####", "....#", "...#.", "..#..", ".#...", "#....", "#####"],
+    "0": [".###.", "#...#", "#..##", "#.#.#", "##..#", "#...#", ".###."],
+    "1": ["..#..", ".##..", "..#..", "..#..", "..#..", "..#..", ".###."],
+    "2": [".###.", "#...#", "....#", "...#.", "..#..", ".#...", "#####"],
+    "3": ["#####", "...#.", "..#..", "...#.", "....#", "#...#", ".###."],
+    "4": ["...#.", "..##.", ".#.#.", "#..#.", "#####", "...#.", "...#."],
+    "5": ["#####", "#....", "####.", "....#", "....#", "#...#", ".###."],
+    "6": ["..##.", ".#...", "#....", "####.", "#...#", "#...#", ".###."],
+    "7": ["#####", "....#", "...#.", "..#..", ".#...", ".#...", ".#..."],
+    "8": [".###.", "#...#", "#...#", ".###.", "#...#", "#...#", ".###."],
+    "9": [".###.", "#...#", "#...#", ".####", "....#", "...#.", ".##.."],
+    "-": [".....", ".....", ".....", "#####", ".....", ".....", "....."],
+    "=": [".....", ".....", "#####", ".....", "#####", ".....", "....."],
+    "+": [".....", "..#..", "..#..", "#####", "..#..", "..#..", "....."],
+    "!": ["..#..", "..#..", "..#..", "..#..", "..#..", ".....", "..#.."],
+    ".": [".....", ".....", ".....", ".....", ".....", ".##..", ".##.."],
+    "^": ["..#..", ".###.", "#.#.#", "..#..", "..#..", "..#..", "..#.."],   # up arrow
+    "v": ["..#..", "..#..", "..#..", "..#..", "#.#.#", ".###.", "..#.."],   # down arrow
+}
+UF_BLUE = hexc("#0021A5")
+UF_ORANGE = hexc("#FA4616")
+SIGN_WHITE = hexc("#F4F2EC")
+
+
+def font_width(text, scale=1, spacing=1):
+    n = len(text)
+    return n * 5 * scale + max(0, n - 1) * spacing * scale if n else 0
+
+
+def font_text(t, text, x, y, color, scale=1, spacing=1):
+    """Draw text with FONT5 (5 x 7 px glyphs, `scale` x bigger); (x, y) = top-left. Space = a blank glyph."""
+    for ch in text:
+        g = FONT5.get(ch)
+        if g is not None:
+            for gy, row in enumerate(g):
+                for gx, c in enumerate(row):
+                    if c == "#":
+                        t.rect(x + gx * scale, y + gy * scale, x + gx * scale + scale - 1, y + gy * scale + scale - 1,
+                               color)
+        x += (5 + spacing) * scale
+
+
+def font_center(t, text, y, color, scale=1, spacing=1, x0=0, x1=None):
+    x1 = t.w - 1 if x1 is None else x1
+    w = font_width(text, scale, spacing)
+    font_text(t, text, x0 + (x1 - x0 + 1 - w) // 2, y, color, scale, spacing)
+
+
+def tx_int_carpet(base_hex, fleck, seed):
+    """Carpet tiles, 0.5 m (8 px at 2 m / 32 px), laid quarter-turned (the pile stripes alternate)."""
+    base = hexc(base_hex)
+    t = Tex(32, 32, base, seed)
+    for ty in range(4):
+        for tx in range(4):
+            vertical = (tx + ty) % 2 == 0
+            kt = 1.0 + t.r.uniform(-0.035, 0.035)
+            for y in range(8):
+                for x in range(8):
+                    stripe = (x if vertical else y) % 2
+                    t.set(tx * 8 + x, ty * 8 + y, shade(base, kt * (1.05 if stripe else 0.95)))
+    t.noise(5)
+    t.speckle(24, [hexc(c) for c in fleck])
+    return t
+
+
+def tx_int_carpet_accent(seed):
+    """Reading-room carpet: rust orange with a darker diamond lattice (16 px = 1 m cells)."""
+    base, line = hexc("#B4532E"), hexc("#7E3620")
+    t = Tex(32, 32, base, seed)
+    t.noise(6)
+    for y in range(32):
+        for x in range(32):
+            if abs((x % 16) - 8) + abs((y % 16) - 8) == 7:
+                t.set(x, y, line)
+    t.speckle(30, [hexc("#D8803E"), hexc("#3A4E7A")])
+    return t
+
+
+def tx_int_floor_tile(seed):
+    """Vinyl composition tile: 0.3 m (12") tiles = 8 px at 1.2 m / 32 px, cream / grey with a few accents."""
+    cream, grey, accent = hexc("#D8D0BC"), hexc("#B8B4AA"), hexc("#9AA6B2")
+    t = Tex(32, 32, cream, seed)
+    for ty in range(4):
+        for tx in range(4):
+            tone = cream if (tx + ty) % 2 == 0 else grey
+            if t.r.random() < 0.12:
+                tone = accent
+            kt = 1.0 + t.r.uniform(-0.03, 0.03)
+            for y in range(8):
+                for x in range(8):
+                    c = shade(tone, kt)
+                    if x == 0 or y == 0:
+                        c = shade(tone, 0.82)       # joint
+                    t.set(tx * 8 + x, ty * 8 + y, c)
+            for _ in range(5):                      # VCT chips
+                t.set(tx * 8 + t.r.randrange(1, 8), ty * 8 + t.r.randrange(1, 8),
+                      shade(tone, t.r.choice((0.86, 1.1))))
+    t.noise(3)
+    return t
+
+
+def tx_int_paint(base_hex, seed, amp=3, speck=6):
+    base = hexc(base_hex)
+    t = Tex(32, 32, base, seed)
+    t.noise(amp)
+    t.speckle(speck, [shade(base, 0.94), shade(base, 1.04)])
+    return t
+
+
+def tx_int_ceiling(seed):
+    """Acoustic lay-in ceiling: 0.6 m (2') tiles = 16 px at 1.2 m, white T-bar grid, pinholes and fissures."""
+    base, tbar, shadow = hexc("#E2E0D8"), hexc("#F6F6F2"), hexc("#BEBCB4")
+    t = Tex(32, 32, base, seed)
+    t.noise(3)
+    for _ in range(90):
+        t.set(t.r.randrange(32), t.r.randrange(32), hexc("#B4B2AA"))
+    for _ in range(10):
+        x, y = t.r.randrange(32), t.r.randrange(32)
+        for d in range(t.r.randrange(2, 4)):
+            t.set(x + d, y + (d // 2), hexc("#C4C2BA"))
+    for i in range(32):
+        for k in (0, 16):
+            t.set(i, k, tbar)
+            t.set(k, i, tbar)
+            t.set(i, k + 1, shadow)
+            t.set(k + 1, i, shadow)
+    return t
+
+
+def tx_int_light(seed):
+    """2' x 4' fluorescent troffer, mapped once: white frame, prismatic diffuser, two brighter lamp bands."""
+    t = Tex(32, 32, hexc("#F2F2EC"), seed)
+    for y in range(32):
+        for x in range(32):
+            c = hexc("#F2F2EC")
+            if (x + y) % 2 == 0:
+                c = hexc("#E6E6E0")
+            if 8 <= x <= 11 or 20 <= x <= 23:
+                c = hexc("#FFFFFF")
+            if x < 2 or x > 29 or y < 2 or y > 29:
+                c = hexc("#CFCFCA")
+            t.set(x, y, c)
+    return t
+
+
+BOOK_WARM = ("#7A2A2A", "#2A3A6A", "#2E5A3A", "#B89A6A", "#2A2A2E", "#C8642E", "#2E6E72", "#8A8A8A",
+             "#D8CCAA", "#A83A32", "#6A4A2E", "#3E62A8", "#5A3A6A", "#C8B048")
+BOOK_JOURNAL = ("#2A3A6A", "#5A1E22", "#1E4A3A", "#3A3A3E", "#6A5A2E", "#2E5A7A", "#7A2E2E", "#3E5A2E")
+
+
+def tx_int_books(palette, seed, runs=False):
+    """Two shelf rows of book spines, 64 x 32 = one 2 m x 0.8 m repeat (the kit maps v to whole rows).
+    Each 16 px row: a dark shelf back, books 9-13 px tall and 2-4 px wide (3-6 cm: chunky, readable),
+    a steel shelf board at the bottom (rows 14-15). runs=True: bound journal runs (same colour + height)."""
+    back, board, edge = hexc("#2A221C"), hexc("#C8C0AA"), hexc("#E2DCC8")
+    t = Tex(64, 32, back, seed)
+    pal = [hexc(c) for c in palette]
+    for row in range(2):
+        y0 = row * 16
+        x = 0
+        while x < 64:
+            if runs:
+                c = t.r.choice(pal)
+                hb = t.r.randint(10, 13)
+                n = t.r.randint(4, 9)
+                label = t.r.randint(1, 3)
+                spec = [(t.r.choice((2, 3)), hb, c, label) for _ in range(n)]
+            else:
+                spec = [(t.r.choice((2, 2, 3, 3, 3, 4)), t.r.randint(9, 13), t.r.choice(pal), t.r.randint(1, 4))]
+            for w, hb, c, label in spec:
+                if x >= 64:
+                    break
+                if 64 - x - w < 2:            # last book fills the row so the texture tiles
+                    w = 64 - x
+                if not runs and t.r.random() < 0.06:
+                    x += min(w, 64 - x)        # a gap on the shelf
+                    continue
+                tone = 1.0 + t.r.uniform(-0.08, 0.08)
+                top = y0 + 14 - hb
+                for xx in range(x, min(64, x + w)):
+                    for yy in range(top, y0 + 14):
+                        k = tone * (0.72 if xx == x else 1.0)
+                        t.set(xx, yy, shade(c, k))
+                    if label and w >= 2:
+                        t.set(xx, top + label, shade(c, 1.45))   # title band
+                    if runs:
+                        t.set(xx, y0 + 12, hexc("#C8A848"))     # gilt volume number
+                x += w
+        for xx in range(64):
+            t.set(xx, y0 + 14, edge)
+            t.set(xx, y0 + 15, board)
+            t.set(xx, y0, shade(back, 0.7))
+    t.noise(3)
+    return t
+
+
+def tx_int_steel(base_hex, seed):
+    base = hexc(base_hex)
+    t = Tex(32, 32, base, seed)
+    for y in range(32):
+        for x in range(32):
+            t.set(x, y, shade(base, 1.0 + 0.04 * (1 - y / 31)))
+    t.noise(4)
+    return t
+
+
+def tx_int_wood(base_hex, seed):
+    """Wood grain running along u (table tops, counter fronts)."""
+    base = hexc(base_hex)
+    t = Tex(32, 32, base, seed)
+    rowk = [1.0 + t.r.uniform(-0.05, 0.05) for _ in range(32)]
+    for y in range(32):
+        for x in range(32):
+            k = rowk[y] * (1 + 0.07 * math.sin(y * 0.9 + math.sin(x * 0.2 + y * 0.1) * 1.6))
+            t.set(x, y, shade(base, k))
+    for _ in range(9):                          # darker grain streaks
+        y, x = t.r.randrange(32), t.r.randrange(32)
+        for d in range(t.r.randrange(5, 14)):
+            t.set((x + d) % 32, y, shade(base, 0.8))
+    t.noise(3)
+    return t
+
+
+def tx_int_glass(seed):
+    """Glass partition (translucent material): pale cyan with diagonal reflection streaks."""
+    base = hexc("#9CC4D8")
+    t = Tex(32, 32, base, seed)
+    for y in range(32):
+        for x in range(32):
+            k = 0.92 + 0.12 * (1 - y / 31)
+            d = (x + y * 0.7) % 16
+            if 3 <= d <= 4 or d == 9:
+                k *= 1.18
+            t.set(x, y, shade(base, k))
+    return t
+
+
+def tx_int_rail_bars(seed):
+    """Cut-out railing infill, 1 m x 1 m: balusters every 12.5 cm (4 px), a bottom rail and a cap."""
+    metal = hexc("#4E5256")
+    t = Tex(32, 32, metal, seed)
+    for y in range(32):
+        for x in range(32):
+            if y <= 1 or y >= 29 or x % 4 == 1:
+                t.set(x, y, shade(metal, 1.0 + (0.15 if y in (0, 29) else 0.0)))
+            else:
+                t.set(x, y, (0, 0, 0), 0)
+    return t
+
+
+def tx_int_brushed(base_hex, seed, vertical=False):
+    base = hexc(base_hex)
+    t = Tex(32, 32, base, seed)
+    ks = [1.0 + t.r.uniform(-0.06, 0.06) for _ in range(32)]
+    for y in range(32):
+        for x in range(32):
+            t.set(x, y, shade(base, ks[x] if vertical else ks[y]))
+    t.noise(3)
+    return t
+
+
+def tx_int_fabric(base_hex, seed):
+    base = hexc(base_hex)
+    t = Tex(32, 32, base, seed)
+    for y in range(32):
+        for x in range(32):
+            t.set(x, y, shade(base, 1.06 if (x + y) % 2 else 0.94))
+    t.noise(5)
+    return t
+
+
+def tx_int_stone(seed):
+    """Speckled quartz / terrazzo (counter tops, lobby floor)."""
+    t = tx_noise("#B0AAA2", seed, 6)
+    t.speckle(110, [hexc("#3A3836"), hexc("#E8E4DC"), hexc("#9A6A4A"), hexc("#7A7672")])
+    return t
+
+
+def tx_int_whiteboard(seed):
+    """64 x 32 whiteboard, mapped once onto a 2:1 board: aluminium frame, tray, marker scribbles."""
+    t = Tex(64, 32, hexc("#ECEEEC"), seed)
+    t.noise(2)
+    blue, red, black, green = hexc("#2A4AB8"), hexc("#C83A32"), hexc("#2A2A2E"), hexc("#2E8A4A")
+    font_text(t, "E=MC", 4, 4, blue)
+    font_text(t, "2", 28, 1, blue)                      # squared
+    for k in range(3):                                   # handwriting lines
+        y = 15 + k * 4
+        n = t.r.randint(22, 34)
+        for x in range(4, 4 + n):
+            if t.r.random() < 0.85:
+                t.set(x, y + int(round(math.sin(x * 1.3 + k) * 0.8)), black)
+    cx, cy, r = 45, 9, 6                                 # red circle + arrow
+    for a in range(48):
+        ang = a / 48 * 2 * math.pi
+        t.set(int(round(cx + r * math.cos(ang))), int(round(cy + r * math.sin(ang))), red)
+    for x in range(52, 60):
+        t.set(x, 9, red)
+    t.set(58, 8, red)
+    t.set(58, 10, red)
+    for y in range(16, 27):                              # green graph
+        t.set(44, y, green)
+    for x in range(44, 60):
+        t.set(x, 26, green)
+    for x in range(45, 59):
+        t.set(x, 26 - int((x - 45) ** 2 / 20.0), green)
+    for x in range(64):
+        t.set(x, 0, hexc("#9A9EA2"))
+        t.set(x, 31, hexc("#9A9EA2"))
+        t.set(x, 29, hexc("#B4B8BC"))
+        t.set(x, 30, hexc("#8A8E92"))
+    for y in range(32):
+        t.set(0, y, hexc("#9A9EA2"))
+        t.set(63, y, hexc("#9A9EA2"))
+    return t
+
+
+def tx_int_monitor(seed):
+    """Monitor front, mapped once onto the screen box: bezel, UF-blue desktop, a window, taskbar."""
+    t = Tex(32, 32, hexc("#1E1E22"), seed)
+    for y in range(2, 27):
+        for x in range(2, 30):
+            t.set(x, y, mix(hexc("#2E62B8"), hexc("#1E4A9A"), (y - 2) / 25))
+    t.rect(6, 6, 24, 20, hexc("#E8ECF0"))
+    t.rect(6, 6, 24, 7, UF_ORANGE)
+    for k, y in enumerate((10, 12, 14, 16, 18)):
+        t.rect(8, y, 8 + t.r.randint(8, 15), y, hexc("#8A9098"))
+    t.rect(2, 25, 29, 26, hexc("#14223E"))
+    for x in (4, 7, 10):
+        t.rect(x, 25, x + 1, 26, hexc("#E8C848") if x == 4 else hexc("#6A8AC8"))
+    t.set(27, 29, hexc("#3AD05A"))                       # power LED
+    return t
+
+
+def tx_int_kiosk(seed):
+    """Room-booking kiosk touch screen, mapped once: 'BOOK' header, a slot grid, a big orange button."""
+    t = Tex(32, 32, hexc("#1E1E22"), seed)
+    t.rect(2, 2, 29, 29, hexc("#E8F0F8"))
+    t.rect(2, 2, 29, 10, UF_BLUE)
+    font_center(t, "BOOK", 3, SIGN_WHITE, x0=2, x1=29)
+    cols = [hexc("#3AA05A"), hexc("#C83A32"), hexc("#9AA0A8")]
+    for r in range(3):
+        for c in range(3):
+            x0, y0 = 4 + c * 9, 12 + r * 4
+            t.rect(x0, y0, x0 + 6, y0 + 2, cols[(r * 2 + c + seed) % 3])
+    t.rect(8, 25, 23, 28, UF_ORANGE)
+    return t
+
+
+def tx_int_elevator(seed):
+    """Brushed-steel elevator door pair, mapped once onto the opening (2 panels, centre seam)."""
+    base = hexc("#A4AAAE")
+    t = Tex(32, 32, base, seed)
+    ks = [1.0 + t.r.uniform(-0.06, 0.06) for _ in range(32)]
+    for y in range(32):
+        for x in range(32):
+            k = ks[x] * (1.12 if 6 <= (x * 0.5 + y) % 22 <= 9 else 1.0)
+            t.set(x, y, shade(base, k))
+    for y in range(32):
+        t.set(15, y, hexc("#4A4E52"))
+        t.set(16, y, hexc("#C4CACE"))
+    t.rect(0, 0, 31, 0, hexc("#6A6E72"))
+    t.rect(0, 31, 31, 31, hexc("#5A5E62"))
+    return t
+
+
+def tx_int_stair(seed):
+    """Stair tread, mapped with v = 1 at the nosing: metal nosing edge, anti-slip grooves, rubber tread."""
+    base = hexc("#8E8A84")
+    t = Tex(32, 32, base, seed)
+    t.noise(5)
+    t.speckle(40, [hexc("#A8A49C"), hexc("#74706A")])
+    for x in range(32):
+        t.set(x, 0, hexc("#C8CCD0"))
+        t.set(x, 1, hexc("#B0B4B8"))
+        for y in (2, 4):
+            t.set(x, y, hexc("#3A3C40"))
+        t.set(x, 3, hexc("#5A5C60"))
+    return t
+
+
+def tx_int_window(seed):
+    """Window view of the campus outside (64 x 32, mapped once per two-pane bay): sky and clouds,
+    Century Tower, a red-brick hall, oak canopies, lawn and a walk; dark bronze head and mullion."""
+    t = Tex(64, 32, hexc("#88AACC"), seed)
+    for y in range(32):
+        for x in range(64):
+            t.set(x, y, mix(hexc("#6E9ED6"), hexc("#C2D8EC"), min(1.0, y / 14)))
+    for cx, cy, rx, ry in ((14, 4, 6, 2), (44, 6, 8, 2), (56, 3, 4, 1)):
+        for y in range(cy - ry, cy + ry + 1):
+            for x in range(cx - rx, cx + rx + 1):
+                if ((x - cx) / rx) ** 2 + ((y - cy) / max(ry, 1)) ** 2 <= 1.0:
+                    t.set(x % 64, y, hexc("#F4F6F8"))
+    brick = hexc("#A9533A")
+    for y in range(11, 24):                               # red-brick hall
+        for x in range(22, 54):
+            c = shade(brick, 1.0 + t.r.uniform(-0.05, 0.05))
+            if y >= 13 and (x - 22) % 4 in (1, 2) and (y - 13) % 4 in (1, 2):
+                c = hexc("#2E4254")
+            t.set(x, y, c)
+    t.rect(21, 10, 54, 10, hexc("#D6C8A4"))
+    for y in range(5, 24):                                # Century Tower
+        for x in range(8, 12):
+            t.set(x, y, shade(brick, 0.95 if x == 8 else 1.05))
+    t.set(9, 9, hexc("#F4F2EC"))
+    t.set(10, 9, hexc("#F4F2EC"))
+    for y in range(1, 5):
+        for x in range(8 + (4 - y) // 2, 12 - (4 - y) // 2):
+            t.set(x, y, hexc("#5E9C88"))
+    for cx, cy, r in ((4, 21, 5), (18, 20, 6), (30, 22, 5), (42, 21, 6), (54, 20, 5), (62, 22, 4)):
+        for y in range(cy - r, 27):
+            for x in range(cx - r - 1, cx + r + 2):
+                if (x - cx) ** 2 + (y - cy) ** 2 * 1.4 <= r * r or y >= cy + 2:
+                    k = 1.0 + 0.2 * (cy - y) / r + t.r.uniform(-0.1, 0.1)
+                    t.set(x % 64, y, shade(hexc("#3E6E2E"), k))
+    for y in range(27, 32):
+        for x in range(64):
+            t.set(x, y, shade(hexc("#6AA346"), 1.0 + t.r.uniform(-0.06, 0.06)))
+    for x in range(64):
+        t.set(x, 29, hexc("#C8C2B4"))
+    frame = hexc("#3A3430")
+    for y in range(32):
+        t.set(0, y, frame)
+        t.set(32, y, frame)
+    for x in range(64):
+        t.set(x, 0, frame)
+    return t
+
+
+def tx_int_posters(seed):
+    """Two posters side by side (64 x 32; the kit maps the left or right half): a DNA science poster
+    and an orange READ poster."""
+    t = Tex(64, 32, hexc("#1C2A4A"), seed)
+    for y in range(32):                                   # DNA (left)
+        for x in range(32):
+            t.set(x, y, hexc("#1C2A4A"))
+    for y in range(3, 23):
+        a = math.sin(y * 0.55) * 7
+        x1, x2 = int(round(16 + a)), int(round(16 - a))
+        if y % 3 == 0:
+            for x in range(min(x1, x2), max(x1, x2) + 1):
+                t.set(x, y, hexc("#9AA6B8"))
+        t.set(x1, y, UF_ORANGE)
+        t.set(x2, y, hexc("#4AC8E0"))
+    font_center(t, "DNA", 24, SIGN_WHITE, x0=0, x1=31)
+    t.rect(32, 0, 63, 31, UF_ORANGE)                       # READ (right)
+    t.rect(38, 4, 57, 14, SIGN_WHITE)
+    for y in range(4, 15):
+        t.set(47, y, UF_BLUE)
+        t.set(48, y, UF_BLUE)
+    for y in (7, 9, 11):
+        t.rect(40, y, 45, y, hexc("#9A9EA2"))
+        t.rect(50, y, 55, y, hexc("#9A9EA2"))
+    font_center(t, "READ", 16, SIGN_WHITE, x0=32, x1=63)
+    font_center(t, "MORE", 24, UF_BLUE, x0=32, x1=63)
+    for x in range(64):
+        t.set(x, 0, SIGN_WHITE)
+        t.set(x, 31, SIGN_WHITE)
+    for y in range(32):
+        for x in (0, 31, 32, 63):
+            t.set(x, y, SIGN_WHITE)
+    return t
+
+
+def tx_int_sign(lines, bg_hex, seed, frame_hex=None, stripes=False):
+    """64 x 32 sign, mapped once onto a 2:1 panel. lines: [(text, y, scale, colour hex)], centred."""
+    t = Tex(64, 32, hexc(bg_hex), seed)
+    t.noise(2)
+    if stripes:                                           # hazard stripes along the bottom
+        for y in range(27, 32):
+            for x in range(64):
+                t.set(x, y, hexc("#1E1E1E") if (x + y) % 8 < 4 else hexc(bg_hex))
+    for text, y, scale, col in lines:
+        font_center(t, text, y, hexc(col), scale=scale)
+    if frame_hex:
+        for x in range(64):
+            t.set(x, 0, hexc(frame_hex))
+            t.set(x, 31, hexc(frame_hex))
+        for y in range(32):
+            t.set(0, y, hexc(frame_hex))
+            t.set(63, y, hexc(frame_hex))
+    return t
+
+
+def tx_int_sign_cafe(seed):
+    """Chalkboard menu board: CAFE + two menu lines with prices, wood frame."""
+    t = Tex(64, 32, hexc("#2E3A32"), seed)
+    t.noise(4)
+    chalk = hexc("#ECEAE0")
+    font_center(t, "CAFE", 1, chalk, scale=2)
+    font_text(t, "COFFEE", 4, 16, hexc("#E8C878"))
+    font_text(t, "2", 56, 16, chalk)
+    font_text(t, "BAGEL", 4, 24, hexc("#9AD0E8"))
+    font_text(t, "3", 56, 24, chalk)
+    for x in range(42, 54, 2):
+        t.set(x, 22, chalk)
+        t.set(x, 30, chalk)
+    for x in range(64):
+        t.set(x, 0, hexc("#8A6A44"))
+        t.set(x, 31, hexc("#8A6A44"))
+    for y in range(32):
+        t.set(0, y, hexc("#8A6A44"))
+        t.set(63, y, hexc("#8A6A44"))
+    return t
+
+
+def tx_int_sign_floors(seed):
+    """Wayfinding atlas, 4 x 2 cells of 16 x 16 px: 1 2 3 4 / 5 6 up down (white on UF blue). The kit maps
+    one cell: cell i = column i % 4, row i // 4 (row 0 = top)."""
+    t = Tex(64, 32, UF_BLUE, seed)
+    for i, ch in enumerate("123456^v"):
+        cx, cy = (i % 4) * 16, (i // 4) * 16
+        for k in range(16):
+            for (x, y) in ((cx + k, cy), (cx + k, cy + 15), (cx, cy + k), (cx + 15, cy + k)):
+                t.set(x, y, hexc("#14207A"))
+        font_text(t, ch, cx + 3, cy + 1, SIGN_WHITE if ch.isdigit() else UF_ORANGE, scale=2)
+    return t
+
+
+def build_interior():
+    """-> {int_* name: Tex} for every stage_palette.INTERIOR_MATERIALS entry (seeds 101+, deterministic)."""
+    T = {
+        "int_carpet": tx_int_carpet("#46597A", ("#E07A3A", "#8AA2C8", "#2E3C56"), 101),
+        "int_carpet_accent": tx_int_carpet_accent(102),
+        "int_floor_tile": tx_int_floor_tile(103),
+        "int_stone": tx_int_stone(104),
+        "int_drywall": tx_int_paint("#E4DED0", 105),
+        "int_wall_blue": tx_int_paint("#2C4A8E", 106, amp=4),
+        "int_ceiling": tx_int_ceiling(107),
+        "int_light": tx_int_light(108),
+        "int_books": tx_int_books(BOOK_WARM, 109),
+        "int_books_b": tx_int_books(BOOK_JOURNAL, 110, runs=True),
+        "int_shelf_steel": tx_int_steel("#C8C0AA", 111),
+        "int_wood": tx_int_wood("#B88A58", 112),
+        "int_wood_dark": tx_int_wood("#6A4A32", 113),
+        "int_glass": tx_int_glass(114),
+        "int_rail_bars": tx_int_rail_bars(115),
+        "int_metal": tx_int_brushed("#A8ACB0", 116),
+        "int_plastic": tx_int_paint("#2E3034", 117, amp=4, speck=10),
+        "int_fabric_orange": tx_int_fabric("#E2642C", 118),
+        "int_fabric_blue": tx_int_fabric("#2E4C9A", 119),
+        "int_fabric_green": tx_int_fabric("#4E8A5A", 120),
+        "int_whiteboard": tx_int_whiteboard(121),
+        "int_monitor": tx_int_monitor(122),
+        "int_kiosk": tx_int_kiosk(123),
+        "int_elevator": tx_int_elevator(124),
+        "int_stair": tx_int_stair(125),
+        "int_window": tx_int_window(126),
+        "int_posters": tx_int_posters(127),
+        "int_sign_quiet": tx_int_sign([("QUIET", 1, 2, "#F4F2EC"), ("FLOOR", 17, 2, "#F4F2EC")], "#0021A5", 128),
+        "int_sign_out_of_order": tx_int_sign([("OUT OF", 2, 1, "#1E1E1E"), ("ORDER", 11, 2, "#1E1E1E")], "#F2C230",
+                                             129, stripes=True),
+        "int_sign_study": tx_int_sign([("GROUP", 1, 2, "#FA4616"), ("STUDY", 17, 2, "#F4F2EC")], "#0021A5", 130),
+        "int_sign_help": tx_int_sign([("HELP", 1, 2, "#F4F2EC"), ("DESK", 17, 2, "#F4F2EC")], "#FA4616", 131),
+        "int_sign_cafe": tx_int_sign_cafe(132),
+        "int_sign_marston": tx_int_sign([("MARSTON", 3, 1, "#F4F2EC"), ("SCIENCE", 12, 1, "#F4F2EC"),
+                                         ("LIBRARY", 21, 1, "#FA4616")], "#0021A5", 133, frame_hex="#F4F2EC"),
+        "int_sign_floors": tx_int_sign_floors(134),
+    }
+    missing = set(INTERIOR_MATERIALS) - set(T)
+    if missing:
+        raise SystemExit(f"no interior texture recipe for {sorted(missing)}")
+    return T
+
+
+def contact_sheet(imgs, path, cols=8, cell=136):
+    sh = Image.new("RGB", (cols * cell, ((len(imgs) + cols - 1) // cols) * (cell + 14)), (40, 40, 40))
+    d = ImageDraw.Draw(sh)
+    for i, (name, im) in enumerate(imgs.items()):
+        r, c = divmod(i, cols)
+        tile = Image.new("RGBA", (im.width * 2, im.height * 2))
+        for yy in range(2):
+            for xx in range(2):
+                tile.paste(im, (xx * im.width, yy * im.height))
+        big = tile.resize((128, int(128 * tile.height / tile.width)), Image.NEAREST)
+        bg = Image.new("RGB", big.size, (255, 0, 255))
+        bg.paste(big, (0, 0), big)
+        sh.paste(bg, (c * cell + 4, r * (cell + 14) + 4))
+        d.text((c * cell + 4, r * (cell + 14) + 134), name, fill=(230, 230, 230))
+    sh.save(path)
+
+
 def main():
     out = TEXTURE_DIR
     sheet = None
@@ -637,6 +1253,22 @@ def main():
             d.text((c * cell + 4, r * (cell + 14) + 134), name, fill=(230, 230, 230))
         sh.save(sheet)
         print("make_textures: sheet", sheet)
+    # interior kit textures (int_*; written next to the outdoor ones, not on the outdoor --sheet).
+    # --interior-sheet PNG: contact sheet of just these (shown 2 x 2 tiled; magenta = cut-out alpha)
+    TI = build_interior()
+    iimgs = {}
+    for name, m in INTERIOR_MATERIALS.items():
+        im = TI[name].image()
+        if im.size not in ((32, 32), (64, 32)):
+            raise SystemExit(f"{name}: {im.size[0]}x{im.size[1]} is not 32x32 / 64x32")
+        im.save(os.path.join(out, m["tex"]))
+        iimgs[name] = im
+    print(f"make_textures: wrote {len(iimgs)} interior kit textures to {out}")
+    if "--interior-sheet" in argv:
+        isheet = os.path.abspath(argv[argv.index("--interior-sheet") + 1])
+        os.makedirs(os.path.dirname(isheet), exist_ok=True)
+        contact_sheet(iimgs, isheet)
+        print("make_textures: interior sheet", isheet)
 
 
 if __name__ == "__main__":

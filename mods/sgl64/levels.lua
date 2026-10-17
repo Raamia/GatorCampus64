@@ -8,6 +8,9 @@
 --                           tools/campus/build_stage.py swamp (missions: swamp_missions.lua)
 --   levels/wf/              course 2, Reitz Union & Engineering (Reitz Union, Weil Hall, Malachowsky Hall),
 --                           tools/campus/build_stage.py reitz_eng (missions: wf_reitz_missions.lua)
+--   levels/jrb/             course 3, Lake Alice, tools/campus/build_stage.py lake_alice (missions: uf_lake_missions.lua)
+--   levels/ccm/             course 4, Marston Science Library (an interior), tools/campus/build_interior.py marston
+--                           (missions: uf_marston_missions.lua)
 -- coopdx compiles each folder into levels/level_<slot>_entry.lvl at launch and the .lvl replaces the
 -- vanilla level. sgl_test stays a custom (non-vanilla) test level, registered below.
 --
@@ -106,9 +109,11 @@ local function door_sign(building, stageName, stars, door)
 end
 
 local function door_sign_text(sign)
-    local stars = sign.stars == 0 and "Open to everyone!" or
-        ("Opens at " .. sign.stars .. " star" .. (sign.stars == 1 and "" or "s") .. ".")
     local stage = sign.door and sgl_stage_by_door(sign.door)
+    -- a stage door's lock comes from course.lua (SGL_STAGES[].stars), so the sign can never disagree with the door
+    local need = stage ~= nil and stage.stars or sign.stars
+    local stars = need == 0 and "Open to everyone!" or
+        ("Opens at " .. need .. " star" .. (need == 1 and "" or "s") .. ".")
     local status
     if stage ~= nil and sgl_stage_ready(stage) then
         status = "Walk into the door\
@@ -131,8 +136,8 @@ end
 SGL_HUB_SIGN_UNIVERSITY_AUDITORIUM = door_sign("UNIVERSITY AUDITORIUM", "THE SWAMP", 0, 1)
 SGL_HUB_SIGN_THE_HUB = door_sign("THE HUB", "REITZ UNION AND\
 ENGINEERING", 2, 2)
-SGL_HUB_SIGN_NEWELL_HALL = door_sign("NEWELL HALL", "LAKE ALICE", 8, 3)
-SGL_HUB_SIGN_MARSTON = door_sign("MARSTON SCIENCE LIBRARY", "MARSTON", 5, 4)
+SGL_HUB_SIGN_NEWELL_HALL = door_sign("NEWELL HALL", "LAKE ALICE", 5, 3)
+SGL_HUB_SIGN_MARSTON = door_sign("MARSTON SCIENCE LIBRARY", "MARSTON", 8, 4)
 SGL_HUB_SIGN_LIBRARY_WEST = door_sign("LIBRARY WEST", "LIBRARY WEST\
 AFTER DARK", 14, 5)
 SGL_HUB_SIGN_CENTURY_TOWER = door_sign("CENTURY TOWER", "CENTURY TOWER\
@@ -472,6 +477,46 @@ local function far_update()
 end
 
 ---------------------------------------------------------------------------------------------
+-- rom-hack camera in an interior stage (Marston: 5.4 m clear rooms). coopdx v1.5.1's defaults
+-- (romhack_camera_init_settings: 900 / 1400 units back, 300 / 450 up) put the zoomed-out camera above
+-- the next floor's slab from a 2.3 m stack top, and 7-12% of indoor spots ended with the camera within
+-- 2 m of Mario. While a built stage listed here is loaded, its settings apply (every frame: cheap, and
+-- survives the engine re-initialising them), camera collision included; the player's own values are
+-- saved on arrival and restored on leaving.
+---------------------------------------------------------------------------------------------
+SGL_STAGE_CAMERA = {
+    [LEVEL_CCM] = { inDist = 650, outDist = 1000, inHeight = 220, outHeight = 330, collisions = 1 },   -- u32s, u8
+}
+local sCamSaved = nil
+
+local function camera_get()
+    return { inDist = camera_romhack_get_zoomed_in_dist(), outDist = camera_romhack_get_zoomed_out_dist(),
+        inHeight = camera_romhack_get_zoomed_in_height(), outHeight = camera_romhack_get_zoomed_out_height(),
+        collisions = camera_romhack_get_collisions() }
+end
+
+local function camera_set(want, have)
+    if have == nil or have.inDist ~= want.inDist then camera_romhack_set_zoomed_in_dist(want.inDist) end
+    if have == nil or have.outDist ~= want.outDist then camera_romhack_set_zoomed_out_dist(want.outDist) end
+    if have == nil or have.inHeight ~= want.inHeight then camera_romhack_set_zoomed_in_height(want.inHeight) end
+    if have == nil or have.outHeight ~= want.outHeight then camera_romhack_set_zoomed_out_height(want.outHeight) end
+    if have == nil or have.collisions ~= want.collisions then camera_romhack_set_collisions(want.collisions) end
+end
+
+local function stage_camera_update()
+    local lvl = gNetworkPlayers[0].currLevelNum
+    local want = SGL_STAGE_CAMERA[lvl]
+    if want ~= nil and sgl_far_level(lvl) then
+        local have = camera_get()
+        if sCamSaved == nil then sCamSaved = have end
+        camera_set(want, have)
+    elseif sCamSaved ~= nil then
+        camera_set(sCamSaved, nil)
+        sCamSaved = nil
+    end
+end
+
+---------------------------------------------------------------------------------------------
 -- level init
 ---------------------------------------------------------------------------------------------
 local sHubWelcomed = false
@@ -612,6 +657,7 @@ SGL_MAP_CENTERS = {
     [LEVEL_BOB] = { -580, 160 },      -- The Swamp (stages.json swamp window centre; data/uf/swamp_points.json map_m)
     [LEVEL_WF] = { -470, -293 },      -- Reitz & Engineering (stages.json reitz_eng window centre; data/uf/reitz_points.json)
     [LEVEL_JRB] = { -1760, -660 },    -- Lake Alice (stages.json lake_alice window centre; data/uf/lake_points.json)
+    [LEVEL_CCM] = { -59.6, -98.9 },   -- Marston Science Library (stages.json marston centre_m; data/uf/marston_points.json)
 }
 
 local function warp_hub()
@@ -735,8 +781,9 @@ hook_event(HOOK_BEFORE_WARP, on_before_warp)
 hook_event(HOOK_ON_LEVEL_INIT, on_level_init)
 hook_event(HOOK_ON_PACKET_RECEIVE, on_packet_receive)
 hook_event(HOOK_UPDATE, far_update)
+hook_event(HOOK_UPDATE, stage_camera_update)
 hook_event(HOOK_MARIO_UPDATE, lives_mario_update)
 hook_event(HOOK_ON_HUD_RENDER, door_hud)
 hook_event(HOOK_UPDATE, hub_hint_update)
 hook_event(HOOK_ON_HUD_RENDER, hub_hint_hud)
-hook_chat_command("campus", "where | list | hub | back | test | swamp | reitz [act] [me] - Super Gatorlator 64 levels", on_campus_command)
+hook_chat_command("campus", "where | list | hub | back | test | swamp | reitz | alice | marston [act] [me] - Super Gatorlator 64 levels", on_campus_command)

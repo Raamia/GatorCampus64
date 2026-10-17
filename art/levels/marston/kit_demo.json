@@ -1,0 +1,1770 @@
+{
+ "generated_by": "tools/campus/interior_kit_demo.py",
+ "notes": {
+  "room_m": [
+   32.0,
+   22.0,
+   8.4
+  ],
+  "mezzanine_z": 4.2,
+  "grand_stair_start_y": 3.532,
+  "stair_hole": [
+   26.8,
+   13.7,
+   30.0,
+   18.979
+  ],
+  "atrium": [
+   12.0,
+   14.0,
+   20.0,
+   20.0
+  ]
+ },
+ "totals": {
+  "visual": 7860,
+  "collision": 1760
+ },
+ "lights": 67,
+ "props": [
+  {
+   "tag": "shell",
+   "kind": "room_shell",
+   "group": "shell",
+   "visual": 980,
+   "collision": 40
+  },
+  {
+   "tag": "lobby_floor",
+   "kind": "slab",
+   "group": "shell",
+   "visual": 96,
+   "collision": 4
+  },
+  {
+   "tag": "stacks_floor",
+   "kind": "slab",
+   "group": "shell",
+   "visual": 96,
+   "collision": 4
+  },
+  {
+   "tag": "mezzanine",
+   "kind": "slab",
+   "group": "shell",
+   "visual": 624,
+   "collision": 296
+  },
+  {
+   "tag": "column_6",
+   "kind": "column",
+   "group": "main",
+   "visual": 32,
+   "collision": 22
+  },
+  {
+   "tag": "column_26",
+   "kind": "column",
+   "group": "main",
+   "visual": 32,
+   "collision": 22
+  },
+  {
+   "tag": "grand_stair",
+   "kind": "straight_stair",
+   "group": "main",
+   "visual": 474,
+   "collision": 126
+  },
+  {
+   "tag": "switchback",
+   "kind": "switchback_stair",
+   "group": "main",
+   "visual": 308,
+   "collision": 68
+  },
+  {
+   "tag": "elevator",
+   "kind": "elevator",
+   "group": "main",
+   "visual": 122,
+   "collision": 120
+  },
+  {
+   "tag": "rail_mezz_w",
+   "kind": "railing",
+   "group": "main",
+   "visual": 120,
+   "collision": 12
+  },
+  {
+   "tag": "rail_mezz_e",
+   "kind": "railing",
+   "group": "main",
+   "visual": 120,
+   "collision": 12
+  },
+  {
+   "tag": "rail_atrium",
+   "kind": "railing",
+   "group": "main",
+   "visual": 270,
+   "collision": 48
+  },
+  {
+   "tag": "rail_stairwell",
+   "kind": "railing",
+   "group": "main",
+   "visual": 180,
+   "collision": 48
+  },
+  {
+   "tag": "help_desk",
+   "kind": "help_desk",
+   "group": "main",
+   "visual": 148,
+   "collision": 30
+  },
+  {
+   "tag": "cafe",
+   "kind": "cafe_counter",
+   "group": "main",
+   "visual": 290,
+   "collision": 64
+  },
+  {
+   "tag": "kiosk_lobby",
+   "kind": "kiosk",
+   "group": "main",
+   "visual": 30,
+   "collision": 10
+  },
+  {
+   "tag": "couch",
+   "kind": "couch",
+   "group": "main",
+   "visual": 84,
+   "collision": 44
+  },
+  {
+   "tag": "beanbag_0",
+   "kind": "beanbag",
+   "group": "main",
+   "visual": 54,
+   "collision": 10
+  },
+  {
+   "tag": "beanbag_1",
+   "kind": "beanbag",
+   "group": "main",
+   "visual": 54,
+   "collision": 10
+  },
+  {
+   "tag": "beanbag_2",
+   "kind": "beanbag",
+   "group": "main",
+   "visual": 54,
+   "collision": 10
+  },
+  {
+   "tag": "poster_dna",
+   "kind": "poster",
+   "group": "main",
+   "visual": 2,
+   "collision": 0
+  },
+  {
+   "tag": "poster_read",
+   "kind": "poster",
+   "group": "main",
+   "visual": 2,
+   "collision": 0
+  },
+  {
+   "tag": "sign_marston",
+   "kind": "sign",
+   "group": "main",
+   "visual": 10,
+   "collision": 0
+  },
+  {
+   "tag": "sign_up",
+   "kind": "sign",
+   "group": "main",
+   "visual": 30,
+   "collision": 10
+  },
+  {
+   "tag": "sign_floor1",
+   "kind": "sign",
+   "group": "main",
+   "visual": 30,
+   "collision": 10
+  },
+  {
+   "tag": "stacks_ground",
+   "kind": "stack_range",
+   "group": "main",
+   "visual": 276,
+   "collision": 60
+  },
+  {
+   "tag": "kick_stool",
+   "kind": "kick_stool",
+   "group": "main",
+   "visual": 22,
+   "collision": 22
+  },
+  {
+   "tag": "book_cart",
+   "kind": "book_cart",
+   "group": "main",
+   "visual": 116,
+   "collision": 10
+  },
+  {
+   "tag": "table_atrium_a",
+   "kind": "study_table",
+   "group": "main",
+   "visual": 234,
+   "collision": 50
+  },
+  {
+   "tag": "table_atrium_b",
+   "kind": "study_table",
+   "group": "main",
+   "visual": 234,
+   "collision": 50
+  },
+  {
+   "tag": "computers",
+   "kind": "computer_row",
+   "group": "main",
+   "visual": 546,
+   "collision": 130
+  },
+  {
+   "tag": "carrels",
+   "kind": "carrel_row",
+   "group": "main",
+   "visual": 320,
+   "collision": 122
+  },
+  {
+   "tag": "kiosk_ground",
+   "kind": "kiosk",
+   "group": "main",
+   "visual": 30,
+   "collision": 10
+  },
+  {
+   "tag": "study_room",
+   "kind": "study_room",
+   "group": "main",
+   "visual": 432,
+   "collision": 112
+  },
+  {
+   "tag": "stacks_mezz",
+   "kind": "stack_range",
+   "group": "main",
+   "visual": 108,
+   "collision": 20
+  },
+  {
+   "tag": "wall_shelf",
+   "kind": "bookshelf",
+   "group": "main",
+   "visual": 40,
+   "collision": 10
+  },
+  {
+   "tag": "table_mezz",
+   "kind": "study_table",
+   "group": "main",
+   "visual": 234,
+   "collision": 50
+  },
+  {
+   "tag": "beanbag_mezz_a",
+   "kind": "beanbag",
+   "group": "main",
+   "visual": 54,
+   "collision": 10
+  },
+  {
+   "tag": "beanbag_mezz_b",
+   "kind": "beanbag",
+   "group": "main",
+   "visual": 54,
+   "collision": 10
+  },
+  {
+   "tag": "whiteboard_mezz",
+   "kind": "whiteboard",
+   "group": "main",
+   "visual": 20,
+   "collision": 0
+  },
+  {
+   "tag": "sign_quiet",
+   "kind": "sign",
+   "group": "main",
+   "visual": 28,
+   "collision": 0
+  },
+  {
+   "tag": "sign_floor2",
+   "kind": "sign",
+   "group": "main",
+   "visual": 10,
+   "collision": 0
+  },
+  {
+   "tag": "kiosk_mezz",
+   "kind": "kiosk",
+   "group": "main",
+   "visual": 30,
+   "collision": 10
+  },
+  {
+   "tag": "light_ring",
+   "kind": "light_ring",
+   "group": "main",
+   "visual": 96,
+   "collision": 64
+  },
+  {
+   "tag": "lights_lobby",
+   "kind": "light_set",
+   "group": "main",
+   "visual": 672,
+   "collision": 0
+  },
+  {
+   "tag": "lights_ground",
+   "kind": "light_set",
+   "group": "main",
+   "visual": 26,
+   "collision": 0
+  },
+  {
+   "tag": "lights_mezz",
+   "kind": "light_set",
+   "group": "main",
+   "visual": 36,
+   "collision": 0
+  }
+ ],
+ "anchor_checks": [
+  {
+   "anchor": "beanbag_0.top",
+   "pos_m": [
+    22.4,
+    5.0,
+    0.33
+   ],
+   "facing_deg": 30.0,
+   "headroom_m": 8.07,
+   "floor_m": 0.33
+  },
+  {
+   "anchor": "beanbag_1.top",
+   "pos_m": [
+    25.4,
+    6.3,
+    0.33
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 8.07,
+   "floor_m": 0.33
+  },
+  {
+   "anchor": "beanbag_2.top",
+   "pos_m": [
+    28.6,
+    4.8,
+    0.33
+   ],
+   "facing_deg": 320.0,
+   "headroom_m": 8.07,
+   "floor_m": 0.33
+  },
+  {
+   "anchor": "beanbag_mezz_a.top",
+   "pos_m": [
+    14.5,
+    21.0,
+    4.53
+   ],
+   "facing_deg": 10.0,
+   "headroom_m": 3.87,
+   "floor_m": 4.53
+  },
+  {
+   "anchor": "beanbag_mezz_b.top",
+   "pos_m": [
+    17.0,
+    21.2,
+    4.53
+   ],
+   "facing_deg": 200.0,
+   "headroom_m": 3.87,
+   "floor_m": 4.53
+  },
+  {
+   "anchor": "book_cart.top",
+   "pos_m": [
+    11.0,
+    13.1,
+    1.0
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 2.9,
+   "floor_m": 1.0
+  },
+  {
+   "anchor": "cafe.barista",
+   "pos_m": [
+    0.93,
+    6.0,
+    0.0
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 8.4,
+   "floor_m": 0.0
+  },
+  {
+   "anchor": "cafe.case_top",
+   "pos_m": [
+    1.6,
+    7.2,
+    1.54
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 6.86,
+   "floor_m": 1.54
+  },
+  {
+   "anchor": "cafe.counter_top",
+   "pos_m": [
+    1.6,
+    6.0,
+    1.07
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 7.33,
+   "floor_m": 1.07
+  },
+  {
+   "anchor": "cafe.menu",
+   "pos_m": [
+    0.63,
+    6.0,
+    2.2
+   ],
+   "facing_deg": 90.0
+  },
+  {
+   "anchor": "cafe.stool0.seat",
+   "pos_m": [
+    2.42,
+    7.6,
+    0.76
+   ],
+   "facing_deg": 270.0,
+   "headroom_m": 7.64,
+   "floor_m": 0.76
+  },
+  {
+   "anchor": "cafe.stool1.seat",
+   "pos_m": [
+    2.42,
+    6.0,
+    0.76
+   ],
+   "facing_deg": 270.0,
+   "headroom_m": 7.64,
+   "floor_m": 0.76
+  },
+  {
+   "anchor": "cafe.stool2.seat",
+   "pos_m": [
+    2.42,
+    4.4,
+    0.76
+   ],
+   "facing_deg": 270.0,
+   "headroom_m": 7.64,
+   "floor_m": 0.76
+  },
+  {
+   "anchor": "carrels.chair0.seat",
+   "pos_m": [
+    24.36,
+    21.0,
+    0.46
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "carrels.chair1.seat",
+   "pos_m": [
+    23.45,
+    21.0,
+    0.46
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "carrels.chair2.seat",
+   "pos_m": [
+    22.55,
+    21.0,
+    0.46
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "carrels.chair3.seat",
+   "pos_m": [
+    21.64,
+    21.0,
+    0.46
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "carrels.seat0",
+   "pos_m": [
+    24.36,
+    21.0,
+    0.46
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "carrels.seat1",
+   "pos_m": [
+    23.45,
+    21.0,
+    0.46
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "carrels.seat2",
+   "pos_m": [
+    22.55,
+    21.0,
+    0.46
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "carrels.seat3",
+   "pos_m": [
+    21.64,
+    21.0,
+    0.46
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "computers.chair0.seat",
+   "pos_m": [
+    22.1,
+    17.6,
+    0.46
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "computers.chair1.seat",
+   "pos_m": [
+    23.0,
+    17.6,
+    0.46
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "computers.chair2.seat",
+   "pos_m": [
+    23.9,
+    17.6,
+    0.46
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "computers.chairb0.seat",
+   "pos_m": [
+    22.1,
+    15.6,
+    0.46
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "computers.chairb1.seat",
+   "pos_m": [
+    23.0,
+    15.6,
+    0.46
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "computers.chairb2.seat",
+   "pos_m": [
+    23.9,
+    15.6,
+    0.46
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "computers.seat0",
+   "pos_m": [
+    22.1,
+    17.6,
+    0.46
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "computers.seat1",
+   "pos_m": [
+    23.0,
+    17.6,
+    0.46
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "computers.seat2",
+   "pos_m": [
+    23.9,
+    17.6,
+    0.46
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "computers.seatb0",
+   "pos_m": [
+    22.1,
+    15.6,
+    0.46
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "computers.seatb1",
+   "pos_m": [
+    23.0,
+    15.6,
+    0.46
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "computers.seatb2",
+   "pos_m": [
+    23.9,
+    15.6,
+    0.46
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.44,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "couch.seat",
+   "pos_m": [
+    25.0,
+    2.0,
+    0.45
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 7.95,
+   "floor_m": 0.45
+  },
+  {
+   "anchor": "elevator.door_0",
+   "pos_m": [
+    2.6,
+    16.5,
+    0.0
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 3.9,
+   "floor_m": 0.0
+  },
+  {
+   "anchor": "elevator.door_1",
+   "pos_m": [
+    2.6,
+    16.5,
+    4.2
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 4.2,
+   "floor_m": 4.2
+  },
+  {
+   "anchor": "elevator.roof",
+   "pos_m": [
+    1.4,
+    16.5,
+    8.4
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": null,
+   "floor_m": 8.4
+  },
+  {
+   "anchor": "elevator.shaft_bottom",
+   "pos_m": [
+    1.4,
+    16.5,
+    0.0
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 8.1,
+   "floor_m": 0.0
+  },
+  {
+   "anchor": "elevator.shaft_ceiling",
+   "pos_m": [
+    1.4,
+    16.5,
+    8.1
+   ],
+   "facing_deg": 90.0
+  },
+  {
+   "anchor": "grand_stair.bottom",
+   "pos_m": [
+    16.0,
+    2.73,
+    0.0
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 8.4,
+   "floor_m": 0.0
+  },
+  {
+   "anchor": "grand_stair.flight1.bottom",
+   "pos_m": [
+    16.0,
+    2.73,
+    0.0
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 8.4,
+   "floor_m": 0.0
+  },
+  {
+   "anchor": "grand_stair.flight1.top",
+   "pos_m": [
+    16.0,
+    7.31,
+    2.1
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 6.3,
+   "floor_m": 2.1
+  },
+  {
+   "anchor": "grand_stair.flight2.bottom",
+   "pos_m": [
+    16.0,
+    7.71,
+    2.1
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 6.3,
+   "floor_m": 2.1
+  },
+  {
+   "anchor": "grand_stair.flight2.top",
+   "pos_m": [
+    16.0,
+    12.29,
+    4.2
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 4.2,
+   "floor_m": 4.2
+  },
+  {
+   "anchor": "grand_stair.landing",
+   "pos_m": [
+    16.0,
+    7.76,
+    2.1
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 6.3,
+   "floor_m": 2.1
+  },
+  {
+   "anchor": "grand_stair.top",
+   "pos_m": [
+    16.0,
+    12.79,
+    4.2
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 4.2,
+   "floor_m": 4.2
+  },
+  {
+   "anchor": "help_desk.counter_top",
+   "pos_m": [
+    8.5,
+    6.21,
+    1.07
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 7.33,
+   "floor_m": 1.07
+  },
+  {
+   "anchor": "help_desk.patron",
+   "pos_m": [
+    8.5,
+    5.25,
+    0.0
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 8.4,
+   "floor_m": 0.0
+  },
+  {
+   "anchor": "help_desk.staff",
+   "pos_m": [
+    8.5,
+    7.55,
+    0.0
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 8.4,
+   "floor_m": 0.0
+  },
+  {
+   "anchor": "kick_stool.top",
+   "pos_m": [
+    10.3,
+    15.2,
+    0.38
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.52,
+   "floor_m": 0.38
+  },
+  {
+   "anchor": "kiosk_ground.punch",
+   "pos_m": [
+    20.6,
+    12.38,
+    0.0
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.9,
+   "floor_m": 0.0
+  },
+  {
+   "anchor": "kiosk_ground.screen",
+   "pos_m": [
+    20.6,
+    13.0,
+    1.12
+   ],
+   "facing_deg": 180.0
+  },
+  {
+   "anchor": "kiosk_lobby.punch",
+   "pos_m": [
+    12.5,
+    1.88,
+    0.0
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 8.4,
+   "floor_m": 0.0
+  },
+  {
+   "anchor": "kiosk_lobby.screen",
+   "pos_m": [
+    12.5,
+    2.5,
+    1.12
+   ],
+   "facing_deg": 180.0
+  },
+  {
+   "anchor": "kiosk_mezz.punch",
+   "pos_m": [
+    10.6,
+    19.98,
+    4.2
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 4.2,
+   "floor_m": 4.2
+  },
+  {
+   "anchor": "kiosk_mezz.screen",
+   "pos_m": [
+    10.6,
+    20.6,
+    5.32
+   ],
+   "facing_deg": 180.0
+  },
+  {
+   "anchor": "light_ring.top_0",
+   "pos_m": [
+    17.98,
+    18.98,
+    6.4
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 2.0,
+   "floor_m": 6.4
+  },
+  {
+   "anchor": "light_ring.top_1",
+   "pos_m": [
+    16.0,
+    19.8,
+    6.4
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 2.0,
+   "floor_m": 6.4
+  },
+  {
+   "anchor": "light_ring.top_2",
+   "pos_m": [
+    14.02,
+    18.98,
+    6.4
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 2.0,
+   "floor_m": 6.4
+  },
+  {
+   "anchor": "light_ring.top_3",
+   "pos_m": [
+    13.2,
+    17.0,
+    6.4
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 2.0,
+   "floor_m": 6.4
+  },
+  {
+   "anchor": "light_ring.top_4",
+   "pos_m": [
+    14.02,
+    15.02,
+    6.4
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 2.0,
+   "floor_m": 6.4
+  },
+  {
+   "anchor": "light_ring.top_5",
+   "pos_m": [
+    16.0,
+    14.2,
+    6.4
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 2.0,
+   "floor_m": 6.4
+  },
+  {
+   "anchor": "light_ring.top_6",
+   "pos_m": [
+    17.98,
+    15.02,
+    6.4
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 2.0,
+   "floor_m": 6.4
+  },
+  {
+   "anchor": "light_ring.top_7",
+   "pos_m": [
+    18.8,
+    17.0,
+    6.4
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 2.0,
+   "floor_m": 6.4
+  },
+  {
+   "anchor": "mezzanine.hole_0",
+   "pos_m": [
+    16.0,
+    17.0,
+    4.2
+   ],
+   "facing_deg": 0.0
+  },
+  {
+   "anchor": "mezzanine.hole_1",
+   "pos_m": [
+    28.4,
+    16.34,
+    4.2
+   ],
+   "facing_deg": 0.0
+  },
+  {
+   "anchor": "mezzanine.hole_2",
+   "pos_m": [
+    1.4,
+    16.5,
+    4.2
+   ],
+   "facing_deg": 0.0
+  },
+  {
+   "anchor": "shell.centre",
+   "pos_m": [
+    16.0,
+    11.0,
+    0.0
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.63,
+   "floor_m": 0.0
+  },
+  {
+   "anchor": "shell.opening_s_16",
+   "pos_m": [
+    16.0,
+    0.0,
+    0.0
+   ],
+   "facing_deg": 180.0
+  },
+  {
+   "anchor": "stacks_ground.row0.step+x",
+   "pos_m": [
+    9.34,
+    13.9,
+    1.07
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 2.83,
+   "floor_m": 1.07
+  },
+  {
+   "anchor": "stacks_ground.row0.top",
+   "pos_m": [
+    6.6,
+    13.9,
+    1.07
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 2.83,
+   "floor_m": 1.07
+  },
+  {
+   "anchor": "stacks_ground.row1.step+x",
+   "pos_m": [
+    9.34,
+    16.31,
+    1.07
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 2.83,
+   "floor_m": 1.07
+  },
+  {
+   "anchor": "stacks_ground.row1.top",
+   "pos_m": [
+    6.6,
+    16.31,
+    1.68
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 2.22,
+   "floor_m": 1.68
+  },
+  {
+   "anchor": "stacks_ground.row2.step+x",
+   "pos_m": [
+    9.34,
+    18.72,
+    1.07
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 2.83,
+   "floor_m": 1.07
+  },
+  {
+   "anchor": "stacks_ground.row2.top",
+   "pos_m": [
+    6.6,
+    18.72,
+    2.29
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 1.61,
+   "floor_m": 2.29
+  },
+  {
+   "anchor": "stacks_mezz.row0.top",
+   "pos_m": [
+    23.5,
+    15.9,
+    6.49
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 1.91,
+   "floor_m": 6.49
+  },
+  {
+   "anchor": "stacks_mezz.row1.top",
+   "pos_m": [
+    23.5,
+    18.31,
+    6.49
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 1.91,
+   "floor_m": 6.49
+  },
+  {
+   "anchor": "study_room.door",
+   "pos_m": [
+    3.92,
+    18.3,
+    4.2
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 2.13,
+   "floor_m": 4.2
+  },
+  {
+   "anchor": "study_room.inside",
+   "pos_m": [
+    5.0,
+    19.2,
+    4.2
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 4.2,
+   "floor_m": 4.2
+  },
+  {
+   "anchor": "study_room.outside",
+   "pos_m": [
+    3.93,
+    17.1,
+    4.2
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 4.2,
+   "floor_m": 4.2
+  },
+  {
+   "anchor": "study_room.table.chair_n0.seat",
+   "pos_m": [
+    5.46,
+    19.58,
+    4.66
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.74,
+   "floor_m": 4.66
+  },
+  {
+   "anchor": "study_room.table.chair_n1.seat",
+   "pos_m": [
+    4.54,
+    19.58,
+    4.66
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.74,
+   "floor_m": 4.66
+  },
+  {
+   "anchor": "study_room.table.chair_s0.seat",
+   "pos_m": [
+    5.46,
+    20.93,
+    4.66
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 3.74,
+   "floor_m": 4.66
+  },
+  {
+   "anchor": "study_room.table.chair_s1.seat",
+   "pos_m": [
+    4.54,
+    20.93,
+    4.66
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 3.74,
+   "floor_m": 4.66
+  },
+  {
+   "anchor": "study_room.table.top",
+   "pos_m": [
+    5.0,
+    20.25,
+    4.96
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 3.44,
+   "floor_m": 4.96
+  },
+  {
+   "anchor": "study_room.table_top",
+   "pos_m": [
+    5.0,
+    20.25,
+    4.96
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 3.44,
+   "floor_m": 4.96
+  },
+  {
+   "anchor": "switchback.bottom",
+   "pos_m": [
+    27.55,
+    13.2,
+    0.0
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.9,
+   "floor_m": 0.0
+  },
+  {
+   "anchor": "switchback.flight1.bottom",
+   "pos_m": [
+    27.55,
+    13.2,
+    0.0
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 3.9,
+   "floor_m": 0.0
+  },
+  {
+   "anchor": "switchback.flight1.top",
+   "pos_m": [
+    27.55,
+    17.78,
+    2.1
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 6.3,
+   "floor_m": 2.1
+  },
+  {
+   "anchor": "switchback.flight2.bottom",
+   "pos_m": [
+    29.25,
+    18.28,
+    2.1
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 6.3,
+   "floor_m": 2.1
+  },
+  {
+   "anchor": "switchback.flight2.top",
+   "pos_m": [
+    29.25,
+    13.4,
+    4.2
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 4.2,
+   "floor_m": 4.2
+  },
+  {
+   "anchor": "switchback.landing",
+   "pos_m": [
+    28.4,
+    18.23,
+    2.1
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 6.3,
+   "floor_m": 2.1
+  },
+  {
+   "anchor": "switchback.landing.centre",
+   "pos_m": [
+    28.4,
+    18.23,
+    2.1
+   ],
+   "facing_deg": 0.0,
+   "headroom_m": 6.3,
+   "floor_m": 2.1
+  },
+  {
+   "anchor": "switchback.top",
+   "pos_m": [
+    29.25,
+    13.2,
+    4.2
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 4.2,
+   "floor_m": 4.2
+  },
+  {
+   "anchor": "table_atrium_a.chair_n0.seat",
+   "pos_m": [
+    14.88,
+    16.66,
+    0.46
+   ],
+   "facing_deg": 270.0,
+   "headroom_m": 7.94,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "table_atrium_a.chair_n1.seat",
+   "pos_m": [
+    14.88,
+    15.74,
+    0.46
+   ],
+   "facing_deg": 270.0,
+   "headroom_m": 7.94,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "table_atrium_a.chair_s0.seat",
+   "pos_m": [
+    13.52,
+    16.66,
+    0.46
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 5.76,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "table_atrium_a.chair_s1.seat",
+   "pos_m": [
+    13.52,
+    15.74,
+    0.46
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 5.76,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "table_atrium_a.top",
+   "pos_m": [
+    14.2,
+    16.2,
+    0.76
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 7.64,
+   "floor_m": 0.76
+  },
+  {
+   "anchor": "table_atrium_b.chair_n0.seat",
+   "pos_m": [
+    18.48,
+    18.46,
+    0.46
+   ],
+   "facing_deg": 270.0,
+   "headroom_m": 5.76,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "table_atrium_b.chair_n1.seat",
+   "pos_m": [
+    18.48,
+    17.54,
+    0.46
+   ],
+   "facing_deg": 270.0,
+   "headroom_m": 5.76,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "table_atrium_b.chair_s0.seat",
+   "pos_m": [
+    17.12,
+    18.46,
+    0.46
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 7.94,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "table_atrium_b.chair_s1.seat",
+   "pos_m": [
+    17.12,
+    17.54,
+    0.46
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 7.94,
+   "floor_m": 0.46
+  },
+  {
+   "anchor": "table_atrium_b.top",
+   "pos_m": [
+    17.8,
+    18.0,
+    0.76
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 7.64,
+   "floor_m": 0.76
+  },
+  {
+   "anchor": "table_mezz.chair_n0.seat",
+   "pos_m": [
+    9.68,
+    16.86,
+    4.66
+   ],
+   "facing_deg": 270.0,
+   "headroom_m": 3.74,
+   "floor_m": 4.66
+  },
+  {
+   "anchor": "table_mezz.chair_n1.seat",
+   "pos_m": [
+    9.68,
+    15.94,
+    4.66
+   ],
+   "facing_deg": 270.0,
+   "headroom_m": 3.74,
+   "floor_m": 4.66
+  },
+  {
+   "anchor": "table_mezz.chair_s0.seat",
+   "pos_m": [
+    8.32,
+    16.86,
+    4.66
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 3.74,
+   "floor_m": 4.66
+  },
+  {
+   "anchor": "table_mezz.chair_s1.seat",
+   "pos_m": [
+    8.32,
+    15.94,
+    4.66
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 3.74,
+   "floor_m": 4.66
+  },
+  {
+   "anchor": "table_mezz.top",
+   "pos_m": [
+    9.0,
+    16.4,
+    4.96
+   ],
+   "facing_deg": 90.0,
+   "headroom_m": 3.44,
+   "floor_m": 4.96
+  },
+  {
+   "anchor": "wall_shelf.top",
+   "pos_m": [
+    23.5,
+    21.75,
+    6.49
+   ],
+   "facing_deg": 180.0,
+   "headroom_m": 1.91,
+   "floor_m": 6.49
+  }
+ ],
+ "warnings": [],
+ "lineup": [
+  {
+   "label": "room_shell",
+   "visual": 270,
+   "collision": 26
+  },
+  {
+   "label": "slab",
+   "visual": 96,
+   "collision": 64
+  },
+  {
+   "label": "column",
+   "visual": 32,
+   "collision": 22
+  },
+  {
+   "label": "window_band",
+   "visual": 44,
+   "collision": 0
+  },
+  {
+   "label": "door_frame",
+   "visual": 22,
+   "collision": 0
+  },
+  {
+   "label": "stair_flight",
+   "visual": 238,
+   "collision": 58
+  },
+  {
+   "label": "stair_flight_slab",
+   "visual": 104,
+   "collision": 22
+  },
+  {
+   "label": "landing",
+   "visual": 12,
+   "collision": 12
+  },
+  {
+   "label": "switchback_stair",
+   "visual": 308,
+   "collision": 68
+  },
+  {
+   "label": "straight_stair",
+   "visual": 480,
+   "collision": 126
+  },
+  {
+   "label": "railing",
+   "visual": 80,
+   "collision": 20
+  },
+  {
+   "label": "railing_glass",
+   "visual": 50,
+   "collision": 10
+  },
+  {
+   "label": "elevator",
+   "visual": 168,
+   "collision": 156
+  },
+  {
+   "label": "bookshelf",
+   "visual": 76,
+   "collision": 20
+  },
+  {
+   "label": "stack_range",
+   "visual": 162,
+   "collision": 30
+  },
+  {
+   "label": "study_table",
+   "visual": 234,
+   "collision": 50
+  },
+  {
+   "label": "chair",
+   "visual": 46,
+   "collision": 10
+  },
+  {
+   "label": "stool",
+   "visual": 58,
+   "collision": 10
+  },
+  {
+   "label": "kick_stool",
+   "visual": 22,
+   "collision": 22
+  },
+  {
+   "label": "carrel_row",
+   "visual": 248,
+   "collision": 100
+  },
+  {
+   "label": "computer_row",
+   "visual": 364,
+   "collision": 90
+  },
+  {
+   "label": "computer_row_double",
+   "visual": 546,
+   "collision": 130
+  },
+  {
+   "label": "study_room",
+   "visual": 444,
+   "collision": 124
+  },
+  {
+   "label": "help_desk",
+   "visual": 148,
+   "collision": 30
+  },
+  {
+   "label": "cafe_counter",
+   "visual": 290,
+   "collision": 64
+  },
+  {
+   "label": "couch",
+   "visual": 84,
+   "collision": 44
+  },
+  {
+   "label": "beanbag",
+   "visual": 54,
+   "collision": 10
+  },
+  {
+   "label": "book_cart",
+   "visual": 116,
+   "collision": 10
+  },
+  {
+   "label": "kiosk",
+   "visual": 30,
+   "collision": 10
+  },
+  {
+   "label": "whiteboard",
+   "visual": 20,
+   "collision": 0
+  },
+  {
+   "label": "poster",
+   "visual": 2,
+   "collision": 0
+  },
+  {
+   "label": "sign_wall",
+   "visual": 10,
+   "collision": 0
+  },
+  {
+   "label": "sign_hanging",
+   "visual": 28,
+   "collision": 0
+  },
+  {
+   "label": "sign_post",
+   "visual": 30,
+   "collision": 10
+  },
+  {
+   "label": "floor_sign",
+   "visual": 10,
+   "collision": 0
+  },
+  {
+   "label": "ceiling_light",
+   "visual": 2,
+   "collision": 0
+  },
+  {
+   "label": "light_grid",
+   "visual": 12,
+   "collision": 0
+  },
+  {
+   "label": "light_ring",
+   "visual": 96,
+   "collision": 64
+  }
+ ],
+ "export": {
+  "level_dir": "work/marston/interior_kit/demo_levels/sgl_kit_demo",
+  "errors": [],
+  "warnings": [],
+  "clear_lighting_cmds": 69,
+  "vertices": 15274,
+  "collision_tris": 1744,
+  "render_tris": 7860
+ },
+ "previews": [
+  "art/levels/marston/kit_overview.png",
+  "art/levels/marston/kit_overview_nw.png",
+  "art/levels/marston/kit_lobby.png",
+  "art/levels/marston/kit_cafe.png",
+  "art/levels/marston/kit_lounge.png",
+  "art/levels/marston/kit_stacks.png",
+  "art/levels/marston/kit_mezzanine.png",
+  "art/levels/marston/kit_stairs.png",
+  "art/levels/marston/kit_atrium.png",
+  "art/levels/marston/kit_topdown.png",
+  "art/levels/marston/kit_collision.png",
+  "art/levels/marston/kit_props.png"
+ ]
+}
