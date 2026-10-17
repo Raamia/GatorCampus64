@@ -53,3 +53,6 @@ art/*/build/compare/
 # Contact sheets and photo-vs-render comparisons contain downloaded third-party photos: local only
 art/levels/*/reference_sheets/
 art/levels/*/compare/
+
+# Gemini API key for tools/npc_bridge (never commit it)
+tools/npc_bridge/.env
