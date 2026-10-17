@@ -225,6 +225,10 @@ INTERIOR_MATERIALS.update({
     "int_ms_brick_f1":        {"tex": "int_ms_brick_f1.png",        "tile_m": 0.84, "color": "#C48890"},
     # iteration 5 (fidelity-4, #98): the sandy ground under the plaza oaks (Marston backdrop)
     "int_ms_sand":            {"tex": "int_ms_sand.png",            "tile_m": 4.0, "color": "#C8B48E"},
+    # iteration 6 (fidelity-3 blocking, #1): the porch bay east of the doors, dark tinted glass with the lit lobby
+    "int_ms_glass_lobby":     {"tex": "int_ms_glass_lobby.png",     "tile_m": 1.2, "color": "#3A3834", "map": "once"},
+    # iteration 6 (fidelity-3, #35): the Starbucks pickup window, the lit back-of-house kitchen seen through it
+    "int_ms_kitchen":         {"tex": "int_ms_kitchen.png",         "tile_m": 1.0, "color": "#D8C8A8", "map": "once"},
 })
 for _m in INTERIOR_MATERIALS.values():
     _m.setdefault("kind", "opaque")

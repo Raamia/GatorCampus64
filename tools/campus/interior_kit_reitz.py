@@ -252,6 +252,7 @@ RU_MATERIALS = {
     "int_ru_steel_bright": {"size": (32, 32), "tile_m": 1.0, "color": "#E6EAEE"},
     "int_ru_wood_tan":     {"size": (32, 32), "tile_m": 1.2, "color": "#C9A06A"},
     "int_ru_fabric_orange": {"size": (32, 32), "tile_m": 0.6, "color": "#EE6A22"},
+    "int_ru_fabric_mustard": {"size": (32, 32), "tile_m": 0.6, "color": "#D8A030"},   # ACC chairs (ru_acc_studio)
     # fix round 5 (fidelity-1, ru_atrium_enr_lounge right third): the Orange & Brew glazed bays on the lounge's south
     # side (a warm-lit cafe interior seen through glass, one 1.25 x 2.0 m bay per texture) and its fascia sign
     "int_ru_cafe_bay":     {"size": (32, 64), "tile_m": 2.0, "color": "#D8B07A", "map": "once"},
@@ -2387,6 +2388,8 @@ TEXTURES = {
     "int_ru_glass_faint": lambda s: _flat("#E4ECEF", s, 1),             # fix round 5 design: north door leaves / bank
     "int_ru_student_art": lambda s: tx_student_art(s),                  # ... ACC student artwork band
     "int_ru_clay": lambda s: _flat("#B0603A", s, 4),                    # ... terracotta clay on the pottery wheels
+    # fix iteration 6 (appended LAST: the recipe seed is 1000 + 7 * its index, earlier textures keep theirs)
+    "int_ru_fabric_mustard": lambda s: tx_fabric("#D8A030", s),         # the ACC's mustard-yellow chairs
 }
 
 
@@ -3689,7 +3692,7 @@ def office_chair(V, x, y, back="int_ru_fabric_char"):
     V.box(x - 0.25, yb - 0.07, 1.15, x + 0.25, yb + 0.01, 1.21, "int_ru_black", faces="+y-y+z")
 
 
-def folding_table(L=1.8, W=0.6, h=0.74, top="int_ru_wall_cream", chairs=3, chair="stack"):
+def folding_table(L=1.8, W=0.6, h=0.74, top="int_ru_wall_cream", chairs=3, chair="stack", chair_mat="int_ru_black"):
     """Classroom training table (ru_os_g325, ru_os_3305): light top, chrome legs, black chairs behind.
     chair="office": black high-back mesh office chairs on casters instead of stacking chairs (fidelity-4 round 2:
     the 3305 U, the 3310 hollow square and the 2345 / 2350 boardroom tables)."""
@@ -3707,8 +3710,8 @@ def folding_table(L=1.8, W=0.6, h=0.74, top="int_ru_wall_cream", chairs=3, chair
         if chair == "office":
             office_chair(V, x, -W / 2 - 0.36)
             continue
-        V.box(x - 0.23, -W / 2 - 0.55, 0.42, x + 0.23, -W / 2 - 0.1, 0.47, "int_ru_black", faces="+z+y-y+x-x")
-        V.box(x - 0.22, -W / 2 - 0.6, 0.47, x + 0.22, -W / 2 - 0.54, 0.95, "int_ru_black", faces="+x-x+y-y+z")
+        V.box(x - 0.23, -W / 2 - 0.55, 0.42, x + 0.23, -W / 2 - 0.1, 0.47, chair_mat, faces="+z+y-y+x-x")
+        V.box(x - 0.22, -W / 2 - 0.6, 0.47, x + 0.22, -W / 2 - 0.54, 0.95, chair_mat, faces="+x-x+y-y+z")
     K.col_box(C, -L / 2, -W / 2, 0.0, L / 2, W / 2, h, K.COL_NOCAM)
     return P
 
@@ -4491,9 +4494,15 @@ if __name__ == "__main__":
 
 # ================================================================== stairs
 def stair_flight(V, C, a, b, z0, z1, width, steps=None, tread_mat="int_ru_terrazzo", side_mat="int_ru_white",
-                 soffit=True, rails=True, rail_h=1.07, col_mat="COL notslip", stringer=0.35):
+                 soffit=True, rails=True, rail_h=1.07, col_mat="COL notslip", stringer=0.35, rail_outer_head=None):
     """Open stair flight from a (bottom, z0) to b (top, z1) in plan, `width` wide (photos: white stringers and
-    soffit, terrazzo treads, silver picket railings). Collision: one ramp (no-slip) + the two railings."""
+    soffit, terrazzo treads, silver picket railings). Collision: one ramp (no-slip) + the two railings.
+    rail_outer_head: None = each railing is a closed 14 cm slab (inner + outer face) along the whole flight; a length
+    in metres = the outer (void-side) face only over that last stretch below the top end (iteration 6 blocking fix:
+    a 14 cm two-faced rail is thinner than Mario's 50 u wall radius, so wherever a junction push left him > 43 u off
+    the flight axis toward a rail, the outer face pushed him THROUGH it onto the open side - the L1 SE flight foot
+    walk-off, falls_fast 19 / 1,056. The inner face alone holds him on the treads; the short outer piece at the top
+    keeps the upper slab's side of the rail end closed)."""
     L = math.dist(a, b)
     if L < 0.2:
         return
@@ -4540,8 +4549,13 @@ def stair_flight(V, C, a, b, z0, z1, width, steps=None, tread_mat="int_ru_terraz
                 pa, pb = P(0, off, z0), P(L, off, z1)
                 for sgn in (1, -1):
                     o = 0.07 * sgn
-                    q = [(pa[0] + nx * o, pa[1] + ny * o, pa[2] - 0.3), (pb[0] + nx * o, pb[1] + ny * o, pb[2] - 0.3),
-                         (pb[0] + nx * o, pb[1] + ny * o, pb[2] + rail_h), (pa[0] + nx * o, pa[1] + ny * o, pa[2] + rail_h)]
+                    qa = pa
+                    if rail_outer_head is not None and (sgn > 0) == (off > 0):     # the outer (void-side) face
+                        if rail_outer_head <= 0:
+                            continue
+                        qa = P(max(0.0, L - rail_outer_head), off, z1 - h * min(1.0, rail_outer_head / L))
+                    q = [(qa[0] + nx * o, qa[1] + ny * o, qa[2] - 0.3), (pb[0] + nx * o, pb[1] + ny * o, pb[2] - 0.3),
+                         (pb[0] + nx * o, pb[1] + ny * o, pb[2] + rail_h), (qa[0] + nx * o, qa[1] + ny * o, qa[2] + rail_h)]
                     C.poly(q, K.COL_NOCAM, normal_hint=(nx * sgn, ny * sgn, 0))
     return {"len": L, "angle_deg": math.degrees(math.atan2(h, L)), "steps": n}
 

@@ -297,6 +297,9 @@ CHANDELIER = {"pos": (-58.4, -100.4), "top_z": 15.0, "radius": 2.0, "ring_w": 0.
 # edge-on, it reads as a lit blue ring (the goal) instead of a thin grey bar
 SKYLIGHT_RIDGE = 3.0
 PORCH = (-71.0, -75.5, -52.6, -69.0)
+# iteration 6 (fidelity-3, #2): the porch planter (x0, y0, x1, y1, brick top, hedge top) against the storefront's
+# outer face (PORCH[1] + WALL_T), east of the doors (build_porch)
+PORCH_PLANTER = (-64.4, -75.2, -60.4, -74.1, 0.55, 0.80)
 ARENA = [(-80.2, -115.4), (-56.0, -115.4), (-56.0, -96.8), (-80.2, -96.8)]     # Act 5 Printer Jam (F1)
 # fidelity-2: the makerspace (makerspace()): room rect, the storefront door gap (east end, #53), the neon's centre
 # (#51 #52), the storefront transom and glass head (#51), the islands' height and their two N-S rows (#54 #56)
@@ -1222,11 +1225,12 @@ def partition_tint(M, fid, a, b):
             if abs(a[1] - b[1]) >= 0.05:
                 return None                                # fidelity-3 (fix round 2): its west face, square to the
                 #                                            lounge's east view (#24 #25), is white
-            if abs(my - STAFF_N_Y) < 0.1 and mx < STAFF_TEAL_X[0] - 0.05:
-                return MP.T_YELLOW_WALL                    # iteration 5 (fidelity-3, #25): golden yellow west of the
-                #                                            teal printer bay (the far-wall yellow band of #25)
             if abs(my - STAFF_N_Y) < 0.1 and not (STAFF_TEAL_X[0] - 0.05 < mx < STAFF_TEAL_X[1] + 0.05):
-                return None                                # fidelity-3 (fix round 2): white toward the lounge
+                return MP.T_YELLOW_WALL                    # iteration 5 (fidelity-3, #25): golden yellow west of the
+                #                                            teal printer bay (the far-wall yellow band of #25);
+                # iteration 6 (fidelity-3, #25): and EAST of it to the window wall (x -40.6..-33.54): it was the white
+                # stretch the l25 views see between the printer bay's teal and the yellow window wall, so the
+                # golden yellow now runs unbroken from the bay round the corner under the windows as in #25
             return MP.T_TEAL_WALL
         if fid == "F2" and r["id"] == "R201H" and abs(a[1] - b[1]) < 0.05 and abs(my - TEAL_WALL_Y) < 0.1:
             return MP.T_TEAL_WALL                          # fidelity-3: the R201G/H block's south face (#29)
@@ -2834,12 +2838,23 @@ def build_floor(M, fid):
                     o["kind"], o["mat"], o["inner"] = "dark", "int_ms_glass_black", "int_ms_glass_clear"
                     # iteration 5 (fidelity-3, #1): the bay either side of the door gap is clear (the lit lobby shows
                     # through it in daylight); the transom over the doors keeps the dark glass behind the neon (#3 #4)
+                    # iteration 6 (fidelity-3 blocking, #1 #2): clear glass in front of the lit white lobby wall read
+                    # as flat white panels and put the white '444 NEWELL DRIVE' vinyl white-on-white. The WEST bay
+                    # (the vinyl's) is black glass again; the EAST bay is a dark tinted pane with the lobby lights
+                    # showing through (int_ms_glass_lobby, darker than the brick)
                     dg = [q for q in ops if q["kind"] == "door"]
                     if o.get("id") != "transom" and dg:
-                        if any(abs(o["s1"] - q["s0"]) < 0.6 for q in dg):
-                            o["bay_mats"] = {-1: "int_ms_glass_clear"}
-                        elif any(abs(o["s0"] - q["s1"]) < 0.6 for q in dg):
-                            o["bay_mats"] = {0: "int_ms_glass_clear"}
+                        for q in dg:
+                            if abs(o["s1"] - q["s0"]) < 0.6:
+                                k_bay, s_bay = -1, o["s1"] - 0.3
+                            elif abs(o["s0"] - q["s1"]) < 0.6:
+                                k_bay, s_bay = 0, o["s0"] + 0.3
+                            else:
+                                continue
+                            sd = (q["s0"] + q["s1"]) / 2
+                            if (a[0] + dx * s_bay) > (a[0] + dx * sd):          # east of the door gap
+                                o["bay_mats"] = {k_bay: "int_ms_glass_lobby"}
+                            break
                     continue
                 if M.solid_at(fid, *pi):
                     o["kind"] = "dark"
@@ -3390,14 +3405,17 @@ def f1_ceiling(M, P):
     # 1.35 / 1.25), the lower three 2.0 m apart (white ceiling between them), and the upper two run 7 degrees off the
     # lower ones (RIBBON_UPPER_YAW), so each crosses a gap diagonally, overlapping a lower band only at its ends: separate
     # wavy bands crossing with gaps. Heights as before (sampled min gap between the layers where they cross: 0.25 m)
+    # iteration 6 (fidelity-1 #4, #69 4317 / #39 4356): at the white edges the clear acrylic (alpha 0.30) read as clear
+    # glass strips / faint shards from lobby_gc; the photographed waves are luminous frosted blue-white: the panels
+    # are the pale frosted divider glass (int_ms_glass_frost, alpha 0.72) in a slightly lighter blue
     for k, (yy, xs) in enumerate(((-91.75, -79.6), (-93.75, -80.4), (-95.75, -79.0))):
         P.merge(MP.wave_ribbon(L=9.2, w=RIBBON_W[0], amp=0.38, waves=1.5, drop=RIBBON_DROP + 0.08 * k, edge=True,
-                               tint=(0.66, 0.74, 1.0), mat="int_ms_glass_clear",
+                               tint=(0.72, 0.80, 1.0), mat="int_ms_glass_frost",
                                tilt=RIBBON_TILT if k % 2 == 0 else -RIBBON_TILT), xs, yy, CLEAR, 0.0)
     for k, (yy, xs) in enumerate(((-92.35, -79.9), (-94.35, -79.4))):
         P.merge(MP.wave_ribbon(L=8.6, w=RIBBON_W[1], amp=0.32, waves=1.25, drop=RIBBON_DROP - 0.52 - RIBBON_UPPER_RISE,
                                edge=True,
-                               phase=0.5, tint=(0.56, 0.64, 1.0), mat="int_ms_glass_clear",
+                               phase=0.5, tint=(0.62, 0.70, 1.0), mat="int_ms_glass_frost",
                                tilt=RIBBON_TILT if k % 2 == 0 else -RIBBON_TILT), xs, yy, CLEAR, RIBBON_UPPER_YAW)
     return n
 
@@ -3493,16 +3511,26 @@ def study_rooms(M, fid, P):
         (ax, ay), (bx, by) = d["a"], d["b"]
         hinge = (ax - fx * 0.05, ay - fy * 0.05)
         along = math.degrees(math.atan2(bx - ax, by - ay))
+        # iteration 6 (technical): the leaves stood open at 95 degrees, half of them out in the lounge / corridor
+        # (R201G/H, L115-L117), and Mario walked straight through them (visual only, 12 of 12 walks). Each now rests
+        # 3 cm off a wall inside its room: swung 90 degrees against the side wall next to the door, or folded flat
+        # back against the door wall (study_leaf_pose); the old pose only where neither fits
+        pose = study_leaf_pose(M, fid, (x0, y0, x1, y1), d, (fx, fy))
+        od, lw = (-95.0, 0.92) if pose is None else (0.0, pose[5])
         # fidelity-1: F1 doors are honey maple (#38 door ~ (232, 179, 130)), not the dark copper veneer
-        leaf = MP.door_leaf(0.92, DOOR_H - 0.3, open_deg=-95.0, mat="int_ms_maple", tint=(1.0, 0.86, 0.78)) \
-            if fid == "F1" else MP.door_leaf(0.92, DOOR_H - 0.3, open_deg=-95.0, mat="int_ms_wall",
+        leaf = MP.door_leaf(lw, DOOR_H - 0.3, open_deg=od, mat="int_ms_maple", tint=(1.0, 0.86, 0.78)) \
+            if fid == "F1" else MP.door_leaf(lw, DOOR_H - 0.3, open_deg=od, mat="int_ms_wall",
                                              tint=(0.97, 0.97, 0.96)) if r["id"] in ("R201G", "R201H") \
-            else MP.door_leaf(0.92, DOOR_H - 0.3, open_deg=-95.0)    # iteration 5: R201G/H white doors (#24)
-        P.merge(leaf, hinge[0], hinge[1], 0.0, (along - 90.0) % 360.0)
+            else MP.door_leaf(lw, DOOR_H - 0.3, open_deg=od)    # iteration 5: R201G/H white doors (#24)
+        if pose is None:
+            P.merge(leaf, hinge[0], hinge[1], 0.0, (along - 90.0) % 360.0)
+        else:
+            P.merge(leaf, pose[0], pose[1], pose[2], pose[3])
+            M.stats.setdefault("study_leaf_poses", []).append(f"{fid} {r['id']} {pose[4]}")
         if r["id"] == "L129":                              # the act 3 star room: chairs in the corners only
             for (qx, qy) in ((x0 + 0.6, y0 + 0.6), (x1 - 0.6, y0 + 0.6)):
                 # (F1: the shell chair keeps the old tub chair's collision block, so the star room plays as before)
-                P.merge(MP.shell_chair(MP.T_TAUPE, col_box=(-0.42, -0.40, 0.0, 0.42, 0.36, 0.66)) if fid == "F1"
+                P.merge(MP.shell_chair(MP.T_TAUPE_F1, col_box=(-0.42, -0.40, 0.0, 0.42, 0.36, 0.66)) if fid == "F1"
                         else MP.tub_chair(MP.T_TAUPE), qx, qy, 0.0, facing_from((qx, qy), (cx, cy)))
             k += 1
             continue
@@ -3519,7 +3547,7 @@ def study_rooms(M, fid, P):
                 P.merge(MP.coffee_disc(0.90 if off >= 0.92 else 0.80, 0.46), tx, ty, 0.0, 0.0)
                 for sgn in (1, -1):
                     px, py = tx + fy * sgn * off, ty - fx * sgn * off
-                    P.merge(MP.shell_chair(MP.T_TAUPE, col=False), px, py, 0.0, facing_from((px, py), (tx, ty)))
+                    P.merge(MP.shell_chair(MP.T_TAUPE_F1, col=False), px, py, 0.0, facing_from((px, py), (tx, ty)))
                 P.merge(MP.slim_table(0.48, 0.58), tx + fy * (off + 0.05) - fx * 0.85,
                         ty - fx * (off + 0.05) - fy * 0.85, 0.0, 0.0)
             elif lounge:
@@ -3582,6 +3610,46 @@ def study_rooms(M, fid, P):
                                    tint=MP.T_TEAL_WALL)
                 P.merge(accent, sx, sy, 0.0, face)
         k += 1
+
+
+def study_leaf_pose(M, fid, rb, d, f, w=0.92, t=0.045):
+    """iteration 6 (technical): where a study room's open door leaf rests -> (x, y, z, rot, kind) for a CLOSED-pose
+    leaf (MP.door_leaf open_deg 0: hinge at local 0, the leaf along local +x), or None. rb: the room's bbox, d: its
+    door, f: the door's outward facing (fx, fy). 'side': swung 90 degrees into the room, 3 cm off the side wall
+    nearest the door (where that wall is at most 0.6 m from the jamb); 'flat': folded back 180 degrees against the
+    door wall, 3 cm off its inner face, from the jamb with more wall beside it (at least 0.75 m: the leaf is narrowed to
+    stop 5 cm short of the side wall). The last element is the leaf width."""
+    x0, y0, x1, y1 = rb
+    (ax, ay), (bx, by) = d["a"], d["b"]
+    L = math.dist(d["a"], d["b"])
+    if L < 0.3:
+        return None
+    ux, uy = (bx - ax) / L, (by - ay) / L
+    nx, ny = -f[0], -f[1]                                  # into the room
+    ins = wall_inset(M, fid, d["a"], d["b"])
+
+    def run(px, py, wx, wy):                               # distance from p along w to the room's bbox edge
+        if abs(wx) > 0.5:
+            return (x1 - px) if wx > 0 else (px - x0)
+        return (y1 - py) if wy > 0 else (py - y0)
+    depth = run(ax, ay, nx, ny)
+    if abs(ux * nx + uy * ny) > 0.05 or depth < 0.5:
+        return None
+    ends = sorted(((run(ex, ey, wx, wy) - PART_T / 2, ex, ey, wx, wy)
+                   for (ex, ey), (wx, wy) in (((ax, ay), (-ux, -uy)), ((bx, by), (ux, uy)))))
+    off = t / 2 + 0.03
+    g, ex, ey, wx, wy = ends[0]
+    n0 = max(ins, 0.06) + 0.01                            # clear of the 12 cm jamb post
+    if 0.08 <= g <= 0.6 and depth - PART_T / 2 - n0 >= w + 0.1:
+        s_ = g - off
+        return (ex + wx * s_ + nx * n0, ey + wy * s_ + ny * n0, 0.0,
+                (math.degrees(math.atan2(nx, ny)) - 90.0) % 360.0, "side", w)
+    g, ex, ey, wx, wy = ends[-1]
+    if g >= 0.75:
+        # (the leaf is narrowed to stop 5 cm short of the side wall where the jamb is closer than w + 5 cm to it)
+        return (ex + nx * (ins + off), ey + ny * (ins + off), 0.0,
+                (math.degrees(math.atan2(wx, wy)) - 90.0) % 360.0, "flat", min(w, g - 0.05))
+    return None
 
 
 def wall_inset(M, fid, p, q):
@@ -3732,7 +3800,11 @@ def dress_f1(M, P, z):
     hx, hy = -77.7, -94.35
     for (u, v, tint) in ((0, 0, MP.T_SALMON), (1, 1, MP.T_SALMON), (2, 0, MP.T_SAND), (3, 1, MP.T_SALMON),
                          (1, -1, MP.T_SAND), (2, -2, MP.T_SALMON), (4, 0, MP.T_SAND)):
-        dress(M, "F1", MP.hex_ottoman(0.55, 0.45, tint), hx + u * 0.855, hy + v * 0.494, 0.0)
+        # iteration 6 (technical, s5_crack: the 3.5 cm slots between neighbours dropped slow walks 45 u at 36 points):
+        # the hexagons now touch edge to edge (1.5 r, r cos 30 deg), so the tops are one seamless walkable cluster
+        # (the shared side walls are back-to-back pairs the collision clean-up drops)
+        hr = 0.55
+        dress(M, "F1", MP.hex_ottoman(hr, 0.45, tint), hx + u * 1.5 * hr, hy + v * hr * math.sqrt(3.0) / 2.0, 0.0)
     P.merge(K.sign("int_ms_directory", 0.55, 0.75, 1.35, mount="wall"), -73.7, -90.6, 0.0, 180.0)
     elevator_lobby_f1(P)
     # iteration 4 (fidelity-1, #69 4317): the brushed stainless bi-level unit stands on the west wall right by the
@@ -3782,7 +3854,10 @@ def dress_f1(M, P, z):
     # maple tables on a ~2.5-3 m grid): two more, outside the coin ring round (-56.4, -88.0) (r 3 m) and its keep-outs
     for (x, y, rot) in ((-55.2, -92.3, 0.5), (-60.5, -90.5, 0.7)):
         rtab(x, y, rot)
-    for (x, y, f) in ((-60.0, -104.0, 0.0), (-52.0, -104.0, 0.0)):    # pods in the cluster rows' gaps
+    # iteration 6 (fidelity-1 #6): the east pod (-52.0, -104.0) touched the south coin ring's north coin (-53.8, -105.0)
+    # keep-out and was dropped (a gap in the pod row): 1.0 m east and 0.6 m north, clear of the ring, the lounge and
+    # the round table at (-52.6, -100.2)
+    for (x, y, f) in ((-60.0, -104.0, 0.0), (-51.0, -103.4, 0.0)):    # pods in the cluster rows' gaps
         pod(x, y, f)
     # east, by the glass rooms (#38 #41): S-banquettes round ottoman tables, bent-plywood chairs, bar tables
     # iteration 4 (fidelity-1 blocking, #38 4272 / #41 bar_tables_2014): one tight cluster as photographed: the S
@@ -3795,7 +3870,10 @@ def dress_f1(M, P, z):
     furnish(M, "F1", MP.banquette_arc(1.0, 0.62, 275.0, 445.0, MP.T_SALMON, "int_ms_fab_multi", None, MP.T_OLIVE_BASE, banded=True),
             -44.6, -100.9, 0.0, note="banquette")
     dress(M, "F1", MP.round_table(0.9, h=0.42, chairs=0), -44.6, -100.9, 0.0, note="lounge_table")
-    furnish(M, "F1", MP.banquette_arc(1.0, 0.62, 95.0, 265.0, MP.T_SALMON, "int_ms_fab_multi", None, MP.T_OLIVE_BASE, banded=True),
+    # iteration 6 (fidelity-1 #2, #38 4272): the near lobe is high-backed on its right half from the 4272 camera (the
+    # south part of its arc, the salmon cap rising) and low on its left, where the round table top shows over it
+    furnish(M, "F1", MP.banquette_arc(1.0, 0.62, 95.0, 265.0, MP.T_SALMON, "int_ms_fab_multi", None, MP.T_OLIVE_BASE, banded=True,
+                                      high=(180.0, 265.0, 1.32)),
             -45.0, -105.0, 0.0, note="banquette")
     dress(M, "F1", MP.round_table(0.9, h=0.42, chairs=0), -45.0, -105.0, 0.0, note="lounge_table")
     for (x, y, f) in ((-47.3, -103.0, 60.0), (-43.4, -103.7, 200.0), (-42.2, -100.0, 200.0)):
@@ -3805,8 +3883,12 @@ def dress_f1(M, P, z):
     # iteration 4 (fidelity-1, #41 bar_tables_2014 / #38 4272): the north row is two maple bar tables end to end (the
     # photos' long counter-height rows between the lounge and the glass rooms); the south row stays one table (a
     # pickup at (-40.0, -112.0) keeps its east end clear, the layout's commons_tables_10 its west end)
-    for (x, y) in ((-40.5, -108.7), (-43.3, -108.7), (-43.0, -111.2)):
-        furnish(M, "F1", MP.bar_table(2.4, 0.75, 1.05, 3), x, y, 0.0, note="bar_table")
+    # iteration 6 (fidelity-1 #1, #38 4272): the photo's middle ground is the bar-table row directly behind the near
+    # lobe, under the ring, between the S and the glass rooms (the E-W pair at y -108.7 fell outside 4272's frame on
+    # the right, leaving empty carpet): the two north tables turn N-S (facing 90) end to end at x -40.6, their east
+    # stools ~0.4 m west of the F1 east coin line (x -39.2); the south table stays (the reviewer's r5_g1 demo layout)
+    for (x, y, f) in ((-40.6, -105.7, 90.0), (-40.6, -102.9, 90.0), (-43.0, -111.2, 0.0)):
+        furnish(M, "F1", MP.bar_table(2.4, 0.75, 1.05, 3), x, y, f, note="bar_table")
     # south band above the study rooms L130-L135 (#40)
     for x in (-56.4, -47.4):
         bench(x, -116.6, 4.2, 0.0, 4)
@@ -4169,8 +4251,15 @@ def conference_l136(M, P):
     # contradicts no photo. fix round 2 (blocking): it is ON, as in #48 (lit GIS aerial imagery across a 3 x 2 grid
     # of thin-bezel displays, 3.3 x 1.7 m, bottom at 0.85 m so a standing user reaches it); was six dark TVs
     P.merge(MP.gis_display_wall(3.3, 1.7, 0.85), x1 - PART_T / 2 - 0.01, yc, 0.0, 270.0)
+    # iteration 6 (fidelity-1 #5, #47): the north tables of the two west rows (y0 + 7.9) sat in the door's keep-out
+    # circle (door centre (-66.0, -115.4)) and were dropped: the four tables of each row now stand end to end 1.93 m
+    # apart (0.10 m gaps) from 0.29 m off the south wall, so the west row keeps all four; the middle row (x0 + 5.7)
+    # lies straight in from the door (x -66.0) and its north table is left out on purpose (the door aisle; even
+    # packed it still reached the keep-out): 11 of the 12 tables stand, 1.7 m clear in front of the door
     for x in (x0 + 3.3, x0 + 5.7, x0 + 8.1):
-        for y in (y0 + 1.6, y0 + 3.6, y0 + 5.9, y0 + 7.9):
+        for y in (y0 + 1.20, y0 + 3.13, y0 + 5.06, y0 + 6.99):
+            if x == x0 + 5.7 and y == y0 + 6.99:
+                continue
             furnish(M, "F1", MP.training_table(1.83, 0.6, 0.74, chairs=2), x, y, 90.0, room="L136",
                     note="training_table", margin=0.08)
 
@@ -4328,7 +4417,12 @@ def starbucks_front(M, P):
     # quartz sill
     V.box(-2.4, 0.101, 0.0, -0.9, 0.115, 3.0, "int_ms_wall", faces="+y", tint=(0.46, 0.20, 0.08))   # rust panel
     V.poly(K.front_quad(-2.15, -1.15, 0.135, 1.45, 2.85), "int_ms_order", uvs=K.ONCE, glow=True)
-    V.poly(K.front_quad(-0.75, 0.25, 0.115, 0.98, 2.30), "int_ms_glass_black", uvs=K.ONCE)
+    # iteration 6 (fidelity-3, #35): the pickup window is the brightest thing in #35, a lit opening onto the
+    # back-of-house (warm wall, stainless shelf and prep line): int_ms_kitchen drawn fullbright (it was a black pane),
+    # in a slim black frame 2.5 cm off the slats (left / right strips stop under the top strip: no coplanar overlap)
+    V.poly(K.front_quad(-0.75, 0.25, 0.115, 0.98, 2.30), "int_ms_kitchen", uvs=K.ONCE, glow=True)
+    for (fx0, fx1, fz0, fz1) in ((-0.80, -0.75, 0.98, 2.30), (0.25, 0.30, 0.98, 2.30), (-0.80, 0.30, 2.30, 2.35)):
+        V.poly(K.front_quad(fx0, fx1, 0.125, fz0, fz1), "int_plastic", uvs=K.ONCE, tint=MP.T_BLACK)
     # (its quartz sill a flat strip 3.5 cm off the slats: a 16 cm ledge with no collision under it was a head-clip)
     V.poly(K.front_quad(-0.80, 0.30, 0.135, 0.90, 0.98), "int_ms_wall", uvs=K.ONCE, tint=(0.88, 0.87, 0.84))
     # fidelity-3 (#35): the warm wood soffit runs up to the ceiling over the slat wall (glass showed above it)
@@ -4368,8 +4462,12 @@ def dress_f3(M, P, z):
         P.merge(MP.wall_tv(w, w * 0.56, 1.2), xin, y, 0.0, 90.0)
     for x in (-77.9, -75.3, -72.7):
         for y in (-99.0, -100.9, -103.6, -105.5):
-            furnish(M, "F3", MP.training_table(1.83, 0.62, 0.74, chairs=2, chair_tint=MP.T_PLUM, base="pedestal"),
-                    x, y, 90.0, room="L308", note="training_table", margin=0.0)
+            if furnish(M, "F3", MP.training_table(1.83, 0.62, 0.74, chairs=2, chair_tint=MP.T_PLUM, base="pedestal"),
+                       x, y, 90.0, room="L308", note="training_table", margin=0.0):
+                # iteration 6 (technical, s5_crack: a slow walk over the 7 cm slot between two back-to-back tops
+                # dropped 74 u into it): each end-to-end pair welds into ONE collision block (place_dressing) when
+                # both of its tables are placed
+                M.dressing[-1]["weld"] = ("L308", x, y > -102.0)
     lx0, ly0, lx1, ly1 = L308_RECT
     ceil = K.Prop("l308_ceiling", col_closed=True)        # visual only, seen from below (the camera may pass it)
     # fix round 2 fidelity-4 (g4_L308: the tile ceiling read mid-grey, ceiling / wall 0.52 against the photo's 0.78):
@@ -4389,7 +4487,9 @@ def dress_f3(M, P, z):
     for k, x in enumerate((-74.4 - 0.50, -72.6 + 0.50)):
         furnish(M, "F3", MP.floor_plant(seed=k), x, -96.36, 0.0, note="tank_plant", margin=0.05)
     # its wood door (vision slot) stands open into the room at the west jamb
-    P.merge(MP.door_leaf(0.92, DOOR_H - 0.3, open_deg=95.0), -76.45, -107.75, 0.0, 0.0)
+    # iteration 6 (technical: it stood 95 degrees open in the room and Mario walked through it): folded flat back
+    # against the inside of the south wall, 3 cm off its face (y -107.7), toward the west
+    P.merge(MP.door_leaf(0.92, DOOR_H - 0.3, open_deg=180.0), -76.45, L308_RECT[1] + PART_T / 2 + 0.0525, 0.0, 0.0)
     # data consultation room (#77): a maple desk with a big monitor and Sayl chairs on each side of the east door
     # (fidelity-4: the north wall's desk too; the core stair door in the west wall, y -86.4..-84.0, stays clear),
     # and the white door leaf with its tall narrow vision panel standing open into the room
@@ -4599,6 +4699,7 @@ def place_dressing(M):
     collision (0.05-2.4 m above its floor) comes within a keep-out circle (keepout_points)."""
     keep = keepout_points(M)
     groups = {}
+    welds = {}
     for it in M.dressing:
         fid = it["floor"]
         pl = it["prop"].placed(it["pos"][0], it["pos"][1], 0.0, it["facing"])
@@ -4627,8 +4728,40 @@ def place_dressing(M):
             continue
         D = groups.setdefault(fid, K.Prop(f"dress_{fid}", col_closed=False))
         D.visual.polys.extend(pl.visual.polys)
-        D.collision.polys.extend(pl.collision.polys)
         D.lights.extend(pl.lights)
+        if it.get("weld") is not None:
+            welds.setdefault((fid, it["weld"]), []).append(pl)
+            continue
+        D.collision.polys.extend(pl.collision.polys)
+    # iteration 6 (technical): a welded pair of placed pieces (back-to-back table tops) gets ONE axis-aligned
+    # collision block over both (no slot between them, no coincident inner walls); a lone piece keeps its own block
+    for (fid, _), pls in welds.items():
+        D = groups[fid]
+        if len(pls) != 2:
+            for pl in pls:
+                D.collision.polys.extend(pl.collision.polys)
+            continue
+        pts = [q for pl in pls for p in pl.collision.polys for q in p.pts]
+        bx = [(min(q[0] for p in pl.collision.polys for q in p.pts), min(q[1] for p in pl.collision.polys for q in p.pts),
+               max(q[0] for p in pl.collision.polys for q in p.pts), max(q[1] for p in pl.collision.polys for q in p.pts))
+              for pl in pls]
+        zt = max(q[2] for q in pts)
+        K.col_box(D.collision, min(q[0] for q in pts), min(q[1] for q in pts), min(q[2] for q in pts),
+                  max(q[0] for q in pts), max(q[1] for q in pts), zt, MP.NOCAM)
+        # the slot between the two tops gets a top strip edge to edge with both (the block spans it: no collision
+        # without a face over it)
+        (a0, b0, a1, b1), (c0, d0, c1, d1) = sorted(bx, key=lambda r: (r[0], r[1]))
+        if abs(a0 - c0) < 1e-3 and abs(a1 - c1) < 1e-3 and b1 < d0:
+            gap = (a0, b1, a1, d0)
+        elif abs(b0 - d0) < 1e-3 and abs(b1 - d1) < 1e-3 and a1 < c0:
+            gap = (a1, b0, c0, b1)
+        else:
+            gap = None
+        if gap:
+            gx0, gy0, gx1, gy1 = gap
+            D.visual.poly([(gx0, gy0, zt), (gx1, gy0, zt), (gx1, gy1, zt), (gx0, gy1, zt)], "int_ms_maple",
+                          normal_hint=(0, 0, 1))
+        M.stats["welded_pairs"] = M.stats.get("welded_pairs", 0) + 1
     for fid, D in groups.items():
         M.add(D, 0.0, 0.0, Z[fid], 0.0, tag=f"dress_{fid}", group=fid)
     M.stats["dressing"] = {f: sum(1 for it in M.dressing if it["floor"] == f) for f in FLOORS}
@@ -4736,6 +4869,7 @@ def tower_band_walls(M, V, C, edge_list, z0, z1, level, doors, in_mat="int_ms_wa
     """Walls of a tower (stair hall / core) for one level band (map x, y; local z of the band).
     The outer face is brick where the outside is outdoors at that level, drywall where it is the floor,
     none underground. doors: [((ax, ay), (bx, by), head)]. edge_list: the CCW edges (a, b) to build."""
+    outers = []
     for a, b in edge_list:
         Ls = math.dist(a, b)
         dx, dy = (b[0] - a[0]) / Ls, (b[1] - a[1]) / Ls
@@ -4778,6 +4912,47 @@ def tower_band_walls(M, V, C, edge_list, z0, z1, level, doors, in_mat="int_ms_wa
         # hall's north-east end, so its brick face had no collision and a grounded player walked through it)
         thick_wall(V, C, a, b, z0, z1, t=WALL_T, in_mat=in_mat, out_mat=outer, openings=ops, col_in=True,
                    col_out=need_out, in_tint=tint, ceil=z1)
+        outers.append((a, b, Ls, dx, dy, ox, oy, outer, ops, need_out))
+    # iteration 6 (fidelity-1 blocking, commons_gc): the outer faces stop WALL_T short of every convex outer corner
+    # (each face spans its own edge only), so the WALL_T x WALL_T corner square had no faces and the inner faces seen
+    # from behind were culled: a full-height see-through slot at the NE hall's SW corner (-52.9, -79.3) and the
+    # core's north corners. Each face is now carried on to the mitre point, in its own material, with collision
+    # where both outer faces have it (the visual-only filler let the walk scan stand inside the wall behind it)
+    for (a, b, La, dxa, dya, oxa, oya, fa, opa, na) in outers:
+        for (c, d, Lc, dxc, dyc, oxc, oyc, fc, opc, nc) in outers:
+            if math.dist(b, c) > 1e-6 or dxa * dyc - dya * dxc <= 1e-6:
+                continue                                       # not consecutive, or not a convex (left) turn
+            cs = oxa * oxc + oya * oyc
+            ext = WALL_T * math.sqrt(max(0.0, (1.0 - cs) / (1.0 + cs)))      # t * tan(turn / 2)
+            if ext < 0.01:
+                continue
+            ma, mc = fa(La - 0.05, (z0 + z1) / 2), fc(0.05, (z0 + z1) / 2)
+            if not ma or not mc:
+                continue
+            pm_ = (b[0] + oxa * WALL_T + dxa * ext, b[1] + oya * WALL_T + dya * ext)
+            if any(seg_point_dist(pm_, e0, e1) < WALL_T + 0.05 for e0, e1 in edges(M.outlines.get(level) or [])):
+                continue                                       # a facade runs past this corner and already covers it
+            if level in FLOORS and "brick_red" in (ma, mc):
+                continue                                       # outdoors at a floor level: the facade's own corner
+                                                               # pieces cover it (core NW, F2-F5: coplanar pairs)
+            # (a door opening reaching the corner keeps its jamb: no filler over its height)
+            za = max([z0] + [o["z1"] for o in opa if o["s1"] > La - 0.05] + [o["z1"] for o in opc if o["s0"] < 0.05])
+            # up to the ceiling only: the slab zone above it is hidden by the ceiling, or (at the atrium) wrapped by
+            # the slab-edge trim (a filler there lay on the dark_trim band: coplanar, core NW corner)
+            zt = z1 - SLAB if level != "ROOF" else z1
+            if za >= zt - 0.05:
+                continue
+            pa = (b[0] + oxa * WALL_T, b[1] + oya * WALL_T)
+            pm = (pa[0] + dxa * ext, pa[1] + dya * ext)
+            pc = (b[0] + oxc * WALL_T, b[1] + oyc * WALL_T)
+            for p, q, m in ((pa, pm, ma), (pm, pc, mc)):
+                mt = None
+                if isinstance(m, tuple):
+                    m, mt = m
+                V.wall(p, q, za, zt, m, ao=1.0, tint=mt)
+            if na(La - 0.05) and nc(0.05):
+                C.wall(pa, pm, za, zt, K.COL)
+                C.wall(pm, pc, za, zt, K.COL)
 
 
 STAIR_EDGE_INSET = 0.02                 # fix round 5: landing / floor-box edges behind the stair flights' top lips
@@ -5411,6 +5586,16 @@ def build_porch(M):
         K.col_box(C, xc - 0.08, ya, 0.0, xc + 0.08, yb, 2.55, K.COL_NOCAM)     # >= 12 units (luatest THIN WALL)
     # the news box by the west pier
     P.merge(MP.news_box(), -70.55, yo + 0.45, 0.0, 0.0)
+    # iteration 6 (fidelity-3, #2): the low red-brick planter with clipped shrubs against the storefront. #2 looks
+    # south, so it stands LEFT = EAST of the doors, under the bronze box, beside the pinned-open east leaf (the west
+    # bay is only 1.8 m and holds the news box). Brick to 0.55 m, the clipped hedge flush on top to 0.80 m; one
+    # no-camera collision box to the hedge top (the visible faces are the collision faces: no unseen walls, no
+    # sinking into the green). No back face: it stands against the storefront's outer face (yo); no bottom face.
+    # 0.8 m clear of the east leaf so the doorway and the porch walk stay wide.
+    px0, py0, px1, py1, ph, hh = PORCH_PLANTER
+    V.box(px0, py0, 0.0, px1, py1, ph, "int_ms_brick", faces="+x-x+y", ao=0.95)
+    V.box(px0, py0, ph, px1, py1, hh, "leaves_oak", faces="+x-x+y+z", tint=(0.80, 0.95, 0.70))
+    C.box(px0, py0, 0.0, px1, py1, hh, K.COL_NOCAM, faces="+x-x+y+z")
     # brick bands in the paving (#1 #2): along the storefront and out from the doors
     for (x0, y0, x1, y1) in ((-71.0, yo + 0.55, -52.6, yo + 0.95), (-67.45, yo + 0.95, -67.05, -69.0),
                              (-58.6, yo + 0.95, -58.2, -69.0)):

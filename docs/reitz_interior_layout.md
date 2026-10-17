@@ -773,6 +773,42 @@ Each change carries a `fix round 5 (design pass...)` comment in `tools/campus/in
 - Rail junctions: 3 single-walk falls remain in spotfall_r (284 before). Area 2 collision is about 12.9k triangles (soft line 12,288). The open terrace added about 60: its inside walls and three table blocks.
 - Technical improvements 4-6 are still open: the South Terrace west door bay, the 0.88 m auditorium stair corridor, and the plinth / print-lab thin walls.
 
+### Fix round 6 (blocking pass: the last atrium rail walk-off, then technical improvements)
+
+Each change carries an `iteration 6` comment in `tools/campus/interiors/reitz.py` / `tools/campus/interior_kit_reitz.py`.
+
+- **Atrium flight rails (technical blocking):** the scissor-flight railings were closed 14 cm slabs, with an inner and an outer collision face. That is thinner than Mario's 0.5 m wall radius, so wherever a junction push left him more than 43 u off the flight axis toward a rail, the outer face pushed him through it. At the L1 SE flight foot, the balcony block's void-side face first carried him 94 u up the treads, because vanilla's one-axis wall test projects that face onto the foot. The rail then threw him onto the open side: falls_fast found 19 such runs out of 1,056. Now `stair_flight(..., rail_outer_head=0.4)` keeps the inner face along the whole flight, and keeps the outer (void-side) face only over the top 0.4 m, where the rail end stands in the upper balcony block. This applies to the south-east flights only. On a north-east flight, the short outer face made the L2 head plug junction's 3-wall push worse (spotfall_r went from 1 to 3), so those flights keep the closed rail. Removing that plug instead opened a floor pocket (42 falls), so it stays.
+- **Rail-end stubs (technical improvement 9):** where the 0.6 m balcony block steps down to 0.3 m beside a flight, its 0.3 m outboard end cap was an invisible wall. Each step now has a rendered picket return with a steel cap (the balcony rail turning down the flight side).
+- **Z-fighting (technical improvement 2):** the auditorium's short-wall wood strips are 1.5 cm off the wall (was 0.5 cm), and the stage exit doors stand 0.19 m out. The Game Room's west hex-neon panels are 4 cm proud, because the arena hex wall behind them runs about 1 degree off the axis. The billiards carpet is notched around the Game Room door's terrazzo threshold. The local z-fight scan (zflocal / zflvis) finds no new visible pairs.
+- **Bookstore ledge coins (technical improvement 9):** the coins sit 0.52 m out on the 0.6 m ledge, clear of the skewed south wall face (coins.py no longer reports one inside a wall).
+
+### Still open after fix round 6
+
+- Technical improvements 5-8 are unchanged: the collision budget (about 12.9k triangles in area 2 against the 12,288 soft line), the South Terrace west door bay, the 0.88 m auditorium stair corridor, and the thin plinth and print-lab walls. Improvement 4a, the L2 SE parapet squeeze, does not reproduce in spotfall_r after the rail change. Improvement 4b, the L2 NE head plug's 3-wall push (1 walk), is unchanged. The long-wall auditorium strips still have a 2.2 m2 wall_aud / wood_panel z-fight from before this round: `_wall_strip` measures the built face, so raising `off` there moved the overlap rather than removing it.
+
+### Fix round 6 (design pass: Orange & Brew, two-sided wainscot, the Arts & Crafts Center, arrival frames)
+
+Each change carries a `fix iteration 6 (design...)` comment in `tools/campus/interiors/reitz.py` / `tools/campus/interior_kit_reitz.py`. The one new texture (`int_ru_fabric_mustard`) is appended at the end of the recipe table, so every earlier texture keeps its seed (only the new PNG was written).
+
+- **Orange & Brew (improvement 3):** the 379 m2 `orange_and_brew` zone (open to the lounge, and the lounge -> Game Room link) was an empty cream-and-terrazzo hall in front of its own painted storefront. There is no photo of the inside, so it is furnished from the house kit as the cafe's seating hall (`ob_cafe()`):
+  - four maple high-top tables (1.05 m) with orange bar stools along the storefront, skipping the glass door bay;
+  - two navy curved booths behind them, open to the hall;
+  - a service counter on the plan's own object at the south tip (`object_6c0207`): a navy front, a maple top, two mitred convex pieces with the ends in the walls, and three menu boards on the facade behind it, 5 cm off the measured face;
+  - a stand-up bar ledge with four stools along the west wall, under two score TVs.
+  The route from the lounge (x -410, y -279.5) to the Game Room door (x -425, y -293.1) keeps more than 2 m clear (`OB_ROUTE`). Things to find: three coins along the counter top (a hop up) and a 1-up behind the counter, in the staff aisle.
+- **Two-sided corridor wainscot (improvement 4):** `_corridor_wainscot` now also takes each corridor zone's own edges whose far side is a solid block that the room pass does not band (no zone, i.e. the core; a solid non-room type such as the L2 office suites), or another corridor behind a plan wall (the L2 pre-function hall's south wall backs onto the restroom lobby corridor). Edges are walked in both directions there, because a big corridor polygon need not follow the wall it shares with a small one. A placed-run list keeps any face from getting two bands. Band length: LL 231 -> 266 m, L2 585 -> 883 m. The door clearance (0.35 m) and the built-face offset (2-2.5 cm) are unchanged.
+- **Arts & Crafts Center (improvement 5; ru_acc_studio):** the craft tables have maple tops and mustard-yellow chairs (`folding_table(..., chair_mat=)`, new `int_ru_fabric_mustard`). Three more tables went in: two in the open north half, one in the SE grid gap. The 18 student-art panels use 8 variants (4 designs, each plain or mirrored) in a scrambled order, with no design next to itself (`ACC_ART_ORDER`); they were in strict ABCD order.
+- **North arrival frames (improvement 6):** on the north entrance door bank, the leaf head rail is 5 cm (was 12) and the transom bar 6 cm (was 14). The wide stiles and the deep bottom rail of ru_ribbon_cutting_doors stay white.
+- **Collision budget (improvement 7, partial):** a room with a dropped lay-in ceiling has its collision ceiling at `ceil_h`. It no longer also joins the clear-height ceiling cover group above that, which nothing can reach (`CEIL_GROUP_SKIP_DROPPED`). That saves 50 triangles. The new furniture adds about 110, so area 2 goes from 12,890 to 12,953 collision triangles (soft line 12,288). Render cost in area 2 is about 136.3k triangles (limit 150k).
+- **QA (the iteration-6 technical suite, before -> after):**
+  - Unchanged: falls_fast 0 walk-offs; spotfall_r 1 walk in 27,712; all 4 doors in both directions, including standing still on each threshold; 10 crack clusters / 143 samples; 0 sky-below-floor rays; 17 invisible-wall triangles (31.8 m2); no new visible z-fight pairs (243 = 243 vis entries).
+  - Pickups: 107 checked (was 103); the 30 flagged pickups are the same ones as before.
+  - Two problems found mid-pass and fixed: a TV bezel 5 mm behind its screen (a visible coplanar pair), and high-top collision boxes around a thin pole (8 invisible-wall triangles). The bezel now sits 2 cm back, and the high-tops stand on octagonal pedestals that match their collision.
+- **Not done here, and why:**
+  - Goombas (improvement 1): `GOOMBA_SPOTS` still waits on a `goomba` branch in `build_interior.build_area`'s pickup loop. That file is not this module's to edit.
+  - Indoor music (improvement 2): it needs a hook outside the stage-camera section of `levels.lua`.
+  - The area-aware interior camera (`SGL_STAGE_CAMERA[LEVEL_WF].area = 2`, with its luatest check) was already in place.
+
 ## 10. Open questions (`open_questions`)
 
 - Real floor elevations, and the ceiling heights of the Grand Ballroom and Rion Ballroom.

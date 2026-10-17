@@ -13,21 +13,21 @@
  "background": "OCEAN_SKY",
  "kit_tris": {
   "total": {
-   "visual": 145386,
-   "collision": 11549
+   "visual": 146012,
+   "collision": 11665
   },
   "by_group": {
    "F1": {
-    "visual": 45245,
-    "collision": 3586
+    "visual": 45761,
+    "collision": 3688
    },
    "F2": {
-    "visual": 19838,
-    "collision": 1924
+    "visual": 19862,
+    "collision": 1912
    },
    "F3": {
-    "visual": 17292,
-    "collision": 1310
+    "visual": 17302,
+    "collision": 1260
    },
    "F4": {
     "visual": 16742,
@@ -42,8 +42,8 @@
     "collision": 274
    },
    "towers": {
-    "visual": 9338,
-    "collision": 2019
+    "visual": 9414,
+    "collision": 2095
    },
    "atrium": {
     "visual": 2074,
@@ -2326,6 +2326,34 @@
    "F4": 7,
    "F5": 0
   },
+  "study_leaf_poses": [
+   "F1 L115 flat",
+   "F1 L116 flat",
+   "F1 L117 flat",
+   "F1 L118 flat",
+   "F1 L119 flat",
+   "F1 L120 flat",
+   "F1 L121 side",
+   "F1 L122 flat",
+   "F1 L123 flat",
+   "F1 L124 flat",
+   "F1 L125 flat",
+   "F1 L126 flat",
+   "F1 L127 side",
+   "F1 L128 flat",
+   "F1 L129 flat",
+   "F1 L130 flat",
+   "F1 L131 flat",
+   "F1 L132 flat",
+   "F1 L133 flat",
+   "F1 L134 flat",
+   "F1 L135 flat",
+   "F2 R201D flat",
+   "F2 R201E flat",
+   "F2 R201F side",
+   "F2 R201G side",
+   "F2 R201H side"
+  ],
   "ceiling_lights": {
    "F1": 158,
    "F2": 73,
@@ -2361,14 +2389,15 @@
    "way_segments": 858,
    "ground_rects": 325
   },
+  "welded_pairs": 5,
   "dressing": {
-   "F1": 79,
+   "F1": 78,
    "F2": 29,
    "F3": 21,
    "F4": 10,
    "F5": 4
   },
-  "dressing_skipped": 5,
+  "dressing_skipped": 2,
   "ribbon_steps": {
    "cuts": 1,
    "end_caps": 5,
@@ -2376,12 +2405,12 @@
    "depth_clipped": 0
   },
   "collision_clean": {
-   "back_to_back_dropped": 337,
+   "back_to_back_dropped": 338,
    "doubled_dropped": 8,
    "default_inside_nocam_kept": 0
   },
-  "finish_swaps": 3696,
-  "f1_core_brick_polys": 67,
+  "finish_swaps": 3726,
+  "f1_core_brick_polys": 73,
   "uv_splits": 637,
   "coplanar_overlap": {
    "m2": 1.6,
@@ -2558,9 +2587,6 @@
    "risers": 34
   },
   "dressing_skipped": [
-   "F1 training_table at (-67.91, -117.1) (near (-66.0, -115.4))",
-   "F1 training_table at (-65.51, -117.1) (near (-66.0, -115.4))",
-   "F1 commons_pod at (-52.0, -104.0) (near (-53.8, -105.0))",
    "F3 training_table at (-75.3, -105.5) (near (-75.3, -107.8))",
    "F3 tank_plant at (-74.9, -96.36) (near (-75.8, -95.85))"
   ]
@@ -2581,32 +2607,32 @@
  "objects": {
   "marston F1 visual": {
    "group": "F1",
-   "tris": 23600,
+   "tris": 23874,
    "collision": false
   },
   "marston F1 collision": {
    "group": "F1",
-   "tris": 1903,
+   "tris": 1954,
    "collision": true
   },
   "marston F2 visual": {
    "group": "F2",
-   "tris": 10550,
+   "tris": 10562,
    "collision": false
   },
   "marston F2 collision": {
    "group": "F2",
-   "tris": 985,
+   "tris": 979,
    "collision": true
   },
   "marston F3 visual": {
    "group": "F3",
-   "tris": 9278,
+   "tris": 9283,
    "collision": false
   },
   "marston F3 collision": {
    "group": "F3",
-   "tris": 671,
+   "tris": 646,
    "collision": true
   },
   "marston F4 visual": {
@@ -2641,12 +2667,12 @@
   },
   "marston towers visual": {
    "group": "towers",
-   "tris": 4687,
+   "tris": 4725,
    "collision": false
   },
   "marston towers collision": {
    "group": "towers",
-   "tris": 1119,
+   "tris": 1157,
    "collision": true
   },
   "marston atrium visual": {
@@ -2671,7 +2697,7 @@
   }
  },
  "export_hygiene": {
-  "geometry_mode_lines_sorted": 430,
+  "geometry_mode_lines_sorted": 438,
   "trailing_ws_lines": 4,
   "max_abs_vertex": 20518,
   "common0_jump_link": true
@@ -2679,27 +2705,27 @@
  "collision_repair": {
   "area_1": {
    "vertices": [
-    8937,
-    8926
+    9002,
+    8991
    ],
    "welded_vertices": 11,
    "collapsed_tris": 0,
-   "tjunction_splits": 435,
+   "tjunction_splits": 439,
    "triangles": [
-    11368,
-    11803
+    11468,
+    11907
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [],
-  "collision_tris": 11803,
-  "render_tris": 145386,
+  "collision_tris": 11907,
+  "render_tris": 146012,
   "lua_names": [],
   "fog_patched": [
-   117,
-   117
+   119,
+   119
   ]
  },
  "level_dir": "mods/sgl64/levels/ccm",

@@ -36,6 +36,9 @@ T_BLUE_CUSHION = (0.36, 0.45, 0.50)       # F5 lounge-cube cushions [#100] (fix 
 T_PLUM = (0.42, 0.31, 0.37)               # L308 chairs [#78] (fix round 2 fidelity-4: muted plum-grey, photo 92/68/78;
                                           # 0.46/0.26/0.36 read raspberry)
 T_TAUPE = (0.62, 0.58, 0.54)              # F1 study-room shell chairs [#44]
+# iteration 6 (fidelity-1 #3, #44): the F1 shell chairs ray-sampled ~25% dark against the photo (90/84/77 vs
+# 119/115/105 in shade, 143/134/119 lit): the same hue lifted 1.3x (T_TAUPE stays for the other floors' tub chairs)
+T_TAUPE_F1 = (0.81, 0.75, 0.70)
 T_GREY_STEEL = (0.74, 0.76, 0.80)         # grey steel shelving / frames (on int_metal / int_drywall)
 T_LIGHT_STEEL = (0.92, 0.94, 0.96)
 T_STEEL_BLUE = (0.60, 0.70, 0.82)         # F4 stack end panels [#84-#86]
@@ -360,10 +363,12 @@ def hex_ottoman(r=0.55, h=0.45, tint=T_SALMON, col=True):
 
 
 def banquette_arc(r_in=1.15, depth=0.62, a0=200.0, a1=340.0, seat_tint=T_ORANGE_LEATHER, back_mat="int_ms_fab_dark",
-                  back_tint=None, base_tint=None, seat_h=0.44, back_h=1.02, n=None, col=True, banded=False):
+                  back_tint=None, base_tint=None, seat_h=0.44, back_h=1.02, n=None, col=True, banded=False, high=None):
     """Curved modular banquette (F2 lounge: orange-tan leather seats, charcoal patterned backs [#24 #25]; F1: salmon
     seats, olive base, multicolour backs [#38]). Local origin = the circle's centre; the seats face it. Angles in
-    degrees, counter-clockwise from local +x. Collision: one block per segment (seat height) + the back."""
+    degrees, counter-clockwise from local +x. Collision: one block per segment (seat height) + the back.
+    high (iteration 6, fidelity-1 #38 4272): (a_from, a_to, h): the segments whose mid-angle lies in [a_from, a_to] get
+    a back h high (the salmon cap taller); a riser face closes each height step. None: one height all round."""
     P = K.Prop("banquette", col_closed=True)
     V, C = P.visual, P.collision
     n = n or max(2, int(round((a1 - a0) / 22.0)))
@@ -375,10 +380,24 @@ def banquette_arc(r_in=1.15, depth=0.62, a0=200.0, a1=340.0, seat_tint=T_ORANGE_
     outer = arc(0, 0, r_out, A0, A1, n)
     base_t = base_tint or (seat_tint[0] * 0.72, seat_tint[1] * 0.72, seat_tint[2] * 0.72)
     bt = back_tint or (1.0, 1.0, 1.0)
+    bhs = [back_h] * n
+    if high:
+        for k in range(n):
+            am = a0 + (a1 - a0) * (k + 0.5) / n
+            if high[0] <= am <= high[1]:
+                bhs[k] = high[2]
     for k in range(n):
         a, b = inner[k], inner[k + 1]
         ma, mb = mid[k], mid[k + 1]
         oa, ob = outer[k], outer[k + 1]
+        back_h = bhs[k]
+        if k > 0 and bhs[k] != bhs[k - 1]:
+            # the step between a low and a high segment: a riser over the back's thickness, facing the low side
+            lo_, hi_ = min(bhs[k], bhs[k - 1]), max(bhs[k], bhs[k - 1])
+            if bhs[k] > bhs[k - 1]:
+                V.wall(oa, ma, lo_, hi_, back_mat, tint=bt)
+            else:
+                V.wall(ma, oa, lo_, hi_, back_mat, tint=bt)
         # seat cushion: top + front; base below the cushion
         V.poly([(a[0], a[1], seat_h), (b[0], b[1], seat_h), (mb[0], mb[1], seat_h), (ma[0], ma[1], seat_h)],
                "int_ms_leather", tint=seat_tint, normal_hint=(0, 0, 1))
@@ -411,7 +430,8 @@ def banquette_arc(r_in=1.15, depth=0.62, a0=200.0, a1=340.0, seat_tint=T_ORANGE_
         p, q = (ia, oa) if end == "b" else (oa, ia)
         V.wall(p, q, 0.06, seat_h, "int_ms_leather", tint=base_t)
         mp = (ia[0] + d[0] * 0.77, ia[1] + d[1] * 0.77)
-        V.wall(mp if end == "b" else oa, oa if end == "b" else mp, seat_h, back_h, back_mat, tint=bt)
+        V.wall(mp if end == "b" else oa, oa if end == "b" else mp, seat_h, bhs[0] if end == "a" else bhs[-1], back_mat,
+               tint=bt)
     return P
 
 
@@ -503,11 +523,13 @@ def commons_pod(arm=1.25, h=1.35, col=True):
         if col:
             col_prism(C, pts, 0.0, 0.74)
     if col:
-        # the cross: one E-W block and two N-S blocks reaching 0.06 m into it (no coincident opposite faces: a
-        # zero-thickness pair is a 'thin wall' an airborne player is thrown through)
+        # the cross: one E-W block and two N-S blocks reaching 0.09 m into it (no coincident opposite faces: a
+        # zero-thickness pair is a 'thin wall' an airborne player is thrown through). iteration 6: the N-S blocks'
+        # ends were at y +-0.06, exactly on the desks' straight edges (y = +-0.06): 4 opposite-facing coincident
+        # pairs per pod (s6_coinc); at +-0.09 they end inside the E-W block, off every desk face
         K.col_box(C, -arm, -0.12, 0.0, arm, 0.12, h, NOCAM)
-        K.col_box(C, -0.12, -arm, 0.0, 0.12, 0.06, h, NOCAM)
-        K.col_box(C, -0.12, -0.06, 0.0, 0.12, arm, h, NOCAM)
+        K.col_box(C, -0.12, -arm, 0.0, 0.12, 0.09, h, NOCAM)
+        K.col_box(C, -0.12, -0.09, 0.0, 0.12, arm, h, NOCAM)
     return P
 
 
@@ -829,8 +851,16 @@ def computer_bench(n=6, w=0.9, depth=0.75, h=0.74, double=True, col=True, top="i
         for i in range(int(L // 1.8) + 1):
             x = -hl + 0.1 + (L - 0.2) * i / max(1, int(L // 1.8))
             V.box(x - 0.02, y0 + 0.05, 0.0, x + 0.02, y1 - 0.05, h - 0.03, "int_metal", faces="+x-x+y-y")
-        if col:
+        if col and not double:
             K.col_box(P.collision, -hl, y0, 0.0, hl, y1, h, NOCAM)
+    if double:
+        # iteration 6 (technical): the 4 cm slot between the back-to-back tops is closed by a top strip edge to edge
+        # with both tops, and ONE collision block spans them (the slot between two blocks dropped a slow walk 74 u
+        # into it and popped it back up: s5_crack, F2 game z 1098 / 1102)
+        V.poly([(-hl, -0.02, h), (hl, -0.02, h), (hl, 0.02, h), (-hl, 0.02, h)], top, normal_hint=(0, 0, 1),
+               tint=(1.0, 1.0, 1.0))
+        if col:
+            K.col_box(P.collision, -hl, -(depth + 0.02), 0.0, hl, depth + 0.02, h, NOCAM)
     return P
 
 
@@ -904,10 +934,12 @@ def low_shelf(L=1.4, W=0.9, h=1.15, sign=None, books="int_ms_stacks", seed=0, co
             # it: a z-fighting strip along every board, coplanar_report)
             V.box(-hl + 0.03, y * 0.98 - (0.03 if sgn > 0 else 0.006), z - 0.02, hl - 0.03,
                   y * 0.98 + (0.006 if sgn > 0 else 0.03), z, "int_drywall", faces="+y-y+z", tint=g)
-        V.box(-hl, y - (0.03 if sgn > 0 else 0), 0.0, -hl + 0.04, y + (0 if sgn > 0 else 0.03), h - 0.04, "int_drywall",
-              faces="+x-x+y-y", tint=g)
-        V.box(hl - 0.04, y - (0.03 if sgn > 0 else 0), 0.0, hl, y + (0 if sgn > 0 else 0.03), h - 0.04, "int_drywall",
-              faces="+x-x+y-y", tint=g)
+        # iteration 6 (technical): the end uprights stand 1 cm proud of the carcass ends (their end faces lay on the
+        # carcass's +x / -x faces: same-material coplanar pairs on the F3 sci-fi shelf, game x -1752)
+        V.box(-hl - 0.01, y - (0.03 if sgn > 0 else 0), 0.0, -hl + 0.04, y + (0 if sgn > 0 else 0.03), h - 0.04,
+              "int_drywall", faces="+x-x+y-y", tint=g)
+        V.box(hl - 0.04, y - (0.03 if sgn > 0 else 0), 0.0, hl + 0.01, y + (0 if sgn > 0 else 0.03), h - 0.04,
+              "int_drywall", faces="+x-x+y-y", tint=g)
     if sign:
         x = hl + 0.006
         pts = [(x, -hw + 0.08, 0.40), (x, hw - 0.08, 0.40), (x, hw - 0.08, h - 0.12), (x, -hw + 0.08, h - 0.12)]

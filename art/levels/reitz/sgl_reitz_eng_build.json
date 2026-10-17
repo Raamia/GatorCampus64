@@ -5874,8 +5874,8 @@
    "area": 2,
    "module": "tools/campus/interiors/reitz.py",
    "kit_tris": {
-    "visual": 134475,
-    "collision": 12515
+    "visual": 136303,
+    "collision": 12577
    },
    "warp_nodes": [
     {
@@ -6467,14 +6467,14 @@
     "note": "area 2 spawn 0x0A (bhvSpinAirborneWarp) in the Ground-level atrium lounge; only debug warps (warp_to_warpnode / area 2) use it: players walk in through the real doors (instant warps)"
    },
    "pickups": {
-    "coins_placed": 100,
-    "coins_with_goombas": 100,
-    "objects": 43,
+    "coins_placed": 103,
+    "coins_with_goombas": 103,
+    "objects": 47,
     "by_kind": {
      "coin_line": 15,
-     "coin": 25,
+     "coin": 28,
      "heart": 1,
-     "1up": 2
+     "1up": 3
     },
     "skipped": [],
     "items": [
@@ -7140,6 +7140,86 @@
      },
      {
       "kind": "coin",
+      "name": "orange and brew counter coin 0",
+      "map_m": [
+       -414.51,
+       -300.04,
+       1.66
+      ],
+      "game": [
+       5549,
+       166,
+       704
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "orange and brew counter coin 1",
+      "map_m": [
+       -415.75,
+       -298.99,
+       1.66
+      ],
+      "game": [
+       5425,
+       166,
+       599
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "orange and brew counter coin 2",
+      "map_m": [
+       -416.98,
+       -297.93,
+       1.66
+      ],
+      "game": [
+       5302,
+       166,
+       493
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "1up",
+      "name": "orange and brew behind the counter",
+      "map_m": [
+       -417.4,
+       -299.6,
+       0.6
+      ],
+      "game": [
+       5260,
+       60,
+       660
+      ],
+      "behavior": "bhv1Up",
+      "model": "MODEL_1UP",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 0,
+      "acts": null
+     },
+     {
+      "kind": "coin",
       "name": "billiards table 0 coin",
       "map_m": [
        -455.0,
@@ -7223,13 +7303,13 @@
       "name": "bookstore ledge coin -1.6",
       "map_m": [
        -442.55,
-       -356.7,
+       -356.48,
        9.7
       ],
       "game": [
        2745,
        970,
-       6370
+       6348
       ],
       "behavior": "bhvYellowCoin",
       "model": "MODEL_YELLOW_COIN",
@@ -7243,13 +7323,13 @@
       "name": "bookstore ledge coin +0.0",
       "map_m": [
        -440.95,
-       -356.7,
+       -356.48,
        9.7
       ],
       "game": [
        2905,
        970,
-       6370
+       6348
       ],
       "behavior": "bhvYellowCoin",
       "model": "MODEL_YELLOW_COIN",
@@ -7263,13 +7343,13 @@
       "name": "bookstore ledge coin +1.6",
       "map_m": [
        -439.35,
-       -356.7,
+       -356.48,
        9.7
       ],
       "game": [
        3065,
        970,
-       6370
+       6348
       ],
       "behavior": "bhvYellowCoin",
       "model": "MODEL_YELLOW_COIN",
@@ -7495,23 +7575,23 @@
       "plaques": 32
      },
      "LL_wainscot": {
-      "art": 68,
-      "plaques": 231.3
+      "art": 78,
+      "plaques": 266.3
      },
      "L2": {
       "art": 111,
       "plaques": 55
      },
      "L2_wainscot": {
-      "art": 166,
-      "plaques": 584.9
+      "art": 216,
+      "plaques": 882.5
      },
      "L3": {
       "art": 109,
       "plaques": 58
      }
     },
-    "lights": 1919,
+    "lights": 1921,
     "instant_warps": [
      {
       "index": 0,
@@ -7563,27 +7643,27 @@
    "objects": {
     "reitz LL visual": {
      "group": "LL",
-     "tris": 3238,
+     "tris": 3381,
      "collision": false
     },
     "reitz LL collision": {
      "group": "LL",
-     "tris": 329,
+     "tris": 344,
      "collision": true
     },
     "reitz G visual": {
      "group": "G",
-     "tris": 18253,
+     "tris": 19080,
      "collision": false
     },
     "reitz G collision": {
      "group": "G",
-     "tris": 1504,
+     "tris": 1548,
      "collision": true
     },
     "reitz L1 visual": {
      "group": "L1",
-     "tris": 14408,
+     "tris": 14412,
      "collision": false
     },
     "reitz L1 collision": {
@@ -7593,22 +7673,22 @@
     },
     "reitz L2 visual": {
      "group": "L2",
-     "tris": 16448,
+     "tris": 16560,
      "collision": false
     },
     "reitz L2 collision": {
      "group": "L2",
-     "tris": 1854,
+     "tris": 1847,
      "collision": true
     },
     "reitz L3 visual": {
      "group": "L3",
-     "tris": 11066,
+     "tris": 11070,
      "collision": false
     },
     "reitz L3 collision": {
      "group": "L3",
-     "tris": 1100,
+     "tris": 1078,
      "collision": true
     },
     "reitz L4 visual": {
@@ -7652,11 +7732,11 @@
      "collision": true
     }
    },
-   "vertex_lit_material_lists": 352
+   "vertex_lit_material_lists": 356
   }
  ],
  "export_hygiene": {
-  "geometry_mode_lines_sorted": 812,
+  "geometry_mode_lines_sorted": 820,
   "trailing_ws_lines": 2,
   "max_abs_vertex": 32416,
   "common0_jump_link": true
@@ -7677,30 +7757,30 @@
   },
   "area_2": {
    "vertices": [
-    14322,
-    14169
+    14380,
+    14228
    ],
-   "welded_vertices": 152,
-   "collapsed_tris": 25,
+   "welded_vertices": 151,
+   "collapsed_tris": 24,
    "tjunction_splits": 422,
    "triangles": [
-    12493,
-    12890
+    12555,
+    12953
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [
-   "12890 static collision triangles in the largest area (22669 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
+   "12953 static collision triangles in the largest area (22732 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
   ],
-  "collision_tris": 22669,
-  "render_tris": 216288,
+  "collision_tris": 22732,
+  "render_tris": 218116,
   "lua_names": [],
   "fog_patched": [
-   224,
-   224
+   226,
+   226
   ]
  },
- "level_dir": "work/interiors/polish3/r5/design/build2/levels/wf"
+ "level_dir": "work/interiors/polish3/r6/reitz-design-review/build/levels/wf"
 }

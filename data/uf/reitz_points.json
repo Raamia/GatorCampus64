@@ -8905,14 +8905,14 @@
    }
   ],
   "pickups": {
-   "coins_placed": 100,
-   "coins_with_goombas": 100,
-   "objects": 43,
+   "coins_placed": 103,
+   "coins_with_goombas": 103,
+   "objects": 47,
    "by_kind": {
     "coin_line": 15,
-    "coin": 25,
+    "coin": 28,
     "heart": 1,
-    "1up": 2
+    "1up": 3
    },
    "skipped": [],
    "items": [
@@ -9578,6 +9578,86 @@
     },
     {
      "kind": "coin",
+     "name": "orange and brew counter coin 0",
+     "map_m": [
+      -414.51,
+      -300.04,
+      1.66
+     ],
+     "game": [
+      5549,
+      166,
+      704
+     ],
+     "behavior": "bhvYellowCoin",
+     "model": "MODEL_YELLOW_COIN",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
+     "coins": 1,
+     "acts": null
+    },
+    {
+     "kind": "coin",
+     "name": "orange and brew counter coin 1",
+     "map_m": [
+      -415.75,
+      -298.99,
+      1.66
+     ],
+     "game": [
+      5425,
+      166,
+      599
+     ],
+     "behavior": "bhvYellowCoin",
+     "model": "MODEL_YELLOW_COIN",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
+     "coins": 1,
+     "acts": null
+    },
+    {
+     "kind": "coin",
+     "name": "orange and brew counter coin 2",
+     "map_m": [
+      -416.98,
+      -297.93,
+      1.66
+     ],
+     "game": [
+      5302,
+      166,
+      493
+     ],
+     "behavior": "bhvYellowCoin",
+     "model": "MODEL_YELLOW_COIN",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
+     "coins": 1,
+     "acts": null
+    },
+    {
+     "kind": "1up",
+     "name": "orange and brew behind the counter",
+     "map_m": [
+      -417.4,
+      -299.6,
+      0.6
+     ],
+     "game": [
+      5260,
+      60,
+      660
+     ],
+     "behavior": "bhv1Up",
+     "model": "MODEL_1UP",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
+     "coins": 0,
+     "acts": null
+    },
+    {
+     "kind": "coin",
      "name": "billiards table 0 coin",
      "map_m": [
       -455.0,
@@ -9661,13 +9741,13 @@
      "name": "bookstore ledge coin -1.6",
      "map_m": [
       -442.55,
-      -356.7,
+      -356.48,
       9.7
      ],
      "game": [
       2745,
       970,
-      6370
+      6348
      ],
      "behavior": "bhvYellowCoin",
      "model": "MODEL_YELLOW_COIN",
@@ -9681,13 +9761,13 @@
      "name": "bookstore ledge coin +0.0",
      "map_m": [
       -440.95,
-      -356.7,
+      -356.48,
       9.7
      ],
      "game": [
       2905,
       970,
-      6370
+      6348
      ],
      "behavior": "bhvYellowCoin",
      "model": "MODEL_YELLOW_COIN",
@@ -9701,13 +9781,13 @@
      "name": "bookstore ledge coin +1.6",
      "map_m": [
       -439.35,
-      -356.7,
+      -356.48,
       9.7
      ],
      "game": [
       3065,
       970,
-      6370
+      6348
      ],
      "behavior": "bhvYellowCoin",
      "model": "MODEL_YELLOW_COIN",
@@ -9881,7 +9961,7 @@
      ],
      "floor_m": 6.02,
      "clearance_m": 3.0,
-     "headroom_m": 11.38
+     "headroom_m": null
     }
    },
    "north_ground": {

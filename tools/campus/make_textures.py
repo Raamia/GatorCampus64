@@ -2480,6 +2480,8 @@ def build_interior_marston():
         "int_ms_rug_blue": tx_ms_rug_blue(263),
         "int_ms_roof_membrane": tx_ms_roof_membrane(264),
         "int_ms_sand": tx_ms_sand(265),
+        "int_ms_glass_lobby": tx_ms_glass_lobby(266),
+        "int_ms_kitchen": tx_ms_kitchen(267),
     }
 
 
@@ -2703,6 +2705,72 @@ def tx_ms_glass_black(seed):
             s = max(0.0, 1.0 - abs(d - 6.0) / 5.0)
             c = (28 * k, 32 * k, 36 * k)
             t.set(x, y, mix(c, (66, 72, 80), s * 0.55))
+    t.noise(1)
+    return t
+
+
+def tx_ms_glass_lobby(seed):
+    """iteration 6 (fidelity-3 blocking, #1): the porch storefront bay EAST of the doors, a dark tinted pane with the
+    lit lobby behind it: smoked glass (about 30 % value, darker than the brick), two soft warm ceiling-light glows
+    near the head, a dim warm band of lit lobby at mid height and the same soft sheen as int_ms_glass_black. All
+    gradients are soft (no one-texel high-contrast lines: no mipmaps). Mapped once per bay."""
+    t = Tex(32, 32, (34, 36, 40), seed)
+    for y in range(32):
+        for x in range(32):
+            k = 0.94 + 0.10 * (1.0 - y / 31.0)
+            c = (34 * k, 36 * k, 40 * k)
+            band = max(0.0, 1.0 - abs(y - 20.0) / 7.0)        # the lit lobby seen through the tint
+            c = mix(c, (74, 66, 56), band * 0.6)
+            for (lx, ly, r) in ((9.0, 6.0, 4.5), (24.0, 8.0, 4.0)):
+                g = max(0.0, 1.0 - math.hypot(x - lx, (y - ly) * 1.4) / r)
+                c = mix(c, (206, 176, 128), g * g * 0.95)
+            d = (x - 4) + (y - 31) * 0.55
+            s = max(0.0, 1.0 - abs(d - 6.0) / 5.0)
+            t.set(x, y, mix(c, (70, 76, 84), s * 0.35))
+    t.noise(1)
+    return t
+
+
+def tx_ms_kitchen(seed):
+    """iteration 6 (fidelity-3, #35): the Starbucks pickup window, the brightest thing in the photo: the lit
+    back-of-house seen through the opening between the slats. A warm cream lit back wall, a stainless hood band at
+    the top, a wire shelf with cups / boxes, stainless prep equipment with dark fronts and a small amber indicator
+    below. Soft two-texel bands only, moderate contrast (no one-texel high-contrast lines: no mipmaps). Mapped once
+    (y 0 = top), drawn fullbright."""
+    t = Tex(32, 32, hexc("#E6D4B0"), seed)
+    for y in range(32):
+        for x in range(32):
+            k = 1.0 - 0.10 * (y / 31.0) - 0.06 * max(0.0, (6 - x) / 6.0)   # lit from above, the left jamb shaded
+            t.set(x, y, shade(mix(hexc("#EEDDBA"), hexc("#D6C29C"), y / 31.0), k))
+    steel, steel_d = hexc("#B4B8BA"), hexc("#8E9296")
+    for y in range(2, 6):                                   # the hood / upper cabinet band
+        for x in range(3, 30):
+            t.set(x, y, mix(steel, steel_d, (y - 2) / 4.0))
+    for x in range(4, 30):                                  # the wire shelf (two texels, soft)
+        t.set(x, 12, hexc("#A2A6A8"))
+        t.set(x, 13, hexc("#9A9C9E"))
+    items = [(5, 8, "#F2F0EA"), (9, 7, "#F2F0EA"), (13, 9, "#A87A52"), (17, 8, "#C8A070"), (21, 7, "#F0EEE8"),
+             (25, 9, "#6E8A62")]
+    for (x0, ytop, c) in items:                             # cup stacks and boxes on the shelf
+        for x in range(x0, x0 + 3):
+            for y in range(ytop, 12):
+                t.set(x, y, shade(hexc(c), 0.92 if x == x0 else 1.0))
+    for y in range(18, 31):                                 # the stainless prep line
+        for x in range(3, 30):
+            t.set(x, y, mix(hexc("#C2C6C8"), steel_d, (y - 18) / 13.0))
+    for x in range(3, 30):                                  # its worktop edge (two texels)
+        t.set(x, 18, hexc("#D2D6D8"))
+        t.set(x, 19, hexc("#C6CACC"))
+    for (x0, x1) in ((5, 12), (15, 22)):                    # the dark equipment fronts
+        for y in range(22, 29):
+            for x in range(x0, x1):
+                t.set(x, y, mix(hexc("#6E7276"), hexc("#5E6266"), (y - 22) / 7.0))
+    for (x, y) in ((10, 23), (11, 23), (10, 24), (11, 24)):  # an amber indicator
+        t.set(x, y, hexc("#E8A040"))
+    for y in range(14, 18):                                 # a warm pendant glow over the line
+        for x in range(10, 22):
+            g = max(0.0, 1.0 - math.hypot(x - 15.5, (y - 15.5) * 1.6) / 6.0)
+            t.set(x, y, mix(t.get(x, y), (252, 238, 206), g * 0.7))
     t.noise(1)
     return t
 
