@@ -43,15 +43,12 @@ function sgl_deepspace_queue_run(run)
     return true
 end
 
+local sLeaderboard = nil
+
 local function show_cached_leaderboard(label, mission_id)
     local prefix = "sgl_ds_lb_" .. mission_id .. "_"
     local count = mod_storage_load_integer(prefix .. "count", 0)
-    if count <= 0 then
-        djui_popup_create(label .. " leaderboard\nNo unassisted scores cached yet.", 5)
-        return
-    end
-
-    local message = label .. " leaderboard"
+    local entries = {}
     for rank = 1, math.min(count, 5) do
         local entry = mod_storage_load(prefix .. rank)
         local tag, frames, retries
@@ -59,10 +56,82 @@ local function show_cached_leaderboard(label, mission_id)
             tag, frames, retries = entry:match("^([^|]+)|(%d+)|(%d+)$")
         end
         if tag ~= nil then
-            message = message .. string.format("\n#%d %s  %.2fs  retry %s", rank, tag, tonumber(frames) / 30, retries)
+            table.insert(entries, {
+                tag = tag,
+                frames = tonumber(frames),
+                retries = tonumber(retries),
+            })
         end
     end
-    djui_popup_create(message, 8)
+    sLeaderboard = {
+        label = string.upper(label),
+        entries = entries,
+        openedAt = get_global_timer(),
+        duration = 360,
+    }
+end
+
+local function leaderboard_time(frames)
+    local tenths = math.floor(frames / 3)
+    local seconds = tenths // 10
+    local minutes = seconds // 60
+    return string.format("%dM%02d.%dS", minutes, seconds % 60, tenths % 10)
+end
+
+local function render_cached_leaderboard()
+    if sLeaderboard == nil then return end
+    local age = get_global_timer() - sLeaderboard.openedAt
+    if age >= sLeaderboard.duration then
+        sLeaderboard = nil
+        return
+    end
+
+    djui_hud_set_resolution(RESOLUTION_N64)
+    djui_hud_set_font(FONT_NORMAL)
+    local width = djui_hud_get_screen_width()
+    local cardW = math.min(166, width - 16)
+    local cardX = width - cardW - 8
+    local cardY = 13
+    local titleH = 34
+    local rowH = 16
+    local cardH = 8 + titleH + math.max(1, #sLeaderboard.entries) * rowH + 14
+
+    -- Dark navy glass with a UF orange cap and a cool blue edge, instead of the
+    -- engine's plain black popup. Keep the card compact so it reads beside the
+    -- Mods menu on both 4:3 and widescreen layouts.
+    sgl_hud_rect(cardX - 1, cardY - 1, cardW + 2, cardH + 2, 73, 154, 235, 230)
+    sgl_hud_rect(cardX, cardY, cardW, cardH, 7, 17, 38, 238)
+    sgl_hud_rect(cardX, cardY, cardW, 3, 250, 110, 30, 255)
+    sgl_hud_rect(cardX + 9, cardY + 9, 3, 20, 90, 170, 255, 255)
+    sgl_hud_text("GLOBAL RECORDS", cardX + 17, cardY + 9, 0.27, { 142, 194, 255 }, 1)
+    sgl_hud_text(sLeaderboard.label, cardX + 17, cardY + 19, 0.34, { 255, 255, 255 }, 1)
+    sgl_hud_rect(cardX + 9, cardY + titleH, cardW - 18, 1, 76, 105, 143, 220)
+
+    if #sLeaderboard.entries == 0 then
+        sgl_hud_text("NO TIMES SYNCED YET", cardX + 10, cardY + titleH + 8, 0.28, { 220, 228, 240 }, 1)
+        sgl_hud_text("Finish a run, then sync", cardX + 10, cardY + titleH + 19, 0.24, { 155, 174, 199 }, 1)
+    else
+        for rank, score in ipairs(sLeaderboard.entries) do
+            local rowY = cardY + titleH + 3 + (rank - 1) * rowH
+            local medal = rank == 1 and { 255, 205, 70 } or (rank == 2 and { 190, 210, 235 } or { 205, 145, 100 })
+            local rowBg = rank == 1 and { 55, 48, 29 } or { 14, 29, 52 }
+            sgl_hud_rect(cardX + 7, rowY, cardW - 14, 14, rowBg[1], rowBg[2], rowBg[3], 235)
+            sgl_hud_rect(cardX + 7, rowY, 2, 14, medal[1], medal[2], medal[3], 255)
+            local left = string.format("#%d %s", rank, score.tag)
+            local right = string.format("%s R%d", leaderboard_time(score.frames), score.retries)
+            local scale = math.min(0.25, (cardW - 25) / (djui_hud_measure_text(left .. "  " .. right)))
+            sgl_hud_text(left, cardX + 12, rowY + 3, scale, medal, 1)
+            local rightW = djui_hud_measure_text(right) * scale
+            sgl_hud_text(right, cardX + cardW - 11 - rightW, rowY + 3, scale, { 238, 243, 250 }, 1)
+        end
+    end
+
+    local footer = "DEEPSPACE  /  SNAPSHOT"
+    sgl_hud_text(footer, cardX + 9, cardY + cardH - 10, 0.21, { 137, 162, 194 }, 1)
+end
+
+if hook_event ~= nil and HOOK_ON_HUD_RENDER ~= nil then
+    hook_event(HOOK_ON_HUD_RENDER, render_cached_leaderboard)
 end
 
 if hook_mod_menu_button ~= nil then
