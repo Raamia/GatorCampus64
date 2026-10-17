@@ -2875,37 +2875,21 @@
     "clearance_m": 3.0,
     "headroom_m": null
    },
-   "food_court_center": {
-    "name": "reitz_union_food_court_center",
-    "map_m": [
-     -412.0,
-     -305.0,
-     2.0
-    ],
-    "game": [
-     5800,
-     200,
-     1200
-    ],
-    "floor_m": 2.0,
-    "clearance_m": 1.0,
-    "headroom_m": 4.6
-   },
    "food_court_door_inside": {
     "name": "reitz_union_food_court_door_inside",
     "map_m": [
      -376.04,
      -287.02,
-     2.0
+     2.02
     ],
     "game": [
      9396,
-     200,
+     202,
      -598
     ],
-    "floor_m": 2.0,
-    "clearance_m": 2.23,
-    "headroom_m": 4.6
+    "floor_m": 2.02,
+    "clearance_m": 0.42,
+    "headroom_m": 2.98
    },
    "food_court_door_outside": {
     "name": "reitz_union_food_court_door_outside",
@@ -2923,37 +2907,69 @@
     "clearance_m": 2.51,
     "headroom_m": 3.6
    },
-   "food_court_counter_top": {
-    "name": "reitz_union_food_court_counter_top",
+   "north_entrance_recess": {
+    "name": "reitz_union_north_entrance_recess",
     "map_m": [
-     -427.0,
-     -300.0,
-     3.1
+     -380.45,
+     -254.0,
+     0.0
     ],
     "game": [
-     4300,
-     310,
-     700
+     8955,
+     0,
+     -3900
     ],
-    "floor_m": 3.1,
-    "clearance_m": 0.65,
-    "headroom_m": 3.5
-   },
-   "food_court_table": {
-    "name": "reitz_union_food_court_table",
-    "map_m": [
-     -413.75,
-     -303.4,
-     2.85
-    ],
-    "game": [
-     5625,
-     285,
-     1040
-    ],
-    "floor_m": 2.85,
+    "floor_m": 0.0,
     "clearance_m": 3.0,
-    "headroom_m": 3.75
+    "headroom_m": 5.4
+   },
+   "north_entrance_doors": {
+    "name": "reitz_union_north_entrance_doors",
+    "map_m": [
+     -380.45,
+     -257.4,
+     0.0
+    ],
+    "game": [
+     8955,
+     0,
+     -3560
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.8,
+    "headroom_m": 5.4
+   },
+   "south_terrace_doors": {
+    "name": "reitz_union_south_terrace_doors",
+    "map_m": [
+     -384.7,
+     -288.0,
+     2.0
+    ],
+    "game": [
+     8530,
+     200,
+     -500
+    ],
+    "floor_m": 2.0,
+    "clearance_m": 3.0,
+    "headroom_m": 3.0
+   },
+   "ground_north_door": {
+    "name": "reitz_union_ground_north_door",
+    "map_m": [
+     -419.1,
+     -242.8,
+     0.0
+    ],
+    "game": [
+     5090,
+     0,
+     -5020
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.3,
+    "headroom_m": 3.0
    },
    "se_canopy_top": {
     "name": "reitz_union_se_canopy_top",
@@ -5443,16 +5459,16 @@
   }
  },
  "pickups": {
-  "coins_placed": 254,
-  "coins_with_goombas": 262,
-  "objects": 140,
+  "coins_placed": 249,
+  "coins_with_goombas": 257,
+  "objects": 139,
   "by_kind": {
    "coin": 82,
    "heart": 4,
    "1up": 3,
    "goomba": 8,
-   "coin_line": 20,
    "coin_ring": 9,
+   "coin_line": 19,
    "bobomb": 2,
    "shell": 3,
    "pole": 9
@@ -5997,26 +6013,6 @@
     "bparams": "0x00000000",
     "facing_deg": 0.0,
     "coins": 1,
-    "acts": null
-   },
-   {
-    "kind": "coin_line",
-    "name": "food court coins",
-    "map_m": [
-     -412.0,
-     -305.0,
-     2.0
-    ],
-    "game": [
-     5800,
-     200,
-     1200
-    ],
-    "behavior": "bhvCoinFormation",
-    "model": "MODEL_NONE",
-    "bparams": "0x00000000",
-    "facing_deg": 90.0,
-    "coins": 5,
     "acts": null
    },
    {
@@ -8314,5 +8310,1536 @@
    }
   ]
  },
- "checks": []
+ "checks": [],
+ "interior_area_2": {
+  "note": "Reitz Union interior (area 2 of levels/wf), measured on the built collision of area 2.",
+  "coordinates": "x = east, y = north, z = game metres above the Ground Level floor (LL -6, G 0, L1 6, L2 12, L3 18, L4 24, L5 29, L6 34); origin = Century Tower; same frame as area 1",
+  "area": 2,
+  "spawn": {
+   "map_m": [
+    -399.0,
+    -278.5
+   ],
+   "floor_m": 0.0,
+   "note": "area 2 spawn 0x0A (bhvSpinAirborneWarp) in the Ground-level atrium lounge; only debug warps (warp_to_warpnode / area 2) use it: players walk in through the real doors (instant warps)"
+  },
+  "warp_nodes": [
+   {
+    "id": "0x0A",
+    "dest_level": "LEVEL_WF",
+    "dest_area": 2,
+    "dest_node": "0x0A",
+    "note": "area 2 spawn (debug warps only)"
+   },
+   {
+    "id": "0xF0",
+    "dest_level": "LEVEL_CASTLE_GROUNDS",
+    "dest_area": 1,
+    "dest_node": "0x22",
+    "note": "star exit -> hub outside door 2 (as area 1)"
+   },
+   {
+    "id": "0xF1",
+    "dest_level": "LEVEL_CASTLE_GROUNDS",
+    "dest_area": 1,
+    "dest_node": "0x32",
+    "note": "death / Exit course -> hub outside door 2 (as area 1)"
+   },
+   {
+    "id": "0x40",
+    "dest_level": "LEVEL_WF",
+    "dest_area": 2,
+    "dest_node": "0x41",
+    "note": "Elevator LL up -> G (teleport pad)"
+   },
+   {
+    "id": "0x41",
+    "dest_level": "LEVEL_WF",
+    "dest_area": 2,
+    "dest_node": "0x40",
+    "note": "Elevator G down -> LL (teleport pad)"
+   },
+   {
+    "id": "0x42",
+    "dest_level": "LEVEL_WF",
+    "dest_area": 2,
+    "dest_node": "0x43",
+    "note": "Elevator G up -> L1 (teleport pad)"
+   },
+   {
+    "id": "0x43",
+    "dest_level": "LEVEL_WF",
+    "dest_area": 2,
+    "dest_node": "0x42",
+    "note": "Elevator L1 down -> G (teleport pad)"
+   },
+   {
+    "id": "0x44",
+    "dest_level": "LEVEL_WF",
+    "dest_area": 2,
+    "dest_node": "0x45",
+    "note": "Elevator L1 up -> L2 (teleport pad)"
+   },
+   {
+    "id": "0x45",
+    "dest_level": "LEVEL_WF",
+    "dest_area": 2,
+    "dest_node": "0x44",
+    "note": "Elevator L2 down -> L1 (teleport pad)"
+   },
+   {
+    "id": "0x46",
+    "dest_level": "LEVEL_WF",
+    "dest_area": 2,
+    "dest_node": "0x47",
+    "note": "Elevator L2 up -> L3 (teleport pad)"
+   },
+   {
+    "id": "0x47",
+    "dest_level": "LEVEL_WF",
+    "dest_area": 2,
+    "dest_node": "0x46",
+    "note": "Elevator L3 down -> L2 (teleport pad)"
+   },
+   {
+    "id": "0x48",
+    "dest_level": "LEVEL_WF",
+    "dest_area": 2,
+    "dest_node": "0x49",
+    "note": "Elevator L3 up -> L4 (teleport pad)"
+   },
+   {
+    "id": "0x49",
+    "dest_level": "LEVEL_WF",
+    "dest_area": 2,
+    "dest_node": "0x48",
+    "note": "Elevator L4 down -> L3 (teleport pad)"
+   },
+   {
+    "id": "0x4A",
+    "dest_level": "LEVEL_WF",
+    "dest_area": 2,
+    "dest_node": "0x4B",
+    "note": "Elevator L4 up -> L5 (teleport pad)"
+   },
+   {
+    "id": "0x4B",
+    "dest_level": "LEVEL_WF",
+    "dest_area": 2,
+    "dest_node": "0x4A",
+    "note": "Elevator L5 down -> L4 (teleport pad)"
+   },
+   {
+    "id": "0x4C",
+    "dest_level": "LEVEL_WF",
+    "dest_area": 2,
+    "dest_node": "0x4D",
+    "note": "Elevator L5 up -> L6 (teleport pad)"
+   },
+   {
+    "id": "0x4D",
+    "dest_level": "LEVEL_WF",
+    "dest_area": 2,
+    "dest_node": "0x4C",
+    "note": "Elevator L6 down -> L5 (teleport pad)"
+   }
+  ],
+  "instant_warps": [
+   {
+    "index": 0,
+    "surface": "SURFACE_INSTANT_WARP_1B",
+    "to_area": 1,
+    "offset_units": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "index": 1,
+    "surface": "SURFACE_INSTANT_WARP_1C",
+    "to_area": 1,
+    "offset_units": [
+     0,
+     -600,
+     0
+    ]
+   },
+   {
+    "index": 2,
+    "surface": "SURFACE_INSTANT_WARP_1D",
+    "to_area": 1,
+    "offset_units": [
+     0,
+     200,
+     0
+    ]
+   },
+   {
+    "index": 3,
+    "surface": "SURFACE_INSTANT_WARP_1E",
+    "to_area": 1,
+    "offset_units": [
+     0,
+     -400,
+     0
+    ]
+   }
+  ],
+  "warp_strips": [
+   {
+    "entrance": "north",
+    "index": 1,
+    "surface": "SURFACE_INSTANT_WARP_1C",
+    "z_m": 6.0,
+    "poly_m": [
+     [
+      -384.6,
+      -258.0
+     ],
+     [
+      -376.3,
+      -258.0
+     ],
+     [
+      -376.3,
+      -255.6
+     ],
+     [
+      -384.6,
+      -255.6
+     ]
+    ],
+    "to_area": 1,
+    "offset_units": [
+     0,
+     -600,
+     0
+    ]
+   },
+   {
+    "entrance": "south_terrace",
+    "index": 2,
+    "surface": "SURFACE_INSTANT_WARP_1D",
+    "z_m": 0.0,
+    "poly_m": [
+     [
+      -388.2,
+      -288.6
+     ],
+     [
+      -381.2,
+      -288.6
+     ],
+     [
+      -381.2,
+      -286.3
+     ],
+     [
+      -388.2,
+      -286.3
+     ]
+    ],
+    "to_area": 1,
+    "offset_units": [
+     0,
+     200,
+     0
+    ]
+   },
+   {
+    "entrance": "south_exit_l1",
+    "index": 3,
+    "surface": "SURFACE_INSTANT_WARP_1E",
+    "z_m": 6.0,
+    "poly_m": [
+     [
+      -377.66,
+      -291.04
+     ],
+     [
+      -374.46,
+      -291.08
+     ],
+     [
+      -374.46,
+      -288.88
+     ],
+     [
+      -377.66,
+      -288.84
+     ]
+    ],
+    "to_area": 1,
+    "offset_units": [
+     0,
+     -400,
+     0
+    ]
+   },
+   {
+    "entrance": "north_ground",
+    "index": 0,
+    "surface": "SURFACE_INSTANT_WARP_1B",
+    "z_m": 0.0,
+    "poly_m": [
+     [
+      -420.4,
+      -244.5
+     ],
+     [
+      -417.8,
+      -244.5
+     ],
+     [
+      -417.8,
+      -242.2
+     ],
+     [
+      -420.4,
+      -242.2
+     ]
+    ],
+    "to_area": 1,
+    "offset_units": [
+     0,
+     0,
+     0
+    ]
+   }
+  ],
+  "pads": [
+   {
+    "name": "Elevator LL up",
+    "node": 64,
+    "dest_node": 65,
+    "floor": "LL",
+    "dest_floor": "G",
+    "pos_m": [
+     -448.7591194968965,
+     -269.67484276732165,
+     -6.0
+    ],
+    "facing_deg": 90.0,
+    "bparams": "0x07400000",
+    "behavior": "bhvFadingWarp",
+    "floor_m": -6.0,
+    "game": [
+     2124,
+     -600,
+     -2333
+    ]
+   },
+   {
+    "name": "Elevator G down",
+    "node": 65,
+    "dest_node": 64,
+    "floor": "G",
+    "dest_floor": "LL",
+    "pos_m": [
+     -441.2849390918901,
+     -269.23189368769056,
+     0.0
+    ],
+    "facing_deg": 270.0,
+    "bparams": "0x07410000",
+    "behavior": "bhvFadingWarp",
+    "floor_m": 0.0,
+    "game": [
+     2872,
+     0,
+     -2377
+    ]
+   },
+   {
+    "name": "Elevator G up",
+    "node": 66,
+    "dest_node": 67,
+    "floor": "G",
+    "dest_floor": "L1",
+    "pos_m": [
+     -448.7594771242405,
+     -269.22483660134355,
+     0.0
+    ],
+    "facing_deg": 90.0,
+    "bparams": "0x07420000",
+    "behavior": "bhvFadingWarp",
+    "floor_m": 0.0,
+    "game": [
+     2124,
+     0,
+     -2378
+    ]
+   },
+   {
+    "name": "Elevator L1 down",
+    "node": 67,
+    "dest_node": 66,
+    "floor": "L1",
+    "dest_floor": "G",
+    "pos_m": [
+     -441.4408805029104,
+     -269.9251572325543,
+     6.0
+    ],
+    "facing_deg": 270.0,
+    "bparams": "0x07430000",
+    "behavior": "bhvFadingWarp",
+    "floor_m": 6.0,
+    "game": [
+     2856,
+     600,
+     -2307
+    ]
+   },
+   {
+    "name": "Elevator L1 up",
+    "node": 68,
+    "dest_node": 69,
+    "floor": "L1",
+    "dest_floor": "L2",
+    "pos_m": [
+     -448.36602728048734,
+     -269.83277919863616,
+     6.0
+    ],
+    "facing_deg": 90.0,
+    "bparams": "0x07440000",
+    "behavior": "bhvFadingWarp",
+    "floor_m": 6.0,
+    "game": [
+     2163,
+     600,
+     -2317
+    ]
+   },
+   {
+    "name": "Elevator L2 down",
+    "node": 69,
+    "dest_node": 68,
+    "floor": "L2",
+    "dest_floor": "L1",
+    "pos_m": [
+     -441.20000000002346,
+     -269.3000000000132,
+     12.0
+    ],
+    "facing_deg": 270.0,
+    "bparams": "0x07450000",
+    "behavior": "bhvFadingWarp",
+    "floor_m": 12.0,
+    "game": [
+     2880,
+     1200,
+     -2370
+    ]
+   },
+   {
+    "name": "Elevator L2 up",
+    "node": 70,
+    "dest_node": 71,
+    "floor": "L2",
+    "dest_floor": "L3",
+    "pos_m": [
+     -448.64999999984656,
+     -269.1999999999061,
+     12.0
+    ],
+    "facing_deg": 90.0,
+    "bparams": "0x07460000",
+    "behavior": "bhvFadingWarp",
+    "floor_m": 12.0,
+    "game": [
+     2135,
+     1200,
+     -2380
+    ]
+   },
+   {
+    "name": "Elevator L3 down",
+    "node": 71,
+    "dest_node": 70,
+    "floor": "L3",
+    "dest_floor": "L2",
+    "pos_m": [
+     -441.9,
+     -269.3500000000013,
+     18.0
+    ],
+    "facing_deg": 270.0,
+    "bparams": "0x07470000",
+    "behavior": "bhvFadingWarp",
+    "floor_m": 18.0,
+    "game": [
+     2810,
+     1800,
+     -2365
+    ]
+   },
+   {
+    "name": "Elevator L3 up",
+    "node": 72,
+    "dest_node": 73,
+    "floor": "L3",
+    "dest_floor": "L4",
+    "pos_m": [
+     -448.8595047341998,
+     -269.27453265358724,
+     18.0
+    ],
+    "facing_deg": 90.0,
+    "bparams": "0x07480000",
+    "behavior": "bhvFadingWarp",
+    "floor_m": 18.0,
+    "game": [
+     2114,
+     1800,
+     -2373
+    ]
+   },
+   {
+    "name": "Elevator L4 down",
+    "node": 73,
+    "dest_node": 72,
+    "floor": "L4",
+    "dest_floor": "L3",
+    "pos_m": [
+     -441.0937198067448,
+     -268.92512077293554,
+     24.0
+    ],
+    "facing_deg": 270.0,
+    "bparams": "0x07490000",
+    "behavior": "bhvFadingWarp",
+    "floor_m": 24.0,
+    "game": [
+     2891,
+     2400,
+     -2407
+    ]
+   },
+   {
+    "name": "Elevator L4 up",
+    "node": 74,
+    "dest_node": 75,
+    "floor": "L4",
+    "dest_floor": "L5",
+    "pos_m": [
+     -448.90000000004596,
+     -268.85000000002503,
+     24.0
+    ],
+    "facing_deg": 90.0,
+    "bparams": "0x074A0000",
+    "behavior": "bhvFadingWarp",
+    "floor_m": 24.0,
+    "game": [
+     2110,
+     2400,
+     -2415
+    ]
+   },
+   {
+    "name": "Elevator L5 down",
+    "node": 75,
+    "dest_node": 74,
+    "floor": "L5",
+    "dest_floor": "L4",
+    "pos_m": [
+     -441.20000000031104,
+     -270.0000000001919,
+     29.0
+    ],
+    "facing_deg": 270.0,
+    "bparams": "0x074B0000",
+    "behavior": "bhvFadingWarp",
+    "floor_m": 29.0,
+    "game": [
+     2880,
+     2900,
+     -2300
+    ]
+   },
+   {
+    "name": "Elevator L5 up",
+    "node": 76,
+    "dest_node": 77,
+    "floor": "L5",
+    "dest_floor": "L6",
+    "pos_m": [
+     -448.7333333334697,
+     -269.9333333334125,
+     29.0
+    ],
+    "facing_deg": 90.0,
+    "bparams": "0x074C0000",
+    "behavior": "bhvFadingWarp",
+    "floor_m": 29.0,
+    "game": [
+     2127,
+     2900,
+     -2307
+    ]
+   },
+   {
+    "name": "Elevator L6 down",
+    "node": 77,
+    "dest_node": 76,
+    "floor": "L6",
+    "dest_floor": "L5",
+    "pos_m": [
+     -441.2499999999829,
+     -269.9499999999906,
+     34.0
+    ],
+    "facing_deg": 270.0,
+    "bparams": "0x074D0000",
+    "behavior": "bhvFadingWarp",
+    "floor_m": 34.0,
+    "game": [
+     2875,
+     3400,
+     -2305
+    ]
+   }
+  ],
+  "pickups": {
+   "coins_placed": 36,
+   "coins_with_goombas": 36,
+   "objects": 11,
+   "by_kind": {
+    "coin_line": 5,
+    "coin": 3,
+    "coin_ring": 1,
+    "heart": 1,
+    "1up": 1
+   },
+   "skipped": [],
+   "items": [
+    {
+     "kind": "coin_line",
+     "name": "food court coins",
+     "map_m": [
+      -438.0,
+      -318.0,
+      6.0
+     ],
+     "game": [
+      3200,
+      600,
+      2500
+     ],
+     "behavior": "bhvCoinFormation",
+     "model": "MODEL_NONE",
+     "bparams": "0x00000000",
+     "facing_deg": 90.0,
+     "coins": 5,
+     "acts": null
+    },
+    {
+     "kind": "coin_line",
+     "name": "bowling lane 7 coins",
+     "map_m": [
+      -446.17,
+      -318.0,
+      0.0
+     ],
+     "game": [
+      2383,
+      0,
+      2500
+     ],
+     "behavior": "bhvCoinFormation",
+     "model": "MODEL_NONE",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
+     "coins": 5,
+     "acts": null
+    },
+    {
+     "kind": "coin_line",
+     "name": "atrium lounge coins",
+     "map_m": [
+      -386.0,
+      -279.5,
+      0.48
+     ],
+     "game": [
+      8400,
+      48,
+      -1350
+     ],
+     "behavior": "bhvCoinFormation",
+     "model": "MODEL_NONE",
+     "bparams": "0x00000000",
+     "facing_deg": 90.0,
+     "coins": 5,
+     "acts": null
+    },
+    {
+     "kind": "coin",
+     "name": "atrium landing G coin",
+     "map_m": [
+      -400.0,
+      -271.3,
+      3.6
+     ],
+     "game": [
+      7000,
+      360,
+      -2170
+     ],
+     "behavior": "bhvYellowCoin",
+     "model": "MODEL_YELLOW_COIN",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
+     "coins": 1,
+     "acts": null
+    },
+    {
+     "kind": "coin",
+     "name": "atrium landing L1 coin",
+     "map_m": [
+      -400.0,
+      -271.3,
+      9.6
+     ],
+     "game": [
+      7000,
+      960,
+      -2170
+     ],
+     "behavior": "bhvYellowCoin",
+     "model": "MODEL_YELLOW_COIN",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
+     "coins": 1,
+     "acts": null
+    },
+    {
+     "kind": "coin",
+     "name": "atrium landing L2 coin",
+     "map_m": [
+      -400.0,
+      -271.3,
+      15.6
+     ],
+     "game": [
+      7000,
+      1560,
+      -2170
+     ],
+     "behavior": "bhvYellowCoin",
+     "model": "MODEL_YELLOW_COIN",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
+     "coins": 1,
+     "acts": null
+    },
+    {
+     "kind": "coin_ring",
+     "name": "grand ballroom coins",
+     "map_m": [
+      -488.5,
+      -264.0,
+      12.46
+     ],
+     "game": [
+      -1850,
+      1246,
+      -2900
+     ],
+     "behavior": "bhvCoinFormation",
+     "model": "MODEL_NONE",
+     "bparams": "0x00020000",
+     "facing_deg": 0.0,
+     "coins": 8,
+     "acts": null
+    },
+    {
+     "kind": "coin_line",
+     "name": "rion ballroom coins",
+     "map_m": [
+      -440.6,
+      -300.5,
+      18.0
+     ],
+     "game": [
+      2940,
+      1800,
+      750
+     ],
+     "behavior": "bhvCoinFormation",
+     "model": "MODEL_NONE",
+     "bparams": "0x00000000",
+     "facing_deg": 90.0,
+     "coins": 5,
+     "acts": null
+    },
+    {
+     "kind": "coin_line",
+     "name": "esports aisle coins",
+     "map_m": [
+      -463.6,
+      -292.0,
+      0.0
+     ],
+     "game": [
+      640,
+      0,
+      -100
+     ],
+     "behavior": "bhvCoinFormation",
+     "model": "MODEL_NONE",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
+     "coins": 5,
+     "acts": null
+    },
+    {
+     "kind": "heart",
+     "name": "hotel corridor heart",
+     "map_m": [
+      -440.0,
+      -274.0,
+      30.0
+     ],
+     "game": [
+      3000,
+      3000,
+      -1900
+     ],
+     "behavior": "bhvRecoveryHeart",
+     "model": "MODEL_HEART",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
+     "coins": 0,
+     "acts": null
+    },
+    {
+     "kind": "1up",
+     "name": "uf letters 1-up",
+     "map_m": [
+      -411.33,
+      -265.6,
+      3.55
+     ],
+     "game": [
+      5867,
+      355,
+      -2740
+     ],
+     "behavior": "bhv1Up",
+     "model": "MODEL_1UP",
+     "bparams": "0x00000000",
+     "facing_deg": 0.0,
+     "coins": 0,
+     "acts": null
+    }
+   ]
+  },
+  "checks": [
+   "interior_bowling_foul_line: floor 0.95 vs design 0.00"
+  ],
+  "entrances": {
+   "north": {
+    "inside": {
+     "name": "interior_north_inside",
+     "map_m": [
+      -380.45,
+      -259.5,
+      6.0
+     ],
+     "game": [
+      8955,
+      600,
+      -3350
+     ],
+     "floor_m": 6.0,
+     "clearance_m": 2.33,
+     "headroom_m": 5.4
+    },
+    "outside_strip": {
+     "name": "interior_north_strip",
+     "map_m": [
+      -380.45,
+      -256.8,
+      6.02
+     ],
+     "game": [
+      8955,
+      602,
+      -3620
+     ],
+     "floor_m": 6.02,
+     "clearance_m": 3.0,
+     "headroom_m": 5.38
+    }
+   },
+   "south_terrace": {
+    "inside": {
+     "name": "interior_south_terrace_inside",
+     "map_m": [
+      -384.7,
+      -284.8,
+      0.0
+     ],
+     "game": [
+      8530,
+      0,
+      -820
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.26,
+     "headroom_m": 5.4
+    },
+    "outside_strip": {
+     "name": "interior_south_terrace_strip",
+     "map_m": [
+      -384.7,
+      -287.45,
+      0.02
+     ],
+     "game": [
+      8530,
+      2,
+      -555
+     ],
+     "floor_m": 0.02,
+     "clearance_m": 1.56,
+     "headroom_m": 5.38
+    }
+   },
+   "south_exit_l1": {
+    "inside": {
+     "name": "interior_south_exit_l1_inside",
+     "map_m": [
+      -376.06,
+      -287.36,
+      6.0
+     ],
+     "game": [
+      9394,
+      600,
+      -564
+     ],
+     "floor_m": 6.0,
+     "clearance_m": 2.26,
+     "headroom_m": 6.0
+    },
+    "outside_strip": {
+     "name": "interior_south_exit_l1_strip",
+     "map_m": [
+      -376.06,
+      -289.96,
+      6.02
+     ],
+     "game": [
+      9394,
+      602,
+      -304
+     ],
+     "floor_m": 6.02,
+     "clearance_m": 3.0,
+     "headroom_m": 5.98
+    }
+   },
+   "north_ground": {
+    "inside": {
+     "name": "interior_north_ground_inside",
+     "map_m": [
+      -419.1,
+      -246.0,
+      0.0
+     ],
+     "game": [
+      5090,
+      0,
+      -4700
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 0.88,
+     "headroom_m": 5.4
+    },
+    "outside_strip": {
+     "name": "interior_north_ground_strip",
+     "map_m": [
+      -419.1,
+      -243.35,
+      0.02
+     ],
+     "game": [
+      5090,
+      2,
+      -4965
+     ],
+     "floor_m": 0.02,
+     "clearance_m": 1.92,
+     "headroom_m": 5.38
+    }
+   }
+  },
+  "elevators": {
+   "LL_up": {
+    "name": "interior_elevator_LL_up",
+    "map_m": [
+     -448.76,
+     -269.67,
+     -6.0
+    ],
+    "game": [
+     2124,
+     -600,
+     -2333
+    ],
+    "floor_m": -6.0,
+    "clearance_m": 1.23,
+    "headroom_m": 2.7,
+    "node": "0x40",
+    "to": "G",
+    "arrow": "^"
+   },
+   "G_down": {
+    "name": "interior_elevator_G_down",
+    "map_m": [
+     -441.28,
+     -269.23,
+     0.0
+    ],
+    "game": [
+     2872,
+     0,
+     -2377
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.17,
+    "headroom_m": 2.7,
+    "node": "0x41",
+    "to": "LL",
+    "arrow": "v"
+   },
+   "G_up": {
+    "name": "interior_elevator_G_up",
+    "map_m": [
+     -448.76,
+     -269.22,
+     0.0
+    ],
+    "game": [
+     2124,
+     0,
+     -2378
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.18,
+    "headroom_m": 2.7,
+    "node": "0x42",
+    "to": "L1",
+    "arrow": "^"
+   },
+   "L1_down": {
+    "name": "interior_elevator_L1_down",
+    "map_m": [
+     -441.44,
+     -269.93,
+     6.0
+    ],
+    "game": [
+     2856,
+     600,
+     -2307
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.23,
+    "headroom_m": 2.7,
+    "node": "0x43",
+    "to": "G",
+    "arrow": "v"
+   },
+   "L1_up": {
+    "name": "interior_elevator_L1_up",
+    "map_m": [
+     -448.37,
+     -269.83,
+     6.0
+    ],
+    "game": [
+     2163,
+     600,
+     -2317
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.22,
+    "headroom_m": 2.7,
+    "node": "0x44",
+    "to": "L2",
+    "arrow": "^"
+   },
+   "L2_down": {
+    "name": "interior_elevator_L2_down",
+    "map_m": [
+     -441.2,
+     -269.3,
+     12.0
+    ],
+    "game": [
+     2880,
+     1200,
+     -2370
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.2,
+    "headroom_m": 2.7,
+    "node": "0x45",
+    "to": "L1",
+    "arrow": "v"
+   },
+   "L2_up": {
+    "name": "interior_elevator_L2_up",
+    "map_m": [
+     -448.65,
+     -269.2,
+     12.0
+    ],
+    "game": [
+     2135,
+     1200,
+     -2380
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.2,
+    "headroom_m": 2.7,
+    "node": "0x46",
+    "to": "L3",
+    "arrow": "^"
+   },
+   "L3_down": {
+    "name": "interior_elevator_L3_down",
+    "map_m": [
+     -441.9,
+     -269.35,
+     18.0
+    ],
+    "game": [
+     2810,
+     1800,
+     -2365
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 1.15,
+    "headroom_m": 2.7,
+    "node": "0x47",
+    "to": "L2",
+    "arrow": "v"
+   },
+   "L3_up": {
+    "name": "interior_elevator_L3_up",
+    "map_m": [
+     -448.86,
+     -269.27,
+     18.0
+    ],
+    "game": [
+     2114,
+     1800,
+     -2373
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 1.13,
+    "headroom_m": 2.7,
+    "node": "0x48",
+    "to": "L4",
+    "arrow": "^"
+   },
+   "L4_down": {
+    "name": "interior_elevator_L4_down",
+    "map_m": [
+     -441.09,
+     -268.93,
+     24.0
+    ],
+    "game": [
+     2891,
+     2400,
+     -2407
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 1.19,
+    "headroom_m": 2.7,
+    "node": "0x49",
+    "to": "L3",
+    "arrow": "v"
+   },
+   "L4_up": {
+    "name": "interior_elevator_L4_up",
+    "map_m": [
+     -448.9,
+     -268.85,
+     24.0
+    ],
+    "game": [
+     2110,
+     2400,
+     -2415
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 1.25,
+    "headroom_m": 2.7,
+    "node": "0x4A",
+    "to": "L5",
+    "arrow": "^"
+   },
+   "L5_down": {
+    "name": "interior_elevator_L5_down",
+    "map_m": [
+     -441.2,
+     -270.0,
+     29.0
+    ],
+    "game": [
+     2880,
+     2900,
+     -2300
+    ],
+    "floor_m": 29.0,
+    "clearance_m": 1.2,
+    "headroom_m": 2.7,
+    "node": "0x4B",
+    "to": "L4",
+    "arrow": "v"
+   },
+   "L5_up": {
+    "name": "interior_elevator_L5_up",
+    "map_m": [
+     -448.73,
+     -269.93,
+     29.0
+    ],
+    "game": [
+     2127,
+     2900,
+     -2307
+    ],
+    "floor_m": 29.0,
+    "clearance_m": 1.23,
+    "headroom_m": 2.7,
+    "node": "0x4C",
+    "to": "L6",
+    "arrow": "^"
+   },
+   "L6_down": {
+    "name": "interior_elevator_L6_down",
+    "map_m": [
+     -441.25,
+     -269.95,
+     34.0
+    ],
+    "game": [
+     2875,
+     3400,
+     -2305
+    ],
+    "floor_m": 34.0,
+    "clearance_m": 1.2,
+    "headroom_m": 2.7,
+    "node": "0x4D",
+    "to": "L5",
+    "arrow": "v"
+   }
+  },
+  "atrium": {
+   "stair_landing_G": {
+    "name": "interior_atrium_landing_G",
+    "map_m": [
+     -399.79,
+     -271.31,
+     3.0
+    ],
+    "game": [
+     7021,
+     300,
+     -2169
+    ],
+    "floor_m": 3.0,
+    "clearance_m": 0.95,
+    "headroom_m": 6.0
+   },
+   "stair_landing_L1": {
+    "name": "interior_atrium_landing_L1",
+    "map_m": [
+     -399.79,
+     -271.31,
+     9.0
+    ],
+    "game": [
+     7021,
+     900,
+     -2169
+    ],
+    "floor_m": 9.0,
+    "clearance_m": 0.95,
+    "headroom_m": 6.0
+   },
+   "stair_landing_L2": {
+    "name": "interior_atrium_landing_L2",
+    "map_m": [
+     -399.79,
+     -271.31,
+     15.0
+    ],
+    "game": [
+     7021,
+     1500,
+     -2169
+    ],
+    "floor_m": 15.0,
+    "clearance_m": 0.95,
+    "headroom_m": 10.6
+   },
+   "lounge": {
+    "name": "interior_atrium_lounge",
+    "map_m": [
+     -404.0,
+     -271.0,
+     0.0
+    ],
+    "game": [
+     6600,
+     0,
+     -2200
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": 25.6
+   },
+   "uf_letters_top": {
+    "name": "interior_uf_letters_top",
+    "map_m": [
+     -411.33,
+     -265.6,
+     2.95
+    ],
+    "game": [
+     5867,
+     295,
+     -2740
+    ],
+    "floor_m": 2.95,
+    "clearance_m": 1.31,
+    "headroom_m": 2.45
+   }
+  },
+  "game_room": {
+   "foul_line": {
+    "name": "interior_bowling_foul_line",
+    "map_m": [
+     -445.35,
+     -307.3,
+     0.95
+    ],
+    "game": [
+     2465,
+     95,
+     1430
+    ],
+    "floor_m": 0.95,
+    "clearance_m": 2.3,
+    "headroom_m": 4.45,
+    "check": "floor 0.95 m, design height 0.00 m"
+   },
+   "head_pin_lane_7": {
+    "name": "interior_bowling_pins_lane7",
+    "map_m": [
+     -446.2,
+     -325.3,
+     0.0
+    ],
+    "game": [
+     2380,
+     0,
+     3230
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.99,
+    "headroom_m": 5.4
+   },
+   "billiards": {
+    "name": "interior_billiards",
+    "map_m": [
+     -447.2,
+     -287.4,
+     0.0
+    ],
+    "game": [
+     2280,
+     0,
+     -560
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.32,
+    "headroom_m": 5.4
+   },
+   "esports": {
+    "name": "interior_esports",
+    "map_m": [
+     -462.4,
+     -293.0,
+     0.0
+    ],
+    "game": [
+     760,
+     0,
+     0
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.8,
+    "headroom_m": 5.4
+   }
+  },
+  "food_court": {
+   "center": {
+    "name": "interior_food_court_center",
+    "map_m": [
+     -438.0,
+     -318.0,
+     6.0
+    ],
+    "game": [
+     3200,
+     600,
+     2500
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 2.2,
+    "headroom_m": 5.4
+   }
+  },
+  "ballrooms": {
+   "grand_stage": {
+    "name": "interior_grand_ballroom_stage",
+    "map_m": [
+     -488.5,
+     -273.2,
+     12.6
+    ],
+    "game": [
+     -1850,
+     1260,
+     -1980
+    ],
+    "floor_m": 12.6,
+    "clearance_m": 1.65,
+    "headroom_m": 10.8
+   },
+   "grand_center": {
+    "name": "interior_grand_ballroom",
+    "map_m": [
+     -488.5,
+     -256.15,
+     12.0
+    ],
+    "game": [
+     -1850,
+     1200,
+     -3685
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 3.0,
+    "headroom_m": 11.4
+   },
+   "rion": {
+    "name": "interior_rion_ballroom",
+    "map_m": [
+     -440.55,
+     -299.8,
+     18.0
+    ],
+    "game": [
+     2945,
+     1800,
+     680
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 2.71,
+    "headroom_m": 7.4
+   },
+   "auditorium_stage": {
+    "name": "interior_auditorium_stage",
+    "map_m": [
+     -453.1,
+     -251.6,
+     12.7
+    ],
+    "game": [
+     1690,
+     1270,
+     -4140
+    ],
+    "floor_m": 12.7,
+    "clearance_m": 1.65,
+    "headroom_m": 4.7
+   }
+  },
+  "rooms": {
+   "senate_dais": {
+    "name": "interior_senate_dais",
+    "map_m": [
+     -408.0,
+     -246.4,
+     0.45
+    ],
+    "game": [
+     6200,
+     45,
+     -4660
+    ],
+    "floor_m": 0.45,
+    "clearance_m": 0.8,
+    "headroom_m": 4.95
+   }
+  }
+ },
+ "instant_warps_area_1": [
+  {
+   "index": 0,
+   "surface": "SURFACE_INSTANT_WARP_1B",
+   "to_area": 2,
+   "offset_units": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "index": 1,
+   "surface": "SURFACE_INSTANT_WARP_1C",
+   "to_area": 2,
+   "offset_units": [
+    0,
+    600,
+    0
+   ]
+  },
+  {
+   "index": 2,
+   "surface": "SURFACE_INSTANT_WARP_1D",
+   "to_area": 2,
+   "offset_units": [
+    0,
+    -200,
+    0
+   ]
+  },
+  {
+   "index": 3,
+   "surface": "SURFACE_INSTANT_WARP_1E",
+   "to_area": 2,
+   "offset_units": [
+    0,
+    400,
+    0
+   ]
+  }
+ ]
 }
