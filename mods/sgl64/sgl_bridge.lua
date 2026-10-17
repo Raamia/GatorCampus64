@@ -7,11 +7,13 @@
 -- Game -> bridge (events): the host prints one line per event to stdout:
 --     SGLEVT {"t":"join","gi":3,"name":"Alberta"}
 --   "t" first, then the other keys sorted; strings escaped (\" \\ \n \r \t \uXXXX for other control
---   bytes; non-ASCII bytes pass through as-is). Events: hello {v, proto}; join / leave {gi, name};
---   char {gi, name, friend (index, 0 = none), id (friend id or "")}; fin {gi, name, race (the race's
---   pbKey), frames, level, act}; login_req {gi, name}; link_req {gi, name, code}. Clients relay their
+--   bytes; non-ASCII bytes pass through as-is). Events: hello {version, proto}; join / leave {gi, name};
+--   char {gi, name, friend (friend id, e.g. "daniel" or "guest_3"; "" = none), index (0 = none)};
+--   fin {gi, name, race (the race's pbKey), frames, level, act}; login_req {gi, name};
+--   link_req {gi, name, code}. The bridge itself adds "exit" when the game process ends. Clients relay their
 --   events to the host with a packet (sgl = "be"); the host takes `name` from its own player list.
---   sglBridgeSend(t, fields) is the call for other files (sgl_login.lua: "login_req", "link_req").
+--   sglBridgeEmit(t, fields) is the call for other files (sgl_login.lua: "login_req", "link_req",
+--   "login_cancel"), on the host or on any client.
 --
 -- Bridge -> game (inbox): server/bridge writes <savepath>/sav/sgl64.modfs (a zip, coopdx mod_fs
 -- format) holding inbox.json: {"seq": N, "cmds": [{"seq": n, "t": "<command>", ...fields}, ...]}.
@@ -272,7 +274,7 @@ local function primitive(v)
 end
 
 -- host only: print one SGLEVT line. Returns the line (nil when not the headless host).
-function sglBridgeEmit(t, fields)
+local function print_event(t, fields)
     if not sgl_bridge_is_host() then return nil end
     local ev = {}
     for k, v in pairs(fields or {}) do ev[k] = v end
@@ -282,8 +284,9 @@ function sglBridgeEmit(t, fields)
     return line
 end
 
--- any process: the host prints it, a client relays it to the headless host (gi + name filled in)
-function sglBridgeSend(t, fields)
+-- any process: the host prints it, a client relays it to the headless host (gi + name filled in by
+-- the host). Returns true when the event went somewhere, false offline / without a headless host.
+function sglBridgeEmit(t, fields)
     if type(t) ~= "string" then return false end
     local ev = {}
     for k, v in pairs(fields or {}) do
@@ -293,7 +296,7 @@ function sglBridgeSend(t, fields)
     if sgl_bridge_is_host() then
         if ev.gi == nil then ev.gi = me.globalIndex end
         if ev.name == nil then ev.name = me.name end
-        return sglBridgeEmit(t, ev) ~= nil
+        return print_event(t, ev) ~= nil
     end
     local li = host_local_index()
     if li == nil then return false end
@@ -312,7 +315,7 @@ local function on_event_packet(data)
     for k, v in pairs(data) do ev[k] = v end
     ev.sgl, ev.t = nil, nil
     ev.name = np.name          -- the host's own view, not what the client claims
-    sglBridgeEmit(data.t, ev)
+    print_event(data.t, ev)
 end
 
 -- join / leave (host hooks)
@@ -348,7 +351,7 @@ local function watch_chars()
             local f = gPlayerSyncTable[i].friend
             if math.type(f) == "integer" and sCharSeen[np.globalIndex] ~= f then
                 sCharSeen[np.globalIndex] = f
-                sglBridgeEmit("char", { gi = np.globalIndex, name = np.name, friend = f, id = friend_id(f) })
+                sglBridgeEmit("char", { gi = np.globalIndex, name = np.name, friend = friend_id(f), index = f })
             end
         end
     end
@@ -357,7 +360,7 @@ end
 -- race finishes (sgl_mission.lua race kind -> here, on the finishing client)
 _G.sglOnRaceFinish = function(race, frames)
     local np = gNetworkPlayers[0]
-    sglBridgeSend("fin", { race = tostring(race), frames = frames, level = np.currLevelNum, act = np.currActNum })
+    sglBridgeEmit("fin", { race = tostring(race), frames = frames, level = np.currLevelNum, act = np.currActNum })
 end
 
 ---------------------------------------------------------------------------------------------
@@ -486,7 +489,7 @@ local function bridge_update()
     sFrame = sFrame + 1
     if not sHelloSent then
         sHelloSent = true
-        sglBridgeEmit("hello", { v = SGL_BRIDGE_VERSION, proto = SGL_BRIDGE_PROTO })
+        sglBridgeEmit("hello", { version = SGL_BRIDGE_VERSION, proto = SGL_BRIDGE_PROTO })
     end
     if sFrame % SGL_BRIDGE_CHAR_FRAMES == 0 then watch_chars() end
     if sFrame % SGL_BRIDGE_POLL_FRAMES == 0 then
