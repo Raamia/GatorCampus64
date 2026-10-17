@@ -224,7 +224,8 @@ The mod prints one line per event to stdout: `SGLEVT {"t":"...", ...}` (a small 
 | `link_req` | gi, name, code | `/link <code>` on a client → host (fallback, §7.2) |
 | `login_cancel` | gi | a waiting login closed on a client |
 | `char` | gi, name, friend (id, e.g. `guest_3`), index | character pick changes |
-| `fin` | gi, name, race, frames, level, act | race finish (for the optional leaderboard, §10) |
+| `fin` | gi, name, race, frames, level, act | race finish |
+| `run` | see §10.1 | a mission round succeeded (verified leaderboards) |
 | `exit` | code | added by the bridge when the game process ends |
 
 ### 6.3 Bridge → game (inbox)
@@ -342,11 +343,52 @@ never appears. `tools/luatest` gets tests for the JSON encoder, inbox sequencing
 (`test_bridge.lua`: events and inbox; `test_qr.lua`: the QR encoder against known vectors;
 `test_login.lua`: guest slots, charselect pages and `sgl_login.lua` against the real bridge).
 
-## 10. Optional: verified leaderboard
+## 10. Verified leaderboards
 
-If the core is done: the host already sees each race's `fin`. Store it via `/events`, rank only
-linked (`sub`) players, show the board on the site and `/tv`, and push the top 3 back through the
-inbox for the results board. Same Auth0 + Vultr pieces; no new infrastructure.
+Leaderboard times come from the hosted server, never from a file on a player's machine. The mission
+`id` from each `sgl_mission_register` definition (e.g. `swamp_sprint`, `reitz_rooftop`) is the key
+everywhere: the mod, the API, the DeepSpace app (`companion/app/src/data/mission-catalog.json`).
+
+### 10.1 Game → API: the `run` event
+
+When a mission round ends in success with every player still in the act, the headless host prints
+
+| `t` | Fields |
+|---|---|
+| `run` | `mission`, `frames` (host-measured: the host's clock from the round going active to success), `client_frames` (the leader's own count, for a sanity check), `retries`, `level`, `act`, `players` (count), then `gi1`, `name1`, `gi2`, `name2`, … (flattened: event fields stay primitives) |
+
+The host measures time itself from the mission state it already receives; a client can only shift a
+result by its network delay. The API rejects a run whose `frames` and `client_frames` differ by more
+than 2 s, or that beats the mission's floor (`par`/gold-derived minimum in the API's mission table).
+
+### 10.2 API
+
+- `runs(id, mission, frames, client_frames, retries, players, subs text[], names text[], coop,
+  created)`. A run is **ranked** when every player in it is linked (Gator Pass, §7); others are
+  stored but shown as unverified.
+- `GET /leaderboards` (public): `{missions: [{mission, title, rows: [{rank, names, frames}]}]}`,
+  top 5 per mission, best run per player set. `GET /leaderboards/{mission}?limit=` (public, ≤ 50).
+- Each ranked run is pushed to the DeepSpace app (§10.4).
+
+### 10.3 Bridge → game: the `leaderboard` inbox command
+
+The bridge fetches `GET /leaderboards` at start, every 60 s and after each accepted `run`, and
+broadcasts one command per mission whose rows changed (and to each joining player):
+
+| Command | Fields |
+|---|---|
+| `leaderboard` | `mission`, `n` (rows), `name1`, `frames1`, … `name5`, `frames5`, `at` (Unix time) |
+
+The in-game leaderboard menu (`sgl_deepspace.lua`) shows these rows; offline it falls back to the
+`.sav` snapshot the macOS helper writes. The solo outbox moves to its own ModFS file name so it never
+shares a write with the inbox (`inbox.json` stays the bridge's).
+
+### 10.4 DeepSpace app
+
+The Gator Field Board is the web display: the API calls a server-only action (`ingestVerifiedRun`,
+authenticated with a shared HMAC secret, not a user session) for each ranked run. The public
+`submitGameRun` action no longer feeds the leaderboard: runs it receives are kept as unverified
+"offline" runs and listed separately.
 
 ## 11. Not built
 
