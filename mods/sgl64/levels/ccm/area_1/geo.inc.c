@@ -11,6 +11,7 @@ const GeoLayout ccm_area_1_geo[] = {
 		GEO_DISPLAY_LIST(LAYER_TRANSPARENT, ccm_dl_marston_F1_visual_mesh_layer_5),
 		GEO_DISPLAY_LIST(LAYER_ALPHA, ccm_dl_marston_F1_visual_mesh_layer_4),
 		GEO_DISPLAY_LIST(LAYER_OPAQUE, ccm_dl_marston_F2_visual_mesh_layer_1),
+		GEO_DISPLAY_LIST(LAYER_ALPHA, ccm_dl_marston_F2_visual_mesh_layer_4),
 		GEO_DISPLAY_LIST(LAYER_TRANSPARENT, ccm_dl_marston_F2_visual_mesh_layer_5),
 		GEO_DISPLAY_LIST(LAYER_OPAQUE, ccm_dl_marston_F3_visual_mesh_layer_1),
 		GEO_DISPLAY_LIST(LAYER_TRANSPARENT, ccm_dl_marston_F3_visual_mesh_layer_5),

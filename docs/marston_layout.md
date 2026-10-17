@@ -174,7 +174,7 @@ Each sketch draws the zones, the 30-ft column grid, ranges, stair halls (hatchin
   - collection highlights and new-books shelves at 1.2 m [plan]
   - four exhibit cases along its south edge [plan; moved]
   - two free-standing module columns
-- **Starbucks:** on the west, with its court door (locked) and an extra interior door from the west aisle. [plan; interior door gameplay]
+- **Starbucks:** on the west, with its court door (locked) and an interior door from the west aisle. [plan; the interior door is real: the Alligator (2015) says the court doors are used by day and the interior doors after sundown and on weekends]
 - **Other rooms and shelves:**
   - computer lab [plan]
   - three sci-fi ranges by the south windows [plan]
@@ -309,7 +309,7 @@ The hub already models most of these. A low-poly ring baked from the hub (the fi
   - bronze fascias and piers (photos)
   - window_glass, white_trim, concrete
   - *New textures needed:* carpet (tinted per floor), wood shelving, ceiling tile (`make_textures.py`, not done here).
-- **Floor accents:** each floor had its own accent colour in 1987 (S10), but the real colours are not published. The game picks: F1 lime, F2 UF orange, F3 coral, F4 sky blue, F5 violet. These come from the official plan legends. [gameplay]
+- **Floor accents:** each floor had its own accent colour in 1987 (S10). The photos show some of today's: floor 2 is teal-blue and golden yellow (photos #24, #29; not UF orange), floor 3's stack ends are coral (#83, #91) and floor 4's steel blue (#84-#86). The original game picks (F1 lime, F2 UF orange, F3 coral, F4 sky blue, F5 violet, from the plan legends) were corrected to the photos in the Marston upgrade (`marston.py` NOTES `sourced_now`). [sourced for F2-F4; F1 and F5 gameplay]
 - **Vertex-colour lighting:**
   - cool daylight within 3 m of windows
   - warm interior
@@ -334,7 +334,6 @@ The hub already models most of these. A low-poly ring baked from the hub (the fi
 | Doors, halls | 3-ft halls and doors (1987) | ≥ 2.0 m doors, ≥ 3 m halls (2.2 m core stair lanes) | co-op, camera |
 | NE / SW towers | stair + restrooms / stair + staff | whole towers become stair halls | 6 m storeys need room |
 | Terraces, roof | roofs, access unknown | walkable decks at z 12 and 18; roof deck at z 24 | outdoor views, coins |
-| Starbucks | court door only | extra interior door | the court is backdrop |
 | Staff spaces | NE offices, SW receiving corridor, F1 NW staff room | NE hall, SW corridor, book sorting room | connect the stairs; chute gag |
 | Exhibit cases, highlights shelf | 2×2 cases in the lobby; shelf 3.3 m further west | cases along the atrium's south edge; shelf moved east | clear the lobby and the grand stair |
 | Basement windows | unknown | light-well windows on the west | daylight on F1 |
@@ -360,7 +359,7 @@ The hub already models most of these. A low-poly ring baked from the hub (the fi
   - OSM tags vending machines at level −1 near the French Fries
   - the Marston Courtyard's radial steps lead down toward the building
 - **Terraces:** do the SE terraces carry planting or sloped glass, and can anyone walk on them?
-- **Elevators:** the plans draw one elevator symbol per floor; two cars are assumed.
+- **Elevators:** the plans draw one elevator symbol per floor. Floor 1 is confirmed: its lobby has two stainless cars in a red brick wall (photo #69); two cars are assumed on the other floors.
 - **Unplaced items:** the data consultation room on floor 3 and the real accent colours.
 - **North Lab:** does the North Computer Lab really run under CSE? Only the floor-1 plan shows it.
 
