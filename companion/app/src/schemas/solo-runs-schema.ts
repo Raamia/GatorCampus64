@@ -1,8 +1,12 @@
 import type { CollectionSchema } from 'deepspace/schema'
 
 /**
- * Append-only solo game results. Authenticated players can see the global
- * leaderboard and create their own rows; only admins can remove a bad entry.
+ * Append-only OFFLINE game results, sent by the player's own machine through
+ * submitGameRun (the macOS bridge). The client reports its own time, so these
+ * rows are labelled unverified "offline" runs and are never mixed into the
+ * verified board (verified_runs, docs/web_platform_spec.md §10.4).
+ * Authenticated players can read them and create their own rows; only admins
+ * can remove a bad entry.
  */
 export const soloRunsSchema: CollectionSchema = {
   name: 'solo_runs',
