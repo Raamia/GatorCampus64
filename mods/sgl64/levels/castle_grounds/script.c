@@ -12,24 +12,49 @@
 #include "levels/scripts.h"
 
 #include "make_const_nonconst.h"
-#include "levels/sgl_hub/header.h"
+#include "levels/castle_grounds/header.h"
 
 /* Fast64 begin persistent block [scripts] */
 /* Fast64 end persistent block [scripts] */
 
-const LevelScript level_sgl_hub_entry[] = {
+const LevelScript level_castle_grounds_entry[] = {
 	INIT_LEVEL(),
-	LOAD_MIO0(0x07, _sgl_hub_segment_7SegmentRomStart, _sgl_hub_segment_7SegmentRomEnd),
+	LOAD_MIO0(0x07, _castle_grounds_segment_7SegmentRomStart, _castle_grounds_segment_7SegmentRomEnd),
 	LOAD_MIO0(0x0A, _water_skybox_mio0SegmentRomStart, _water_skybox_mio0SegmentRomEnd),
 	ALLOC_LEVEL_POOL(),
 	MARIO(MODEL_MARIO, 0x00000001, bhvMario),
 	/* Fast64 begin persistent block [level commands] */
 	/* Fast64 end persistent block [level commands] */
 
-	AREA(1, sgl_hub_area_1),
-		WARP_NODE(0x0A, LEVEL_CASTLE, 0x01, 0x0A, WARP_NO_CHECKPOINT),
-		WARP_NODE(0xF0, LEVEL_CASTLE, 0x01, 0x32, WARP_NO_CHECKPOINT),
-		WARP_NODE(0xF1, LEVEL_CASTLE, 0x01, 0x64, WARP_NO_CHECKPOINT),
+	AREA(1, castle_grounds_area_1),
+		WARP_NODE(0x0A, LEVEL_CASTLE_GROUNDS, 0x01, 0x0A, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x0B, LEVEL_CASTLE_GROUNDS, 0x01, 0x0B, WARP_NO_CHECKPOINT),
+		WARP_NODE(0xF0, LEVEL_CASTLE_GROUNDS, 0x01, 0x0A, WARP_NO_CHECKPOINT),
+		WARP_NODE(0xF1, LEVEL_CASTLE_GROUNDS, 0x01, 0x0B, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x11, LEVEL_BOB, 0x01, 0x0A, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x21, LEVEL_CASTLE_GROUNDS, 0x01, 0x21, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x31, LEVEL_CASTLE_GROUNDS, 0x01, 0x31, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x12, LEVEL_WF, 0x01, 0x0A, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x22, LEVEL_CASTLE_GROUNDS, 0x01, 0x22, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x32, LEVEL_CASTLE_GROUNDS, 0x01, 0x32, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x13, LEVEL_JRB, 0x01, 0x0A, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x23, LEVEL_CASTLE_GROUNDS, 0x01, 0x23, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x33, LEVEL_CASTLE_GROUNDS, 0x01, 0x33, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x14, LEVEL_CCM, 0x01, 0x0A, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x24, LEVEL_CASTLE_GROUNDS, 0x01, 0x24, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x34, LEVEL_CASTLE_GROUNDS, 0x01, 0x34, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x15, LEVEL_BBH, 0x01, 0x0A, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x25, LEVEL_CASTLE_GROUNDS, 0x01, 0x25, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x35, LEVEL_CASTLE_GROUNDS, 0x01, 0x35, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x16, LEVEL_TTC, 0x01, 0x0A, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x26, LEVEL_CASTLE_GROUNDS, 0x01, 0x26, WARP_NO_CHECKPOINT),
+		WARP_NODE(0x36, LEVEL_CASTLE_GROUNDS, 0x01, 0x36, WARP_NO_CHECKPOINT),
+		OBJECT(MODEL_NONE, 8350, 0, 3515, 0, 178, 0, 0x0111102A, id_bhvSglDoor),
+		OBJECT(MODEL_NONE, -14985, 0, 18265, 0, 36, 0, 0x0212121D, id_bhvSglDoor),
+		OBJECT(MODEL_NONE, -10968, 120, 6775, 0, 90, 0, 0x0313122A, id_bhvSglDoor),
+		OBJECT(MODEL_NONE, -1350, 0, 16700, 0, -180, 0, 0x0414122A, id_bhvSglDoor),
+		OBJECT(MODEL_NONE, 8391, 0, -16043, 0, 0, 0, 0x05151227, id_bhvSglDoor),
+		OBJECT(MODEL_NONE, 4407, 0, 9469, 0, -180, 0, 0x0616101E, id_bhvSglDoor),
 		OBJECT(MODEL_NONE, 7180, 0, 150, 0, 0, 0, 0x002B0000, bhvPoleGrabbing),
 		OBJECT(MODEL_NONE, 9460, 0, 150, 0, 0, 0, 0x002B0000, bhvPoleGrabbing),
 		OBJECT(MODEL_NONE, 5900, 0, 940, 0, 0, 0, 0x002B0000, bhvPoleGrabbing),
@@ -55,6 +80,19 @@ const LevelScript level_sgl_hub_entry[] = {
 		OBJECT(MODEL_WOODEN_SIGNPOST, 8098, 0, 3208, 0, 178, 0, SGL_HUB_SIGN_UNIVERSITY_AUDITORIUM, bhvMessagePanel),
 		OBJECT(MODEL_WOODEN_SIGNPOST, 8364, 0, -3942, 0, -175, 0, SGL_HUB_SIGN_WELCOME, bhvMessagePanel),
 		OBJECT(MODEL_NONE, 8320, 100, -4440, 0, -10, 0, 0x000A0000, bhvSpinAirborneWarp),
+		OBJECT(MODEL_NONE, 8470, 100, -4440, 0, -10, 0, 0x000B0000, bhvDeathWarp),
+		OBJECT(MODEL_NONE, 8357, 80, 3265, 0, -2, 0, 0x00210000, bhvPaintingStarCollectWarp),
+		OBJECT(MODEL_NONE, -14838, 80, 18468, 0, -144, 0, 0x00220000, bhvPaintingStarCollectWarp),
+		OBJECT(MODEL_NONE, -10668, 80, 6775, 0, -90, 0, 0x00230000, bhvPaintingStarCollectWarp),
+		OBJECT(MODEL_NONE, -1350, 80, 16450, 0, 0, 0, 0x00240000, bhvPaintingStarCollectWarp),
+		OBJECT(MODEL_NONE, 8391, 80, -15793, 0, -180, 0, 0x00250000, bhvPaintingStarCollectWarp),
+		OBJECT(MODEL_NONE, 4406, 80, 9219, 0, 0, 0, 0x00260000, bhvPaintingStarCollectWarp),
+		OBJECT(MODEL_NONE, 8357, 80, 3265, 0, -2, 0, 0x00310000, bhvPaintingDeathWarp),
+		OBJECT(MODEL_NONE, -14838, 80, 18468, 0, -144, 0, 0x00320000, bhvPaintingDeathWarp),
+		OBJECT(MODEL_NONE, -10668, 80, 6775, 0, -90, 0, 0x00330000, bhvPaintingDeathWarp),
+		OBJECT(MODEL_NONE, -1350, 80, 16450, 0, 0, 0, 0x00340000, bhvPaintingDeathWarp),
+		OBJECT(MODEL_NONE, 8391, 80, -15793, 0, -180, 0, 0x00350000, bhvPaintingDeathWarp),
+		OBJECT(MODEL_NONE, 4406, 80, 9219, 0, 0, 0, 0x00360000, bhvPaintingDeathWarp),
 		OBJECT(MODEL_NONE, 4959, 0, -2675, 0, 0, 0, 0x00000000, bhvTree),
 		OBJECT(MODEL_NONE, 4878, 0, -5166, 0, 0, 0, 0x00000000, bhvTree),
 		OBJECT(MODEL_NONE, 4785, 0, -7620, 0, 0, 0, 0x00000000, bhvTree),
@@ -83,8 +121,8 @@ const LevelScript level_sgl_hub_entry[] = {
 		OBJECT(MODEL_NONE, 13801, 0, -9099, 0, 0, 0, 0x00000000, bhvTree),
 		OBJECT(MODEL_NONE, 13746, 0, -8220, 0, 0, 0, 0x00000000, bhvTree),
 		OBJECT(MODEL_NONE, 13745, 0, -6927, 0, 0, 0, 0x00000000, bhvTree),
-		TERRAIN(sgl_hub_area_1_collision),
-		MACRO_OBJECTS(sgl_hub_area_1_macro_objs),
+		TERRAIN(castle_grounds_area_1_collision),
+		MACRO_OBJECTS(castle_grounds_area_1_macro_objs),
 		SET_BACKGROUND_MUSIC(0x00, SEQ_LEVEL_GRASS),
 		TERRAIN_TYPE(TERRAIN_GRASS),
 		/* Fast64 begin persistent block [area commands] */

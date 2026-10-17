@@ -4,6 +4,13 @@ ground (20.48 m tiles offset half a collision cell, with holes for the ponds).
 
 Visual ground layers sit just BELOW the collision floor (z = 0) so Mario's shadow and feet are
 never hidden by a decal layer; each layer is 1-2 cm above the one under it:
+
+Ground holes (landmark contract key "ground_holes_m", e.g. the Swamp stadium's sunken bowl): cut out
+of the collision ground (HOLE_OVERLAP_M smaller: see there) and the base grass like the ponds (one
+cut-out rectangle per group of holes / ponds whose tile rectangles overlap, so no tile is covered
+twice); mapped areas, roads, centre lines, walkways, barriers and fountains drop the pieces whose
+centre lies in a hole. Inside a hole the landmark module provides every floor. S.ground_holes keeps
+them (stage coordinates).
 """
 import math
 
@@ -15,6 +22,12 @@ Z = {"base": -0.12, "lawn": -0.10, "forest": -0.10, "area": -0.08, "road": -0.06
      "crossing": -0.04, "path": -0.03}
 POND_FLOOR = -2.2
 POND_SURFACE = -0.3
+# landmark ground holes are cut this much SMALLER in the collision ground, so the ground and the
+# landmark's own floors at the rim (coplanar at z = 0) overlap instead of abutting: after the export
+# rounds every vertex to whole units, two abutting edges with different intermediate vertices leave
+# hairline slivers with no floor at some integer points, and find_floor (which truncates Mario's
+# position to s16) returns NULL there = an invisible wall that can stop Mario dead on the seam
+HOLE_OVERLAP_M = 0.06
 
 
 def densify(pts, max_len):
@@ -40,21 +53,40 @@ def tile_rect(i, j):
     return x0, y0, x0 + TILE, y0 + TILE
 
 
-def ground_sheet(acc, bounds, z, mat, ponds, down_holes=True):
-    """Tiles over bounds (clipped to it) at height z, with holes where the ponds are.
-    Returns the number of polygons written."""
-    xmin, ymin, xmax, ymax = bounds
-    i0, i1, j0, j1 = tiles_covering(xmin, ymin, xmax, ymax)
-    holed = {}
+def hole_groups(ponds):
+    """Tile rectangles to cut out: [(hole indices, (i0, i1, j0, j1))], one per group of holes whose
+    tile rectangles overlap (merged into their bounding rectangle). Non-overlapping holes keep their
+    own rectangle, in index order."""
+    groups = []
     for pi, p in enumerate(ponds):
         px0, py0, px1, py1 = G.bbox(p)
-        a0, a1, b0, b1 = tiles_covering(px0, py0, px1, py1)
-        for i in range(a0, a1):
-            for j in range(b0, b1):
-                holed.setdefault(pi, set()).add((i, j))
+        groups.append(([pi], list(tiles_covering(px0, py0, px1, py1))))
+    merged = True
+    while merged:
+        merged = False
+        for x in range(len(groups)):
+            for y in range(x + 1, len(groups)):
+                A, B = groups[x][1], groups[y][1]
+                if A[0] < B[1] and B[0] < A[1] and A[2] < B[3] and B[2] < A[3]:
+                    groups[x] = (groups[x][0] + groups[y][0],
+                                 [min(A[0], B[0]), max(A[1], B[1]), min(A[2], B[2]), max(A[3], B[3])])
+                    del groups[y]
+                    merged = True
+                    break
+            if merged:
+                break
+    return [(idx, tuple(r)) for idx, r in groups]
+
+
+def ground_sheet(acc, bounds, z, mat, ponds, down_holes=True):
+    """Tiles over bounds (clipped to it) at height z, with holes where the ponds (and landmark ground
+    holes) are. Returns the number of polygons written."""
+    xmin, ymin, xmax, ymax = bounds
+    i0, i1, j0, j1 = tiles_covering(xmin, ymin, xmax, ymax)
+    groups = hole_groups(ponds)
     skip = set()
-    for s in holed.values():
-        skip |= s
+    for _, (a0, a1, b0, b1) in groups:
+        skip.update((i, j) for i in range(a0, a1) for j in range(b0, b1))
     n = 0
     for i in range(i0, i1):
         for j in range(j0, j1):
@@ -65,19 +97,31 @@ def ground_sheet(acc, bounds, z, mat, ponds, down_holes=True):
             if len(r) >= 3:
                 acc.flat(r, z, mat)
                 n += 1
-    for pi, cells in holed.items():
-        xs = [c[0] for c in cells]
-        ys = [c[1] for c in cells]
-        x0, y0, _, _ = tile_rect(min(xs), min(ys))
-        _, _, x1, y1 = tile_rect(max(xs), max(ys))
+    for idx, (a0, a1, b0, b1) in groups:
+        x0, y0, _, _ = tile_rect(a0, b0)
+        _, _, x1, y1 = tile_rect(a1 - 1, b1 - 1)
         rect = G.clip_convex([(x0, y0), (x1, y0), (x1, y1), (x0, y1)], xmin, ymin, xmax, ymax)
         if len(rect) < 3:
             continue
-        hole = [p for p in ponds[pi]]
-        tris = G.triangulate([rect, hole[::-1]])
+        tris = G.triangulate([rect] + [list(ponds[pi])[::-1] for pi in idx])
         acc.flat_tris(tris, z, mat, cell=TILE, ox=TILE_OFF, oy=TILE_OFF)
         n += len(tris)
     return n
+
+
+def landmark_ground_holes(S):
+    """Landmark "ground_holes_m" rings (map metres) -> stage coordinates, counter-clockwise."""
+    out = []
+    for e in S.landmark_entries:
+        for h in e.get("ground_holes_m", []) or []:
+            ring = G.ccw([S.T(p) for p in h])
+            if len(ring) >= 3 and abs(G.signed_area(ring)) > 1.0:
+                out.append(ring)
+    return out
+
+
+def _centre(pts):
+    return (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts))
 
 
 def build(S):
@@ -92,13 +136,27 @@ def build(S):
 
     ponds = [[T(p) for p in w["ring"]] for w in d["water"]]
     ponds = [G.ccw(p) for p in ponds if len(p) >= 3]
+    holes = landmark_ground_holes(S)          # landmark ground holes (the stadium bowl)
+    S.ground_holes = holes
+    hole_bbs = [G.bbox(h) for h in holes]
 
     # ---- base grass + collision ground
-    ground_sheet(vis, ext, Z["base"], "ground_grass", ponds)
-    ground_sheet(col, col_bounds, 0.0, "COL default", ponds)
+    ground_sheet(vis, ext, Z["base"], "ground_grass", ponds + holes)
+    col_holes = [G.inset(h, HOLE_OVERLAP_M) or h for h in holes]
+    ground_sheet(col, col_bounds, 0.0, "COL default", ponds + col_holes)
+    if holes:
+        S.stats["ground_holes"] = [{"vertices": len(h), "area_m2": round(G.signed_area(h), 1),
+                                    "bbox_stage_m": [round(v, 1) for v in G.bbox(h)]} for h in holes]
 
     def in_pond(pt):
         return any(G.point_in_poly(pt, p) for p in ponds)
+
+    def in_hole(pt):
+        return any(b[0] <= pt[0] <= b[2] and b[1] <= pt[1] <= b[3] and G.point_in_poly(pt, h)
+                   for h, b in zip(holes, hole_bbs))
+
+    def piece_in_hole(pts):
+        return bool(holes) and in_hole(_centre(pts))
 
     def clip_ext(quad):
         """Road / path quads end at the visual extent (mitres and end caps would otherwise reach
@@ -120,11 +178,14 @@ def build(S):
         if in_pond(G.bbox(ring)[:2]) and in_pond(G.bbox(ring)[2:]):
             continue
         z = Z["lawn"] if a["cls"] in ("lawn", "forest") else Z["area"]
-        # ponds inside a park polygon become holes, or the lawn would cover the water
-        for p in ponds:
+        # ponds (and landmark ground holes) inside a park polygon become holes, or the lawn would
+        # cover the water / the sunken bowl
+        for p in ponds + S.ground_holes:
             if all(G.point_in_poly(q, ring) for q in p):
                 holes.append(p[::-1])
         tris = G.triangulate([ring] + holes)
+        if S.ground_holes:   # partial overlaps: drop the triangles whose centre is in a ground hole
+            tris = [t for t in tris if not piece_in_hole(t)]
         vis.flat_tris(tris, z, a["mat"], cell=TILE, ox=TILE_OFF, oy=TILE_OFF)
 
     # ---- roads
@@ -160,10 +221,11 @@ def build(S):
             continue
         for quad, _s0, _s1 in G.ribbon(pts, r["width"]):
             q, _ = clip_ext(quad)
-            if q:
+            if q and not piece_in_hole(q):
                 roads_acc.flat(q, Z["road"], "asphalt")
         if r.get("center_line"):
-            _center_dashes(roads_acc, [T(p) for p in r["pts"]], near_junction)
+            _center_dashes(roads_acc, [T(p) for p in r["pts"]],
+                           (lambda m: near_junction(m) or in_hole(m)) if holes else near_junction)
 
     # ---- walkways, crossings, steps
     for p in d["paths"]:
@@ -179,14 +241,14 @@ def build(S):
             z = Z["crossing"] if p["kind"] == "crossing" else Z["path"]
             for quad, s0, s1 in G.ribbon(pts, w, extend=0.3 if p["kind"] == "crossing" else None):
                 q, whole = clip_ext(quad)
-                if not q:
+                if not q or piece_in_hole(q):
                     continue
                 uvs = [(0.0, s0 / tile), (0.0, s1 / tile), (w / tile, s1 / tile), (w / tile, s0 / tile)]
                 roads_acc.poly([(x, y, z) for x, y in q], mat, uvs if whole else None)
         else:
             for quad, _s0, _s1 in G.ribbon(pts, w):
                 q, _ = clip_ext(quad)
-                if q:
+                if q and not piece_in_hole(q):
                     roads_acc.flat(q, Z["path"], p["mat"])
 
     # ---- ponds: basin (visual + collision), translucent water surface, water box
@@ -209,6 +271,8 @@ def build(S):
         if f["id"] in skip_areas:
             continue
         ring = G.ccw([T(p) for p in f["ring"]])
+        if piece_in_hole(ring):
+            continue
         fv = S.acc("Props visual", collision=False)
         fc = S.acc("Props collision", render=False)
         for a, b in zip(ring, ring[1:] + ring[:1]):
@@ -233,6 +297,8 @@ def build(S):
         top = {"hedge": "leaves_oak", "fence": "metal_gray"}.get(kind, "limestone")
         h = b["height"]
         for quad, _s0, _s1 in G.ribbon(pts, width, extend=0.0):
+            if piece_in_hole(quad):
+                continue
             for a, c in zip(quad, quad[1:] + quad[:1]):
                 bv.wall(a, c, -0.15, h, mat)
                 bc.wall(a, c, 0.0, h, "COL default")

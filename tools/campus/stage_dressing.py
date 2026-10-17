@@ -221,7 +221,10 @@ def pick_hammocks(S, probe, n=3):
 
 def build(S, probe, avoid=()):
     """Place the dressing; returns pole objects [{name, stage (x, y), z, height_m}] for build_stage.
-    avoid = [(stage x, y, radius)] kept clear (spawn, signs, climbable trees)."""
+    avoid = [(stage x, y, radius)] kept clear (spawn, signs, climbable trees).
+    The Swamp has its own game-day set (build_swamp); every other stage uses the hub tables."""
+    if getattr(S, "key", "hub") == "swamp":
+        return build_swamp(S, probe, avoid)
     vis = S.acc("Dressing visual", collision=False)
     col = S.acc("Dressing collision", render=False)
     taken = list(avoid)
@@ -271,4 +274,187 @@ def build(S, probe, avoid=()):
     print(f"SGL: dressing: {len(rep['lamps'])} lamp posts, {len(rep['benches'])} benches, "
           f"{len(rep['planters'])} planters, {len(rep['tables'])} tables, {len(rep['hammocks'])} hammocks; "
           f"skipped {rep['skipped']}")
+    return poles
+
+
+# ------------------------------------------------------------------ The Swamp: game day
+# Tailgate lots (map boxes x0, y0, x1, y1, max tents): the big lot north-west of the stadium between
+# Parking Garage 7 and W University Ave (the "north lots" of docs/game_design.md 7.1, act 4: red coins
+# on the tailgate canopies) and the Stadium Lawn north-east of the Courtyard of Champions.
+SWAMP_TAILGATE_LOTS = [((-800.0, 232.0, -650.0, 352.0), 12), ((-505.0, 284.0, -440.0, 350.0), 5)]
+TENT_HALF = 1.5            # 3 x 3 m pop-up canopy
+TENT_EAVE, TENT_PEAK = 2.9, 3.4   # 18 degree roof: walkable, a single jump (2.2-3.1 m) or a double jump up
+TENT_SPACING = 7.5
+# lamp posts with UF banners (climbable bhvPoleGrabbing poles) round the Courtyard of Champions (the
+# stage spawn) and along the north approach / Stadium Road
+SWAMP_LAMPS = [(-529.0, 262.0), (-498.0, 262.0), (-529.0, 286.0), (-498.0, 286.0), (-535.0, 244.0),
+               (-492.0, 244.0), (-560.0, -12.0), (-530.0, -14.0), (-470.0, -14.0), (-440.0, -12.0)]
+# bronze gator statues (design 7.1: the original gator statue spots; OSM n7984819939 "Bull Gator statue")
+# (x, y, facing): the gator looks toward `facing`
+SWAMP_GATORS = [(-608.1, -2.9, 135.0, "Bull Gator statue"), (-585.0, 386.0, 180.0, "gator statue (north lawn)")]
+# small historical marker: "Gatorade birthplace" (OSM n7994037191)
+SWAMP_MARKERS = [(-674.8, 131.4, 90.0, "Gatorade birthplace marker")]
+
+
+def tent(vis, col, x, y, key, roof_mat, trim_mat):
+    """Pop-up tailgate canopy: 3 x 3 m, four legs (visual), a valance and an 18 degree pyramid roof
+    whose collision is the same 4 triangles (stand on it; walk under it; jump up through it)."""
+    h = TENT_HALF
+    q = [(x - h, y - h), (x + h, y - h), (x + h, y + h), (x - h, y + h)]          # CCW
+    top = (x, y, TENT_PEAK)
+    solid = [(0.15, 0.45), (0.85, 0.45), (0.5, 0.62)]                             # the banner's solid area
+    for a, b in zip(q, q[1:] + q[:1]):
+        tri = [(a[0], a[1], TENT_EAVE), (b[0], b[1], TENT_EAVE), top]
+        vis.poly(tri, roof_mat, solid)
+        vis.poly(tri[::-1], roof_mat, solid[::-1])                                 # underside
+        if col is not None:
+            col.poly(tri, "COL default")
+        uv = [(0, 0), (3, 0), (3, 1), (0, 1)]
+        vis.wall(a, b, TENT_EAVE - 0.3, TENT_EAVE, trim_mat, uv)                  # valance, both faces
+        vis.wall(b, a, TENT_EAVE - 0.3, TENT_EAVE, trim_mat, uv)
+    for (px, py) in q:
+        lx, ly = px + (0.06 if px < x else -0.06), py + (0.06 if py < y else -0.06)
+        _obox(vis, lx, ly, 0.0, 0.035, 0.035, -0.05, TENT_EAVE, "metal_gray", None)
+    if rnd_key(key) < 0.6:   # a folding table with a UF cloth under most of them
+        table(vis, col, x, y - 0.4, "banner_orange" if rnd_key(key + "t") < 0.5 else "banner_blue")
+
+
+def rnd_key(key):
+    import hashlib
+    return int(hashlib.md5(key.encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
+
+
+def gator_statue(vis, col, x, y, facing, key):
+    """Bronze alligator (4.7 m, an original low-poly sculpt: raised head, curled tail) lying on a
+    limestone plinth 1.0 m high. Collision: the plinth and a box over the gator's back (stand on it).
+    Returns the standing height on its back."""
+    f = math.radians(facing)
+    ux, uy = math.sin(f), math.cos(f)                 # head direction
+    ang = math.atan2(uy, ux)
+    zp = 1.0
+    _obox(vis, x, y, ang, 2.6, 1.2, -0.1, zp - 0.12, "limestone", None)
+    _obox(vis, x, y, ang, 2.7, 1.3, zp - 0.12, zp, "limestone", "limestone")
+    nx, ny = -uy, ux
+    # cross sections from the tail tip to the snout: (s, half width, height, sideways offset, lift)
+    secs = [(-2.35, 0.05, 0.08, 0.95, 0.0), (-1.9, 0.14, 0.16, 0.70, 0.0), (-1.35, 0.26, 0.28, 0.32, 0.0),
+            (-0.75, 0.48, 0.42, 0.08, 0.0), (-0.1, 0.62, 0.52, 0.0, 0.0), (0.55, 0.58, 0.50, 0.0, 0.0),
+            (1.05, 0.42, 0.40, 0.0, 0.05), (1.45, 0.34, 0.32, 0.0, 0.12), (1.95, 0.26, 0.22, 0.0, 0.12),
+            (2.35, 0.12, 0.12, 0.0, 0.10)]
+    n = 6
+    rings = []
+    for sc, w, hh, off, lift in secs:
+        r = []
+        for k in range(n):
+            a_ = math.pi * k / (n - 1)                 # half ellipse over a flat belly
+            lat, up = math.cos(a_) * w + off, math.sin(a_) * hh
+            r.append((x + ux * sc + nx * lat, y + uy * sc + ny * lat, zp + lift + up))
+        rings.append(r)
+    for lo, hi in zip(rings, rings[1:]):
+        for k in range(n - 1):
+            vis.poly([lo[k], lo[k + 1], hi[k + 1], hi[k]], "bronze")      # outward (up / sideways)
+        vis.poly([lo[0], hi[0], hi[n - 1], lo[n - 1]], "bronze")           # belly (faces down)
+    for r, tail in ((rings[0], True), (rings[-1], False)):
+        c = (sum(p[0] for p in r) / n, sum(p[1] for p in r) / n, r[0][2])
+        for k in range(n - 1):
+            tri = [r[k + 1], r[k], c] if tail else [r[k], r[k + 1], c]       # tail cap faces -u, snout +u
+            vis.poly(tri, "bronze")
+    # splayed legs and two eye bumps
+    for sc, side in ((-0.6, 1), (-0.6, -1), (0.7, 1), (0.7, -1)):
+        lx, ly = x + ux * sc + nx * side * 0.72, y + uy * sc + ny * side * 0.72
+        _obox(vis, lx, ly, ang + side * 0.5, 0.26, 0.13, zp, zp + 0.2, "bronze", "bronze")
+    for side in (1, -1):
+        ex, ey = x + ux * 1.5 + nx * side * 0.18, y + uy * 1.5 + ny * side * 0.18
+        _obox(vis, ex, ey, ang, 0.08, 0.06, zp + 0.36, zp + 0.5, "bronze", "bronze")
+    if col is not None:
+        _obox(col, x, y, ang, 2.7, 1.3, 0.0, zp, "COL default", "COL default")
+        _obox(col, x + ux * 0.1, y + uy * 0.1, ang, 1.1, 0.5, zp, zp + 0.5, "COL default", "COL default")
+    return zp + 0.5
+
+
+def history_marker(vis, col, x, y, facing):
+    """Roadside historical marker: post + plaque (1.0 x 0.8 m at 1.6 m), facing `facing`."""
+    f = math.radians(facing)
+    ang = math.atan2(math.cos(f), math.sin(f)) + math.pi / 2
+    trunk(vis, x, y, 0.06, -0.05, 1.6, 5, "dark_trim", "marker")
+    _obox(vis, x, y, ang, 0.5, 0.04, 1.6, 2.4, "dark_trim", "dark_trim", "dark_trim")
+    fx, fy = math.sin(f), math.cos(f)
+    tx, ty = -fy, fx
+    a = (x + fx * 0.05 + tx * 0.42, y + fy * 0.05 + ty * 0.42)
+    b = (x + fx * 0.05 - tx * 0.42, y + fy * 0.05 - ty * 0.42)
+    vis.wall(b, a, 1.68, 2.32, "banner_blue", [(0, 0.55), (1, 0.55), (1, 0.7), (0, 0.7)])
+    if col is not None:
+        _obox(col, x, y, 0.0, 0.12, 0.12, 0.0, 2.4, "COL nocam", None)
+
+
+def build_swamp(S, probe, avoid=()):
+    """Game-day dressing of The Swamp: tailgate canopies in the lots, banner lamp posts (climbable),
+    bronze gator statues and the Gatorade marker. Every item is checked against the real collision
+    (_place). Sets S.swamp_dressing (report + stage_points) and S.swamp_secrets."""
+    vis = S.acc("Dressing visual", collision=False)
+    col = S.acc("Dressing collision", render=False)
+    taken = list(avoid)
+    rep = {"tents": [], "lamps": [], "statues": [], "markers": [], "skipped": []}
+    poles, secrets = [], []
+    for li, ((x0, y0, x1, y1), nmax) in enumerate(SWAMP_TAILGATE_LOTS):
+        cands = []
+        nx = int((x1 - x0) // TENT_SPACING) + 1
+        ny = int((y1 - y0) // TENT_SPACING) + 1
+        for i in range(nx):
+            for j in range(ny):
+                mx = x0 + i * TENT_SPACING + (TENT_SPACING / 2 if j % 2 else 0.0)
+                my = y0 + j * TENT_SPACING
+                if mx <= x1:
+                    cands.append((rnd_key(f"lot{li}:{i}:{j}"), mx, my))
+        placed = 0
+        for _, mx, my in sorted(cands):
+            if placed >= nmax:
+                break
+            p = _place(S, probe, taken, mx, my, 2.3)
+            if p is None:
+                continue
+            k = len(rep["tents"])
+            roof, trim = (("banner_orange", "banner_blue") if k % 2 == 0 else ("banner_blue", "banner_orange"))
+            tent(vis, col, p[0], p[1], f"tent{k}", roof, trim)
+            taken.append((p[0], p[1], TENT_SPACING / 2))
+            rep["tents"].append({"map_m": [round(p[0] + S.cx, 2), round(p[1] + S.cy, 2)], "peak_m": TENT_PEAK,
+                                 "eave_m": TENT_EAVE, "roof": roof, "lot": li})
+            placed += 1
+        if placed < nmax:
+            rep["skipped"].append(("tents", li, nmax - placed))
+    for i, (mx, my) in enumerate(SWAMP_LAMPS):
+        p = _place(S, probe, taken, mx, my, 1.4, walk_pad=0.3)
+        if p is None:
+            rep["skipped"].append(("lamp", mx, my))
+            continue
+        yaw = 0.0 if i % 2 == 0 else math.pi / 2
+        lamp(vis, p[0], p[1], f"swamp_lamp{i}", yaw)
+        taken.append((p[0], p[1], 1.4))
+        poles.append({"name": f"Lamp post {i:02d}", "stage": p, "z": 0.0, "height_m": LAMP_POLE_M})
+        rep["lamps"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+    for i, (mx, my, facing, name) in enumerate(SWAMP_GATORS):
+        p = _place(S, probe, taken, mx, my, 3.0)
+        if p is None:
+            rep["skipped"].append(("statue", mx, my))
+            continue
+        top = gator_statue(vis, col, p[0], p[1], facing, f"gator{i}")
+        taken.append((p[0], p[1], 3.2))
+        rep["statues"].append({"name": name, "map_m": [round(p[0] + S.cx, 2), round(p[1] + S.cy, 2)],
+                               "facing_deg": facing, "plinth_m": 1.0, "back_m": top})
+        secrets.append({"name": "secret_" + name.lower().replace(" ", "_").replace("(", "").replace(")", ""),
+                        "map_m": (p[0] + S.cx + math.sin(math.radians(facing)) * 0.1,
+                                  p[1] + S.cy + math.cos(math.radians(facing)) * 0.1, top),
+                        "note": f"on the back of the {name} (plinth 1.0 m; design act 4: the gator-statue plinth)"})
+    for mx, my, facing, name in SWAMP_MARKERS:
+        p = _place(S, probe, taken, mx, my, 0.8)
+        if p is None:
+            rep["skipped"].append(("marker", mx, my))
+            continue
+        history_marker(vis, col, p[0], p[1], facing)
+        taken.append((p[0], p[1], 1.0))
+        rep["markers"].append({"name": name, "map_m": [round(p[0] + S.cx, 2), round(p[1] + S.cy, 2)]})
+    S.stats["dressing"] = rep
+    S.swamp_dressing = rep
+    S.swamp_secrets = secrets
+    print(f"SGL: swamp dressing: {len(rep['tents'])} tailgate tents, {len(rep['lamps'])} lamp posts, "
+          f"{len(rep['statues'])} gator statues, {len(rep['markers'])} markers; skipped {rep['skipped']}")
     return poles

@@ -356,7 +356,9 @@ def main():
     # ------------------------------------------------------------------ points of interest
     pois = {}
     for p in campus["points"]:
-        if p["id"] in ("n4741925737", "n1637323042", "n8045866345", "n5145535993", "n5623470779"):
+        # hand-modelled hub props (stage_landmarks.props): only when they stand in this stage's play zone
+        if p["id"] in ("n4741925737", "n1637323042", "n8045866345", "n5145535993", "n5623470779") \
+                and sp.inside(p["pt"], play):
             pois[p["id"]] = {"pt": r2(p["pt"]), "name": p["tags"].get("name"), "height": fnum(p["tags"].get("height"))}
 
     data = {

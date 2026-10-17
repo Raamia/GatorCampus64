@@ -1,5 +1,5 @@
 {
- "level": "sgl_hub",
+ "level": "castle_grounds",
  "stage": "hub",
  "center_m": [
   -45,
@@ -19,7 +19,7 @@
  ],
  "extent_half_m": 324.0,
  "collision_tris": 8729,
- "visual_tris": 55295,
+ "visual_tris": 55166,
  "collision_by_object": {
   "Ground collision": 1552,
   "Pond basins collision": 195,
@@ -48,7 +48,7 @@
   "Props visual": 252,
   "Buildings visual": 7685,
   "Backdrop buildings": 4376,
-  "Trees visual": 16460,
+  "Trees visual": 16331,
   "Tree line": 560,
   "Dressing visual": 1492,
   "LM century_tower visual": 1474,
@@ -193,6 +193,22 @@
      "budget_visual": 200
     }
    }
+  },
+  {
+   "module": "swamp_oconnell_gym",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'hub' (stages: ['swamp'])"
+  },
+  {
+   "module": "swamp_stadium",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'hub' (stages: ['swamp'])"
   }
  ],
  "replaced_osm_ids": [
@@ -272,6 +288,658 @@
   "floor_m": -2.384185791015625e-07,
   "clearance_m": 3.0
  },
+ "slot": "castle_grounds",
+ "level_script": "level_castle_grounds_entry",
+ "warp_nodes": [
+  {
+   "id": "0x0A",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x0A",
+   "note": "Plaza spawn (also exitCastleWarpNode, /campus hub)"
+  },
+  {
+   "id": "0x0B",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x0B",
+   "note": "Plaza death respawn"
+  },
+  {
+   "id": "0xF0",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x0A",
+   "note": "hub success exit (unused) -> Plaza"
+  },
+  {
+   "id": "0xF1",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x0B",
+   "note": "death in the hub -> Plaza death respawn"
+  },
+  {
+   "id": "0x11",
+   "dest_level": "LEVEL_BOB",
+   "dest_area": 1,
+   "dest_node": "0x0A",
+   "note": "door 1 (university_auditorium) -> bob entry"
+  },
+  {
+   "id": "0x21",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x21",
+   "note": "return after a star, outside door 1"
+  },
+  {
+   "id": "0x31",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x31",
+   "note": "return after a death / Exit course, door 1"
+  },
+  {
+   "id": "0x12",
+   "dest_level": "LEVEL_WF",
+   "dest_area": 1,
+   "dest_node": "0x0A",
+   "note": "door 2 (the_hub) -> wf entry"
+  },
+  {
+   "id": "0x22",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x22",
+   "note": "return after a star, outside door 2"
+  },
+  {
+   "id": "0x32",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x32",
+   "note": "return after a death / Exit course, door 2"
+  },
+  {
+   "id": "0x13",
+   "dest_level": "LEVEL_JRB",
+   "dest_area": 1,
+   "dest_node": "0x0A",
+   "note": "door 3 (newell_hall) -> jrb entry"
+  },
+  {
+   "id": "0x23",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x23",
+   "note": "return after a star, outside door 3"
+  },
+  {
+   "id": "0x33",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x33",
+   "note": "return after a death / Exit course, door 3"
+  },
+  {
+   "id": "0x14",
+   "dest_level": "LEVEL_CCM",
+   "dest_area": 1,
+   "dest_node": "0x0A",
+   "note": "door 4 (marston) -> ccm entry"
+  },
+  {
+   "id": "0x24",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x24",
+   "note": "return after a star, outside door 4"
+  },
+  {
+   "id": "0x34",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x34",
+   "note": "return after a death / Exit course, door 4"
+  },
+  {
+   "id": "0x15",
+   "dest_level": "LEVEL_BBH",
+   "dest_area": 1,
+   "dest_node": "0x0A",
+   "note": "door 5 (library_west) -> bbh entry"
+  },
+  {
+   "id": "0x25",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x25",
+   "note": "return after a star, outside door 5"
+  },
+  {
+   "id": "0x35",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x35",
+   "note": "return after a death / Exit course, door 5"
+  },
+  {
+   "id": "0x16",
+   "dest_level": "LEVEL_TTC",
+   "dest_area": 1,
+   "dest_node": "0x0A",
+   "note": "door 6 (century_tower) -> ttc entry"
+  },
+  {
+   "id": "0x26",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x26",
+   "note": "return after a star, outside door 6"
+  },
+  {
+   "id": "0x36",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x36",
+   "note": "return after a death / Exit course, door 6"
+  }
+ ],
+ "spawn_objects": [
+  {
+   "node": "0x0A",
+   "behavior": "bhvSpinAirborneWarp",
+   "game_units": [
+    8320,
+    100,
+    -4440
+   ],
+   "facing_deg": 190.0,
+   "note": "spawn + MARIO_POS"
+  },
+  {
+   "node": "0x0B",
+   "behavior": "bhvDeathWarp",
+   "game_units": [
+    8470,
+    100,
+    -4440
+   ],
+   "facing_deg": 190.0,
+   "note": "death in the hub"
+  },
+  {
+   "node": "0x21",
+   "behavior": "bhvPaintingStarCollectWarp",
+   "game_units": [
+    8357,
+    80,
+    3265
+   ],
+   "game_yaw": 65263,
+   "note": "return outside door 1 (university_auditorium)"
+  },
+  {
+   "node": "0x31",
+   "behavior": "bhvPaintingDeathWarp",
+   "game_units": [
+    8357,
+    80,
+    3265
+   ],
+   "game_yaw": 65263,
+   "note": "return outside door 1 (university_auditorium)"
+  },
+  {
+   "node": "0x22",
+   "behavior": "bhvPaintingStarCollectWarp",
+   "game_units": [
+    -14838,
+    80,
+    18468
+   ],
+   "game_yaw": 39303,
+   "note": "return outside door 2 (the_hub)"
+  },
+  {
+   "node": "0x32",
+   "behavior": "bhvPaintingDeathWarp",
+   "game_units": [
+    -14838,
+    80,
+    18468
+   ],
+   "game_yaw": 39303,
+   "note": "return outside door 2 (the_hub)"
+  },
+  {
+   "node": "0x23",
+   "behavior": "bhvPaintingStarCollectWarp",
+   "game_units": [
+    -10668,
+    80,
+    6775
+   ],
+   "game_yaw": 49152,
+   "note": "return outside door 3 (newell_hall)"
+  },
+  {
+   "node": "0x33",
+   "behavior": "bhvPaintingDeathWarp",
+   "game_units": [
+    -10668,
+    80,
+    6775
+   ],
+   "game_yaw": 49152,
+   "note": "return outside door 3 (newell_hall)"
+  },
+  {
+   "node": "0x24",
+   "behavior": "bhvPaintingStarCollectWarp",
+   "game_units": [
+    -1350,
+    80,
+    16450
+   ],
+   "game_yaw": 0,
+   "note": "return outside door 4 (marston)"
+  },
+  {
+   "node": "0x34",
+   "behavior": "bhvPaintingDeathWarp",
+   "game_units": [
+    -1350,
+    80,
+    16450
+   ],
+   "game_yaw": 0,
+   "note": "return outside door 4 (marston)"
+  },
+  {
+   "node": "0x25",
+   "behavior": "bhvPaintingStarCollectWarp",
+   "game_units": [
+    8391,
+    80,
+    -15793
+   ],
+   "game_yaw": 32768,
+   "note": "return outside door 5 (library_west)"
+  },
+  {
+   "node": "0x35",
+   "behavior": "bhvPaintingDeathWarp",
+   "game_units": [
+    8391,
+    80,
+    -15793
+   ],
+   "game_yaw": 32768,
+   "note": "return outside door 5 (library_west)"
+  },
+  {
+   "node": "0x26",
+   "behavior": "bhvPaintingStarCollectWarp",
+   "game_units": [
+    4406,
+    80,
+    9219
+   ],
+   "game_yaw": 36,
+   "note": "return outside door 6 (century_tower)"
+  },
+  {
+   "node": "0x36",
+   "behavior": "bhvPaintingDeathWarp",
+   "game_units": [
+    4406,
+    80,
+    9219
+   ],
+   "game_yaw": 36,
+   "note": "return outside door 6 (century_tower)"
+  }
+ ],
+ "flow_doors": [
+  {
+   "door": 1,
+   "slug": "university_auditorium",
+   "slot": "bob",
+   "stage_level": "LEVEL_BOB",
+   "warp_node": "0x11",
+   "door_object": {
+    "behavior": "id_bhvSglDoor",
+    "bparams": "0x0111102A",
+    "game_units": [
+     8350,
+     0,
+     3515
+    ],
+    "game_yaw": 32495,
+    "trigger_half_width_m": 1.6,
+    "emblem_up_m": 4.2,
+    "ceiling_above_m": null,
+    "map_m": [
+     38.5,
+     62.85,
+     0.0
+    ],
+    "facing_deg": 1.5
+   },
+   "return_spawns": [
+    {
+     "node": "0x21",
+     "behavior": "bhvPaintingStarCollectWarp",
+     "game_units": [
+      8357,
+      80,
+      3265
+     ],
+     "game_yaw": 65263
+    },
+    {
+     "node": "0x31",
+     "behavior": "bhvPaintingDeathWarp",
+     "game_units": [
+      8357,
+      80,
+      3265
+     ],
+     "game_yaw": 65263
+    }
+   ],
+   "return_spot": {
+    "out_m": 2.5,
+    "aside_m": 0.0,
+    "clearance_m": 2.0,
+    "floor_m": -0.0
+   },
+   "stars_required_generator": 0,
+   "stage_label": "THE SWAMP"
+  },
+  {
+   "door": 2,
+   "slug": "the_hub",
+   "slot": "wf",
+   "stage_level": "LEVEL_WF",
+   "warp_node": "0x12",
+   "door_object": {
+    "behavior": "id_bhvSglDoor",
+    "bparams": "0x0212121D",
+    "game_units": [
+     -14985,
+     0,
+     18265
+    ],
+    "game_yaw": 6535,
+    "trigger_half_width_m": 1.8,
+    "emblem_up_m": 2.9,
+    "ceiling_above_m": 3.6,
+    "map_m": [
+     -194.85,
+     -84.65,
+     0.0
+    ],
+    "facing_deg": 144.1
+   },
+   "return_spawns": [
+    {
+     "node": "0x22",
+     "behavior": "bhvPaintingStarCollectWarp",
+     "game_units": [
+      -14838,
+      80,
+      18468
+     ],
+     "game_yaw": 39303
+    },
+    {
+     "node": "0x32",
+     "behavior": "bhvPaintingDeathWarp",
+     "game_units": [
+      -14838,
+      80,
+      18468
+     ],
+     "game_yaw": 39303
+    }
+   ],
+   "return_spot": {
+    "out_m": 2.5,
+    "aside_m": 0.0,
+    "clearance_m": 2.0,
+    "floor_m": -0.0
+   },
+   "stars_required_generator": 2,
+   "stage_label": "REITZ UNION + ENGINEERING"
+  },
+  {
+   "door": 3,
+   "slug": "newell_hall",
+   "slot": "jrb",
+   "stage_level": "LEVEL_JRB",
+   "warp_node": "0x13",
+   "door_object": {
+    "behavior": "id_bhvSglDoor",
+    "bparams": "0x0313122A",
+    "game_units": [
+     -10968,
+     120,
+     6775
+    ],
+    "game_yaw": 16384,
+    "trigger_half_width_m": 1.8,
+    "emblem_up_m": 4.2,
+    "ceiling_above_m": null,
+    "map_m": [
+     -154.68,
+     30.25,
+     1.2
+    ],
+    "facing_deg": 90.0
+   },
+   "return_spawns": [
+    {
+     "node": "0x23",
+     "behavior": "bhvPaintingStarCollectWarp",
+     "game_units": [
+      -10668,
+      80,
+      6775
+     ],
+     "game_yaw": 49152
+    },
+    {
+     "node": "0x33",
+     "behavior": "bhvPaintingDeathWarp",
+     "game_units": [
+      -10668,
+      80,
+      6775
+     ],
+     "game_yaw": 49152
+    }
+   ],
+   "return_spot": {
+    "out_m": 3.0,
+    "aside_m": 0.0,
+    "clearance_m": 1.1,
+    "floor_m": 0.0
+   },
+   "stars_required_generator": 8,
+   "stage_label": "LAKE ALICE"
+  },
+  {
+   "door": 4,
+   "slug": "marston",
+   "slot": "ccm",
+   "stage_level": "LEVEL_CCM",
+   "warp_node": "0x14",
+   "door_object": {
+    "behavior": "id_bhvSglDoor",
+    "bparams": "0x0414122A",
+    "game_units": [
+     -1350,
+     0,
+     16700
+    ],
+    "game_yaw": 32768,
+    "trigger_half_width_m": 1.8,
+    "emblem_up_m": 4.2,
+    "ceiling_above_m": null,
+    "map_m": [
+     -58.5,
+     -69.0,
+     0.0
+    ],
+    "facing_deg": 0.0
+   },
+   "return_spawns": [
+    {
+     "node": "0x24",
+     "behavior": "bhvPaintingStarCollectWarp",
+     "game_units": [
+      -1350,
+      80,
+      16450
+     ],
+     "game_yaw": 0
+    },
+    {
+     "node": "0x34",
+     "behavior": "bhvPaintingDeathWarp",
+     "game_units": [
+      -1350,
+      80,
+      16450
+     ],
+     "game_yaw": 0
+    }
+   ],
+   "return_spot": {
+    "out_m": 2.5,
+    "aside_m": 0.0,
+    "clearance_m": 2.0,
+    "floor_m": 0.0
+   },
+   "stars_required_generator": 5,
+   "stage_label": "MARSTON (INSIDE)"
+  },
+  {
+   "door": 5,
+   "slug": "library_west",
+   "slot": "bbh",
+   "stage_level": "LEVEL_BBH",
+   "warp_node": "0x15",
+   "door_object": {
+    "behavior": "id_bhvSglDoor",
+    "bparams": "0x05151227",
+    "game_units": [
+     8391,
+     0,
+     -16043
+    ],
+    "game_yaw": 0,
+    "trigger_half_width_m": 1.8,
+    "emblem_up_m": 3.9,
+    "ceiling_above_m": 4.6,
+    "map_m": [
+     38.91,
+     258.43,
+     0.0
+    ],
+    "facing_deg": 180.0
+   },
+   "return_spawns": [
+    {
+     "node": "0x25",
+     "behavior": "bhvPaintingStarCollectWarp",
+     "game_units": [
+      8391,
+      80,
+      -15793
+     ],
+     "game_yaw": 32768
+    },
+    {
+     "node": "0x35",
+     "behavior": "bhvPaintingDeathWarp",
+     "game_units": [
+      8391,
+      80,
+      -15793
+     ],
+     "game_yaw": 32768
+    }
+   ],
+   "return_spot": {
+    "out_m": 2.5,
+    "aside_m": 0.0,
+    "clearance_m": 2.0,
+    "floor_m": 0.0
+   },
+   "stars_required_generator": 14,
+   "stage_label": "LIBRARY WEST AFTER DARK"
+  },
+  {
+   "door": 6,
+   "slug": "century_tower",
+   "slot": "ttc",
+   "stage_level": "LEVEL_TTC",
+   "warp_node": "0x16",
+   "door_object": {
+    "behavior": "id_bhvSglDoor",
+    "bparams": "0x0616101E",
+    "game_units": [
+     4407,
+     0,
+     9469
+    ],
+    "game_yaw": 32804,
+    "trigger_half_width_m": 1.6,
+    "emblem_up_m": 3.0,
+    "ceiling_above_m": 3.7,
+    "map_m": [
+     -0.93,
+     3.31,
+     0.0
+    ],
+    "facing_deg": 359.8
+   },
+   "return_spawns": [
+    {
+     "node": "0x26",
+     "behavior": "bhvPaintingStarCollectWarp",
+     "game_units": [
+      4406,
+      80,
+      9219
+     ],
+     "game_yaw": 36
+    },
+    {
+     "node": "0x36",
+     "behavior": "bhvPaintingDeathWarp",
+     "game_units": [
+      4406,
+      80,
+      9219
+     ],
+     "game_yaw": 36
+    }
+   ],
+   "return_spot": {
+    "out_m": 2.5,
+    "aside_m": 0.0,
+    "clearance_m": 2.0,
+    "floor_m": -0.0
+   },
+   "stars_required_generator": 20,
+   "stage_label": "CENTURY TOWER (INSIDE)"
+  }
+ ],
  "doors": [
   {
    "slug": "university_auditorium",
@@ -300,7 +968,8 @@
    "source": "landmark module century_tower_auditorium (module primary door)",
    "marker_drawn": false,
    "module_primary": true,
-   "note": "centre door of the three-door porch facing the Plaza of the Americas (OSM entrance node 8064445595); the NW/NE porch doors are decorative; visual door leaf 0.5 m behind pos_m"
+   "note": "centre door of the three-door porch facing the Plaza of the Americas (OSM entrance node 8064445595); the NW/NE porch doors are decorative; visual door leaf 0.5 m behind pos_m",
+   "width_m": 2.0
   },
   {
    "slug": "the_hub",
@@ -329,7 +998,8 @@
    "source": "landmark module hub_newell (module primary door)",
    "marker_drawn": false,
    "module_primary": true,
-   "note": "south entrance on the Union Lawn side (OSM entrance node), the side that faces the Reitz Union: suggested door to the Reitz + Engineering stage"
+   "note": "south entrance on the Union Lawn side (OSM entrance node), the side that faces the Reitz Union: suggested door to the Reitz + Engineering stage",
+   "width_m": null
   },
   {
    "slug": "marston",
@@ -358,7 +1028,8 @@
    "source": "landmark module marston_turlington (module primary door)",
    "marker_drawn": false,
    "module_primary": true,
-   "note": "main entrance on the stepped north wing, facing the entry plaza"
+   "note": "main entrance on the stepped north wing, facing the entry plaza",
+   "width_m": null
   },
   {
    "slug": "newell_hall",
@@ -387,7 +1058,8 @@
    "source": "landmark module hub_newell (door named in DOOR_DEFAULTS)",
    "marker_drawn": false,
    "module_primary": false,
-   "note": "historic arched main entry in the east facade, top of the stoop (OSM entrance=main)"
+   "note": "historic arched main entry in the east facade, top of the stoop (OSM entrance=main)",
+   "width_m": null
   },
   {
    "slug": "library_west",
@@ -416,7 +1088,8 @@
    "source": "landmark module library_west_smathers_plaza (module primary door)",
    "marker_drawn": false,
    "module_primary": true,
-   "note": "Main revolving door (OSM 4741830154) in the two-storey glass wall, under the colonnade's entrance canopy -> 'Library West After Dark' [generator: moved 0.35 m out of the recess onto the facade plane]"
+   "note": "Main revolving door (OSM 4741830154) in the two-storey glass wall, under the colonnade's entrance canopy -> 'Library West After Dark' [generator: moved 0.35 m out of the recess onto the facade plane]",
+   "width_m": null
   },
   {
    "slug": "century_tower",
@@ -445,7 +1118,8 @@
    "source": "landmark module century_tower_auditorium (module primary door)",
    "marker_drawn": false,
    "module_primary": true,
-   "note": "north face, in the recessed bay; visual door leaf sits 0.35 m behind pos_m"
+   "note": "north face, in the recessed bay; visual door leaf sits 0.35 m behind pos_m",
+   "width_m": 2.0
   },
   {
    "slug": "smathers",
@@ -474,7 +1148,8 @@
    "source": "landmark module library_west_smathers_plaza (module primary door)",
    "marker_drawn": false,
    "module_primary": true,
-   "note": "Main entrance (OSM 4741830122) in the west face of the entrance tower, facing the Plaza -> 'Smathers Stacks Slide' [generator: moved 0.6 m out of the recess onto the facade plane]"
+   "note": "Main entrance (OSM 4741830122) in the west face of the entrance tower, facing the Plaza -> 'Smathers Stacks Slide' [generator: moved 0.6 m out of the recess onto the facade plane]",
+   "width_m": null
   },
   {
    "slug": "final_exam",
@@ -503,7 +1178,8 @@
    "source": "landmark module century_tower_auditorium (door named in DOOR_DEFAULTS)",
    "marker_drawn": false,
    "module_primary": false,
-   "note": "west face, in the recessed bay; visual door leaf sits 0.35 m behind pos_m"
+   "note": "west face, in the recessed bay; visual door leaf sits 0.35 m behind pos_m",
+   "width_m": 2.0
   },
   {
    "slug": "the_hub",
@@ -529,7 +1205,8 @@
    "source": "landmark module hub_newell (not a stage door)",
    "marker_drawn": false,
    "module_primary": false,
-   "note": "main two-storey glass entry under the curving north awning (OSM entrance=main)"
+   "note": "main two-storey glass entry under the curving north awning (OSM entrance=main)",
+   "width_m": null
   },
   {
    "slug": "the_hub",
@@ -555,7 +1232,8 @@
    "source": "landmark module hub_newell (not a stage door)",
    "marker_drawn": false,
    "module_primary": false,
-   "note": "food-court entry in the rounded east wing (OSM entrance=main)"
+   "note": "food-court entry in the rounded east wing (OSM entrance=main)",
+   "width_m": null
   },
   {
    "slug": "newell_hall",
@@ -581,7 +1259,8 @@
    "source": "landmark module hub_newell (not a stage door)",
    "marker_drawn": false,
    "module_primary": true,
-   "note": "west gable door of the 2017 addition (mirrors the east entry): suggested stage door, west side toward the stadium (stages.json); no real door here"
+   "note": "west gable door of the 2017 addition (mirrors the east entry): suggested stage door, west side toward the stadium (stages.json); no real door here",
+   "width_m": null
   },
   {
    "slug": "newell_hall",
@@ -607,7 +1286,8 @@
    "source": "landmark module hub_newell (not a stage door)",
    "marker_drawn": false,
    "module_primary": false,
-   "note": "student entry in the glass connector, inside the south wall-kick slot (OSM entrance)"
+   "note": "student entry in the glass connector, inside the south wall-kick slot (OSM entrance)",
+   "width_m": null
   },
   {
    "slug": "library_west",
@@ -633,7 +1313,8 @@
    "source": "landmark module library_west_smathers_plaza (not a stage door)",
    "marker_drawn": false,
    "module_primary": false,
-   "note": "North door (OSM 10117492280) in the notch west of the curved glass front"
+   "note": "North door (OSM 10117492280) in the notch west of the curved glass front",
+   "width_m": null
   },
   {
    "slug": "library_west",
@@ -659,7 +1340,8 @@
    "source": "landmark module library_west_smathers_plaza (not a stage door)",
    "marker_drawn": false,
    "module_primary": false,
-   "note": "North door (OSM 10117492278) in the notch east of the curved glass front"
+   "note": "North door (OSM 10117492278) in the notch east of the curved glass front",
+   "width_m": null
   },
   {
    "slug": "smathers_library",
@@ -685,7 +1367,8 @@
    "source": "landmark module library_west_smathers_plaza (not a stage door)",
    "marker_drawn": false,
    "module_primary": false,
-   "note": "Side door (OSM 10083724148) on the north range, facing the east courtyard"
+   "note": "Side door (OSM 10083724148) on the north range, facing the east courtyard",
+   "width_m": null
   }
  ],
  "lua_globals_needed": [
@@ -697,7 +1380,8 @@
   "SGL_HUB_SIGN_LIBRARY_WEST",
   "SGL_HUB_SIGN_CENTURY_TOWER",
   "SGL_HUB_SIGN_SMATHERS",
-  "SGL_HUB_SIGN_FINAL_EXAM"
+  "SGL_HUB_SIGN_FINAL_EXAM",
+  "id_bhvSglDoor"
  ],
  "landmark_extras": {
   "century_tower": {
@@ -1516,6 +2200,7 @@
    "facing_deg": 270.1
   }
  },
+ "stars": [],
  "fog": {
   "start_m": 200.0,
   "end_m": 1000.0,
@@ -1537,23 +2222,26 @@
    "name": "Dairy Pond",
    "stage_m": [
     -97.64,
-    -283.57,
+    -242.0,
     -56.15,
     -237.51
    ],
-   "surface_m": -0.3
+   "surface_m": -0.3,
+   "clipped": true
   },
   {
    "name": "Gator Pond",
    "stage_m": [
     222.39,
     -181.82,
-    258.92,
+    242.0,
     -145.66
    ],
-   "surface_m": -0.3
+   "surface_m": -0.3,
+   "clipped": true
   }
  ],
+ "pickups": null,
  "stats": {
   "landmark_conflicts": {
    "trees_removed": [],
@@ -2806,9 +3494,11 @@
   "trees": {
    "oak": 116,
    "pine": 7,
-   "palm": 170,
+   "palm": 167,
    "colliders": 173,
-   "climbable": 28
+   "climbable": 28,
+   "beyond_s16": 3,
+   "in_ground_hole": 0
   },
   "dressing": {
    "lamps": [
@@ -2948,11 +3638,26 @@
   "trailing_ws_lines": 3,
   "max_abs_vertex": 32400
  },
+ "collision_repair": {
+  "area_1": {
+   "vertices": [
+    6713,
+    6694
+   ],
+   "welded_vertices": 19,
+   "collapsed_tris": 28,
+   "tjunction_splits": 240,
+   "triangles": [
+    8723,
+    8935
+   ]
+  }
+ },
  "validation": {
   "errors": [],
   "warnings": [],
-  "collision_tris": 8723,
-  "render_tris": 55295,
+  "collision_tris": 8935,
+  "render_tris": 55166,
   "lua_names": [
    "SGL_HUB_SIGN_CENTURY_TOWER",
    "SGL_HUB_SIGN_FINAL_EXAM",
@@ -2962,12 +3667,13 @@
    "SGL_HUB_SIGN_SMATHERS",
    "SGL_HUB_SIGN_THE_HUB",
    "SGL_HUB_SIGN_UNIVERSITY_AUDITORIUM",
-   "SGL_HUB_SIGN_WELCOME"
+   "SGL_HUB_SIGN_WELCOME",
+   "id_bhvSglDoor"
   ],
   "fog_patched": [
    49,
    49
   ]
  },
- "level_dir": "mods/sgl64/levels/sgl_hub"
+ "level_dir": "mods/sgl64/levels/castle_grounds"
 }

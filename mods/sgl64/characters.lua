@@ -20,6 +20,19 @@ for _, friend in ipairs(FRIENDS) do
     friend.model = smlua_model_util_get_id(friend.id .. "_geo")
 end
 
+-- Shared with charselect.lua (the character select menu). sglSetFriend(index) picks a friend for
+-- the local player (0 = normal character), returns false when that friend's model failed to load,
+-- and calls sglOnFriendSet (charselect.lua) so the pick is remembered for the next session.
+_G.sglFriends = FRIENDS
+function _G.sglSetFriend(index)
+    if index ~= 0 and (FRIENDS[index] == nil or FRIENDS[index].model == E_MODEL_ERROR_MODEL) then
+        return false
+    end
+    gPlayerSyncTable[0].friend = index
+    if _G.sglOnFriendSet ~= nil then _G.sglOnFriendSet(index) end
+    return true
+end
+
 local function find_friend(query)
     query = query:lower()
     for i, friend in ipairs(FRIENDS) do
@@ -41,11 +54,15 @@ end
 local function on_char_command(msg)
     msg = msg:gsub("^%s+", ""):gsub("%s+$", "")
     if msg == "" then
+        if _G.sglOpenCharSelect ~= nil then
+            _G.sglOpenCharSelect()
+            return true
+        end
         djui_chat_message_create("Usage: /char <name> or /char off. Characters: " .. friend_list())
         return true
     end
     if msg:lower() == "off" then
-        gPlayerSyncTable[0].friend = 0
+        _G.sglSetFriend(0)
         djui_chat_message_create("Back to your normal character.")
         return true
     end
@@ -58,7 +75,7 @@ local function on_char_command(msg)
         djui_chat_message_create("\\#ff8080\\" .. FRIENDS[index].name .. "'s model failed to load.")
         return true
     end
-    gPlayerSyncTable[0].friend = index
+    _G.sglSetFriend(index)
     djui_chat_message_create("You are now \\#ffd700\\" .. FRIENDS[index].name .. "\\#dcdcdc\\!")
     return true
 end
@@ -94,4 +111,4 @@ end
 
 hook_event(HOOK_MARIO_UPDATE, on_mario_update)
 hook_event(HOOK_ON_SYNC_VALID, on_sync_valid)
-hook_chat_command("char", "[name|off] Play as one of our friends", on_char_command)
+hook_chat_command("char", "[name|off] Play as one of our friends (no name: open the menu)", on_char_command)

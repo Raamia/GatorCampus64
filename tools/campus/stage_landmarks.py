@@ -47,17 +47,29 @@ POI_IDS = ("n4741925737", "n1637323042", "n8045866345", "n5145535993", "n5623470
 
 
 # ------------------------------------------------------------------ landmark modules
+def entry_stages(e):
+    """Stage keys a LANDMARKS entry is built into (contract key "stages", default ["hub"])."""
+    st = e.get("stages", ["hub"])
+    if isinstance(st, str):
+        st = [st]
+    return [str(s) for s in st]
+
+
 def load_modules(S, strict=False):
     """Import every landmarks/<slug>.py (not starting with '_') and run build(ctx). Successful
     modules' osm_ids are added to S.replaced_ids; a failing module is reported and skipped (its
-    buildings fall back to generic extrusions) unless strict."""
+    buildings fall back to generic extrusions) unless strict.
+    Per-stage filtering (contract key "stages", default ["hub"]): only entries listing the stage being
+    built (S.key) count; a module with no such entry is skipped without calling build(), and the parts
+    of a mixed module's other entries are dropped."""
     if HERE not in sys.path:
         sys.path.insert(0, HERE)
     lm_dir = os.path.join(HERE, "landmarks")
     import json
     campus = json.load(open(os.path.join(S.root, "data", "uf", "campus.json")))
     from landmarks._common import PALETTE
-    ctx = {"campus": campus, "stage": S.data["stage"], "ground_z": lambda x, y: 0.0,
+    stage_key = getattr(S, "key", None) or S.data["stage"].get("key", "hub")
+    ctx = {"campus": campus, "stage": S.data["stage"], "stage_key": stage_key, "ground_z": lambda x, y: 0.0,
            "buildings": {b["id"]: b for b in campus["buildings"]}, "palette": PALETTE}
     S.landmark_report = []
     for path in sorted(glob.glob(os.path.join(lm_dir, "*.py"))):
@@ -72,13 +84,27 @@ def load_modules(S, strict=False):
                 mod = importlib.reload(sys.modules[modname])
             else:
                 mod = importlib.import_module(modname)
-            entries = list(getattr(mod, "LANDMARKS"))
-            for e in entries:
+            all_entries = list(getattr(mod, "LANDMARKS"))
+            for e in all_entries:
                 for k in ("slug", "name", "osm_ids", "center_m"):
                     if k not in e:
                         raise ValueError(f"LANDMARKS entry {e.get('slug')!r} has no {k!r}")
+            entries = [e for e in all_entries if stage_key in entry_stages(e)]
+            other = {e["slug"] for e in all_entries if stage_key not in entry_stages(e)}
+            if not entries:
+                rep.update(ok=True, skipped=True, slugs=[], parts=0,
+                           reason=f"no LANDMARKS entry lists stage {stage_key!r} "
+                                  f"(stages: {sorted({s for e in all_entries for s in entry_stages(e)})})")
+                print(f"SGL: landmark module {base}: skipped for stage {stage_key!r} ({rep['reason']})")
+                continue
             parts = mod.build(ctx)
-            slugs = sorted((e["slug"] for e in entries), key=len, reverse=True)
+            slugs = sorted((e["slug"] for e in all_entries), key=len, reverse=True)
+            if other:
+                kept = [p for p in parts if part_slug(p, slugs) not in other]
+                rep["parts_dropped_other_stages"] = len(parts) - len(kept)
+                print(f"SGL: landmark module {base}: {len(parts) - len(kept)} parts of {sorted(other)} "
+                      f"dropped (not for stage {stage_key!r})")
+                parts = kept
             objs = [add_part(S, base, p, part_slug(p, slugs)) for p in parts]
         except Exception as ex:  # noqa: BLE001 - report and fall back
             rep["error"] = f"{type(ex).__name__}: {ex}"
@@ -435,7 +461,8 @@ def doors(S):
                     note = f"{note or ''} [generator: moved {r} m out of the recess onto the facade plane]".strip()
                 out.append(dict(dd, name=door.get("name") or f"DOOR_{dd['slug']}", map_pos=(x, y, z), facing=f,
                                 source=f"landmark module {e['module']} ({picked})", marker=False, sign=True,
-                                note=note, module_primary=bool(door.get("primary"))))
+                                note=note, module_primary=bool(door.get("primary")),
+                                width_m=door.get("width_m")))
                 continue
         if dd.get("module_only"):
             continue
@@ -454,7 +481,7 @@ def doors(S):
         out.append(dict(dd, name=f"DOOR_{dd['slug']}", map_pos=(sx + S.cx, sy + S.cy, 0.0),
                         facing=round(facing, 1),
                         source="generator (OSM footprint edge)" if marker else "generator (no door in module)",
-                        marker=marker, sign=True))
+                        marker=marker, sign=True, width_m=2.4))
     # the modules' other doors: listed for later (decorative / future), no stage and no sign
     for e in S.landmark_entries:
         for door in e.get("doors", []):

@@ -1,0 +1,53 @@
+#!/bin/sh
+# Offline checks for the mods/sgl64 Lua (no game needed):
+#   1. luac -p on every mod Lua file (syntax; coopdx runs Lua 5.3-style code, keep 5.4/5.5-only
+#      syntax such as <const>/<close>/global out of the mod)
+#   2. check_api.lua: unknown functions/constants and wrong argument counts vs sm64coopdx v1.5.1
+#   3. check_globals.lua: cross-file globals from the bytecode, in coopdx's load order (strcmp of the
+#      file names): every read resolves, load-time reads only use earlier files, no shadowed coopdx
+#      names, no global assigned by two files
+#   4. test_missions.lua: multi-client simulation of the mission framework + Swamp missions
+#   5. test_flow.lua: the whole mod (every file) + the real levels/castle_grounds and levels/bob
+#      scripts: doors, warp nodes, return spawns, act select, stars, character select, Study Group
+#   6. check_swamp_points.py: SWAMP_POINTS still match data/uf/swamp_points.json (the built Swamp)
+#      (skipped when tools/.venv is missing)
+# Usage: tools/luatest/run.sh            (exit status 0 = all good)
+# Fixtures (regenerate only for a new coopdx version): coopdx_constants_v151.lua,
+# coopdx_api_v151.lua, coopdx_structs_v151.lua (gen_coopdx_*.py, see their headers).
+set -e
+HERE="$(cd "$(dirname "$0")" && pwd)"
+MOD="$HERE/../../mods/sgl64"
+LUA="${LUA:-lua}"
+LUAC="${LUAC:-luac}"
+export LUAC
+
+echo "== luac -p"
+for f in "$MOD"/*.lua; do
+    "$LUAC" -p "$f"
+    echo "ok $(basename "$f")"
+done
+if grep -nE '<const>|<close>|^[[:space:]]*global[[:space:]]' "$MOD"/*.lua; then
+    echo "Lua 5.4/5.5-only syntax found (coopdx is Lua 5.3-style)"; exit 1
+fi
+
+echo "== check_api (sm64coopdx v1.5.1)"
+"$LUA" "$HERE/check_api.lua" "$MOD"/*.lua
+
+echo "== check_globals (cross-file, load order)"
+"$LUA" "$HERE/check_globals.lua" "$MOD"
+
+echo "== test_missions"
+"$LUA" "$HERE/test_missions.lua"
+
+echo "== test_flow (whole mod + level scripts)"
+"$LUA" "$HERE/test_flow.lua"
+
+PY="$HERE/../.venv/bin/python"
+if [ -x "$PY" ]; then
+    echo "== check_swamp_points"
+    out="$("$PY" -I "$HERE/check_swamp_points.py")" || { echo "$out"; exit 1; }
+    echo "$out"
+else
+    echo "== check_swamp_points skipped (no tools/.venv)"
+fi
+echo "== all luatest checks passed"

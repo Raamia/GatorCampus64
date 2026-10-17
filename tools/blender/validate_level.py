@@ -286,10 +286,15 @@ def validate_level(level_dir):
             if mname not in LVL_SYMBOLS:
                 errors.append(f"{d}: level script command {mname} is not supported by DynOS")
             script_cmds.append((d, mname, args))
+    loaded_models = set(GLOBAL_MODELS)
     for d, mname, args in script_cmds:
+        if mname == "JUMP_LINK" and args and args[0].strip() in MODEL_GROUP_SCRIPTS:
+            loaded_models |= MODEL_GROUP_SCRIPTS[args[0].strip()]
+            info.append(f"model group {args[0].strip()} loaded ({len(MODEL_GROUP_SCRIPTS[args[0].strip()])} models)")
         if mname == "AREA":
             cur_area = to_int(args[0])
-            areas[cur_area] = {"geo": args[1], "terrain": None, "warps": {}, "spawns": {}, "objects": 0}
+            areas[cur_area] = {"geo": args[1], "terrain": None, "warps": {}, "spawns": {}, "objects": 0,
+                               "object_list": []}
             if args[1] not in decls:
                 errors.append(f"AREA({args[0]}): geo layout {args[1]} not found")
         elif mname == "END_AREA":
@@ -307,6 +312,9 @@ def validate_level(level_dir):
         elif cur_area is not None and mname in ("OBJECT", "OBJECT_WITH_ACTS"):
             areas[cur_area]["objects"] += 1
             model, bparam, bhv = args[0], args[7], args[8]
+            areas[cur_area]["object_list"].append({"cmd": mname, "model": model, "bhv": bhv, "bparam": bparam,
+                                                   "pos": args[1:4], "yaw": args[5],
+                                                   "acts": args[9] if len(args) > 9 else "ALL"})
             for a in (model, bhv, bparam):
                 if not _known_symbol(a):
                     lua_names.add(a)
@@ -314,7 +322,7 @@ def validate_level(level_dir):
                 bp = to_int(bparam)
                 if bp is not None:
                     areas[cur_area]["spawns"][(bp >> 16) & 0xFF] = (bhv, args[1:4])
-            if model.startswith("MODEL_") and model != "MODEL_NONE" and model not in GLOBAL_MODELS:
+            if model.startswith("MODEL_") and model != "MODEL_NONE" and model not in loaded_models:
                 warnings.append(f"area {cur_area}: {model} is not a globally loaded model; it only shows if this "
                                 "level loads it (or use the Lua E_MODEL_* name, loaded on demand)")
         elif mname == "SHOW_DIALOG":
@@ -343,6 +351,8 @@ def validate_level(level_dir):
         info.append(f"area {idx}: geo {a['geo']}, collision {a['terrain']}, {a['objects']} objects, "
                     f"warp nodes {sorted('0x%02X' % w for w in a['warps'])}, "
                     f"spawn warps {sorted('0x%02X' % w for w in a['spawns'])}")
+    # ---- Super Gatorlator 64 flow contract (docs/flow.md) for vanilla-slot level folders
+    check_flow_contract(name, areas, errors, warnings, info)
 
     # ---- geo layouts
     for d in by_type.get("GeoLayout", []):
@@ -452,6 +462,7 @@ def validate_level(level_dir):
     if lua_names:
         info.append("resolved as Lua globals of the mod at level load (must exist, or the object is skipped): "
                     + ", ".join(sorted(lua_names)))
+        check_lua_globals(level_dir, lua_names, warnings, info)
     return _finish(name, errors, warnings, info, lua_names=sorted(lua_names), collision_tris=total_tris,
                    render_tris=gfx_tris)
 
@@ -468,6 +479,109 @@ MODEL_MARIOS_WINGED_METAL_CAP MODEL_MARIOS_METAL_CAP MODEL_MARIOS_WING_CAP MODEL
 MODEL_BOWSER_KEY_CUTSCENE MODEL_BOWSER_KEY MODEL_RED_FLAME_SHADOW MODEL_1UP MODEL_RED_COIN
 MODEL_RED_COIN_NO_SHADOW MODEL_NUMBER MODEL_EXPLOSION MODEL_DIRT_ANIMATION MODEL_CARTOON_STAR
 """.split())
+
+# model groups a level script can load with JUMP_LINK(<script>) (vanilla levels/scripts.c; DynOS knows the
+# script_func_global_* names). common0 = script_func_global_1 (every vanilla course links it).
+MODEL_GROUP_SCRIPTS = {
+    "script_func_global_1": set("""
+MODEL_BLUE_COIN_SWITCH MODEL_AMP MODEL_PURPLE_SWITCH MODEL_CHECKERBOARD_PLATFORM MODEL_BREAKABLE_BOX
+MODEL_BREAKABLE_BOX_SMALL MODEL_EXCLAMATION_BOX_OUTLINE MODEL_EXCLAMATION_BOX MODEL_GOOMBA MODEL_EXCLAMATION_POINT
+MODEL_KOOPA_SHELL MODEL_METAL_BOX MODEL_METAL_BOX_DL MODEL_BLACK_BOBOMB MODEL_BOBOMB_BUDDY MODEL_DL_CANNON_LID
+MODEL_BOWLING_BALL MODEL_CANNON_BARREL MODEL_CANNON_BASE MODEL_HEART MODEL_FLYGUY MODEL_CHUCKYA
+MODEL_TRAJECTORY_MARKER_BALL
+""".split()),
+}
+
+
+# ---- Super Gatorlator 64 flow contract (docs/flow.md, tools/campus/build_stage.py) ----------------
+FLOW_HUB = "castle_grounds"
+FLOW_SLOT_LEVEL = {"castle_grounds": "LEVEL_CASTLE_GROUNDS", "bob": "LEVEL_BOB", "wf": "LEVEL_WF",
+                   "jrb": "LEVEL_JRB", "ccm": "LEVEL_CCM", "bbh": "LEVEL_BBH", "ttc": "LEVEL_TTC"}
+FLOW_SLOT_DOOR = {"bob": 1, "wf": 2, "jrb": 3, "ccm": 4, "bbh": 5, "ttc": 6}
+FLOW_DOOR_BEHAVIOR = "id_bhvSglDoor"
+FLOW_STAR_RETURN = {"bhvPaintingStarCollectWarp", "bhvAirborneStarCollectWarp", "bhvLaunchStarCollectWarp"}
+FLOW_DEATH_RETURN = {"bhvPaintingDeathWarp", "bhvAirborneDeathWarp", "bhvLaunchDeathWarp", "bhvDeathWarp"}
+
+
+def _warp_dest(a, wid):
+    """(destLevel, destArea, destNode) of WARP_NODE wid in area dict a, or None."""
+    w = a["warps"].get(wid)
+    if w is None or len(w) < 3:
+        return None
+    return w[0].strip(), to_int(w[1]), to_int(w[2])
+
+
+def check_flow_contract(name, areas, errors, warnings, info):
+    """Warp wiring of the hub (castle_grounds) and the stage slots (bob, wf, jrb, ccm, bbh, ttc).
+    Only runs for those folder names; other levels (sgl_test, ...) are not affected."""
+    if name not in FLOW_SLOT_LEVEL or 1 not in areas:
+        return
+    a = areas[1]
+    cg = FLOW_SLOT_LEVEL[FLOW_HUB]
+    bad = []
+
+    def expect(wid, level, node):
+        got = _warp_dest(a, wid)
+        if got != (level, 1, node):
+            bad.append(f"WARP_NODE(0x{wid:02X}) must lead to {level} area 1 node 0x{node:02X}, found {got}")
+
+    if name == FLOW_HUB:
+        for i in sorted(FLOW_SLOT_DOOR.values()):
+            slot = next(s for s, d in FLOW_SLOT_DOOR.items() if d == i)
+            expect(0x10 + i, FLOW_SLOT_LEVEL[slot], 0x0A)
+            for base, bhvs, what in ((0x20, FLOW_STAR_RETURN, "star return"), (0x30, FLOW_DEATH_RETURN, "death return")):
+                wid = base + i
+                if wid not in a["warps"]:
+                    bad.append(f"no WARP_NODE(0x{wid:02X}) ({what} of door {i})")
+                sp = a["spawns"].get(wid)
+                if sp is None:
+                    bad.append(f"no spawn object with bparam2 0x{wid:02X} ({what} of door {i})")
+                elif sp[0] not in bhvs:
+                    warnings.append(f"flow: spawn 0x{wid:02X} uses {sp[0]} (expected one of {sorted(bhvs)})")
+            doors = [o for o in a["object_list"] if o["bhv"] == FLOW_DOOR_BEHAVIOR
+                     and to_int(o["bparam"]) is not None and (to_int(o["bparam"]) >> 16) & 0xFF == 0x10 + i]
+            if len(doors) != 1:
+                bad.append(f"expected 1 {FLOW_DOOR_BEHAVIOR} object with bparam2 0x{0x10 + i:02X} (door {i}), "
+                           f"found {len(doors)}")
+            elif (to_int(doors[0]["bparam"]) >> 24) & 0xFF != i:
+                bad.append(f"door object 0x{0x10 + i:02X}: bparam1 must be the door index {i}")
+        if 0x0A not in a["spawns"]:
+            bad.append("no Plaza spawn 0x0A")
+        info.append(f"flow contract (hub): doors 1-{max(FLOW_SLOT_DOOR.values())} -> "
+                    + ", ".join(f"0x{0x10 + i:02X}->{_warp_dest(a, 0x10 + i)}" for i in sorted(FLOW_SLOT_DOOR.values())))
+    else:
+        i = FLOW_SLOT_DOOR[name]
+        expect(0x0A, FLOW_SLOT_LEVEL[name], 0x0A)
+        expect(0xF0, cg, 0x20 + i)
+        expect(0xF1, cg, 0x30 + i)
+        stars = [o for o in a["object_list"] if o["bhv"] == "bhvStar"]
+        info.append(f"flow contract (stage {name}, door {i}): 0xF0->{_warp_dest(a, 0xF0)}, "
+                    f"0xF1->{_warp_dest(a, 0xF1)}; level-script stars: "
+                    + (", ".join(f"id {(to_int(o['bparam']) or 0) >> 24} acts {o['acts']}" for o in stars) or "none"))
+    for b in bad:
+        errors.append("flow: " + b)
+
+
+def check_lua_globals(level_dir, lua_names, warnings, info):
+    """Warn about Lua names the level script uses that no .lua file of the mod assigns (a typo there
+    only shows up in game: DynOS skips the object). The mod root is two folders above the level."""
+    import glob
+    mod_root = os.path.dirname(os.path.dirname(os.path.abspath(level_dir)))
+    files = glob.glob(os.path.join(mod_root, "*.lua"))
+    if not files:
+        return
+    src = "\n".join(open(f, encoding="utf-8", errors="replace").read() for f in files)
+    missing = []
+    for n in sorted(lua_names):
+        tok = n.strip()
+        if not re.fullmatch(r"[A-Za-z_]\w*", tok):
+            continue
+        if not re.search(r"(^|[^\w.])" + re.escape(tok) + r"\s*=[^=]", src, re.M):
+            missing.append(tok)
+    if missing:
+        warnings.append(f"Lua globals not assigned in {os.path.basename(mod_root)}/*.lua: {', '.join(missing)}")
+    else:
+        info.append(f"all {len(lua_names)} Lua names are assigned in {os.path.basename(mod_root)}/*.lua")
 
 
 def _known_symbol(a):

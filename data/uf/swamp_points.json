@@ -1,0 +1,5638 @@
+{
+ "schema": "sgl64.swamp_points/1",
+ "generated_by": "tools/campus/build_stage.py swamp (stage_points.swamp_points)",
+ "stage": "swamp",
+ "level": "bob",
+ "slot": "bob",
+ "level_const": "LEVEL_BOB",
+ "course": "COURSE_BOB",
+ "center_m": [
+  -580,
+  160
+ ],
+ "coordinates": {
+  "map_m": "x = east, y = north, z = metres above grade (the field is 10 m below grade); origin = Century Tower",
+  "game": "X = (x - cx) * 100, Y = z * 100, Z = -(y - cy) * 100 with (cx, cy) = center_m; Y is the ray-cast collision floor (Mario's feet). Objects that hover (stars, coins) add their own offset.",
+  "game_yaw": "0 = faces +Z (south), 0x4000 = east, 0x8000 = north, 0xC000 = west",
+  "floor_m": "collision floor measured by ray-casting the built level (STAND_FROM_M above the design height, straight down)"
+ },
+ "note": "Anchor points for the mission author (docs/game_design.md 7.1). Re-generated on every `build_stage.py -- swamp` from the built collision. Points with a 'check' key did not measure as designed. 'actN_' keys use the design doc's act numbers; the course acts (course.lua, docs/flow.md 5) are: 1 Kickoff = design 1, 2 Stair Sprint = design 5, 3 Chomp Chorus = design 3, 4-6 coming soon (design 2 Mascot, 4 Tailgate, 6 Flyover).",
+ "spawn": {
+  "name": "spawn_0x0A",
+  "map_m": [
+   -513.49,
+   272.98,
+   0.0
+  ],
+  "game": [
+   6651,
+   0,
+   -11298
+  ],
+  "floor_m": 0.0,
+  "clearance_m": 3.0,
+  "headroom_m": null,
+  "facing_deg": 180.0,
+  "game_yaw": "0x0000",
+  "note": "stage entry spawn (bhvSpinAirborneWarp, MARIO_POS); the object hovers 1 m above this floor",
+  "node": "0x0A",
+  "spawn_object_game": [
+   6651,
+   100,
+   -11298
+  ]
+ },
+ "warp_nodes": [
+  {
+   "id": "0x0A",
+   "dest_level": "LEVEL_BOB",
+   "dest_area": 1,
+   "dest_node": "0x0A",
+   "note": "stage entry spawn"
+  },
+  {
+   "id": "0xF0",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x21",
+   "note": "star exit -> hub outside door 1"
+  },
+  {
+   "id": "0xF1",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x31",
+   "note": "death / Exit course -> hub outside door 1"
+  }
+ ],
+ "stars": [
+  {
+   "act": 1,
+   "star_id": 0,
+   "name": "Kickoff star (press box roof)",
+   "behavior": "bhvStar",
+   "bparams": "0x00000000",
+   "acts": [
+    1
+   ],
+   "map_m": [
+    -618.28,
+    123.52,
+    67.2
+   ],
+   "game_units": [
+    -3828,
+    6720,
+    3648
+   ],
+   "floor_m": 66.0
+  }
+ ],
+ "press_box": {
+  "points": [
+   {
+    "name": "press_box_roof_center",
+    "map_m": [
+     -618.28,
+     123.52,
+     66.0
+    ],
+    "game": [
+     -3828,
+     6600,
+     3648
+    ],
+    "floor_m": 66.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "press box / skybox roof (whole west tower), 1 m parapet with a gap over the camera deck stack; four light frames (top 71 m) along the field edge"
+   },
+   {
+    "name": "press_box_roof_star_spot",
+    "map_m": [
+     -618.28,
+     123.52,
+     66.0
+    ],
+    "game": [
+     -3828,
+     6600,
+     3648
+    ],
+    "floor_m": 66.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "swamp_stadium.py spot press_box_roof_star"
+   },
+   {
+    "name": "light_frame_top",
+    "map_m": [
+     -602.84,
+     111.44,
+     71.0
+    ],
+    "game": [
+     -2284,
+     7100,
+     4856
+    ],
+    "floor_m": 71.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "swamp_stadium.py spot light_frame_top"
+   },
+   {
+    "name": "bull_gator_deck",
+    "map_m": [
+     -601.73,
+     123.44,
+     44.0
+    ],
+    "game": [
+     -2173,
+     4400,
+     3656
+    ],
+    "floor_m": 44.0,
+    "clearance_m": 3.0,
+    "headroom_m": 8.0,
+    "source": "swamp_stadium.py spot bull_gator_deck"
+   },
+   {
+    "name": "west_rim_climb_start",
+    "map_m": [
+     -604.57,
+     76.45,
+     20.0
+    ],
+    "game": [
+     -2457,
+     2000,
+     8355
+    ],
+    "floor_m": 20.0,
+    "clearance_m": 1.85,
+    "headroom_m": null,
+    "source": "swamp_stadium.py spot west_rim"
+   }
+  ],
+  "kickoff_climb_route": [
+   {
+    "name": "kickoff_climb_00",
+    "map_m": [
+     -604.33,
+     74.95,
+     20.0
+    ],
+    "game": [
+     -2433,
+     2000,
+     8505
+    ],
+    "floor_m": 20.0,
+    "clearance_m": 2.1,
+    "headroom_m": null
+   },
+   {
+    "name": "kickoff_climb_01",
+    "map_m": [
+     -605.72,
+     77.06,
+     22.0
+    ],
+    "game": [
+     -2572,
+     2200,
+     8294
+    ],
+    "floor_m": 22.0,
+    "clearance_m": 0.7,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_02",
+    "map_m": [
+     -605.73,
+     74.86,
+     24.0
+    ],
+    "game": [
+     -2573,
+     2400,
+     8514
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 0.7,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_03",
+    "map_m": [
+     -605.72,
+     77.06,
+     26.0
+    ],
+    "game": [
+     -2572,
+     2600,
+     8294
+    ],
+    "floor_m": 26.0,
+    "clearance_m": 0.7,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_04",
+    "map_m": [
+     -605.73,
+     74.86,
+     28.0
+    ],
+    "game": [
+     -2573,
+     2800,
+     8514
+    ],
+    "floor_m": 28.0,
+    "clearance_m": 0.7,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_05",
+    "map_m": [
+     -605.72,
+     77.06,
+     30.0
+    ],
+    "game": [
+     -2572,
+     3000,
+     8294
+    ],
+    "floor_m": 30.0,
+    "clearance_m": 0.7,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_06",
+    "map_m": [
+     -605.73,
+     74.86,
+     32.0
+    ],
+    "game": [
+     -2573,
+     3200,
+     8514
+    ],
+    "floor_m": 32.0,
+    "clearance_m": 0.7,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_07",
+    "map_m": [
+     -605.72,
+     77.06,
+     34.0
+    ],
+    "game": [
+     -2572,
+     3400,
+     8294
+    ],
+    "floor_m": 34.0,
+    "clearance_m": 0.7,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_08",
+    "map_m": [
+     -605.73,
+     74.86,
+     36.0
+    ],
+    "game": [
+     -2573,
+     3600,
+     8514
+    ],
+    "floor_m": 36.0,
+    "clearance_m": 0.7,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_09",
+    "map_m": [
+     -605.72,
+     77.06,
+     38.0
+    ],
+    "game": [
+     -2572,
+     3800,
+     8294
+    ],
+    "floor_m": 38.0,
+    "clearance_m": 0.7,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_10",
+    "map_m": [
+     -605.73,
+     74.86,
+     40.0
+    ],
+    "game": [
+     -2573,
+     4000,
+     8514
+    ],
+    "floor_m": 40.0,
+    "clearance_m": 0.7,
+    "headroom_m": null
+   },
+   {
+    "name": "kickoff_climb_11",
+    "map_m": [
+     -605.72,
+     77.06,
+     42.0
+    ],
+    "game": [
+     -2572,
+     4200,
+     8294
+    ],
+    "floor_m": 42.0,
+    "clearance_m": 0.7,
+    "headroom_m": null
+   },
+   {
+    "name": "kickoff_climb_12",
+    "map_m": [
+     -601.95,
+     81.44,
+     44.0
+    ],
+    "game": [
+     -2195,
+     4400,
+     7856
+    ],
+    "floor_m": 44.0,
+    "clearance_m": 3.0,
+    "headroom_m": 8.0
+   },
+   {
+    "name": "kickoff_climb_13",
+    "map_m": [
+     -599.04,
+     122.22,
+     46.0
+    ],
+    "game": [
+     -1904,
+     4600,
+     3778
+    ],
+    "floor_m": 46.0,
+    "clearance_m": 3.0,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_14",
+    "map_m": [
+     -599.02,
+     124.62,
+     48.0
+    ],
+    "game": [
+     -1902,
+     4800,
+     3538
+    ],
+    "floor_m": 48.0,
+    "clearance_m": 3.0,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_15",
+    "map_m": [
+     -599.04,
+     122.22,
+     50.0
+    ],
+    "game": [
+     -1904,
+     5000,
+     3778
+    ],
+    "floor_m": 50.0,
+    "clearance_m": 3.0,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_16",
+    "map_m": [
+     -599.02,
+     124.62,
+     52.0
+    ],
+    "game": [
+     -1902,
+     5200,
+     3538
+    ],
+    "floor_m": 52.0,
+    "clearance_m": 1.25,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_17",
+    "map_m": [
+     -599.04,
+     122.22,
+     54.0
+    ],
+    "game": [
+     -1904,
+     5400,
+     3778
+    ],
+    "floor_m": 54.0,
+    "clearance_m": 1.25,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_18",
+    "map_m": [
+     -599.02,
+     124.62,
+     56.0
+    ],
+    "game": [
+     -1902,
+     5600,
+     3538
+    ],
+    "floor_m": 56.0,
+    "clearance_m": 1.25,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_19",
+    "map_m": [
+     -599.04,
+     122.22,
+     58.0
+    ],
+    "game": [
+     -1904,
+     5800,
+     3778
+    ],
+    "floor_m": 58.0,
+    "clearance_m": 1.25,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_20",
+    "map_m": [
+     -599.02,
+     124.62,
+     60.0
+    ],
+    "game": [
+     -1902,
+     6000,
+     3538
+    ],
+    "floor_m": 60.0,
+    "clearance_m": 1.25,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "kickoff_climb_21",
+    "map_m": [
+     -599.04,
+     122.22,
+     62.0
+    ],
+    "game": [
+     -1904,
+     6200,
+     3778
+    ],
+    "floor_m": 62.0,
+    "clearance_m": 1.25,
+    "headroom_m": null
+   },
+   {
+    "name": "kickoff_climb_22",
+    "map_m": [
+     -599.02,
+     124.62,
+     64.0
+    ],
+    "game": [
+     -1902,
+     6400,
+     3538
+    ],
+    "floor_m": 64.0,
+    "clearance_m": 1.25,
+    "headroom_m": null
+   },
+   {
+    "name": "kickoff_climb_23",
+    "map_m": [
+     -604.28,
+     123.45,
+     66.0
+    ],
+    "game": [
+     -2428,
+     6600,
+     3655
+    ],
+    "floor_m": 66.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "kickoff_climb_24",
+    "map_m": [
+     -602.84,
+     111.44,
+     71.0
+    ],
+    "game": [
+     -2284,
+     7100,
+     4856
+    ],
+    "floor_m": 71.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  ],
+  "note": "Act 1 route: west rim (20 m) -> 11 ledges on the tower's south bay -> Bull Gator Deck (44 m) -> 10 camera decks -> press box roof (66 m) -> light frames (71 m)"
+ },
+ "field": {
+  "points": [
+   {
+    "name": "field_center",
+    "map_m": [
+     -514.28,
+     122.98,
+     -10.0
+    ],
+    "game": [
+     6572,
+     -1000,
+     3702
+    ],
+    "floor_m": -10.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "swamp_stadium.py spot field_center"
+   },
+   {
+    "name": "endzone_corner_NW",
+    "map_m": [
+     -537.38,
+     176.97,
+     -10.0
+    ],
+    "game": [
+     4262,
+     -1000,
+     -1697
+    ],
+    "floor_m": -10.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "swamp_stadium.py spot endzone_button_NW"
+   },
+   {
+    "name": "endzone_corner_NE",
+    "map_m": [
+     -490.61,
+     176.72,
+     -10.0
+    ],
+    "game": [
+     8939,
+     -1000,
+     -1672
+    ],
+    "floor_m": -10.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "swamp_stadium.py spot endzone_button_NE"
+   },
+   {
+    "name": "endzone_corner_SW",
+    "map_m": [
+     -537.95,
+     69.24,
+     -10.0
+    ],
+    "game": [
+     4205,
+     -1000,
+     9076
+    ],
+    "floor_m": -10.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "swamp_stadium.py spot endzone_button_SW"
+   },
+   {
+    "name": "endzone_corner_SE",
+    "map_m": [
+     -491.18,
+     68.99,
+     -10.0
+    ],
+    "game": [
+     8882,
+     -1000,
+     9101
+    ],
+    "floor_m": -10.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "swamp_stadium.py spot endzone_button_SE"
+   },
+   {
+    "name": "goalpost_north_base",
+    "map_m": [
+     -513.98,
+     179.64,
+     -10.0
+    ],
+    "game": [
+     6602,
+     -1000,
+     -1964
+    ],
+    "floor_m": -10.0,
+    "clearance_m": 0.2,
+    "headroom_m": 1.8,
+    "note": "foot of the goalpost (the post is collision)",
+    "source": "swamp_stadium.py spot goalpost_north_base"
+   },
+   {
+    "name": "goalpost_south_base",
+    "map_m": [
+     -514.58,
+     66.32,
+     -10.0
+    ],
+    "game": [
+     6542,
+     -1000,
+     9368
+    ],
+    "floor_m": -10.0,
+    "clearance_m": 0.2,
+    "headroom_m": 1.8,
+    "note": "foot of the goalpost (the post is collision)",
+    "source": "swamp_stadium.py spot goalpost_south_base"
+   },
+   {
+    "name": "fg_tee_north_20yd",
+    "map_m": [
+     -514.14,
+     150.41,
+     -10.0
+    ],
+    "game": [
+     6586,
+     -1000,
+     959
+    ],
+    "floor_m": -10.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "swamp_stadium.py spot fg_tee_north_20yd"
+   },
+   {
+    "name": "fg_tee_north_30yd",
+    "map_m": [
+     -514.18,
+     141.27,
+     -10.0
+    ],
+    "game": [
+     6582,
+     -1000,
+     1873
+    ],
+    "floor_m": -10.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "swamp_stadium.py spot fg_tee_north_30yd"
+   },
+   {
+    "name": "fg_tee_south_20yd",
+    "map_m": [
+     -514.42,
+     95.55,
+     -10.0
+    ],
+    "game": [
+     6558,
+     -1000,
+     6445
+    ],
+    "floor_m": -10.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "swamp_stadium.py spot fg_tee_south_20yd"
+   },
+   {
+    "name": "field_tunnel_mouth",
+    "map_m": [
+     -514.61,
+     60.38,
+     -9.92
+    ],
+    "game": [
+     6539,
+     -992,
+     9962
+    ],
+    "floor_m": -9.92,
+    "clearance_m": 3.0,
+    "headroom_m": 4.5,
+    "source": "swamp_stadium.py spot tunnel_field_tunnel_mouth"
+   },
+   {
+    "name": "goalpost_north_crossbar",
+    "map_m": [
+     -513.99,
+     177.84,
+     -6.78
+    ],
+    "game": [
+     6601,
+     -678,
+     -1784
+    ],
+    "floor_m": -6.78,
+    "clearance_m": 2.82,
+    "headroom_m": null,
+    "note": "top of the crossbar (10 ft, standable collision); the uprights rise 9.1 m above it",
+    "source": "swamp_stadium.py spot fg_crossbar_north"
+   },
+   {
+    "name": "goalpost_south_crossbar",
+    "map_m": [
+     -514.57,
+     68.12,
+     -6.78
+    ],
+    "game": [
+     6543,
+     -678,
+     9188
+    ],
+    "floor_m": -6.78,
+    "clearance_m": 2.82,
+    "headroom_m": null,
+    "note": "top of the crossbar (10 ft, standable collision); the uprights rise 9.1 m above it",
+    "source": "swamp_stadium.py spot fg_crossbar_south"
+   }
+  ],
+  "level_m": -10.0,
+  "note": "end-zone corners: 1 m inside the end line / sideline corner (clear field-level spots, e.g. for the corner buttons)"
+ },
+ "races": {
+  "concourse_loop": {
+   "start_finish": {
+    "name": "concourse_start_finish",
+    "map_m": [
+     -513.86,
+     202.53,
+     0.0
+    ],
+    "game": [
+     6614,
+     0,
+     -4253
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": 22.0,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000",
+    "note": "on the cross-aisle in front of the north gate (gate_N), running west (counter-clockwise seen from above)"
+   },
+   "checkpoints": [
+    {
+     "name": "concourse_cp_01_N_side_west_end",
+     "map_m": [
+      -535.46,
+      202.64,
+      0.0
+     ],
+     "game": [
+      4454,
+      0,
+      -4264
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.34,
+     "headroom_m": 22.0,
+     "facing_deg": 247.8,
+     "game_yaw": "0xCFC9",
+     "note": "facing = running direction to the next checkpoint"
+    },
+    {
+     "name": "concourse_cp_02_NW_corner",
+     "map_m": [
+      -556.33,
+      194.13,
+      0.0
+     ],
+     "game": [
+      2367,
+      0,
+      -3413
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.34,
+     "headroom_m": 21.99,
+     "facing_deg": 202.8,
+     "game_yaw": "0xEFC9",
+     "note": "facing = running direction to the next checkpoint"
+    },
+    {
+     "name": "concourse_cp_03_W_side_north_end",
+     "map_m": [
+      -565.07,
+      173.35,
+      0.0
+     ],
+     "game": [
+      1493,
+      0,
+      -1335
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.34,
+     "headroom_m": null,
+     "facing_deg": 180.3,
+     "game_yaw": "0xFFC9",
+     "note": "facing = running direction to the next checkpoint"
+    },
+    {
+     "name": "concourse_cp_04_W_side_south_end",
+     "map_m": [
+      -565.59,
+      73.15,
+      0.0
+     ],
+     "game": [
+      1441,
+      0,
+      8685
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.34,
+     "headroom_m": null,
+     "facing_deg": 157.8,
+     "game_yaw": "0x0FC9",
+     "note": "facing = running direction to the next checkpoint"
+    },
+    {
+     "name": "concourse_cp_05_SW_corner",
+     "map_m": [
+      -557.08,
+      52.28,
+      0.0
+     ],
+     "game": [
+      2292,
+      0,
+      10772
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.34,
+     "headroom_m": null,
+     "facing_deg": 112.8,
+     "game_yaw": "0x2FC9",
+     "note": "facing = running direction to the next checkpoint"
+    },
+    {
+     "name": "concourse_cp_06_S_side_west_end",
+     "map_m": [
+      -536.3,
+      43.54,
+      0.0
+     ],
+     "game": [
+      4370,
+      0,
+      11646
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.34,
+     "headroom_m": null,
+     "facing_deg": 90.3,
+     "game_yaw": "0x3FC9",
+     "note": "facing = running direction to the next checkpoint"
+    },
+    {
+     "name": "concourse_cp_07_S_side_east_end",
+     "map_m": [
+      -493.1,
+      43.32,
+      0.0
+     ],
+     "game": [
+      8690,
+      0,
+      11668
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.34,
+     "headroom_m": null,
+     "facing_deg": 67.8,
+     "game_yaw": "0x4FC9",
+     "note": "facing = running direction to the next checkpoint"
+    },
+    {
+     "name": "concourse_cp_08_SE_corner",
+     "map_m": [
+      -472.23,
+      51.83,
+      0.0
+     ],
+     "game": [
+      10777,
+      0,
+      10817
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.34,
+     "headroom_m": null,
+     "facing_deg": 22.8,
+     "game_yaw": "0x6FC9",
+     "note": "facing = running direction to the next checkpoint"
+    },
+    {
+     "name": "concourse_cp_09_E_side_south_end",
+     "map_m": [
+      -463.49,
+      72.61,
+      0.0
+     ],
+     "game": [
+      11651,
+      0,
+      8739
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.34,
+     "headroom_m": null,
+     "facing_deg": 0.3,
+     "game_yaw": "0x7FC9",
+     "note": "facing = running direction to the next checkpoint"
+    },
+    {
+     "name": "concourse_cp_10_E_side_north_end",
+     "map_m": [
+      -462.97,
+      172.81,
+      0.0
+     ],
+     "game": [
+      11703,
+      0,
+      -1281
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.34,
+     "headroom_m": null,
+     "facing_deg": 337.8,
+     "game_yaw": "0x8FC9",
+     "note": "facing = running direction to the next checkpoint"
+    },
+    {
+     "name": "concourse_cp_11_NE_corner",
+     "map_m": [
+      -471.48,
+      193.68,
+      0.0
+     ],
+     "game": [
+      10852,
+      0,
+      -3368
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.34,
+     "headroom_m": 21.99,
+     "facing_deg": 292.8,
+     "game_yaw": "0xAFC9",
+     "note": "facing = running direction to the next checkpoint"
+    },
+    {
+     "name": "concourse_cp_12_N_side_east_end",
+     "map_m": [
+      -492.26,
+      202.42,
+      0.0
+     ],
+     "game": [
+      8774,
+      0,
+      -4242
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.34,
+     "headroom_m": 22.0,
+     "facing_deg": 270.3,
+     "game_yaw": "0xBFC9",
+     "note": "facing = running direction to the next checkpoint"
+    }
+   ],
+   "path_check": {
+    "name": "concourse_loop_path",
+    "length_m": 467.1,
+    "closed": true,
+    "samples": 474,
+    "floor_range_m": [
+     0.0,
+     0.0
+    ],
+    "max_floor_deviation_m": 0.0,
+    "gaps": [],
+    "walls_across": []
+   },
+   "game_path": [
+    [
+     6614,
+     0,
+     -4253
+    ],
+    [
+     4454,
+     0,
+     -4264
+    ],
+    [
+     2367,
+     0,
+     -3413
+    ],
+    [
+     1493,
+     0,
+     -1335
+    ],
+    [
+     1441,
+     0,
+     8685
+    ],
+    [
+     2292,
+     0,
+     10772
+    ],
+    [
+     4370,
+     0,
+     11646
+    ],
+    [
+     8690,
+     0,
+     11668
+    ],
+    [
+     10777,
+     0,
+     10817
+    ],
+    [
+     11651,
+     0,
+     8739
+    ],
+    [
+     11703,
+     0,
+     -1281
+    ],
+    [
+     10852,
+     0,
+     -3368
+    ],
+    [
+     8774,
+     0,
+     -4242
+    ],
+    [
+     6614,
+     0,
+     -4253
+    ]
+   ],
+   "note": "cross-aisle at grade (2.5 m wide) all the way round the bowl, between the lower bowl's top riser and the main stands; checkpoints at the 12 ring vertices (corner chords). Every gate (N, NE, E x2, SE, SW, W, NW) opens onto it."
+  },
+  "apron_loop": {
+   "waypoints": [
+    {
+     "name": "apron_loop_00",
+     "map_m": [
+      -485.98,
+      68.37,
+      -10.0
+     ],
+     "game": [
+      9402,
+      -1000,
+      9163
+     ],
+     "floor_m": -10.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "apron_loop_01",
+     "map_m": [
+      -485.41,
+      177.29,
+      -10.0
+     ],
+     "game": [
+      9459,
+      -1000,
+      -1729
+     ],
+     "floor_m": -10.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "apron_loop_02",
+     "map_m": [
+      -489.39,
+      181.31,
+      -10.0
+     ],
+     "game": [
+      9061,
+      -1000,
+      -2131
+     ],
+     "floor_m": -10.0,
+     "clearance_m": 2.4,
+     "headroom_m": null
+    },
+    {
+     "name": "apron_loop_03",
+     "map_m": [
+      -538.56,
+      181.57,
+      -10.0
+     ],
+     "game": [
+      4144,
+      -1000,
+      -2157
+     ],
+     "floor_m": -10.0,
+     "clearance_m": 2.4,
+     "headroom_m": null
+    },
+    {
+     "name": "apron_loop_04",
+     "map_m": [
+      -542.58,
+      177.59,
+      -10.0
+     ],
+     "game": [
+      3742,
+      -1000,
+      -1759
+     ],
+     "floor_m": -10.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "apron_loop_05",
+     "map_m": [
+      -543.15,
+      68.67,
+      -10.0
+     ],
+     "game": [
+      3685,
+      -1000,
+      9133
+     ],
+     "floor_m": -10.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "apron_loop_06",
+     "map_m": [
+      -539.17,
+      64.65,
+      -10.0
+     ],
+     "game": [
+      4083,
+      -1000,
+      9535
+     ],
+     "floor_m": -10.0,
+     "clearance_m": 2.4,
+     "headroom_m": null
+    },
+    {
+     "name": "apron_loop_07",
+     "map_m": [
+      -490.0,
+      64.39,
+      -10.0
+     ],
+     "game": [
+      9000,
+      -1000,
+      9561
+     ],
+     "floor_m": -10.0,
+     "clearance_m": 2.4,
+     "headroom_m": null
+    }
+   ],
+   "game_path": [
+    [
+     9402,
+     -1000,
+     9163
+    ],
+    [
+     9459,
+     -1000,
+     -1729
+    ],
+    [
+     9061,
+     -1000,
+     -2131
+    ],
+    [
+     4144,
+     -1000,
+     -2157
+    ],
+    [
+     3742,
+     -1000,
+     -1759
+    ],
+    [
+     3685,
+     -1000,
+     9133
+    ],
+    [
+     4083,
+     -1000,
+     9535
+    ],
+    [
+     9000,
+     -1000,
+     9561
+    ]
+   ],
+   "note": "field-level apron loop 3.5 m outside the sidelines",
+   "path_check": {
+    "name": "apron_loop_path",
+    "length_m": 338.8,
+    "closed": true,
+    "samples": 342,
+    "floor_range_m": [
+     -10.0,
+     -10.0
+    ],
+    "max_floor_deviation_m": 0.0,
+    "gaps": [],
+    "walls_across": []
+   }
+  },
+  "stair_sprint": {
+   "waypoints": [
+    {
+     "name": "stair_sprint_00",
+     "map_m": [
+      -514.02,
+      172.98,
+      -10.0
+     ],
+     "game": [
+      6598,
+      -1000,
+      -1298
+     ],
+     "floor_m": -10.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "stair_sprint_01",
+     "map_m": [
+      -485.98,
+      180.83,
+      -10.0
+     ],
+     "game": [
+      9402,
+      -1000,
+      -2083
+     ],
+     "floor_m": -10.0,
+     "clearance_m": 1.45,
+     "headroom_m": null
+    },
+    {
+     "name": "stair_sprint_02",
+     "map_m": [
+      -479.47,
+      162.8,
+      -8.26
+     ],
+     "game": [
+      10053,
+      -826,
+      -280
+     ],
+     "floor_m": -8.26,
+     "clearance_m": 1.1,
+     "headroom_m": null
+    },
+    {
+     "name": "stair_sprint_03",
+     "map_m": [
+      -463.32,
+      152.71,
+      0.0
+     ],
+     "game": [
+      11668,
+      0,
+      729
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "stair_sprint_04",
+     "map_m": [
+      -444.6,
+      137.62,
+      9.48
+     ],
+     "game": [
+      13540,
+      948,
+      2238
+     ],
+     "floor_m": 9.48,
+     "clearance_m": 1.1,
+     "headroom_m": null
+    },
+    {
+     "name": "stair_sprint_05",
+     "map_m": [
+      -424.48,
+      122.51,
+      20.0
+     ],
+     "game": [
+      15552,
+      2000,
+      3749
+     ],
+     "floor_m": 20.0,
+     "clearance_m": 1.5,
+     "headroom_m": null
+    },
+    {
+     "name": "stair_sprint_06",
+     "map_m": [
+      -424.72,
+      77.51,
+      20.0
+     ],
+     "game": [
+      15528,
+      2000,
+      8249
+     ],
+     "floor_m": 20.0,
+     "clearance_m": 1.5,
+     "headroom_m": null
+    },
+    {
+     "name": "stair_sprint_07",
+     "map_m": [
+      -444.8,
+      24.11,
+      20.0
+     ],
+     "game": [
+      13520,
+      2000,
+      13589
+     ],
+     "floor_m": 20.0,
+     "clearance_m": 1.25,
+     "headroom_m": null
+    },
+    {
+     "name": "stair_sprint_08",
+     "map_m": [
+      -493.3,
+      4.32,
+      20.0
+     ],
+     "game": [
+      8670,
+      2000,
+      15568
+     ],
+     "floor_m": 20.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "stair_sprint_09",
+     "map_m": [
+      -514.92,
+      1.68,
+      20.0
+     ],
+     "game": [
+      6508,
+      2000,
+      15832
+     ],
+     "floor_m": 20.0,
+     "clearance_m": 2.7,
+     "headroom_m": 24.0
+    }
+   ],
+   "game_path": [
+    [
+     6598,
+     -1000,
+     -1298
+    ],
+    [
+     9402,
+     -1000,
+     -2083
+    ],
+    [
+     10053,
+     -826,
+     -280
+    ],
+    [
+     11668,
+     0,
+     729
+    ],
+    [
+     13540,
+     948,
+     2238
+    ],
+    [
+     15552,
+     2000,
+     3749
+    ],
+    [
+     15528,
+     2000,
+     8249
+    ],
+    [
+     13520,
+     2000,
+     13589
+    ],
+    [
+     8670,
+     2000,
+     15568
+    ],
+    [
+     6508,
+     2000,
+     15832
+    ]
+   ],
+   "note": "Course act 2 STADIUM STAIR SPRINT (design act 5): north end zone -> east stands -> east rim -> south ramp terrace (20 m)"
+  }
+ },
+ "act_spots": {
+  "act2_mascot_arena": {
+   "name": "midfield_mascot_arena",
+   "map_m": [
+    -514.28,
+    122.98,
+    -10.0
+   ],
+   "game": [
+    6572,
+    -1000,
+    3702
+   ],
+   "floor_m": -10.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "source": "swamp_stadium.py spot midfield_mascot_arena"
+  },
+  "act3_spirit_pads": [
+   {
+    "name": "spirit_pad_1",
+    "map_m": [
+     -526.86,
+     202.6,
+     0.0
+    ],
+    "game": [
+     5314,
+     0,
+     -4260
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.34,
+    "headroom_m": 22.0,
+    "source": "swamp_stadium.py spot spirit_pad_1"
+   },
+   {
+    "name": "spirit_pad_2",
+    "map_m": [
+     -520.36,
+     202.56,
+     0.0
+    ],
+    "game": [
+     5964,
+     0,
+     -4256
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.35,
+    "headroom_m": 22.0,
+    "source": "swamp_stadium.py spot spirit_pad_2"
+   },
+   {
+    "name": "spirit_pad_3",
+    "map_m": [
+     -507.36,
+     202.49,
+     0.0
+    ],
+    "game": [
+     7264,
+     0,
+     -4249
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.35,
+    "headroom_m": 22.0,
+    "source": "swamp_stadium.py spot spirit_pad_3"
+   },
+   {
+    "name": "spirit_pad_4",
+    "map_m": [
+     -500.86,
+     202.46,
+     0.0
+    ],
+    "game": [
+     7914,
+     0,
+     -4246
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.35,
+    "headroom_m": 22.0,
+    "source": "swamp_stadium.py spot spirit_pad_4"
+   }
+  ],
+  "act1_usher_npc": {
+   "name": "usher_npc",
+   "map_m": [
+    -507.59,
+    63.34,
+    -10.0
+   ],
+   "game": [
+    7241,
+    -1000,
+    9666
+   ],
+   "floor_m": -10.0,
+   "clearance_m": 2.5,
+   "headroom_m": null,
+   "source": "swamp_stadium.py spot usher_npc"
+  },
+  "act1_cannon_north_endzone": {
+   "name": "cannon_north_endzone",
+   "map_m": [
+    -528.02,
+    173.34,
+    -10.0
+   ],
+   "game": [
+    5198,
+    -1000,
+    -1334
+   ],
+   "floor_m": -10.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "source": "swamp_stadium.py spot cannon_north_endzone"
+  },
+  "act6_wing_cap_box": {
+   "name": "wing_cap_box",
+   "map_m": [
+    -514.9,
+    5.23,
+    55.6
+   ],
+   "game": [
+    6510,
+    5560,
+    15477
+   ],
+   "floor_m": 55.6,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "note": "Wing Cap box on top of the south video board (stand point; put the box ~1.5 m up)",
+   "source": "swamp_stadium.py spot south_board_top"
+  },
+  "act6_south_board_climb": [
+   {
+    "name": "south_board_climb_00",
+    "map_m": [
+     -501.44,
+     -0.59,
+     20.0
+    ],
+    "game": [
+     7856,
+     2000,
+     16059
+    ],
+    "floor_m": 20.0,
+    "clearance_m": 0.5,
+    "headroom_m": null
+   },
+   {
+    "name": "south_board_climb_01",
+    "map_m": [
+     -502.83,
+     0.97,
+     22.0
+    ],
+    "game": [
+     7717,
+     2200,
+     15903
+    ],
+    "floor_m": 22.0,
+    "clearance_m": 0.98,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "south_board_climb_02",
+    "map_m": [
+     -500.03,
+     0.95,
+     24.0
+    ],
+    "game": [
+     7997,
+     2400,
+     15905
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 1.0,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "south_board_climb_03",
+    "map_m": [
+     -502.83,
+     0.97,
+     26.0
+    ],
+    "game": [
+     7717,
+     2600,
+     15903
+    ],
+    "floor_m": 26.0,
+    "clearance_m": 0.98,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "south_board_climb_04",
+    "map_m": [
+     -500.03,
+     0.95,
+     28.0
+    ],
+    "game": [
+     7997,
+     2800,
+     15905
+    ],
+    "floor_m": 28.0,
+    "clearance_m": 1.0,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "south_board_climb_05",
+    "map_m": [
+     -502.83,
+     0.97,
+     30.0
+    ],
+    "game": [
+     7717,
+     3000,
+     15903
+    ],
+    "floor_m": 30.0,
+    "clearance_m": 0.98,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "south_board_climb_06",
+    "map_m": [
+     -500.03,
+     0.95,
+     32.0
+    ],
+    "game": [
+     7997,
+     3200,
+     15905
+    ],
+    "floor_m": 32.0,
+    "clearance_m": 1.0,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "south_board_climb_07",
+    "map_m": [
+     -502.83,
+     0.97,
+     34.0
+    ],
+    "game": [
+     7717,
+     3400,
+     15903
+    ],
+    "floor_m": 34.0,
+    "clearance_m": 0.98,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "south_board_climb_08",
+    "map_m": [
+     -500.03,
+     0.95,
+     36.0
+    ],
+    "game": [
+     7997,
+     3600,
+     15905
+    ],
+    "floor_m": 36.0,
+    "clearance_m": 1.0,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "south_board_climb_09",
+    "map_m": [
+     -502.83,
+     0.97,
+     38.0
+    ],
+    "game": [
+     7717,
+     3800,
+     15903
+    ],
+    "floor_m": 38.0,
+    "clearance_m": 0.98,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "south_board_climb_10",
+    "map_m": [
+     -500.03,
+     0.95,
+     40.0
+    ],
+    "game": [
+     7997,
+     4000,
+     15905
+    ],
+    "floor_m": 40.0,
+    "clearance_m": 1.0,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "south_board_climb_11",
+    "map_m": [
+     -502.83,
+     0.97,
+     42.0
+    ],
+    "game": [
+     7717,
+     4200,
+     15903
+    ],
+    "floor_m": 42.0,
+    "clearance_m": 0.98,
+    "headroom_m": 2.0
+   },
+   {
+    "name": "south_board_climb_12",
+    "map_m": [
+     -514.91,
+     1.98,
+     44.0
+    ],
+    "game": [
+     6509,
+     4400,
+     15802
+    ],
+    "floor_m": 44.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "south_board_climb_13",
+    "map_m": [
+     -516.91,
+     2.79,
+     46.0
+    ],
+    "game": [
+     6309,
+     4600,
+     15721
+    ],
+    "floor_m": 46.0,
+    "clearance_m": 0.7,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "south_board_climb_14",
+    "map_m": [
+     -512.91,
+     2.77,
+     48.0
+    ],
+    "game": [
+     6709,
+     4800,
+     15723
+    ],
+    "floor_m": 48.0,
+    "clearance_m": 0.7,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "south_board_climb_15",
+    "map_m": [
+     -516.91,
+     2.79,
+     50.0
+    ],
+    "game": [
+     6309,
+     5000,
+     15721
+    ],
+    "floor_m": 50.0,
+    "clearance_m": 0.7,
+    "headroom_m": 4.0
+   },
+   {
+    "name": "south_board_climb_16",
+    "map_m": [
+     -512.91,
+     2.77,
+     52.0
+    ],
+    "game": [
+     6709,
+     5200,
+     15723
+    ],
+    "floor_m": 52.0,
+    "clearance_m": 0.7,
+    "headroom_m": null
+   },
+   {
+    "name": "south_board_climb_17",
+    "map_m": [
+     -516.91,
+     2.79,
+     54.0
+    ],
+    "game": [
+     6309,
+     5400,
+     15721
+    ],
+    "floor_m": 54.0,
+    "clearance_m": 0.7,
+    "headroom_m": null
+   },
+   {
+    "name": "south_board_climb_18",
+    "map_m": [
+     -514.9,
+     5.23,
+     55.6
+    ],
+    "game": [
+     6510,
+     5560,
+     15477
+    ],
+    "floor_m": 55.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  ],
+  "act6_flyover_rings": [
+   {
+    "name": "flyover_ring_1",
+    "map_m": [
+     -514.28,
+     122.98,
+     35.0
+    ],
+    "game": [
+     6572,
+     3500,
+     3702
+    ],
+    "air": true,
+    "floor_below_m": -10.0,
+    "height_above_floor_m": 45.0
+   },
+   {
+    "name": "flyover_ring_2",
+    "map_m": [
+     -514.59,
+     62.98,
+     40.0
+    ],
+    "game": [
+     6541,
+     4000,
+     9702
+    ],
+    "air": true,
+    "floor_below_m": -10.0,
+    "height_above_floor_m": 50.0
+   },
+   {
+    "name": "flyover_ring_3",
+    "map_m": [
+     -474.78,
+     27.77,
+     45.0
+    ],
+    "game": [
+     10522,
+     4500,
+     13223
+    ],
+    "air": true,
+    "floor_below_m": 11.96,
+    "height_above_floor_m": 33.04
+   },
+   {
+    "name": "flyover_ring_4",
+    "map_m": [
+     -434.39,
+     102.56,
+     42.0
+    ],
+    "game": [
+     14561,
+     4200,
+     5744
+    ],
+    "air": true,
+    "floor_below_m": 15.18,
+    "height_above_floor_m": 26.82
+   },
+   {
+    "name": "flyover_ring_5",
+    "map_m": [
+     -443.97,
+     182.61,
+     45.0
+    ],
+    "game": [
+     13603,
+     4500,
+     -2261
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 45.0
+   },
+   {
+    "name": "flyover_ring_6",
+    "map_m": [
+     -513.76,
+     222.98,
+     55.0
+    ],
+    "game": [
+     6624,
+     5500,
+     -6298
+    ],
+    "air": true,
+    "floor_below_m": 33.96,
+    "height_above_floor_m": 21.04
+   },
+   {
+    "name": "flyover_ring_7",
+    "map_m": [
+     -583.96,
+     183.35,
+     72.0
+    ],
+    "game": [
+     -396,
+     7200,
+     -2335
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 72.0
+   },
+   {
+    "name": "flyover_ring_8",
+    "map_m": [
+     -594.49,
+     83.4,
+     60.0
+    ],
+    "game": [
+     -1449,
+     6000,
+     7660
+    ],
+    "air": true,
+    "floor_below_m": 15.18,
+    "height_above_floor_m": 44.82
+   }
+  ],
+  "poles": [
+   {
+    "name": "pole_goalpost_north",
+    "map_m": [
+     -513.98,
+     179.64,
+     -10.0
+    ],
+    "game": [
+     6602,
+     -1000,
+     -1964
+    ],
+    "floor_m": -10.0,
+    "clearance_m": 0.2,
+    "headroom_m": 1.8,
+    "height_m": 3.0,
+    "behavior": "bhvPoleGrabbing",
+    "bparams": "0x001E0000"
+   },
+   {
+    "name": "pole_goalpost_south",
+    "map_m": [
+     -514.58,
+     66.32,
+     -10.0
+    ],
+    "game": [
+     6542,
+     -1000,
+     9368
+    ],
+    "floor_m": -10.0,
+    "clearance_m": 0.2,
+    "headroom_m": 1.8,
+    "height_m": 3.0,
+    "behavior": "bhvPoleGrabbing",
+    "bparams": "0x001E0000"
+   },
+   {
+    "name": "pole_bgd_to_press_box_roof",
+    "map_m": [
+     -598.25,
+     128.92,
+     44.0
+    ],
+    "game": [
+     -1825,
+     4400,
+     3108
+    ],
+    "floor_m": 44.0,
+    "clearance_m": 1.0,
+    "headroom_m": null,
+    "height_m": 22.5,
+    "behavior": "bhvPoleGrabbing",
+    "bparams": "0x00E10000"
+   },
+   {
+    "name": "pole_south_board_leg",
+    "map_m": [
+     -527.2,
+     2.55,
+     20.0
+    ],
+    "game": [
+     5280,
+     2000,
+     15745
+    ],
+    "floor_m": 20.0,
+    "clearance_m": 0.45,
+    "headroom_m": 24.0,
+    "height_m": 24.2,
+    "behavior": "bhvPoleGrabbing",
+    "bparams": "0x00F20000"
+   },
+   {
+    "name": "pole_east_light_mast_1",
+    "map_m": [
+     -422.19,
+     82.0,
+     21.0
+    ],
+    "game": [
+     15781,
+     2100,
+     7800
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 21.0,
+    "note": "hanging pole: its base is in the air at the design height (no floor under it)",
+    "height_m": 12.0,
+    "behavior": "bhvPoleGrabbing",
+    "bparams": "0x00780000"
+   },
+   {
+    "name": "pole_east_light_mast_2",
+    "map_m": [
+     -421.97,
+     125.09,
+     21.0
+    ],
+    "game": [
+     15803,
+     2100,
+     3491
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 21.0,
+    "note": "hanging pole: its base is in the air at the design height (no floor under it)",
+    "height_m": 12.0,
+    "behavior": "bhvPoleGrabbing",
+    "bparams": "0x00780000"
+   },
+   {
+    "name": "pole_east_light_mast_3",
+    "map_m": [
+     -421.74,
+     167.99,
+     21.0
+    ],
+    "game": [
+     15826,
+     2100,
+     -799
+    ],
+    "air": true,
+    "floor_below_m": 0.0,
+    "height_above_floor_m": 21.0,
+    "note": "hanging pole: its base is in the air at the design height (no floor under it)",
+    "height_m": 12.0,
+    "behavior": "bhvPoleGrabbing",
+    "bparams": "0x00780000"
+   }
+  ],
+  "act4_red_coin_candidates": [
+   {
+    "name": "rc_south_ramp_terrace",
+    "map_m": [
+     -514.92,
+     0.58,
+     20.0
+    ],
+    "game": [
+     6508,
+     2000,
+     15942
+    ],
+    "floor_m": 20.0,
+    "clearance_m": 1.6,
+    "headroom_m": 24.0,
+    "source": "swamp_stadium.py spot south_ramp_terrace"
+   },
+   {
+    "name": "rc_south_board_catwalk",
+    "map_m": [
+     -514.91,
+     1.98,
+     44.0
+    ],
+    "game": [
+     6509,
+     4400,
+     15802
+    ],
+    "floor_m": 44.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "swamp_stadium.py spot south_board_catwalk"
+   },
+   {
+    "name": "rc_field_tunnel",
+    "map_m": [
+     -514.78,
+     27.88,
+     -5.02
+    ],
+    "game": [
+     6522,
+     -502,
+     13212
+    ],
+    "floor_m": -5.02,
+    "clearance_m": 3.0,
+    "headroom_m": 4.5,
+    "source": "swamp_stadium.py spot field_tunnel_mid"
+   },
+   {
+    "name": "rc_under_sunshine_seats",
+    "map_m": [
+     -513.78,
+     218.05,
+     7.0
+    ],
+    "game": [
+     6622,
+     700,
+     -5805
+    ],
+    "floor_m": 7.0,
+    "clearance_m": 1.5,
+    "headroom_m": 23.76,
+    "source": "swamp_stadium.py spot under_sunshine_promenade"
+   },
+   {
+    "name": "rc_gatehouse_roof",
+    "map_m": [
+     -513.67,
+     240.33,
+     11.2
+    ],
+    "game": [
+     6633,
+     1120,
+     -8033
+    ],
+    "floor_m": 11.2,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "swamp_stadium.py spot gatehouse_roof"
+   },
+   {
+    "name": "rc_exactech_arena_entry",
+    "map_m": [
+     -680.84,
+     68.28,
+     0.0
+    ],
+    "game": [
+     -10084,
+     0,
+     9172
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.5,
+    "headroom_m": 4.6,
+    "source": "swamp_oconnell_gym.py entry_niche"
+   },
+   {
+    "name": "rc_tailgate_tent_00",
+    "map_m": [
+     -687.5,
+     322.3,
+     3.3
+    ],
+    "game": [
+     -10750,
+     330,
+     -16230
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_01",
+    "map_m": [
+     -774.5,
+     292.3,
+     3.3
+    ],
+    "game": [
+     -19450,
+     330,
+     -13230
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_02",
+    "map_m": [
+     -657.5,
+     277.3,
+     3.3
+    ],
+    "game": [
+     -7750,
+     330,
+     -11730
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_03",
+    "map_m": [
+     -713.75,
+     269.8,
+     3.3
+    ],
+    "game": [
+     -13375,
+     330,
+     -10980
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_04",
+    "map_m": [
+     -736.25,
+     329.8,
+     3.3
+    ],
+    "game": [
+     -15625,
+     330,
+     -16980
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_05",
+    "map_m": [
+     -668.75,
+     284.8,
+     3.3
+    ],
+    "game": [
+     -8875,
+     330,
+     -12480
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_06",
+    "map_m": [
+     -710.0,
+     277.3,
+     3.3
+    ],
+    "game": [
+     -13000,
+     330,
+     -11730
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_07",
+    "map_m": [
+     -766.25,
+     344.8,
+     3.3
+    ],
+    "game": [
+     -18625,
+     330,
+     -18480
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_08",
+    "map_m": [
+     -650.0,
+     337.3,
+     3.3
+    ],
+    "game": [
+     -7000,
+     330,
+     -17730
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_09",
+    "map_m": [
+     -695.0,
+     292.3,
+     3.3
+    ],
+    "game": [
+     -11500,
+     330,
+     -13230
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_10",
+    "map_m": [
+     -725.0,
+     292.3,
+     3.3
+    ],
+    "game": [
+     -14500,
+     330,
+     -13230
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_11",
+    "map_m": [
+     -683.0,
+     247.3,
+     3.3
+    ],
+    "game": [
+     -10300,
+     330,
+     -8730
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_12",
+    "map_m": [
+     -490.0,
+     299.3,
+     3.3
+    ],
+    "game": [
+     9000,
+     330,
+     -13930
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_13",
+    "map_m": [
+     -471.25,
+     321.8,
+     3.3
+    ],
+    "game": [
+     10875,
+     330,
+     -16180
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_14",
+    "map_m": [
+     -505.0,
+     344.3,
+     3.3
+    ],
+    "game": [
+     7500,
+     330,
+     -18430
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_15",
+    "map_m": [
+     -505.0,
+     329.3,
+     3.3
+    ],
+    "game": [
+     7500,
+     330,
+     -16930
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_tailgate_tent_16",
+    "map_m": [
+     -463.75,
+     306.8,
+     3.3
+    ],
+    "game": [
+     11625,
+     330,
+     -14680
+    ],
+    "floor_m": 3.3,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "peak of a tailgate canopy roof (18 degree pyramid; the floor is the roof)",
+    "source": "stage_dressing.py tailgate tent"
+   },
+   {
+    "name": "rc_bull_gator_statue_plinth",
+    "map_m": [
+     -608.1,
+     -2.9,
+     1.5
+    ],
+    "game": [
+     -2810,
+     150,
+     16290
+    ],
+    "floor_m": 1.5,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "stage_dressing.py statue"
+   },
+   {
+    "name": "rc_gator_statue_north_lawn_plinth",
+    "map_m": [
+     -585.0,
+     386.0,
+     1.5
+    ],
+    "game": [
+     -500,
+     150,
+     -22600
+    ],
+    "floor_m": 1.5,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "source": "stage_dressing.py statue"
+   }
+  ]
+ },
+ "secret_spots": [
+  {
+   "name": "secret_gatehouse_roof",
+   "map_m": [
+    -513.67,
+    240.33,
+    11.2
+   ],
+   "game": [
+    6633,
+    1120,
+    -8033
+   ],
+   "floor_m": 11.2,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "source": "swamp_stadium.py spot gatehouse_roof"
+  },
+  {
+   "name": "secret_north_board_top",
+   "map_m": [
+    -513.72,
+    230.43,
+    47.8
+   ],
+   "game": [
+    6628,
+    4780,
+    -7043
+   ],
+   "floor_m": 47.8,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "source": "swamp_stadium.py spot north_board_top"
+  },
+  {
+   "name": "secret_south_board_top",
+   "map_m": [
+    -514.9,
+    5.23,
+    55.6
+   ],
+   "game": [
+    6510,
+    5560,
+    15477
+   ],
+   "floor_m": 55.6,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "source": "swamp_stadium.py spot south_board_top"
+  },
+  {
+   "name": "secret_light_frame_top",
+   "map_m": [
+    -602.84,
+    111.44,
+    71.0
+   ],
+   "game": [
+    -2284,
+    7100,
+    4856
+   ],
+   "floor_m": 71.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "source": "swamp_stadium.py spot light_frame_top"
+  },
+  {
+   "name": "secret_east_light_catwalk",
+   "map_m": [
+    -422.48,
+    123.5,
+    33.1
+   ],
+   "game": [
+    15752,
+    3310,
+    3650
+   ],
+   "floor_m": 33.1,
+   "clearance_m": 0.6,
+   "headroom_m": null,
+   "source": "swamp_stadium.py spot east_light_catwalk_center"
+  },
+  {
+   "name": "secret_sunshine_top_row",
+   "map_m": [
+    -513.72,
+    229.58,
+    37.6
+   ],
+   "game": [
+    6628,
+    3760,
+    -6958
+   ],
+   "floor_m": 37.6,
+   "clearance_m": 1.5,
+   "headroom_m": 2.9,
+   "source": "swamp_stadium.py spot sunshine_top_row"
+  },
+  {
+   "name": "secret_exactech_crown_hatch",
+   "map_m": [
+    -758.6,
+    67.85,
+    31.1
+   ],
+   "game": [
+    -17860,
+    3110,
+    9215
+   ],
+   "floor_m": 31.1,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "source": "swamp_oconnell_gym.py crown_hatch"
+  },
+  {
+   "name": "secret_exactech_marquee_top",
+   "map_m": [
+    -678.59,
+    65.78,
+    7.8
+   ],
+   "game": [
+    -9859,
+    780,
+    9422
+   ],
+   "floor_m": 7.8,
+   "clearance_m": 0.75,
+   "headroom_m": null,
+   "source": "swamp_oconnell_gym.py marquee_top"
+  },
+  {
+   "name": "secret_florida_gym_tower_deck",
+   "map_m": [
+    -383.23,
+    10.83,
+    17.6
+   ],
+   "game": [
+    19677,
+    1760,
+    14917
+   ],
+   "floor_m": 17.6,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "source": "swamp_oconnell_gym.py tower_deck"
+  },
+  {
+   "name": "secret_florida_gym_ridge_north",
+   "map_m": [
+    -383.0,
+    102.0,
+    16.6
+   ],
+   "game": [
+    19700,
+    1660,
+    5800
+   ],
+   "floor_m": 16.6,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "source": "swamp_oconnell_gym.py ridge_north"
+  },
+  {
+   "name": "secret_bull_gator_statue",
+   "map_m": [
+    -608.03,
+    -2.97,
+    1.5
+   ],
+   "game": [
+    -2803,
+    150,
+    16297
+   ],
+   "floor_m": 1.5,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "note": "on the back of the Bull Gator statue (plinth 1.0 m; design act 4: the gator-statue plinth)",
+   "source": "stage_dressing.py"
+  },
+  {
+   "name": "secret_gator_statue_north_lawn",
+   "map_m": [
+    -585.0,
+    385.9,
+    1.5
+   ],
+   "game": [
+    -500,
+    150,
+    -22590
+   ],
+   "floor_m": 1.5,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "note": "on the back of the gator statue (north lawn) (plinth 1.0 m; design act 4: the gator-statue plinth)",
+   "source": "stage_dressing.py"
+  }
+ ],
+ "exactech_arena": {
+  "climb_route": [
+   {
+    "name": "exactech_climb_00",
+    "map_m": [
+     -677.59,
+     57.83,
+     2.6
+    ],
+    "game": [
+     -9759,
+     260,
+     10217
+    ],
+    "floor_m": 2.6,
+    "clearance_m": 2.55,
+    "headroom_m": null
+   },
+   {
+    "name": "exactech_climb_01",
+    "map_m": [
+     -676.04,
+     61.78,
+     5.1
+    ],
+    "game": [
+     -9604,
+     510,
+     9822
+    ],
+    "floor_m": 5.1,
+    "clearance_m": 2.55,
+    "headroom_m": null
+   },
+   {
+    "name": "exactech_climb_02",
+    "map_m": [
+     -678.59,
+     65.78,
+     7.8
+    ],
+    "game": [
+     -9859,
+     780,
+     9422
+    ],
+    "floor_m": 7.8,
+    "clearance_m": 0.75,
+    "headroom_m": null
+   },
+   {
+    "name": "exactech_climb_03",
+    "map_m": [
+     -683.34,
+     66.28,
+     10.5
+    ],
+    "game": [
+     -10334,
+     1050,
+     9372
+    ],
+    "floor_m": 10.5,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "exactech_climb_04",
+    "map_m": [
+     -698.57,
+     67.85,
+     10.5
+    ],
+    "game": [
+     -11857,
+     1050,
+     9215
+    ],
+    "floor_m": 10.5,
+    "clearance_m": 1.5,
+    "headroom_m": null
+   },
+   {
+    "name": "exactech_climb_05",
+    "map_m": [
+     -701.01,
+     67.85,
+     12.52
+    ],
+    "game": [
+     -12101,
+     1252,
+     9215
+    ],
+    "floor_m": 12.52,
+    "clearance_m": 0.94,
+    "headroom_m": null
+   },
+   {
+    "name": "exactech_climb_06",
+    "map_m": [
+     -702.88,
+     67.85,
+     14.54
+    ],
+    "game": [
+     -12288,
+     1454,
+     9215
+    ],
+    "floor_m": 14.54,
+    "clearance_m": 0.94,
+    "headroom_m": null
+   },
+   {
+    "name": "exactech_climb_07",
+    "map_m": [
+     -704.75,
+     67.85,
+     16.56
+    ],
+    "game": [
+     -12475,
+     1656,
+     9215
+    ],
+    "floor_m": 16.56,
+    "clearance_m": 0.94,
+    "headroom_m": null
+   },
+   {
+    "name": "exactech_climb_08",
+    "map_m": [
+     -706.63,
+     67.85,
+     18.58
+    ],
+    "game": [
+     -12663,
+     1858,
+     9215
+    ],
+    "floor_m": 18.58,
+    "clearance_m": 0.94,
+    "headroom_m": null
+   },
+   {
+    "name": "exactech_climb_09",
+    "map_m": [
+     -708.5,
+     67.85,
+     20.6
+    ],
+    "game": [
+     -12850,
+     2060,
+     9215
+    ],
+    "floor_m": 20.6,
+    "clearance_m": 2.41,
+    "headroom_m": null
+   },
+   {
+    "name": "exactech_climb_10",
+    "map_m": [
+     -718.43,
+     67.85,
+     24.26
+    ],
+    "game": [
+     -13843,
+     2426,
+     9215
+    ],
+    "floor_m": 24.26,
+    "clearance_m": 1.48,
+    "headroom_m": null
+   },
+   {
+    "name": "exactech_climb_11",
+    "map_m": [
+     -758.6,
+     67.85,
+     31.1
+    ],
+    "game": [
+     -17860,
+     3110,
+     9215
+    ],
+    "floor_m": 31.1,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  ],
+  "spots": {
+   "crown_hatch": {
+    "name": "exactech_crown_hatch",
+    "map_m": [
+     -758.6,
+     67.85,
+     31.1
+    ],
+    "game": [
+     -17860,
+     3110,
+     9215
+    ],
+    "floor_m": 31.1,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "dome_cap_north": {
+    "name": "exactech_dome_cap_north",
+    "map_m": [
+     -758.6,
+     92.85,
+     28.26
+    ],
+    "game": [
+     -17860,
+     2826,
+     6715
+    ],
+    "floor_m": 28.26,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "dome_cap_south": {
+    "name": "exactech_dome_cap_south",
+    "map_m": [
+     -758.6,
+     42.85,
+     28.26
+    ],
+    "game": [
+     -17860,
+     2826,
+     11715
+    ],
+    "floor_m": 28.26,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "dome_cap_west": {
+    "name": "exactech_dome_cap_west",
+    "map_m": [
+     -782.6,
+     67.85,
+     28.26
+    ],
+    "game": [
+     -20260,
+     2826,
+     9215
+    ],
+    "floor_m": 28.26,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "slide_top_north": {
+    "name": "exactech_slide_top_north",
+    "map_m": [
+     -758.6,
+     118.91,
+     20.67
+    ],
+    "game": [
+     -17860,
+     2067,
+     4109
+    ],
+    "floor_m": 20.67,
+    "clearance_m": 1.54,
+    "headroom_m": null
+   },
+   "slide_top_south": {
+    "name": "exactech_slide_top_south",
+    "map_m": [
+     -758.6,
+     16.79,
+     20.67
+    ],
+    "game": [
+     -17860,
+     2067,
+     14321
+    ],
+    "floor_m": 20.67,
+    "clearance_m": 1.54,
+    "headroom_m": null
+   },
+   "slide_top_west": {
+    "name": "exactech_slide_top_west",
+    "map_m": [
+     -807.56,
+     67.85,
+     20.68
+    ],
+    "game": [
+     -22756,
+     2068,
+     9215
+    ],
+    "floor_m": 20.68,
+    "clearance_m": 1.48,
+    "headroom_m": null
+   },
+   "ring_roof_north": {
+    "name": "exactech_ring_roof_north",
+    "map_m": [
+     -758.6,
+     133.3,
+     10.5
+    ],
+    "game": [
+     -17860,
+     1050,
+     2670
+    ],
+    "floor_m": 10.5,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "ring_roof_south": {
+    "name": "exactech_ring_roof_south",
+    "map_m": [
+     -758.6,
+     2.4,
+     10.5
+    ],
+    "game": [
+     -17860,
+     1050,
+     15760
+    ],
+    "floor_m": 10.5,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "ring_roof_west": {
+    "name": "exactech_ring_roof_west",
+    "map_m": [
+     -821.5,
+     67.85,
+     10.5
+    ],
+    "game": [
+     -24150,
+     1050,
+     9215
+    ],
+    "floor_m": 10.5,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "lobby_roof": {
+    "name": "exactech_lobby_roof",
+    "map_m": [
+     -688.34,
+     68.28,
+     10.5
+    ],
+    "game": [
+     -10834,
+     1050,
+     9172
+    ],
+    "floor_m": 10.5,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "entry_niche": {
+    "name": "exactech_entry_niche",
+    "map_m": [
+     -680.84,
+     68.28,
+     0.0
+    ],
+    "game": [
+     -10084,
+     0,
+     9172
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.5,
+    "headroom_m": 4.6
+   },
+   "canopy_top": {
+    "name": "exactech_canopy_top",
+    "map_m": [
+     -677.09,
+     74.78,
+     5.1
+    ],
+    "game": [
+     -9709,
+     510,
+     8522
+    ],
+    "floor_m": 5.1,
+    "clearance_m": 2.12,
+    "headroom_m": null
+   },
+   "kiosk_top": {
+    "name": "exactech_kiosk_top",
+    "map_m": [
+     -677.59,
+     57.83,
+     2.6
+    ],
+    "game": [
+     -9759,
+     260,
+     10217
+    ],
+    "floor_m": 2.6,
+    "clearance_m": 2.55,
+    "headroom_m": null
+   },
+   "marquee_top": {
+    "name": "exactech_marquee_top",
+    "map_m": [
+     -678.59,
+     65.78,
+     7.8
+    ],
+    "game": [
+     -9859,
+     780,
+     9422
+    ],
+    "floor_m": 7.8,
+    "clearance_m": 0.75,
+    "headroom_m": null
+   }
+  },
+  "note": "spot heights are measured on the collision (the dome cap spots sit ~1.2 m below the module's nominal 29.5 m)"
+ },
+ "florida_gym": {
+  "climb_route": [
+   {
+    "name": "gym_climb_00",
+    "map_m": [
+     -356.8,
+     11.3,
+     2.4
+    ],
+    "game": [
+     22320,
+     240,
+     14870
+    ],
+    "floor_m": 2.4,
+    "clearance_m": 0.6,
+    "headroom_m": null
+   },
+   {
+    "name": "gym_climb_01",
+    "map_m": [
+     -358.0,
+     11.3,
+     4.8
+    ],
+    "game": [
+     22200,
+     480,
+     14870
+    ],
+    "floor_m": 4.8,
+    "clearance_m": 0.6,
+    "headroom_m": null
+   },
+   {
+    "name": "gym_climb_02",
+    "map_m": [
+     -359.2,
+     11.3,
+     7.2
+    ],
+    "game": [
+     22080,
+     720,
+     14870
+    ],
+    "floor_m": 7.2,
+    "clearance_m": 0.6,
+    "headroom_m": null
+   },
+   {
+    "name": "gym_climb_03",
+    "map_m": [
+     -361.8,
+     14.0,
+     9.6
+    ],
+    "game": [
+     21820,
+     960,
+     14600
+    ],
+    "floor_m": 9.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   {
+    "name": "gym_climb_04",
+    "map_m": [
+     -364.8,
+     19.0,
+     11.98
+    ],
+    "game": [
+     21520,
+     1198,
+     14100
+    ],
+    "floor_m": 11.98,
+    "clearance_m": 2.36,
+    "headroom_m": null
+   },
+   {
+    "name": "gym_climb_05",
+    "map_m": [
+     -383.0,
+     19.0,
+     16.6
+    ],
+    "game": [
+     19700,
+     1660,
+     14100
+    ],
+    "floor_m": 16.6,
+    "clearance_m": 1.9,
+    "headroom_m": null
+   },
+   {
+    "name": "gym_climb_06",
+    "map_m": [
+     -383.23,
+     10.83,
+     17.6
+    ],
+    "game": [
+     19677,
+     1760,
+     14918
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   }
+  ],
+  "spots": {
+   "tower_deck": {
+    "name": "gym_tower_deck",
+    "map_m": [
+     -383.23,
+     10.83,
+     17.6
+    ],
+    "game": [
+     19677,
+     1760,
+     14917
+    ],
+    "floor_m": 17.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "ridge_south": {
+    "name": "gym_ridge_south",
+    "map_m": [
+     -383.0,
+     19.0,
+     16.6
+    ],
+    "game": [
+     19700,
+     1660,
+     14100
+    ],
+    "floor_m": 16.6,
+    "clearance_m": 1.9,
+    "headroom_m": null
+   },
+   "ridge_middle": {
+    "name": "gym_ridge_middle",
+    "map_m": [
+     -383.0,
+     60.5,
+     16.6
+    ],
+    "game": [
+     19700,
+     1660,
+     9950
+    ],
+    "floor_m": 16.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "ridge_north": {
+    "name": "gym_ridge_north",
+    "map_m": [
+     -383.0,
+     102.0,
+     16.6
+    ],
+    "game": [
+     19700,
+     1660,
+     5800
+    ],
+    "floor_m": 16.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "front_roof_west": {
+    "name": "gym_front_roof_west",
+    "map_m": [
+     -401.0,
+     11.3,
+     9.6
+    ],
+    "game": [
+     17900,
+     960,
+     14870
+    ],
+    "floor_m": 9.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "front_roof_east": {
+    "name": "gym_front_roof_east",
+    "map_m": [
+     -366.0,
+     11.3,
+     9.6
+    ],
+    "game": [
+     21400,
+     960,
+     14870
+    ],
+    "floor_m": 9.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "west_wing_roof": {
+    "name": "gym_west_wing_roof",
+    "map_m": [
+     -409.0,
+     77.0,
+     9.6
+    ],
+    "game": [
+     17100,
+     960,
+     8300
+    ],
+    "floor_m": 9.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "east_wing_roof": {
+    "name": "gym_east_wing_roof",
+    "map_m": [
+     -356.8,
+     77.0,
+     9.6
+    ],
+    "game": [
+     22320,
+     960,
+     8300
+    ],
+    "floor_m": 9.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "north_annex_roof": {
+    "name": "gym_north_annex_roof",
+    "map_m": [
+     -398.0,
+     108.1,
+     9.6
+    ],
+    "game": [
+     18200,
+     960,
+     5190
+    ],
+    "floor_m": 9.6,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "north_pavilion_roof": {
+    "name": "gym_north_pavilion_roof",
+    "map_m": [
+     -382.93,
+     108.6,
+     12.4
+    ],
+    "game": [
+     19707,
+     1240,
+     5140
+    ],
+    "floor_m": 12.4,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "entrance_steps": {
+    "name": "gym_entrance_steps",
+    "map_m": [
+     -383.23,
+     2.55,
+     0.0
+    ],
+    "game": [
+     19677,
+     0,
+     15745
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.0,
+    "headroom_m": null
+   }
+  }
+ },
+ "stadium_gates": [
+  {
+   "name": "field_tunnel_mouth",
+   "map_m": [
+    -514.61,
+    60.38,
+    -9.92
+   ],
+   "game": [
+    6539,
+    -992,
+    9962
+   ],
+   "floor_m": -9.92,
+   "clearance_m": 3.0,
+   "headroom_m": 4.5,
+   "exit": {
+    "name": "field_tunnel_exit",
+    "map_m": [
+     -514.96,
+     -6.92,
+     0.0
+    ],
+    "game": [
+     6504,
+     0,
+     16692
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.56,
+    "headroom_m": null
+   },
+   "kind": "field",
+   "width_m": 6.0,
+   "clear_height_m": 4.5,
+   "exit_facing_deg": 180.3
+  },
+  {
+   "name": "gate_E_south_mouth",
+   "map_m": [
+    -461.64,
+    92.7,
+    0.0
+   ],
+   "game": [
+    11836,
+    0,
+    6730
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.5,
+   "headroom_m": 4.0,
+   "exit": {
+    "name": "gate_E_south_exit",
+    "map_m": [
+     -421.04,
+     92.49,
+     0.0
+    ],
+    "game": [
+     15896,
+     0,
+     6751
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "kind": "gate",
+   "width_m": 5.0,
+   "clear_height_m": 4.0,
+   "exit_facing_deg": 90.3
+  },
+  {
+   "name": "gate_E_north_mouth",
+   "map_m": [
+    -461.32,
+    152.7,
+    0.0
+   ],
+   "game": [
+    11868,
+    0,
+    730
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.5,
+   "headroom_m": 4.0,
+   "exit": {
+    "name": "gate_E_north_exit",
+    "map_m": [
+     -420.72,
+     152.49,
+     0.0
+    ],
+    "game": [
+     15928,
+     0,
+     751
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "kind": "gate",
+   "width_m": 5.0,
+   "clear_height_m": 4.0,
+   "exit_facing_deg": 90.3
+  },
+  {
+   "name": "gate_SE_mouth",
+   "map_m": [
+    -466.37,
+    61.6,
+    0.0
+   ],
+   "game": [
+    11363,
+    0,
+    9840
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.7,
+   "headroom_m": 4.0,
+   "exit": {
+    "name": "gate_SE_exit",
+    "map_m": [
+     -431.79,
+     47.06,
+     0.0
+    ],
+    "game": [
+     14821,
+     0,
+     11294
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "kind": "gate",
+   "width_m": 5.0,
+   "clear_height_m": 4.0,
+   "exit_facing_deg": 112.8
+  },
+  {
+   "name": "gate_SW_mouth",
+   "map_m": [
+    -562.83,
+    62.1,
+    0.0
+   ],
+   "game": [
+    1717,
+    0,
+    9790
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.7,
+   "headroom_m": 4.0,
+   "exit": {
+    "name": "gate_SW_exit",
+    "map_m": [
+     -597.56,
+     47.93,
+     0.0
+    ],
+    "game": [
+     -1756,
+     0,
+     11207
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "kind": "gate",
+   "width_m": 5.0,
+   "clear_height_m": 4.0,
+   "exit_facing_deg": 247.8
+  },
+  {
+   "name": "gate_W_mouth",
+   "map_m": [
+    -566.94,
+    149.76,
+    0.0
+   ],
+   "game": [
+    1306,
+    0,
+    1024
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.5,
+   "headroom_m": 4.0,
+   "exit": {
+    "name": "gate_W_exit",
+    "map_m": [
+     -648.64,
+     150.18,
+     0.0
+    ],
+    "game": [
+     -6864,
+     0,
+     982
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": null
+   },
+   "kind": "gate",
+   "width_m": 5.0,
+   "clear_height_m": 4.0,
+   "exit_facing_deg": 270.3
+  },
+  {
+   "name": "gate_N_mouth",
+   "map_m": [
+    -513.85,
+    204.28,
+    0.0
+   ],
+   "game": [
+    6615,
+    0,
+    -4428
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.5,
+   "headroom_m": 4.0,
+   "exit": {
+    "name": "gate_N_exit",
+    "map_m": [
+     -513.7,
+     233.18,
+     0.0
+    ],
+    "game": [
+     6630,
+     0,
+     -7318
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 3.0,
+    "headroom_m": 10.0
+   },
+   "kind": "gate",
+   "width_m": 5.0,
+   "clear_height_m": 4.0,
+   "exit_facing_deg": 0.3
+  },
+  {
+   "name": "gate_NE_mouth",
+   "map_m": [
+    -465.73,
+    183.86,
+    0.0
+   ],
+   "game": [
+    11427,
+    0,
+    -2386
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.7,
+   "headroom_m": 4.0,
+   "exit": {
+    "name": "gate_NE_exit",
+    "map_m": [
+     -451.38,
+     189.71,
+     0.0
+    ],
+    "game": [
+     12862,
+     0,
+     -2971
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.5,
+    "headroom_m": 3.44
+   },
+   "kind": "gate",
+   "width_m": 5.0,
+   "clear_height_m": 4.0,
+   "exit_facing_deg": 67.8
+  },
+  {
+   "name": "gate_NW_mouth",
+   "map_m": [
+    -562.19,
+    184.36,
+    0.0
+   ],
+   "game": [
+    1781,
+    0,
+    -2436
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.7,
+   "headroom_m": 4.0,
+   "exit": {
+    "name": "gate_NW_exit",
+    "map_m": [
+     -576.48,
+     190.37,
+     0.0
+    ],
+    "game": [
+     352,
+     0,
+     -3037
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.49,
+    "headroom_m": 3.44
+   },
+   "kind": "gate",
+   "width_m": 5.0,
+   "clear_height_m": 4.0,
+   "exit_facing_deg": 292.8
+  },
+  {
+   "name": "vom_NE_mouth",
+   "map_m": [
+    -488.94,
+    203.57,
+    22.0
+   ],
+   "game": [
+    9106,
+    2200,
+    -4357
+   ],
+   "floor_m": 22.0,
+   "clearance_m": 2.7,
+   "headroom_m": 4.0,
+   "exit": {
+    "name": "vom_NE_exit",
+    "map_m": [
+     -478.88,
+     227.51,
+     22.0
+    ],
+    "game": [
+     10112,
+     2200,
+     -6751
+    ],
+    "floor_m": 22.0,
+    "clearance_m": 2.05,
+    "headroom_m": null
+   },
+   "kind": "vomitory",
+   "width_m": 5.0,
+   "clear_height_m": 4.0,
+   "exit_facing_deg": 22.8
+  },
+  {
+   "name": "vom_NW_mouth",
+   "map_m": [
+    -538.77,
+    203.84,
+    22.0
+   ],
+   "game": [
+    4123,
+    2200,
+    -4384
+   ],
+   "floor_m": 22.0,
+   "clearance_m": 2.7,
+   "headroom_m": 4.0,
+   "exit": {
+    "name": "vom_NW_exit",
+    "map_m": [
+     -548.58,
+     227.87,
+     22.0
+    ],
+    "game": [
+     3142,
+     2200,
+     -6787
+    ],
+    "floor_m": 22.0,
+    "clearance_m": 2.05,
+    "headroom_m": null
+   },
+   "kind": "vomitory",
+   "width_m": 5.0,
+   "clear_height_m": 4.0,
+   "exit_facing_deg": 337.8
+  }
+ ],
+ "dressing": {
+  "tents": [
+   {
+    "map_m": [
+     -687.5,
+     322.0
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_orange",
+    "lot": 0
+   },
+   {
+    "map_m": [
+     -774.5,
+     292.0
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_blue",
+    "lot": 0
+   },
+   {
+    "map_m": [
+     -657.5,
+     277.0
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_orange",
+    "lot": 0
+   },
+   {
+    "map_m": [
+     -713.75,
+     269.5
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_blue",
+    "lot": 0
+   },
+   {
+    "map_m": [
+     -736.25,
+     329.5
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_orange",
+    "lot": 0
+   },
+   {
+    "map_m": [
+     -668.75,
+     284.5
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_blue",
+    "lot": 0
+   },
+   {
+    "map_m": [
+     -710.0,
+     277.0
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_orange",
+    "lot": 0
+   },
+   {
+    "map_m": [
+     -766.25,
+     344.5
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_blue",
+    "lot": 0
+   },
+   {
+    "map_m": [
+     -650.0,
+     337.0
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_orange",
+    "lot": 0
+   },
+   {
+    "map_m": [
+     -695.0,
+     292.0
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_blue",
+    "lot": 0
+   },
+   {
+    "map_m": [
+     -725.0,
+     292.0
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_orange",
+    "lot": 0
+   },
+   {
+    "map_m": [
+     -683.0,
+     247.0
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_blue",
+    "lot": 0
+   },
+   {
+    "map_m": [
+     -490.0,
+     299.0
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_orange",
+    "lot": 1
+   },
+   {
+    "map_m": [
+     -471.25,
+     321.5
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_blue",
+    "lot": 1
+   },
+   {
+    "map_m": [
+     -505.0,
+     344.0
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_orange",
+    "lot": 1
+   },
+   {
+    "map_m": [
+     -505.0,
+     329.0
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_blue",
+    "lot": 1
+   },
+   {
+    "map_m": [
+     -463.75,
+     306.5
+    ],
+    "peak_m": 3.4,
+    "eave_m": 2.9,
+    "roof": "banner_orange",
+    "lot": 1
+   }
+  ],
+  "lamps": [
+   [
+    -529.0,
+    262.0
+   ],
+   [
+    -498.0,
+    262.0
+   ],
+   [
+    -529.0,
+    286.0
+   ],
+   [
+    -498.0,
+    286.0
+   ],
+   [
+    -535.0,
+    244.0
+   ],
+   [
+    -492.0,
+    244.0
+   ],
+   [
+    -560.0,
+    -13.5
+   ],
+   [
+    -530.0,
+    -14.0
+   ],
+   [
+    -440.0,
+    -9.0
+   ]
+  ],
+  "statues": [
+   {
+    "name": "Bull Gator statue",
+    "map_m": [
+     -608.1,
+     -2.9
+    ],
+    "facing_deg": 135.0,
+    "plinth_m": 1.0,
+    "back_m": 1.5
+   },
+   {
+    "name": "gator statue (north lawn)",
+    "map_m": [
+     -585.0,
+     386.0
+    ],
+    "facing_deg": 180.0,
+    "plinth_m": 1.0,
+    "back_m": 1.5
+   }
+  ],
+  "markers": [
+   {
+    "name": "Gatorade birthplace marker",
+    "map_m": [
+     -674.8,
+     131.4
+    ]
+   }
+  ],
+  "skipped": [
+   [
+    "lamp",
+    -470.0,
+    -14.0
+   ]
+  ]
+ },
+ "pickups": {
+  "coins_placed": 142,
+  "coins_with_goombas": 149,
+  "objects": 65,
+  "by_kind": {
+   "coin": 21,
+   "heart": 4,
+   "coin_line": 21,
+   "goomba": 7,
+   "coin_ring": 2,
+   "1up": 3,
+   "pole": 7
+  },
+  "skipped": [],
+  "items": [
+   {
+    "kind": "coin",
+    "name": "climb coin ledge 01",
+    "map_m": [
+     -605.72,
+     77.06,
+     22.6
+    ],
+    "game": [
+     -2572,
+     2260,
+     8294
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin ledge 02",
+    "map_m": [
+     -605.73,
+     74.86,
+     24.6
+    ],
+    "game": [
+     -2573,
+     2460,
+     8514
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin ledge 03",
+    "map_m": [
+     -605.72,
+     77.06,
+     26.6
+    ],
+    "game": [
+     -2572,
+     2660,
+     8294
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin ledge 04",
+    "map_m": [
+     -605.73,
+     74.86,
+     28.6
+    ],
+    "game": [
+     -2573,
+     2860,
+     8514
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin ledge 05",
+    "map_m": [
+     -605.72,
+     77.06,
+     30.6
+    ],
+    "game": [
+     -2572,
+     3060,
+     8294
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin ledge 06",
+    "map_m": [
+     -605.73,
+     74.86,
+     32.6
+    ],
+    "game": [
+     -2573,
+     3260,
+     8514
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin ledge 07",
+    "map_m": [
+     -605.72,
+     77.06,
+     34.6
+    ],
+    "game": [
+     -2572,
+     3460,
+     8294
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin ledge 08",
+    "map_m": [
+     -605.73,
+     74.86,
+     36.6
+    ],
+    "game": [
+     -2573,
+     3660,
+     8514
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin ledge 09",
+    "map_m": [
+     -605.72,
+     77.06,
+     38.6
+    ],
+    "game": [
+     -2572,
+     3860,
+     8294
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin ledge 10",
+    "map_m": [
+     -605.73,
+     74.86,
+     40.6
+    ],
+    "game": [
+     -2573,
+     4060,
+     8514
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin ledge 11",
+    "map_m": [
+     -605.72,
+     77.06,
+     42.6
+    ],
+    "game": [
+     -2572,
+     4260,
+     8294
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin deck 01",
+    "map_m": [
+     -599.04,
+     122.22,
+     46.6
+    ],
+    "game": [
+     -1904,
+     4660,
+     3778
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin deck 02",
+    "map_m": [
+     -599.02,
+     124.62,
+     48.6
+    ],
+    "game": [
+     -1902,
+     4860,
+     3538
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin deck 03",
+    "map_m": [
+     -599.04,
+     122.22,
+     50.6
+    ],
+    "game": [
+     -1904,
+     5060,
+     3778
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin deck 04",
+    "map_m": [
+     -599.02,
+     124.62,
+     52.6
+    ],
+    "game": [
+     -1902,
+     5260,
+     3538
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin deck 05",
+    "map_m": [
+     -599.04,
+     122.22,
+     54.6
+    ],
+    "game": [
+     -1904,
+     5460,
+     3778
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin deck 06",
+    "map_m": [
+     -599.02,
+     124.62,
+     56.6
+    ],
+    "game": [
+     -1902,
+     5660,
+     3538
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin deck 07",
+    "map_m": [
+     -599.04,
+     122.22,
+     58.6
+    ],
+    "game": [
+     -1904,
+     5860,
+     3778
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin deck 08",
+    "map_m": [
+     -599.02,
+     124.62,
+     60.6
+    ],
+    "game": [
+     -1902,
+     6060,
+     3538
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin deck 09",
+    "map_m": [
+     -599.04,
+     122.22,
+     62.6
+    ],
+    "game": [
+     -1904,
+     6260,
+     3778
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "climb coin deck 10",
+    "map_m": [
+     -599.02,
+     124.62,
+     64.6
+    ],
+    "game": [
+     -1902,
+     6460,
+     3538
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart west rim (climb start)",
+    "map_m": [
+     -604.57,
+     76.45,
+     21.0
+    ],
+    "game": [
+     -2457,
+     2100,
+     8355
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart Bull Gator Deck",
+    "map_m": [
+     -601.73,
+     123.44,
+     45.0
+    ],
+    "game": [
+     -2173,
+     4500,
+     3656
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart camera deck 5",
+    "map_m": [
+     -599.04,
+     122.22,
+     55.0
+    ],
+    "game": [
+     -1904,
+     5500,
+     3778
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "sprint coins east rim 25",
+    "map_m": [
+     -424.54,
+     111.26,
+     20.0
+    ],
+    "game": [
+     15546,
+     2000,
+     4874
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 180.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "sprint coins east rim 75",
+    "map_m": [
+     -424.66,
+     88.76,
+     20.0
+    ],
+    "game": [
+     15534,
+     2000,
+     7124
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 180.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "sprint coins south-east rim 25",
+    "map_m": [
+     -429.74,
+     64.16,
+     19.71
+    ],
+    "game": [
+     15026,
+     1971,
+     9584
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 200.6,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "sprint coins south-east rim 75",
+    "map_m": [
+     -439.78,
+     37.46,
+     20.0
+    ],
+    "game": [
+     14022,
+     2000,
+     12254
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 200.6,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "sprint coins south rim 25",
+    "map_m": [
+     -456.93,
+     19.16,
+     20.0
+    ],
+    "game": [
+     12307,
+     2000,
+     14084
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 247.8,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "sprint coins south rim 75",
+    "map_m": [
+     -481.18,
+     9.27,
+     20.0
+    ],
+    "game": [
+     9882,
+     2000,
+     15073
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 247.8,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba sprint east rim",
+    "map_m": [
+     -424.6,
+     100.01,
+     20.0
+    ],
+    "game": [
+     15540,
+     2000,
+     5999
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 0.3,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba sprint south rim",
+    "map_m": [
+     -469.05,
+     14.21,
+     20.0
+    ],
+    "game": [
+     11095,
+     2000,
+     14578
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 67.8,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart South Ramp terrace (sprint finish)",
+    "map_m": [
+     -514.92,
+     1.68,
+     21.0
+    ],
+    "game": [
+     6508,
+     2100,
+     15832
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "concourse coins 00",
+    "map_m": [
+     -524.66,
+     202.59,
+     0.0
+    ],
+    "game": [
+     5534,
+     0,
+     -4259
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 270.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "concourse coins 01",
+    "map_m": [
+     -545.9,
+     198.38,
+     0.0
+    ],
+    "game": [
+     3410,
+     0,
+     -3838
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 247.8,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "concourse coins 02",
+    "map_m": [
+     -560.7,
+     183.74,
+     0.0
+    ],
+    "game": [
+     1930,
+     0,
+     -2374
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 202.8,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "concourse coins 03",
+    "map_m": [
+     -565.33,
+     123.25,
+     -0.0
+    ],
+    "game": [
+     1467,
+     0,
+     3675
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 180.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "concourse coins 05",
+    "map_m": [
+     -546.69,
+     47.91,
+     0.0
+    ],
+    "game": [
+     3331,
+     0,
+     11209
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 112.8,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "concourse coins 06",
+    "map_m": [
+     -514.7,
+     43.43,
+     0.0
+    ],
+    "game": [
+     6530,
+     0,
+     11657
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "concourse coins 08",
+    "map_m": [
+     -467.86,
+     62.22,
+     0.0
+    ],
+    "game": [
+     11214,
+     0,
+     9778
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 22.8,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "concourse coins 10",
+    "map_m": [
+     -467.23,
+     183.25,
+     0.0
+    ],
+    "game": [
+     11277,
+     0,
+     -2325
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 337.8,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba concourse north",
+    "map_m": [
+     -531.14,
+     202.62,
+     -0.0
+    ],
+    "game": [
+     4886,
+     0,
+     -4262
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.3,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba concourse west",
+    "map_m": [
+     -565.33,
+     123.25,
+     -0.0
+    ],
+    "game": [
+     1467,
+     0,
+     3675
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 0.3,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba concourse east",
+    "map_m": [
+     -463.23,
+     122.71,
+     0.0
+    ],
+    "game": [
+     11677,
+     0,
+     3729
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 180.3,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "field coins midfield ring",
+    "map_m": [
+     -514.28,
+     122.98,
+     -10.0
+    ],
+    "game": [
+     6572,
+     -1000,
+     3702
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "apron coins 0 30",
+    "map_m": [
+     -485.81,
+     101.05,
+     -10.0
+    ],
+    "game": [
+     9419,
+     -1000,
+     5895
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "apron coins 0 70",
+    "map_m": [
+     -485.58,
+     144.61,
+     -10.0
+    ],
+    "game": [
+     9442,
+     -1000,
+     1539
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "apron coins 4 30",
+    "map_m": [
+     -542.75,
+     144.91,
+     -10.0
+    ],
+    "game": [
+     3725,
+     -1000,
+     1509
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 180.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "apron coins 4 70",
+    "map_m": [
+     -542.98,
+     101.35,
+     -10.0
+    ],
+    "game": [
+     3702,
+     -1000,
+     5865
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 180.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "courtyard coins to the north gate",
+    "map_m": [
+     -513.61,
+     251.06,
+     0.0
+    ],
+    "game": [
+     6639,
+     0,
+     -9106
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 180.3,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba courtyard 0",
+    "map_m": [
+     -505.64,
+     245.06,
+     -0.0
+    ],
+    "game": [
+     7436,
+     0,
+     -8506
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 336.2,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba courtyard 1",
+    "map_m": [
+     -521.64,
+     245.14,
+     0.0
+    ],
+    "game": [
+     5836,
+     0,
+     -8514
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 24.4,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "secret coins gatehouse_roof",
+    "map_m": [
+     -513.67,
+     240.33,
+     11.2
+    ],
+    "game": [
+     6633,
+     1120,
+     -8033
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "secret coins north_board_top (line)",
+    "map_m": [
+     -513.72,
+     230.43,
+     47.8
+    ],
+    "game": [
+     6628,
+     4780,
+     -7043
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "secret coins south_board_top (line)",
+    "map_m": [
+     -514.9,
+     5.23,
+     55.6
+    ],
+    "game": [
+     6510,
+     5560,
+     15477
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up light frame top (71 m)",
+    "map_m": [
+     -602.84,
+     111.44,
+     71.6
+    ],
+    "game": [
+     -2284,
+     7160,
+     4856
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up Exactech Arena crown",
+    "map_m": [
+     -758.6,
+     67.85,
+     31.7
+    ],
+    "game": [
+     -17860,
+     3170,
+     9215
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up Florida Gym tower deck",
+    "map_m": [
+     -383.23,
+     10.83,
+     18.2
+    ],
+    "game": [
+     19677,
+     1820,
+     14917
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "pole",
+    "name": "pole goalpost_north",
+    "map_m": [
+     -513.98,
+     179.64,
+     -10.0
+    ],
+    "game": [
+     6602,
+     -1000,
+     -1964
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x001E0000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 3.0,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole goalpost_south",
+    "map_m": [
+     -514.58,
+     66.32,
+     -10.0
+    ],
+    "game": [
+     6542,
+     -1000,
+     9368
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x001E0000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 3.0,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole bgd_to_press_box_roof",
+    "map_m": [
+     -598.25,
+     128.92,
+     44.0
+    ],
+    "game": [
+     -1825,
+     4400,
+     3108
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00E10000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 22.5,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole south_board_leg",
+    "map_m": [
+     -527.2,
+     2.55,
+     20.0
+    ],
+    "game": [
+     5280,
+     2000,
+     15745
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00F20000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 24.2,
+    "hanging": false
+   },
+   {
+    "kind": "pole",
+    "name": "pole east_light_mast_1",
+    "map_m": [
+     -422.19,
+     82.0,
+     21.0
+    ],
+    "game": [
+     15781,
+     2100,
+     7800
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00780000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 12.0,
+    "hanging": true
+   },
+   {
+    "kind": "pole",
+    "name": "pole east_light_mast_2",
+    "map_m": [
+     -421.97,
+     125.09,
+     21.0
+    ],
+    "game": [
+     15803,
+     2100,
+     3491
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00780000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 12.0,
+    "hanging": true
+   },
+   {
+    "kind": "pole",
+    "name": "pole east_light_mast_3",
+    "map_m": [
+     -421.74,
+     167.99,
+     21.0
+    ],
+    "game": [
+     15826,
+     2100,
+     -799
+    ],
+    "behavior": "bhvPoleGrabbing",
+    "model": "MODEL_NONE",
+    "bparams": "0x00780000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null,
+    "height_m": 12.0,
+    "hanging": true
+   }
+  ]
+ },
+ "checks": []
+}

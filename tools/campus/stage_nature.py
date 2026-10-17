@@ -176,10 +176,22 @@ def build(S, pole_avoid=()):
     counts = {"oak": 0, "pine": 0, "palm": 0, "colliders": 0, "climbable": 0}
     poles = pick_pole_trees(S, pole_avoid)
     S.pole_trees = []
+    # crowns reach up to ~10.5 m from the trunk: a tree closer than that to the s16 vertex limit
+    # (327.67 m from the stage centre) would wrap around; out there it is behind the tree line anyway
+    lim = 327.0 - 10.5
+    counts["beyond_s16"] = 0
+    holes = getattr(S, "ground_holes", None) or []     # landmark ground holes (no ground to stand on)
+    counts["in_ground_hole"] = 0
     for t in d["trees"]:
         if t["id"] in S.removed_points or t["id"] in S.replaced_ids:
             continue
         x, y = S.T(t["pt"])
+        if max(abs(x), abs(y)) > lim:
+            counts["beyond_s16"] += 1
+            continue
+        if holes and any(G.point_in_poly((x, y), h) for h in holes):
+            counts["in_ground_hole"] += 1
+            continue
         key = t["id"]
         kind = t["kind"]
         if kind == "palm":

@@ -13,6 +13,14 @@ LANDMARK MODULE CONTRACT (tools/campus/landmarks/<slug>.py)
       walking OUT of the door looks. Optional "primary": True marks the stage door (it gets the
       signpost); without it the first door does.
   Optional entry keys the generator also honours (OSM ids from campus.json / the raw tiles):
+      "stages":         [stage keys] the stages.json stages this landmark is built into ("hub", "swamp",
+                                     "reitz_eng", "lake_alice", ...). Missing key = ["hub"].
+                                     build_stage.py <key> only builds entries whose "stages" contain <key>:
+                                     when none of a module's entries list <key>, its build() is not
+                                     called at all (module skipped); in a module with mixed entries the parts of the
+                                     other entries are dropped (parts are matched to entries by their
+                                     "landmark" key, else by the slug their name starts with). ctx gains
+                                     "stage_key" (the stage being built) so a module can also branch itself.
       "replaces_ways":  [way ids]   roads / walkways / walls you draw yourself (generator skips them)
       "replaces_areas": [area ids]  lawn / plaza / parking polygons you draw yourself
       "removes_points": [node ids]  trees or props that must not be generated
@@ -35,8 +43,11 @@ LANDMARK MODULE CONTRACT (tools/campus/landmarks/<slug>.py)
   def build(ctx) -> [{"name": str, "mesh": bpy.types.Mesh, "material_slots": [palette names in
                       face material-index order], "collision": bool, "visual": bool}, ...]
   Geometry in MAP METRES, z up (x = east, y = north, origin = Century Tower); the generator moves it
-  into the stage frame. ctx = {"campus": campus.json dict, "stage": hub entry of stages.json,
-  "ground_z": f(x, y) -> 0.0, "buildings": {osm_id: campus.json building}, "palette": PALETTE}.
+  into the stage frame. ctx = {"campus": campus.json dict, "stage": the stages.json entry of the stage
+  being built, "stage_key": its key ("hub", "swamp", ...), "ground_z": f(x, y) -> 0.0,
+  "buildings": {osm_id: campus.json building}, "palette": PALETTE}.
+  Doors (hub only): a door may also give "width_m" (door opening width); the hub door trigger
+  (mods/sgl64/levels.lua id_bhvSglDoor) uses width / 2 + 0.6 m as its half width. See docs/flow.md.
 
 UVs: optional. A mesh without a UV layer gets planar UVs from the generator (project_uv below:
   floors/roofs top-down, walls along the wall, one texture repeat per PALETTE[name]["tile_m"]

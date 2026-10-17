@@ -1,8 +1,13 @@
 -- name: Super Gatorlator 64
--- description: Our school, in Super Mario 64.\n\nTest build: proves the mod pipeline works.\nType /school in chat.
+-- incompatible: romhack
+-- description: Our school, in Super Mario 64: the real University of Florida campus at true scale, with online co-op and playable friends.\n\nThe hub replaces Castle Grounds; building doors lead into the stages.\nThe Swamp (University Auditorium door) is open from the start.\n\nL + START or /char: choose your friend. D-pad Up or /join: join your friends' stage act.\nChat: /char, /join, /mission, /campus, /school
+--
+-- Map data (c) OpenStreetMap contributors, ODbL 1.0.
+-- Level flow (hub, doors, stages, warp nodes, stars): docs/flow.md, course.lua, levels.lua.
+-- (The old "Super Gatorlator 64 loaded" banner is gone: it read like a debug line on the vanilla HUD
+-- row. /school still answers, and levels.lua shows where to go next in the hub.)
 
 local sWelcomed = false
-local sBannerTimer = 0
 
 local function count_players()
     local count = 0
@@ -17,26 +22,7 @@ end
 local function on_level_init()
     if sWelcomed then return end
     sWelcomed = true
-    sBannerTimer = 30 * 8 -- 8 seconds (game runs at 30 ticks per second)
     djui_popup_create("\\#ffd700\\Welcome to Super Gatorlator 64, " .. gNetworkPlayers[0].name .. "!", 2)
-end
-
-local function on_hud_render()
-    if sBannerTimer <= 0 then return end
-    sBannerTimer = sBannerTimer - 1
-
-    djui_hud_set_resolution(RESOLUTION_N64)
-    djui_hud_set_font(FONT_NORMAL)
-
-    local text = "Super Gatorlator 64 loaded"
-    local scale = 0.5
-    local width = djui_hud_measure_text(text) * scale
-    local x = (djui_hud_get_screen_width() - width) * 0.5
-
-    djui_hud_set_color(0, 0, 0, 160)
-    djui_hud_render_rect(x - 6, 0, width + 12, 16)
-    djui_hud_set_color(255, 215, 0, 255)
-    djui_hud_print_text(text, x, 0, scale)
 end
 
 local function on_school_command()
@@ -45,5 +31,4 @@ local function on_school_command()
 end
 
 hook_event(HOOK_ON_LEVEL_INIT, on_level_init)
-hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 hook_chat_command("school", "Check that the Super Gatorlator 64 mod is running", on_school_command)

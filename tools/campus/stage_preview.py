@@ -269,6 +269,8 @@ def _standins(S):
         if model == "MODEL_WOODEN_SIGNPOST":
             boxes = [((-0.07, -0.07, 0.0), (0.07, 0.07, 0.8), "door_wood"),
                      ((-0.5, -0.05, 0.6), (0.5, 0.05, 1.3), "door_wood")]
+        elif o.name.startswith("Star"):              # level-script star: a gold diamond, 0.8 m
+            boxes = [((-0.3, -0.08, -0.3), (0.3, 0.08, 0.3), "door_marker")]
         elif o.name.startswith("Spawn"):
             loc.z -= 1.0                              # spawn objects sit 1 m above the floor
             boxes = [((-0.28, -0.22, 0.0), (0.28, 0.22, 0.8), "window_glass"),
@@ -301,6 +303,8 @@ def _standins(S):
 
 def default_views(S):
     H = S.data["extent_half_m"]
+    if getattr(S, "key", "hub") == "swamp":
+        return swamp_views(S)
     return [
         {"name": "hub_topdown", "ortho": 2 * H, "fog": False, "px": 1600},
         # where Lakitu starts: 9 m behind Mario at the spawn, looking the way he faces (190 deg)
@@ -348,4 +352,48 @@ def landmark_views():
         {"name": "hub_dressing_turlington_plaza", "cam": (-40.0, -25.0, 4.0), "target": (-80.0, 10.0, 2.0),
          "vfov": 60.0},
         {"name": "hub_tower_from_smathers_door", "cam": (126.0, 236.0, 3.0), "target": (0.0, 0.0, 30.0), "vfov": 45.0},
+    ]
+
+
+def swamp_views(S):
+    """The Swamp (map metres; the field is at z = -10): arrival, the bowl from the field, the top of the
+    stands, the press box, aerials, the neighbours and the north lots."""
+    H = S.data["extent_half_m"]
+    return [
+        {"name": "swamp_topdown", "ortho": 2 * H, "fog": False, "px": 1600},
+        # where Lakitu starts: ~10 m behind Mario at the spawn (Courtyard of Champions), looking south
+        {"name": "swamp_arrival", "cam": (-513.5, 283.0, 3.4), "target": (-513.7, 215.0, 13.0), "vfov": 50.0},
+        {"name": "swamp_arrival_wide", "cam": (-500.0, 300.0, 8.0), "target": (-516.0, 200.0, 14.0), "vfov": 55.0},
+        # inside the bowl, from the field
+        {"name": "swamp_field_to_press_box", "cam": (-492.0, 112.0, -8.2), "target": (-610.0, 123.0, 26.0),
+         "vfov": 60.0},
+        {"name": "swamp_field_north_endzone", "cam": (-503.0, 166.0, -8.3), "target": (-516.0, 40.0, 6.0),
+         "vfov": 62.0},
+        {"name": "swamp_field_to_sunshine", "cam": (-514.0, 90.0, -8.4), "target": (-514.0, 215.0, 18.0),
+         "vfov": 60.0},
+        # the top of the stands
+        {"name": "swamp_from_east_rim", "cam": (-423.0, 140.0, 21.7), "target": (-600.0, 112.0, 22.0), "vfov": 62.0},
+        {"name": "swamp_from_sunshine_top", "cam": (-513.7, 229.0, 39.4), "target": (-514.5, 40.0, 4.0),
+         "vfov": 60.0},
+        {"name": "swamp_concourse", "cam": (-463.2, 160.0, 1.6), "target": (-466.0, 60.0, 4.0), "vfov": 60.0},
+        # the press box / West Skybox Tower
+        {"name": "swamp_press_box_roof", "cam": (-603.5, 147.0, 70.0), "target": (-514.0, 118.0, -10.0), "vfov": 62.0},
+        {"name": "swamp_press_box_roof_star", "cam": (-628.0, 140.0, 69.0), "target": (-614.0, 120.0, 65.0),
+         "vfov": 60.0},
+        {"name": "swamp_press_box_tower", "cam": (-545.0, 45.0, 22.0), "target": (-612.0, 115.0, 45.0), "vfov": 55.0},
+        {"name": "swamp_kickoff_climb", "cam": (-596.0, 58.0, 26.0), "target": (-606.0, 78.0, 34.0), "vfov": 62.0},
+        # aerials
+        {"name": "swamp_aerial_se", "cam": (-330.0, -60.0, 210.0), "target": (-560.0, 160.0, 0.0), "vfov": 50.0},
+        {"name": "swamp_aerial_nw", "cam": (-760.0, 360.0, 170.0), "target": (-520.0, 110.0, 0.0), "vfov": 50.0},
+        {"name": "swamp_aerial_low_south", "cam": (-514.0, -95.0, 60.0), "target": (-514.0, 120.0, 10.0),
+         "vfov": 55.0},
+        # neighbours
+        {"name": "swamp_oconnell_from_heisman", "cam": (-664.0, 92.0, 5.0), "target": (-745.0, 66.0, 14.0),
+         "vfov": 60.0},
+        {"name": "swamp_florida_gym", "cam": (-420.0, -25.0, 4.0), "target": (-384.0, 20.0, 10.0), "vfov": 60.0},
+        {"name": "swamp_north_lots", "cam": (-640.0, 250.0, 6.0), "target": (-740.0, 320.0, 2.0), "vfov": 60.0},
+        {"name": "swamp_tailgate_lawn", "cam": (-455.0, 270.0, 3.0), "target": (-480.0, 315.0, 2.0), "vfov": 60.0},
+        {"name": "swamp_bull_gator", "cam": (-601.0, 4.0, 3.0), "target": (-608.1, -2.9, 1.2), "vfov": 55.0},
+        {"name": "swamp_stadium_road", "cam": (-600.0, -25.0, 3.0), "target": (-480.0, -10.0, 12.0), "vfov": 60.0},
+        {"name": "swamp_edge_check", "cam": (-830.0, 410.0, 2.2), "target": (-900.0, 470.0, 6.0)},
     ]
