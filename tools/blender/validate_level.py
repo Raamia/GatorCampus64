@@ -365,6 +365,7 @@ def validate_level(level_dir):
                             + (f" (~{far / 100:.0f} m)" if far else ""))
 
     # ---- collision
+    area_tris = []
     total_tris = 0
     for d in by_type.get("Collision", []):
         cmds = macros(decls[d][1])
@@ -406,12 +407,17 @@ def validate_level(level_dir):
         if not cmds or cmds[-1][0] != "COL_END":
             errors.append(f"{d}: does not end with COL_END()")
         total_tris += n_tri
+        area_tris.append(n_tri)
         info.append(f"{d}: {n_vert} vertices, {n_tri} triangles, {water} water boxes, surfaces "
                     + ", ".join(f"{k}={v}" for k, v in cur_surfaces.items()))
-    if total_tris > SURFACE_POOL_SIZE * 0.75:
-        (errors if total_tris > SURFACE_POOL_SIZE else warnings).append(
-            f"{total_tris} static collision triangles vs SURFACE_POOL_SIZE {SURFACE_POOL_SIZE} "
-            "(objects need room too; keep levels well under ~12k)")
+    # the pool holds the CURRENT area's static triangles (load_area_terrain clears it on every area change), so the
+    # budget applies per area; a one-area level checks its total exactly as before
+    pool_tris = max(area_tris) if area_tris else 0
+    if pool_tris > SURFACE_POOL_SIZE * 0.75:
+        (errors if pool_tris > SURFACE_POOL_SIZE else warnings).append(
+            f"{pool_tris} static collision triangles"
+            + (f" in the largest area ({total_tris} in {len(area_tris)} areas)" if len(area_tris) > 1 else "")
+            + f" vs SURFACE_POOL_SIZE {SURFACE_POOL_SIZE} (objects need room too; keep levels well under ~12k)")
 
     # ---- display lists / macro objects
     gfx_tris = 0

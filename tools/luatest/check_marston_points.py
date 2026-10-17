@@ -33,7 +33,7 @@ course 4, LEVEL_CCM, an interior stage) against its sources and, once it exists,
       slide (SURFACE_SLIPPERY);
    c. no wall at least 2 m tall that is thinner than 12 units (two opposite faces closer than a 48 u/f long jump's
       quarter step) stands between two open floor spaces: an airborne player would be thrown through it (glass rooms
-      such as L129, act 3's lock).
+      such as L129, act 3's lock). Fix round 5: zero-thickness walls (two opposite faces on one plane) count too.
 Usage (from anywhere):
   tools/.venv/bin/python -I tools/luatest/check_marston_points.py          check, exit 1 on any finding
   tools/.venv/bin/python -I tools/luatest/check_marston_points.py --print  print the source values (Lua syntax)
@@ -984,7 +984,7 @@ def check_airborne(col, bad):
         la = [tx * v[0] + tz * v[2] for v in a]
         for o in by_n.get((round(-nx, 3) + 0.0, round(-nz, 3) + 0.0), ()):
             sep = nx * (a[0][0] - o["v"][0][0]) + nz * (a[0][2] - o["v"][0][2])
-            if not 0 < sep < THIN_UNITS:
+            if not 0 <= sep < THIN_UNITS:          # fix round 5: sep 0 (coincident back-to-back faces) included
                 continue
             yb = [v[1] for v in o["v"]]
             y0, y1 = max(min(ya), min(yb)), min(max(ya), max(yb))

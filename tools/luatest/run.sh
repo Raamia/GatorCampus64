@@ -13,7 +13,8 @@
 #   6. check_swamp_points.py: SWAMP_POINTS still match data/uf/swamp_points.json (the built Swamp)
 #      (skipped when tools/.venv is missing)
 #   7. test_reitz_missions.lua: course 2 (wf_reitz_missions.lua): the rooftop climb + window-washer lift,
-#      the shared token hunt, the co-op robotics cranes (2-4 players), act select, levels/wf contract
+#      the shared token hunt, the co-op robotics cranes (2-4 players), act select, levels/wf contract (incl. area 2,
+#      the Reitz Union interior: entry node, exits, paired instant warps, elevator pads)
 #   8. check_reitz_points.py: REITZ_POINTS vs data/uf/reitz_points.json, and every anchor / crane lane /
 #      console against the built levels/wf collision (skipped when tools/.venv is missing)
 #   9. test_lake_missions.lua: course 3 (uf_lake_missions.lua): the lily-pad route, the sinking gator line +

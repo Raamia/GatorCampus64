@@ -114,6 +114,70 @@ INTERIOR_MATERIALS = {
     "int_sign_marston":      {"tex": "int_sign_marston.png",      "tile_m": 1.2, "color": "#3A50B4", "map": "once"},
     "int_sign_floors":       {"tex": "int_sign_floors.png",       "tile_m": 0.6, "color": "#2A3AA8", "map": "once"},
 }
+# Course 4 photo-reference pass (Marston Science Library, tools/campus/interiors/marston.py): its own int_ms_*
+# materials, from the reference photos (reference/interiors/marston/). Additive: entries no other stage uses, so
+# Library West / outdoor builds export exactly as before (Fast64 only writes the materials a mesh uses).
+INTERIOR_MATERIALS.update({
+    # floors / ceilings
+    "int_ms_carpet":          {"tex": "int_ms_carpet.png",          "tile_m": 1.2, "color": "#4E4842"},
+    "int_ms_carpet_f1":       {"tex": "int_ms_carpet_f1.png",       "tile_m": 1.2, "color": "#4A4A6C"},
+    "int_ms_vinyl":           {"tex": "int_ms_vinyl.png",           "tile_m": 1.2, "color": "#86A4B8"},
+    "int_ms_plank":           {"tex": "int_ms_plank.png",           "tile_m": 1.2, "color": "#9A8670"},
+    "int_ms_mat":             {"tex": "int_ms_mat.png",             "tile_m": 1.0, "color": "#3E3E40"},
+    "int_ms_coffer":          {"tex": "int_ms_coffer.png",          "tile_m": 1.5, "color": "#DCD6CA"},
+    "int_ms_lay_in":          {"tex": "int_ms_lay_in.png",          "tile_m": 0.6, "color": "#F6F6F0", "map": "once"},
+    "int_ms_louver":          {"tex": "int_ms_louver.png",          "tile_m": 1.2, "color": "#E8E8E4", "map": "once"},
+    "int_ms_diffuser":        {"tex": "int_ms_diffuser.png",        "tile_m": 0.6, "color": "#C8C6C0", "map": "once"},
+    "int_ms_led":             {"tex": "int_ms_led.png",             "tile_m": 1.0, "color": "#FFFFFF", "map": "once"},
+    # walls / cladding / millwork
+    "int_ms_brick":           {"tex": "int_ms_brick.png",           "tile_m": 0.84, "color": "#A85640"},
+    "int_ms_copper":          {"tex": "int_ms_copper.png",          "tile_m": 1.2, "color": "#6A5040"},
+    "int_ms_veneer":          {"tex": "int_ms_veneer.png",          "tile_m": 1.0, "color": "#B0683A"},
+    "int_ms_perf":            {"tex": "int_ms_perf.png",            "tile_m": 0.5, "color": "#D2D2CE"},
+    "int_ms_maple":           {"tex": "int_ms_maple.png",           "tile_m": 1.0, "color": "#E4CEA4"},
+    "int_ms_slats":           {"tex": "int_ms_slats.png",           "tile_m": 0.8, "color": "#C8782C"},
+    "int_ms_pegboard":        {"tex": "int_ms_pegboard.png",        "tile_m": 1.0, "color": "#E6E6E2"},
+    "int_ms_butcher":         {"tex": "int_ms_butcher.png",         "tile_m": 0.8, "color": "#C89C64"},
+    # upholstery
+    "int_ms_leather":         {"tex": "int_ms_leather.png",         "tile_m": 0.6, "color": "#EEE8E0"},
+    "int_ms_fab_geo":         {"tex": "int_ms_fab_geo.png",         "tile_m": 0.5, "color": "#A8AAA6"},
+    "int_ms_fab_dark":        {"tex": "int_ms_fab_dark.png",        "tile_m": 0.5, "color": "#463A30"},
+    "int_ms_fab_multi":       {"tex": "int_ms_fab_multi.png",       "tile_m": 0.5, "color": "#DAD2C2"},
+    "int_ms_felt":            {"tex": "int_ms_felt.png",            "tile_m": 0.6, "color": "#5E605E"},
+    "int_ms_mesh":            {"tex": "int_ms_mesh.png",            "tile_m": 0.3, "color": "#5C5E62"},
+    # collections (64 x 32 = 2 m x two shelf rows, mapped like int_books)
+    "int_ms_bound":           {"tex": "int_ms_bound.png",           "tile_m": 2.0, "color": "#6A4A44", "map": "once"},
+    "int_ms_theses":          {"tex": "int_ms_theses.png",          "tile_m": 2.0, "color": "#2E4A3E", "map": "once"},
+    "int_ms_stacks":          {"tex": "int_ms_stacks.png",          "tile_m": 2.0, "color": "#6A5A54", "map": "once"},
+    # signs, screens, decals (mapped once)
+    "int_ms_sign_service":    {"tex": "int_ms_sign_service.png",    "tile_m": 1.2, "color": "#F2C430", "map": "once"},
+    "int_ms_sign_highlights": {"tex": "int_ms_sign_highlights.png", "tile_m": 1.2, "color": "#F2F2EE", "map": "once"},
+    "int_ms_sign_newbooks":   {"tex": "int_ms_sign_newbooks.png",   "tile_m": 1.2, "color": "#F2F2EE", "map": "once"},
+    "int_ms_neon_maker":      {"tex": "int_ms_neon_maker.png",      "tile_m": 1.2, "color": "#E8C030", "map": "once",
+                               "kind": "cutout"},
+    "int_ms_neon_open":       {"tex": "int_ms_neon_open.png",       "tile_m": 1.0, "color": "#FFD84A", "map": "once",
+                               "kind": "cutout"},
+    "int_ms_glass_444":       {"tex": "int_ms_glass_444.png",       "tile_m": 1.2, "color": "#F4F4F0", "map": "once",
+                               "kind": "cutout"},
+    "int_ms_sign_rest":       {"tex": "int_ms_sign_rest.png",       "tile_m": 1.2, "color": "#2E2C2C", "map": "once"},
+    "int_ms_names":           {"tex": "int_ms_names.png",           "tile_m": 1.2, "color": "#3A3C40", "map": "once"},
+    "int_ms_names_b":         {"tex": "int_ms_names_b.png",         "tile_m": 1.2, "color": "#3A3C40", "map": "once"},
+    "int_ms_exit":            {"tex": "int_ms_exit.png",            "tile_m": 0.4, "color": "#2A1414", "map": "once"},
+    "int_ms_order":           {"tex": "int_ms_order.png",           "tile_m": 0.8, "color": "#1E8A72", "map": "once"},
+    "int_ms_cafe_decal":      {"tex": "int_ms_cafe_decal.png",      "tile_m": 1.0, "color": "#1E6A4A", "map": "once",
+                               "kind": "cutout"},
+    "int_ms_projector":       {"tex": "int_ms_projector.png",       "tile_m": 2.0, "color": "#2E62C8", "map": "once"},
+    "int_ms_directory":       {"tex": "int_ms_directory.png",       "tile_m": 0.8, "color": "#34363A", "map": "once"},
+    "int_ms_aquarium":        {"tex": "int_ms_aquarium.png",        "tile_m": 1.8, "color": "#14261E", "map": "once"},
+    "int_ms_vending":         {"tex": "int_ms_vending.png",         "tile_m": 1.0, "color": "#6A4E9A", "map": "once"},
+    "int_ms_tv":              {"tex": "int_ms_tv.png",              "tile_m": 1.2, "color": "#18191C", "map": "once"},
+    "int_ms_logo":            {"tex": "int_ms_logo.png",            "tile_m": 1.2, "color": "#E6E6E4", "map": "once"},
+    "int_ms_tile":            {"tex": "int_ms_tile.png",            "tile_m": 1.2, "color": "#ECEAE4"},
+    "int_ms_bins":            {"tex": "int_ms_bins.png",            "tile_m": 1.2, "color": "#9AA0A6", "map": "once"},
+    "int_ms_wall":            {"tex": "int_ms_wall.png",            "tile_m": 1.2, "color": "#EEEBE3"},
+    "int_ms_print_poster":    {"tex": "int_ms_print_poster.png",    "tile_m": 1.2, "color": "#C8CCD8", "map": "once"},
+    "int_ms_exit_door":       {"tex": "int_ms_exit_door.png",       "tile_m": 1.0, "color": "#6E7884", "map": "once"},
+})
 for _m in INTERIOR_MATERIALS.values():
     _m.setdefault("kind", "opaque")
     _m.setdefault("lit", "vertex")

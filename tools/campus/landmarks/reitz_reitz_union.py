@@ -81,6 +81,20 @@ GAMEPLAY (SM64: a standing jump reaches ~2.2 m, a running jump ~3 m; every step 
   Doors: north entrance (primary), food court (enterable), Game Room / bowling (door marker on the
   north facade, OSM Level 0 entrance x -485), east door. None of them is a stage door.
 
+INTERIOR HOOKUPS (Course 2 area 2, Oct 2026: the real Reitz Union interior, tools/campus/interiors/reitz.py, built
+by build_stage.py as area 2 of levels/wf in this same frame). Four real doors open here; just inside each door line
+a floor of type SURFACE_INSTANT_WARP_1x (part "reitz_union door warps", materials 'COL warp_1x') moves a player
+into area 2 (build_stage.py writes the INSTANT_WARPs: only the vertical offset differs, the interior uses the real
+levels while this exterior is flattened). The interior's research (docs/reitz_interior_layout.md) found the old
+enterable food court here wrong (the real one is on Level 1 inside), so it is gone:
+  - the 2016 NORTH ENTRANCE: the Level 1 entrance recessed ~15 m under the 2016 wing's overhang (photos
+    ru_north_entrance_*): the recess is carved out of the E block (soffit 5.4 m, white columns), the four glass
+    leaves at its back (y -258) open into area 2's vestibule (+6 m: Level 1);
+  - the SOUTH TERRACE DOORS (Ground in reality, this deck 2.0 m): an opening in the E wing's south face, x -388.2..
+    -381.2, the doors 2.35 m back (-2 m into area 2's South Terrace vestibule);
+  - the former FOOD COURT door (OSM 11261533459, DOOR_reitz_union_2) = the real Level 1 south exit (+4 m: Level 1);
+  - the GROUND NORTH DOOR under the colonnade (plan door g_ext_door_07, x -420.4.. -417.8; +0 m).
+
 AMPHITHEATER + SOUTH TERRACE (entry "reitz_amphitheater")
   The site's slope is flattened (the generator ground is z = 0 everywhere). The South Terrace is a
   2.0 m deck on the OSM pedestrian area, at food court level. The OSM amphitheater band (concentric
@@ -224,6 +238,17 @@ ROOM_GLASS = {2, 3, 4, 5, 6, 7}        # room edges i -> i+1 that are the curved
 ROOM_DOOR_EDGE = 7                     # (-388.39, -288.65) -> (-372.0, -288.88): door wall (inside)
 E_DOOR_EDGE = 3                        # E_POLY edge (-388.39, -288.65) -> (-360.05, -289.04)
 DOOR_X, DOOR_W = -376.06, 3.2          # OSM entrance node 11261533459
+# ------------------------------------------------------------------ interior hookups (Course 2 area 2)
+HOOKUP_WARP = {"north": "COL warp_1C", "south_terrace": "COL warp_1D", "south_exit_l1": "COL warp_1E",
+               "north_ground": "COL warp_1B"}        # = interiors/reitz.py WARP_MAT[ENTRANCES index]
+RECESS = (-410.2, -370.9, -258.0, 5.4)              # x0, x1, back wall y, soffit z (2016 north entrance)
+NORTH_DOORS = (-384.6, -376.3)                      # the four glass leaves at the back of the recess (plan)
+NORTH_COLS = (-402.5, -394.0, -385.5, -377.0)       # white columns under the overhang edge (photos; spacing inferred)
+ST_DOORS = (-388.2, -381.2, -286.3)                 # South Terrace doors: x0, x1, door line y
+GN_DOOR = (-420.4, -417.8, -244.5)                  # Ground north door (plan g_ext_door_07): x0, x1, door line y
+VEST_D = 2.2                                        # warp strip depth inside a door line
+HOOK_DOOR_TOP = 5.0                                 # head of the south openings (deck 2.0 + 3.0)
+WARP_UP = 0.02                                      # warp floors sit 2 cm over the floor they cover
 COUNTER = (-427.65, -426.35, -316.5, -285.0, DECK_Z + 1.1)
 TABLES = [(-416.0, -411.5, -304.0, -302.8), (-416.0, -411.5, -296.0, -294.8)]
 TABLE_H = 0.85
@@ -525,14 +550,27 @@ def _layout():
                  "the back of the recess under the colonnade canopy; not a stage door"},
         {"name": "DOOR_reitz_union_2", "pos_m": _r((*Es.xy(t_door), DECK_Z)), "facing_deg": round(Es.bearing(), 1),
          "width_m": DOOR_W, "height_m": DOOR_TOP - DECK_Z, "enterable": True,
-         "note": "Food Court entrance from the South Terrace (OSM 11261533459): an open doorway into the "
-                 "enterable Level 1 food court (floor 2.0 m); not a stage door"},
+         "note": "Level 1 south exit (OSM 11261533459; formerly the enterable food court door): an open doorway, "
+                 "its floor an instant warp into the interior (area 2, Level 1 landing of the terrace stairs); "
+                 "not a stage door"},
         {"name": "DOOR_reitz_union_3", "pos_m": _r((*Wn.xy(Wn.t_of((-485.22, -242.73))), 0.0)),
          "facing_deg": round(Wn.bearing(), 1), "width_m": 2.4, "height_m": 2.8,
          "note": "Game Room door marker (Ground Level: 14 bowling lanes, billiards; union.ufl.edu/gameroom) at "
                  "the OSM Level 0 entrance 11246964266; glass doors + bowling sign panel, not enterable"},
         {"name": "DOOR_reitz_union_4", "pos_m": _r((*Ee.xy(t_east), 0.0)), "facing_deg": round(Ee.bearing(), 1),
          "width_m": 2.4, "height_m": 2.8, "note": "east door (OSM 8041384373, Level 0); visual panel"},
+        {"name": "DOOR_reitz_union_5", "pos_m": _r(((NORTH_DOORS[0] + NORTH_DOORS[1]) / 2, RECESS[2], 0.0)),
+         "facing_deg": 0.0, "width_m": round(NORTH_DOORS[1] - NORTH_DOORS[0], 2), "height_m": 3.0, "enterable": True,
+         "note": "2016 north entrance (the real main entrance, Level 1) at the back of the recess under the overhang: "
+                 "instant warp into the interior (area 2, +6 m)"},
+        {"name": "DOOR_reitz_union_6", "pos_m": _r(((ST_DOORS[0] + ST_DOORS[1]) / 2, ST_DOORS[2], DECK_Z)),
+         "facing_deg": 180.0, "width_m": round(ST_DOORS[1] - ST_DOORS[0], 2), "height_m": HOOK_DOOR_TOP - DECK_Z,
+         "enterable": True, "note": "South Terrace doors (real Ground level): instant warp into the interior (area 2, "
+                                    "-2 m: the atrium's South Terrace vestibule)"},
+        {"name": "DOOR_reitz_union_7", "pos_m": _r(((GN_DOOR[0] + GN_DOOR[1]) / 2, GN_DOOR[2], 0.0)),
+         "facing_deg": 0.0, "width_m": round(GN_DOOR[1] - GN_DOOR[0], 2), "height_m": 3.0, "enterable": True,
+         "note": "Ground north door under the colonnade (plan g_ext_door_07): instant warp into the interior "
+                 "(area 2, Ground corridor)"},
     ]
     can_mid = _lerp(can_in[2], can_out[2], 0.5)
     spots = {
@@ -551,12 +589,13 @@ def _layout():
         "green_roof_center": (-380.0, -266.0, Z_E),
         "skylight_top": ((SKYLIGHT[0] + SKYLIGHT[1]) / 2, (SKYLIGHT[2] + SKYLIGHT[3]) / 2, SKYLIGHT[4]),
         "food_court_roof": (-440.0, -305.0, Z_S),
-        "food_court_center": (-412.0, -305.0, DECK_Z),
+        # the former enterable food court's door: inside = the instant-warp strip, outside = the terrace
         "food_court_door_inside": _r((*Es.xy(t_door, -1.8), DECK_Z)),
         "food_court_door_outside": _r((*Es.xy(t_door, 1.8), DECK_Z)),
-        "food_court_counter_top": (-427.0, -300.0, COUNTER[4]),
-        "food_court_table": ((TABLES[0][0] + TABLES[0][1]) / 2, (TABLES[0][2] + TABLES[0][3]) / 2,
-                             DECK_Z + TABLE_H),
+        "north_entrance_recess": _r(((NORTH_DOORS[0] + NORTH_DOORS[1]) / 2, RECESS[2] + 4.0, 0.0)),
+        "north_entrance_doors": _r(((NORTH_DOORS[0] + NORTH_DOORS[1]) / 2, RECESS[2] + 0.6, 0.0)),
+        "south_terrace_doors": _r(((ST_DOORS[0] + ST_DOORS[1]) / 2, -288.0, DECK_Z)),
+        "ground_north_door": _r(((GN_DOOR[0] + GN_DOOR[1]) / 2, -242.8, 0.0)),
         "se_canopy_top": _r((*can_mid, CAN_SE_Z[1])),
         # North Lawn walk ~20 m north of the colonnade; face south (180 deg) at the north facade + tower
         "suggested_stage_spawn": (-430.0, -222.0, 0.0),
@@ -678,25 +717,49 @@ def _build_union(ctx, lay):
                 style = "curve"
             if key == "E" and i == E_DOOR_EDGE:
                 td, hw = lay["t_door"], DOOR_W / 2
-                # collision: either side full height, lintel over the doorway (below the sill is the deck)
-                E.quad(col, 0.0, td - hw, 0.0, top, "concrete")
-                E.quad(col, td + hw, E.L, 0.0, top, "concrete")
-                E.quad(col, td - hw, td + hw, DOOR_TOP, top, "concrete")
-                _facade(vis, E, 0.0, td - hw, 0.0, top, style, FLOORS[key])
-                _facade(vis, E, td + hw, E.L, 0.0, top, style, FLOORS[key])
-                E.quad(vis, td - hw, td + hw, DOOR_TOP, DOOR_TOP + 0.6, "white_trim")
-                E.quad(vis, td - hw, td + hw, DOOR_TOP + 0.6, top - STYLE[style]["corn_h"], "window_glass")
-                E.quad(vis, td - hw, td + hw, top - STYLE[style]["corn_h"], top, "white_trim")
-                # dark door frame around the opening (jambs + head, on the facade)
-                E.quad(vis, td - hw - 0.3, td - hw, DECK_Z, DOOR_TOP + 0.3, "dark_trim", off=2 * DECAL)
-                E.quad(vis, td + hw, td + hw + 0.3, DECK_Z, DOOR_TOP + 0.3, "dark_trim", off=2 * DECAL)
-                E.quad(vis, td - hw, td + hw, DOOR_TOP, DOOR_TOP + 0.3, "dark_trim", off=DECAL)
+                t_st0, t_st1 = E.t_of((ST_DOORS[0], E.a[1])), E.t_of((ST_DOORS[1], E.a[1]))
+                ops = sorted([(td - hw, td + hw), (t_st0, t_st1)])
+                # collision: wall pieces between the openings (full height), lintels over them (deck below)
+                prev = 0.0
+                for t0, t1 in ops:
+                    E.quad(col, prev, t0, 0.0, top, "concrete")
+                    E.quad(col, t0, t1, DOOR_TOP, top, "concrete")
+                    _facade(vis, E, prev, t0, 0.0, top, style, FLOORS[key])
+                    E.quad(vis, t0, t1, DOOR_TOP, DOOR_TOP + 0.6, "white_trim")
+                    E.quad(vis, t0, t1, DOOR_TOP + 0.6, top - STYLE[style]["corn_h"], "window_glass")
+                    E.quad(vis, t0, t1, top - STYLE[style]["corn_h"], top, "white_trim")
+                    # dark door frame around the opening (jambs + head, on the facade)
+                    E.quad(vis, t0 - 0.3, t0, DECK_Z, DOOR_TOP + 0.3, "dark_trim", off=2 * DECAL)
+                    E.quad(vis, t1, t1 + 0.3, DECK_Z, DOOR_TOP + 0.3, "dark_trim", off=2 * DECAL)
+                    E.quad(vis, t0, t1, DOOR_TOP, DOOR_TOP + 0.3, "dark_trim", off=DECAL)
+                    prev = t1
+                E.quad(col, prev, E.L, 0.0, top, "concrete")
+                _facade(vis, E, prev, E.L, 0.0, top, style, FLOORS[key])
+                # J. WAYNE REITZ UNION letters over the South Terrace doors (ru_south_ground_entrance)
+                E.quad(vis, t_st0 + 0.6, t_st1 - 0.6, DOOR_TOP + 0.05, DOOR_TOP + 0.25, "dark_trim", off=2 * DECAL)
                 # FOOD COURT sign hanging under the arcade canopy's front edge (visual, above head height)
                 for sgn, mat in ((1.0, "white_trim"), (-1.0, "white_trim")):
                     q = [E.p(td - 1.8, 4.55, CAN_SE_D - 0.3), E.p(td + 1.8, 4.55, CAN_SE_D - 0.3),
                          E.p(td + 1.8, CAN_SE_Z[0], CAN_SE_D - 0.3), E.p(td - 1.8, CAN_SE_Z[0], CAN_SE_D - 0.3)]
                     vis.poly(q, mat, normal_hint=(sgn * E.n[0], sgn * E.n[1], 0.0))
                 E.quad(vis, td - 1.5, td + 1.5, 4.75, 5.05, "dark_trim", off=CAN_SE_D - 0.3 + DECAL)
+                continue
+            if key == "E" and _in_recess(a, c):
+                # the 2016 north entrance recess: the north face only rises above the overhang soffit
+                z_lo = max(z_lo, RECESS[3])
+            if key == "C" and i == 0:
+                # Ground north door under the colonnade (opening + recess to the door line, _build_hookups)
+                t0, t1 = sorted((E.t_of((GN_DOOR[0], E.a[1])), E.t_of((GN_DOOR[1], E.a[1]))))
+                E.quad(col, 0.0, t0, z_lo, top, "brick_red")
+                E.quad(col, t1, E.L, z_lo, top, "brick_red")
+                E.quad(col, t0, t1, 3.0, top, "brick_red")
+                _facade(vis, E, 0.0, t0, z_lo, top, style, FLOORS[key])
+                _facade(vis, E, t1, E.L, z_lo, top, style, FLOORS[key])
+                E.quad(vis, t0, t1, 3.0, top - STYLE[style]["corn_h"], "brick_red")
+                E.quad(vis, t0, t1, top - STYLE[style]["corn_h"], top, STYLE[style]["cornice"])
+                E.quad(vis, t0 - 0.25, t0, 0.0, 3.25, "dark_trim", off=2 * DECAL)
+                E.quad(vis, t1, t1 + 0.25, 0.0, 3.25, "dark_trim", off=2 * DECAL)
+                E.quad(vis, t0, t1, 3.0, 3.25, "dark_trim", off=2 * DECAL)
                 continue
             E.quad(col, 0.0, E.L, z_lo, top, "brick_red" if style not in ("glass", "curve") else "window_glass")
             _facade(vis, E, 0.0, E.L, z_lo, top, style, FLOORS[key])
@@ -814,9 +877,9 @@ def _build_union(ctx, lay):
     for i in (12, 7):   # E north face segments (-399.5 -> -410.41) and (-359.63 -> -370.51)
         a, c = E_POLY[i], E_POLY[(i + 1) % len(E_POLY)]
         Eg = Edge(a, c)
-        _gator_scales(vis, Eg, 0.8, Eg.L - 0.8, 4.6, 3 if Eg.L > 10.5 else 2)
+        _gator_scales(vis, Eg, 0.8, Eg.L - 0.8, RECESS[3] + 0.5, 3 if Eg.L > 10.5 else 2)
     Eg = Edge(E_POLY[11], E_POLY[12])    # (-383.91 -> -399.5): the longest north segment
-    _gator_scales(vis, Eg, 0.8, Eg.L - 0.8, 4.6, 3)
+    _gator_scales(vis, Eg, 0.8, Eg.L - 0.8, RECESS[3] + 0.5, 3)
 
     # ---------------------------------------------------------------- north colonnade + entrance + signs
     z0n, z1n = CANOPY_N_Z
@@ -888,9 +951,120 @@ def _build_union(ctx, lay):
         _ebox(col, Eh, t0, t1, 0.0, SHADE_D, z - SHADE_T, z, "concrete", faces="tflr")
         _ebox(vis, Eh, t0, t1, 0.0, SHADE_D, z - SHADE_T, z, "white_trim", faces="tbflr")
 
-    # ---------------------------------------------------------------- enterable food court (Level 1)
-    _build_food_court(vis, col, lay)
-    return vis, col
+    # ---------------------------------------------------------------- interior hookups (area 2 doors)
+    warp = _WarpBuilder()
+    _build_hookups(vis, col, warp, lay)
+    return vis, col, warp
+
+
+def _in_recess(a, c):
+    x0, x1 = RECESS[0] - 0.35, RECESS[1] + 0.35
+    return x0 <= a[0] <= x1 and x0 <= c[0] <= x1 and a[1] > RECESS[2] + 10.0 and c[1] > RECESS[2] + 10.0
+
+
+class _WarpBuilder(C.Builder):
+    """Collision-only builder for the instant-warp floors ('COL warp_1x': build_stage.py adds those materials)."""
+
+    def poly(self, pts3, material, uvs=None, normal_hint=None, smooth=False):
+        if not str(material).startswith("COL warp_"):
+            return super().poly(pts3, material, uvs, normal_hint, smooth)
+        pts3 = [tuple(float(c) for c in p) for p in pts3]
+        if normal_hint is not None:
+            n = C.face_normal(pts3)
+            if n[0] * normal_hint[0] + n[1] * normal_hint[1] + n[2] * normal_hint[2] < 0:
+                pts3.reverse()
+        self.polys.append((pts3, material, [(0.0, 0.0)] * len(pts3), False))
+
+
+def _vestibule(vis, col, warp, warp_mat, x0, x1, y_door, y_back, z, head, ceil, floor_mat="path"):
+    """A short glass-lined vestibule behind an open door line (x0..x1 at y_door, extending to y_back): the warp floor
+    across it, side walls + a back wall + a ceiling (visual and collision). Works for north (y_back < y_door) and
+    south doors (y_back > y_door)."""
+    ya, yb = sorted((y_door, y_back))
+    inward = 1.0 if y_back > y_door else -1.0
+    # warp floor: exactly from the door line inward (never past it: area 2 warps back from just outside the same
+    # line), 2 cm above the ground / deck so find_floor picks it over the coplanar floor under it
+    zw = z + WARP_UP
+    warp.poly([(x0, ya, zw), (x1, ya, zw), (x1, yb, zw), (x0, yb, zw)], warp_mat, normal_hint=(0, 0, 1))
+    _box(vis, x0, x1, ya, yb, z, z, floor_mat, faces="t")
+    _box(vis, x0 - 0.1, x1 + 0.1, ya, yb, ceil, ceil, "white_trim", faces="b")
+    for x, f in ((x0, "e"), (x1, "w")):
+        _box(col, x, x, ya, yb, z, ceil, "concrete", faces=f)
+        _box(vis, x, x, ya, yb, z, ceil, "white_trim", faces=f)
+    yw = y_back
+    _box(col, x0, x1, yw, yw, z, ceil, "concrete", faces="s" if inward > 0 else "n")
+    _box(vis, x0, x1, yw, yw, z, ceil, "window_dark", faces="s" if inward > 0 else "n")
+    _box(col, x0, x1, ya, yb, ceil, ceil, "concrete", faces="b")
+
+
+def _build_hookups(vis, col, warp, lay):
+    """The four interior doors (see the module docstring): recess, glass, columns, vestibules, warp floors."""
+    x0, x1, yb, zs = RECESS
+    # ---- 2016 north entrance recess under the overhang (ru_north_entrance_enr_dusk / _night_oelrich)
+    face = [p for p in E_POLY if x0 - 0.4 <= p[0] <= x1 + 0.05 and p[1] > yb + 10.0]
+    face = sorted(face, key=lambda p: p[0])
+    soffit = [(x0, yb), (x1, yb)] + [(x1, face[-1][1])] + list(reversed(face)) + [(x0, face[0][1])]
+    for b, m in ((col, "concrete"), (vis, "white_trim")):
+        _slab(b, [soffit], zs, m, up=False)
+    _slab(vis, [soffit], -0.015, "path", up=True, uv_tile=3.0)
+    # side walls (C's east face, the NE stair block) and the back wall (glass storefront with the door leaves)
+    _box(col, x0, x0, yb, face[0][1], 0.0, zs, "concrete", faces="e")
+    _box(vis, x0, x0, yb, face[0][1], 0.0, zs, "brick_red", faces="e")
+    _box(col, x1, x1, yb, face[-1][1], 0.0, zs, "concrete", faces="w")
+    _box(vis, x1, x1, yb, face[-1][1], 0.0, zs, "white_trim", faces="w")
+    d0, d1 = NORTH_DOORS
+    for (ax, bx) in ((x0, d0), (d1, x1)):
+        _box(col, ax, bx, yb, yb, 0.0, zs, "concrete", faces="n")
+        _box(vis, ax, bx, yb, yb, 0.0, 0.5, "dark_trim", faces="n")
+        _box(vis, ax, bx, yb, yb, 0.5, zs - 0.4, "window_glass", faces="n")
+        _box(vis, ax, bx, yb, yb, zs - 0.4, zs, "white_trim", faces="n")
+        for xm in [ax + (bx - ax) * k / max(1, int((bx - ax) / 2.2)) for k in range(1, max(1, int((bx - ax) / 2.2)))]:
+            _box(vis, xm - 0.06, xm + 0.06, yb + DECAL, yb + 0.12, 0.0, zs, "dark_trim", faces="nsew")
+    _box(col, d0, d1, yb, yb, 3.0, zs, "concrete", faces="n")
+    _box(vis, d0, d1, yb, yb, 3.0, zs, "window_glass", faces="n")
+    _box(vis, d0 - 0.25, d1 + 0.25, yb + DECAL, yb + DECAL, 3.0, 3.25, "dark_trim", faces="n")
+    for xm in (d0, (d0 * 3 + d1) / 4, (d0 + d1) / 2, (d0 + 3 * d1) / 4, d1):
+        _box(vis, xm - 0.05, xm + 0.05, yb, yb + 0.1, 0.0, 3.0, "dark_trim", faces="nsew")
+    _vestibule(vis, col, warp, HOOKUP_WARP["north"], d0, d1, yb, yb - VEST_D, 0.0, 3.0, 3.0)
+    # white columns along the overhang edge
+    for cx in NORTH_COLS:
+        cy = face[0][1] - 0.9
+        _prism_post(vis, cx, cy, 0.35, 0.0, zs, "white_trim", 8)
+        _box(col, cx - 0.33, cx + 0.33, cy - 0.33, cy + 0.33, 0.0, zs, "concrete", faces="nsew")
+    # J. WAYNE REITZ UNION band on the soffit edge (ru_north_entrance_hotelsite)
+    _box(vis, -392.0, -378.0, face[0][1] + 0.12, face[0][1] + 0.12, zs - 0.7, zs - 0.1, "dark_trim", faces="n")
+    # ---- South Terrace doors: recess to the door line + vestibule
+    sx0, sx1, sy = ST_DOORS
+    E3 = Edge(E_POLY[E_DOOR_EDGE], E_POLY[E_DOOR_EDGE + 1])
+    yf0, yf1 = _y_on(E3.a, E3.c, sx0), _y_on(E3.a, E3.c, sx1)
+    yf = min(yf0, yf1)
+    _box(col, sx0, sx1, yf - 0.3, sy, DECK_Z, DECK_Z, "concrete", faces="t")
+    _box(vis, sx0, sx1, yf, sy, DECK_Z - 0.015, DECK_Z - 0.015, "path", faces="t")
+    _box(col, sx0, sx1, yf, sy, HOOK_DOOR_TOP, HOOK_DOOR_TOP, "concrete", faces="b")
+    _box(vis, sx0, sx1, yf, sy, HOOK_DOOR_TOP, HOOK_DOOR_TOP, "white_trim", faces="b")
+    for x, f in ((sx0, "e"), (sx1, "w")):
+        _box(col, x, x, yf, sy, DECK_Z, HOOK_DOOR_TOP, "concrete", faces=f)
+        _box(vis, x, x, yf, sy, DECK_Z, HOOK_DOOR_TOP, "white_trim", faces=f)
+    for xm in [sx0 + (sx1 - sx0) * k / 4 for k in range(5)]:
+        _box(vis, xm - 0.05, xm + 0.05, sy - 0.1, sy, DECK_Z, HOOK_DOOR_TOP, "dark_trim", faces="nsew")
+    _vestibule(vis, col, warp, HOOKUP_WARP["south_terrace"], sx0, sx1, sy, sy + VEST_D, DECK_Z, HOOK_DOOR_TOP,
+               HOOK_DOOR_TOP)
+    # ---- the former food court door: its vestibule warp (the doorway is cut by the block loop)
+    td, hw = lay["t_door"], DOOR_W / 2
+    ax_, bx_ = sorted((E3.xy(td - hw)[0], E3.xy(td + hw)[0]))
+    ydf = max(_y_on(E3.a, E3.c, ax_), _y_on(E3.a, E3.c, bx_))
+    _vestibule(vis, col, warp, HOOKUP_WARP["south_exit_l1"], ax_, bx_, ydf, ydf + VEST_D, DECK_Z, DOOR_TOP, DOOR_TOP)
+    # ---- Ground north door under the colonnade: recess from the facade to the door line + vestibule
+    gx0, gx1, gy = GN_DOOR
+    Ec = Edge(C_POLY[0], C_POLY[1])
+    yfc = _y_on(Ec.a, Ec.c, (gx0 + gx1) / 2)
+    _box(vis, gx0, gx1, gy, yfc, -0.015, -0.015, "path", faces="t")
+    _box(col, gx0, gx1, gy, yfc, 3.0, 3.0, "concrete", faces="b")
+    _box(vis, gx0, gx1, gy, yfc, 3.0, 3.0, "white_trim", faces="b")
+    for x, f in ((gx0, "e"), (gx1, "w")):
+        _box(col, x, x, gy, yfc, 0.0, 3.0, "concrete", faces=f)
+        _box(vis, x, x, gy, yfc, 0.0, 3.0, "brick_red", faces=f)
+    _vestibule(vis, col, warp, HOOKUP_WARP["north_ground"], gx0, gx1, gy, gy - VEST_D, 0.0, 3.0, 3.0)
 
 
 def _build_food_court(vis, col, lay):
@@ -1126,7 +1300,7 @@ def build(ctx):
         return []
     _check(ctx)
     parts = []
-    u_vis, u_col = _build_union(ctx, _LAY)
+    u_vis, u_col, u_warp = _build_union(ctx, _LAY)
     a_vis, a_col = _build_amphi(ctx, _AL)
     for slug, vis, col in (("reitz_union", u_vis, u_col), ("reitz_amphitheater", a_vis, a_col)):
         me, slots = vis.build(f"{slug} visual")
@@ -1138,4 +1312,9 @@ def build(ctx):
         p["landmark"] = slug
         parts.append(p)
         print(f"reitz_reitz_union: {slug}: visual {vis.tri_count()} tris, collision {col.tri_count()} tris")
+    # the interior hookups' instant-warp floors (Course 2 area 2; materials 'COL warp_1x' from build_stage.py)
+    me, slots = u_warp.build("reitz_union door warps")
+    p = C.part("reitz_union door warps", me, slots, collision=True, visual=False)
+    p["landmark"] = "reitz_union"
+    parts.append(p)
     return parts

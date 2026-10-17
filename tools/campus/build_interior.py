@@ -55,11 +55,16 @@ import build_stage as BS  # noqa: E402  (helpers only: warps, fog, hygiene, comm
 import interior_kit as K  # noqa: E402
 
 INTERIORS = {"marston": os.path.join(HERE, "interiors", "marston.py"),
-             "libwest": os.path.join(HERE, "interiors", "libwest.py")}
+             "libwest": os.path.join(HERE, "interiors", "libwest.py"),
+             # Course 2 area 2 (the Reitz Union interior of levels/wf): an AREA module (AREA = 2). build_stage.py
+             # reitz_eng exports it together with area 1 (build_area below); here only --no-export previews
+             "reitz": os.path.join(HERE, "interiors", "reitz.py")}
 SHOWCASE = {"marston": ["marston_lobby", "marston_atrium", "marston_stacks", "marston_study_rooms",
                         "marston_5th_floor_view"],
             "libwest": ["libwest_entrance", "libwest_stacks", "libwest_study_floor", "libwest_windows_plaza",
-                        "libwest_top_floor"]}
+                        "libwest_top_floor"],
+            "reitz": ["reitz_atrium_lounge", "reitz_game_room_lanes", "reitz_food_court", "reitz_grand_ballroom",
+                      "reitz_atrium_stairs"]}
 # Optional interior-module overrides (added for Course 5; a module without them builds exactly as before):
 #   BACKGROUND_COLOR (linear RGB 0..1, with BACKGROUND None: a solid background), SPAWN_NOTE,
 #   POINTS_COORDINATES_MAP_M, POINTS_NOTE, PREVIEW_OVERVIEW ((camera), (target), vfov) in stage-local metres,
@@ -165,6 +170,10 @@ def main():
     report_dir = o["report_dir"] or art_dir
     os.makedirs(report_dir, exist_ok=True)
 
+    if getattr(mod, "AREA", 1) != 1 and o["export"]:
+        sys.exit(f"{key} is area {mod.AREA} of levels/{slot}: export it with build_stage.py (its outdoor stage); "
+                 "here use --no-export [--previews]")
+
     # ---- 1. the interior (pure Python)
     M = mod.build(backdrop=o["backdrop"])
     rep = mod.report(M)
@@ -193,6 +202,8 @@ def main():
     mats = stage_materials.make_materials()
     mats.update(stage_materials.make_interior_materials())
     mats[mod.COL_SLIDE] = slide_material()
+    if hasattr(mod, "WARP_SURFACE"):          # area modules: the instant-warp floor materials (previews only here)
+        mats.update(warp_materials(mod))
 
     # ---- 3. meshes (lighting baked), moved into the stage frame
     from mathutils import Matrix
@@ -349,6 +360,151 @@ def main():
                 shutil.copyfile(src, os.path.join(sc, name + ".png"))
         print(f"SGL: {len(paths)} previews in {pv}, showcase {sc}")
     print(f"SGL: done in {time.time() - t0:.1f}s")
+
+
+
+# ================================================================== extra AREAS of an outdoor stage (Course 2 area 2)
+# build_stage.py <stage> calls build_area() for every STAGE_INTERIOR_AREAS entry of its stage, after area 1 is built
+# and before the one Fast64 export. Additive: the interior stages above (main()) never call it.
+def warp_materials(mod):
+    """{'COL warp_1x': bpy material} with the SURFACE_INSTANT_WARP_1x collision types of an area module."""
+    from fast64.fast64_internal.f3d.f3d_material import createF3DMat
+    import stage_materials
+    out = {}
+    for idx, surface in sorted(mod.WARP_SURFACE.items()):
+        name = mod.WARP_MAT[idx]
+        mat = createF3DMat(None, "sm64_shaded_solid")
+        mat.name = f"sgl {name}"
+        stage_materials._set_collision(mat, surface)
+        mat["sgl_tile_m"] = 0.0
+        mat["sgl_name"] = name
+        out[name] = mat
+    return out
+
+
+def load_area_module(key):
+    return load_module(key)
+
+
+def build_area(L, root, mod, M, mats, slot, door, levels_const, hub_const="LEVEL_CASTLE_GROUNDS"):
+    """Area mod.AREA of an outdoor stage's level from an interior module's build() (M), in the SAME frame as area 1
+    (mod.CENTER = the stage centre): area root (music, terrain, fog), warp nodes (own 0x0A spawn; 0xF0 / 0xF1 to the
+    hub door like area 1; the module's teleport pads), INSTANT_WARPs back to area 1 (negated offsets), the baked kit
+    meshes, the spawn object, the pads and the pickups. -> (area, objects, report dict). mats must hold the interior
+    kit materials and the warp floor materials."""
+    import stage_materials
+    import stage_pickups
+    from mathutils import Matrix
+    cx, cy = mod.CENTER
+    ai = int(mod.AREA)
+    area = L.make_area(root, ai, music=mod.MUSIC, terrain=mod.TERRAIN, camera="CAMERA_MODE_FREE_ROAM",
+                       envfx="ENVFX_MODE_NONE", clip=(BS.NEAR_CLIP, BS.FAR_CLIP))
+    area.fast64.sm64.area.set_fog = True
+    area.area_fog_color = (*(stage_materials._srgb_to_linear(c / 255.0) for c in mod.FOG_RGB), 1.0)
+    area.area_fog_position = (990, 1000)
+    nodes = []
+
+    def node(wid, dest, darea, dnode, note):
+        L.add_warp_node(area, wid, dest, darea, dnode)
+        nodes.append({"id": "0x%02X" % wid, "dest_level": dest, "dest_area": darea, "dest_node": "0x%02X" % dnode,
+                      "note": note})
+    node(BS.NODE_SPAWN, levels_const, ai, BS.NODE_SPAWN, f"area {ai} spawn (debug warps only)")
+    node(0xF0, hub_const, 1, BS.NODE_STAR_RETURN + door, f"star exit -> hub outside door {door} (as area 1)")
+    node(0xF1, hub_const, 1, BS.NODE_DEATH_RETURN + door, f"death / Exit course -> hub outside door {door} (as area 1)")
+    for p in M.pads:
+        node(p["node"], levels_const, ai, p["dest_node"], f"{p['name']} -> {p['dest_floor']} (teleport pad)")
+    iw = []
+    for idx, off in mod.instant_warps():
+        back = (-off[0], -off[1], -off[2])
+        L.add_instant_warp(area, idx, 1, back)
+        iw.append({"index": idx, "surface": mod.WARP_SURFACE[idx], "to_area": 1, "offset_units": list(back)})
+    # meshes
+    objs = []
+    for g in M.kit.groups():
+        merged = M.kit.merged(g)
+        parts = merged.parts(f"{mod.KEY} {g}", lighting=M.lighting.get(g) or K.Lighting(M.kit.lights()))
+        for ob in K.link_parts(parts, mats, parent=area, prefix=""):
+            ob.data.transform(Matrix.Translation((-cx, -cy, 0.0)))
+            ob.data.update()
+            ob["sgl_group"] = g
+            objs.append(ob)
+    probe = BS.CollisionProbe(objs)
+    # spawn 0x0A of this area (no MARIO_POS: the level's start stays in area 1)
+    sp = M.layout["entrance"]["spawn"]
+    sx, sy = sp["pos_m"][0] - cx, sp["pos_m"][1] - cy
+    sz = float(sp.get("z_game_m", 0.0))
+    fz = probe.floor(sx, sy, sz + 1.5)
+    L.add_spawn(area, (sx, sy, (fz if fz is not None else sz) + 1.0), yaw_deg=BS.yaw_for_facing(sp["facing_deg"]),
+                mario_start=False)
+    # teleport pads (vanilla bhvFadingWarp: stand still on it -> fade -> the paired pad)
+    pads_out = []
+    for p in M.pads:
+        x, y, z = p["pos_m"]
+        pz = probe.floor(x - cx, y - cy, z + 1.0)
+        L.add_object(area, p["name"], (x - cx, y - cy, pz if pz is not None else z), p["behavior"], "MODEL_NONE",
+                     p["bparams"], BS.yaw_for_facing(p["facing_deg"]))
+        pads_out.append(dict(p, floor_m=pz, game=[round((x - cx) * 100), round((pz or z) * 100), round(-(y - cy) * 100)]))
+    # pickups
+    S = types.SimpleNamespace(cx=cx, cy=cy, key=mod.KEY)
+    Pl = stage_pickups.Placer(S, probe)
+    for it in M.pickups:
+        k, name, p = it["kind"], it["name"], it["pos"]
+        if k == "coin":
+            Pl.coin(name, p)
+        elif k == "coin_line":
+            Pl.coin_line(name, p, it.get("facing", 0.0))
+        elif k == "coin_ring":
+            Pl.coin_ring(name, p)
+        elif k == "heart":
+            Pl.heart(name, p)
+        elif k == "1up":
+            Pl.one_up(name, p)
+    for it in Pl.items:
+        L.add_object(area, it["name"], it["stage"], it["behavior"], it["model"], it["bparams"],
+                     BS.yaw_for_facing(it["facing_deg"]), acts=it.get("acts"))
+    pickups = stage_pickups.summary(Pl.items, Pl.skipped)
+    rep = {"area": ai, "module": f"tools/campus/interiors/{mod.KEY}.py", "kit_tris": mod.report(M)["total"],
+           "warp_nodes": nodes, "instant_warps": iw, "warp_strips": M.warp_strips, "pads": pads_out,
+           "spawn": {"map_m": list(sp["pos_m"]), "floor_m": fz, "note": getattr(mod, "SPAWN_NOTE", "")},
+           "pickups": pickups, "stats": M.stats, "notes": M.notes,
+           "objects": {o_.name: {"group": o_.get("sgl_group"), "tris": len(o_.data.polygons),
+                                 "collision": not o_.ignore_collision} for o_ in objs}}
+    print(f"SGL: area {ai} ({mod.KEY}): {len(objs)} mesh objects, {len(M.pads)} pads, pickups {pickups['by_kind']}")
+    return area, objs, probe, rep
+
+
+def measure_area_points(mod, M, probe):
+    """The area module's design points measured on its own collision (stage_points.Points)."""
+    import stage_points as SP
+    cx, cy = mod.CENTER
+    S = types.SimpleNamespace(cx=cx, cy=cy, key=mod.KEY)
+    Pt = SP.Points(S, probe)
+
+    def measure(rec):
+        name, p = rec["name"], rec["p"]
+        if rec["kind"] == "air":
+            out = Pt.air(name, tuple(p), rec.get("note"))
+        else:
+            out = Pt.ground(name, tuple(p), rec.get("note"), rec.get("facing"), clear=rec.get("clear", 0.5))
+        for k2, v in rec.items():
+            if k2 not in ("name", "p", "kind", "note", "facing", "clear"):
+                out[k2] = v
+        return out
+    return walk_points(M.points, measure), Pt.flags
+
+
+def patch_vertex_lit(level_dir, area_index):
+    """Vertex-lit kit materials of an extra area in a level whose Fast64 world keeps G_LIGHTING off (outdoor
+    stages: build_stage never pins the world, so area 1 exports exactly as before): their material display lists
+    get an explicit gsSPClearGeometryMode(G_LIGHTING) (the shade is the baked vertex colour; the engine state
+    between display lists has lighting on). Only mat_*_sgl_int_*_area<N> lists are touched. -> count."""
+    import re
+    path = os.path.join(level_dir, "model.inc.c")
+    src = open(path).read()
+    pat = re.compile(r"(Gfx mat_\w*_sgl_int_\w*_area%d\[\] = \{\n)" % area_index)
+    src, n = pat.subn(lambda m: m.group(1) + "\tgsSPClearGeometryMode(G_LIGHTING),\n", src)
+    open(path, "w").write(src)
+    return n
 
 
 def render_previews(M, objs, out, cx, cy, mod=None):

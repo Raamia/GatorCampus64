@@ -219,6 +219,68 @@ test("levels/wf/script.c (when built): warp contract for door 2, no level-script
     check(n1 - n2 <= 5, "the token act only loses the coins on token spots (" .. (n1 - n2) .. ")")
 end)
 
+test("levels/wf area 2 (the Reitz Union interior, when built): entry node, exits, paired instant warps, elevator pads", function()
+    local ls = Sim.level_script("wf")
+    if ls == nil or ls.areaWarps[2] == nil then
+        print("  (levels/wf has no area 2: skipped)")
+        return
+    end
+    local a1, a2 = ls.areaWarps[1] or {}, ls.areaWarps[2]
+    local e = a2[0x0A]
+    check(e ~= nil and e.level == "LEVEL_WF" and e.area == 2 and e.node == 0x0A, "area 2 0x0A = its own (debug) entry spawn")
+    check(ls.warps[0x0A] ~= nil and ls.warps[0x0A].area == 1, "the level's 0x0A (door entry, warp_to_level area 1) stays area 1's")
+    for _, n in ipairs({ 0xF0, 0xF1 }) do
+        local x, y = a1[n], a2[n]
+        check(x ~= nil and y ~= nil and x.level == y.level and x.area == y.area and x.node == y.node,
+            string.format("area 2 0x%02X = area 1's (pause exit / death lead outside The Hub door)", n))
+    end
+    -- INSTANT_WARP(index, area, dx, dy, dz) per area block: every door of area 1 leads into area 2 and back
+    local f = assert(io.open(Sim.MOD .. "levels/wf/script.c", "r"))
+    local src = f:read("a")
+    f:close()
+    local iw, cur = { [1] = {}, [2] = {} }, nil
+    for line in src:gmatch("[^\n]+") do
+        local an = line:match("^%s*AREA%(%s*(%d+)")
+        if an then cur = tonumber(an) elseif line:match("^%s*END_AREA") then cur = nil end
+        local i, a, x, y, z = line:match("INSTANT_WARP%(%s*([%wx]+)%s*,%s*([%wx]+)%s*,%s*(%-?%d+)%s*,%s*(%-?%d+)%s*,%s*(%-?%d+)")
+        if i and cur and iw[cur] then
+            iw[cur][tonumber(i)] = { area = tonumber(a), x = tonumber(x), y = tonumber(y), z = tonumber(z) }
+        end
+    end
+    local n = 0
+    for i, w1 in pairs(iw[1]) do
+        n = n + 1
+        local w2 = iw[2][i]
+        check(w1.area == 2 and w2 ~= nil and w2.area == 1 and w2.x == -w1.x and w2.y == -w1.y and w2.z == -w1.z,
+            string.format("instant warp %d: area 1 -> 2 and back with opposite offsets", i))
+        for _, k in ipairs({ 1, 2 }) do
+            local cf = io.open(Sim.MOD .. "levels/wf/area_" .. k .. "/collision.inc.c", "r")
+            local col = cf and cf:read("a") or ""
+            if cf then cf:close() end
+            check(col:find("SURFACE_INSTANT_WARP_1" .. string.char(string.byte("B") + i), 1, true) ~= nil,
+                string.format("area %d collision has the warp %d floor (SURFACE_INSTANT_WARP_1%s)", k, i, string.char(string.byte("B") + i)))
+        end
+    end
+    check(n >= 1, n .. " door(s) of area 1 lead into the interior")
+    -- elevator pads (bhvFadingWarp, bparam2 = its node): every pad's node leads to another pad of area 2 and back
+    local pads = {}
+    for _, o in ipairs(ls.objects) do
+        if o.bhv == "bhvFadingWarp" then
+            check(o.area == 2, "fading-warp pads only in area 2")
+            pads[(o.bparams >> 16) & 0xFF] = o
+        end
+        if o.area == 2 then check(o.bhv ~= "bhvStar", "no level-script star in area 2") end
+    end
+    local np = 0
+    for node, o in pairs(pads) do
+        np = np + 1
+        local wn = a2[node]
+        check(wn ~= nil and wn.level == "LEVEL_WF" and wn.area == 2 and pads[wn.node] ~= nil and a2[wn.node] ~= nil
+            and a2[wn.node].node == node, string.format("pad 0x%02X -> pad 0x%02X -> back", node, wn and wn.node or -1))
+    end
+    print(string.format("  area 2: %d instant-warp doors, %d elevator pads", n, np))
+end)
+
 
 
 -- act 3 helpers ------------------------------------------------------------------------------

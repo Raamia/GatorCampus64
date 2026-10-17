@@ -23,6 +23,8 @@ Usage:
     --repair-collision / --no-repair-collision
                          T-junction-split + weld the exported floors (stage_collision.py; default on
                          for REPAIR_COLLISION_STAGES = the hub and the swamp)
+    --no-interior        skip the stage's extra interior areas (STAGE_INTERIOR_AREAS; reitz_eng: area 2, the
+                         Reitz Union interior); area 1 keeps its door hookups (scratch verification builds)
 The swamp and reitz_eng also write their mission anchor points (stage_points.py) to
 data/uf/swamp_points.json / data/uf/reitz_points.json (next to the report for a --report-dir test build).
 Course 3, lake_alice (slot jrb): its stage-specific parts (tree thinning, the observation deck + nest, pickups,
@@ -55,6 +57,9 @@ Flow contract (docs/flow.md), written into the level script by add_flow_warps():
              5 Library West, 6 Century Tower
   stage in slot s with door i, area 1:
     0x0A  entry spawn (bhvSpinAirborneWarp)   0xF0 -> CASTLE_GROUNDS 0x20+i   0xF1 -> CASTLE_GROUNDS 0x30+i
+  extra areas (STAGE_INTERIOR_AREAS, additive): reitz_eng's area 2 = the Reitz Union interior
+  (tools/campus/interiors/reitz.py via build_interior.build_area): its own 0x0A (debug), 0xF0 / 0xF1 as area 1,
+  bhvFadingWarp elevator pads (0x40+); area 1 <-> 2 through INSTANT_WARPs on the landmark's door floors.
 Map data (c) OpenStreetMap contributors, ODbL 1.0.
 """
 import json
@@ -158,6 +163,11 @@ REPAIR_COLLISION_STAGES = {"swamp", "hub", "reitz_eng", "lake_alice"}
 # short name of a stage whose stages.json key is long: its art folder (art/levels/<short>/: build report,
 # previews) and its anchor points (data/uf/<short>_points.json); others use the key itself
 STAGE_SHORT_NAMES = {"reitz_eng": "reitz", "lake_alice": "lake"}
+# extra areas of a stage built from interior modules (tools/campus/interiors/<key>.py, an AREA module: AREA,
+# CENTER = the stage centre, instant_warps(), WARP_MAT / WARP_SURFACE). Course 2: area 2 = the Reitz Union interior,
+# entered through the landmark's real doors (landmarks/reitz_reitz_union.py puts the area-1 warp floors there).
+# Stages not listed build exactly as before.
+STAGE_INTERIOR_AREAS = {"reitz_eng": ["reitz"]}
 TREE_BEHAVIOR = "bhvTree"            # vanilla climbable tree: SET_HITBOX(80, 500), pushes Mario away
 LAMP_BEHAVIOR = "bhvPoleGrabbing"    # vanilla pole: hitbox height = bparam2 * 10 units
 
@@ -215,7 +225,8 @@ def parse_args():
                  "[--no-export] [--blend OUT] [--work DIR] [--strict-landmarks]")
     opts = {"key": argv[0], "levels_dir": os.path.join(ROOT, "mods", "sgl64", "levels"), "previews": False,
             "export": True, "blend": None, "work": None, "strict": False, "landmarks": True,
-            "previews_dir": None, "slot": None, "custom": False, "report_dir": None, "repair_collision": None}
+            "previews_dir": None, "slot": None, "custom": False, "report_dir": None, "repair_collision": None,
+            "interior": True}
     i = 1
     while i < len(argv):
         a = argv[i]
@@ -248,6 +259,8 @@ def parse_args():
             opts["repair_collision"] = True
         elif a == "--no-repair-collision":
             opts["repair_collision"] = False
+        elif a == "--no-interior":
+            opts["interior"] = False
         else:
             sys.exit(f"unknown option {a}")
         i += 1
@@ -640,7 +653,25 @@ def main():
     warp_nodes = add_flow_warps(L, area, slot)
 
     mats = stage_materials.make_materials()
-    S = Stage(data, area, mats, stage_materials.tiles(), key=key)
+    # extra interior areas (STAGE_INTERIOR_AREAS): their modules + the instant-warp floor materials the landmark's door
+    # hookups use, and area 1's INSTANT_WARPs into them
+    area_mods = []
+    instant_out = []
+    if key in STAGE_INTERIOR_AREAS and slot not in (None, HUB_SLOT):
+        import build_interior as BI
+        for mkey in STAGE_INTERIOR_AREAS[key]:
+            amod = BI.load_area_module(mkey)
+            area_mods.append(amod)
+            mats.update(BI.warp_materials(amod))
+            for idx, off in amod.instant_warps():
+                L.add_instant_warp(area, idx, amod.AREA, off)
+                instant_out.append({"index": idx, "surface": amod.WARP_SURFACE[idx], "to_area": amod.AREA,
+                                    "offset_units": list(off)})
+    tiles_ = stage_materials.tiles()
+    for amod in area_mods:
+        for nm in amod.WARP_MAT.values():
+            tiles_[nm] = 0.0
+    S = Stage(data, area, mats, tiles_, key=key)
 
     if opts["landmarks"]:
         stage_landmarks.load_modules(S, strict=opts["strict"])
@@ -927,6 +958,27 @@ def main():
         for n, c in sorted(report[k].items(), key=lambda t: -t[1]):
             print(f"   collision {c:6d}  {n}")
 
+    # ---- extra interior areas (after area 1 is complete; one Fast64 export holds every area)
+    area_reports, area_built = [], []
+    if instant_out:
+        report["instant_warps"] = instant_out
+    if area_mods and opts["interior"]:
+        import build_interior as BI
+        for amod in area_mods:
+            if getattr(amod, "TEXTURE_SCRIPT", None):
+                run_venv(os.path.join(HERE, amod.TEXTURE_SCRIPT), "--textures")
+            M2 = amod.build(backdrop=True)
+            if "int_carpet" not in mats:
+                # interior kit materials WITHOUT pinning the Fast64 world (area 1 exports exactly as before);
+                # build_interior.patch_vertex_lit adds the G_LIGHTING clear to the area's vertex-lit lists
+                mats.update(stage_materials.make_interior_materials(world_lighting_default=False))
+            a2, objs2, probe2, rep2 = BI.build_area(L, root, amod, M2, mats, slot, SLOT_DOOR[slot], SLOT_LEVELS[slot])
+            area_reports.append(rep2)
+            area_built.append((amod, M2, objs2, probe2))
+        report["interior_areas"] = area_reports
+    elif area_mods:
+        print("SGL: --no-interior: area 1 only (its door hookups stay; the INSTANT_WARPs lead to no area)")
+
     if opts["blend"]:
         os.makedirs(os.path.dirname(opts["blend"]), exist_ok=True)
         bpy.ops.wm.save_as_mainfile(filepath=opts["blend"], copy=True)
@@ -940,6 +992,13 @@ def main():
         from validate_level import validate_level
         level_dir, _ = export_level(root.name, level, opts["levels_dir"], setup=False, validate=False)
         n_pos, n_col = patch_fog(level_dir, fm, fo, fog_rgb)
+        if area_built:
+            import build_interior as BI
+            for amod, _, _, _ in area_built:
+                n_vl = BI.patch_vertex_lit(level_dir, amod.AREA)
+                for r in area_reports:
+                    if r["area"] == amod.AREA:
+                        r["vertex_lit_material_lists"] = n_vl
         hyg = export_hygiene(level_dir)
         if key in STAGE_COMMON0_MODELS:
             hyg["common0_jump_link"] = add_common0_models(level_dir)
@@ -983,12 +1042,27 @@ def main():
             stars_out, warp_nodes, level, slot)
         pts_path = os.path.join(report_dir if opts["report_dir"] else os.path.join(ROOT, "data", "uf"),
                                 f"{STAGE_SHORT_NAMES.get(key, key)}_points.json")
+        for amod, M2, objs2, probe2 in area_built:
+            # additive: the interior area's anchors (measured on its own collision) under "interior_area_<N>"
+            import build_interior as BI
+            measured, flags = BI.measure_area_points(amod, M2, probe2)
+            rep2 = next(r for r in area_reports if r["area"] == amod.AREA)
+            pts[f"interior_area_{amod.AREA}"] = dict(
+                {"note": getattr(amod, "POINTS_NOTE", ""), "coordinates": getattr(amod, "POINTS_COORDINATES_MAP_M", ""),
+                 "area": amod.AREA, "spawn": rep2["spawn"], "warp_nodes": rep2["warp_nodes"],
+                 "instant_warps": rep2["instant_warps"], "warp_strips": rep2["warp_strips"], "pads": rep2["pads"],
+                 "pickups": rep2["pickups"], "checks": flags}, **measured)
+            pts.setdefault("instant_warps_area_1", report.get("instant_warps", []))
         stage_points.write(pts_path, pts)
         print(f"SGL: wrote {pts_path} ({len(pts.get('checks', []))} point checks flagged)")
         for c in pts.get("checks", []):
             print(f"   points check: {c}")
 
     if opts["previews"]:
+        for _, _, objs2, _ in area_built:          # the interior areas share area 1's frame: keep them out of its views
+            for ob in objs2:
+                ob.hide_render = True
+                ob.hide_set(True)
         import stage_preview
         pv = opts["previews_dir"] or os.path.join(art_dir, "previews")
         paths = stage_preview.render_all(S, pv, fog=(FOG_START_M, FOG_END_M, fog_rgb),

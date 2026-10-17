@@ -18,7 +18,8 @@
 --   * level scripts: on every warp the REAL mods/sgl64/levels/<slot>/script.c of the destination is
 --     parsed and its stars (bhvStar, with OBJECT_WITH_ACTS act masks), warp spawn objects and objects
 --     with the mod's own Lua behaviours (id_bhvSglDoor, ...) are spawned (opts.levelScripts = false
---     turns it off); Sim.level_script(slot) gives the parsed WARP_NODEs + objects;
+--     turns it off); Sim.level_script(slot) gives the parsed WARP_NODEs + objects (per AREA block: only the
+--     destination area's objects spawn; .warps = area 1's nodes, .areaWarps[n] = area n's);
 --   * the save file: w.starFlags[course] (bit k-1 = act k) + w.stars extra stars;
 --   * level_trigger_warp(m, WARP_OP_EXIT) leaves through the real level script's WARP_NODE 0xF1
 --     (c.warpOps, c.arrivalNode); play_music / stop_background_music keep a per-client queue (c.music);
@@ -76,15 +77,41 @@ function Sim.level_script(slot)
     if f == nil then sScripts[slot] = false return nil end
     local src = f:read("a")
     f:close()
-    local out = { slot = slot, warps = {}, objects = {} }
-    for id, lvl, area, node in src:gmatch("WARP_NODE%(%s*([%wx]+)%s*,%s*([%w_]+)%s*,%s*([%wx]+)%s*,%s*([%wx]+)") do
-        out.warps[parse_int(id)] = { level = lvl, area = parse_int(area), node = parse_int(node) }
+    -- AREA(n, geo) ... END_AREA() blocks: a level can hold several areas (course 2: area 2 = the Reitz Union
+    -- interior); every WARP_NODE / OBJECT belongs to the area block around it (o.area, out.areaWarps[n]).
+    -- out.warps keeps the FIRST area's node for an id (area 1: the entry / exit contract), as before for
+    -- one-area levels.
+    local spans = {}
+    for pos, name, n in src:gmatch("()([%w_]*AREA)%(%s*([%w]*)") do
+        if name == "AREA" then
+            spans[#spans + 1] = { from = pos, to = #src + 1, area = parse_int(n) }
+        elseif name == "END_AREA" and #spans > 0 and spans[#spans].to == #src + 1 then
+            spans[#spans].to = pos
+        end
     end
-    for kind, args in src:gmatch("(OBJECT_WITH_ACTS)%(([^\n]-)%),?%s*\n") do
-        out.objects[#out.objects + 1] = { kind = kind, args = args }
+    local function area_at(pos)
+        for _, s in ipairs(spans) do
+            if pos > s.from and pos < s.to then return s.area end
+        end
+        return nil
     end
-    for kind, args in src:gmatch("(OBJECT)%(([^\n]-)%),?%s*\n") do
-        out.objects[#out.objects + 1] = { kind = kind, args = args }
+    local out = { slot = slot, warps = {}, objects = {}, areaWarps = {} }
+    for pos, id, lvl, area, node in src:gmatch("()WARP_NODE%(%s*([%wx]+)%s*,%s*([%w_]+)%s*,%s*([%wx]+)%s*,%s*([%wx]+)") do
+        local a = area_at(pos)
+        local wn = { level = lvl, area = parse_int(area), node = parse_int(node), inArea = a }
+        local nid = parse_int(id)
+        local old = out.warps[nid]
+        if old == nil or old.inArea == a then out.warps[nid] = wn end
+        if a ~= nil then
+            out.areaWarps[a] = out.areaWarps[a] or {}
+            out.areaWarps[a][nid] = wn
+        end
+    end
+    for pos, kind, args in src:gmatch("()(OBJECT_WITH_ACTS)%(([^\n]-)%),?%s*\n") do
+        out.objects[#out.objects + 1] = { kind = kind, args = args, area = area_at(pos) }
+    end
+    for pos, kind, args in src:gmatch("()(OBJECT)%(([^\n]-)%),?%s*\n") do
+        out.objects[#out.objects + 1] = { kind = kind, args = args, area = area_at(pos) }
     end
     for _, o in ipairs(out.objects) do
         local a = {}
@@ -345,7 +372,7 @@ function World:spawn_level_objects(c)
     if ls == nil or (c.level ~= C.LEVEL_CASTLE_GROUNDS and not self.built[c.level]) then return end
     local actBit = (c.act >= 1 and c.act <= 6) and (1 << (c.act - 1)) or 0x3F
     for _, o in ipairs(ls.objects) do
-        if (o.acts & actBit) ~= 0 then
+        if (o.acts & actBit) ~= 0 and (o.area == nil or o.area == c.area) then
             local bhv
             if SPAWN_BHVS[o.bhv] then
                 bhv = C["id_" .. o.bhv]
@@ -670,7 +697,7 @@ function World:build_env(c)
         table.insert(c.warpOps, op)
         if op == C.WARP_OP_EXIT then
             local ls = Sim.level_script(Sim.SLOT_OF_LEVEL[c.level] or "")
-            local wn = ls and ls.warps[0xF1]
+            local wn = ls and ((ls.areaWarps[c.area] or {})[0xF1] or ls.warps[0xF1])
             if wn ~= nil then
                 w:warp(c, C[wn.level], wn.area, 0)
                 c.arrivalNode = wn.node
