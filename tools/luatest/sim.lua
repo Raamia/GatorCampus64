@@ -770,6 +770,19 @@ function World:build_env(c)
         table.insert(c.draw, { k = "tex", name = tex.name, x = x, y = y })
     end
 
+    -- sgl_login.lua (Gator Pass): player list description, name tag colour, Unix time
+    S.network_player_set_description = function(np, desc, r, g, b, a)
+        assert(type(desc) == "string", "description must be a string")
+        for _, v in ipairs({ r, g, b, a }) do assert(math.type(v) == "integer" and v >= 0 and v <= 255, "description colour") end
+        local s = raw(np)
+        s.description, s.descriptionR, s.descriptionG, s.descriptionB, s.descriptionA = desc, r, g, b, a
+    end
+    S.network_get_player_text_color_string = function(li)
+        assert(math.type(li) == "integer", "network_get_player_text_color_string(int)")
+        return "\\#dcdcdc\\"
+    end
+    S.get_time = function() return 1800000000 + w.frame // 30 end
+
     -- objects
     local function new_object(bhv, model, x, y, z)
         local s = { behavior = bhv, _model = model, oPosX = x, oPosY = y, oPosZ = z, oBehParams = 0, oFlags = 0,

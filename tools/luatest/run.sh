@@ -36,6 +36,10 @@
 #      sanity: walkable floor, columns, barriers on the doors, ladder decks, star humps, the arena, the coffee run's par),
 #      and the built levels/bbh collision once it exists, incl. a walk through every door anchor and a
 #      floor-crack scan (skipped when tools/.venv is missing)
+#  15. test_qr.lua: sgl_qr.lua (vendored QR encoder) against known vectors (thonky.com HELLO WORLD 1-M codewords,
+#      a pinned zbarimg-decoded 5-M matrix of the Gator Pass URL), QR structure, the HUD draw helper
+#  16. test_login.lua: web platform mod side: guests.lua slots in characters.lua, charselect.lua paging,
+#      sgl_login.lua (/login, /link, QR panel, verified marks) against a stub sgl_bridge.lua
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
 # Fixtures (regenerate only for a new coopdx version): coopdx_constants_v151.lua,
 # coopdx_api_v151.lua, coopdx_structs_v151.lua (gen_coopdx_*.py, see their headers).
@@ -78,6 +82,12 @@ echo "== test_marston_missions (course 4: Marston Science Library)"
 
 echo "== test_libwest_missions (course 5: Library West After Dark)"
 "$LUA" "$HERE/test_libwest_missions.lua"
+
+echo "== test_qr (sgl_qr.lua: QR encoder known vectors)"
+"$LUA" "$HERE/test_qr.lua"
+
+echo "== test_login (guest slots, character select pages, Gator Pass login)"
+"$LUA" "$HERE/test_login.lua"
 
 PY="$HERE/../.venv/bin/python"
 if [ -x "$PY" ]; then
