@@ -222,8 +222,8 @@ local function leaderboard_input(c)
     local pressed = c.buttonPressed
     local held = c.buttonDown
     local vertical = 0
-    if ((pressed | held) & U_JPAD) ~= 0 or (c.stickY or 0) > 60 then vertical = -1 end
-    if ((pressed | held) & D_JPAD) ~= 0 or (c.stickY or 0) < -60 then vertical = 1 end
+    if ((pressed | held) & (U_JPAD | U_CBUTTONS)) ~= 0 or (c.stickY or 0) > 60 then vertical = -1 end
+    if ((pressed | held) & (D_JPAD | D_CBUTTONS)) ~= 0 or (c.stickY or 0) < -60 then vertical = 1 end
     if vertical ~= 0 then
         if vertical ~= sLeaderboardDirection or sLeaderboardRepeat <= 0 then
             move_leaderboard_cursor(vertical)

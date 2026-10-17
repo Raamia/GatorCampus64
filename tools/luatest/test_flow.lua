@@ -380,6 +380,15 @@ test("campus boards: direct button and mouse open a later board without the mapp
     w:step(1)
     check(table.concat(H.hudText, " | "):find("Skybox Climb", 1, true) ~= nil,
         "clicking the board footer returns to the four-board list")
+
+    H.mouseButtons = 0
+    w:step(1)
+    H.pressed = C.D_CBUTTONS -- keyboard Down arrow is mapped to C-down in CoopDX
+    w:step(1)
+    H.pressed = C.A_BUTTON
+    w:step(1)
+    check(table.concat(H.hudText, " | "):find("REITZ ROOFTOP", 1, true) ~= nil,
+        "keyboard Down arrow wraps from fourth to first board, then A opens it")
 end)
 
 test("door 2: The Hub (2 stars) -> Reitz & Engineering act 1 -> star -> back outside The Hub door", function()
