@@ -4,6 +4,8 @@ const GeoLayout wf_area_2_geo[] = {
 	GEO_NODE_START(),
 	GEO_OPEN_NODE(),
 		GEO_DISPLAY_LIST(LAYER_OPAQUE, wf_dl_reitz_ext_visual_mesh_layer_1),
+		GEO_DISPLAY_LIST(LAYER_TRANSPARENT, wf_dl_reitz_ext_visual_mesh_layer_5),
+		GEO_DISPLAY_LIST(LAYER_ALPHA, wf_dl_reitz_ext_visual_mesh_layer_4),
 		GEO_DISPLAY_LIST(LAYER_OPAQUE, wf_dl_reitz_G_visual_mesh_layer_1),
 		GEO_DISPLAY_LIST(LAYER_TRANSPARENT, wf_dl_reitz_G_visual_mesh_layer_5),
 		GEO_DISPLAY_LIST(LAYER_ALPHA, wf_dl_reitz_G_visual_mesh_layer_4),

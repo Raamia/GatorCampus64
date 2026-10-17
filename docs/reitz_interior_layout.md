@@ -274,12 +274,352 @@ Mainstreet Daily News blocks scripted access (403), so I skipped it. I did not u
 ## 9. Deviations a builder should expect (`deviations`)
 
 - **Floor height.** Floors are 6.0 m apart in the game (4.0 m on the hotel floors) against about 4.5 m real; plan dimensions stay 1:1.
-- **Grand Ballroom.** It keeps its real double height: about 11 m clear in the game, against about 7 m real (estimated from photos).
+- **Grand Ballroom.** It keeps its real double height: about 11 m clear in the game, against about 7 m real (estimated from photos). Since fidelity pass 4 the perimeter soffit is at 9.3 m and the screens fill the upper wall, so the room reads closer to the photos' proportions.
 - **Atrium.** It is real and already camera-friendly: Ground to the roof over L3, about 23.4 m in the game.
 - **Bowling lanes.** They stay at regulation length, 18.29 m from foul line to head pin. The plan's 15.5 m lane block is extended north to y −303.9 (inferred).
 - **Registration.** Every floor carries the shift described in section 3.
+- **Atrium balconies (build rule).** Where a plan wall or door lies on the edge of an atrium void, the game does not build it. That edge gets only the balcony: a white fascia, a picket rail (30 cm collision block) and the slab edge. The photos show open balconies on all three levels. The rail is cut where each scissor-stair flight meets the slab, so the stair can be climbed from Ground to L3.
+- **Cedar vault.** A lens-shaped barrel that rises 2.0 m (`VAULT_RISE`) over the 25.6 m clerestory top, with three long dark ribs along its length and a dark band at the head of the clerestory (ru_atrium_enr_vertical, ru_atrium_hdr_flickr). The rise is an estimate from the photos.
+- **Outside the glass (visual only).** A paving apron and a lawn at Ground grade, Liberty Pond with oaks, a tree line all round, and a Level 1 plaza in front of the north entrance. The Level 1 outdoor walkway and the outdoor dining area get slabs with a canopy and a rail. The main roof leaves out the tower (L4+). The Level 1 plaza and the tree ring are simplified grades, not survey data.
+- **Floor collision** is clipped to each floor's outline, so no invisible ledge reaches past a facade. The Level 1 south-exit porch (door 3) is closed by rails with a tall invisible guard and by a solid face on the facade behind it.
+- **Door thresholds.** The area-2 warp strips of doors 0-2 start 0.10 m outside the door line (`STRIP_GAP`), with a plain floor in that gap. Area 1's strips end exactly on the line, so the two never share an edge (a shared edge flips Mario between areas every frame). Door 3 already had a 4 cm gap.
+- **Meeting-room set-ups.** Chair rows start 2.6 m from the screen wall. The screen (accent) wall is never a window wall. G330 has rows again (fidelity pass 3: ru_os_g330 shows rows of black chairs facing the blue wall, with the navy draped table behind them).
+- **Meeting-room furniture check.** `reitz.py --selftest` fails when more than 5 % of a room's furniture vertices (chair rows, draped tables, classroom / U / boardroom tables) fall outside the room. Classroom tables that would cross a wall of a tapered room are dropped (3310 keeps one column).
+- **North entrance recess (visual only, fidelity pass r1).** Outside the north doors, area 2 now shows the 2016 wing's overhang as area 1 builds it, clipped to the open part of area 2's Level 1 outline: a white soffit at the Level 2 slab underside (11.4 m, i.e. area 1's 5.4 m) with three rows of linear lights, three white columns on the overhang edge (x −394.0, −385.5, −377.0; area 1 has a fourth at −402.5, where area 2's plan has Level 1 rooms), the east side wall and a white fascia at the face (ru_north_entrance_hotelsite, ru_north_entrance_enr_dusk). The Level 1 plaza follows the same outline. The vestibule's door frames are aluminium, not wood (ru_ribbon_cutting_doors), and the two entrance vestibules (north, South Terrace; `GLASS_VESTIBULES`) are glass boxes toward the corridor / atrium: glass storefront with a steel base and a transom bar at the 3.0 m door head (collision unchanged).
+- **Atrium lounge (fidelity pass r1).** One large dark-navy carpet with light-blue squiggles fills the west void's floor under six clusters (3 x 2, 0.6 m aisles between their 0.48 m collision blocks); two more sit on the east rug (ru_atrium_enr_lounge shows about ten). The carpet stops about 1.5 m short of the UF letters, so the floor in front of them is open terrazzo. The terrazzo texture has no joint lines (the photos show a poured, seamless floor). Ground and Level 1 have a brighter ambient than the other floors (sky 0.74 against 0.66), for the daylit atrium.
+- **UF letters bay (fidelity pass r1).** The Ground ceiling under the Level 1 balcony over the letters is plain white (`WHITE_SOFFITS`), not the near-void cedar band. A WELCOME TO THE REITZ UNION banner hangs on that balcony's rail. The gator-skin plates are about 0.28 m (1.0 m per texture repeat), the size in ru_atrium_uf_letters_flickr.
+- **Atrium top (fidelity pass r1).** The clerestory is a dark glazed ring on every long side, with dark mullions, under the cedar lens. Three dark drum pendants on long rods hang into the void at the Level 3 storey. No downlight is placed in or within 0.5 m of a void.
+- **Info Desk (no photo).** It is sized to the plan object (2.7 x 1.0 m at x −399.1..−396.4, y −261.3..−260.3), with a curved navy front, a white top and a black kick base. The look is inferred.
+- **Preview cameras.** `reitz_atrium_lounge`, `reitz_atrium_up` and `reitz_atrium_stairs` (the ENR vertical view, from the Level 3 west-end balcony, 95° field of view) are matched to their photos.
+- **Food court vendors (fidelity pass 2).** The storefronts (`SERVERY_FRONTS` + `VENDOR_STYLES` in `interiors/reitz.py`) follow the `food_vendors` pins in `props_extra` L1 where they agree. The signs are generic (no brand marks).
+  - **Burger drive-in (Sonic)** is on the NE block's south face, x −432.0..−424.9, y −297.2. Both pin sets put it there. Its look is from ru_food_court_sonic_2025: a navy fascia with the neon name above a white-framed opening, a bright white kitchen with a row of blue-lit menu screens, a navy counter, a wood-look panel on the right and a navy panel with a red/blue neon swirl on the left.
+  - **Coffee bar (Starbucks)** is on the servery's east face, y −303.0..−307.4 (OSM pin). Its look is from ru_starbucks_2017, before the 2018 refit: maple counter, top and side panels, an orange/green/cream small-square mosaic back wall and black chalkboard menus. It has no hood.
+  - **Wok (Panda)** is at the SW corner (MVF pin). It has a red/black counter front. A lime wall with a sky-blue post at the west end of its slot reproduces the left edge of ru_food_court_counter_2023.
+  - **Halal and pizza (Baba's)** are on the south front. Mac, shakes and the Latin café keep the faces that would otherwise be blank: the east face north of the coffee bar and the NE block's east face. Neither pin set places them.
+  - **The others** keep the pale-blue siding of ru_food_court_counter_2023.
+  - **The servery's west face and north side** are back of house, with no storefront and no checker.
+- **Food court queue ring and soffit (fidelity pass 2).**
+  - The checker ring is one band, `FC_RING_DEPTH` 2.6 m deep. It runs only in front of the storefronts, from the SW corner, along the south front and the east face, round the NE block, and up its east face.
+  - The cream soffit over it is just as deep, at `FC_SOFFIT_Z` 4.0 m (the photo shows about 3 m; it is raised for the camera). Its outer edge is a smooth curve (`_offset_open`): convex corners are rounded, the curved south front is smoothed, and it has a 0.7 m fascia. Two staggered rows of downlights run along it.
+- **Food court hall floor (fidelity pass 2).** The tile is large-format white / very light grey (60 cm, faint grout). It runs to the curved SE glass and the outdoor-dining nook (`FC_HALL_EAST`), not only to the OSM outline, so there is no terrazzo seam by the glass.
+- **Level 1 outdoor walkway (visual only, fidelity pass 2).** White canopy piers stand on the outer edges, no more than 6.5 m apart. The plan's door at (−463, −330) on the walkway's west edge is a glass pair in a white surround (the Bookstore entrance). The food court's west strip therefore looks out on the covered route.
+- **Ground meeting rooms G310-G330 (fidelity pass 3; ru_os_g310_g320, ru_os_g330).**
+  - The royal-blue accent is the corridor end wall, the one with the two honey-wood-framed doors at its ends: the south walls of G310 / G315 / G320 / G325 and the slanted west wall of G330. The long side walls stay white.
+  - There is no screen on the blue wall. A ceiling projector on a drop rod and a grey retracted-screen housing at the ceiling, 0.55 m in front of the blue wall, stand in for it. Upstairs rooms keep their wall screens.
+  - The white walls get a white raised-panel wainscot under the chair rail (`int_ru_wainscot`, 0.10-0.88 m). The long interior side walls carry a row of small framed prints at 1.55-2.15 m, every 1.7 m (`int_ru_prints`, 8 prints). There is an EXIT sign over every door, on the room side.
+  - The chair block is centred on the room's full width across the facing, not on the accent wall (G330's blue wall is shorter than the room). On Ground, every chair vertex must lie inside the room: the fit loop narrows the rows first and only then drops rows, and about 1.6 m is left behind the last row. The navy draped table stands there, beside a side wall where it fits (ru_os_g330 shows it in the foreground).
+- **Senate Chamber (fidelity pass 3; ru_os_chamber).** It has 7 curved rows (r0 6.0 m, pitch 1.25 m, rise 0.15 m), each clamped to 9.6 m either side of the centre line, so the rows fill the room to about 3 m from the back wall. The desks are long continuous light-grey stone-look counters (`int_ru_stone_grey`). The navy high-back chairs are lower (back top 1.05 m) and denser (0.72 m apart). The carpet is dark navy (`int_ru_carpet_chamber`). The US flag is at the west (left, seen from the seats) end of the cherry panel and the Florida flag at the east end. A ceiling projector hangs over the rows. Collision per row: the desk band (both faces, top, ends) and a floor. The 0.15 m risers need no walls.
+- **Gator Esports Center (fidelity pass 3; ru_es_overview, ru_es_oelrich_9352).**
+  - The sign is one line, GATOR ESPORTS CENTER, in white letters on a black bulkhead across the south end, with a blue LED underline. The line is 128 px wide, stored as two 64 x 16 halves of `int_ru_sign_esports` and drawn as two quads.
+  - The hex walls are near-black with faint blue edges, and the floor is a wood-look plank (`int_ru_wood_lvt`).
+  - Eight glass dome pendants hang over the west PC row, the island and the couch area.
+- **Hotel reception (no photo, fidelity pass 3).** It sits on the plan prop along the west wall (y −272.9..−268.0). There is a honey-wood front counter with a navy reveal, a white transaction top and a black kick, a white back counter, a royal-blue sign wall with the lit REITZ UNION HOTEL sign, two monitors and three navy drum pendants. The look is inferred from the house finishes.
+- **Bowling pin end (fidelity pass 3; ru_gr_lane_screens).** A short dark-navy masking fascia (1.25-1.9 m) sits under one continuous video wall (2.0-4.9 m) across all 14 lanes. The wall shows a seamless broadcast tile (a studio desk with two presenters and a lower third) 3 times. The backing and the end returns run up to the ceiling. The gator mural (ru_gr_kosmic_lanes) is the blacklight show only, so it is not modelled. The overhead TV strip is the truss's score monitors.
+- **Ball returns (fidelity pass 3; ru_gr_lanes_overview_1).** Each has a rounded black Brunswick hood (a 9-point profile) with a steel lip, a low black base with two steel rails, and 4 low-poly balls (8-sided lathe, 32 triangles each). The collision block is unchanged.
+- **Billiards carpet (fidelity pass 3).** It is about 40 % darker: deep navy scales with light-blue highlights and orange flecks (ru_gr_billiards_room).
+- **Food court preview cameras (fidelity pass 2).**
+  - `reitz_food_court` uses the matched ru_food_court_counter_2023 viewpoint: (−457.2, −314.2, 7.55) to (−433.0, −310.5, 7.2), vfov 54.
+  - `reitz_food_court_burgers` looks north at the burger front.
+  - The new `reitz_food_court_coffee` looks west at the coffee bar.
+- **Grand Ballroom (fidelity pass 4; ru_os_grand_ballroom_1, _3).**
+  - The upper wall now follows the photos. The drop-down screens are 7.0 x 5.0 m, from 3.9 to 8.9 m: about twice the 2.6 m door head tall, starting at about 1.5 door heights. There are four on the stage (south) wall, two on the north wall and one on the west end wall. Between them, full bays of white 3-D triangle acoustic panels run from 3.6 m up to the soffit, between white pilasters (one at each screen edge, then every 4.6 m or less). The blank grey band is gone.
+  - The perimeter soffit is lowered to 9.3 m (`GB_SOFFIT`). The luminous coffers stay at the 11.4 m clear height. Both soffits are clipped to the room outline, so nothing pokes through the walls.
+  - The clerestory band is on a short end wall, as in ru_os_grand_ballroom_3 (it was on the north long wall). It is lit glazing at 6.5-8.0 m with mullions, under a lowered end soffit (`GB_END_SOFFIT` 8.3 m, `GB_END_D` 4.0 m deep, with two rows of downlights). The photos do not fix the compass end. The east end is used because GB3 looks down the long axis with the stage on the right long wall and the window band on the far wall, which is the east end when the stage is on the south wall. From Level 3 the band is only a decal on the ballroom's own face.
+  - The carpet (`int_ru_carpet_ballroom`) has nine thin lines (six white, three light blue), each drawn from its true distance, about 4 cm wide, at 3.6 m per 64 px. The old lines were 1-2 px at 6 m and rendered as wide white chains.
+- **Auditorium (fidelity pass 4; ru_os_auditorium_3).**
+  - The rows are continuous, with no centre aisle. Each row is as wide as the room allows at its depth, with side aisles of at least 1.3 m, because the north-east corner is cut on the diagonal.
+  - A railed cross-aisle runs in front of the first row: a navy parapet 0.9 m high with a honey-wood cap, open at both ends.
+  - The screen is narrowed to the straight end wall, between two navy pilasters. The angled walls either side are honey-wood panel blocks, each with an exit door and a lit EXIT sign.
+  - The ceiling has six thick, bright LED coves, 0.72 m wide in dark lips, instead of four thin lines.
+  - The rake's collision is now one ramp through the middle of every step top (within 9 cm at the step edges, standard SM64 practice for stairs) instead of a prism per step. That saves about 90 collision tris and pays for the new ceilings below.
+- **Rion Ballroom (fidelity pass 4; ru_os_rion_ballroom).** The clear height is 6.0 m (it was 7.4 m; the photo looks like about 5 m). There are 11 narrow red-brown beams (0.34 m), about 2.8 m apart, with a flush LED line between each pair. A light cove (a glowing strip under a white lip) runs along the top of every wall. The dark-grey wall panels are 0.6 m wide, every 2 m, in `int_ru_wall_slate`.
+- **Upstairs meeting rooms (fidelity pass 4; ru_os_2315_2330, ru_os_3315_3320, ru_os_2355_2365).**
+  - The accent wall is a medium slate grey-blue (`int_ru_wall_slateblue`, #6E7D96, about (110, 125, 150)). It was the pale `int_ru_wall_greyblue`, which stays for Matthew's Suite.
+  - L2 / L3 meeting rooms (and, since fidelity-3 of fix round 2, G310-G330 and the Senate Chamber) have a dropped lay-in ceiling at 3.9 m (`MEETING_CLEAR`, style key `ceil_h`), against about 2.7-3 m real, raised for the camera. It is drawn, has a collision ceiling at 3.9 m, and the light fixtures hang from it. The walls and the plain ceiling above keep the floor's 5.4 m clear height, so the wall collision still merges with the corridor side.
+  - The side walls carry a row of framed photos / art (`int_ru_prints`, 0.9 x 0.8 m every 2.0 m), plus EXIT signs over the doors. There is no wainscot upstairs. The wall screen is now 1.2-3.3 m.
+- **Hotel room 516 (fidelity pass 4; ru_hotel_room).** The blue wall carries a full-size cherry dresser (1.8 m) with the TV mounted on the wall above it, a cherry-framed mirror to the west and a cherry desk with a navy chair to the east, clear of the balcony door. The room's west bay (the plan's notch beside the corridor door) is an entry / bath block: a wall-high cream box with a bath door, one collision face. The `reitz_hotel_room` preview now looks from the balcony-door corner (−424.95, −269.2) south-west at the blue wall, the bed and the bath block.
+- **Arredondo Cafe (fidelity pass 4; ru_os_arredondo_cafe).** A stone-clad column (`int_ru_stone_clad`, 0.9 m square, `ARREDONDO_COLUMN` at (−437.5, −262.5); the position is estimated) stands mid-room, and the two tables nearest it are left out. Roller shades (`int_ru_shade`) hang on every window-wall bay, lowered to different heights (0.7-1.6 m), under a white head rail, on the cafe's west glass and round the Level 4 ring corridor it opens onto (`OPEN_PAIRS`). The `reitz_arredondo` preview now looks east from the west end, with the north window wall on the left, as in the photo.
+- **Doors without photos (fidelity pass 4).**
+  - Elevator entrances (the closed halves of the Blue banks, the Orange and service elevators) are one pair of brushed-steel sliding doors with a centre seam (`int_ru_door_elev`), in a steel frame, with a lit call-button plate beside them (`int_ru_call_button`). They were hinged steel doors with vision panels.
+  - Hotel guest-room doors are cherry with a brass room-number plate and a card lock (`int_ru_door_hotel`).
+- **Stair halls (no photo).** The enclosed stairs are not built. Their doors are closed and the shafts are sealed (section 5), so Mario moves between floors by the Blue elevator pads and the atrium scissor stairs. Without photos of the stairwells this is a deliberate omission, not an error.
+- **Design pass (wayfinding, gameplay, camera).**
+  - *Wayfinding.* A big floor number (`int_ru_floor_atlas`, 1.3 m) hangs on the lobby face of the wall over every Blue elevator car, above that car's destination sign. The destination signs themselves were moved onto that face; they had sat 0.35 m inside the car, hidden behind the door header. A two-face sign hangs from the ceiling in each Blue elevator lobby (`wayfinding()`; textures `int_ru_wayfind_<floor>` for the north face and `_s` for the south face, from `WAYFIND` in `interior_kit_reitz.py`). It names the floor's destinations with arrows for each face's reader: GAME ROOM, ESPORTS, ATRIUM and HOTEL DESK on G; FOOD COURT, ATRIUM and NORTH EXIT on L1; GRAND BALLROOM, AUDITORIUM and MEETING ROOMS on L2; and so on. The atrium fascia carries the floor number beside the scissor-stair ends (`FASCIA_NUMS`; 3 panels on L1-L3). The UF blue and orange follow the building's own signs. Per-floor accent wall colours were not added, because the photos show the same white, navy and cedar palette on every floor.
+  - *Camera.* The side walls of the hotel corridors (L5 / L6) and the G elevator corridor, and the freestanding LL wall block at x −427.3..−425, are `SURFACE_NO_CAM_COLLISION` wherever a closed room (or, for the G corridor and LL block boxes, unzoned space inside the building) lies behind them and the run has no open door (`NOCAM_CORRIDORS`). The camera can pull back through them, as in vanilla; Mario still collides with them. Exterior walls never get this.
+  - *Grand Ballroom.* The aisles are 2.0 m (`GB_AISLE`, was 1.6 m), and each of the three seat blocks has its own collision box (`chair_rows(col_blocks=True)`), so the aisles are walkable floor up to the stage. A coin line runs along the stage. The coin ring moved to the open floor behind the rows, where it is placed as its fallback line of 5 (`stage_pickups` coin_ring).
+  - *Pickups.* There are 17 entries in `PICKUPS`, plus 16 from the builders (`EXTRA_PICKUPS`): two coins on each scissor-stair flight (12), the Grand Ballroom stage line, and coins on three billiard tables. New coin lines are in the LL dance studio, the L3 elevator lobby, the Arredondo Cafe (the aisle between the two table rows, east of the column) and the L5 / L6 hotel lobbies. A 1-up sits on top of the Swamp Boss gator head.
+  - *Atrium.* The balcony band's bottom edge is rounded in two facets, so it reads as a curved white band (ru_atrium_enr_lounge). The scissor stairs have slimmer stringers (`STAIR_STRINGER` 0.24 m, was 0.35 m) and landings (`LANDING_T` 0.22 m, was 0.35 m). Transverse cedar-vault ribs were tried and removed: ru_atrium_hdr_flickr and ru_atrium_enr_vertical show only long ribs.
+  - *Billiards carpet.* The 16-texel light / dark block alternation, which read as big quilted squares, is gone. Outlines and highlights are lower in contrast, so the 1-texel lines no longer shimmer.
+  - *Collision budget.* The bowling ball racks stand in the 0.39 m gaps between the booth pits, so their collision is now only the front face and the top (`ball_rack(front_only=True)`). This saves 36 tris and pays for the ballroom blocks.
+  - *Not done.* The slippery bowling lanes need `COL slide` in area 2's material set, which `build_stage.py` / `stage_materials.py` do not provide. A rolling bowling-ball hazard needs an object path that area 2 cannot place, because area builds take only pickups and pads. A red-coin hunt would add a star outside the flow contract.
 
 ---
+
+### Fix round 2 (blocking pass)
+
+- **East atrium void**: the part of Level 1 void 02 that the Level 2 void does not continue (under the sealed
+  student-engagement suites) is capped at the Level 1 ceiling (11.4 m): white tile with downlights, the cedar band
+  within 3 m of the Level 2 void, a white fascia on the edge where the cap meets that void, and a collision ceiling.
+  Atrium void edges without a plan wall (the voids are convex hulls of the plan's chevron cuts) now get the balcony
+  edge (fascia, pickets, collision) where the outside is walkable, or a solid wall into the void where it is sealed.
+- **Cedar soffit bands**: one polygon per void (the void above offset 3.2 m, clipped to the zone) cut out of the tile
+  ceiling, instead of a material per 6 m ceiling piece (no sawtooth slivers).
+- **Scissor stairs**: the balcony rail opens only on the edge line a flight actually crosses, 0.2 m narrower than the
+  flight's own rails (the collision blocks overlap at the junctions); the landings' inner edge between the two flights
+  is railed.
+- **SE glass view** (ru_dining_windows, ru_os_amphitheatre): tall oaks and pines close against the curved SE facade
+  (canopies ~7-16 m above Ground), the amphitheater's stepped grass terraces in the bowl the curve wraps, and an
+  umbrella terrace by the South Terrace doors. Backdrop trees are checked against every floor's zones (two oaks stood
+  inside the Level 1 hall south of the food court).
+- **Game Room / Esports** (ru_es_oelrich_8951, ru_gr_esports_bridge_billiards): the 27 m wall to the Esports Center is
+  a glass storefront (steel base, transom) with a glass door, the GATOR ESPORTS CENTER sign and a row of TVs above; the
+  arcade cabinets, the blue kiosk, a black high-top bar with stools and ottomans stand along it on the billiards side
+  (pool tables shifted 1 m east). The service corridor between the lanes and the east games is back of house: a closed
+  steel door across its north end.
+- **Meeting rooms** (ru_os_2315_2330... ru_os_3315_3320): no permanent wall screen upstairs; a ceiling projector and a
+  retracted screen housing. 3305: the pull-down screen is down in front of a white wall, the U's legs run the room's
+  length. 3310: a hollow square of tables. 2345 / 2350 (and the other boardrooms): a ~6 m table along the long wall with
+  chairs on both sides and a wall TV on the end wall. Rows are framed on the room's full wall (2335).
+- **Hotel**: room 516's balcony is open (no facade or glass on its outer edge, only the slotted balustrade) and the
+  room side is a glass wall with a slider. Sealed rooms behind the NO_CAM hotel corridor walls (and the G elevator
+  corridor) have a cheap backing box (floor, ceiling, inner walls except the corridor side) for the camera.
+- **Misc**: FONT3 has Z and Q ("REITZ UNION" signs), the Matthews Suite photos skip the window walls, the Grand
+  Ballroom coffers hang 0.1 m below the tile ceiling (no z-fight), the gap floor at the Ground north and South Terrace
+  doors starts 0.15 m inside the door line (no NULL-floor crack).
+
+### Fix round 2 (fidelity pass)
+
+- **Cedar vault** (ru_atrium_hdr_flickr from below, ru_atrium_enr_vertical): the cedar is a pointed LENS inside the
+  west void (half-width B(1 - t^2) about the void's mid line, the crown rising 2 m), not the void's rectangle; five
+  dark ribs follow constant fractions of the lens width, so they bow and converge at both ends. The void's corners
+  outside the lens are a flat white soffit at the clerestory head (25.6 m), with a dark lip round the lens.
+- **Gator-skin wall** behind the UF letters (ru_atrium_uf_letters_flickr): light white / cream plates with thin
+  (mostly 1 px), only slightly darker seams (grout 165,165,170 instead of 118,118,122); three warm wall-wash lights
+  under the Level 1 soffit keep it light in the baked lighting.
+- **Gator tracks** (ru_floor_gator_tracks): the 7 cm steel strip is a continuous S-curve (a sine of amplitude 0.35 m,
+  wavelength 2.5 m laid along the old line), with the navy prints (0.4 m, about 1 m apart) alternating 0.3 m either side, turned to the
+  local tangent.
+- **Lounge chairs** (ru_atrium_enr_lounge): new `int_ru_fabric_plum` (plum / maroon-brown) club chairs with taupe
+  cushions: two of each cluster's three club chairs, next to one navy club chair and the orange swivel tub.
+- **North entrance door bank** (ru_ribbon_cutting_doors): each of the four plan door bays holds a pair of glazed
+  leaves in white aluminium with wide stiles and a deep bottom rail, tall steel pulls on both faces, a white transom
+  bar at 2.45 m and transom glass above. The curtain glass and its mullions / transom now stop at the bays (they
+  crossed the openings, so the leaves could not be told from the fixed glass). Visual only: the bays stay open and
+  the warp strip just outside is unchanged.
+- **Thresholds**: the outside paving at the entrances sits 3 mm over the interior floor's base (zero-offset coplanar
+  strips at the north door line are gone).
+
+### Fix round 2 (fidelity-2 pass: the Level 1 food court)
+
+- **Burger storefront** (ru_food_court_sonic_2025; the wording stays generic): the name is now channel letters straight
+  on the navy fascia. `int_ru_sign_burger_glow` is a cutout card, so it has no panel behind it, and the letters glow
+  red-orange, 0.86 m tall over 4.2 m. Four landscape menu screens (`int_ru_menu_screen`, 0.82 x 0.46 m each, 3.6 m
+  in all) hang on drop rods 0.75 m inside the opening. The opening shows about 1 m of bright kitchen
+  (`storefront` style `kitchen`): a white tile back wall, a steel pass shelf with heat-lamp posts and a lit hood, a
+  reach-in fridge, a fryer / grill block, and steel wall shelves with boxes. The red / pink / blue neon
+  (`int_ru_neon_swirl_tall`, 32 x 64) now fills the height of the left navy panel.
+- **The photographed servery slot** (ru_food_court_counter_2023): slot 0, by the lime wall and sky-blue post, is the
+  photo's empty former counter. It has pale-blue siding, a white top and a plain cream fascia with no sign and no
+  menu, plus a kitchen line and black security-camera domes under the soffit. The red / black wok counter moved one
+  slot east, and the halal counter took the pizza slot (the generic pizza front is gone).
+- **Vendor names**: no boxed sign panels on the photographed fronts. Wok, halal, mac & cheese, shakes, tacos and
+  coffee each get cutout letters (`int_ru_vletters_*`) on a fascia: black for wok and halal, cream for the others,
+  maple for coffee.
+- **Hall ceiling** (ru_food_court_counter_2023): 206 glowing 2 x 4 lay-in troffers (`int_ru_troffer`, 0.6 x 1.2 m, a
+  4 cm deep white rim) on a 2.4 m grid over the whole seating hall. They stay 0.9 m clear of the soffit band and
+  walls and 1 m clear of the columns.
+- **Seating** (ru_food_court_booths_2016, ru_food_court_counter_2023): 8 orange booths (`diner_booth`,
+  `int_ru_leather_orange`, dark tables) line the west glass in the 4 m west strip, table ends against the wall, with one
+  collision block for the run. The south hall's 7 x 4 grid of single tables became 4 rows of 5 table pairs pushed
+  together (40 tables). The east hall gained 10 more pairs (20 tables) between the NE block's queue ring and the
+  curved glass. Every pair has one merged collision block, so area 2's collision is 12,406 tris, against 12,386
+  before this pass (soft line 12,288).
+- **Columns**: the south row of white hall columns moved from y -320.5 to -321.1. The chairs of the y -319.5 tables
+  reached 0.1 m into them.
+- **Starbucks** (ru_starbucks_2017): the counter, top, side walls and fascia are smooth vertical-grain maple panels
+  (`int_ru_maple_panel`). `int_ru_maple` stays the Rion Ballroom floor. On the counter: two black espresso machines
+  with steel group heads, a register with a screen, and a lit pastry case (`int_ru_pastry`) with a glass sneeze
+  guard. The chalkboards moved down to 1.6-2.35 m, under the fascia.
+- **Walkway door**: the free-standing glass pair 0.4 m outside the Level 1 walkway's west slab edge is gone. It stood
+  behind the full-length rail, 6 m above the lawn, with nothing behind it, and its "Bookstore" label was wrong (the
+  Bookstore is south of the walkway). The plan door stays in the layout data.
+- **Proportions** (documented raise, reduced): the queue-ring soffit and the storefront openings / kitchen ceilings
+  are at 3.6 m (was 4.0 / 3.9 m; photo about 2.9 m). The hall ceiling stays at the floor's 5.4 m clear (photo about
+  3.6 m). Lowering it would need a new collision ceiling over the whole L1 corridor zone.
+
+### Fix round 2 (fidelity-3 pass: Ground, the Game Room, Esports and the Senate Chamber)
+
+- **Dropped ceilings on Ground** (documented raise): G310-G330 and the Senate Chamber now have the same 3.9 m
+  lay-in ceiling as L2 / L3 (`MEETING_CLEAR`, style key `ceil_h`), with a collision ceiling at 3.9 m. The photos
+  (ru_os_g310_g320, ru_os_g330, ru_os_chamber) show about 3 m, about 1.4x the door. At 5.4 m the royal-blue accent
+  walls were tall slabs. The projectors, screen housings, lights and the chamber's cherry wall stop at the new ceiling.
+- **Billiards carpet** (`int_ru_carpet_billiards`): this reverses the earlier "about 40% darker" request. Both photos
+  measure a lighter, desaturated grey-blue. The new carpet is irregular croc scales (a toroidal Voronoi) outlined in
+  pale blue-grey with a few tan lines. Its texture mean is about (107,122,151) with saturation 0.34; it was
+  (38,52,110), 0.65.
+- **Game Room east windows** (`window_spec`): the windows by the table games now have a charcoal dado
+  (`int_ru_wall_charcoal`) to 1.1 m, with glass from there to the ceiling (ru_gr_foosball_windows, ru_gr_ping_pong).
+  They were floor-to-ceiling glass because the CURVE rule overrode the zone.
+- **Esports**:
+  - The GATOR ESPORTS CENTER sign is now bold italic white letters with a 1-texel blue halo. The 256 x 16 px line is
+    split over two textures (`int_ru_sign_esports`, `int_ru_sign_esports_b`) and drawn as four quads (`_esports_sign`).
+    On the end-wall bulkhead the letters are about 0.5 m tall over about 5.4 m; the bulkhead band is 0.95 m. The
+    sign over the storefront door on the Game Room side uses the same line.
+  - The walls (`int_ru_hex`) are flat matte black. Only the neon clusters are hexagons.
+  - The gaming chairs are all black (the red back panels are gone).
+  - The bar, stools, ottomans and TV row on the Game Room side of the storefront were already built in the blocking
+    pass.
+- **Senate Chamber** (ru_os_chamber):
+  - The cherry wall is one 9 m feature wall mapped once (`int_ru_chevron`, now 64 x 32): three courses of large
+    panels in slightly different tones and two broad diagonal reveals forming one big chevron. It replaces the
+    tiled 0.6 m zigzag.
+  - The dais desk has a plain cherry front, a dark kick strip and two small navy UF FLORIDA plaques
+    (`int_ru_dais`, cropped by UVs), instead of the big UF roundel.
+  - Two cherry podiums with the same plaque stand at the dais ends.
+- **Bowling ball racks** (`ball_rack`): the racks are open frames (end panels, a plinth, two shelves on steel rails)
+  holding two rows of round 8-sided balls, so both shelves show. They were closed boxes of 0.22 m cubes.
+  Collision is unchanged.
+- **Preview camera** `reitz_bowling_lane`: moved to (-444.46, -301.9, 1.6), behind and between the two white columns
+  that frame ru_gr_lane_screens.
+- **Ground north-door corridor** (`g_north_corridor`): the plan run is unchanged. The arrival through the north warp
+  door now has:
+  - a lay-in soffit at 3.9 m over the run and the door alcove, with a collision ceiling, five downlights, and a
+    fascia where it meets the 5.4 m main corridor;
+  - a lit EXIT sign hung just inside the door;
+  - the Ground wayfinding blade (both faces);
+  - on the restroom wall, a drinking-fountain + AED niche: a slate panel, a bi-level steel fountain (with collision)
+    and an AED cabinet (`int_ru_aed`).
+- **Budget**: area 2 collision is 12,476 tris (+90: the six Ground ceilings, the corridor soffit, the fountain and
+  the podiums). That is still the single soft warning (12,288 line). The level renders 198,095 tris in all; area 2
+  is about 116k.
+
+### Fix round 2 (fidelity-4 pass: Levels 2-6 event rooms, meeting rooms and the hotel)
+
+- **Arredondo Cafe (L4)**: the large ceiling-hung projection screen (4.8 x 2.7 m, black case + rods) now hangs
+  centred on the far (east) end in front of the east glass (`ARREDONDO_SCREEN`), with a ceiling projector mid-room,
+  as `level4()`'s docstring and ru_os_arredondo_cafe show. The chairs have tan-orange padded seats
+  (`int_ru_seat_tan`) and taller cherry wood backs (`cafe_table_set(seat_box=True)`); the tables are a staggered
+  3.3 m grid of 33 sets (was about 14), clear of the stone column, the plan doors and the cafe coin line. Not
+  denser, because every table keeps a 10-triangle collision box.
+- **Hotel suite 501/502 (L5)**: the plan zone is two hotel rooms (two corridor doors), so a full-height partition
+  (`SUITE_SPLIT_Y`, with collision) now splits it into the south sitting room (ru_hotel_suite) and the north
+  bedroom (a queen bed set). The sitting room is dressed from the photo, which looks east at the solid back wall:
+  - the blue sofa between two cherry end tables with white-shade lamps (`lamp_table`), and a framed aqua print over
+    it (`int_ru_print_suite`, right half);
+  - the royal-blue accent wall on the left (the partition's south face) with a large framed palm print (left half);
+  - the window wall on the right: pleated gold drapes (`int_ru_drape_gold`) at both ends, the east one drawn across
+    the balcony slider, a white sheer, and a navy patterned valance (`int_ru_valance_navy`);
+  - two rounded butterscotch leather loveseats (`loveseat_round`, `int_ru_leather_tan`) facing each other across a
+    cherry coffee table.
+  The bedroom takes the zone's auto accent wall (east). New preview camera `reitz_hotel_suite`.
+- **Room 516 + its camera** (ru_hotel_room looks north: the royal-blue wall with the dresser + TV on the LEFT, the
+  cherry headboard + nightstands + lamps AHEAD, the window on the right). The royal blue, the cherry dresser and the
+  wall TV moved to the east face of the entry / bath block (the bath door at its south end); the plan's south wall
+  is cream with the desk; the cherry-framed mirror hangs on the notch wall. `reitz_hotel_room` is now
+  (-425.3, -273.45, 30.65) -> (-428.5, -268.8, 30.05), vfov 72. The reviewer's suggested view
+  (-425.1, -273.9) -> (-431.6, -268.9) showed the headboard on the right wall of the old layout.
+- **Preview camera** `reitz_rion_ballroom` now stands at the north-west behind the rows and looks south at the
+  stage and its black drape on the far wall (it stood beside the stage).
+- **Rion Ballroom (L3)**: 7 darker mahogany beams (`int_ru_mahogany`, 0.4 m wide, 4.2 m apart), with an LED line
+  in every other bay, so the white tile ceiling and its downlights dominate. The old ceiling had 11 cedar beams at
+  2.8 m. The theatre rows fill the floor: 16 rows of 36 seats in three blocks (was 12 x 24), still one low
+  collision box. The stage is 8 m wide with a 4 m black drape that now stands clear of the south wall. Before, the
+  drape sat on the wall line and was hidden, so the photo's focal point was missing.
+- **Grand Ballroom (L2)**: two seat blocks of 15 with a 3.2 m centre aisle (`GB_CENTRE_AISLE`) on the podium axis
+  (ru_os_grand_ballroom_1). The podium moved to the stage centre front, 0.75 m clear of the stage coin line.
+- **Office chairs**: the 3305 U, the 3310 hollow square and the 2345 / 2350 boardroom tables seat black high-back
+  mesh office chairs on casters (`office_chair`, via `folding_table(chair="office")`; visual only). Rows, G325 and
+  the other rooms keep the black stacking chairs.
+- **Upstairs accent walls**: `int_ru_wall_slateblue` is now #7F90AC (+15 % value; was #6E7D96), the light slate
+  grey-blue of ru_os_2315_2330 and ru_os_2355_2365.
+- **L2 / L3 meeting-room doors** (deviation, see `deviations`): each meeting room keeps ONE walk-through door, its
+  first plan door to a corridor (`_closed_look`). Its other plan doors, the second corridor door and the doors
+  between adjoining rooms, are drawn as closed walnut leaves with a narrow vision lite and a lever
+  (`int_ru_door_meeting`) in a continuous wall: 8 on L2, 6 on L3. The open doorways get painted returns and steel
+  trim instead of the wood jamb returns, which read as door leaves standing open at 90 degrees into the 2.6 m
+  corridors.
+- **New textures** (appended, so the existing seeds are unchanged): `int_ru_leather_tan`, `int_ru_seat_tan`,
+  `int_ru_mahogany`, `int_ru_drape_gold`, `int_ru_valance_navy`, `int_ru_print_suite`, `int_ru_door_meeting`.
+- **Budget**: area 2 collision is 12,448 tris (-28). The closed doors save 188 tris and the Arredondo tables add
+  170. It is still the single soft warning. The level renders 205,487 tris; area 2 is about 124k.
+
+### Fix round 2 (design pass: circulation, arrival, camera, textures, rewards)
+
+- **Circulation (LL / L2 / L3)** (`circulation_dress`, `_corridor_art`). The pass walks the outline of every
+  solid room (meeting rooms, ballrooms, auditorium, studios, restrooms, service, elevators; no glass storefront
+  types) where a corridor lies outside it. It walks the rooms, not the corridors, because many room blocks are
+  islands inside the big corridor polygons. On those walls it adds:
+  - a navy room-number plaque (`int_ru_room_plaque`, 0.15 x 0.3 m at 1.4-1.7 m) on the latch side of every room
+    door that opens onto a corridor: 32 on LL, 62 on L2, 64 on L3;
+  - a framed print (one of the eight `int_ru_prints` cells, 0.75 m) or every third time a cork bulletin board
+    (`int_ru_bulletin`, 1.2 x 0.9 m) every ~5 m, kept 0.45 m clear of doors and 0.6 m clear of corners: 45 on LL,
+    120 on L2, 113 on L3. The LL accent mural is skipped.
+  - No photo shows the exact art or signs on these walls; the framed-art rows follow ru_os_g310_g320 and
+    ru_os_g330. All the plaques share one design (per-room numbers do not fit at N64 texture size).
+- **L2 pre-function hall** (west of the atrium): two navy lounge groups (sofa, a navy and a plum club chair, a
+  coffee table on an `int_ru_carpet_atrium` rug) at (-458.6, -270.6) and (-421.6, -281.2), each with one
+  seat-height collision block. Two maple lobby benches stand against the restroom core on L2, L3 and LL.
+- **L1 south hall (the Bookstore link)**: the backdrop oaks were already kept out by `_tree_clear` (blocking
+  pass). The hall gets:
+  - two back-to-back bench pairs and five charcoal planters with shrubs (collision only to the planter rim,
+    0.55 m);
+  - over the plan's 4.5 m link doors (-443.2..-438.7, y -357.1), the storefront sign from ru_bookstore_entrance:
+    glowing white UNIVERSITY OF FLORIDA / BOOKSTORE letters with a blue halo (`int_ru_sign_bookstore`) on a dark
+    fascia band. The sign sits on a 0.6 m white sign ledge (top 3.1 m, collision top and underside).
+  - The Bookstore itself is still not modelled: the glass door bank looks out to the backdrop, not into the store.
+- **Arrival glass**: the north entrance door bank, its curtain glass, and the GLASS_VESTIBULES storefront walls
+  use the new `int_ru_glass_clear` (alpha 0.14, #DCE6EA) instead of `int_ru_glass` (0.30, #A8CCE0). The vestibule
+  transom is now 5 cm (2.95-3.0 m; was 3.0-3.1 m). The balconies and the vault read at once through the doors.
+- **Hotel camera (L5 / L6)**: NO_CAM stays only on the guest-room side of the corridor ring. Corridor walls whose
+  room reaches no closer than 3 m to the floor outline (the core: elevators, service, linen; `_core_room`) are
+  camera-solid again. A camera that swung through the core used to be hidden by the far corridor's walls. NO_CAM
+  wall runs went from 36 to 22 on L5 and 39 to 26 on L6. The core rooms no longer get sealed backings (23 -> 19 and
+  26 -> 22).
+  - The sealed backings also drop the wall between two backed rooms. Each such wall faced into its own room, so a
+    camera that had swung into one guest room was blind to Mario in front of the next.
+  - Measured with the design reviewer's follow-cam sweep (8 directions, 10 m back, +3.6 m, pulled in by
+    camera-colliding walls only), Mario is hidden in 14.0% of L5 samples (was 17.9%) and 18.0% of L6 samples (was
+    27.9%). The camera is within 3 m of Mario more often: 50.0% / 31.5% (was 37.9% / 9.6%).
+  - Variants measured and rejected:
+    - core-only NO_CAM: 14.0 / 20.6% hidden;
+    - no NO_CAM in the ring: 7.3 / 4.1% hidden, but 70% cramped;
+    - guest-side NO_CAM without the backing change: 21.9 / 34.2% hidden.
+- **Bowling**: the overhead truss and score monitors are 0.4 m higher (`zt` 4.3 -> 4.7; monitors 3.5-4.65 m).
+- **Thin lines (no mipmaps)**:
+  - `int_ru_cedar` is now soft two-tone slats, 2 texels light and 2 texels 12% darker, 32 px over 1.6 m. It was
+    1-texel dark gaps every 4 texels at 0.8 m.
+  - `int_ru_carpet_atrium` squiggles are 2 texels tall.
+  - Every `int_ru_carpet_ballroom` line is at least 2 texels (11 cm) wide; the meander pattern is unchanged.
+- **Gator tracks**: the footprint fills ~85% of its 0.4 m quad (palm r 8 px, longer toes), so the trail reads from
+  the follow camera.
+- **Already done in earlier passes**: the lounge cluster collision is 0.48 m (seat height), and the gator-track
+  prints are 0.4 m.
+- **Rewards**: 3 coins on the Bookstore sign ledge (double jump, or a jump and a ledge grab) and 3 coins on top
+  of arcade cabinets 0, 3 and 6 by the Esports storefront (1.85 m tops; hop from the 1.07 m bar). Area 2 now has
+  84 coins.
+  - Red coins are not built: `stage_pickups` has no red-coin kind and area 2 has no star slot of its own.
+- **New textures** (appended, so the existing seeds are unchanged): `int_ru_glass_clear`, `int_ru_room_plaque`,
+  `int_ru_bulletin`, `int_ru_sign_bookstore`. Redrawn in place: `int_ru_cedar` (tile 0.8 -> 1.6 m),
+  `int_ru_carpet_atrium`, `int_ru_carpet_ballroom`, `int_ru_gator_track`.
+- **Budget**: area 2 collision is 12,632 tris (+184 for the benches, lounge blocks, planters and sign ledge). It
+  is still the single soft warning. The level renders about 207k tris.
+
+### Open after review round 3 ( final integration)
+
+Six reviewers scored the final build (out of 10): fidelity-1 7, fidelity-2 7, fidelity-3 7, fidelity-4 6, design 7, technical 5 (round 1: 5, 4, 5, 4, 5, 5). Their blocking items below were not fixed; `mods/sgl64/levels/wf` is the final source, rebuilt byte-identical. Photo | render pairs of 12 spaces: `art/levels/reitz_interior/compare/FINAL_sheet.jpg` (local only).
+
+- **Cedar vault (ru_atrium_enr_vertical, ru_atrium_hdr_flickr, ru_atrium_construction_2015):** the build is a pointed lens (21.5 x 9.2 m, 61 % of the west void) with five ribs converging at both ends, white corner soffits, clerestory on every side and three drum pendants. The photos show cedar wall to wall between dark bands, 2-3 long ribs bowing apart, and a convex silver metal-panel bulkhead with a downlight row across the east end; no pendants.
+- **View through the curved SE glass (ru_dining_windows):** the crowns near the curve run 6.8-17.2 m above G, so the lower 40 % of the glass shows lawn, trunks and the pond. The photo has foliage from the sill up to about 2/3 of the glass: crowns at about 3-11 m above G within 10 m of the glass, plus an understory.
+- **Outdoor dining terrace:** the east leg of `outdoor_dining_area` (x −420.0..−418.0, y −335.3..−320.5, about 30 m²) is rendered paving with no collision floor; Mario stops at an invisible line 2 m short of the rail. Give the exterior walkway zones a collision floor and rail, or close the south leg at x −431.1 with glass.
+- **Esports storefront (ru_es_oelrich_8951 / 9352):** milky `int_ru_glass`, emitted twice, so the dark arena reads as a frosted pale wall from the Game Room and glows from inside. Clear or smoked glass with black framing; optionally glaze only the door bay.
+- **Wall colours:** G315's accent is royal blue, the photo's is pale blue-grey (about #BCC4D0); the billiards walls are navy, the photo's are charcoal (`int_ru_wall_charcoal` exists), and the GAME ROOM mural sits where the photo has a plain dark wall.
+- **Upstairs meeting rooms (ru_os_2315_2330, 2335_2340, 2360, 2345_2350, 3315_3320):** the accent-wall picker skips walls with doors, so the slate blue and the chair rows face a door-less side wall, 90° off the photos. The front wall should be the door wall (blue bays between the door bays for 2315-2330 and 2360); 2345/2350 and 3315/3320 belong in `WHITE_SCREEN_WALL`.
+- **Interior camera:** area 2 has no `SGL_STAGE_CAMERA` entry (`levels.lua` keys it by level and reads only `currLevelNum`), so the outdoor distances apply. Sweep: Mario hidden in 22 % of L5 and 35 % of L6 samples zoomed out with collision on; 12-14 % with the interior values (650 / 1000 back, 220 / 330 up, collision on). Fix: an area-aware entry that restores the player's values on the way out.
+- **Sky below grade through Ground glazing:** the paving apron is cut by the full roof footprint (`holes=[RZ.footprint]`), so under the overhangs and just outside the Ground outline there is no grade: 71 of 376 eye-height rays from Ground / LL glass hit nothing (west glazing at x −460.5, Orange & Brew SE glass, Game Room east windows, the South Terrace west bay).
+- **LL print lab door:** the plan door at (−403.0, −266.7)-(−403.0, −265.8) into the sealed `sg_print_lab` is a 0.42 m slot with jambs and no leaf; Mario walks through into hollow sealed rooms (about 175 m²). Close it with a leaf.
+- **Auditorium (L2):** the raked floor's back face (game x 3710, 1.9 m) has collision but no render face, and the only door opens onto a 0.9 m strip behind it: the rake can be reached only with a 1.9 m jump. Add steps or a render face, or open the door onto the aisle.
+- **Atrium rail junctions:** walk sims still drop Mario at the L2 NE flight head (about 10 % of walks), the L1 junction (−398.2, −276.3), the L2 SE flight foot, the L3 east kink rail and the L3 flight head: pockets of one-sided no-camera faces between a flight rail's end and the balcony rail's end. Close them with double-sided or overlapping rail collision.
+- **Coplanar decals:** the Bookstore sign lies in the plane of its fascia; about 25 bulletin boards and prints sit within 0.35 units of their wall (z-fight) and about 14 lie behind it (hidden). Offset from the built wall face, not the plan centre line.
 
 ## 10. Open questions (`open_questions`)
 

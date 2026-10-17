@@ -1054,6 +1054,9 @@ def _build_hookups(vis, col, warp, lay):
     ax_, bx_ = sorted((E3.xy(td - hw)[0], E3.xy(td + hw)[0]))
     ydf = max(_y_on(E3.a, E3.c, ax_), _y_on(E3.a, E3.c, bx_))
     _vestibule(vis, col, warp, HOOKUP_WARP["south_exit_l1"], ax_, bx_, ydf, ydf + VEST_D, DECK_Z, DOOR_TOP, DOOR_TOP)
+    # the deck's edge is the slanted facade line, 2-4 cm short of the warp strip's start (y = ydf): a deck strip up
+    # to the door line closes that crack (the warp strip itself must not reach further out: area 2's strip)
+    _box(col, ax_ - 0.3, bx_ + 0.3, ydf - 0.15, ydf, DECK_Z, DECK_Z, "concrete", faces="t")
     # ---- Ground north door under the colonnade: recess from the facade to the door line + vestibule
     gx0, gx1, gy = GN_DOOR
     Ec = Edge(C_POLY[0], C_POLY[1])

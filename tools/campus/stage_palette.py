@@ -131,7 +131,7 @@ INTERIOR_MATERIALS.update({
     "int_ms_led":             {"tex": "int_ms_led.png",             "tile_m": 1.0, "color": "#FFFFFF", "map": "once"},
     # walls / cladding / millwork
     "int_ms_brick":           {"tex": "int_ms_brick.png",           "tile_m": 0.84, "color": "#A85640"},
-    "int_ms_copper":          {"tex": "int_ms_copper.png",          "tile_m": 1.2, "color": "#6A5040"},
+    "int_ms_copper":          {"tex": "int_ms_copper.png",          "tile_m": 1.2, "color": "#A8704C"},
     "int_ms_veneer":          {"tex": "int_ms_veneer.png",          "tile_m": 1.0, "color": "#B0683A"},
     "int_ms_perf":            {"tex": "int_ms_perf.png",            "tile_m": 0.5, "color": "#D2D2CE"},
     "int_ms_maple":           {"tex": "int_ms_maple.png",           "tile_m": 1.0, "color": "#E4CEA4"},
@@ -141,13 +141,13 @@ INTERIOR_MATERIALS.update({
     # upholstery
     "int_ms_leather":         {"tex": "int_ms_leather.png",         "tile_m": 0.6, "color": "#EEE8E0"},
     "int_ms_fab_geo":         {"tex": "int_ms_fab_geo.png",         "tile_m": 0.5, "color": "#A8AAA6"},
-    "int_ms_fab_dark":        {"tex": "int_ms_fab_dark.png",        "tile_m": 0.5, "color": "#463A30"},
+    "int_ms_fab_dark":        {"tex": "int_ms_fab_dark.png",        "tile_m": 0.5, "color": "#3C3C40"},
     "int_ms_fab_multi":       {"tex": "int_ms_fab_multi.png",       "tile_m": 0.5, "color": "#DAD2C2"},
     "int_ms_felt":            {"tex": "int_ms_felt.png",            "tile_m": 0.6, "color": "#5E605E"},
     "int_ms_mesh":            {"tex": "int_ms_mesh.png",            "tile_m": 0.3, "color": "#5C5E62"},
     # collections (64 x 32 = 2 m x two shelf rows, mapped like int_books)
     "int_ms_bound":           {"tex": "int_ms_bound.png",           "tile_m": 2.0, "color": "#6A4A44", "map": "once"},
-    "int_ms_theses":          {"tex": "int_ms_theses.png",          "tile_m": 2.0, "color": "#2E4A3E", "map": "once"},
+    "int_ms_theses":          {"tex": "int_ms_theses.png",          "tile_m": 2.0, "color": "#2C3236", "map": "once"},
     "int_ms_stacks":          {"tex": "int_ms_stacks.png",          "tile_m": 2.0, "color": "#6A5A54", "map": "once"},
     # signs, screens, decals (mapped once)
     "int_ms_sign_service":    {"tex": "int_ms_sign_service.png",    "tile_m": 1.2, "color": "#F2C430", "map": "once"},
@@ -160,15 +160,16 @@ INTERIOR_MATERIALS.update({
     "int_ms_glass_444":       {"tex": "int_ms_glass_444.png",       "tile_m": 1.2, "color": "#F4F4F0", "map": "once",
                                "kind": "cutout"},
     "int_ms_sign_rest":       {"tex": "int_ms_sign_rest.png",       "tile_m": 1.2, "color": "#2E2C2C", "map": "once"},
+    "int_ms_wc_plaques":      {"tex": "int_ms_wc_plaques.png",      "tile_m": 1.2, "color": "#3A3C40", "map": "once"},
     "int_ms_names":           {"tex": "int_ms_names.png",           "tile_m": 1.2, "color": "#3A3C40", "map": "once"},
     "int_ms_names_b":         {"tex": "int_ms_names_b.png",         "tile_m": 1.2, "color": "#3A3C40", "map": "once"},
-    "int_ms_exit":            {"tex": "int_ms_exit.png",            "tile_m": 0.4, "color": "#2A1414", "map": "once"},
+    "int_ms_exit":            {"tex": "int_ms_exit.png",            "tile_m": 0.4, "color": "#EEEDE8", "map": "once"},
     "int_ms_order":           {"tex": "int_ms_order.png",           "tile_m": 0.8, "color": "#1E8A72", "map": "once"},
     "int_ms_cafe_decal":      {"tex": "int_ms_cafe_decal.png",      "tile_m": 1.0, "color": "#1E6A4A", "map": "once",
                                "kind": "cutout"},
-    "int_ms_projector":       {"tex": "int_ms_projector.png",       "tile_m": 2.0, "color": "#2E62C8", "map": "once"},
+    "int_ms_projector":       {"tex": "int_ms_projector.png",       "tile_m": 2.0, "color": "#88AEF8", "map": "once"},
     "int_ms_directory":       {"tex": "int_ms_directory.png",       "tile_m": 0.8, "color": "#34363A", "map": "once"},
-    "int_ms_aquarium":        {"tex": "int_ms_aquarium.png",        "tile_m": 1.8, "color": "#14261E", "map": "once"},
+    "int_ms_aquarium":        {"tex": "int_ms_aquarium.png",        "tile_m": 1.8, "color": "#0C1812", "map": "once"},
     "int_ms_vending":         {"tex": "int_ms_vending.png",         "tile_m": 1.0, "color": "#6A4E9A", "map": "once"},
     "int_ms_tv":              {"tex": "int_ms_tv.png",              "tile_m": 1.2, "color": "#18191C", "map": "once"},
     "int_ms_logo":            {"tex": "int_ms_logo.png",            "tile_m": 1.2, "color": "#E6E6E4", "map": "once"},
@@ -177,6 +178,44 @@ INTERIOR_MATERIALS.update({
     "int_ms_wall":            {"tex": "int_ms_wall.png",            "tile_m": 1.2, "color": "#EEEBE3"},
     "int_ms_print_poster":    {"tex": "int_ms_print_poster.png",    "tile_m": 1.2, "color": "#C8CCD8", "map": "once"},
     "int_ms_exit_door":       {"tex": "int_ms_exit_door.png",       "tile_m": 1.0, "color": "#6E7884", "map": "once"},
+    # fidelity-1: study-room names lettered on the F1 bulkheads (cut-out), clear study-room front glass
+    "int_ms_bnames_0":        {"tex": "int_ms_bnames_0.png",        "tile_m": 1.2, "color": "#45474C", "map": "once",
+                               "kind": "cutout"},
+    "int_ms_bnames_1":        {"tex": "int_ms_bnames_1.png",        "tile_m": 1.2, "color": "#45474C", "map": "once",
+                               "kind": "cutout"},
+    "int_ms_bnames_2":        {"tex": "int_ms_bnames_2.png",        "tile_m": 1.2, "color": "#45474C", "map": "once",
+                               "kind": "cutout"},
+    "int_ms_bnames_3":        {"tex": "int_ms_bnames_3.png",        "tile_m": 1.2, "color": "#45474C", "map": "once",
+                               "kind": "cutout"},
+    "int_ms_glass_clear":     {"tex": "int_ms_glass_clear.png",     "tile_m": 2.0, "color": "#E4ECEE", "kind": "water",
+                               "alpha": 0.30},
+    "int_ms_roomnum_0":       {"tex": "int_ms_roomnum_0.png",       "tile_m": 1.2, "color": "#3A3C40", "map": "once"},
+    "int_ms_roomnum_1":       {"tex": "int_ms_roomnum_1.png",       "tile_m": 1.2, "color": "#3A3C40", "map": "once"},
+    "int_ms_roomnum_2":       {"tex": "int_ms_roomnum_2.png",       "tile_m": 1.2, "color": "#3A3C40", "map": "once"},
+    # fidelity-2: the labs' blue-wallpaper monitors (#61 #63) and the makerspace's 2' x 4' lay-in tile (#54 #56)
+    "int_ms_monitor":         {"tex": "int_ms_monitor.png",         "tile_m": 1.0, "color": "#2A6CC0", "map": "once"},
+    "int_ms_tile24":          {"tex": "int_ms_tile24.png",          "tile_m": 1.2, "color": "#ECEAE4"},
+    # fidelity-3: the porch's near-black storefront glass (#2), the F2 science fiction stacks' spines and end sign,
+    # the entrance door vinyl (#1)
+    "int_ms_glass_black":     {"tex": "int_ms_glass_black.png",     "tile_m": 1.2, "color": "#1E2226", "map": "once"},
+    "int_ms_fiction":         {"tex": "int_ms_fiction.png",         "tile_m": 2.0, "color": "#3A3434", "map": "once"},
+    "int_ms_sign_scifi":      {"tex": "int_ms_sign_scifi.png",      "tile_m": 1.2, "color": "#F2F2EE", "map": "once"},
+    "int_ms_door_vinyl":      {"tex": "int_ms_door_vinyl.png",      "tile_m": 1.2, "color": "#F2F2EE", "map": "once",
+                               "kind": "cutout"},
+    "int_ms_sign_stairs":     {"tex": "int_ms_sign_stairs.png",     "tile_m": 1.6, "color": "#2E3440", "map": "once"},
+    # fix round 2: the L136 visualization wall's GIS aerial imagery (#48), mapped once over the 3 x 2 display grid
+    "int_ms_gis_map":         {"tex": "int_ms_gis_map.png",         "tile_m": 3.0, "color": "#6A9050", "map": "once"},
+    # fix round 2: the F1 east study rooms' daylit exterior glass onto the sunken court (#38 4272, #44)
+    "int_ms_glass_day":       {"tex": "int_ms_glass_day.png",       "tile_m": 2.0, "color": "#E8F0F4", "kind": "water",
+                               "alpha": 0.55},
+    # fidelity-2 fix 2: the labs' / benching's pale frosted divider glass (#61 #63 #64), the makerspace TV's lit
+    # light-blue slide (#56), the wellness room's patterned blue rug (#74 #75)
+    "int_ms_glass_frost":     {"tex": "int_ms_glass_frost.png",     "tile_m": 1.2, "color": "#E6EAEC", "kind": "water",
+                               "alpha": 0.72},
+    "int_ms_tv_maker":        {"tex": "int_ms_tv_maker.png",        "tile_m": 1.8, "color": "#8CCAF0", "map": "once"},
+    "int_ms_rug_blue":        {"tex": "int_ms_rug_blue.png",        "tile_m": 2.0, "color": "#2E5A9A", "map": "once"},
+    # design fix round 2: Marston's walkable roof deck, a grey single-ply membrane with lap seams on a 2 m tile
+    "int_ms_roof_membrane":   {"tex": "int_ms_roof_membrane.png",   "tile_m": 2.0, "color": "#A2A29E"},
 })
 for _m in INTERIOR_MATERIALS.values():
     _m.setdefault("kind", "opaque")

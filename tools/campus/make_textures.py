@@ -1260,17 +1260,18 @@ def tx_ms_carpet(seed):
 def tx_ms_carpet_f1(seed):
     """Collaboration Commons carpet (2014, floor 1): 24" linear tiles laid quarter-turned, each tile a block of fine
     stripes in one muted family (slate blue, lavender grey, sage, rust brown, navy) with lighter and darker threads;
-    medium-dark overall (photos #36-#41, #69; crop of #36). 16 px tiles, 32 px = 1.2 m."""
-    fams = [hexc("#5C6078"), hexc("#6A6482"), hexc("#686A56"), hexc("#68504A"), hexc("#3E4260"), hexc("#64646E"),
-            hexc("#4E5470"), hexc("#5E5672")]
-    hi, lo = hexc("#9A98AC"), hexc("#2A2C3A")
-    t = Tex(32, 32, fams[0], seed)
-    order = list(range(len(fams)))
-    t.r.shuffle(order)
+    medium-dark overall (photos #36-#41, #69; crop of #36). 16 px tiles, 32 px = 1.2 m.
+    Fix r1 (blocking): the 4 hue families (sage, rust...) read as a checkerboard quilt (block contrast 23.5 vs the
+    photos' 8-10). Now ONE slate / navy-purple base for every tile (mean ~ #5E5A70, photos 85-107 / 79-103 / 99-119),
+    only the stripe direction alternates, each tile's mean luminance is levelled to within ~1%, and 1-px flecks of
+    purple / teal / brown / white give the multicolour."""
+    base = hexc("#5E5A70")
+    hi, lo = hexc("#8A86A0"), hexc("#34324A")
+    t = Tex(32, 32, base, seed)
     for ty in range(2):
         for tx in range(2):
             horiz = (tx + ty) % 2 == 0
-            tone = mix(fams[order[(tx * 2 + ty) % len(order)]], hexc("#585A6C"), 0.40)
+            tone = base
             for a in range(16):
                 row_k = 1.0 + t.r.uniform(-0.10, 0.10)
                 b = 0
@@ -1287,7 +1288,24 @@ def tx_ms_carpet_f1(seed):
                         x, y = (tx * 16 + bb, ty * 16 + a) if horiz else (tx * 16 + a, ty * 16 + bb)
                         t.set(x, y, c)
                     b += n
+    flecks = [hexc("#7A4E96"), hexc("#3E7E86"), hexc("#6E5040"), hexc("#B8B6C4")]
+    for ty in range(2):
+        for tx in range(2):
+            for _ in range(7):
+                t.set(tx * 16 + t.r.randrange(16), ty * 16 + t.r.randrange(16), t.r.choice(flecks))
     t.noise(2)
+
+    def lum(p):
+        return 0.299 * p[0] + 0.587 * p[1] + 0.114 * p[2]
+    target = lum(base)
+    for ty in range(2):                     # level every tile's mean luminance to the base's
+        for tx in range(2):
+            cells = [(tx * 16 + i, ty * 16 + j) for j in range(16) for i in range(16)]
+            m = sum(lum(t.px[y][x]) for x, y in cells) / len(cells)
+            k = target / m if m > 0 else 1.0
+            for x, y in cells:
+                r, g, b_, al = t.px[y][x]
+                t.px[y][x] = (max(0, min(255, r * k)), max(0, min(255, g * k)), max(0, min(255, b_ * k)), al)
     return t
 
 
@@ -1408,11 +1426,13 @@ def tx_ms_led(seed):
 def tx_ms_brick(seed):
     """Interior face brick (the floor-1 core walls #69, the makerspace #50-#57, the porch piers #1): 64 x 32,
     4 bricks x 8 courses with light grey mortar. Mapped with explicit UVs (u over 0.84 m, v over 0.54 m) so a
-    brick is 0.21 x 0.0675 m like a modular brick; varied red / orange / flashed tones."""
-    t = Tex(64, 32, hexc("#D2CCC0"), seed)
+    brick is 0.21 x 0.0675 m like a modular brick; varied red / orange / flashed tones.
+    Fix r1 (blocking): no mipmaps in coopdx, and at 76 texels/m the 1-texel light mortar (#CEC8BC) broke into dashed
+    noise across the atrium; the mortar is now a warm mid tone (#A07C6A) within ~25-30 luminance of the brick."""
+    t = Tex(64, 32, hexc("#A07C6A"), seed)
     tones = [hexc("#B0583E"), hexc("#A24E3A"), hexc("#BC6448"), hexc("#94483A"), hexc("#AA5E4A"),
              hexc("#8A4436"), hexc("#B86A50"), hexc("#9C5244")]
-    mortar = hexc("#CEC8BC")
+    mortar = hexc("#A07C6A")
     for course in range(8):
         off = 8 if course % 2 else 0
         for b in range(5):
@@ -1432,27 +1452,27 @@ def tx_ms_brick(seed):
 
 
 def tx_ms_copper(seed):
-    """Weathered copper cladding (the porch soffit / fascia over the north doors, #1, #3): dark bronze-brown
-    standing-seam panels 0.6 m wide (16 px at 1.2 m), a horizontal joint, green-grey patina streaks."""
-    base = hexc("#6A5040")
+    """Bronze metal cladding of the porch box over the north doors (#1 #2 #3). fidelity-3: smooth dark bronze-brown
+    panels with fine horizontal seams 0.6 m apart (16 px at 1.2 m; two-pixel shadow + highlight so they do not
+    shimmer), a faint vertical joint every 1.2 m, a soft sheen down each panel and a little mottling (the vertical
+    plank pattern read as timber siding). Mid-tone: the walls tint it dark, the soffit underside stays lighter.
+    design fix round 1: flat, low-contrast copper panels, one 1.2 m panel per tile with a thin dark joint on two
+    edges (2 px: shadow + soft highlight, so it does not shimmer) and no grain, seams or mottling (the 0.6 m seams
+    still read as stained boards). Brighter copper base so the F2 atrium bulkhead and lantern (#24) can use it
+    untinted; the porch callers tint it back down to the fidelity-3 bronze."""
+    base = hexc("#A8704C")
     t = Tex(32, 32, base, seed)
-    for x in range(32):
-        k = 1.0 + 0.06 * math.sin(x * 0.9) + t.r.uniform(-0.03, 0.03)
-        for y in range(32):
+    for y in range(32):
+        k = 1.0 + 0.025 * math.cos(y / 31.0 * math.pi)             # a very soft sheen down the panel
+        for x in range(32):
             t.set(x, y, shade(base, k))
-    for _ in range(9):                        # vertical patina / rain streaks
-        x = t.r.randrange(32)
-        c = t.r.choice((hexc("#5E6252"), hexc("#80644C"), hexc("#4E3E34")))
-        y0 = t.r.randrange(32)
-        for d in range(t.r.randint(6, 20)):
-            t.set(x, (y0 + d) % 32, c)
-    for y in range(32):                       # standing seams
-        for x in (0, 16):
-            t.set(x, y, hexc("#8A6C52"))
-            t.set(x + 1, y, hexc("#3E2E26"))
-    for x in range(32):
-        t.set(x, 0, hexc("#3A2C24"))
-    t.noise(3)
+    t.noise(1.0)
+    for i in range(32):                        # panel joints: shadow + soft highlight on two edges
+        t.set(i, 0, shade(base, 0.72))
+        t.set(i, 1, shade(base, 1.05))
+        if i > 1:
+            t.set(0, i, shade(base, 0.76))
+            t.set(1, i, shade(base, 1.04))
     return t
 
 
@@ -1522,9 +1542,11 @@ def tx_ms_slats(seed):
 def tx_ms_pegboard(seed):
     """Makerspace tool wall (#53, #58): white pegboard with orange-handled wrenches and dark tools (tile 1.0)."""
     t = Tex(32, 32, hexc("#E6E6E2"), seed)
-    for y in range(0, 32, 2):
-        for x in range(0, 32, 2):
-            t.set(x, y, hexc("#A8A8A4"))
+    # design fix round 2 (no mipmaps in game: the 1 px holes every 2 px at 32 texels/m shimmered, 68 % isolated
+    # contrast pixels): the holes on a 4 px pitch at half the contrast
+    for y in range(1, 32, 4):
+        for x in range(1, 32, 4):
+            t.set(x, y, hexc("#C8C8C4"))
     for k in range(5):                        # wrench rack (orange handles)
         x = 3 + k * 2
         for y in range(4, 12 + k):
@@ -1585,18 +1607,24 @@ def tx_ms_fab_geo(seed):
 
 
 def tx_ms_fab_dark(seed):
-    """Charcoal-brown banquette back fabric with a tan / grey dash weave (floor 2, #24-#26)."""
-    base = hexc("#463A30")
+    """Banquette back upholstery (floor 2, #24-#26). fidelity-3: a charcoal woven fabric with a small grey geometric
+    repeat (diamonds on an 8 px = 12.5 cm grid, a dot in each, a faint weave), so the backs read as upholstery
+    rather than the speckled stone the random dash weave gave."""
+    base = hexc("#3C3C40")
     t = Tex(32, 32, base, seed)
-    t.noise(3)
-    for y in range(0, 32, 3):
-        x = t.r.randrange(4)
-        while x < 32:
-            n = t.r.randint(2, 4)
-            c = t.r.choice((hexc("#8A7A62"), hexc("#625448"), hexc("#7A7A6E")))
-            for d in range(n):
-                t.set((x + d) % 32, y, c)
-            x += n + t.r.randint(2, 5)
+    for y in range(32):                       # fine weave: alternate rows a touch lighter
+        for x in range(32):
+            t.set(x, y, shade(base, 1.015 if (x + y) % 2 else 0.99))
+    # design fix round 2: diamonds, dots and weave at about half the contrast (64 texels/m on the F2 banquette backs:
+    # the 1 px pattern shimmered in the no-mip game)
+    grey, light = hexc("#555559"), hexc("#626266")
+    for cy in range(4, 32, 8):
+        for cx in range(4, 32, 8):
+            for d in range(4):                # diamond outline, radius 3
+                for (px, py) in ((cx - 3 + d, cy - d), (cx + d, cy - 3 + d), (cx + 3 - d, cy + d), (cx - d, cy + 3 - d)):
+                    t.set(px % 32, py % 32, grey)
+            t.set(cx, cy, light)
+    t.noise(2)
     return t
 
 
@@ -1628,11 +1656,13 @@ def tx_ms_felt(seed):
 def tx_ms_mesh(seed):
     """Herman Miller Sayl chair back (every task chair in the photos, #28 #61 #76): a light grey elastomer lattice of
     diamonds over the dark frame behind it (the vertex shade darkens it to the photos' mid grey)."""
-    t = Tex(32, 32, hexc("#74767A"), seed)
+    # design fix round 2: the lattice at half the contrast about the same mean (107 texels/m on every chair back
+    # shimmered in the no-mip game)
+    t = Tex(32, 32, hexc("#828488"), seed)
     for y in range(32):
         for x in range(32):
             if (x + y) % 8 in (0, 1) or (x - y) % 8 in (0, 1):
-                t.set(x, y, hexc("#B4B6BA"))
+                t.set(x, y, hexc("#A2A4A8"))
     return t
 
 
@@ -1652,8 +1682,10 @@ def tx_ms_bound(seed):
     height, gilt bands, light grey shelves. 64 x 32, two shelf rows (mapped like int_books)."""
     back, board, edge = hexc("#2A2622"), hexc("#D4D6D6"), hexc("#ECEEEE")
     t = Tex(64, 32, back, seed)
-    pal = [hexc(c) for c in ("#B02E2E", "#2E7A44", "#2E5496", "#C2A274", "#3E8484", "#8E8E8E", "#2A2A2E",
-                             "#C24A2E", "#5A7A3A", "#D8D2C0")]
+    # fidelity-4 (#83 #87): deep red / maroon, teal, tan, navy and black bindings (the bright green and yellow runs
+    # read as rainbow stripes), gilt bands and gilt lettering
+    pal = [hexc(c) for c in ("#8A2226", "#5E1A1E", "#7A2A24", "#2A5E62", "#1F4A50", "#A88A62", "#8A7050",
+                             "#24305A", "#1E2232", "#222226", "#4A2A2E", "#34483A")]
 
     def fill(row, y0):
         x = 0
@@ -1669,8 +1701,8 @@ def tx_ms_bound(seed):
                 for xx in range(x, min(64, x + w)):
                     for yy in range(y0 + 14 - hb, y0 + 14):
                         t.set(xx, yy, shade(c, 0.74 if xx == x else 1.0))
-                    t.set(xx, y0 + 14 - hb + 2, hexc("#D8B858"))
-                    t.set(xx, y0 + 12, shade(c, 1.35))
+                    t.set(xx, y0 + 14 - hb + 2, hexc("#C8A448"))
+                    t.set(xx, y0 + 12, hexc("#B89440") if (xx - x) % 2 == 0 else shade(c, 1.25))
                 x += w
     _ms_shelves(t, 2, back, board, edge, fill)
     t.noise(2)
@@ -1688,13 +1720,16 @@ def tx_ms_theses(seed):
             w = t.r.choice((2, 2, 3))
             if 64 - x - w < 2:
                 w = 64 - x
-            c = t.r.choice((hexc("#2E4A3E"), hexc("#344E44"), hexc("#28403A"), hexc("#2A2E30")))
+            # fix round 2 fidelity-4 (f3_theses_aisle / _shelf_texture measure ~(42-55, 44-57, 46-58)): near-black
+            # slate / navy-green bindings, each with a white call-number label (2 texels) and no gilt band
+            c = t.r.choice((hexc("#232A2C"), hexc("#262C34"), hexc("#20262A"), hexc("#2A3032")))
             hb = t.r.randint(11, 13)
             for xx in range(x, min(64, x + w)):
                 for yy in range(y0 + 14 - hb, y0 + 14):
                     t.set(xx, yy, shade(c, 0.76 if xx == x else 1.0))
-                t.set(xx, y0 + 12, hexc("#E8E8E2"))
-                t.set(xx, y0 + 14 - hb + 1, hexc("#B89C58"))
+                if xx > x or w == 2:
+                    t.set(xx, y0 + 10, hexc("#ECECE6"))
+                    t.set(xx, y0 + 11, hexc("#E2E2DC"))
             x += w
     _ms_shelves(t, 2, back, board, edge, fill)
     t.noise(2)
@@ -1740,8 +1775,32 @@ def tx_ms_sign_service(seed):
     t = Tex(64, 32, hexc("#F2C430"), seed)
     t.noise(2)
     black = hexc("#1E1E1E")
-    _ms_font(t, "SERVICE", 1, 1, black, sx=1, sy=2)
-    _ms_font(t, "DESK", 1, 17, black, sx=1, sy=2)
+    # fidelity-3 (fix round 2, #23): title case 'Service Desk' as photographed (FONT5 has capitals only): the
+    # lowercase glyphs here, 5 x 7 on the capitals' grid, so the words keep their pixel widths (41 / 23 px) that
+    # service_ring_sign maps
+    lower = {
+        "e": [".....", ".....", ".###.", "#...#", "#####", "#....", ".###."],
+        "r": [".....", ".....", "#.##.", "##..#", "#....", "#....", "#...."],
+        "v": [".....", ".....", "#...#", "#...#", "#...#", ".#.#.", "..#.."],
+        "i": ["..#..", ".....", ".##..", "..#..", "..#..", "..#..", ".###."],
+        "c": [".....", ".....", ".###.", "#....", "#....", "#...#", ".###."],
+        "s": [".....", ".....", ".####", "#....", ".###.", "....#", "####."],
+        "k": ["#....", "#....", "#..#.", "#.#..", "##...", "#.#..", "#..#."],
+    }
+
+    def word(text, x, y):
+        for ch in text:
+            g = lower.get(ch)
+            if g is None:
+                _ms_font(t, ch, x, y, black, sx=1, sy=2)
+            else:
+                for gy, row in enumerate(g):
+                    for gx, c in enumerate(row):
+                        if c == "#":
+                            t.rect(x + gx, y + gy * 2, x + gx, y + gy * 2 + 1, black)
+            x += 6
+    word("Service", 1, 1)
+    word("Desk", 1, 17)
     for x in range(64):
         for y in (0, 15, 16, 31):
             t.set(x, y, hexc("#C89A20"))
@@ -1803,7 +1862,7 @@ def tx_ms_neon_open(seed):
         ang = a / 160 * 2 * math.pi
         for r in (14.6, 15.3):
             t.set(int(round(15.5 + r * math.cos(ang))), int(round(15.5 + r * math.sin(ang))), hexc("#FFD84A"))
-    blue = hexc("#7A9CFF")
+    blue = hexc("#3F6EFF")          # fidelity-3 (fix round 2, #3 #4): saturated neon blue (it read pale lilac)
     _ms_center(t, "OPEN", 5, blue)
     _ms_center(t, "24", 13, blue)
     _ms_center(t, "HOURS", 21, blue, spacing=0)
@@ -1833,7 +1892,133 @@ def tx_ms_sign_rest(seed):
     return t
 
 
-MS_ROOM_NAMES = (("HEISENBERG", "CARSON", "FRANKLIN", "CURIE"), ("DARWIN", "NEWTON", "HOPPER", "MEITNER"))
+def tx_ms_wc_plaques():
+    """Floor-1 restroom door plaques (#71): left half (16 x 24 px) the dark grey ADA restroom pictogram plaque (man,
+    woman, wheelchair), right half top (16 x 16 px) the blue accessibility plaque (white wheelchair symbol)."""
+    t = Tex(32, 32, hexc("#3A3C40"), 0)
+    w = hexc("#F0F0EA")
+    grey = ["................",
+            "..##.......##...",
+            "..##.......##...",
+            "................",
+            ".####.....####..",
+            ".####....######.",
+            ".####....######.",
+            ".####...########",
+            ".#..#.....####..",
+            "..##......#..#..",
+            "..##......#..#..",
+            "..##......#..#..",
+            "..##......#..#..",
+            "................",
+            "................",
+            "......##........",
+            ".......#........",
+            "......####......",
+            ".....#..#.......",
+            ".....#..###.....",
+            ".....#....#.....",
+            "......##..#.....",
+            "................",
+            "................"]
+    for y, row in enumerate(grey):
+        for x, ch in enumerate(row):
+            if ch == "#":
+                t.set(x, y + 4, w)
+    blue = hexc("#2A5CB0")
+    t.rect(16, 0, 31, 15, blue)
+    wheel = ["................",
+             "........##......",
+             "........##......",
+             "................",
+             "........#.......",
+             "........####....",
+             "........#.......",
+             "......####......",
+             ".....#..#####...",
+             "....#.......#...",
+             "....#.......##..",
+             "....#......#....",
+             ".....#....#.....",
+             "......####......",
+             "................",
+             "................"]
+    for y, row in enumerate(wheel):
+        for x, ch in enumerate(row):
+            if ch == "#":
+                t.set(16 + x, y, w)
+    t.rect(16, 16, 31, 31, hexc("#D8D8D2"))
+    return t
+
+
+MS_ROOM_NAMES = (("HEISENBERG", "CARSON", "FRANKLIN", "CURIE"), ("DARWIN", "NEWTON", "HOPPER", "JEMISON"))
+# fidelity-1: the F1 study-room names are lettered on the white drywall bulkhead over the glass (#38 'Heisenberg',
+# #36 'Carson', 'Jemison'): dark grey serif, title case, two names per 64 x 32 cut-out texture (rows of 64 x 16)
+MS_BULK_NAMES = (("Heisenberg", "Carson"), ("Jemison", "Franklin"), ("Curie", "Darwin"), ("Hopper", "Newton"))
+MS_SERIF_FONTS = ("/System/Library/Fonts/Supplemental/Georgia.ttf",
+                  "/System/Library/Fonts/Supplemental/Times New Roman.ttf")
+
+
+def tx_ms_bulk_names(names, ink="#45474C"):
+    """fidelity-1: two study-room names lettered in a dark grey serif (Georgia, rendered 4x and box-filtered to 64 x
+    16 per row, then thresholded) on a transparent ground: the letters sit on the white bulkhead (cut-out). Falls back
+    to the 5 x 7 pixel font when no serif font is installed."""
+    from PIL import ImageFont
+    t = Tex(64, 32, hexc("#F2F2EE"), 0)
+    for y in range(32):
+        for x in range(64):
+            t.set(x, y, hexc("#F2F2EE"), 0)
+    font_path = next((p for p in MS_SERIF_FONTS if os.path.exists(p)), None)
+    for i, nm in enumerate(names):
+        y0 = i * 16
+        if font_path is None:
+            _ms_center(t, nm.upper(), y0 + 5, hexc(ink), spacing=0 if len(nm) > 9 else 1)
+            continue
+        S = 4
+        size = 13 * S
+        while True:
+            f = ImageFont.truetype(font_path, size)
+            bb = f.getbbox(nm)
+            if bb[2] - bb[0] <= 62 * S or size <= 6 * S:
+                break
+            size -= S
+        big = Image.new("L", (64 * S, 16 * S), 0)
+        d = ImageDraw.Draw(big)
+        cap = f.getbbox("H")                         # centre the cap height (descenders hang below)
+        d.text(((64 * S - (bb[2] - bb[0])) // 2 - bb[0], (16 * S - (cap[3] - cap[1])) // 2 - cap[1] - S), nm, font=f,
+               fill=255)
+        small = big.resize((64, 16), Image.BOX)
+        for y in range(16):
+            for x in range(64):
+                if small.getpixel((x, y)) >= 92:
+                    t.set(x, y0 + y, hexc(ink), 255)
+    return t
+
+
+MS_F1_ROOM_NUMBERS = tuple(f"L{n}" for n in range(115, 139))      # 24 = three 8-cell atlases
+
+
+def tx_ms_roomnums(ids):
+    """fidelity-1: the small room-number plaques on the F1 study-room glass (#38 'L124'): eight 32 x 8 cells (two
+    columns, four rows), white 5 x 7 letters on dark grey."""
+    t = Tex(64, 32, hexc("#3A3C40"), 0)
+    for i, rid in enumerate(ids):
+        cx, cy = (i % 2) * 32, (i // 2) * 8
+        _ms_center(t, rid, cy + 1, hexc("#F0F0EA"), x0=cx, x1=cx + 31)
+    return t
+
+
+def tx_ms_glass_clear(seed):
+    """fidelity-1: clear storefront glass for the F1 study-room fronts (#38 #36): nearly neutral, a faint cool cast and
+    a very soft diagonal sheen (no streaks); translucent ('water' kind)."""
+    t = Tex(32, 32, hexc("#E4ECEE"), seed)
+    for y in range(32):
+        for x in range(32):
+            d = (x + y) % 32
+            if 10 <= d <= 13:
+                t.set(x, y, hexc("#EEF4F6"))
+    t.noise(1.5)
+    return t
 
 
 def tx_ms_names(seed, names):
@@ -1849,12 +2034,13 @@ def tx_ms_names(seed, names):
 
 
 def tx_ms_exit(seed):
-    """Red EXIT sign (#24, #47, #69)."""
-    t = Tex(32, 32, hexc("#2A1414"), seed)
-    _ms_center(t, "EXIT", 12, hexc("#FF3A2A"))
-    for x in range(32):
-        t.set(x, 0, hexc("#E8E8E4"))
-        t.set(x, 31, hexc("#E8E8E4"))
+    """EXIT sign (#24, #47, #54, #61, #64, #69). fidelity-2: a white housing with big red EXIT letters (the dark
+    plaque read as a small dark-red sign from the game camera)."""
+    t = Tex(32, 32, hexc("#F2F1EC"), seed)
+    _ms_center(t, "EXIT", 9, hexc("#D8231C"), sx=1, sy=2)
+    for i in range(32):
+        for (x, y) in ((i, 0), (i, 31), (0, i), (31, i)):
+            t.set(x, y, hexc("#B8B8B2"))
     return t
 
 
@@ -1919,31 +2105,57 @@ def tx_ms_cafe_decal(seed):
     cut-out)."""
     t = Tex(32, 32, (0, 0, 0), seed)
     green, white = hexc("#1E6A4A"), hexc("#F2F2EE")
+    # fidelity-3: the disc's outline comes from a 24-sided polygon (marston.starbucks_front), so the texture is a
+    # full green field with a clean two-pixel white ring and a simple generic white emblem: a round face under a
+    # three-point crown and two flowing bands (the white cup read as a blob)
     for y in range(32):
         for x in range(32):
             r = math.hypot(x - 15.5, y - 15.5)
-            if r <= 15.5:
-                t.set(x, y, white if 12.0 <= r <= 13.4 else green)
-            else:
-                t.set(x, y, (0, 0, 0), 0)
-    t.rect(11, 12, 19, 21, white)               # cup
-    t.rect(20, 14, 21, 18, white)               # handle
-    t.rect(12, 9, 12, 10, white)                # steam
-    t.rect(15, 8, 15, 10, white)
-    t.rect(18, 9, 18, 10, white)
+            t.set(x, y, white if 12.2 <= r <= 13.9 else green)
+    for y in range(32):
+        for x in range(32):
+            if math.hypot(x - 15.5, y - 14.0) <= 3.3:
+                t.set(x, y, white)                     # face
+            if math.hypot(x - 15.5, y - 14.0) <= 1.6:
+                t.set(x, y, green)
+    for cx in (12, 15, 16, 19):                       # crown points
+        t.set(cx, 8, white)
+    t.rect(12, 9, 19, 9, white)
+    for k in range(7):                                # flowing bands down each side
+        t.set(10 - k // 3, 15 + k, white)
+        t.set(11 - k // 3, 15 + k, white)
+        t.set(21 + k // 3, 15 + k, white)
+        t.set(20 + k // 3, 15 + k, white)
+    t.rect(13, 19, 18, 20, white)                     # shoulders
     return t
 
 
 def tx_ms_projector(seed):
-    """Projection screen in L136 (#47): blue field, 'UF' and 'UNIVERSITY OF FLORIDA' in white."""
-    t = Tex(64, 32, hexc("#2E62C8"), seed)
+    """Projection screen in L136 (#47): blue field, 'UF' and 'UNIVERSITY OF FLORIDA' in white.
+    fix round 2 fidelity-1 (#47 vs L136 / L136_wide): the projected slide is a bright pale periwinkle (photo screen mean
+    RGB 128/161/241, lum ~160; the deep royal blue read as a sign at lum 122) with a hot spot in the middle, and a
+    SMALL centred white wordmark: a bold 7 px 'UF' and 'FLORIDA' in 3x5 capitals on its baseline (it was 14 px tall
+    letters across the whole screen)."""
+    t = Tex(64, 32, hexc("#88AEF8"), seed)
     for y in range(32):
         for x in range(64):
-            t.set(x, y, mix(hexc("#4A7EE0"), hexc("#2A56B8"), (abs(x - 32) / 32 + y / 31) / 2))
-    _ms_font(t, "UF", 6, 9, hexc("#F4F4F0"), sx=2, sy=2)
-    _ms_font(t, "FLORIDA", 28, 15, hexc("#F4F4F0"), spacing=0)
-    for x in range(28, 62):
-        t.set(x, 12, hexc("#C8D6F4"))
+            d = min(1.0, math.hypot((x - 31.5) / 34.0, (y - 15.5) / 19.0))
+            t.set(x, y, mix(hexc("#A2C4FE"), hexc("#7298EC"), d))
+    wh = hexc("#F6F8FC")
+    x0, y0 = 10, 12
+    for dx in (0, 1):                                      # bold 'UF'
+        _ms_font(t, "UF", x0 + dx, y0, wh, spacing=2)
+    mini = {"F": ("###", "#..", "##.", "#..", "#.."), "L": ("#..", "#..", "#..", "#..", "###"),
+            "O": ("###", "#.#", "#.#", "#.#", "###"), "R": ("##.", "#.#", "##.", "#.#", "#.#"),
+            "I": ("###", ".#.", ".#.", ".#.", "###"), "D": ("##.", "#.#", "#.#", "#.#", "##."),
+            "A": (".#.", "#.#", "###", "#.#", "#.#")}
+    x = x0 + 13 + 3
+    for ch in "FLORIDA":
+        for gy, row in enumerate(mini[ch]):
+            for gx, c in enumerate(row):
+                if c == "#":
+                    t.set(x + gx, y0 + 2 + gy, wh)
+        x += 4
     return t
 
 
@@ -1965,7 +2177,8 @@ def tx_ms_aquarium(seed):
     t = Tex(64, 32, hexc("#14261E"), seed)
     for y in range(32):
         for x in range(64):
-            t.set(x, y, mix(hexc("#2A4A3A"), hexc("#0E1C16"), y / 31))
+            # fix round 2 fidelity-4 (f3_fish_tank_plaque_2025 averages lum ~28): a dark, dense planted tank
+            t.set(x, y, mix(hexc("#16281E"), hexc("#060C0A"), y / 31))
     for x in range(64):                                   # gravel
         for y in range(27, 32):
             t.set(x, y, t.r.choice((hexc("#7A6A4E"), hexc("#5A4E3A"), hexc("#8E7E5E"))))
@@ -1974,20 +2187,15 @@ def tx_ms_aquarium(seed):
             top = 27 - int(h * (1 - ((x - x0) / w - 0.5) ** 2 * 3))
             for y in range(max(0, top), 27):
                 t.set(x, y, hexc("#1A1A1C") if (x + y) % 5 else hexc("#2E2E30"))
-    for k in range(16):                                   # plants
+    # fidelity-4 (#79 #80): a densely planted back (the tank's fronds, rock, driftwood and the few large rainbowfish
+    # are geometry in front of it now: marston_props.fish_tank), so no pixel fish here
+    for k in range(34):                                   # plants
         x = t.r.randrange(64)
-        h = t.r.randint(8, 20)
-        c = t.r.choice((hexc("#3E8A3A"), hexc("#5AA040"), hexc("#2E6A2E")))
-        for d in range(h):
-            t.set(x + int(math.sin(d * 0.4 + k) * 1.5), 27 - d, c)
-            if d % 3 == 0:
-                t.set(x + 1 + int(math.sin(d * 0.4 + k) * 1.5), 27 - d, c)
-    for k in range(10):                                   # fish
-        x, y = t.r.randrange(2, 60), t.r.randrange(4, 22)
-        c = t.r.choice((hexc("#F08A2A"), hexc("#F2D040"), hexc("#4A8AE8"), hexc("#E85A3A")))
-        t.rect(x, y, x + 2, y, c)
-        t.set(x + 1, y - 1, c)
-        t.set(x + 3, y, shade(c, 0.7))
+        h = t.r.randint(10, 26)
+        c = t.r.choice((hexc("#2A5E28"), hexc("#3A6E2C"), hexc("#1E4A20"), hexc("#34561E")))
+        for d in range(min(h, 27)):
+            for w in range(2 if d % 2 else 3):
+                t.set((x + w + int(math.sin(d * 0.4 + k) * 1.5)) % 64, 27 - d, shade(c, 0.85 + 0.3 * d / h))
     return t
 
 
@@ -2005,7 +2213,15 @@ def tx_ms_vending(seed):
     t.rect(24, 3, 29, 20, hexc("#B8B8BC"))
     for k in range(4):
         t.rect(25, 9 + k * 3, 28, 10 + k * 3, hexc("#5A5A60"))
-    t.rect(3, 27, 21, 30, hexc("#D86A3A"))
+    # fidelity-2 (#73): the black pickup slot, then the white SUPPLIES graphic panel along the bottom (was an orange
+    # slot band): a peach / orange figure graphic at the right, the purple SUPPLIES lettering as a bar at the left
+    t.rect(2, 26, 22, 27, hexc("#18181C"))
+    t.rect(2, 28, 29, 31, hexc("#F4F2EE"))
+    t.rect(4, 29, 14, 30, hexc("#5A3E8E"))
+    for (x, y, c) in ((19, 28, "#F0A070"), (20, 28, "#F0A070"), (21, 29, "#E06A3A"), (22, 29, "#E06A3A"),
+                      (23, 30, "#D84A5A"), (24, 30, "#F0A070"), (25, 29, "#E8C060"), (26, 28, "#E06A3A"),
+                      (27, 29, "#F0A070"), (18, 30, "#E8C060")):
+        t.set(x, y, hexc(c))
     return t
 
 
@@ -2143,6 +2359,7 @@ def build_interior_marston():
         "int_ms_neon_open": tx_ms_neon_open(231),
         "int_ms_glass_444": tx_ms_glass_444(232),
         "int_ms_sign_rest": tx_ms_sign_rest(233),
+        "int_ms_wc_plaques": tx_ms_wc_plaques(),
         "int_ms_names": tx_ms_names(234, MS_ROOM_NAMES[0]),
         "int_ms_names_b": tx_ms_names(235, MS_ROOM_NAMES[1]),
         "int_ms_exit": tx_ms_exit(236),
@@ -2159,7 +2376,313 @@ def build_interior_marston():
         "int_ms_wall": tx_ms_wall(248),
         "int_ms_print_poster": tx_ms_print_poster(249),
         "int_ms_exit_door": tx_ms_exit_door(250),
+        "int_ms_bnames_0": tx_ms_bulk_names(MS_BULK_NAMES[0]),
+        "int_ms_bnames_1": tx_ms_bulk_names(MS_BULK_NAMES[1]),
+        "int_ms_bnames_2": tx_ms_bulk_names(MS_BULK_NAMES[2]),
+        "int_ms_bnames_3": tx_ms_bulk_names(MS_BULK_NAMES[3]),
+        "int_ms_glass_clear": tx_ms_glass_clear(251),
+        "int_ms_roomnum_0": tx_ms_roomnums(MS_F1_ROOM_NUMBERS[0:8]),
+        "int_ms_roomnum_1": tx_ms_roomnums(MS_F1_ROOM_NUMBERS[8:16]),
+        "int_ms_roomnum_2": tx_ms_roomnums(MS_F1_ROOM_NUMBERS[16:24]),
+        "int_ms_monitor": tx_ms_monitor(252),
+        "int_ms_tile24": tx_ms_tile24(253),
+        "int_ms_glass_black": tx_ms_glass_black(254),
+        "int_ms_fiction": tx_ms_fiction(255),
+        "int_ms_sign_scifi": tx_ms_sign_scifi(256),
+        "int_ms_door_vinyl": tx_ms_door_vinyl(257),
+        "int_ms_sign_stairs": tx_ms_sign_stairs(258),
+        "int_ms_gis_map": tx_ms_gis_map(259),
+        "int_ms_glass_day": tx_ms_glass_day(260),
+        "int_ms_glass_frost": tx_ms_glass_frost(261),
+        "int_ms_tv_maker": tx_ms_tv_maker(262),
+        "int_ms_rug_blue": tx_ms_rug_blue(263),
+        "int_ms_roof_membrane": tx_ms_roof_membrane(264),
     }
+
+
+def tx_ms_glass_frost(seed):
+    """fidelity-2 fix 2 (#61 #63 #64): the lab / benching desks' pale white-grey frosted-glass divider bands (the
+    streaky blue int_glass read as a cyan stripe on every row). Even milky white, a touch greyer at the foot, a faint
+    grain, no streaks. Translucent ('water' kind)."""
+    t = Tex(32, 32, hexc("#E6EAEC"), seed)
+    for y in range(32):
+        c = mix(hexc("#F0F2F2"), hexc("#D8DCDE"), y / 31.0)
+        for x in range(32):
+            t.set(x, y, c)
+    t.noise(3)
+    return t
+
+
+def tx_ms_tv_maker(seed):
+    """fidelity-2 fix 2 (#56): the makerspace's big wall TV, switched on: a bright light-blue slide (pale sky-blue
+    field, a white title bar with dark-blue lettering blocks, three white cards with blue picture blocks and an
+    orange UF accent). 64 x 32, mapped once over the screen (drawn unshaded)."""
+    t = Tex(64, 32, hexc("#8CCAF0"), seed)
+    for y in range(32):
+        c = mix(hexc("#A8DAF6"), hexc("#74B8EA"), y / 31.0)
+        for x in range(64):
+            t.set(x, y, c)
+    t.rect(3, 3, 60, 9, hexc("#F6FAFC"))
+    for (x0, x1) in ((6, 13), (15, 25), (27, 33)):
+        t.rect(x0, 5, x1, 7, hexc("#1E4C8C"))
+    t.rect(52, 4, 58, 8, hexc("#F08A24"))
+    for k in range(3):
+        x0 = 4 + k * 20
+        t.rect(x0, 13, x0 + 16, 28, hexc("#F6FAFC"))
+        t.rect(x0 + 2, 15, x0 + 14, 21, hexc("#3C8CD8") if k != 1 else hexc("#F2A040"))
+        t.rect(x0 + 2, 23, x0 + 12, 24, hexc("#5A6A80"))
+        t.rect(x0 + 2, 26, x0 + 9, 26, hexc("#8A96A8"))
+    return t
+
+
+def tx_ms_rug_blue(seed):
+    """fidelity-2 fix 2 (#74 #75): the wellness room's patterned blue area rug: a navy border with a pale inner line,
+    a mid-blue field with a light-blue trellis (diamond lattice) and cream dots. 64 x 32, mapped once over the rug."""
+    t = Tex(64, 32, hexc("#2E5A9A"), seed)
+    for y in range(32):
+        for x in range(64):
+            u, v = x % 8, y % 8
+            if abs(u - 3.5) + abs(v - 3.5) in (3.0, 4.0):
+                t.set(x, y, hexc("#86B4E4"))
+            elif (u, v) in ((3, 3), (4, 4), (3, 4), (4, 3)):
+                t.set(x, y, hexc("#EEE6D2"))
+    t.noise(4)
+    for x in range(64):
+        for y in (0, 1, 2, 29, 30, 31):
+            t.set(x, y, hexc("#1A2E5A"))
+        t.set(x, 3, hexc("#D8DCE4"))
+        t.set(x, 28, hexc("#D8DCE4"))
+    for y in range(32):
+        for x in (0, 1, 2, 61, 62, 63):
+            t.set(x, y, hexc("#1A2E5A"))
+        if 3 <= y <= 28:
+            t.set(3, y, hexc("#D8DCE4"))
+            t.set(60, y, hexc("#D8DCE4"))
+    return t
+
+
+def tx_ms_roof_membrane(seed):
+    """design fix round 2 (s3_roof): the flat roof deck as a grey single-ply membrane on a 2 m tile (16 texels/m;
+    roof_gravel's 32 px over 4 m read as a blurry flat plate from Mario's camera): a soft mottle, one 2 px heat-welded
+    lap seam along v with its shadow line, staggered end laps across, a few dark grime flecks."""
+    base = hexc("#A2A29E")
+    t = Tex(32, 32, base, seed)
+    for y in range(32):
+        for x in range(32):
+            k = 1.0 + 0.025 * math.sin(x * 0.35 + y * 0.21) + 0.02 * math.sin(y * 0.6 - x * 0.15)
+            t.set(x, y, shade(base, k))
+    t.noise(3)
+    for y in range(32):                       # the lap seam (a lighter welded strip, a shadow line beside it)
+        t.set(0, y, hexc("#B8B8B4"))
+        t.set(1, y, hexc("#B2B2AE"))
+        t.set(2, y, hexc("#868682"))
+    for (x0, x1, y) in ((3, 16, 0), (16, 32, 16)):   # staggered end laps
+        for x in range(x0, x1):
+            t.set(x, y, hexc("#B0B0AC"))
+            t.set(x, (y + 1) % 32, hexc("#8A8A86"))
+    for _ in range(10):
+        t.set(t.r.randrange(4, 32), t.r.randrange(2, 32), hexc("#8C8C88"))
+    return t
+
+
+def tx_ms_glass_day(seed):
+    """fix round 2 (#38 4272, #44): the F1 east study rooms' exterior glass onto the sunken court, as the photos see it:
+    bright daylight (pale sky white, a touch lighter toward the top) over the court, a very soft diagonal sheen, no
+    streaks. Translucent ('water' kind, a higher alpha than the clear partition glass so the panes read light)."""
+    t = Tex(32, 32, hexc("#E8F0F4"), seed)
+    for y in range(32):
+        k = y / 31.0
+        for x in range(32):
+            c = mix(hexc("#F4F8FA"), hexc("#DCE8EE"), k)
+            if 9 <= (x + y) % 32 <= 12:
+                c = shade(c, 1.03)
+            t.set(x, y, c)
+    return t
+
+
+def tx_ms_gis_map(seed):
+    """fix round 2 (#48): the L136 visualization wall's bright GIS aerial imagery (campus blocks: tree canopy, lawns,
+    pale roofs, brick roofs, a lake, light road grid). 64 x 32, mapped once over the whole 3 x 2 display grid (lit)."""
+    t = Tex(64, 32, hexc("#5E8A48"), seed)
+    rnd = random.Random(seed)
+    for y in range(32):
+        for x in range(64):
+            k = rnd.random()
+            t.set(x, y, hexc("#4E7C3C") if k < 0.30 else (hexc("#7AA25A") if k < 0.55 else hexc("#66924C")))
+    for (x0, y0, x1, y1) in ((4, 3, 15, 10), (20, 4, 30, 9), (36, 3, 44, 12), (49, 5, 60, 10), (6, 18, 13, 27),
+                             (24, 17, 34, 22), (40, 19, 47, 28), (52, 16, 61, 23)):
+        t.rect(x0, y0, x1, y1, hexc("#D8D4CC"))
+        t.rect(x0 + 1, y0 + 1, x1 - 1, y0 + 2, hexc("#EEEAE2"))
+    for (x0, y0, x1, y1) in ((16, 11, 21, 15), (30, 24, 37, 29), (55, 26, 61, 30), (2, 12, 6, 16)):
+        t.rect(x0, y0, x1, y1, hexc("#B4644A"))
+    for y in range(22, 32):                       # the lake (bottom left)
+        for x in range(14, 27):
+            if (x - 20) ** 2 / 36.0 + (y - 28) ** 2 / 16.0 < 1.0:
+                t.set(x, y, hexc("#3E7CB8") if (x + y) % 5 else hexc("#5A96CC"))
+    for x in range(64):                           # roads
+        for y in (14, 15):
+            t.set(x, y, hexc("#E6E2DA"))
+    for y in range(32):
+        for x in (18, 19, 47, 48):
+            t.set(x, y, hexc("#E6E2DA"))
+    for x in range(0, 64, 3):
+        t.set(x, 14, hexc("#F4D23C"))
+    return t
+
+
+def tx_ms_monitor(seed):
+    """fidelity-2 (#61 #63 #64): a lab monitor's desktop, the blue wallpaper (deep blue to bright blue with a pale
+    light sweep), a thin black bezel and a dark taskbar. Mapped once over the screen."""
+    t = Tex(32, 32, hexc("#1E5AA8"), seed)
+    top, bot = hexc("#14408A"), hexc("#3C8CE0")
+    for y in range(32):
+        k = y / 31.0
+        c = tuple(int(top[i] + (bot[i] - top[i]) * k) for i in range(3))
+        for x in range(32):
+            t.set(x, y, c)
+    for y in range(4, 27):
+        for x in range(32):
+            d = (x - 6) - (y - 4) * 1.15
+            if 0 <= d < 5:
+                t.set(x, y, shade(t.get(x, y), 1.22 if 1 <= d < 4 else 1.10))
+    for x in range(32):
+        for y in (27, 28):
+            t.set(x, y, hexc("#1A1E2A"))
+    for x in (3, 6, 9, 12):
+        t.set(x, 27, hexc("#8AB4E8"))
+    for i in range(32):
+        for (x, y) in ((i, 0), (i, 31), (0, i), (31, i), (i, 30), (30, i)):
+            t.set(x, y, hexc("#0C0C0E"))
+    return t
+
+
+def tx_ms_tile24(seed):
+    """fidelity-2 (#54 #56): the makerspace's 2' x 4' lay-in acoustic tile in a white T-bar grid (the Commons has
+    2' x 2'): 32 px = 1.2 m, one tile 16 x 32 px = 0.6 x 1.2 m. Two-pixel grid lines (light + shadow) so the bars do
+    not shimmer without mipmaps."""
+    base = hexc("#ECEAE4")
+    t = Tex(32, 32, base, seed)
+    t.noise(2)
+    for _ in range(26):
+        t.set(t.r.randrange(32), t.r.randrange(32), hexc("#DCDAD2"))
+    for i in range(32):
+        for k in (0, 16):
+            t.set(k, i, hexc("#F8F8F6"))
+            t.set(k + 1, i, hexc("#D0CEC6"))
+        t.set(i, 0, hexc("#F8F8F6"))
+        t.set(i, 1, hexc("#D0CEC6"))
+    return t
+
+
+def tx_ms_glass_black(seed):
+    """fidelity-3 (#2): the near-black storefront glass of the porch bays east of the doors (offices behind): about
+    RGB 28,32,36, a little darker at the foot, and one soft diagonal sheen. Mapped once per 1.25 m bay."""
+    t = Tex(32, 32, (28, 32, 36), seed)
+    for y in range(32):
+        for x in range(32):
+            k = 0.92 + 0.12 * (1.0 - y / 31.0)
+            d = (x - 4) + (y - 31) * 0.55                 # a band from lower left to upper right
+            s = max(0.0, 1.0 - abs(d - 6.0) / 5.0)
+            c = (28 * k, 32 * k, 36 * k)
+            t.set(x, y, mix(c, (66, 72, 80), s * 0.55))
+    t.noise(1)
+    return t
+
+
+def tx_ms_fiction(seed):
+    """fidelity-3 (F2 science fiction stacks): fiction spines on mid-grey steel cantilever shelves, darker mixed
+    colours, white spine labels with red genre stickers, a black book support now and then. 64 x 32, two rows."""
+    back, board, edge = hexc("#1E1C1C"), hexc("#8C9094"), hexc("#A6AAAE")
+    t = Tex(64, 32, back, seed)
+    pal = [hexc(c) for c in ("#2A2A3A", "#3A1E22", "#1E2E4A", "#4A2A4A", "#2E3E2E", "#5A4A3A", "#7A2A22", "#2A4A5A",
+                             "#3A3A3A", "#6A6252", "#8A7A5A", "#C8C0A8", "#B8B4A8", "#5A1E2E", "#2A2420")]
+
+    def fill(row, y0):
+        x = 0
+        while x < 64:
+            w = t.r.choice((2, 2, 2, 3, 3))
+            if 64 - x - w < 2:
+                w = 64 - x
+            if t.r.random() < 0.04 and 64 - x > 4:
+                for yy in range(y0 + 6, y0 + 14):
+                    t.set(x, yy, hexc("#141414"))
+                x += 2
+                continue
+            c = t.r.choice(pal)
+            hb = t.r.randint(9, 12)
+            for xx in range(x, min(64, x + w)):
+                for yy in range(y0 + 14 - hb, y0 + 14):
+                    t.set(xx, yy, shade(c, 0.78 if xx == x else 1.0))
+                t.set(xx, y0 + 12, hexc("#ECECE6"))          # call label
+                if t.r.random() < 0.55:
+                    t.set(xx, y0 + 11, hexc("#C82A2A"))      # genre sticker
+            x += w
+    _ms_shelves(t, 2, back, board, edge, fill)
+    t.noise(2)
+    return t
+
+
+def tx_ms_sign_stairs(seed):
+    """design fix round 1: the hanging wayfinding sign at the top of the grand stair on floor 3, 'STAIRS 4 5' with
+    an arrow, white on dark slate. Two 64 x 16 rows: the top row's arrow points right, the bottom row's left (one
+    row per face of the double-sided sign, so both arrows point the same way in the world)."""
+    bg, fg = hexc("#2E3440"), hexc("#F2F2EE")
+    t = Tex(64, 32, bg, seed)
+
+    def arrow(x0, y0, right):
+        for i in range(7):                                  # shaft: 2 px high, 7 px long
+            t.set(x0 + i, y0 + 3, fg)
+            t.set(x0 + i, y0 + 4, fg)
+        for k in range(4):                                  # head
+            hx = x0 + 6 - k if right else x0 + k
+            for dy in range(-k, k + 1):
+                if 0 <= y0 + 3 + dy <= 31 and 0 <= y0 + 4 + dy <= 31:
+                    t.set(hx, y0 + 3 + dy if dy <= 0 else y0 + 4 + dy, fg)
+    for row, right in ((0, True), (16, False)):
+        y = row + 4
+        if right:
+            _ms_font(t, "STAIRS", 1, y, fg, 1, 1, 1)
+            _ms_font(t, "4", 40, y, fg, 1, 1, 1)
+            _ms_font(t, "5", 48, y, fg, 1, 1, 1)
+            arrow(56, y, True)
+        else:
+            arrow(1, y, False)
+            _ms_font(t, "STAIRS", 10, y, fg, 1, 1, 1)
+            _ms_font(t, "4", 49, y, fg, 1, 1, 1)
+            _ms_font(t, "5", 57, y, fg, 1, 1, 1)
+        for x in range(64):
+            t.set(x, row, hexc("#59606C"))
+            t.set(x, row + 15, hexc("#59606C"))
+    return t
+
+
+def tx_ms_sign_scifi(seed):
+    """fidelity-3: the white end-panel sign of the science fiction ranges, 'SCIENCE' / 'FICTION'."""
+    t = Tex(64, 32, hexc("#F2F2EE"), seed)
+    _ms_center(t, "SCIENCE", 4, hexc("#1E1E1E"), sx=1, sy=2, spacing=1)
+    _ms_center(t, "FICTION", 18, hexc("#1E1E1E"), sx=1, sy=2, spacing=1)
+    for x in range(64):
+        t.set(x, 0, hexc("#9A9A98"))
+        t.set(x, 31, hexc("#9A9A98"))
+    for y in range(32):
+        t.set(0, y, hexc("#9A9A98"))
+        t.set(63, y, hexc("#9A9A98"))
+    return t
+
+
+def tx_ms_door_vinyl(seed):
+    """fidelity-3 (#1): the white door vinyl of the north entrance leaves, a two-line name block (title over the
+    smaller libraries line) on the black glass. Cut-out: the letters only. 64 x 32."""
+    t = Tex(64, 32, (0, 0, 0), seed)
+    for y in range(32):
+        for x in range(64):
+            t.set(x, y, (0, 0, 0), 0)
+    w = hexc("#F2F2EE")
+    _ms_center(t, "MARSTON", 6, w, sx=1, sy=2, spacing=1)
+    _ms_center(t, "SCIENCE LIB", 18, w, sx=1, sy=1, spacing=0)
+    t.rect(10, 25, 53, 25, w)
+    _ms_center(t, "UF", 27, w, sx=1, sy=1, spacing=1)
+    return t
 
 
 def contact_sheet(imgs, path, cols=8, cell=136):

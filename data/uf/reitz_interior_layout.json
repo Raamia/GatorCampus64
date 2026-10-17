@@ -22673,6 +22673,12 @@
  },
  "deviations": [
   {
+   "what": "Meeting-room doors (L2 / L3) and the hotel suite partition",
+   "real": "every meeting room has its plan doors (most have two to the corridor; 3305 / 3310 share doors); suite 501/502 is two hotel rooms with one corridor door each",
+   "game": "fix round 2 fidelity-4: each L2 / L3 meeting room keeps one walk-through door (its first plan door to a corridor); its other plan doors are drawn closed (walnut leaf with a vision lite) in a continuous wall. Suite 501/502 gets a full-height partition at y -284.52 between the sitting room (south, ru_hotel_suite) and the bedroom (north)",
+   "why": "the photos show closed walnut doors along the L2 / L3 corridors; one door per room keeps every room reachable and saves collision. The plan's two doors place the suite's two rooms"
+  },
+  {
    "what": "Floor-to-floor height",
    "real": "not published; about 4.5 m estimated for LL-L4 (1967 core + 2016 wing), about 3.2 m for the hotel floors",
    "game": "6.0 m (LL-L4), 4.0 m (L5, L6); plan dimensions stay 1:1",
@@ -22701,6 +22707,42 @@
    "real": "regulation 18.29 m foul line to head pin",
    "game": "keep 1:1; the MVF block is only 15.5 m long, the layout extends it north to y -303.9 (inferred)",
    "why": "The real count (14) and width (~23 m) fit only if lanes run north-south."
+  },
+  {
+   "what": "Food court vendor placement and soffit height",
+   "real": "mvf_pins / osm_pins disagree; Sonic on the NE block's south face (both), Starbucks on the servery's east face (OSM), Panda at the SW corner (MVF), Baba's + Halal Shack south of the SE corner (OSM); soffit ~3 m",
+   "game": "Sonic (burger) on the NE block's south face, Starbucks (coffee) on the east face south, Panda (wok) at the SW corner, Halal + Baba's on the south front, Mac / shakes / Latin cafe on the remaining faces (unpinned); the west face and the north side are back of house (no ring); the cream soffit is the ring's full 2.6 m depth at 4.0 m",
+   "why": "Pins first; the unpinned vendors keep faces that would otherwise be blank; generic signs (no brand marks); the soffit is raised for the SM64 camera."
+  },
+  {
+   "what": "Grand Ballroom upper wall and clerestory end",
+   "real": "screens ~2x door height alternating with acoustic bays; a lit clerestory band on a short end wall under a lowered end soffit (ru_os_grand_ballroom_1, _3); compass end not known",
+   "game": "screens 3.9-8.9 m, acoustic bays to a 9.3 m perimeter soffit; clerestory 6.5-8.0 m on the EAST end under an 8.3 m end soffit 4 m deep",
+   "why": "the east end keeps GB3's composition (stage on the right long wall) with the stage on the south wall; clear height stays 11.4 m (camera)"
+  },
+  {
+   "what": "Meeting room, Senate Chamber and Rion ceiling heights",
+   "real": "lay-in ceilings ~2.7-3 m (ru_os_2315_2330, ru_os_3315_3320); Rion Ballroom ~5 m (ru_os_rion_ballroom)",
+   "game": "G/L2/L3 meeting rooms and the Senate Chamber (fix round 2 fidelity-3: Ground too; ru_os_g310_g320, ru_os_g330, ru_os_chamber ~3 m): a dropped lay-in ceiling (drawn + collision) at 3.9 m inside 5.4 m walls; Rion 6.0 m clear",
+   "why": "raised for the SM64 camera; the walls keep the floor's clear height so the wall collision still merges"
+  },
+  {
+   "what": "Enclosed stair halls",
+   "real": "stairwells at the building's cores (no public photos)",
+   "game": "not built: closed doors, sealed shafts",
+   "why": "no photos; floors connect by the Blue elevator pads and the atrium scissor stairs"
+  },
+  {
+   "what": "Elevator-lobby wayfinding",
+   "real": "UF-blue room and directory signs (ru_* photos); the Blue elevator lobbies' own signs are not photographed",
+   "game": "a 1.3 m floor number over every Blue elevator car and one hanging two-face sign per lobby naming the floor's destinations with arrows; floor numbers on the atrium fascia beside the scissor-stair ends",
+   "why": "co-op wayfinding: eight floors of similar white corridors (design review); same blue / orange palette as the building's signs, no per-floor accent colours (the photos show one palette)"
+  },
+  {
+   "what": "Circulation art, lounges and the Bookstore link (fix round 2, design pass)",
+   "real": "LL / L2 / L3 corridors and pre-function halls: white walls with framed art rows and room signs beside the doors (ru_os_g310_g320, ru_os_g330); the L1 south hall links to the UF Bookstore through a glass door bank",
+   "game": "a navy room-number plaque beside every room door on a corridor, a framed UF print or cork bulletin board every ~5 m on the solid room walls facing a corridor (LL / L2 / L3), two navy lounge groups on rugs in the L2 pre-function hall, lobby benches against the core walls; in the L1 south hall benches, five planters and a UF BOOKSTORE sign on a 0.6 m sign ledge over the link doors (3 coins on the ledge); one plaque design (no per-room numbers at N64 texture size)",
+   "why": "design review: 3,902 / 2,440 / 1,114 m2 of reachable L2 / L3 / LL floor had almost no landmarks; the sign ledge is a jump reward. The plaques, prints and boards are generic: no photo shows the exact art on these walls"
   }
  ],
  "findings": [

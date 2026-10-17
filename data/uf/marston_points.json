@@ -796,7 +796,7 @@
      610
     ],
     "floor_m": 12.0,
-    "clearance_m": 2.3,
+    "clearance_m": 2.11,
     "headroom_m": 5.4,
     "note": "K3 as uf_marston_missions.lua places it (4th-floor quiet study, between carrel rows 4 and 5): the layout's F3 K3 is too close to K2 for the 4 s window"
    }
@@ -893,16 +893,16 @@
     "map_m": [
      -78.0,
      -99.0,
-     -4.8
+     -5.08
     ],
     "game": [
      -1840,
-     -480,
+     -508,
      10
     ],
-    "floor_m": -4.8,
+    "floor_m": -5.08,
     "clearance_m": 2.08,
-    "headroom_m": 4.2,
+    "headroom_m": 4.48,
     "note": "makerspace 3D-printer bench",
     "float_m": 0.6
    },
@@ -981,17 +981,17 @@
    {
     "name": "act4_red_7",
     "map_m": [
-     -74.6,
-     -99.25,
+     -77.53,
+     -95.62,
      1.07
     ],
     "game": [
-     -1500,
+     -1793,
      107,
-     35
+     -328
     ],
     "floor_m": 1.07,
-    "clearance_m": 0.98,
+    "clearance_m": 1.23,
     "headroom_m": 4.33,
     "note": "on the Starbucks counter",
     "float_m": 0.6
@@ -1066,7 +1066,7 @@
      510
     ],
     "floor_m": -6.0,
-    "clearance_m": 0.6,
+    "clearance_m": 0.7,
     "headroom_m": 5.4
    },
    {
@@ -2455,7 +2455,7 @@
      -3380
     ],
     "floor_m": -6.0,
-    "clearance_m": 1.17,
+    "clearance_m": 1.27,
     "headroom_m": 5.4,
     "facing_deg": 0.0,
     "game_yaw": "0x8000"
@@ -2559,7 +2559,7 @@
      -3380
     ],
     "floor_m": -6.0,
-    "clearance_m": 1.17,
+    "clearance_m": 1.27,
     "headroom_m": 5.4,
     "facing_deg": 0.0,
     "game_yaw": "0x8000"
@@ -2663,7 +2663,7 @@
      -1300
     ],
     "floor_m": -6.0,
-    "clearance_m": 1.22,
+    "clearance_m": 1.27,
     "headroom_m": 5.4,
     "facing_deg": 90.0,
     "game_yaw": "0x4000"
@@ -2871,7 +2871,7 @@
      -40
     ],
     "floor_m": -6.0,
-    "clearance_m": 1.1,
+    "clearance_m": 1.27,
     "headroom_m": 5.4,
     "facing_deg": 90.0,
     "game_yaw": "0x4000"
@@ -2975,7 +2975,7 @@
      755
     ],
     "floor_m": -6.0,
-    "clearance_m": 1.1,
+    "clearance_m": 1.27,
     "headroom_m": 5.4,
     "facing_deg": 90.0,
     "game_yaw": "0x4000"
@@ -3925,7 +3925,7 @@
      -305
     ],
     "floor_m": 6.0,
-    "clearance_m": 1.15,
+    "clearance_m": 1.03,
     "headroom_m": 2.6,
     "facing_deg": 90.0,
     "game_yaw": "0x4000"
@@ -3996,36 +3996,36 @@
   "counter_top": {
    "name": "cafe_counter_top",
    "map_m": [
-    -74.6,
-    -99.25,
+    -77.53,
+    -95.62,
     1.07
    ],
    "game": [
-    -1500,
+    -1793,
     107,
-    35
+    -328
    ],
    "floor_m": 1.07,
-   "clearance_m": 0.98,
+   "clearance_m": 1.23,
    "headroom_m": 4.33
   },
   "customer": {
    "name": "cafe_customer",
    "map_m": [
-    -76.2,
-    -99.25,
+    -75.5,
+    -96.92,
     0.0
    ],
    "game": [
-    -1660,
+    -1590,
     0,
-    35
+    -198
    ],
    "floor_m": 0.0,
-   "clearance_m": 1.2,
+   "clearance_m": 0.93,
    "headroom_m": 5.4,
-   "facing_deg": 90.0,
-   "game_yaw": "0x4000"
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
   }
  },
  "circulation": [
@@ -4191,13 +4191,13 @@
    "name": "duct_mid",
    "map_m": [
     -82.17,
-    -64.65,
+    -64.8,
     -3.4
    ],
    "game": [
     -2257,
     -340,
-    -3425
+    -3410
    ],
    "floor_m": -3.4,
    "clearance_m": 0.92,
@@ -4209,16 +4209,16 @@
    "name": "duct_mouth",
    "map_m": [
     -82.17,
-    -73.7,
+    -74.0,
     -3.4
    ],
    "game": [
     -2257,
     -340,
-    -2520
+    -2490
    ],
    "floor_m": -3.4,
-   "clearance_m": 0.68,
+   "clearance_m": 0.92,
    "headroom_m": 2.0,
    "facing_deg": 0.0,
    "game_yaw": "0x8000"
@@ -4652,7 +4652,7 @@
     150
    ],
    "floor_m": 0.0,
-   "clearance_m": 1.3,
+   "clearance_m": 1.03,
    "headroom_m": 14.82,
    "facing_deg": 0.0,
    "game_yaw": "0x8000"
@@ -4974,16 +4974,16 @@
   }
  ],
  "pickups": {
-  "coins_placed": 164,
-  "coins_with_goombas": 168,
-  "objects": 73,
+  "coins_placed": 190,
+  "coins_with_goombas": 195,
+  "objects": 93,
   "by_kind": {
-   "coin_line": 22,
-   "coin": 38,
+   "coin_line": 24,
+   "coin": 54,
    "coin_ring": 2,
    "heart": 4,
-   "1up": 3,
-   "goomba": 4
+   "1up": 4,
+   "goomba": 5
   },
   "skipped": [],
   "items": [
@@ -5269,6 +5269,26 @@
    },
    {
     "kind": "coin_line",
+    "name": "F1 makerspace",
+    "map_m": [
+     -76.1,
+     -101.75,
+     -6.0
+    ],
+    "game": [
+     -1650,
+     -600,
+     285
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
     "name": "F1 west commons",
     "map_m": [
      -68.8,
@@ -5319,6 +5339,46 @@
      -2250,
      -280,
      -4090
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 sorting-table step coin",
+    "map_m": [
+     -82.1,
+     -75.4,
+     -4.2
+    ],
+    "game": [
+     -2250,
+     -420,
+     -2350
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 vent duct mouth coin",
+    "map_m": [
+     -82.17,
+     -74.0,
+     -2.8
+    ],
+    "game": [
+     -2257,
+     -280,
+     -2490
     ],
     "behavior": "bhvYellowCoin",
     "model": "MODEL_YELLOW_COIN",
@@ -6049,6 +6109,306 @@
    },
    {
     "kind": "coin",
+    "name": "roof ne AC step 1",
+    "map_m": [
+     -57.8,
+     -72.6,
+     26.0
+    ],
+    "game": [
+     180,
+     2600,
+     -2630
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "roof ne AC step 2",
+    "map_m": [
+     -55.8,
+     -72.6,
+     27.4
+    ],
+    "game": [
+     380,
+     2740,
+     -2630
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "roof ne AC step 3",
+    "map_m": [
+     -53.88,
+     -72.6,
+     28.8
+    ],
+    "game": [
+     573,
+     2880,
+     -2630
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "roof sw AC step 1",
+    "map_m": [
+     -85.4,
+     -105.92,
+     26.0
+    ],
+    "game": [
+     -2580,
+     2600,
+     702
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "roof sw AC step 2",
+    "map_m": [
+     -83.4,
+     -105.92,
+     27.4
+    ],
+    "game": [
+     -2380,
+     2740,
+     702
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "roof sw AC step 3",
+    "map_m": [
+     -81.4,
+     -105.92,
+     28.8
+    ],
+    "game": [
+     -2180,
+     2880,
+     702
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 lantern top coin 1",
+    "map_m": [
+     -59.56,
+     -102.97,
+     4.3
+    ],
+    "game": [
+     4,
+     430,
+     407
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 lantern top coin 2",
+    "map_m": [
+     -56.77,
+     -102.97,
+     4.3
+    ],
+    "game": [
+     284,
+     430,
+     407
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 lantern top coin 3",
+    "map_m": [
+     -55.59,
+     -101.8,
+     4.3
+    ],
+    "game": [
+     401,
+     430,
+     290
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 lantern top coin 4",
+    "map_m": [
+     -55.59,
+     -99.0,
+     4.3
+    ],
+    "game": [
+     401,
+     430,
+     10
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 lantern top coin 5",
+    "map_m": [
+     -56.77,
+     -97.83,
+     4.3
+    ],
+    "game": [
+     284,
+     430,
+     -108
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 lantern top coin 6",
+    "map_m": [
+     -59.56,
+     -97.83,
+     4.3
+    ],
+    "game": [
+     4,
+     430,
+     -108
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 lantern top coin 7",
+    "map_m": [
+     -60.74,
+     -99.0,
+     4.3
+    ],
+    "game": [
+     -114,
+     430,
+     10
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 lantern top coin 8",
+    "map_m": [
+     -60.74,
+     -101.8,
+     4.3
+    ],
+    "game": [
+     -114,
+     430,
+     290
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F5 east of the atrium",
+    "map_m": [
+     -45.0,
+     -106.0,
+     18.0
+    ],
+    "game": [
+     1460,
+     1800,
+     710
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
     "name": "turn landing ne_stair_F1_turn",
     "map_m": [
      -46.1,
@@ -6368,6 +6728,26 @@
     "acts": null
    },
    {
+    "kind": "1up",
+    "name": "1-up SW tower top",
+    "map_m": [
+     -85.14,
+     -113.38,
+     30.8
+    ],
+    "game": [
+     -2554,
+     3080,
+     1447
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
     "kind": "goomba",
     "name": "goomba F1 commons",
     "map_m": [
@@ -6439,6 +6819,26 @@
      -1050,
      1200,
      310
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba F5 west of the atrium",
+    "map_m": [
+     -70.0,
+     -93.5,
+     18.0
+    ],
+    "game": [
+     -1040,
+     1800,
+     -540
     ],
     "behavior": "bhvGoomba",
     "model": "MODEL_GOOMBA",

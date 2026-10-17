@@ -18,7 +18,7 @@
   -23.0
  ],
  "extent_half_m": 324.0,
- "collision_tris": 9659,
+ "collision_tris": 9661,
  "visual_tris": 81813,
  "collision_by_object": {
   "Ground collision": 1781,
@@ -29,7 +29,7 @@
   "Boundary walls": 216,
   "Dressing collision": 214,
   "LM malachowsky_hall collision": 204,
-  "LM reitz_union collision": 500,
+  "LM reitz_union collision": 502,
   "LM reitz_amphitheater collision": 123,
   "LM reitz_union door warps": 8,
   "LM weil_hall collision": 297,
@@ -134,13 +134,13 @@
     "reitz_amphitheater"
    ],
    "parts": 5,
-   "collision_tris": 631,
+   "collision_tris": 633,
    "visual_tris": 2200,
    "budget_collision": 650,
    "budget_visual": 2300,
    "per_landmark": {
     "reitz_union": {
-     "collision_tris": 508,
+     "collision_tris": 510,
      "visual_tris": 1803,
      "budget_collision": 500,
      "budget_visual": 1800
@@ -5874,8 +5874,8 @@
    "area": 2,
    "module": "tools/campus/interiors/reitz.py",
    "kit_tris": {
-    "visual": 92420,
-    "collision": 12004
+    "visual": 124960,
+    "collision": 12261
    },
    "warp_nodes": [
     {
@@ -6049,11 +6049,11 @@
      "poly_m": [
       [
        -384.6,
-       -258.0
+       -257.9
       ],
       [
        -376.3,
-       -258.0
+       -257.9
       ],
       [
        -376.3,
@@ -6087,11 +6087,11 @@
       ],
       [
        -381.2,
-       -286.3
+       -286.4
       ],
       [
        -388.2,
-       -286.3
+       -286.4
       ]
      ],
      "to_area": 1,
@@ -6139,11 +6139,11 @@
      "poly_m": [
       [
        -420.4,
-       -244.5
+       -244.4
       ],
       [
        -417.8,
-       -244.5
+       -244.4
       ],
       [
        -417.8,
@@ -6467,15 +6467,14 @@
     "note": "area 2 spawn 0x0A (bhvSpinAirborneWarp) in the Ground-level atrium lounge; only debug warps (warp_to_warpnode / area 2) use it: players walk in through the real doors (instant warps)"
    },
    "pickups": {
-    "coins_placed": 36,
-    "coins_with_goombas": 36,
-    "objects": 11,
+    "coins_placed": 84,
+    "coins_with_goombas": 84,
+    "objects": 39,
     "by_kind": {
-     "coin_line": 5,
-     "coin": 3,
-     "coin_ring": 1,
+     "coin_line": 12,
+     "coin": 24,
      "heart": 1,
-     "1up": 1
+     "1up": 2
     },
     "skipped": [],
     "items": [
@@ -6600,23 +6599,23 @@
       "acts": null
      },
      {
-      "kind": "coin_ring",
-      "name": "grand ballroom coins",
+      "kind": "coin_line",
+      "name": "grand ballroom coins (line)",
       "map_m": [
        -488.5,
-       -264.0,
-       12.46
+       -252.6,
+       12.0
       ],
       "game": [
        -1850,
-       1246,
-       -2900
+       1200,
+       -4040
       ],
       "behavior": "bhvCoinFormation",
       "model": "MODEL_NONE",
-      "bparams": "0x00020000",
-      "facing_deg": 0.0,
-      "coins": 8,
+      "bparams": "0x00000000",
+      "facing_deg": 90.0,
+      "coins": 5,
       "acts": null
      },
      {
@@ -6645,7 +6644,7 @@
       "map_m": [
        -463.6,
        -292.0,
-       0.0
+       -0.0
       ],
       "game": [
        640,
@@ -6698,6 +6697,566 @@
       "facing_deg": 0.0,
       "coins": 0,
       "acts": null
+     },
+     {
+      "kind": "coin_line",
+      "name": "dance studio coins",
+      "map_m": [
+       -396.2,
+       -270.5,
+       -6.0
+      ],
+      "game": [
+       7380,
+       -600,
+       -2250
+      ],
+      "behavior": "bhvCoinFormation",
+      "model": "MODEL_NONE",
+      "bparams": "0x00000000",
+      "facing_deg": 90.0,
+      "coins": 5,
+      "acts": null
+     },
+     {
+      "kind": "coin_line",
+      "name": "l3 elevator lobby coins",
+      "map_m": [
+       -444.8,
+       -271.0,
+       18.0
+      ],
+      "game": [
+       2520,
+       1800,
+       -2200
+      ],
+      "behavior": "bhvCoinFormation",
+      "model": "MODEL_NONE",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 5,
+      "acts": null
+     },
+     {
+      "kind": "coin_line",
+      "name": "arredondo cafe coins",
+      "map_m": [
+       -432.0,
+       -262.5,
+       24.0
+      ],
+      "game": [
+       3800,
+       2400,
+       -3050
+      ],
+      "behavior": "bhvCoinFormation",
+      "model": "MODEL_NONE",
+      "bparams": "0x00000000",
+      "facing_deg": 90.0,
+      "coins": 5,
+      "acts": null
+     },
+     {
+      "kind": "coin_line",
+      "name": "l5 hotel lobby coins",
+      "map_m": [
+       -444.8,
+       -273.0,
+       29.0
+      ],
+      "game": [
+       2520,
+       2900,
+       -2000
+      ],
+      "behavior": "bhvCoinFormation",
+      "model": "MODEL_NONE",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 5,
+      "acts": null
+     },
+     {
+      "kind": "coin_line",
+      "name": "l6 hotel lobby coins",
+      "map_m": [
+       -444.8,
+       -273.0,
+       34.0
+      ],
+      "game": [
+       2520,
+       3400,
+       -2000
+      ],
+      "behavior": "bhvCoinFormation",
+      "model": "MODEL_NONE",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 5,
+      "acts": null
+     },
+     {
+      "kind": "1up",
+      "name": "swamp boss 1-up",
+      "map_m": [
+       -397.3,
+       -271.1,
+       1.5
+      ],
+      "game": [
+       7270,
+       150,
+       -2190
+      ],
+      "behavior": "bhv1Up",
+      "model": "MODEL_1UP",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 0,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "atrium stair G se coin 3",
+      "map_m": [
+       -396.5,
+       -274.83,
+       1.5
+      ],
+      "game": [
+       7350,
+       150,
+       -1817
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "atrium stair G se coin 7",
+      "map_m": [
+       -397.94,
+       -273.36,
+       2.7
+      ],
+      "game": [
+       7206,
+       270,
+       -1964
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "atrium stair G ne coin 3",
+      "map_m": [
+       -397.78,
+       -269.16,
+       4.5
+      ],
+      "game": [
+       7222,
+       450,
+       -2384
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "atrium stair G ne coin 7",
+      "map_m": [
+       -396.15,
+       -267.52,
+       5.7
+      ],
+      "game": [
+       7385,
+       570,
+       -2548
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "atrium stair L1 se coin 3",
+      "map_m": [
+       -396.99,
+       -274.33,
+       7.5
+      ],
+      "game": [
+       7301,
+       750,
+       -1867
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "atrium stair L1 se coin 7",
+      "map_m": [
+       -398.15,
+       -273.14,
+       8.7
+      ],
+      "game": [
+       7185,
+       870,
+       -1986
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "atrium stair L1 ne coin 3",
+      "map_m": [
+       -397.52,
+       -268.89,
+       10.5
+      ],
+      "game": [
+       7248,
+       1050,
+       -2411
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "atrium stair L1 ne coin 7",
+      "map_m": [
+       -395.52,
+       -266.9,
+       11.7
+      ],
+      "game": [
+       7448,
+       1170,
+       -2610
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "atrium stair L2 se coin 3",
+      "map_m": [
+       -396.04,
+       -275.3,
+       13.5
+      ],
+      "game": [
+       7396,
+       1350,
+       -1770
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "atrium stair L2 se coin 7",
+      "map_m": [
+       -397.74,
+       -273.56,
+       14.7
+      ],
+      "game": [
+       7226,
+       1470,
+       -1944
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "atrium stair L2 ne coin 3",
+      "map_m": [
+       -397.73,
+       -269.11,
+       16.5
+      ],
+      "game": [
+       7227,
+       1650,
+       -2389
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "atrium stair L2 ne coin 7",
+      "map_m": [
+       -396.03,
+       -267.41,
+       17.7
+      ],
+      "game": [
+       7397,
+       1770,
+       -2559
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "billiards table 0 coin",
+      "map_m": [
+       -455.0,
+       -285.3,
+       1.43
+      ],
+      "game": [
+       1500,
+       143,
+       -770
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "billiards table 5 coin",
+      "map_m": [
+       -450.3,
+       -290.8,
+       1.43
+      ],
+      "game": [
+       1970,
+       143,
+       -220
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "billiards table 8 coin",
+      "map_m": [
+       -450.3,
+       -295.0,
+       1.43
+      ],
+      "game": [
+       1970,
+       143,
+       200
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin_line",
+      "name": "grand ballroom stage coins",
+      "map_m": [
+       -489.4,
+       -273.2,
+       12.6
+      ],
+      "game": [
+       -1940,
+       1260,
+       -1980
+      ],
+      "behavior": "bhvCoinFormation",
+      "model": "MODEL_NONE",
+      "bparams": "0x00000000",
+      "facing_deg": 90.0,
+      "coins": 5,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "bookstore ledge coin -1.6",
+      "map_m": [
+       -442.55,
+       -356.7,
+       9.7
+      ],
+      "game": [
+       2745,
+       970,
+       6370
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "bookstore ledge coin +0.0",
+      "map_m": [
+       -440.95,
+       -356.7,
+       9.7
+      ],
+      "game": [
+       2905,
+       970,
+       6370
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "bookstore ledge coin +1.6",
+      "map_m": [
+       -439.35,
+       -356.7,
+       9.7
+      ],
+      "game": [
+       3065,
+       970,
+       6370
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "arcade top coin 0",
+      "map_m": [
+       -458.8,
+       -283.6,
+       2.45
+      ],
+      "game": [
+       1120,
+       245,
+       -940
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "arcade top coin 3",
+      "map_m": [
+       -458.8,
+       -286.45,
+       2.45
+      ],
+      "game": [
+       1120,
+       245,
+       -655
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "arcade top coin 6",
+      "map_m": [
+       -458.8,
+       -289.3,
+       2.45
+      ],
+      "game": [
+       1120,
+       245,
+       -370
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
      }
     ]
    },
@@ -6706,42 +7265,74 @@
      "LL": {
       "walls": 186,
       "doors_open": 12,
-      "doors_closed": 36
+      "doors_closed": 36,
+      "void_edge_fill": 0,
+      "void_caps": 0,
+      "sealed_backing": 0,
+      "nocam_walls": 3
      },
      "G": {
       "walls": 253,
       "doors_open": 26,
-      "doors_closed": 23
+      "doors_closed": 23,
+      "void_edge_fill": 0,
+      "void_caps": 0,
+      "sealed_backing": 3,
+      "nocam_walls": 11
      },
      "L1": {
       "walls": 290,
       "doors_open": 7,
-      "doors_closed": 29
+      "doors_closed": 29,
+      "void_edge_fill": 1,
+      "void_caps": 6,
+      "sealed_backing": 0,
+      "nocam_walls": 0
      },
      "L2": {
       "walls": 517,
-      "doors_open": 47,
-      "doors_closed": 77
+      "doors_open": 39,
+      "doors_closed": 85,
+      "void_edge_fill": 1,
+      "void_caps": 0,
+      "sealed_backing": 0,
+      "nocam_walls": 0
      },
      "L3": {
       "walls": 397,
-      "doors_open": 29,
-      "doors_closed": 62
+      "doors_open": 23,
+      "doors_closed": 68,
+      "void_edge_fill": 2,
+      "void_caps": 0,
+      "sealed_backing": 0,
+      "nocam_walls": 0
      },
      "L4": {
-      "walls": 54,
-      "doors_open": 7,
-      "doors_closed": 7
+      "walls": 52,
+      "doors_open": 6,
+      "doors_closed": 7,
+      "void_edge_fill": 0,
+      "void_caps": 0,
+      "sealed_backing": 0,
+      "nocam_walls": 0
      },
      "L5": {
       "walls": 90,
       "doors_open": 6,
-      "doors_closed": 23
+      "doors_closed": 23,
+      "void_edge_fill": 0,
+      "void_caps": 0,
+      "sealed_backing": 19,
+      "nocam_walls": 22
      },
      "L6": {
       "walls": 72,
       "doors_open": 1,
-      "doors_closed": 25
+      "doors_closed": 25,
+      "void_edge_fill": 0,
+      "void_caps": 0,
+      "sealed_backing": 22,
+      "nocam_walls": 26
      }
     },
     "elevator_links": [
@@ -6818,7 +7409,21 @@
       "landing_z": 15.0
      }
     ],
-    "lights": 1949,
+    "circulation_art": {
+     "LL": {
+      "art": 45,
+      "plaques": 32
+     },
+     "L2": {
+      "art": 111,
+      "plaques": 55
+     },
+     "L3": {
+      "art": 109,
+      "plaques": 58
+     }
+    },
+    "lights": 1912,
     "instant_warps": [
      {
       "index": 0,
@@ -6858,7 +7463,9 @@
     "frame": "Area 2 shares area 1's frame (centre (-470, -293)); the doors line up in plan, instant warps add only the vertical offset between area 1's flattened grade and the real level (+6 north entrance, -2 South Terrace, +4 Level 1 south exit, 0 Ground north door).",
     "floor_height": "Floors 6.0 m apart (real ~4.5 m), 5.4 m clear; the tower floors (L4-L6) 5.0 m apart (real ~3.2 m hotel floors), 4.4 m clear. Plans 1:1 (the registered wayfinding geometry).",
     "grand_ballroom": "Double height: L2 floor to the L3 roof line, 11.4 m clear (real ~7 m, estimated from photos).",
-    "rion_ballroom": "Top floor, so its ceiling rises 2 m above the L3 corridor ceiling (7.4 m clear).",
+    "rion_ballroom": "Top floor, so its ceiling rises 0.6 m above the L3 corridor ceiling (6.0 m clear; the photo reads about 5 m).",
+    "meeting_rooms": "Ground (G310-G330, the Senate Chamber), L2 and L3 meeting rooms have a dropped lay-in ceiling at 3.9 m (photos ~2.7-3 m), raised for the camera.",
+    "stair_halls": "The enclosed stair halls are not built (closed doors, sealed shafts; no photos): floors connect by the Blue elevator pads and the atrium scissor stairs.",
     "atrium": "Ground to a cedar ceiling at 25.6 m over the voids (L3 ceiling + a 2.2 m clerestory band).",
     "sealed": "Offices, restrooms, kitchens, back-of-house rooms, the stair shafts and most hotel rooms are closed doors (no photos; not public). Open: corridors, the atrium, vestibules, every meeting room, the ballrooms, the Auditorium, the Gallery, the Senate Chamber, the Game Room, the Gator Esports Center, Orange & Brew, the Arts & Crafts Center and the dance studios, the Level 4 event rooms, hotel rooms 516 and 501/502 and a balcony.",
     "elevators": "The Blue elevators (the only bank that reaches the hotel) are vanilla teleport pads: two open cars per floor (north-west UP, north-east DOWN). The Orange and service elevators are closed.",
@@ -6868,139 +7475,139 @@
    "objects": {
     "reitz LL visual": {
      "group": "LL",
-     "tris": 2634,
+     "tris": 2762,
      "collision": false
     },
     "reitz LL collision": {
      "group": "LL",
-     "tris": 288,
+     "tris": 302,
      "collision": true
     },
     "reitz G visual": {
      "group": "G",
-     "tris": 13067,
+     "tris": 16571,
      "collision": false
     },
     "reitz G collision": {
      "group": "G",
-     "tris": 1384,
+     "tris": 1485,
      "collision": true
     },
     "reitz L1 visual": {
      "group": "L1",
-     "tris": 9791,
+     "tris": 13421,
      "collision": false
     },
     "reitz L1 collision": {
      "group": "L1",
-     "tris": 1083,
+     "tris": 1185,
      "collision": true
     },
     "reitz L2 visual": {
      "group": "L2",
-     "tris": 13099,
+     "tris": 15959,
      "collision": false
     },
     "reitz L2 collision": {
      "group": "L2",
-     "tris": 1777,
+     "tris": 1806,
      "collision": true
     },
     "reitz L3 visual": {
      "group": "L3",
-     "tris": 7462,
+     "tris": 11474,
      "collision": false
     },
     "reitz L3 collision": {
      "group": "L3",
-     "tris": 1114,
+     "tris": 1098,
      "collision": true
     },
     "reitz L4 visual": {
      "group": "L4",
-     "tris": 2357,
+     "tris": 3279,
      "collision": false
     },
     "reitz L4 collision": {
      "group": "L4",
-     "tris": 293,
+     "tris": 337,
      "collision": true
     },
     "reitz L5 visual": {
      "group": "L5",
-     "tris": 1621,
+     "tris": 1980,
      "collision": false
     },
     "reitz L5 collision": {
      "group": "L5",
-     "tris": 183,
+     "tris": 205,
      "collision": true
     },
     "reitz L6 visual": {
      "group": "L6",
-     "tris": 913,
+     "tris": 1086,
      "collision": false
     },
     "reitz L6 collision": {
      "group": "L6",
-     "tris": 70,
+     "tris": 71,
      "collision": true
     },
     "reitz ext visual": {
      "group": "ext",
-     "tris": 573,
+     "tris": 3823,
      "collision": false
     }
    },
-   "vertex_lit_material_lists": 206
+   "vertex_lit_material_lists": 308
   }
  ],
  "export_hygiene": {
-  "geometry_mode_lines_sorted": 520,
-  "trailing_ws_lines": 2,
+  "geometry_mode_lines_sorted": 724,
+  "trailing_ws_lines": 4,
   "max_abs_vertex": 32416,
   "common0_jump_link": true
  },
  "collision_repair": {
   "area_1": {
    "vertices": [
-    8119,
-    8113
+    8123,
+    8117
    ],
    "welded_vertices": 6,
    "collapsed_tris": 0,
-   "tjunction_splits": 115,
+   "tjunction_splits": 118,
    "triangles": [
-    9659,
-    9774
+    9661,
+    9779
    ]
   },
   "area_2": {
    "vertices": [
-    13822,
-    13671
+    14131,
+    13983
    ],
-   "welded_vertices": 150,
+   "welded_vertices": 147,
    "collapsed_tris": 14,
-   "tjunction_splits": 458,
+   "tjunction_splits": 406,
    "triangles": [
-    11947,
-    12391
+    12240,
+    12632
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [
-   "12391 static collision triangles in the largest area (22165 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
+   "12632 static collision triangles in the largest area (22411 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
   ],
-  "collision_tris": 22165,
-  "render_tris": 174233,
+  "collision_tris": 22411,
+  "render_tris": 206773,
   "lua_names": [],
   "fog_patched": [
-   151,
-   151
+   202,
+   202
   ]
  },
- "level_dir": "work/interiors/integ/b_wf2/levels/wf"
+ "level_dir": "mods/sgl64/levels/wf"
 }
