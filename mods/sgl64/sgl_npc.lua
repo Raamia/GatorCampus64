@@ -173,7 +173,8 @@ local function write_outbox()
     table.sort(seqs)
     for _, seq in ipairs(seqs) do
         local p = sPending[seq]
-        table.insert(lines, string.format("%d\t%s\t%s\t%s", seq, p.npc, escape(p.player), escape(p.text)))
+        table.insert(lines, string.format("%d\t%s\t%s\t%s\t%s", seq, p.npc, escape(p.player), escape(p.text),
+            escape(p.stats or "")))
     end
     file:rewind()
     file:erase(file.size)
@@ -222,6 +223,43 @@ local function npc_say(id, text, thinking)
     npc_show(id, text, thinking)
 end
 
+-- what the guide's live answers need ("how many stars do I have"): "key=value;key=value" (bridge.py parse_stats)
+local function clean(v)
+    return (tostring(v):gsub("[;=\t\n\r\\]", " "))
+end
+
+local function sender_stats(m)
+    local np = gNetworkPlayers[m.playerIndex]
+    local stars = sgl_total_stars()
+    local kv = {
+        stars = stars, lives = m.numLives, coins = m.numCoins,
+        players = 0,
+    }
+    for i = 0, MAX_PLAYERS - 1 do
+        if gNetworkPlayers[i].connected then kv.players = kv.players + 1 end
+    end
+    local stage = sgl_stage_by_level(np.currLevelNum)
+    if np.currLevelNum == SGL_HUB_LEVEL then
+        kv.here = "central campus"
+    elseif stage ~= nil then
+        kv.here = stage.name .. " act " .. np.currActNum
+    end
+    local friends = _G.sglFriends
+    local pick = gPlayerSyncTable[m.playerIndex].friend
+    if friends ~= nil and type(pick) == "number" and friends[pick] ~= nil then kv.char = friends[pick].name end
+    local go = sgl_next_stage()
+    if go ~= nil then kv.go = go.name .. "|" .. go.building end
+    local file = get_current_save_file_num() - 1
+    for _, s in ipairs(SGL_STAGES) do
+        if kv.lock == nil and s.stars > stars then kv.lock = s.name .. "|" .. s.building .. "|" .. s.stars end
+        if s.acts ~= nil and file >= 0 then kv["s_" .. s.key] = save_file_get_course_star_count(file, s.course - 1) end
+    end
+    local parts = {}
+    for k, v in pairs(kv) do table.insert(parts, k .. "=" .. clean(v)) end
+    table.sort(parts)
+    return table.concat(parts, ";")
+end
+
 local function pending_for(player)
     for _, p in pairs(sPending) do
         if p.player == player then return true end
@@ -238,7 +276,7 @@ local function on_chat_message(m, msg)
     local player = gNetworkPlayers[m.playerIndex].name
     if pending_for(player) then return end   -- one question at a time per player
     sSeq = sSeq + 1
-    sPending[sSeq] = { npc = npc.id, player = player, text = msg:sub(1, 300), age = 0 }
+    sPending[sSeq] = { npc = npc.id, player = player, text = msg:sub(1, 300), stats = sender_stats(m), age = 0 }
     sPollTimer = SGL_NPC_POLL
     write_outbox()
     npc_say(npc.id, "...", true)
@@ -308,8 +346,23 @@ local function wrap(text, scale, width)
     return lines
 end
 
+-- long guide answers: the bubble shows the first sentences (up to BUBBLE_CHARS), chat shows everything
+local BUBBLE_CHARS = 200
+
+local function bubble_text(text)
+    if #text <= BUBBLE_CHARS then return text end
+    local cut = text:sub(1, BUBBLE_CHARS)
+    local last = nil
+    for i = 1, #cut - 1 do
+        local c = cut:sub(i, i)
+        if (c == "." or c == "!" or c == "?") and cut:sub(i + 1, i + 1) == " " then last = i end
+    end
+    if last ~= nil and last > 40 then return cut:sub(1, last) .. " (more in chat)" end
+    return cut:gsub("%s+%S*$", "") .. "... (more in chat)"
+end
+
 local function draw_bubble(b, x, y, col)
-    local text = b.thinking and string.rep(".", 1 + (b.age // 8) % 3) or b.text
+    local text = b.thinking and string.rep(".", 1 + (b.age // 8) % 3) or bubble_text(b.text)
     local lines = wrap(text, BUBBLE_SCALE, BUBBLE_W)
     local w = 0
     for _, l in ipairs(lines) do w = math.max(w, sgl_hud_text_width(l, BUBBLE_SCALE)) end

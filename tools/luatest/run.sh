@@ -36,8 +36,12 @@
 #      sanity: walkable floor, columns, barriers on the doors, ladder decks, star humps, the arena, the coffee run's par),
 #      and the built levels/bbh collision once it exists, incl. a walk through every door anchor and a
 #      floor-crack scan (skipped when tools/.venv is missing)
-#  15. check_npc_ids.py: the NPCs of sgl_npc.lua match the personas in tools/npc_bridge/npcs.json
-#  16. tools/npc_bridge/test_bridge.py: the NPC chat bridge (modfs protocol, Gemini requests; offline)
+#  15. test_npc.lua: the talking hub NPCs (sgl_npc.lua): Albert, chat -> outbox with live stats, the bridge's replies
+#      relayed to everyone, timeouts
+#  16. check_npc_ids.py: the NPCs of sgl_npc.lua match the personas in tools/npc_bridge/npcs.json
+#  17. check_game_guide.py: tools/npc_bridge/game_guide.md covers every stage, door, star count and act of course.lua
+#  18. tools/npc_bridge/test_*.py: the NPC chat bridge and the game guide (modfs protocol, routing, Gemini requests;
+#      offline) and tools/actors/test_make_albert.py (Albert's generated actor is valid and up to date)
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
 # Fixtures (regenerate only for a new coopdx version): coopdx_constants_v151.lua,
 # coopdx_api_v151.lua, coopdx_structs_v151.lua (gen_coopdx_*.py, see their headers).
@@ -101,9 +105,14 @@ if [ -x "$PY" ]; then
 else
     echo "== check_swamp_points / check_reitz_points / check_lake_points / check_marston_points / check_libwest_points skipped (no tools/.venv)"
 fi
+echo "== test_npc (talking hub NPCs)"
+"$LUA" "$HERE/test_npc.lua"
 echo "== check_npc_ids"
 python3 -I "$HERE/check_npc_ids.py"
 echo "== npc_bridge tests"
 out="$(python3 -m unittest discover -s "$HERE/../npc_bridge" 2>&1)" || { echo "$out"; exit 1; }
+echo "$out" | tail -1
+echo "== Albert actor tests"
+out="$(python3 -m unittest discover -s "$HERE/../actors" 2>&1)" || { echo "$out"; exit 1; }
 echo "$out" | tail -1
 echo "== all luatest checks passed"

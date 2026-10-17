@@ -521,7 +521,7 @@ function World:build_env(c)
         local marioObj = strict("Object", mo)
         mo.__built = true
         local ms = { playerIndex = i, pos = (i == 0) and c.pos or { x = 0, y = 0, z = 0 },
-            faceAngle = (i == 0) and c.face or { x = 0, y = 0, z = 0 }, health = 0x880, action = C.ACT_IDLE, numLives = 4,
+            faceAngle = (i == 0) and c.face or { x = 0, y = 0, z = 0 }, health = 0x880, action = C.ACT_IDLE, numLives = 4, numCoins = 0,
             numStars = 0, controller = ctl, marioObj = marioObj, character = { type = C.CT_MARIO },
             skipWarpInteractionsTimer = 0, interactObj = nil, usedObj = nil, riddenObj = nil,
             vel = { x = 0, y = 0, z = 0 }, forwardVel = 0, heldObj = nil, area = nil }
