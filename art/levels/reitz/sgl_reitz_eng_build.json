@@ -18,8 +18,8 @@
   -23.0
  ],
  "extent_half_m": 324.0,
- "collision_tris": 9626,
- "visual_tris": 81673,
+ "collision_tris": 9659,
+ "visual_tris": 81813,
  "collision_by_object": {
   "Ground collision": 1781,
   "Pond basins collision": 259,
@@ -29,8 +29,9 @@
   "Boundary walls": 216,
   "Dressing collision": 214,
   "LM malachowsky_hall collision": 204,
-  "LM reitz_union collision": 475,
+  "LM reitz_union collision": 500,
   "LM reitz_amphitheater collision": 123,
+  "LM reitz_union door warps": 8,
   "LM weil_hall collision": 297,
   "LM engineering_clock_tower collision": 20,
   "LM engineering_plaza collision": 76
@@ -48,7 +49,7 @@
   "Dressing visual": 2072,
   "LM malachowsky_hall visual": 1086,
   "LM malachowsky_hall paving": 24,
-  "LM reitz_union visual": 1663,
+  "LM reitz_union visual": 1803,
   "LM reitz_amphitheater visual": 397,
   "LM weil_hall visual": 923,
   "LM weil_hall courtyard paving": 4,
@@ -132,15 +133,15 @@
     "reitz_union",
     "reitz_amphitheater"
    ],
-   "parts": 4,
-   "collision_tris": 598,
-   "visual_tris": 2060,
+   "parts": 5,
+   "collision_tris": 631,
+   "visual_tris": 2200,
    "budget_collision": 650,
    "budget_visual": 2300,
    "per_landmark": {
     "reitz_union": {
-     "collision_tris": 475,
-     "visual_tris": 1663,
+     "collision_tris": 508,
+     "visual_tris": 1803,
      "budget_collision": 500,
      "budget_visual": 1800
     },
@@ -891,11 +892,6 @@
      -305.0,
      11.5
     ],
-    "food_court_center": [
-     -412.0,
-     -305.0,
-     2.0
-    ],
     "food_court_door_inside": [
      -376.04,
      -287.02,
@@ -906,15 +902,25 @@
      -290.62,
      2.0
     ],
-    "food_court_counter_top": [
-     -427.0,
-     -300.0,
-     3.1
+    "north_entrance_recess": [
+     -380.45,
+     -254.0,
+     0.0
     ],
-    "food_court_table": [
-     -413.75,
-     -303.4,
-     2.85
+    "north_entrance_doors": [
+     -380.45,
+     -257.4,
+     0.0
+    ],
+    "south_terrace_doors": [
+     -384.7,
+     -288.0,
+     2.0
+    ],
+    "ground_north_door": [
+     -419.1,
+     -242.8,
+     0.0
     ],
     "se_canopy_top": [
      -404.25,
@@ -1990,16 +1996,16 @@
   }
  ],
  "pickups": {
-  "coins_placed": 254,
-  "coins_with_goombas": 262,
-  "objects": 140,
+  "coins_placed": 249,
+  "coins_with_goombas": 257,
+  "objects": 139,
   "by_kind": {
    "coin": 82,
    "heart": 4,
    "1up": 3,
    "goomba": 8,
-   "coin_line": 20,
    "coin_ring": 9,
+   "coin_line": 19,
    "bobomb": 2,
    "shell": 3,
    "pole": 9
@@ -2544,26 +2550,6 @@
     "bparams": "0x00000000",
     "facing_deg": 0.0,
     "coins": 1,
-    "acts": null
-   },
-   {
-    "kind": "coin_line",
-    "name": "food court coins",
-    "map_m": [
-     -412.0,
-     -305.0,
-     2.0
-    ],
-    "game": [
-     5800,
-     200,
-     1200
-    ],
-    "behavior": "bhvCoinFormation",
-    "model": "MODEL_NONE",
-    "bparams": "0x00000000",
-    "facing_deg": 90.0,
-    "coins": 5,
     "acts": null
    },
    {
@@ -5841,37 +5827,1180 @@
   }
  },
  "attribution": "Map data (c) OpenStreetMap contributors, ODbL 1.0",
+ "instant_warps": [
+  {
+   "index": 0,
+   "surface": "SURFACE_INSTANT_WARP_1B",
+   "to_area": 2,
+   "offset_units": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "index": 1,
+   "surface": "SURFACE_INSTANT_WARP_1C",
+   "to_area": 2,
+   "offset_units": [
+    0,
+    600,
+    0
+   ]
+  },
+  {
+   "index": 2,
+   "surface": "SURFACE_INSTANT_WARP_1D",
+   "to_area": 2,
+   "offset_units": [
+    0,
+    -200,
+    0
+   ]
+  },
+  {
+   "index": 3,
+   "surface": "SURFACE_INSTANT_WARP_1E",
+   "to_area": 2,
+   "offset_units": [
+    0,
+    400,
+    0
+   ]
+  }
+ ],
+ "interior_areas": [
+  {
+   "area": 2,
+   "module": "tools/campus/interiors/reitz.py",
+   "kit_tris": {
+    "visual": 92420,
+    "collision": 12004
+   },
+   "warp_nodes": [
+    {
+     "id": "0x0A",
+     "dest_level": "LEVEL_WF",
+     "dest_area": 2,
+     "dest_node": "0x0A",
+     "note": "area 2 spawn (debug warps only)"
+    },
+    {
+     "id": "0xF0",
+     "dest_level": "LEVEL_CASTLE_GROUNDS",
+     "dest_area": 1,
+     "dest_node": "0x22",
+     "note": "star exit -> hub outside door 2 (as area 1)"
+    },
+    {
+     "id": "0xF1",
+     "dest_level": "LEVEL_CASTLE_GROUNDS",
+     "dest_area": 1,
+     "dest_node": "0x32",
+     "note": "death / Exit course -> hub outside door 2 (as area 1)"
+    },
+    {
+     "id": "0x40",
+     "dest_level": "LEVEL_WF",
+     "dest_area": 2,
+     "dest_node": "0x41",
+     "note": "Elevator LL up -> G (teleport pad)"
+    },
+    {
+     "id": "0x41",
+     "dest_level": "LEVEL_WF",
+     "dest_area": 2,
+     "dest_node": "0x40",
+     "note": "Elevator G down -> LL (teleport pad)"
+    },
+    {
+     "id": "0x42",
+     "dest_level": "LEVEL_WF",
+     "dest_area": 2,
+     "dest_node": "0x43",
+     "note": "Elevator G up -> L1 (teleport pad)"
+    },
+    {
+     "id": "0x43",
+     "dest_level": "LEVEL_WF",
+     "dest_area": 2,
+     "dest_node": "0x42",
+     "note": "Elevator L1 down -> G (teleport pad)"
+    },
+    {
+     "id": "0x44",
+     "dest_level": "LEVEL_WF",
+     "dest_area": 2,
+     "dest_node": "0x45",
+     "note": "Elevator L1 up -> L2 (teleport pad)"
+    },
+    {
+     "id": "0x45",
+     "dest_level": "LEVEL_WF",
+     "dest_area": 2,
+     "dest_node": "0x44",
+     "note": "Elevator L2 down -> L1 (teleport pad)"
+    },
+    {
+     "id": "0x46",
+     "dest_level": "LEVEL_WF",
+     "dest_area": 2,
+     "dest_node": "0x47",
+     "note": "Elevator L2 up -> L3 (teleport pad)"
+    },
+    {
+     "id": "0x47",
+     "dest_level": "LEVEL_WF",
+     "dest_area": 2,
+     "dest_node": "0x46",
+     "note": "Elevator L3 down -> L2 (teleport pad)"
+    },
+    {
+     "id": "0x48",
+     "dest_level": "LEVEL_WF",
+     "dest_area": 2,
+     "dest_node": "0x49",
+     "note": "Elevator L3 up -> L4 (teleport pad)"
+    },
+    {
+     "id": "0x49",
+     "dest_level": "LEVEL_WF",
+     "dest_area": 2,
+     "dest_node": "0x48",
+     "note": "Elevator L4 down -> L3 (teleport pad)"
+    },
+    {
+     "id": "0x4A",
+     "dest_level": "LEVEL_WF",
+     "dest_area": 2,
+     "dest_node": "0x4B",
+     "note": "Elevator L4 up -> L5 (teleport pad)"
+    },
+    {
+     "id": "0x4B",
+     "dest_level": "LEVEL_WF",
+     "dest_area": 2,
+     "dest_node": "0x4A",
+     "note": "Elevator L5 down -> L4 (teleport pad)"
+    },
+    {
+     "id": "0x4C",
+     "dest_level": "LEVEL_WF",
+     "dest_area": 2,
+     "dest_node": "0x4D",
+     "note": "Elevator L5 up -> L6 (teleport pad)"
+    },
+    {
+     "id": "0x4D",
+     "dest_level": "LEVEL_WF",
+     "dest_area": 2,
+     "dest_node": "0x4C",
+     "note": "Elevator L6 down -> L5 (teleport pad)"
+    }
+   ],
+   "instant_warps": [
+    {
+     "index": 0,
+     "surface": "SURFACE_INSTANT_WARP_1B",
+     "to_area": 1,
+     "offset_units": [
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "index": 1,
+     "surface": "SURFACE_INSTANT_WARP_1C",
+     "to_area": 1,
+     "offset_units": [
+      0,
+      -600,
+      0
+     ]
+    },
+    {
+     "index": 2,
+     "surface": "SURFACE_INSTANT_WARP_1D",
+     "to_area": 1,
+     "offset_units": [
+      0,
+      200,
+      0
+     ]
+    },
+    {
+     "index": 3,
+     "surface": "SURFACE_INSTANT_WARP_1E",
+     "to_area": 1,
+     "offset_units": [
+      0,
+      -400,
+      0
+     ]
+    }
+   ],
+   "warp_strips": [
+    {
+     "entrance": "north",
+     "index": 1,
+     "surface": "SURFACE_INSTANT_WARP_1C",
+     "z_m": 6.0,
+     "poly_m": [
+      [
+       -384.6,
+       -258.0
+      ],
+      [
+       -376.3,
+       -258.0
+      ],
+      [
+       -376.3,
+       -255.6
+      ],
+      [
+       -384.6,
+       -255.6
+      ]
+     ],
+     "to_area": 1,
+     "offset_units": [
+      0,
+      -600,
+      0
+     ]
+    },
+    {
+     "entrance": "south_terrace",
+     "index": 2,
+     "surface": "SURFACE_INSTANT_WARP_1D",
+     "z_m": 0.0,
+     "poly_m": [
+      [
+       -388.2,
+       -288.6
+      ],
+      [
+       -381.2,
+       -288.6
+      ],
+      [
+       -381.2,
+       -286.3
+      ],
+      [
+       -388.2,
+       -286.3
+      ]
+     ],
+     "to_area": 1,
+     "offset_units": [
+      0,
+      200,
+      0
+     ]
+    },
+    {
+     "entrance": "south_exit_l1",
+     "index": 3,
+     "surface": "SURFACE_INSTANT_WARP_1E",
+     "z_m": 6.0,
+     "poly_m": [
+      [
+       -377.66,
+       -291.04
+      ],
+      [
+       -374.46,
+       -291.08
+      ],
+      [
+       -374.46,
+       -288.88
+      ],
+      [
+       -377.66,
+       -288.84
+      ]
+     ],
+     "to_area": 1,
+     "offset_units": [
+      0,
+      -400,
+      0
+     ]
+    },
+    {
+     "entrance": "north_ground",
+     "index": 0,
+     "surface": "SURFACE_INSTANT_WARP_1B",
+     "z_m": 0.0,
+     "poly_m": [
+      [
+       -420.4,
+       -244.5
+      ],
+      [
+       -417.8,
+       -244.5
+      ],
+      [
+       -417.8,
+       -242.2
+      ],
+      [
+       -420.4,
+       -242.2
+      ]
+     ],
+     "to_area": 1,
+     "offset_units": [
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "pads": [
+    {
+     "name": "Elevator LL up",
+     "node": 64,
+     "dest_node": 65,
+     "floor": "LL",
+     "dest_floor": "G",
+     "pos_m": [
+      -448.7591194968965,
+      -269.67484276732165,
+      -6.0
+     ],
+     "facing_deg": 90.0,
+     "bparams": "0x07400000",
+     "behavior": "bhvFadingWarp",
+     "floor_m": -6.0,
+     "game": [
+      2124,
+      -600,
+      -2333
+     ]
+    },
+    {
+     "name": "Elevator G down",
+     "node": 65,
+     "dest_node": 64,
+     "floor": "G",
+     "dest_floor": "LL",
+     "pos_m": [
+      -441.2849390918901,
+      -269.23189368769056,
+      0.0
+     ],
+     "facing_deg": 270.0,
+     "bparams": "0x07410000",
+     "behavior": "bhvFadingWarp",
+     "floor_m": 0.0,
+     "game": [
+      2872,
+      0,
+      -2377
+     ]
+    },
+    {
+     "name": "Elevator G up",
+     "node": 66,
+     "dest_node": 67,
+     "floor": "G",
+     "dest_floor": "L1",
+     "pos_m": [
+      -448.7594771242405,
+      -269.22483660134355,
+      0.0
+     ],
+     "facing_deg": 90.0,
+     "bparams": "0x07420000",
+     "behavior": "bhvFadingWarp",
+     "floor_m": 0.0,
+     "game": [
+      2124,
+      0,
+      -2378
+     ]
+    },
+    {
+     "name": "Elevator L1 down",
+     "node": 67,
+     "dest_node": 66,
+     "floor": "L1",
+     "dest_floor": "G",
+     "pos_m": [
+      -441.4408805029104,
+      -269.9251572325543,
+      6.0
+     ],
+     "facing_deg": 270.0,
+     "bparams": "0x07430000",
+     "behavior": "bhvFadingWarp",
+     "floor_m": 6.0,
+     "game": [
+      2856,
+      600,
+      -2307
+     ]
+    },
+    {
+     "name": "Elevator L1 up",
+     "node": 68,
+     "dest_node": 69,
+     "floor": "L1",
+     "dest_floor": "L2",
+     "pos_m": [
+      -448.36602728048734,
+      -269.83277919863616,
+      6.0
+     ],
+     "facing_deg": 90.0,
+     "bparams": "0x07440000",
+     "behavior": "bhvFadingWarp",
+     "floor_m": 6.0,
+     "game": [
+      2163,
+      600,
+      -2317
+     ]
+    },
+    {
+     "name": "Elevator L2 down",
+     "node": 69,
+     "dest_node": 68,
+     "floor": "L2",
+     "dest_floor": "L1",
+     "pos_m": [
+      -441.20000000002346,
+      -269.3000000000132,
+      12.0
+     ],
+     "facing_deg": 270.0,
+     "bparams": "0x07450000",
+     "behavior": "bhvFadingWarp",
+     "floor_m": 12.0,
+     "game": [
+      2880,
+      1200,
+      -2370
+     ]
+    },
+    {
+     "name": "Elevator L2 up",
+     "node": 70,
+     "dest_node": 71,
+     "floor": "L2",
+     "dest_floor": "L3",
+     "pos_m": [
+      -448.64999999984656,
+      -269.1999999999061,
+      12.0
+     ],
+     "facing_deg": 90.0,
+     "bparams": "0x07460000",
+     "behavior": "bhvFadingWarp",
+     "floor_m": 12.0,
+     "game": [
+      2135,
+      1200,
+      -2380
+     ]
+    },
+    {
+     "name": "Elevator L3 down",
+     "node": 71,
+     "dest_node": 70,
+     "floor": "L3",
+     "dest_floor": "L2",
+     "pos_m": [
+      -441.9,
+      -269.3500000000013,
+      18.0
+     ],
+     "facing_deg": 270.0,
+     "bparams": "0x07470000",
+     "behavior": "bhvFadingWarp",
+     "floor_m": 18.0,
+     "game": [
+      2810,
+      1800,
+      -2365
+     ]
+    },
+    {
+     "name": "Elevator L3 up",
+     "node": 72,
+     "dest_node": 73,
+     "floor": "L3",
+     "dest_floor": "L4",
+     "pos_m": [
+      -448.8595047341998,
+      -269.27453265358724,
+      18.0
+     ],
+     "facing_deg": 90.0,
+     "bparams": "0x07480000",
+     "behavior": "bhvFadingWarp",
+     "floor_m": 18.0,
+     "game": [
+      2114,
+      1800,
+      -2373
+     ]
+    },
+    {
+     "name": "Elevator L4 down",
+     "node": 73,
+     "dest_node": 72,
+     "floor": "L4",
+     "dest_floor": "L3",
+     "pos_m": [
+      -441.0937198067448,
+      -268.92512077293554,
+      24.0
+     ],
+     "facing_deg": 270.0,
+     "bparams": "0x07490000",
+     "behavior": "bhvFadingWarp",
+     "floor_m": 24.0,
+     "game": [
+      2891,
+      2400,
+      -2407
+     ]
+    },
+    {
+     "name": "Elevator L4 up",
+     "node": 74,
+     "dest_node": 75,
+     "floor": "L4",
+     "dest_floor": "L5",
+     "pos_m": [
+      -448.90000000004596,
+      -268.85000000002503,
+      24.0
+     ],
+     "facing_deg": 90.0,
+     "bparams": "0x074A0000",
+     "behavior": "bhvFadingWarp",
+     "floor_m": 24.0,
+     "game": [
+      2110,
+      2400,
+      -2415
+     ]
+    },
+    {
+     "name": "Elevator L5 down",
+     "node": 75,
+     "dest_node": 74,
+     "floor": "L5",
+     "dest_floor": "L4",
+     "pos_m": [
+      -441.20000000031104,
+      -270.0000000001919,
+      29.0
+     ],
+     "facing_deg": 270.0,
+     "bparams": "0x074B0000",
+     "behavior": "bhvFadingWarp",
+     "floor_m": 29.0,
+     "game": [
+      2880,
+      2900,
+      -2300
+     ]
+    },
+    {
+     "name": "Elevator L5 up",
+     "node": 76,
+     "dest_node": 77,
+     "floor": "L5",
+     "dest_floor": "L6",
+     "pos_m": [
+      -448.7333333334697,
+      -269.9333333334125,
+      29.0
+     ],
+     "facing_deg": 90.0,
+     "bparams": "0x074C0000",
+     "behavior": "bhvFadingWarp",
+     "floor_m": 29.0,
+     "game": [
+      2127,
+      2900,
+      -2307
+     ]
+    },
+    {
+     "name": "Elevator L6 down",
+     "node": 77,
+     "dest_node": 76,
+     "floor": "L6",
+     "dest_floor": "L5",
+     "pos_m": [
+      -441.2499999999829,
+      -269.9499999999906,
+      34.0
+     ],
+     "facing_deg": 270.0,
+     "bparams": "0x074D0000",
+     "behavior": "bhvFadingWarp",
+     "floor_m": 34.0,
+     "game": [
+      2875,
+      3400,
+      -2305
+     ]
+    }
+   ],
+   "spawn": {
+    "map_m": [
+     -399.0,
+     -278.5
+    ],
+    "floor_m": 0.0,
+    "note": "area 2 spawn 0x0A (bhvSpinAirborneWarp) in the Ground-level atrium lounge; only debug warps (warp_to_warpnode / area 2) use it: players walk in through the real doors (instant warps)"
+   },
+   "pickups": {
+    "coins_placed": 36,
+    "coins_with_goombas": 36,
+    "objects": 11,
+    "by_kind": {
+     "coin_line": 5,
+     "coin": 3,
+     "coin_ring": 1,
+     "heart": 1,
+     "1up": 1
+    },
+    "skipped": [],
+    "items": [
+     {
+      "kind": "coin_line",
+      "name": "food court coins",
+      "map_m": [
+       -438.0,
+       -318.0,
+       6.0
+      ],
+      "game": [
+       3200,
+       600,
+       2500
+      ],
+      "behavior": "bhvCoinFormation",
+      "model": "MODEL_NONE",
+      "bparams": "0x00000000",
+      "facing_deg": 90.0,
+      "coins": 5,
+      "acts": null
+     },
+     {
+      "kind": "coin_line",
+      "name": "bowling lane 7 coins",
+      "map_m": [
+       -446.17,
+       -318.0,
+       0.0
+      ],
+      "game": [
+       2383,
+       0,
+       2500
+      ],
+      "behavior": "bhvCoinFormation",
+      "model": "MODEL_NONE",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 5,
+      "acts": null
+     },
+     {
+      "kind": "coin_line",
+      "name": "atrium lounge coins",
+      "map_m": [
+       -386.0,
+       -279.5,
+       0.48
+      ],
+      "game": [
+       8400,
+       48,
+       -1350
+      ],
+      "behavior": "bhvCoinFormation",
+      "model": "MODEL_NONE",
+      "bparams": "0x00000000",
+      "facing_deg": 90.0,
+      "coins": 5,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "atrium landing G coin",
+      "map_m": [
+       -400.0,
+       -271.3,
+       3.6
+      ],
+      "game": [
+       7000,
+       360,
+       -2170
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "atrium landing L1 coin",
+      "map_m": [
+       -400.0,
+       -271.3,
+       9.6
+      ],
+      "game": [
+       7000,
+       960,
+       -2170
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin",
+      "name": "atrium landing L2 coin",
+      "map_m": [
+       -400.0,
+       -271.3,
+       15.6
+      ],
+      "game": [
+       7000,
+       1560,
+       -2170
+      ],
+      "behavior": "bhvYellowCoin",
+      "model": "MODEL_YELLOW_COIN",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 1,
+      "acts": null
+     },
+     {
+      "kind": "coin_ring",
+      "name": "grand ballroom coins",
+      "map_m": [
+       -488.5,
+       -264.0,
+       12.46
+      ],
+      "game": [
+       -1850,
+       1246,
+       -2900
+      ],
+      "behavior": "bhvCoinFormation",
+      "model": "MODEL_NONE",
+      "bparams": "0x00020000",
+      "facing_deg": 0.0,
+      "coins": 8,
+      "acts": null
+     },
+     {
+      "kind": "coin_line",
+      "name": "rion ballroom coins",
+      "map_m": [
+       -440.6,
+       -300.5,
+       18.0
+      ],
+      "game": [
+       2940,
+       1800,
+       750
+      ],
+      "behavior": "bhvCoinFormation",
+      "model": "MODEL_NONE",
+      "bparams": "0x00000000",
+      "facing_deg": 90.0,
+      "coins": 5,
+      "acts": null
+     },
+     {
+      "kind": "coin_line",
+      "name": "esports aisle coins",
+      "map_m": [
+       -463.6,
+       -292.0,
+       0.0
+      ],
+      "game": [
+       640,
+       0,
+       -100
+      ],
+      "behavior": "bhvCoinFormation",
+      "model": "MODEL_NONE",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 5,
+      "acts": null
+     },
+     {
+      "kind": "heart",
+      "name": "hotel corridor heart",
+      "map_m": [
+       -440.0,
+       -274.0,
+       30.0
+      ],
+      "game": [
+       3000,
+       3000,
+       -1900
+      ],
+      "behavior": "bhvRecoveryHeart",
+      "model": "MODEL_HEART",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 0,
+      "acts": null
+     },
+     {
+      "kind": "1up",
+      "name": "uf letters 1-up",
+      "map_m": [
+       -411.33,
+       -265.6,
+       3.55
+      ],
+      "game": [
+       5867,
+       355,
+       -2740
+      ],
+      "behavior": "bhv1Up",
+      "model": "MODEL_1UP",
+      "bparams": "0x00000000",
+      "facing_deg": 0.0,
+      "coins": 0,
+      "acts": null
+     }
+    ]
+   },
+   "stats": {
+    "floors": {
+     "LL": {
+      "walls": 186,
+      "doors_open": 12,
+      "doors_closed": 36
+     },
+     "G": {
+      "walls": 253,
+      "doors_open": 26,
+      "doors_closed": 23
+     },
+     "L1": {
+      "walls": 290,
+      "doors_open": 7,
+      "doors_closed": 29
+     },
+     "L2": {
+      "walls": 517,
+      "doors_open": 47,
+      "doors_closed": 77
+     },
+     "L3": {
+      "walls": 397,
+      "doors_open": 29,
+      "doors_closed": 62
+     },
+     "L4": {
+      "walls": 54,
+      "doors_open": 7,
+      "doors_closed": 7
+     },
+     "L5": {
+      "walls": 90,
+      "doors_open": 6,
+      "doors_closed": 23
+     },
+     "L6": {
+      "walls": 72,
+      "doors_open": 1,
+      "doors_closed": 25
+     }
+    },
+    "elevator_links": [
+     [
+      "LL",
+      "G"
+     ],
+     [
+      "G",
+      "L1"
+     ],
+     [
+      "L1",
+      "L2"
+     ],
+     [
+      "L2",
+      "L3"
+     ],
+     [
+      "L3",
+      "L4"
+     ],
+     [
+      "L4",
+      "L5"
+     ],
+     [
+      "L5",
+      "L6"
+     ]
+    ],
+    "atrium_stairs": [
+     {
+      "storey": "G-L1",
+      "se": {
+       "len": 5.160417496507558,
+       "angle_deg": 30.171505803237135,
+       "steps": 16
+      },
+      "ne": {
+       "len": 5.769595949289331,
+       "angle_deg": 27.472947219271045,
+       "steps": 16
+      },
+      "landing_z": 3.0
+     },
+     {
+      "storey": "L1-L2",
+      "se": {
+       "len": 4.1604174965075424,
+       "angle_deg": 35.794675181976224,
+       "steps": 16
+      },
+      "ne": {
+       "len": 7.03754219142928,
+       "angle_deg": 23.087833395109804,
+       "steps": 16
+      },
+      "landing_z": 9.0
+     },
+     {
+      "storey": "L2-L3",
+      "se": {
+       "len": 6.100636661488036,
+       "angle_deg": 26.185742706737408,
+       "steps": 16
+      },
+      "ne": {
+       "len": 6.008818437632747,
+       "angle_deg": 26.531406789190637,
+       "steps": 16
+      },
+      "landing_z": 15.0
+     }
+    ],
+    "lights": 1949,
+    "instant_warps": [
+     {
+      "index": 0,
+      "area1_to_area2_units": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "index": 1,
+      "area1_to_area2_units": [
+       0,
+       600,
+       0
+      ]
+     },
+     {
+      "index": 2,
+      "area1_to_area2_units": [
+       0,
+       -200,
+       0
+      ]
+     },
+     {
+      "index": 3,
+      "area1_to_area2_units": [
+       0,
+       400,
+       0
+      ]
+     }
+    ]
+   },
+   "notes": {
+    "frame": "Area 2 shares area 1's frame (centre (-470, -293)); the doors line up in plan, instant warps add only the vertical offset between area 1's flattened grade and the real level (+6 north entrance, -2 South Terrace, +4 Level 1 south exit, 0 Ground north door).",
+    "floor_height": "Floors 6.0 m apart (real ~4.5 m), 5.4 m clear; the tower floors (L4-L6) 5.0 m apart (real ~3.2 m hotel floors), 4.4 m clear. Plans 1:1 (the registered wayfinding geometry).",
+    "grand_ballroom": "Double height: L2 floor to the L3 roof line, 11.4 m clear (real ~7 m, estimated from photos).",
+    "rion_ballroom": "Top floor, so its ceiling rises 2 m above the L3 corridor ceiling (7.4 m clear).",
+    "atrium": "Ground to a cedar ceiling at 25.6 m over the voids (L3 ceiling + a 2.2 m clerestory band).",
+    "sealed": "Offices, restrooms, kitchens, back-of-house rooms, the stair shafts and most hotel rooms are closed doors (no photos; not public). Open: corridors, the atrium, vestibules, every meeting room, the ballrooms, the Auditorium, the Gallery, the Senate Chamber, the Game Room, the Gator Esports Center, Orange & Brew, the Arts & Crafts Center and the dance studios, the Level 4 event rooms, hotel rooms 516 and 501/502 and a balcony.",
+    "elevators": "The Blue elevators (the only bank that reaches the hotel) are vanilla teleport pads: two open cars per floor (north-west UP, north-east DOWN). The Orange and service elevators are closed.",
+    "brands": "Food court storefronts carry generic signs (BURGERS, PIZZA, WOK, ...) in the real counters' colours; no brand marks.",
+    "inferred": "No public photo of: the hotel reception, the Info Desk, Orange & Brew, Subway / The Market, the stairwells, restrooms, hotel corridors. Those are drawn plainly (the plan + the house finishes)."
+   },
+   "objects": {
+    "reitz LL visual": {
+     "group": "LL",
+     "tris": 2634,
+     "collision": false
+    },
+    "reitz LL collision": {
+     "group": "LL",
+     "tris": 288,
+     "collision": true
+    },
+    "reitz G visual": {
+     "group": "G",
+     "tris": 13067,
+     "collision": false
+    },
+    "reitz G collision": {
+     "group": "G",
+     "tris": 1384,
+     "collision": true
+    },
+    "reitz L1 visual": {
+     "group": "L1",
+     "tris": 9791,
+     "collision": false
+    },
+    "reitz L1 collision": {
+     "group": "L1",
+     "tris": 1083,
+     "collision": true
+    },
+    "reitz L2 visual": {
+     "group": "L2",
+     "tris": 13099,
+     "collision": false
+    },
+    "reitz L2 collision": {
+     "group": "L2",
+     "tris": 1777,
+     "collision": true
+    },
+    "reitz L3 visual": {
+     "group": "L3",
+     "tris": 7462,
+     "collision": false
+    },
+    "reitz L3 collision": {
+     "group": "L3",
+     "tris": 1114,
+     "collision": true
+    },
+    "reitz L4 visual": {
+     "group": "L4",
+     "tris": 2357,
+     "collision": false
+    },
+    "reitz L4 collision": {
+     "group": "L4",
+     "tris": 293,
+     "collision": true
+    },
+    "reitz L5 visual": {
+     "group": "L5",
+     "tris": 1621,
+     "collision": false
+    },
+    "reitz L5 collision": {
+     "group": "L5",
+     "tris": 183,
+     "collision": true
+    },
+    "reitz L6 visual": {
+     "group": "L6",
+     "tris": 913,
+     "collision": false
+    },
+    "reitz L6 collision": {
+     "group": "L6",
+     "tris": 70,
+     "collision": true
+    },
+    "reitz ext visual": {
+     "group": "ext",
+     "tris": 573,
+     "collision": false
+    }
+   },
+   "vertex_lit_material_lists": 206
+  }
+ ],
  "export_hygiene": {
-  "geometry_mode_lines_sorted": 102,
-  "trailing_ws_lines": 4,
+  "geometry_mode_lines_sorted": 520,
+  "trailing_ws_lines": 2,
   "max_abs_vertex": 32416,
   "common0_jump_link": true
  },
  "collision_repair": {
   "area_1": {
    "vertices": [
-    8081,
-    8079
+    8119,
+    8113
    ],
-   "welded_vertices": 2,
+   "welded_vertices": 6,
    "collapsed_tris": 0,
    "tjunction_splits": 115,
    "triangles": [
-    9626,
-    9741
+    9659,
+    9774
+   ]
+  },
+  "area_2": {
+   "vertices": [
+    13822,
+    13671
+   ],
+   "welded_vertices": 150,
+   "collapsed_tris": 14,
+   "tjunction_splits": 458,
+   "triangles": [
+    11947,
+    12391
    ]
   }
  },
  "validation": {
   "errors": [],
-  "warnings": [],
-  "collision_tris": 9741,
-  "render_tris": 81673,
+  "warnings": [
+   "12391 static collision triangles in the largest area (22165 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
+  ],
+  "collision_tris": 22165,
+  "render_tris": 174233,
   "lua_names": [],
   "fog_patched": [
-   48,
-   48
+   151,
+   151
   ]
  },
- "level_dir": "mods/sgl64/levels/wf"
+ "level_dir": "work/interiors/integ/b_wf2/levels/wf"
 }
