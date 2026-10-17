@@ -44,5 +44,9 @@ if __name__ == "__main__":
     if len(sys.argv) < 3:
         sys.exit(__doc__)
     status, data = call(sys.argv[1].upper(), sys.argv[2], json.loads(sys.argv[3]) if len(sys.argv) > 3 else None)
+    # instance responses carry a tokenised web-console URL; never print it
+    for inst in [data.get("instance")] + list(data.get("instances", [])):
+        if isinstance(inst, dict) and "kvm" in inst:
+            inst["kvm"] = "<redacted>"
     print(json.dumps(data, indent=2))
     sys.exit(0 if status < 400 else 1)
