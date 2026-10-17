@@ -4,7 +4,7 @@
 -- actors/<id>_geo.bin when the mod loads.
 
 local FRIENDS = {
-    { id = "sgltest", name = "Test (green shirt)" },
+    { id = "daniel", name = "Daniel" },
 }
 
 for _, friend in ipairs(FRIENDS) do

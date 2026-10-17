@@ -26,7 +26,13 @@ def setup_fast64():
     migrate_legacy_custom_geo_cmds()
     if any(mat.is_f3d and mat.mat_ver < mod.F3D_MAT_CUR_VERSION for mat in bpy.data.materials):
         bpy.ops.dialog.upgrade_f3d_materials("EXEC_DEFAULT")
-    mod.resync_scene_props()
+    try:
+        mod.resync_scene_props()
+    except KeyError as e:
+        # Re-opened build files (art/<id>/build/<id>.blend) keep only the Fast64 library
+        # node groups that were in use when saved, so this viewport-preview-only resync
+        # can miss e.g. "GeometryNormal_ViewSpace". Exporting does not need it.
+        print(f"SGL: skipped Fast64 preview resync ({e})")
     return mod
 
 
