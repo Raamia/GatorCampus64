@@ -289,6 +289,14 @@ local function new_ctx(def, np)
         ctx[f] = 0
     end
     ctx.loc = { round = -1 }     -- local scratch, reset every round
+    ctx.run = {
+        runId = sgl_deepspace_new_run_id(),
+        activeStartedFrame = nil,
+        elapsedFrames = 0,
+        retries = 0,
+        failedPending = false,
+        submitted = false,
+    }
     ctx.lead = nil               -- leader scratch, fresh whenever this client becomes leader
     ctx.objs = {}                -- local helper objects (live as long as the controller)
     ctx.players, ctx.n, ctx.need = {}, 0, def.minPlayers
@@ -338,6 +346,9 @@ function sgl_mission_dispatch(ctx, data)
         if ctx.isLeader and ctx.s ~= SGL_MS_DONE and ctx.s ~= SGL_MS_IDLE then ctx:setState(SGL_MS_DONE) end
         if data.gi ~= gNetworkPlayers[0].globalIndex then sgl_exit_offer(data.nm) end
     elseif ev == "reset" then
+        if ctx.run ~= nil and (ctx.run.activeStartedFrame ~= nil or ctx.run.elapsedFrames > 0) then
+            ctx.run.failedPending = true
+        end
         if ctx.isLeader and not ctx.dormant then sgl_mission_reset(ctx) end
         if data.gi ~= gNetworkPlayers[0].globalIndex then
             sgl_hud_toast("Mission restarted", 3, SGL_HUD_ORANGE)
@@ -393,14 +404,45 @@ local function on_state_change(ctx, old, new)
     ctx.loc.expandUntil = ctx.age + 150    -- a compact panel opens up for 5 s
     if new == SGL_MS_INTRO and old ~= -1 then ctx.bannerAge = 0 end
     if old == -1 then return end   -- first look after arriving: no sounds
+    if old == SGL_MS_ACTIVE and new ~= SGL_MS_ACTIVE and ctx.run ~= nil and ctx.run.activeStartedFrame ~= nil then
+        ctx.run.elapsedFrames = ctx.run.elapsedFrames + math.max(0, get_global_timer() - ctx.run.activeStartedFrame)
+        ctx.run.activeStartedFrame = nil
+    end
     if new == SGL_MS_FAILED then
+        if ctx.run ~= nil then ctx.run.failedPending = true end
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
     elseif new == SGL_MS_WAITING and old == SGL_MS_ACTIVE then
         sgl_hud_toast("Paused: waiting for enough players", 3, SGL_HUD_ORANGE)
     elseif new == SGL_MS_ACTIVE then
+        if ctx.run ~= nil and not ctx.run.submitted then
+            if ctx.run.failedPending then
+                ctx.run.retries = ctx.run.retries + 1
+                ctx.run.failedPending = false
+            end
+            ctx.run.activeStartedFrame = get_global_timer()
+        end
         play_sound(SOUND_GENERAL2_RIGHT_ANSWER, gGlobalSoundSource)
     elseif new == SGL_MS_DONE then
         sgl_hud_toast("Star collected!", 3, SGL_HUD_GOLD)
+    end
+end
+
+local function queue_completed_run(ctx)
+    local run = ctx.run
+    if run == nil or run.submitted or (run.activeStartedFrame == nil and run.elapsedFrames == 0) then return end
+    if ctx.def.minPlayers > 1 or ctx.n > 1 then return end
+    local activeFrames = run.activeStartedFrame ~= nil and (get_global_timer() - run.activeStartedFrame) or 0
+    local elapsed = math.max(1, run.elapsedFrames + activeFrames)
+    if sgl_deepspace_queue_run({
+        runId = run.runId,
+        missionId = ctx.def.id,
+        elapsedFrames = elapsed,
+        retries = run.retries,
+        assisted = false,
+    }) then
+        run.submitted = true
+    else
+        log_to_console("[SGL] Run finished, but the DeepSpace outbox could not save it.", CONSOLE_MESSAGE_WARNING)
     end
 end
 
@@ -425,6 +467,7 @@ local function local_tick(ctx)
     if def.levelStar and ctx.levelStarFound and ctx.loc.got == nil and ctx.s ~= SGL_MS_IDLE
         and ctx.age % 10 == 0 and not sgl_mission_star_exists(def) then
         ctx.loc.got = "?"
+        queue_completed_run(ctx)
         if ctx.isLeader and ctx.s ~= SGL_MS_DONE then ctx:setState(SGL_MS_DONE) end
     end
     ctx.freeze = false
@@ -625,6 +668,7 @@ local function on_interact(m, o, interactType, interactValue)
     local ctx = sCtx
     if ctx == nil or ctx.dormant or not ctrl_alive() then return end
     if ((o.oBehParams >> 24) & 0xFF) ~= ctx.def.starId then return end
+    queue_completed_run(ctx)
     ctx:send("got", { nm = gNetworkPlayers[0].name })
 end
 

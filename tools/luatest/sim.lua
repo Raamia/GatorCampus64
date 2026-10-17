@@ -33,7 +33,7 @@ local Sim = {}
 local HERE = debug.getinfo(1, "S").source:match("^@(.*/)") or "./"
 Sim.ROOT = HERE .. "../../"
 Sim.MOD = os.getenv("SGL_MOD_DIR") or (Sim.ROOT .. "mods/sgl64/")   -- SGL_MOD_DIR: test a copy (mutation runs)
-Sim.FILES = { "course.lua", "sgl_hud.lua", "sgl_mission.lua", "swamp_missions.lua" }
+Sim.FILES = { "course.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_mission.lua", "swamp_missions.lua" }
 Sim.ALL_FILES = {}
 do
     local p = io.popen('ls "' .. Sim.MOD .. '"')
@@ -679,6 +679,32 @@ function World:build_env(c)
     S.find_floor_height = function(x, y, z) return w.floor(x, y, z) end
     S.mod_storage_load_number = function(k, d) return c.storage[k] or d or 0 end
     S.mod_storage_save_number = function(k, v) c.storage[k] = v; return true end
+    S.mod_storage_load_integer = function(k, d) return c.storage[k] or d or 0 end
+    S.mod_storage_save_integer = function(k, v) c.storage[k] = v; return true end
+    c.modFs = { files = {}, saves = 0 }
+    S.mod_fs_get = function() return c.modFs.fs end
+    S.mod_fs_create = function()
+        if c.modFs.fs ~= nil then return c.modFs.fs end
+        local fs = { files = c.modFs.files }
+        function fs:get_file(path) return self.files[path] end
+        function fs:create_file(path, text)
+            local file = { content = "", size = 0, isText = text }
+            function file:set_text_mode(enabled) self.isText = enabled; return true end
+            function file:seek(offset, origin)
+                return offset == 0 and origin == C.FILE_SEEK_END
+            end
+            function file:write_line(line)
+                self.content = self.content .. line .. "\n"
+                self.size = #self.content
+                return true
+            end
+            self.files[path] = file
+            return file
+        end
+        function fs:save() c.modFs.saves = c.modFs.saves + 1; return true end
+        c.modFs.fs = fs
+        return fs
+    end
 
     -- used by levels.lua / main.lua (integration test)
     S.camera_set_romhack_override = function() end

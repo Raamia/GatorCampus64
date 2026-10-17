@@ -326,6 +326,10 @@ test("act 1: solo climb, milestones, roof -> the level script's star (no second 
     check(Sim.hud_has(A, "STAR"), "STAR! / marker on the HUD")
     -- grab it: DONE, and nothing respawns after the static star is gone
     Sim.run_hooks(A, C.HOOK_ON_INTERACT, A.ms[0], st, C.INTERACT_STAR_OR_KEY, true)
+    local outbox = A.modFs.files["pending_runs.txt"]
+    check(outbox ~= nil and outbox.content:match("|swamp_skybox|%d+|0|0|0.1.0\n") ~= nil,
+        "a completed solo act is saved to the local DeepSpace outbox")
+    check(A.modFs.saves == 1, "the ModFS outbox is flushed to disk before networking")
     raw(st).activeFlags = C.ACTIVE_FLAG_DEACTIVATED
     w:step(5)
     check(state(A) == MS.DONE and #A.starSpawns == 0 and Sim.stars_of(A, 0) == 0, "DONE, no respawn")

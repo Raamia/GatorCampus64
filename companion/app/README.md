@@ -1,6 +1,6 @@
 # Gator Field Board
 
-A DeepSpace-powered companion for the Super Gatorlator 64 campus missions. The game remains authoritative; the companion shows the verified mission catalog and keeps a squad-shared, player-reported run log.
+A DeepSpace backend for Super Gatorlator 64. The game remains native and authoritative; DeepSpace stores signed-in players' self-reported solo run results and serves mission leaderboards. The Lua mod currently saves completed runs to a local ModFS outbox. A macOS OAuth/sync bridge is still required before those local results reach DeepSpace; the game does not make network requests.
 
 ## Local setup
 
@@ -18,7 +18,7 @@ The local worker starts at `http://localhost:8780`. Anonymous visitors can view 
 
 ## Optional sponsor service
 
-The companion works without a service deployment. `src/server/study-routes.ts` proxies minimal mission hints, anonymized result mirrors, and aggregate requests when both service variables are configured:
+The game works without a DeepSpace deployment. `src/server/study-routes.ts` proxies minimal mission hints, anonymized result mirrors, and aggregate requests when both service variables are configured:
 
 - `VULTR_SERVICE_URL`: base URL of the separately hosted service
 - `VULTR_SERVICE_TOKEN`: bearer token shared with that service
