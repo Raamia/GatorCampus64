@@ -117,7 +117,7 @@ const LevelScript level_wf_entry[] = {
 		OBJECT(MODEL_HEART, 3000, 3000, -1900, 0, -180, 0, 0x00000000, bhvRecoveryHeart),
 		OBJECT(MODEL_1UP, 5260, 60, 660, 0, -180, 0, 0x00000000, bhv1Up),
 		OBJECT(MODEL_1UP, 7270, 150, -2190, 0, -180, 0, 0x00000000, bhv1Up),
-		OBJECT(MODEL_1UP, 5867, 355, -2740, 0, -180, 0, 0x00000000, bhv1Up),
+		OBJECT(MODEL_1UP, 5867, 320, -2740, 0, -180, 0, 0x00000000, bhv1Up),
 		TERRAIN(wf_area_2_collision),
 		MACRO_OBJECTS(wf_area_2_macro_objs),
 		SET_BACKGROUND_MUSIC(0x00, SEQ_LEVEL_HOT),

@@ -1,0 +1,25 @@
+# Headless Super Gatorlator 64 server: play.gatorcamp.us:7777 (UDP).
+# Logs (including the mod's SGLEVT lines): journalctl -u sgl-game -f
+# The bridge (server/bridge/) will take over launching the game as its child; until then this runs it directly.
+[Unit]
+Description=Super Gatorlator 64 headless coopdx server
+After=network-online.target
+Wants=network-online.target
+ConditionPathExistsGlob=/srv/sgl/*.z64
+
+[Service]
+User=sgl
+Group=sgl
+WorkingDirectory=/opt/sm64coopdx
+ExecStart=/opt/sm64coopdx/sm64coopdx --headless --server 7777 --savepath /srv/sgl \
+    --enable-mod sgl64 --playername Campus --playercount 16 --no-discord --skip-update-check
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=yes
+ProtectSystem=strict
+ReadWritePaths=/srv/sgl
+ProtectHome=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

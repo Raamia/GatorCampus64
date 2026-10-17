@@ -522,7 +522,7 @@ function World:build_env(c)
         local marioObj = strict("Object", mo)
         mo.__built = true
         local ms = { playerIndex = i, pos = (i == 0) and c.pos or { x = 0, y = 0, z = 0 },
-            faceAngle = (i == 0) and c.face or { x = 0, y = 0, z = 0 }, health = 0x880, action = C.ACT_IDLE, numLives = 4,
+            faceAngle = (i == 0) and c.face or { x = 0, y = 0, z = 0 }, health = 0x880, action = C.ACT_IDLE, numLives = 4, numCoins = 0,
             numStars = 0, controller = ctl, marioObj = marioObj, character = { type = C.CT_MARIO },
             skipWarpInteractionsTimer = 0, interactObj = nil, usedObj = nil, riddenObj = nil,
             vel = { x = 0, y = 0, z = 0 }, forwardVel = 0, heldObj = nil, area = nil }
@@ -666,6 +666,12 @@ function World:build_env(c)
         raw(np).overrideLocation = text
     end
     S.network_is_server = function() return c.gi == 0 end
+    -- coopdx returns UNKNOWN_LOCAL_INDEX (255) for a player this client has not seen
+    S.network_local_index_from_global = function(gi)
+        assert(math.type(gi) == "integer", "network_local_index_from_global(int)")
+        if gi == c.gi then return 0 end
+        return c.liOf[gi] or 255
+    end
     S.network_is_moderator = function() return c.moderator == true end
 
     -- levels / save
@@ -763,6 +769,36 @@ function World:build_env(c)
         return a
     end
     S.soft_reset_camera = function(cam) assert(cam ~= nil) end
+    S.degrees_to_sm64 = function(deg)
+        assert(type(deg) == "number")
+        return math.floor(deg * 65536 / 360 + 0.5)
+    end
+    -- custom Lua animations (sgl_albert.lua): registered tables per client, the object's current one in _customAnim
+    c.customAnims = {}
+    S.smlua_anim_util_register_animation = function(name, flags, div, start, loopStart, loopEnd, values, index)
+        assert(type(name) == "string" and c.customAnims[name] == nil, "register_animation: new name " .. tostring(name))
+        for _, v in ipairs({ flags, div, start, loopStart, loopEnd }) do assert(math.type(v) == "integer") end
+        assert(#values > 0 and #index > 0 and #index % 2 == 0, "register_animation: values / index tables")
+        for _, v in ipairs(values) do assert(math.type(v) == "integer" and v >= 0 and v <= 0xFFFF, "u16 value") end
+        for i = 1, #index, 2 do
+            assert(index[i] >= 1 and index[i + 1] + index[i] <= #values, "index entry inside the values")
+        end
+        c.customAnims[name] = { values = values, index = index, frames = loopEnd }
+    end
+    S.smlua_anim_util_set_animation = function(o, name)
+        assert(c.customAnims[name] ~= nil, "set_animation: unknown animation " .. tostring(name))
+        raw(o)._customAnim = name
+    end
+    -- vanilla object animations (sgl_npc.lua; stage tests replace these with their own tables)
+    S.gObjectAnimations = setmetatable({}, { __index = function(_, k) return "ANIM:" .. k end })
+    S.obj_init_animation = function(o, i) raw(o)._anim = i end
+    S.approach_s16_symmetric = function(cur, target, inc)
+        assert(math.type(cur) == "integer" and math.type(target) == "integer" and type(inc) == "number")
+        local d = (target - cur + 32768) % 65536 - 32768
+        if d > inc then d = inc elseif d < -inc then d = -inc end
+        local v = (cur + d + 32768) % 65536 - 32768
+        return math.floor(v)
+    end
     S.set_mario_action = function(m, a, arg)
         raw(m).action = a
         raw(m).actionArg = arg
@@ -819,13 +855,26 @@ function World:build_env(c)
         table.insert(c.draw, { k = "tex", name = tex.name, x = x, y = y })
     end
 
+    -- sgl_login.lua (Gator Pass): player list description, name tag colour, Unix time
+    S.network_player_set_description = function(np, desc, r, g, b, a)
+        assert(type(desc) == "string", "description must be a string")
+        for _, v in ipairs({ r, g, b, a }) do assert(math.type(v) == "integer" and v >= 0 and v <= 255, "description colour") end
+        local s = raw(np)
+        s.description, s.descriptionR, s.descriptionG, s.descriptionB, s.descriptionA = desc, r, g, b, a
+    end
+    S.network_get_player_text_color_string = function(li)
+        assert(math.type(li) == "integer", "network_get_player_text_color_string(int)")
+        return "\\#dcdcdc\\"
+    end
+    S.get_time = function() return 1800000000 + w.frame // 30 end
+
     -- objects
     local function new_object(bhv, model, x, y, z)
         local s = { behavior = bhv, _model = model, oPosX = x, oPosY = y, oPosZ = z, oBehParams = 0, oFlags = 0,
             activeFlags = C.ACTIVE_FLAG_ACTIVE, oAnimState = 0, oTimer = 0, oFaceAngleYaw = 0, oMoveAngleYaw = 0,
             oIntangibleTimer = 0,
             oDrawingDistance = 4000, oCollisionDistance = 1000, oStarSpawnExtCutsceneFlags = 0, oHealth = 0,
-            header = { gfx = { node = { flags = 0 }, scale = { x = 1, y = 1, z = 1 } } },
+            header = { gfx = { node = { flags = 0 }, scale = { x = 1, y = 1, z = 1 }, animInfo = { animFrame = 0 } } },
             _inited = false, _id = c.nextObj }
         c.nextObj = c.nextObj + 1
         local o = strict("Object", s)
