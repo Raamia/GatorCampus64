@@ -43,10 +43,38 @@ function sgl_deepspace_queue_run(run)
     return true
 end
 
-local sLeaderboard = nil
+local BOARD_LIST = {
+    { label = "Reitz rooftop", missionId = "reitz_rooftop" },
+    { label = "Marston climb", missionId = "marston_climb" },
+    { label = "Stadium Stair Sprint", missionId = "swamp_sprint" },
+    { label = "Skybox Climb", missionId = "swamp_skybox" },
+}
 
-local function show_cached_leaderboard(label, mission_id)
-    local prefix = "sgl_ds_lb_" .. mission_id .. "_"
+-- The menu opens from the engine Mods screen. Wait for that screen to close and
+-- for the closing button to be released before taking controller input.
+local sLeaderboardMenu = nil
+local sLeaderboardCursor = 1
+local sLeaderboardArmed = false
+local sLeaderboardRepeat = 0
+local sLeaderboardDirection = 0
+local sLeaderboardBoard = nil
+
+local function leaderboard_is_paused()
+    return (djui_hud_is_pause_menu_created ~= nil and djui_hud_is_pause_menu_created())
+        or (is_game_paused ~= nil and is_game_paused())
+end
+
+local function open_leaderboard_menu()
+    sLeaderboardMenu = "list"
+    sLeaderboardCursor = 1
+    sLeaderboardArmed = false
+    sLeaderboardRepeat = 0
+    sLeaderboardDirection = 0
+    sLeaderboardBoard = nil
+end
+
+local function load_cached_board(board)
+    local prefix = "sgl_ds_lb_" .. board.missionId .. "_"
     local count = mod_storage_load_integer(prefix .. "count", 0)
     local entries = {}
     for rank = 1, math.min(count, 5) do
@@ -56,19 +84,10 @@ local function show_cached_leaderboard(label, mission_id)
             tag, frames, retries = entry:match("^([^|]+)|(%d+)|(%d+)$")
         end
         if tag ~= nil then
-            table.insert(entries, {
-                tag = tag,
-                frames = tonumber(frames),
-                retries = tonumber(retries),
-            })
+            table.insert(entries, { tag = tag, frames = tonumber(frames), retries = tonumber(retries) })
         end
     end
-    sLeaderboard = {
-        label = string.upper(label),
-        entries = entries,
-        openedAt = get_global_timer(),
-        duration = 360,
-    }
+    return { label = string.upper(board.label), entries = entries }
 end
 
 local function leaderboard_time(frames)
@@ -78,77 +97,148 @@ local function leaderboard_time(frames)
     return string.format("%dM%02d.%dS", minutes, seconds % 60, tenths % 10)
 end
 
-local function render_cached_leaderboard()
-    if sLeaderboard == nil then return end
-    local age = get_global_timer() - sLeaderboard.openedAt
-    if age >= sLeaderboard.duration then
-        sLeaderboard = nil
+local function move_leaderboard_cursor(direction)
+    sLeaderboardCursor = sLeaderboardCursor + direction
+    if sLeaderboardCursor < 1 then sLeaderboardCursor = #BOARD_LIST end
+    if sLeaderboardCursor > #BOARD_LIST then sLeaderboardCursor = 1 end
+end
+
+local function eat_leaderboard_input(c)
+    c.buttonPressed = 0
+    c.buttonDown = 0
+    c.stickX = 0
+    c.stickY = 0
+    c.stickMag = 0
+    c.rawStickX = 0
+    c.rawStickY = 0
+    c.extStickX = 0
+    c.extStickY = 0
+end
+
+local function leaderboard_controller_idle(c)
+    return c.buttonDown == 0 and c.buttonPressed == 0
+        and math.abs(c.stickX or 0) < 10 and math.abs(c.stickY or 0) < 10
+end
+
+local function leaderboard_input(c)
+    if not sLeaderboardArmed then
+        if leaderboard_controller_idle(c) then sLeaderboardArmed = true end
         return
     end
 
-    djui_hud_set_resolution(RESOLUTION_N64)
-    djui_hud_set_font(FONT_NORMAL)
-    local width = djui_hud_get_screen_width()
-    -- The CoopDX Mods screen draws a wide dark sheet over the left ~3/4 of
-    -- widescreen HUD space. Keep this card in the remaining right gutter so
-    -- that screen can sit above it without hiding the heading or scores.
-    local cardW = math.min(104, width - 16)
-    local cardX = width - cardW - 4
-    local cardY = 13
-    local titleH = 34
-    local rowH = 23
-    local cardH = 8 + titleH + math.max(1, #sLeaderboard.entries) * rowH + 14
-
-    -- Dark navy glass with a UF orange cap and a cool blue edge, instead of the
-    -- engine's plain black popup. Keep the card compact so it reads beside the
-    -- Mods menu on both 4:3 and widescreen layouts.
-    sgl_hud_rect(cardX - 1, cardY - 1, cardW + 2, cardH + 2, 73, 154, 235, 230)
-    sgl_hud_rect(cardX, cardY, cardW, cardH, 7, 17, 38, 238)
-    sgl_hud_rect(cardX, cardY, cardW, 3, 250, 110, 30, 255)
-    sgl_hud_rect(cardX + 7, cardY + 9, 2, 20, 90, 170, 255, 255)
-    sgl_hud_text("GLOBAL BOARD", cardX + 13, cardY + 9, 0.20, { 142, 194, 255 }, 1)
-    local labelScale = math.min(0.27, (cardW - 21) / djui_hud_measure_text(sLeaderboard.label))
-    sgl_hud_text(sLeaderboard.label, cardX + 13, cardY + 19, labelScale, { 255, 255, 255 }, 1)
-    sgl_hud_rect(cardX + 9, cardY + titleH, cardW - 18, 1, 76, 105, 143, 220)
-
-    if #sLeaderboard.entries == 0 then
-        sgl_hud_text("NO SCORES YET", cardX + 8, cardY + titleH + 8, 0.20, { 220, 228, 240 }, 1)
-        sgl_hud_text("Finish + sync a run", cardX + 8, cardY + titleH + 19, 0.18, { 155, 174, 199 }, 1)
-    else
-        for rank, score in ipairs(sLeaderboard.entries) do
-            local rowY = cardY + titleH + 3 + (rank - 1) * rowH
-            local medal = rank == 1 and { 255, 205, 70 } or (rank == 2 and { 190, 210, 235 } or { 205, 145, 100 })
-            local rowBg = rank == 1 and { 55, 48, 29 } or { 14, 29, 52 }
-            sgl_hud_rect(cardX + 6, rowY, cardW - 12, 20, rowBg[1], rowBg[2], rowBg[3], 235)
-            sgl_hud_rect(cardX + 6, rowY, 2, 20, medal[1], medal[2], medal[3], 255)
-            local left = string.format("#%d %s", rank, score.tag)
-            local timeLine = string.format("%s  RETRIES %d", leaderboard_time(score.frames), score.retries)
-            local nameScale = math.min(0.19, (cardW - 21) / djui_hud_measure_text(left))
-            local timeScale = math.min(0.19, (cardW - 21) / djui_hud_measure_text(timeLine))
-            sgl_hud_text(left, cardX + 11, rowY + 2, nameScale, medal, 1)
-            sgl_hud_text(timeLine, cardX + 11, rowY + 11, timeScale, { 238, 243, 250 }, 1)
+    local pressed = c.buttonPressed
+    local held = c.buttonDown
+    local vertical = 0
+    if ((pressed | held) & U_JPAD) ~= 0 or (c.stickY or 0) > 60 then vertical = -1 end
+    if ((pressed | held) & D_JPAD) ~= 0 or (c.stickY or 0) < -60 then vertical = 1 end
+    if vertical ~= 0 then
+        if vertical ~= sLeaderboardDirection or sLeaderboardRepeat <= 0 then
+            move_leaderboard_cursor(vertical)
+            sLeaderboardRepeat = 8
+        else
+            sLeaderboardRepeat = sLeaderboardRepeat - 1
         end
+        sLeaderboardDirection = vertical
+    else
+        sLeaderboardDirection = 0
+        sLeaderboardRepeat = sLeaderboardRepeat - 1
     end
 
-    local footer = "DEEPSPACE SNAPSHOT"
-    sgl_hud_text(footer, cardX + 7, cardY + cardH - 10, 0.17, { 137, 162, 194 }, 1)
+    if (pressed & B_BUTTON) ~= 0 then
+        if sLeaderboardMenu == "board" then
+            sLeaderboardMenu = "list"
+        else
+            sLeaderboardMenu = nil
+        end
+    elseif (pressed & START_BUTTON) ~= 0 then
+        sLeaderboardMenu = nil
+    elseif (pressed & A_BUTTON) ~= 0 and sLeaderboardMenu == "list" then
+        sLeaderboardMenu = "board"
+        sLeaderboardBoard = load_cached_board(BOARD_LIST[sLeaderboardCursor])
+    end
 end
 
-if hook_event ~= nil and HOOK_ON_HUD_RENDER ~= nil then
-    hook_event(HOOK_ON_HUD_RENDER, render_cached_leaderboard)
+local function on_leaderboard_before_mario_update(m)
+    if m.playerIndex ~= 0 or sLeaderboardMenu == nil then return end
+    if not leaderboard_is_paused() then leaderboard_input(m.controller) end
+    -- Keep movement and pause from leaking through while the custom menu is open.
+    if not leaderboard_is_paused() then eat_leaderboard_input(m.controller) end
+end
+
+local function on_leaderboard_update()
+    if sLeaderboardMenu == nil or leaderboard_is_paused() then return end
+    local m = gMarioStates ~= nil and gMarioStates[0] or nil
+    if m ~= nil and m.controller ~= nil and not sLeaderboardArmed then
+        -- Catch the controller release even during frames where Mario isn't updated.
+        if leaderboard_controller_idle(m.controller) then sLeaderboardArmed = true end
+    end
+end
+
+local function draw_leaderboard_menu()
+    if sLeaderboardMenu == nil or leaderboard_is_paused() then return end
+    djui_hud_set_resolution(RESOLUTION_N64)
+    djui_hud_set_font(FONT_NORMAL)
+    local sw, sh = djui_hud_get_screen_width(), djui_hud_get_screen_height()
+    local panelW = math.min(244, sw - 24)
+    local panelH = sLeaderboardMenu == "list" and 174 or 190
+    local x, y = (sw - panelW) / 2, (sh - panelH) / 2
+
+    -- Centered, full menu sheet using the same focus and button rhythm as CoopDX's menus.
+    sgl_hud_rect(0, 0, sw, sh, 0, 0, 0, 112)
+    sgl_hud_rect(x - 2, y - 2, panelW + 4, panelH + 4, 73, 154, 235, 255)
+    sgl_hud_rect(x, y, panelW, panelH, 7, 17, 38, 248)
+    sgl_hud_rect(x, y, panelW, 4, 250, 110, 30, 255)
+    sgl_hud_text_center("CAMPUS LEADERBOARDS", sw / 2, y + 12, 0.31, { 255, 255, 255 }, 1)
+    sgl_hud_rect(x + 12, y + 30, panelW - 24, 1, 76, 105, 143, 230)
+
+    if sLeaderboardMenu == "list" then
+        for i, board in ipairs(BOARD_LIST) do
+            local rowY = y + 39 + (i - 1) * 24
+            local selected = i == sLeaderboardCursor
+            if selected then
+                sgl_hud_rect(x + 10, rowY, panelW - 20, 21, 35, 73, 116, 255)
+                sgl_hud_rect(x + 10, rowY, 3, 21, 250, 110, 30, 255)
+            end
+            sgl_hud_text_center(board.label, sw / 2, rowY + 4, 0.27,
+                selected and { 255, 224, 160 } or { 220, 230, 244 }, 1)
+        end
+        sgl_hud_rect(x + 12, y + panelH - 29, panelW - 24, 1, 76, 105, 143, 230)
+        sgl_hud_text_center("D-PAD: MOVE     A: OPEN     B: CLOSE", sw / 2, y + panelH - 20,
+            0.19, { 155, 183, 216 }, 1)
+    else
+        local board = sLeaderboardBoard or { label = "GLOBAL BOARD", entries = {} }
+        sgl_hud_text_center(board.label, sw / 2, y + 38, 0.28, { 255, 205, 70 }, 1)
+        sgl_hud_rect(x + 12, y + 54, panelW - 24, 1, 76, 105, 143, 230)
+        if #board.entries == 0 then
+            sgl_hud_text_center("NO SCORES CACHED YET", sw / 2, y + 79, 0.25, { 220, 228, 240 }, 1)
+            sgl_hud_text_center("Complete a run, then sync scores.", sw / 2, y + 98, 0.19,
+                { 155, 174, 199 }, 1)
+        else
+            for rank, score in ipairs(board.entries) do
+                local rowY = y + 61 + (rank - 1) * 19
+                local medal = rank == 1 and { 255, 205, 70 }
+                    or (rank == 2 and { 190, 210, 235 } or { 205, 145, 100 })
+                sgl_hud_rect(x + 10, rowY, panelW - 20, 17,
+                    rank == 1 and 55 or 14, rank == 1 and 48 or 29, rank == 1 and 29 or 52, 245)
+                sgl_hud_rect(x + 10, rowY, 3, 17, medal[1], medal[2], medal[3], 255)
+                local line = string.format("#%d  %s    %s   R%d", rank, score.tag,
+                    leaderboard_time(score.frames), score.retries)
+                local scale = math.min(0.22, (panelW - 38) / djui_hud_measure_text(line))
+                sgl_hud_text(line, x + 18, rowY + 3, scale, medal, 1)
+            end
+        end
+        sgl_hud_rect(x + 12, y + panelH - 29, panelW - 24, 1, 76, 105, 143, 230)
+        sgl_hud_text_center("B: BOARDS     START: CLOSE", sw / 2, y + panelH - 20,
+            0.20, { 155, 183, 216 }, 1)
+    end
+end
+
+if hook_event ~= nil then
+    if HOOK_ON_HUD_RENDER ~= nil then hook_event(HOOK_ON_HUD_RENDER, draw_leaderboard_menu) end
+    if HOOK_BEFORE_MARIO_UPDATE ~= nil then hook_event(HOOK_BEFORE_MARIO_UPDATE, on_leaderboard_before_mario_update) end
+    if HOOK_UPDATE ~= nil then hook_event(HOOK_UPDATE, on_leaderboard_update) end
 end
 
 if hook_mod_menu_button ~= nil then
-    hook_mod_menu_button("Reitz leaderboard", function()
-        show_cached_leaderboard("Reitz", "reitz_rooftop")
-    end)
-    hook_mod_menu_button("Marston leaderboard", function()
-        show_cached_leaderboard("Marston", "marston_climb")
-    end)
-    hook_mod_menu_button("Stadium leaderboard", function()
-        show_cached_leaderboard("Stadium Stair Sprint", "swamp_sprint")
-    end)
-    hook_mod_menu_button("Skybox Climb leaderboard", function()
-        show_cached_leaderboard("Skybox Climb", "swamp_skybox")
-    end)
+    hook_mod_menu_button("Campus leaderboards", open_leaderboard_menu)
 end
