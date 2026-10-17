@@ -102,6 +102,10 @@
       "Head DL:Logo (EMBLEM)->cap": 5,
       "Torso:Buttons (PANTS)->top": 10
     },
+    "sleeve_ends": {
+      "sleeve_end": 0.66,
+      "tris_added": 40
+    },
     "soles": 12,
     "cap_logos": 59,
     "sleeve_cuffs": {},
@@ -153,11 +157,23 @@
     "chest_logo_tris": 12,
     "bracelet_tris": 16
   },
+  "wings": {
+    "shift": [
+      0.22,
+      -0.02,
+      0.08
+    ],
+    "vertices": 12,
+    "bones": {
+      "Mario": 8,
+      "Metal Mario": 8
+    }
+  },
   "loose_vertices_added": 0,
   "tris": {
-    "Mario Mesh": 1156,
+    "Mario Mesh": 1196,
     "Capless Head Mesh": 308,
-    "Metal Mario Mesh": 1156,
+    "Metal Mario Mesh": 1196,
     "Metal Capless Head Mesh": 308,
     "Head Closed Mesh": 308
   },
@@ -197,8 +213,8 @@
       "texture jaime_eyes_down_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_jaime_Down_Eyes__SKIN_)",
       "texture jaime_eyes_dead_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_jaime_Dead_Eyes__SKIN_)"
     ],
-    "display_lists": 216,
-    "total_tris_all_dls": 3750,
+    "display_lists": 218,
+    "total_tris_all_dls": 3830,
     "textures": [
       "jaime_eyes_open_rgba16",
       "jaime_mouth_grin_rgba16",
@@ -625,5 +641,5 @@
     "head_side": "art/jaime/build/previews/head_side.png",
     "eye_states": "art/jaime/build/previews/eye_states.png"
   },
-  "seconds": 11.5
+  "seconds": 13.7
 }

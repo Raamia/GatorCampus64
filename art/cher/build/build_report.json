@@ -94,6 +94,7 @@
       "Head DL:Logo (EMBLEM)->cap": 5,
       "Torso:Buttons (PANTS)->top": 10
     },
+    "sleeve_ends": "built by the character module",
     "soles": 12,
     "cap_logos": 59,
     "sleeve_cuffs": {},
@@ -127,7 +128,7 @@
   },
   "heads": {
     "style": "long_straight_past_shoulders + characters/cher.py",
-    "tris_per_head": 364,
+    "tris_per_head": 362,
     "meshes": [
       "Mario Mesh (open)",
       "Capless Head Closed Mesh (closed)",
@@ -149,29 +150,21 @@
   },
   "post_build": {
     "head": {
-      "fringe_end_vertices_straightened": 2,
+      "fringe_ends_welded": [
+        -60,
+        60
+      ],
       "curtain_tris": 160,
-      "head_tris": 364
-    },
-    "face_edge_bleed_texels": {
-      "eyes_open": 204,
-      "eyes_half": 226,
-      "eyes_closed": 246,
-      "eyes_left": 204,
-      "eyes_right": 204,
-      "eyes_up": 204,
-      "eyes_down": 204,
-      "eyes_dead": 264,
-      "mouth_grin": 70
+      "head_tris": 362
     }
   },
   "loose_vertices_added": 0,
   "tris": {
-    "Mario Mesh": 1127,
-    "Capless Head Mesh": 364,
-    "Metal Mario Mesh": 1127,
-    "Metal Capless Head Mesh": 364,
-    "Head Closed Mesh": 364
+    "Mario Mesh": 1125,
+    "Capless Head Mesh": 362,
+    "Metal Mario Mesh": 1125,
+    "Metal Capless Head Mesh": 362,
+    "Head Closed Mesh": 362
   },
   "blend": "art/cher/build/cher.blend",
   "export": "mods/sgl64/actors/cher",
@@ -210,7 +203,7 @@
       "texture cher_eyes_dead_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_cher_Dead_Eyes__SKIN_)"
     ],
     "display_lists": 206,
-    "total_tris_all_dls": 3804,
+    "total_tris_all_dls": 3796,
     "textures": [
       "cher_eyes_open_rgba16",
       "cher_mouth_grin_rgba16",
@@ -633,5 +626,5 @@
     "head_side": "art/cher/build/previews/head_side.png",
     "eye_states": "art/cher/build/previews/eye_states.png"
   },
-  "seconds": 11.3
+  "seconds": 9.7
 }

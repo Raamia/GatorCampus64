@@ -13,7 +13,8 @@ Driven entirely by art/<id>/character.json. Steps:
   2. face textures: final art > candidate set > generated placeholder, skin keyed to alpha
   3. recolour materials, remap the outfit on the body, add outfit accessories
   4. replace every head (main, 7 cap-on + 8 capless eye variants) with the procedural
-     head/hair, rebuild the metal body/head from the finished geometry
+     head/hair, run the character module's post_build, move the wing-cap wings
+     (WING_SHIFT), rebuild the metal body/head from the finished geometry
   5. save art/<id>/build/<id>.blend, export mods/sgl64/actors/<id>/, validate
   6. render previews to art/<id>/build/previews/ (after saving; never saved)
 """
@@ -132,6 +133,9 @@ def main():
     post_build = sgl_characters.get(spec, "post_build")
     if post_build:
         report["post_build"] = post_build({"spec": spec, "mats": mats, "report": report})
+    wing_shift = sgl_characters.get(spec, "WING_SHIFT")
+    if wing_shift is not None:  # wing-cap wings moved out of big hair (sgl_body.move_wings)
+        report["wings"] = sgl_body.move_wings(wing_shift)
     for o in bpy.data.objects:
         if o.type == "MESH" and o.parent is not None and o.parent.type == "ARMATURE":
             sgl_materials.compact_material_slots(o)

@@ -499,44 +499,11 @@ def head_roles(spec, mats):
     return roles
 
 
-# Short sleeves: Mario's upper arm ends in a tapered cap (bone frame u > ~0.27) that sits
-# inside the forearm's top and pokes through it when the elbow bends, which shows as red
-# slivers on the bare forearm. Those cap faces become skin (the elbow), and the sleeve's
-# last ring opens a little wider (a T-shirt sleeve) so the forearm's top stays inside it.
-SLEEVE_END_U = 0.25
-SLEEVE_FLARE = 1.22
-
-
-def sleeve_end_caps(mats):
-    obj, arm = bpy.data.objects["Mario Mesh"], bpy.data.objects["Mario"]
-    me = obj.data
-    top = smat.ensure_slot(obj, mats["top"])
-    skin = smat.ensure_slot(obj, mats["skin"])
-    n = 0
-    for side in ("Left", "Right"):
-        gname = f"{side} Arm Color"
-        if gname not in obj.vertex_groups:
-            continue
-        gi = obj.vertex_groups[gname].index
-        fr = H.BoneFrame(obj, arm, gname)
-        mine = {v.index for v in me.vertices if any(g.group == gi and g.weight > 0.4 for g in v.groups)}
-        caps = []
-        for p in me.polygons:
-            if p.material_index != top or not all(i in mine for i in p.vertices):
-                continue
-            if all(fr.from_local(me.vertices[i].co).z >= SLEEVE_END_U for i in p.vertices):
-                caps.append(p)
-        # the sleeve's last ring: vertices shared by the cap and the sleeve band
-        band = {i for p in me.polygons if p.material_index == top and all(i in mine for i in p.vertices)
-                and p not in caps for i in p.vertices}
-        rim = band & {i for p in caps for i in p.vertices}
-        for p in caps:
-            p.material_index = skin
-            n += 1
-        for i in rim:
-            q = fr.from_local(me.vertices[i].co)
-            me.vertices[i].co = fr.to_local(Vector((q.x * SLEEVE_FLARE, q.y * SLEEVE_FLARE, q.z)))
-    return n
+# Short sleeves: the shared cut (sgl_body.short_sleeve_ends, sleeve end at 0.66 of the
+# upper arm, everything past it skin) builds the sleeve end. His own first fix (the upper
+# arm's end cap recoloured to skin past bone-frame u 0.25, the sleeve's last ring flared
+# 1.22x) left red slivers poking through the bare forearm at extreme elbow bends (61 f38,
+# star dance CD f36); a longer shared sleeve (0.75, 0.82) still shows them, 0.66 does not.
 
 
 def post_build(ctx):
@@ -546,8 +513,6 @@ def post_build(ctx):
     if spec["colors"].get("top_detail") and "graphic" in spec.get("outfit", {}).get("top", ""):
         g, frame = add_shirt_graphic()
         out["shirt_graphic_tris"] = H.emit(g, obj, "Torso", frame, {"top_detail": mats["top_detail"]})
-    if spec.get("build", {}).get("sleeves") == "short":
-        out["sleeve_end_cap_faces_to_skin"] = sleeve_end_caps(mats)
     smat.compact_material_slots(obj)
     return out
 

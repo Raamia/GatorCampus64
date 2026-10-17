@@ -96,6 +96,7 @@
       "Head DL:Logo (EMBLEM)->cap": 5,
       "Torso:Buttons (PANTS)->top": 10
     },
+    "sleeve_ends": null,
     "soles": 12,
     "cap_logos": 59,
     "sleeve_cuffs": {
@@ -630,5 +631,5 @@
     "head_side": "art/alfred/build/previews/head_side.png",
     "eye_states": "art/alfred/build/previews/eye_states.png"
   },
-  "seconds": 14.9
+  "seconds": 13.4
 }

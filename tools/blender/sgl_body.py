@@ -2,6 +2,7 @@
 character.json, shoe soles, and outfit accessories built as small low-poly
 pieces rigidly weighted to existing bones (so every Mario animation still works).
 """
+import json
 import math
 
 import bmesh
@@ -66,6 +67,111 @@ def remap_body(obj, spec, mats):
             p.material_index = idx(role)
             changed[f"{g}:{m}->{role}"] = changed.get(f"{g}:{m}->{role}", 0) + 1
     return changed
+
+
+# ------------------------------------------------------------------ limb bands
+def cut_faces(obj, face_ids, planes, snap=1e-5):
+    """Bisect the faces face_ids of obj with planes [(co, no)] (mesh-local). Pieces of
+    a cut face stay tagged; returns the indices of every tagged face afterwards.
+    Vertices within `snap` of a plane count as on it (no sliver cut next to them)."""
+    me = obj.data
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    bm.faces.ensure_lookup_table()
+    tag = bm.faces.layers.int.new("sgl_cut")
+    for i in face_ids:
+        bm.faces[i][tag] = 1
+    for co, no in planes:
+        faces = [f for f in bm.faces if f[tag]]
+        edges = list({e for f in faces for e in f.edges})
+        verts = list({v for f in faces for v in f.verts})
+        bmesh.ops.bisect_plane(bm, geom=faces + edges + verts, plane_co=co, plane_no=no, dist=snap)
+    bm.faces.index_update()
+    out = [f.index for f in bm.faces if f[tag]]
+    bm.faces.layers.int.remove(tag)
+    bm.to_mesh(me)
+    bm.free()
+    me.update()
+    return out
+
+
+def tri_count(obj):
+    obj.data.calc_loop_triangles()
+    return len(obj.data.loop_triangles)
+
+
+def limb_axis(obj, arm, bone_a, bone_b):
+    """Mesh-local points of two bone heads (the limb segment from joint a to joint b)."""
+    M = obj.matrix_world.inverted() @ arm.matrix_world
+    return M @ arm.data.bones[bone_a].head_local, M @ arm.data.bones[bone_b].head_local
+
+
+def recolour_limb_bands(obj, arm, group, bone_a, bone_b, bands, tag="limb"):
+    """Cut the faces of `group` across the limb and recolour bands of it. The limb runs
+    along the joint axis bone_a -> bone_b; bands are [(frac_from, frac_to, material)] as
+    fractions of the group's extent along that axis (0 = the bone_a end). Returns the
+    number of triangles the cuts added."""
+    me = obj.data
+    groups = dominant_groups(obj)
+    ids = [p.index for p, gname in zip(me.polygons, groups) if gname == group]
+    if not ids:
+        print(f"SGL WARNING: {tag}: no faces in {group}")
+        return 0
+    a, b = limb_axis(obj, arm, bone_a, bone_b)
+    axis = (b - a)
+    if axis.length < 1e-6:
+        print(f"SGL WARNING: {tag}: zero-length axis {bone_a} -> {bone_b}")
+        return 0
+    axis.normalize()
+    vs = {v for i in ids for v in me.polygons[i].vertices}
+    proj = [(me.vertices[i].co - a).dot(axis) for i in vs]
+    lo, hi = min(proj), max(proj)
+    cuts = sorted({f for f0, f1, _m in bands for f in (f0, f1) if 0.0 < f < 1.0})
+    before = tri_count(obj)
+    ids = cut_faces(obj, ids, [(a + axis * (lo + (hi - lo) * f), axis) for f in cuts])
+    counts = {}
+    for i in ids:
+        p = me.polygons[i]
+        c = sum((me.vertices[v].co for v in p.vertices), Vector()) / len(p.vertices)
+        frac = ((c - a).dot(axis) - lo) / (hi - lo)
+        for f0, f1, mat in bands:
+            if f0 <= frac < f1 or (f1 >= 1.0 and frac >= f0):
+                p.material_index = smat.ensure_slot(obj, mat)
+                counts[mat.name] = counts.get(mat.name, 0) + 1
+                break
+    added = tri_count(obj) - before
+    print(f"SGL {tag}: {group}: {counts} (cuts {cuts}, +{added} tris)")
+    return added
+
+
+# Short sleeves. The sleeve is Mario's upper arm ("<side> Arm Color"), whose tapered end
+# cap reaches past the elbow joint into the top of the forearm: with a bare forearm
+# (remap_body) the cap is a shirt-coloured piece INSIDE the skin, and it pokes through
+# the forearm as shards whenever the elbow bends (running, punching). The sleeve is cut
+# across the upper arm at SLEEVE_END (fraction of the upper arm's extent, shoulder ->
+# elbow) and everything past the cut, end cap included, becomes skin: what pokes through
+# the forearm is then skin on skin, and the tee sleeve has a real T-shirt length instead
+# of reaching the elbow (the length Josh's/Donald's tee was reviewed with; longer cuts,
+# 0.75 and 0.82, still let shirt slivers through the forearm at extreme bends).
+# A character module overrides it with SHORT_SLEEVE_END (a fraction), or sets it to None
+# when it builds its own sleeve end (Anh's jersey cuff band, Cher's rolled cuffs).
+SLEEVE_END = 0.66
+
+
+def short_sleeve_ends(spec, mats, obj, arm):
+    if spec.get("build", {}).get("sleeves", "long") != "short":
+        return None
+    frac = sgl_characters.get(spec, "SHORT_SLEEVE_END", SLEEVE_END)
+    if frac is None:
+        return "built by the character module"
+    tris = 0
+    for side in ARMS:
+        grp = f"{side} Arm Color"
+        if grp not in obj.vertex_groups or f"{side} Forearm" not in arm.data.bones:
+            continue
+        tris += recolour_limb_bands(obj, arm, grp, grp, f"{side} Forearm", [(frac, 1.0, mats["skin"])],
+                                    tag="short sleeve end")
+    return {"sleeve_end": frac, "tris_added": tris}
 
 
 def strip_cap_logos(mats):
@@ -738,6 +844,7 @@ def build_body(spec, mats):
     arm = bpy.data.objects["Mario"]
     set_action(arm, REST_ACTION)
     report = {"remap": remap_body(obj, spec, mats)}
+    report["sleeve_ends"] = short_sleeve_ends(spec, mats, obj, arm)
     report["soles"] = shoe_soles(obj, arm, mats)
     report["cap_logos"] = strip_cap_logos(mats)
     report["sleeve_cuffs"] = sleeve_cuffs(spec, mats)   # before scaling: CUFF_U is in Mario's hand size
@@ -751,6 +858,91 @@ def build_body(spec, mats):
         acc[name] = fn(ctx)
     report["accessories"] = acc
     return report
+
+
+# ------------------------------------------------------------------ wing-cap wings
+# The wing-cap wings (Mario Mesh groups "Left/Right Wing DL") sit at the sides of Mario's
+# cap. Big hair buries their roots, so a character module can move them out with
+# WING_SHIFT = (l, f, u) in head space (mirrored for the right wing); build_character
+# applies it after post_build. The wing BONES move by the same amount, so in the export
+# the wing vertices stay where the template has them relative to their bone (root edge on
+# the bone's X axis) and geo_mario_rotate_wing_cap_wings still flaps them about their
+# root; only the GEO_TRANSLATE_ROTATE offset of the wing node changes.
+WING_SIDES = (("Left", 1.0), ("Right", -1.0))
+# Mario Mesh custom property: JSON {"<side> Wing DL": {"parent": bone, "delta": armature-space
+# move}} written by move_wings, read by sgl_preview.frame_bbox
+WING_SHIFT_PROP = "sgl_wing_shift"
+WING_ARMATURES = ("Mario", "Metal Mario")  # the metal body is rebuilt from Mario Mesh later
+
+
+def _wing_bones(side):
+    return (f"{side} Wing", f"0 {side} Wing Rotation Function", f"1 {side} Wing Rotation", f"{side} Wing DL")
+
+
+def _translate_bones(arm, moves):
+    """Translate edit bones {name: armature-space vector}. Needs edit mode."""
+    if not moves:
+        return 0
+    vl = bpy.context.view_layer
+    prev = vl.objects.active
+    hidden, hide_vp = arm.hide_get(), arm.hide_viewport
+    arm.hide_viewport = False
+    arm.hide_set(False)
+    if bpy.context.mode != "OBJECT":
+        bpy.ops.object.mode_set(mode="OBJECT")
+    vl.objects.active = arm
+    bpy.ops.object.mode_set(mode="EDIT")
+    try:
+        eb = arm.data.edit_bones
+        for name, d in moves.items():
+            eb[name].translate(d)
+    finally:
+        bpy.ops.object.mode_set(mode="OBJECT")
+        arm.hide_viewport = hide_vp
+        arm.hide_set(hidden)
+        vl.objects.active = prev
+    return len(moves)
+
+
+def move_wings(shift):
+    """Move both wing-cap wings (vertices + bones) by shift = (l, f, u) in head space,
+    mirrored for the right wing."""
+    shift = Vector(shift)
+    obj, arm = bpy.data.objects["Mario Mesh"], bpy.data.objects["Mario"]
+    frame = BoneFrame(obj, arm, "Head DL")
+    moved = 0
+    shifts = {}
+    for side, sgn in WING_SIDES:
+        vg = obj.vertex_groups.get(f"{side} Wing DL")
+        if vg is None:
+            continue
+        d = Vector((shift.x * sgn, shift.y, shift.z))
+        shifts[side] = d
+        for v in obj.data.vertices:
+            if any(g.group == vg.index and g.weight > 0.4 for g in v.groups):
+                v.co = frame.to_local(frame.from_local(v.co) + d)
+                moved += 1
+    bones = {}
+    frame_info = {}
+    for arm_name in WING_ARMATURES:
+        a = bpy.data.objects.get(arm_name)
+        if a is None or a.type != "ARMATURE" or "Head DL" not in a.data.bones:
+            continue
+        head3 = a.data.bones["Head DL"].matrix_local.to_3x3()  # bone-local axes = (u, f, l)
+        moves = {}
+        for side, d in shifts.items():
+            dd = head3 @ Vector((d.z, d.y, d.x))
+            moves.update({n: dd for n in _wing_bones(side) if n in a.data.bones})
+            top = a.data.bones.get(f"{side} Wing")
+            if arm_name == "Mario" and top is not None and top.parent is not None:
+                frame_info[f"{side} Wing DL"] = {"parent": top.parent.name, "delta": [round(c, 6) for c in dd]}
+        bones[arm_name] = _translate_bones(a, moves)
+    if moved and bones.get("Mario", 0) != 8:
+        raise RuntimeError(f"move_wings: moved {moved} wing vertices but bones {bones} (expected 8 per armature)")
+    # the standard previews frame the body as if the (hidden) wings had not moved, so
+    # a WING_SHIFT does not change the preview scale (sgl_preview.frame_bbox)
+    obj[WING_SHIFT_PROP] = json.dumps(frame_info)
+    return {"shift": tuple(round(c, 4) for c in shift), "vertices": moved, "bones": bones}
 
 
 def rebuild_metal(mats):

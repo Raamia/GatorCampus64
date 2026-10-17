@@ -10,12 +10,13 @@ volume and a rounder face, plus head_parts:
   - reshape_rings: hair radius at the cheeks/jaw per column (wide at the sides, shallow
     at the back, the jaw-side hair moved behind the jaw so profiles show no "beard")
   - add_shell_bumps: hair vertices pushed in/out in a checkerboard (lumpy relief)
-  - add_curly_drape: an A-line drape of her own (the shared drape hugs the body) that
+  - add_curly_drape: an A-line drape of her own (curl relief and scalloped tips) that
     continues the checkerboard, bulges then tucks in, ends in scalloped curl tips, with
     the caramel colour (role hair_tips = colors.hair_tips) on a zigzag boundary
   - move_floor: closes the underside of the hair above the neck (seen from below)
   - add_lumps: hanging curl clumps on the side silhouettes only (from the gameplay
     camera behind her, clumps on the back read as studs)
+The wing-cap wings move out of the curls (WING_SHIFT).
 """
 import math
 
@@ -86,6 +87,10 @@ HAIR_STYLE = {
         "rows": (0.0, 0.33, 0.64, 1.0),
         # radius added to the top radius at each row: bulges, then the curl ends tuck in
         "flare": (0.0, 0.10, 0.12, 0.06), "thickness": 0.09, "notch": 0.12,
+        # (the front side columns, 60/300, hang over the shoulders and stay as they are:
+        # flaring them out takes them off the upper arms but into the swinging forearms
+        # and hands - every flare/length tried made some animation clip more - and the
+        # torso never reaches the drape)
         # gap between the inner side and the (rest pose) torso
         "clearance": 0.05,
         # crouching (and other bent-over moves) swings the upper back up to 0.76 from
@@ -520,3 +525,10 @@ def add_thin_chain_necklace(ctx):
 
 
 ACCESSORIES = {"thin_chain_necklace": add_thin_chain_necklace}
+
+
+# ------------------------------------------------------------------ wing-cap wings
+# Mario's wing roots sit at the sides of his cap, inside her curls (hair surface about
+# 0.7 out at wing height, plus the side curl clumps): the wings move out and up so they
+# grow from the hair surface (applied by build_character, sgl_body.move_wings)
+WING_SHIFT = (0.28, -0.02, 0.10)  # head space (l, f, u), mirrored for the right wing

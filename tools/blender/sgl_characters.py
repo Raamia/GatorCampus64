@@ -11,6 +11,11 @@
 #   head_roles(spec, mats) -> {role: material}
 #                     materials for any extra roles head_parts used (e.g. "glasses")
 #   post_build(ctx)   last hook before the metal rebuild; ctx has spec, mats, report
+#   SHORT_SLEEVE_END  fraction of the upper arm (shoulder -> elbow) where a short sleeve
+#                     ends (default sgl_body.SLEEVE_END); None when the module builds its
+#                     own sleeve end
+#   WING_SHIFT        (l, f, u) head-space move of the wing-cap wings (mirrored for the
+#                     right wing), applied after post_build (sgl_body.move_wings)
 #
 # A spec with "based_on": "<other id>" falls back to that character's module.
 import importlib.util

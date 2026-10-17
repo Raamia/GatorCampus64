@@ -6,13 +6,13 @@
     "kind": "final",
     "crease_mode": "darken",
     "crease_texels": {
-      "eyes_open": 28,
-      "eyes_half": 48,
-      "eyes_closed": 28,
-      "eyes_left": 28,
-      "eyes_right": 28,
-      "eyes_up": 28,
-      "eyes_down": 28
+      "eyes_open": 22,
+      "eyes_half": 40,
+      "eyes_closed": 14,
+      "eyes_left": 22,
+      "eyes_right": 22,
+      "eyes_up": 22,
+      "eyes_down": 22
     }
   },
   "face_tiles": {
@@ -92,6 +92,7 @@
       "Head DL:Logo (EMBLEM)->cap": 5,
       "Torso:Buttons (PANTS)->top": 10
     },
+    "sleeve_ends": null,
     "soles": 12,
     "cap_logos": 59,
     "sleeve_cuffs": {
@@ -265,7 +266,7 @@
           true,
           true
         ],
-        "opaque_texels": 226
+        "opaque_texels": 122
       },
       {
         "material": "mat_daniel_Mouth__SKIN_",
@@ -477,7 +478,7 @@
           true,
           true
         ],
-        "opaque_texels": 182
+        "opaque_texels": 96
       },
       {
         "material": "mat_daniel_Closed_Eyes__SKIN_",
@@ -499,7 +500,7 @@
           true,
           true
         ],
-        "opaque_texels": 102
+        "opaque_texels": 56
       },
       {
         "material": "mat_daniel_Left_Eyes__SKIN_",
@@ -521,7 +522,7 @@
           true,
           true
         ],
-        "opaque_texels": 226
+        "opaque_texels": 122
       },
       {
         "material": "mat_daniel_Right_Eyes__SKIN_",
@@ -543,7 +544,7 @@
           true,
           true
         ],
-        "opaque_texels": 226
+        "opaque_texels": 122
       },
       {
         "material": "mat_daniel_Up_Eyes__SKIN_",
@@ -565,7 +566,7 @@
           true,
           true
         ],
-        "opaque_texels": 226
+        "opaque_texels": 122
       },
       {
         "material": "mat_daniel_Down_Eyes__SKIN_",
@@ -587,7 +588,7 @@
           true,
           true
         ],
-        "opaque_texels": 226
+        "opaque_texels": 122
       },
       {
         "material": "mat_daniel_Dead_Eyes__SKIN_",
@@ -609,7 +610,7 @@
           true,
           true
         ],
-        "opaque_texels": 104
+        "opaque_texels": 54
       }
     ]
   },
@@ -622,5 +623,5 @@
     "head_side": "art/daniel/build/previews/head_side.png",
     "eye_states": "art/daniel/build/previews/eye_states.png"
   },
-  "seconds": 12.0
+  "seconds": 14.1
 }

@@ -58,6 +58,8 @@ FACE_LAYOUT = {
 #                                                 hair band of that column (skin below)
 #   fringe.lo_ring / offset_mid / mid_at          how low the fringe may reach; convex
 #                                                 middle row of the fringe flap
+#   fringe.weld_ends (default True)               flap sides welded to the side hair
+#                                                 (weld_fringe_ends)
 #   ears {theta, u, h, out, w}                    ear wedge placement
 #   nose {u, half_width, bottom, tip, top}        nose size/placement (add_nose)
 _LONG = {
@@ -112,7 +114,12 @@ HAIR_STYLES = {
         # broad clumps by a few notches (+-45, +-22.5) and the parting just to his right of
         # centre (-7.5); the clump tips at +-30 overlap the top texel row of the eyes,
         # the temples hang lower
+        # weld_ends False: his reviewed head geometry stays exactly as built (the cast
+        # polish may change only his face textures). Seen straight from the side a thin
+        # slit of temple skin still shows where each flap end meets the side hair (the
+        # gap weld_fringe_ends closes for the others); welding it would change his head
         "fringe": {"kind": "full", "offset": 0.035, "offset_mid": 0.115, "mid_at": 0.5, "lo_ring": 1,
+                   "weld_ends": False,
                    "edge": {-90: 0.52, -82.5: 0.55, -75: 0.535, -67.5: 0.585, -60: 0.62, -52.5: 0.615,
                             -45: 0.66, -37.5: 0.62, -30: 0.605, -22.5: 0.66, -15: 0.62,
                             -7.5: 0.69,  # the parting
@@ -464,6 +471,9 @@ def add_fringe(g, style):
         n = surface_normal(t, u)
         low[t] = g.v(p + n * off)
         tuck[t] = g.v(p - n * 0.006)
+    g.fringe_welded = {}
+    if mids and fr.get("weld_ends", True):
+        weld_fringe_ends(g, fr, thetas, mids, low, lo_ring, top_ring)
     # flap faces: per 30-degree shell column, fan from the two top corners
     step = 360.0 / SEG
     col_starts = sorted({math.floor((t + 1e-6) / step) * step for t in thetas if t < max(thetas) - 1e-6})
@@ -489,6 +499,44 @@ def add_fringe(g, style):
     for a, b in zip(thetas, thetas[1:]):
         quad = [low[a], low[b], tuck[b], tuck[a]]
         g.face(quad, "hair", Vector((0, 0.35, -1.0)))
+
+
+def weld_fringe_ends(g, fr, thetas, mids, low, lo_ring, top_ring):
+    """Close the flap's sides. With a middle row (offset_mid), the first and last
+    middle-row vertices bulge out by offset_mid like the rest, while the side hair next to
+    them (the shell's hair border at that column) runs along the skull: a slot opens
+    between the flap's side edge and the side hair at each temple, and the forehead skin
+    (or the flap's inside) shows through it from the side. The end middle vertex is
+    welded to the shell instead, so the flap's side edge IS the side hair's border edge:
+      - edge snapped to the border (its low vertex is the lo_ring hair vertex): the middle
+        vertex becomes the ring-2 hair vertex when the flap reaches below ring 2 (lo_ring
+        1), else the low vertex itself (the flap side then runs straight down the shell
+        edge ring 3 -> ring 2)
+      - edge hanging free below ring 2 (not snapped, e.g. over the temple in front of the
+        ear): the middle vertex becomes the ring-2 hair vertex and the flap's lower part
+        hangs from the side hair's corner
+    Only window-border columns qualify (the column must have a ring-2 hair vertex). The
+    welded vertices are recorded in g.fringe_welded {theta: vertex}. fringe.weld_ends =
+    False keeps the free-standing ends."""
+    u2 = SKULL_RINGS[2][0]
+    u_lo = SKULL_RINGS[lo_ring][0]
+    u_hi = SKULL_RINGS[top_ring][0]
+    for t in sorted({thetas[0], thetas[-1]}):
+        i = round((t % 360) / (360.0 / SEG)) % SEG
+        if abs(THETAS[i] - (t % 360)) > 1e-6 or (top_ring, i) not in g.hair_vid:
+            continue
+        h2 = g.hair_vid.get((2, i))
+        if h2 is None or g.face_vid.get((2, i)) is None:
+            continue  # not a window-border column
+        u_e = max(u_lo + 0.005, min(u_hi - 0.02, fr["edge"][t]))
+        snapped = low[t] == g.hair_vid.get((lo_ring, i))
+        if snapped and lo_ring >= 2:
+            mids[t] = low[t]
+        elif u_e < u2:
+            mids[t] = h2
+        else:
+            continue
+        g.fringe_welded[t] = mids[t]
 
 
 def body_radius_fn(body_bvh):
@@ -535,10 +583,14 @@ def add_drape(g, style, body_r):
         outer = [top]
         inner = []
         for n, u in enumerate(rows_u):
+            # the drape's own shape: straight down from the shell (flare 0), widening
+            # toward the tips (flare > 0) or tapering in (flare < 0). The body is only a
+            # floor: the inner side never comes closer than `clearance` to the torso
+            # (rest pose). (Clamping the shape TO the body cancelled any flare, so the
+            # drape hugged the back and shoulders and clipped as soon as the head turned.)
             r_out = r_top + flare * (n / 2)
             rb = body_r(t, u, f0) if n > 0 else None
             if rb is not None:
-                r_out = min(r_out, max(rb + clear + th, r_top - 0.18 * n / 2))
                 r_out = max(r_out, rb + clear + th)
             p_out = Vector((0, f0, u)) + d * r_out
             if n > 0:

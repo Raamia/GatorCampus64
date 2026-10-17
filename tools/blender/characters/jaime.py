@@ -13,9 +13,9 @@ flaring out above the brows, a jagged crown, flicks behind the ears and at the n
 
 NOTE: this module uses sgl_heads/sgl_body internals beyond the documented hooks
 (H.SEG/THETAS/ring_point/_wrap/_hair_dir/skull_surface/surface_normal, Geo.hair_vid,
-add_fringe's middle-row placement (_fringe_mid), SB._ring_hit/front_hit/radial_hit/
-bone_bvh). _require() checks the ones whose change would silently break the sculpt (a
-12-column shell with 5 skull rings); a missed fringe weld prints an SGL WARNING.
+the fringe's side ends welded to the shell (Geo.fringe_welded), SB._ring_hit/front_hit/
+radial_hit/bone_bvh). _require() checks the ones whose change would silently break the
+sculpt (a 12-column shell with 5 skull rings); a missed fringe weld prints an SGL WARNING.
 """
 import math
 
@@ -222,20 +222,6 @@ def _triangulate_all(g, prefer):
     g.faces = out
 
 
-def _fringe_mid(style, theta):
-    """Position add_fringe gives the fringe's middle-row vertex at `theta` (to weld it
-    onto the side notch there)."""
-    fr = style["fringe"]
-    u_lo, u_hi = H.SKULL_RINGS[fr.get("lo_ring", 2)][0], H.SKULL_RINGS[3][0]
-    u_e = max(u_lo + 0.005, min(u_hi - 0.02, fr["edge"][theta]))
-    u_m = u_e + (u_hi - u_e) * fr.get("mid_at", 0.45)
-    return H.skull_surface(theta, u_m) + H.surface_normal(theta, u_m) * fr["offset_mid"]
-
-
-def _weld(g, old, new):
-    g.faces = [([new if i == old else i for i in idx], role) for idx, role in g.faces]
-
-
 def _vid(g, k, theta):
     return g.hair_vid.get((k, round((theta % 360) / 30.0) % 12))
 
@@ -271,15 +257,13 @@ def head_parts(g, style, spec):
     for ((k1, t1), (k2, t2)), val in EDGE_CUTS.items():
         for s in (-1, 1):
             edges.append(((k1, s * t1), (k2, s * t2), val))
-    fr_mid = {}
-    if style.get("fringe") and style["fringe"].get("offset_mid") is not None:
-        for t in (-90, 90):
-            q = _fringe_mid(style, t)
-            hit = [n for n, v in enumerate(g.verts) if (v - q).length < 1e-6]
-            if hit:
-                fr_mid[t] = hit[0]
-            else:
-                print("SGL WARNING: jaime hair: fringe side vertex not found at", t, "(not welded)")
+    # the fringe's side ends at +-90 are welded to the shell by the shared builder
+    # (sgl_heads.weld_fringe_ends: the flap side runs down the shell edge ring 3 -> ring
+    # 2), so the side notch cut into that edge below also cuts the flap's side edge and
+    # the fringe stays closed against the side tufts
+    welded = getattr(g, "fringe_welded", {})
+    if style.get("fringe") and style["fringe"].get("offset_mid") is not None and set(welded) != {-90, 90}:
+        print("SGL WARNING: jaime hair: fringe side ends not welded to the shell:", sorted(welded))
     for (k1, t1), (k2, t2), (t, push, lift) in edges:
         a, b = _vid(g, k1, t1), _vid(g, k2, t2)
         if a is None or b is None:
@@ -291,8 +275,6 @@ def head_parts(g, style, spec):
             print("SGL WARNING: jaime hair: edge not in any face", (k1, t1), (k2, t2))
             continue
         cuts.add(m)
-        if {k1, k2} == {2, 3} and abs(t1) == 90 and t1 in fr_mid:
-            _weld(g, fr_mid[t1], m)
     _triangulate_all(g, cuts)
     _highlight(g, tips)
 
@@ -555,6 +537,11 @@ def _bracelet(obj, arm, mats):
         g.face([lo[k], lo[j], hi[j], hi[k]], "bracelet", Vector((mid.x, mid.y, 0)))
     role = smat.accessory_material(mats, "bracelet", mats["_palette"].get("bracelet", BRACELET["colour"]))
     return H.emit(g, obj, grp, frame, {"bracelet": role})
+
+
+# wing-cap wings: Mario's wing roots sit inside the big side tufts and the crown; they
+# move out and up to the hair surface (applied by build_character, sgl_body.move_wings)
+WING_SHIFT = (0.22, -0.02, 0.08)  # head space (l, f, u), mirrored for the right wing
 
 
 def post_build(ctx):

@@ -4,27 +4,31 @@ Built on the "faithful" candidate (its proportions: narrow 16-px eyes with
 about one eye-width between them, a wide closed-bite grin, no lower teeth),
 with the judges' fixes and the best grafts from "classic" / "expressive":
 
-  eyes
-  * open: happy-squint half-moon - gently arched 2-px upper lash (no flat
-    top), flat lower lid pushed up by the cheek, corners LEVEL (no cat-eye
-    tilt), outer lash wraps down at the corner with a 1-px tail pointing down
-    and out (no horizontal "eyeliner" flick).  16x5 opening, 18 px corner to
-    corner (+1-px tail), 16 px between the eyes, left eye x 5-23 / right eye
-    x 40-58 (exact mirror), content rows 12-19 (exactly centred).
-  * iris 10x7 with a 4x3 pupil and a 3-px white glint (same image side in
-    both eyes).  It fills the opening top to bottom, so at game size the eye is
-    a dark slit with small white corner wedges (how his eyes read in photos).
-  * left/right/up move the iris 3 px, down 2 px (3 would leave only a dome of
-    iris under a white arch - an eye-roll look); up shows two rows of white
-    under the iris, down a row of white over it, pupil and glint stay visible.
-    All five open-gaze states share exactly the same lid pixels and
-    footprint - only the iris moves.
-  * half: 2-px lash lowered to mid-eye + a skin-shadow crease where it was.
+  eyes (redrawn after the likeness review: narrower and wider apart; second
+  pass after the polish review: less "dark bar with three white dots")
+  * open: smiling slit - arched 2-px upper lash, the inner corner one row lower
+    than the outer one (smile tilt), lower lid = a skin-shadow row (the cheek
+    pushing the lid up, as in the first set; no ink outline under the eye).
+    15 x 5 texels corner to corner (crease row included), 22 texels between
+    the inner corners, left eye x 6-20 / right eye x 43-57 (exact mirror),
+    rows 13-17.
+  * iris 11x3 with a 3x2 pupil right under the lash (a squinting eye's upper
+    lid covers the top of the iris) and a 1-px glint on the pupil's top-left
+    texel (same image side in both eyes).  The iris fills the opening except
+    one texel of white at the OUTER corner (iris pattern mirrored for the
+    right eye), so at game size the eye is a dark slit with a sparkle (how his
+    eyes read in photos) and no row of evenly spaced dots.
+  * left/right move the iris 2 px, up/down 1 px (a row of white under / over
+    the iris), pupil and glint stay visible.  All five open-gaze states share
+    exactly the same lid pixels and footprint - only the iris moves.
+  * half: the lash drops to the middle row and covers the pupil and glint;
+    only a 1-row sliver of iris shows under it, with a skin-shadow lid crease
+    above (where the open lash was) - two dark rows instead of four, so the
+    blink's middle frame reads.
   * closed: 2-px thick happy "^" arc on the same corners (his laughing
-    crescent eyes when he blinks), same tail and lower-lid shadow.
-  * dead: bold 14x9 "X" (3-px strokes, single 4-px crossing so it never
-    blobs), rows 12-20: it starts no higher than the open lash, so the fringe
-    geometry cannot clip it.
+    crescent eyes when he blinks), a short cheek shadow under its middle.
+  * dead: bold 9x7 "X" (2-px diagonal strokes meeting in a single 3-px
+    crossing row) centred on the eye, rows 12-18.
   mouth
   * lens-shaped grin from photos 1/3/4: flat 1-row upper lip (no centre bump),
     5-row upper-teeth band whose lower edge follows the smile curve, chunky
@@ -80,87 +84,64 @@ def to_img(grid):
 
 # ===================================================================== EYES
 # The LEFT eye (image-left) is drawn as ASCII in a window of texture columns
-# x = EX0 .. EX0+23 and rows y = EY0 .. EY0+11.  Outer corner on the left,
+# x = EX0 .. EX0+14 and rows y = EY0 .. EY0+4.  Outer corner on the left,
 # inner corner (next to the nose) on the right.  The right eye is the exact
 # mirror x -> 63 - x.  'W' marks the eye opening (sclera; the iris is stamped
 # into it), 'L' lash / lid ink, 's' skin shadow, 'H' darkest ink.
-EX0, EY0 = 4, 10
-#            x = 4         1         2
-#                4567890123456789012345678
+# Likeness review (photos 1-4): his eyes are narrow smiling slits set wide apart,
+# about 15 x 5 texels with ~22 texels between the inner corners and almost no white
+# showing (the first set was 19 x 7 with a 16-texel gap).  Left eye x 6-20, right
+# eye x 43-57, gap x 21-42 (22 texels), rows 13-17.
+EX0, EY0 = 6, 13
+EW = 15
+#            x = 6        2
+#                678901234567890
 LIDS = {
     'open': [
-        "........................",   # 10
-        "........................",   # 11
-        "........LLLLLL..........",   # 12  lash top (peak)
-        "......LLLLLLLLLL........",   # 13
-        "....LLLLWWWWWWLLLL......",   # 14
-        "...LLLWWWWWWWWWWLLL.....",   # 15
-        "...LWWWWWWWWWWWWWWL.....",   # 16
-        "..LWWWWWWWWWWWWWWWWL....",   # 17
-        ".LLWWWWWWWWWWWWWWWWL....",   # 18  flat lower lid; tail down + out
-        "....ssssssssssssss......",   # 19  cheek pushing the lower lid up
-        "........................",   # 20
-        "........................",   # 21
+        "...LLLLLLLLL...",   # 13  arched upper lash (2 thick at the top)
+        ".LLLWWWWWWWLLL.",   # 14  lash corners; the pupil sits right under the lash
+        "LLWWWWWWWWWWWL.",   # 15  outer corner
+        ".LWWWWWWWWWWWLL",   # 16  inner corner one row lower (smile tilt)
+        "..sssssssssss..",   # 17  lower lid: the cheek pushing it up (skin shadow)
     ],
     'half': [
-        "........................",   # 10
-        "........................",   # 11
-        "........ssssss..........",   # 12  crease where the open lash was
-        "......ss......ss........",   # 13
-        "........LLLLLL..........",   # 14  lash lowered 2 rows
-        "......LLLLLLLLLL........",   # 15
-        "....LLLLWWWWWWLLLL......",   # 16
-        "..LLLLWWWWWWWWWWLLLL....",   # 17
-        ".LLLWWWWWWWWWWWWWWLL....",   # 18
-        "....ssssssssssssss......",   # 19
-        "........................",   # 20
-        "........................",   # 21
+        "...............",   # 13
+        "...sssssssss...",   # 14  lid crease where the open lash was
+        "LLLLLLLLLLLLLL.",   # 15  lash lowered to the middle row (covers pupil + glint)
+        ".LWWWWWWWWWWWLL",   # 16  a 1-row sliver of iris
+        "..sssssssssss..",   # 17  lower lid, as open
     ],
     'closed': [
-        "........................",   # 10
-        "........................",   # 11
-        "........................",   # 12
-        "........................",   # 13
-        ".......LLLLLLLL.........",   # 14  happy "^" arc, 2 px thick
-        ".....LLLLLLLLLLLL.......",   # 15
-        "...LLLL........LLLL.....",   # 16
-        "..LLL............LLL....",   # 17
-        ".LL................L....",   # 18  same corners + tail as open
-        "....ssssssssssssss......",   # 19
-        "........................",   # 20
-        "........................",   # 21
+        "....LLLLLLL....",   # 13  happy "^" arc, 2 px thick, on the open eye's corners
+        "..LLL.....LLL..",   # 14
+        "LLL.........LL.",   # 15
+        ".L...........LL",   # 16
+        "....sssssss....",   # 17  short cheek shadow under the arc's middle
     ],
 }
 
-IRIS = [  # 10 x 7 (top and bottom rows sit under the lids by default)
-    "..IIIIII..",
-    ".IIIIIIII.",
-    "IIIPPPPIII",
-    "IIIPPPPIII",
-    "IIIPPPPIII",
-    "IIIIIIIIII",
-    ".IIIIIIII.",
+IRIS = [  # 11 x 3 (left eye; mirrored for the right eye): pupil up under the lash,
+    "..IIPPPII..",   # the opening filled except one texel of white at the outer
+    ".IIIPPPIIII",   # corner (middle row)
+    "IIIIIIIIIII",
 ]
 IW, IH = len(IRIS[0]), len(IRIS)
-IRIS_X = 10          # left eye: iris columns 10..19, centred on the opening 7..22
-IRIS_Y = 13          # rows 13..19
-GLINT = [(3, 2), (4, 2), (3, 3)]   # upper-left of the pupil, same side both eyes
-GAZE_X = 3
-GAZE_UP = 3       # up: 2 rows of white below the iris, glint + part of the pupil stay
-GAZE_DOWN = 2     # down: 3 would leave only a dome of iris (reads as an eye roll)
+IRIS_X = 8           # left eye: iris columns 8..18, centred on the opening 8..18
+IRIS_Y = 14          # rows 14..16
+GAZE_X = 2        # left/right: 3 texels of white on the far side, iris under the lid
+GAZE_UP = 1       # up: a row of white under the iris
+GAZE_DOWN = 1     # down: a row of white over the iris
 
-DEAD_X = [  # 14 x 9 knocked-out X, columns 8..21, rows 12..20 (left eye)
-    "HHH........HHH",
-    ".HHH......HHH.",
-    "..HHH....HHH..",
-    "...HHH..HHH...",
-    ".....HHHH.....",
-    "...HHH..HHH...",
-    "..HHH....HHH..",
-    ".HHH......HHH.",
-    "HHH........HHH",
+DEAD_X = [  # 9 x 7 knocked-out X, columns 9..17, rows 12..18 (left eye)
+    "HH.....HH",
+    ".HH...HH.",
+    "..HH.HH..",
+    "...HHH...",
+    "..HH.HH..",
+    ".HH...HH.",
+    "HH.....HH",
 ]
-DEAD_X0, DEAD_Y0 = 8, 12
+DEAD_X0, DEAD_Y0 = 9, 12
 
 
 def eye_grid(state, gaze=(0, 0)):
@@ -174,30 +155,32 @@ def eye_grid(state, gaze=(0, 0)):
         return g
     tpl = LIDS['half' if state == 'half' else 'closed' if state == 'closed' else 'open']
     for j, row in enumerate(tpl):
-        assert len(row) == 24, (state, j)
+        assert len(row) == EW, (state, j)
         for i, ch in enumerate(row):
             g[EY0 + j][EX0 + i] = ch
             g[EY0 + j][63 - (EX0 + i)] = ch
     if state == 'closed':
         return g
     for side in 'LR':
+        # the iris pattern is mirrored for the right eye (the white sits at the outer
+        # corner of both eyes); a gaze moves both irises the same way
+        iris = IRIS if side == 'L' else [r[::-1] for r in IRIS]
         ox = IRIS_X if side == 'L' else 63 - IRIS_X - (IW - 1)
         ox += gaze[0]
         oy = IRIS_Y + gaze[1]
-        vis = []
-        for j, row in enumerate(IRIS):
+        pupil = []
+        for j, row in enumerate(iris):
             for i, ch in enumerate(row):
                 x, y = ox + i, oy + j
                 if ch != '.' and g[y][x] == 'W' and ((x < 32) == (side == 'L')):
                     g[y][x] = ch
-                    vis.append((x, y))
-        # glint: keep it on the top visible iris row so it never vanishes
-        top = min(y for _, y in vis)
-        dy0 = max(0, top - (oy + min(d for _, d in GLINT)))
-        for dx, dy in GLINT:
-            x, y = ox + dx, oy + dy + dy0
-            if g[y][x] in 'IP':
-                g[y][x] = 'h'
+                    if ch == 'P':
+                        pupil.append((x, y))
+        # glint: the top-left texel of the pupil's visible part (same image side in
+        # both eyes); none when the lid covers the pupil (half)
+        if pupil:
+            top = min(y for _, y in pupil)
+            g[top][min(x for x, y in pupil if y == top)] = 'h'
     return g
 
 
@@ -321,7 +304,7 @@ def face_mock(eye_im, mouth_im):
         a[y, x] = SHAD
     # hair: rounded cap, heavy straight fringe ending one skin row above the
     # lashes, blocky strand tips, side locks over the temples
-    fb = EYE_Y + 10                       # fringe bottom row (lash top = EYE_Y+12)
+    fb = EYE_Y + 10                       # fringe bottom row (lash top = EYE_Y+13)
     cap = ((xx - cx) / 34.0) ** 2 + ((yy - 22) / 23.0) ** 2 <= 1.0
     hair = cap & (yy <= fb)
     # side locks over the temples / ears, longest at the outer edge

@@ -14,8 +14,9 @@ fringe does not read as a beret brim), a few over the fringe, and round curls ha
 Daniel's 1293.
 
 Also: crewneck sweatshirt (ribbed collar + hip-length body with a ribbed hem) when
-outfit.top says crewneck, and the wing-cap wings moved out of the curls (post_build:
-the wing BONES move with the wing vertices, so the flap hinge stays at the wing root).
+outfit.top says crewneck, and the wing-cap wings moved out of the curls (WING_SHIFT,
+applied by build_character with sgl_body.move_wings: the wing BONES move with the wing
+vertices, so the flap hinge stays at the wing root).
 
 Shared helpers this module relies on are checked up front (_require) so a refactor of
 sgl_heads / sgl_body fails with a clear message instead of a silent wrong build.
@@ -103,7 +104,9 @@ HANG_CLUMPS = [(102.0, 0.51, 0.10, 0.16),
 # the shared fringe flap bulges by offset_mid at every edge column; at the temples
 # (|theta| 90, in front of the ears) that middle row stood 0.26 off the skull, further
 # out than the side hair, and showed as thin blades beside the head (front and back
-# views). {|theta|: middle-row offset} there
+# views). {|theta|: middle-row offset} there. Only used when the shared builder does not
+# weld those ends to the side hair (fringe.weld_ends False): by default they ARE the side
+# hair's ring-2 vertex, which also closes the slot that showed skin at the temples
 FLAP_SIDE_MID = {90.0: 0.13}
 # flatter, rounder top (the shell's top-pole vertex sat as a peak above the crown curls)
 TOP_DROP = 0.07
@@ -244,7 +247,9 @@ def lump_shell(g):
 def tuck_flap_sides(g, style):
     """Pull the fringe flap's middle-row vertices at the temples in (FLAP_SIDE_MID).
     They are found by position: sgl_heads.add_fringe puts them at
-    skull_surface(t, u_m) + surface_normal(t, u_m) * offset_mid."""
+    skull_surface(t, u_m) + surface_normal(t, u_m) * offset_mid. Ends that the shared
+    builder welded to the side hair (g.fringe_welded, the default) are left alone: they
+    already sit on the side hair, with no slot or blade beside the head."""
     fr = style.get("fringe") or {}
     mid_off = fr.get("offset_mid")
     if mid_off is None:
@@ -252,11 +257,12 @@ def tuck_flap_sides(g, style):
     edge = fr["edge"]
     u_lo = H.SKULL_RINGS[fr.get("lo_ring", 2)][0]
     u_hi = H.SKULL_RINGS[FRINGE_TOP_RING][0]
+    welded = getattr(g, "fringe_welded", {})
     moved = 0
     for t_abs, off in FLAP_SIDE_MID.items():
         for t in (t_abs, -t_abs):
-            if t not in edge:
-                continue
+            if t not in edge or t in welded:
+                continue  # welded ends ARE the side hair vertex (sgl_heads.weld_fringe_ends)
             u_e = max(u_lo + 0.005, min(u_hi - 0.02, edge[t]))
             u_m = u_e + (u_hi - u_e) * fr.get("mid_at", 0.45)
             p, n = H.skull_surface(t, u_m), H.surface_normal(t, u_m)
@@ -418,83 +424,17 @@ def wears_crewneck(spec):
 
 # ------------------------------------------------------------------ wing-cap wings
 # The wings (Mario Mesh groups Left/Right Wing DL) sit at the sides of Mario's cap; here
-# their roots would be buried in the curls, so they move out to the hair surface. The
-# wing bones move by the same amount, so in the export the wing vertices stay where
-# the template has them relative to their bone (root edge on the bone's X axis) and
-# geo_mario_rotate_wing_cap_wings still flaps them about their root; only the
-# GEO_TRANSLATE_ROTATE offset of the wing node changes.
-WING_SHIFT = Vector((0.22, -0.02, 0.06))  # head space (l, f, u), mirrored for the right wing
-WING_SIDES = (("Left", 1.0), ("Right", -1.0))
-WING_ARMATURES = ("Mario", "Metal Mario")  # the metal body is rebuilt from Mario Mesh later
-
-
-def _wing_bones(side):
-    return (f"{side} Wing", f"0 {side} Wing Rotation Function", f"1 {side} Wing Rotation", f"{side} Wing DL")
-
-
-def _translate_bones(arm, moves):
-    """Translate edit bones {name: armature-space vector}. Needs edit mode."""
-    import bpy
-    if not moves:
-        return 0
-    vl = bpy.context.view_layer
-    prev = vl.objects.active
-    hidden, hide_vp = arm.hide_get(), arm.hide_viewport
-    arm.hide_viewport = False
-    arm.hide_set(False)
-    if bpy.context.mode != "OBJECT":
-        bpy.ops.object.mode_set(mode="OBJECT")
-    vl.objects.active = arm
-    bpy.ops.object.mode_set(mode="EDIT")
-    try:
-        eb = arm.data.edit_bones
-        for name, d in moves.items():
-            eb[name].translate(d)
-    finally:
-        bpy.ops.object.mode_set(mode="OBJECT")
-        arm.hide_viewport = hide_vp
-        arm.hide_set(hidden)
-        vl.objects.active = prev
-    return len(moves)
-
-
-def move_wings():
-    import bpy
-    obj, arm = bpy.data.objects["Mario Mesh"], bpy.data.objects["Mario"]
-    frame = H.BoneFrame(obj, arm, "Head DL")
-    moved = 0
-    shifts = {}
-    for side, sgn in WING_SIDES:
-        vg = obj.vertex_groups.get(f"{side} Wing DL")
-        if vg is None:
-            continue
-        shift = Vector((WING_SHIFT.x * sgn, WING_SHIFT.y, WING_SHIFT.z))
-        shifts[side] = shift
-        for v in obj.data.vertices:
-            if any(g.group == vg.index and g.weight > 0.4 for g in v.groups):
-                v.co = frame.to_local(frame.from_local(v.co) + shift)
-                moved += 1
-    bones = {}
-    for arm_name in WING_ARMATURES:
-        a = bpy.data.objects.get(arm_name)
-        if a is None or a.type != "ARMATURE" or "Head DL" not in a.data.bones:
-            continue
-        head3 = a.data.bones["Head DL"].matrix_local.to_3x3()  # bone-local axes = (u, f, l)
-        moves = {}
-        for side, s in shifts.items():
-            d = head3 @ Vector((s.z, s.y, s.x))
-            moves.update({n: d for n in _wing_bones(side) if n in a.data.bones})
-        bones[arm_name] = _translate_bones(a, moves)
-    if moved and bones.get("Mario", 0) != 8:
-        raise RuntimeError(f"raami move_wings: moved {moved} wing vertices but bones {bones} (expected 8 per armature)")
-    return {"vertices": moved, "bones": bones}
+# their roots would be buried in the curls, so they move out to the hair surface
+# (build_character applies WING_SHIFT with sgl_body.move_wings after post_build: the wing
+# bones move with the wing vertices, so the flap hinge stays at the wing root).
+WING_SHIFT = (0.27, -0.02, 0.10)  # head space (l, f, u), mirrored for the right wing
 
 
 def post_build(ctx):
     import bpy
     _require()
     spec = ctx["spec"]
-    out = {"wings_moved": move_wings()}
+    out = {}
     # the sweatshirt is the outfit itself (the spec lists no accessories); if the spec
     # ever lists "crewneck_sweatshirt", ACCESSORIES above builds it instead
     if wears_crewneck(spec) and "crewneck_sweatshirt" not in spec.get("build", {}).get("accessories", []):

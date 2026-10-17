@@ -94,6 +94,7 @@
       "Head DL:Logo (EMBLEM)->cap": 5,
       "Torso:Buttons (PANTS)->top": 10
     },
+    "sleeve_ends": null,
     "soles": 12,
     "cap_logos": 59,
     "sleeve_cuffs": {
@@ -150,15 +151,20 @@
     ]
   },
   "post_build": {
-    "wings_moved": {
-      "vertices": 12,
-      "bones": {
-        "Mario": 8,
-        "Metal Mario": 8
-      }
-    },
     "crewneck_sweatshirt_collar_tris": 72,
     "curl_colour": "#312C2D"
+  },
+  "wings": {
+    "shift": [
+      0.27,
+      -0.02,
+      0.1
+    ],
+    "vertices": 12,
+    "bones": {
+      "Mario": 8,
+      "Metal Mario": 8
+    }
   },
   "loose_vertices_added": 0,
   "tris": {
@@ -628,5 +634,5 @@
     "head_side": "art/raami/build/previews/head_side.png",
     "eye_states": "art/raami/build/previews/eye_states.png"
   },
-  "seconds": 11.7
+  "seconds": 13.5
 }

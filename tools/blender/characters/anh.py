@@ -11,9 +11,9 @@ here is driven by the spec that is being built:
 """
 import math
 
-import bmesh
 from mathutils import Vector
 
+import sgl_body
 import sgl_heads as H
 import sgl_materials as smat
 from sgl_body import _prism, _ring_hit, bone_bvh, dominant_groups, hit_from
@@ -234,83 +234,20 @@ def _plane_local(frame, p0, p1, p2):
     return a, n.normalized()
 
 
-def _cut_faces(obj, face_ids, planes, snap=1e-5):
-    """Bisect the faces face_ids of obj with planes [(co, no)] (mesh-local). Pieces of
-    a cut face stay tagged; returns the indices of every tagged face afterwards.
-    Vertices within `snap` of a plane count as on it (no sliver cut next to them)."""
-    me = obj.data
-    bm = bmesh.new()
-    bm.from_mesh(me)
-    bm.faces.ensure_lookup_table()
-    tag = bm.faces.layers.int.new("sgl_cut")
-    for i in face_ids:
-        bm.faces[i][tag] = 1
-    for co, no in planes:
-        faces = [f for f in bm.faces if f[tag]]
-        edges = list({e for f in faces for e in f.edges})
-        verts = list({v for f in faces for v in f.verts})
-        bmesh.ops.bisect_plane(bm, geom=faces + edges + verts, plane_co=co, plane_no=no, dist=snap)
-    bm.faces.index_update()
-    out = [f.index for f in bm.faces if f[tag]]
-    bm.faces.layers.int.remove(tag)
-    bm.to_mesh(me)
-    bm.free()
-    me.update()
-    return out
-
-
 def _centroid(obj, frame, poly):
     me = obj.data
     pts = [frame.from_local(me.vertices[i].co) for i in poly.vertices]
     return sum(pts, Vector()) / len(pts)
 
 
-def _tri_count(obj):
-    obj.data.calc_loop_triangles()
-    return len(obj.data.loop_triangles)
-
-
-def _limb_axis(obj, arm, bone_a, bone_b):
-    """Mesh-local points of two bone heads (the limb segment from joint a to joint b)."""
-    M = obj.matrix_world.inverted() @ arm.matrix_world
-    return M @ arm.data.bones[bone_a].head_local, M @ arm.data.bones[bone_b].head_local
+# face cutting / limb band helpers (first written here, now shared in sgl_body)
+_cut_faces = sgl_body.cut_faces
+_tri_count = sgl_body.tri_count
+_limb_axis = sgl_body.limb_axis
 
 
 def _recolour_limb_bands(obj, arm, group, bone_a, bone_b, bands):
-    """Cut the faces of `group` across the limb and recolour bands of it. The limb runs
-    along the joint axis bone_a -> bone_b; bands are [(frac_from, frac_to, material)] as
-    fractions of the group's extent along that axis (0 = the bone_a end)."""
-    me = obj.data
-    groups = dominant_groups(obj)
-    ids = [p.index for p, gname in zip(me.polygons, groups) if gname == group]
-    if not ids:
-        print(f"SGL WARNING: anh: no faces in {group}")
-        return 0
-    a, b = _limb_axis(obj, arm, bone_a, bone_b)
-    axis = (b - a)
-    if axis.length < 1e-6:
-        print(f"SGL WARNING: anh: zero-length axis {bone_a} -> {bone_b}")
-        return 0
-    axis.normalize()
-    vs = {v for i in ids for v in me.polygons[i].vertices}
-    proj = [(me.vertices[i].co - a).dot(axis) for i in vs]
-    lo, hi = min(proj), max(proj)
-    cuts = sorted({f for f0, f1, _m in bands for f in (f0, f1) if 0.0 < f < 1.0})
-    before = _tri_count(obj)
-    ids = _cut_faces(obj, ids, [(a + axis * (lo + (hi - lo) * f), axis) for f in cuts])
-    counts = {}
-    for i in ids:
-        p = me.polygons[i]
-        c = sum((me.vertices[v].co for v in p.vertices), Vector()) / len(p.vertices)
-        frac = ((c - a).dot(axis) - lo) / (hi - lo)
-        for f0, f1, mat in bands:
-            if f0 <= frac < f1 or (f1 >= 1.0 and frac >= f0):
-                p.material_index = smat.ensure_slot(obj, mat)
-                counts[mat.name] = counts.get(mat.name, 0) + 1
-                break
-    added = _tri_count(obj) - before
-    print(f"SGL anh: {group}: {counts} (cuts {cuts}, +{added} tris)")
-    return added
+    return sgl_body.recolour_limb_bands(obj, arm, group, bone_a, bone_b, bands, tag="anh")
 
 
 # ------------------------------------------------------------------ jersey
@@ -329,6 +266,10 @@ TORSO_F0 = 0.035  # torso axis (forward offset of the torso's centre, Torso fram
 # cut into the torso itself, so they stay in)
 NOT_IN_TORSO_BVH = ("Top Trim (ACC)", "Jersey Gold (ACC)", "Jersey Number (ACC)")
 SLEEVE = (0.50, 0.66)  # cuff band of the short sleeve, as fractions shoulder -> elbow
+# the jersey cuts its own sleeve (cuff band + bare arm, add_jersey_stripes): no shared
+# short-sleeve cut for Anh (sgl_body.short_sleeve_ends). Josh and Donald (plain tees, own
+# modules) get the shared cut, which ends the sleeve at the same SLEEVE[1].
+SHORT_SLEEVE_END = None
 SOCK_TOP = 0.50        # sock top, as a fraction knee -> ankle
 
 

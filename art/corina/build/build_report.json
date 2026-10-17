@@ -95,6 +95,10 @@
       "Head DL:Logo (EMBLEM)->cap": 5,
       "Torso:Buttons (PANTS)->top": 10
     },
+    "sleeve_ends": {
+      "sleeve_end": 0.66,
+      "tris_added": 40
+    },
     "soles": 12,
     "cap_logos": 59,
     "sleeve_cuffs": {},
@@ -140,11 +144,23 @@
       "Head Up Mesh (up)"
     ]
   },
+  "wings": {
+    "shift": [
+      0.28,
+      -0.02,
+      0.1
+    ],
+    "vertices": 12,
+    "bones": {
+      "Mario": 8,
+      "Metal Mario": 8
+    }
+  },
   "loose_vertices_added": 0,
   "tris": {
-    "Mario Mesh": 1032,
+    "Mario Mesh": 1072,
     "Capless Head Mesh": 420,
-    "Metal Mario Mesh": 1032,
+    "Metal Mario Mesh": 1072,
     "Metal Capless Head Mesh": 420,
     "Head Closed Mesh": 420
   },
@@ -184,8 +200,8 @@
       "texture corina_eyes_down_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_corina_Down_Eyes__SKIN_)",
       "texture corina_eyes_dead_rgba16 (tile 0): loaded 64x32, tile 64x32, masks 6/5, clamp True/True (mat_corina_Dead_Eyes__SKIN_)"
     ],
-    "display_lists": 203,
-    "total_tris_all_dls": 3726,
+    "display_lists": 205,
+    "total_tris_all_dls": 3806,
     "textures": [
       "corina_eyes_open_rgba16",
       "corina_mouth_grin_rgba16",
@@ -608,5 +624,5 @@
     "head_side": "art/corina/build/previews/head_side.png",
     "eye_states": "art/corina/build/previews/eye_states.png"
   },
-  "seconds": 14.2
+  "seconds": 14.4
 }

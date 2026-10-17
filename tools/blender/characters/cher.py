@@ -8,19 +8,17 @@ hairline and a sleek, rounded crown, plus (head_parts):
     middle of the back, over the shoulders, and two front panels that fall in front
     of the shoulders down the chest; the bottom edge is cut into strand tips
   - face-framing layers (shared add_face_locks, tuned) over the window border
-Everything is rigid on the head bone, kept clear of the torso (rest pose) by a
-raycast against the body.
+Everything is rigid on the head bone, kept clear of the torso by a raycast against the
+body (rest pose).
 
 Outfit (ACCESSORIES "shirt_collar"): the shared collar/placket/buttons, a chest
 pocket, and turned-up cuffs on the forearms that hide Mario's sleeve/forearm
 junction (add_elbow_cuffs).
 
-post_build: bleeds the face-texture ink colours into the neighbouring transparent
-texels (no light halo around brows/lashes/lips on a shaded face) and reports the
-head/curtain triangle counts.
+post_build: reports the head/curtain triangle counts. (The face-texture halo fix that
+started here is now shared: sgl_textures.bleed_transparent.)
 """
 import math
-import os
 
 import bpy
 from mathutils import Vector
@@ -73,17 +71,29 @@ HAIR_STYLE = {
     #              the chest in the photo)
     #   105        stops at the shoulder top: Mario's shoulders sit right under the
     #              head, so the side hair parts there (front panel / back curtain)
-    #   135..180   down the back to mid-back, extra clearance at the tips (the head
-    #              nods/turns against the torso in the idle and walk cycles)
+    #   135..180   down the back to mid-back
+    # The curtain is rigid on the head bone and kept clear of the torso in the rest pose
+    # only, so animations swing parts of it into the body. Tuned (cast polish) by
+    # measuring hair vertices inside the body over 15 Mario animations (every frame) and
+    # 10 C-up head rotations, accepting only changes that make NO animation or head pose
+    # clip more than the first build, in total or against the forearms/hands: the
+    # front column at 60 tapers in a little less (0.10 -> 0.09), the side-back column
+    # at 135 too (0.10 -> 0.085), and the back centre's tips keep 0.15 off the back
+    # (0.09). Hair inside the body: 3540 -> 3366 vertex-frames over the animations,
+    # head rotations 39 -> 32. Pushing the curtain further out (a straighter back,
+    # more clearance, clearance held over head turns of +-30 degrees) takes it off the
+    # torso in idle looks and turns but into the swinging forearms/hands, and makes
+    # crouching, swimming and breakdancing clip more: every such variant tried made
+    # some animation worse.
     "cher_drape": {
         "cols": [
             ("jaw", 60, 30, -0.32, -0.10, 0.05),
-            ("hair", 60, 42, -0.39, 0.10, 0.05),
+            ("hair", 60, 42, -0.39, 0.09, 0.05),
             ("hair", 90, 60, -0.34, 0.14, 0.05),
             ("hair", 105, 106, 0.01, 0.0, 0.05),
-            ("hair", 135, 138, -0.30, 0.10, 0.09),
+            ("hair", 135, 138, -0.30, 0.085, 0.09),
             ("hair", 157.5, 159, -0.40, 0.18, 0.09),
-            ("hair", 180, 180, -0.44, 0.20, 0.09),
+            ("hair", 180, 180, -0.44, 0.20, 0.15),
         ],
         "jaw_off": 0.025,
         "mid_s": 0.45, "thickness": 0.06, "notch": 0.08, "min_notch": 0.045,
@@ -201,50 +211,22 @@ def add_cher_drape(g, style):
             g.face([o[n], o[n + 1], i[n + 1], i[n]], "hair", away)
 
 
-def straighten_fringe_ends(g, style):
-    """The fringe's convex middle row (offset_mid) also bulges at the two edge columns
-    that snap to the face-window border (+-60), so the flap's side edge bows out past
-    the straight hair edge next to it and a sliver of forehead skin shows through from
-    the side. Move those two middle-row vertices onto the straight shell edge."""
-    fr = style.get("fringe") or {}
-    mid_off = fr.get("offset_mid")
-    if mid_off is None:
-        return 0
-    lo_ring, top_ring = fr.get("lo_ring", 2), 3
-    u_lo, u_hi = H.SKULL_RINGS[lo_ring][0], H.SKULL_RINGS[top_ring][0]
-    moved = 0
-    for t, u_edge in fr["edge"].items():
-        i = round((t % 360) / 30.0) % H.SEG
-        if abs(H.THETAS[i] - (t % 360)) > 1e-6:
-            continue
-        u_e = max(u_lo + 0.005, min(u_hi - 0.02, u_edge))
-        if not (u_e <= u_lo + 0.02 and (lo_ring, i) in g.hair_vid and (lo_ring, i) in g.face_vid):
-            continue  # not snapped to the border
-        u_m = u_e + (u_hi - u_e) * fr.get("mid_at", 0.45)
-        p = H.skull_surface(t, u_m) + H.surface_normal(t, u_m) * mid_off
-        vi = next((k for k, q in enumerate(g.verts) if (q - p).length < 1e-6), None)
-        if vi is None:
-            continue
-        a, b = g.verts[g.hair_vid[(lo_ring, i)]], g.verts[g.hair_vid[(top_ring, i)]]
-        g.verts[vi] = a.lerp(b, (p.z - a.z) / (b.z - a.z))
-        moved += 1
-    return moved
-
-
 HEAD_STATS = {}
 
 
 def head_parts(g, style, spec):
     fr = style.get("fringe") or {}
-    moved = straighten_fringe_ends(g, style)
-    if fr.get("offset_mid") is not None and moved == 0:
-        # the shared add_fringe changed (or the edge no longer snaps at +-60): the
-        # temple skin sliver this fix hides would be back
-        print("SGL WARNING: cher straighten_fringe_ends moved no vertices; check the temples "
+    # the fringe's convex middle row would bulge out past the straight side hair at the
+    # two edge columns that snap to the face-window border (+-60), leaving a sliver of
+    # forehead visible from the side: the shared builder welds those ends onto the shell
+    # edge (sgl_heads.weld_fringe_ends)
+    welded = sorted(getattr(g, "fringe_welded", {}))
+    if fr.get("offset_mid") is not None and welded != [-60, 60]:
+        print(f"SGL WARNING: cher fringe ends welded at {welded}, expected [-60, 60]; check the temples "
               "(head_side preview) for a sliver of forehead skin beside the fringe")
     n0 = g.tri_count()
     add_cher_drape(g, style)
-    HEAD_STATS.update({"fringe_end_vertices_straightened": moved, "curtain_tris": g.tri_count() - n0,
+    HEAD_STATS.update({"fringe_ends_welded": welded, "curtain_tris": g.tri_count() - n0,
                        "head_tris": g.tri_count()})
     print(f"SGL cher head: {HEAD_STATS}")
 
@@ -398,6 +380,9 @@ def add_shirt(ctx):
 # torso frame (l = her left, u up from the torso bone): pocket box below the torso top
 POCKET = {"l": (0.075, 0.235), "u": (0.25, 0.39), "hem": 0.035, "point": 0.025, "raise": 0.014}
 SHIRT = {"cuffs": True}  # the spec's rolled sleeves (add_elbow_cuffs)
+# the rolled cuffs build the sleeve end (the sleeve's end cap stays shirt colour, tucked
+# into the cuff): no shared short-sleeve cut (sgl_body.short_sleeve_ends)
+SHORT_SLEEVE_END = None
 # CUFF, forearm frame (u from the elbow toward the hand, bone length 0.2): the band
 # spans u, an octagon fitted around the forearm's cross-section and pushed out by
 # push (top, bottom); lip: its inner edges (x the fitted octagon, just inside the
@@ -409,63 +394,6 @@ CUFF = {"sides": 8, "u": (-0.025, 0.07), "push": (0.016, 0.012), "lip": 0.86, "c
 ACCESSORIES = {"shirt_collar": add_shirt}
 
 
-# ------------------------------------------------------------------ face texture edges
-FACE_TEXTURES = ("eyes_open", "eyes_half", "eyes_closed", "eyes_left", "eyes_right", "eyes_up",
-                 "eyes_down", "eyes_dead", "mouth_grin")
-
-
-def bleed_face_edges(char_id):
-    """The keyed face textures keep the skin RGB in their alpha-0 texels. With
-    bilinear filtering and the face combiner (TEXEL0 - SHADE) * TEXEL0_ALPHA + SHADE,
-    that skin RGB is mixed into the edge of every brow/lash/lip and draws a light
-    peach halo around them wherever the face is shaded darker than the skin (side
-    and 3/4 views). Give each transparent texel next to an opaque one the mean colour
-    of its opaque neighbours instead (alpha stays 0, so the alpha mask and the clamp
-    edges are unchanged): the filtered edge then fades from the ink to the shaded
-    skin. Done on the loaded images (what Fast64 exports) and their processed PNGs."""
-    import numpy as np
-    from sgl_util import write_png
-    out = {}
-    for name in FACE_TEXTURES:
-        img = bpy.data.images.get(f"{char_id}_{name}")
-        if img is None:
-            print(f"SGL WARNING: cher bleed: image {char_id}_{name} not found")
-            continue
-        w, h = img.size
-        a = np.array(img.pixels[:], dtype=np.float32).reshape(h, w, 4)
-        op = a[..., 3] > 0.5
-        acc = np.zeros((h, w, 3), np.float32)
-        cnt = np.zeros((h, w), np.float32)
-        for dy in (-1, 0, 1):
-            for dx in (-1, 0, 1):
-                if dx == 0 and dy == 0:
-                    continue
-                sh_op = np.zeros_like(op)
-                sh_rgb = np.zeros_like(acc)
-                ys = slice(max(dy, 0), h + min(dy, 0))
-                yd = slice(max(-dy, 0), h + min(-dy, 0))
-                xs = slice(max(dx, 0), w + min(dx, 0))
-                xd = slice(max(-dx, 0), w + min(-dx, 0))
-                sh_op[yd, xd] = op[ys, xs]
-                sh_rgb[yd, xd] = a[ys, xs, :3]
-                acc += sh_rgb * sh_op[..., None]
-                cnt += sh_op
-        edge = ~op & (cnt > 0)
-        a[edge, :3] = acc[edge] / cnt[edge][:, None]
-        a[~op, 3] = 0.0
-        img.pixels[:] = a.ravel()
-        img.update()
-        img.pack()  # a modified image packs its current pixels
-        path = bpy.path.abspath(img.filepath)
-        if path and os.path.isfile(path):
-            q = np.clip(np.round(np.flipud(a) * 255), 0, 255).astype(np.uint8)
-            write_png(path, [[tuple(int(v) for v in px) for px in row] for row in q])
-        out[name] = int(edge.sum())
-    return out
-
-
 def post_build(ctx):
-    rep = {"head": dict(HEAD_STATS)}
-    rep["face_edge_bleed_texels"] = bleed_face_edges(ctx["spec"]["id"])
-    return rep
+    return {"head": dict(HEAD_STATS)}
 

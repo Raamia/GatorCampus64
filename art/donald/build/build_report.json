@@ -94,6 +94,10 @@
       "Head DL:Logo (EMBLEM)->cap": 5,
       "Torso:Buttons (PANTS)->top": 10
     },
+    "sleeve_ends": {
+      "sleeve_end": 0.66,
+      "tris_added": 40
+    },
     "soles": 12,
     "cap_logos": 59,
     "sleeve_cuffs": {},
@@ -136,9 +140,6 @@
       "Head Right Mesh (right)",
       "Head Up Mesh (up)"
     ]
-  },
-  "post_build": {
-    "tee_sleeve_end_tris": 40
   },
   "loose_vertices_added": 0,
   "tris": {
@@ -606,5 +607,5 @@
     "head_side": "art/donald/build/previews/head_side.png",
     "eye_states": "art/donald/build/previews/eye_states.png"
   },
-  "seconds": 11.0
+  "seconds": 14.2
 }

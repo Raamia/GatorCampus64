@@ -101,6 +101,7 @@
       "Head DL:Logo (EMBLEM)->cap": 5,
       "Torso:Buttons (PANTS)->top": 10
     },
+    "sleeve_ends": "built by the character module",
     "soles": 12,
     "cap_logos": 59,
     "sleeve_cuffs": {},
@@ -621,5 +622,5 @@
     "head_side": "art/anh/build/previews/head_side.png",
     "eye_states": "art/anh/build/previews/eye_states.png"
   },
-  "seconds": 17.7
+  "seconds": 12.7
 }
