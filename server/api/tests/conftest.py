@@ -33,7 +33,7 @@ from sgl_api.storage import Storage
 ISSUER = "https://login.test.example/"
 AUDIENCE = "https://api.gatorcamp.us"
 BUCKET = "sgl-test"
-TABLES = "deploys, events, link_codes, links, slots, jobs, characters, users"
+TABLES = "run_pushes, runs, deploys, events, link_codes, links, slots, jobs, characters, users"
 
 
 # ── Postgres ──────────────────────────────────────────────────────────────────────────────────
@@ -150,7 +150,8 @@ def s3():
 def make_settings(url: str, **over) -> config.Settings:
     base = dict(database_url=url, auth0_issuer=ISSUER, auth0_audience=AUDIENCE,
                 auth0_jwks_url=ISSUER + ".well-known/jwks.json", s3_endpoint=None, s3_region="us-east-1",
-                s3_bucket=BUCKET, s3_access_key="x", s3_secret_key="x", cors_origins=["http://localhost:5173"])
+                s3_bucket=BUCKET, s3_access_key="x", s3_secret_key="x", cors_origins=["http://localhost:5173"],
+                leaderboard_cache_secs=0, deepspace_push_interval=0)
     base.update(over)
     return config.Settings(**base)
 
@@ -159,11 +160,12 @@ def make_settings(url: str, **over) -> config.Settings:
 def make_client(pg, s3, jwks):
     made = []
 
-    def make(**over):
+    def make(transport=None, **over):
         s = make_settings(pg, **over)
         db = Database(pg, max_size=4)
         app = create_app(s, db=db, storage=Storage(s, client=s3),
-                         verifier=Verifier(ISSUER, AUDIENCE, JWKSCache("unused", fetch=lambda _u: jwks)))
+                         verifier=Verifier(ISSUER, AUDIENCE, JWKSCache("unused", fetch=lambda _u: jwks)),
+                         deepspace_transport=transport)
         tc = TestClient(app)
         tc.__enter__()
         made.append((tc, db))

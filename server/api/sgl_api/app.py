@@ -1,4 +1,4 @@
-"""FastAPI app: docs/web_platform_spec.md §8 (plus §5.1-§5.3, §7.2-§7.4).
+"""FastAPI app: docs/web_platform_spec.md §8 (plus §5.1-§5.3, §7.2-§7.4, §10.2 leaderboards).
 
 Run:  uvicorn --factory sgl_api.app:create_app --host 127.0.0.1 --port 8000   (from server/api/)
 """
@@ -7,19 +7,24 @@ import json
 import logging
 import re
 import secrets
+import threading
+import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 from typing import Annotated, Any, Callable
 
-from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
+import httpx
+from fastapi import BackgroundTasks, Depends, FastAPI, File, Form, HTTPException, Request, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from psycopg.types.json import Jsonb
 from pydantic import BaseModel, Field, model_validator
 
-from . import config, images, names
+from . import config, images, names, runs
 from .auth import AuthError, JWKSCache, Principal, Verifier, bearer
+from .deepspace import Pusher
+from .missions import MISSIONS
 from .db import Database, apply_schema
 from .storage import Storage
 
@@ -74,9 +79,12 @@ class SlotPatch(BaseModel):
 # ── app factory ───────────────────────────────────────────────────────────────────────────────
 
 def create_app(settings: config.Settings | None = None, *, db: Database | None = None,
-               storage: Storage | None = None, verifier: Verifier | None = None) -> FastAPI:
+               storage: Storage | None = None, verifier: Verifier | None = None,
+               deepspace_transport: httpx.BaseTransport | None = None) -> FastAPI:
     s = settings or config.load()
     state: dict[str, Any] = {}
+    board_cache: dict[str, tuple[float, Any]] = {}
+    board_lock = threading.Lock()
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI):
@@ -86,7 +94,11 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
         state["storage"] = storage or Storage(s)
         state["verifier"] = verifier or Verifier(s.auth0_issuer, s.auth0_audience, JWKSCache(s.auth0_jwks_url),
                                                  claim_ns=s.claim_namespace)
+        state["pusher"] = Pusher(s, lambda: state["db"], transport=deepspace_transport)
+        state["pusher"].start()
+        app.state.pusher = state["pusher"]
         yield
+        state["pusher"].close()
         if db is None:
             state["db"].close()
 
@@ -219,6 +231,48 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                 "version": hp.get("version") or hp.get("v") or hp.get("mod_version"),
                 "since": hello["at"], "last_event_at": last, "slots": slots, "jobs_in_progress": queue,
                 "address": s.play_address}
+
+    # ── leaderboards (§10.2, public) ──────────────────────────────────────────────────────────
+
+    def cached(key: str, build: Callable[[], Any]) -> Any:
+        if s.leaderboard_cache_secs <= 0:
+            return build()
+        now = time.monotonic()
+        with board_lock:
+            hit = board_cache.get(key)
+            if hit and hit[0] > now:
+                return hit[1]
+        value = build()
+        with board_lock:
+            board_cache[key] = (now + s.leaderboard_cache_secs, value)
+        return value
+
+    def board_headers(response: Response) -> None:
+        response.headers["Cache-Control"] = f"public, max-age={max(s.leaderboard_cache_secs, 0)}"
+
+    @app.get("/leaderboards")
+    def leaderboards(response: Response):
+        def build():
+            with DB().tx() as c:
+                b = runs.boards(c, list(MISSIONS), runs.TOP_DEFAULT)
+            return {"missions": [{"mission": m, "title": MISSIONS[m]["title"], "rows": b[m]} for m in MISSIONS]}
+        board_headers(response)
+        return cached("all", build)
+
+    @app.get("/leaderboards/{mission}")
+    def leaderboard(mission: str, response: Response, limit: int = 10):
+        if mission not in MISSIONS:
+            raise HTTPException(404, "no such mission")
+        limit = max(1, min(limit, runs.LIMIT_MAX))
+
+        def build():
+            with DB().tx() as c:
+                rows = runs.boards(c, [mission], limit)[mission]
+            m = MISSIONS[mission]
+            return {"mission": mission, "title": m["title"], "par": m["par"], "gold": m["gold"],
+                    "floor_frames": m["floor_frames"], "rows": rows}
+        board_headers(response)
+        return cached(f"{mission}:{limit}", build)
 
     # ── users ─────────────────────────────────────────────────────────────────────────────────
 
@@ -392,7 +446,8 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                 "guest_slot": g["slot"] if g else None, "character_name": g["name"] if g else None}
 
     @app.post("/events", status_code=202)
-    async def post_events(request: Request, _p: Annotated[Principal, Depends(scoped(SCOPE_BRIDGE))]):
+    async def post_events(request: Request, background: BackgroundTasks,
+                          _p: Annotated[Principal, Depends(scoped(SCOPE_BRIDGE))]):
         try:
             body = await request.json()
         except Exception as e:  # noqa: BLE001
@@ -400,16 +455,33 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
         evs = body if isinstance(body, list) else [body]
         if not evs or len(evs) > 500 or not all(isinstance(e, dict) and isinstance(e.get("t"), str) for e in evs):
             raise HTTPException(422, 'expected an event {"t": ...} or a list of up to 500 of them')
+        stored_runs = []
         with DB().tx() as c:
             for e in evs:
-                c.execute("INSERT INTO events (t, payload) VALUES (%s, %s)", (e["t"][:32], Jsonb(e)))
-                if e["t"] == "char":
+                ev = c.execute("INSERT INTO events (t, payload) VALUES (%s, %s) RETURNING id",
+                               (e["t"][:32], Jsonb(e))).fetchone()
+                if e["t"] == "run":   # §10.1: always stored, ranked only when valid and fully linked
+                    stored_runs.append(runs.store(c, event_fields(e), ev["id"]))
+                elif e["t"] == "char":
                     f = event_fields(e)
                     fid = str(f.get("friend") or f.get("friend_id") or f.get("id") or "")
                     m = re.fullmatch(r"guest_([1-8])", fid)
                     if m:
                         c.execute("UPDATE slots SET last_played = now() WHERE n = %s", (int(m.group(1)),))
-        return {"stored": len(evs)}
+        if not stored_runs:
+            return {"stored": len(evs)}
+        for r in stored_runs:
+            if r["ranked"]:
+                log.info("run %s %s ranked", r["id"], r["mission"])
+            else:
+                log.info("run %s %s not ranked: %s", r["id"], r["mission"], r["reason"])
+        if any(r["ranked"] for r in stored_runs):
+            with board_lock:
+                board_cache.clear()
+            if state["pusher"].enabled:
+                background.add_task(state["pusher"].drain)
+        return {"stored": len(evs),
+                "runs": [{k: r[k] for k in ("id", "mission", "ranked", "reason")} for r in stored_runs]}
 
     def roster(c) -> list[dict]:
         return c.execute(

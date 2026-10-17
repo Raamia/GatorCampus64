@@ -40,6 +40,17 @@ class Settings:
     status_stale_secs: int = 0      # > 0: report the server offline when no event arrived for this long
     claim_namespace: str = f"https://{DEFAULT_DOMAIN}/"   # Auth0 Action custom claims: <ns>uf, <ns>nickname
     play_address: str = f"play.{DEFAULT_DOMAIN}:7777"     # shown by /status
+    leaderboard_cache_secs: int = 5  # GET /leaderboards responses are reused for this long (0 = off)
+    # §10.4: push ranked runs to the DeepSpace app. Disabled unless both are set.
+    deepspace_app_url: str | None = None        # app origin, e.g. https://gator-field-board.app.space
+    deepspace_ingest_secret: str | None = None  # shared HMAC secret (DeepSpace secret DEEPSPACE_INGEST_SECRET)
+    deepspace_push_interval: int = 30           # seconds between outbox sweeps (0 = only after new runs)
+    deepspace_push_max_attempts: int = 20       # then the push is marked failed (backoff 30 s doubling, cap 1 h)
+    deepspace_timeout: float = 5.0              # per request, seconds
+
+    @property
+    def deepspace_enabled(self) -> bool:
+        return bool(self.deepspace_app_url and self.deepspace_ingest_secret)
 
 
 def load() -> Settings:
@@ -74,4 +85,10 @@ def load() -> Settings:
         limit_global_hour=_int("LIMIT_GLOBAL_HOUR", 20),
         link_code_ttl=_int("LINK_CODE_TTL", 600),
         status_stale_secs=_int("STATUS_STALE_SECS", 0),
+        leaderboard_cache_secs=_int("LEADERBOARD_CACHE_SECS", 5),
+        deepspace_app_url=_env("DEEPSPACE_APP_URL"),
+        deepspace_ingest_secret=_env("DEEPSPACE_INGEST_SECRET"),
+        deepspace_push_interval=_int("DEEPSPACE_PUSH_INTERVAL", 30),
+        deepspace_push_max_attempts=_int("DEEPSPACE_PUSH_MAX_ATTEMPTS", 20),
+        deepspace_timeout=float(_env("DEEPSPACE_TIMEOUT", "5")),
     )
