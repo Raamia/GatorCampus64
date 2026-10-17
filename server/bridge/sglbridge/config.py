@@ -8,6 +8,7 @@ from pathlib import Path
 
 from .deploy import DEFAULT_RENAME_TOOL
 from .game import default_command
+from .npc import REPO_NPC_DIR
 
 # the repo checkout the bridge runs from: its mods/sgl64 holds the shipped guest placeholders
 REPO_MOD = Path(__file__).resolve().parents[3] / "mods" / "sgl64"
@@ -35,6 +36,12 @@ class Config:
     deploy_poll: float
     deploy_gap: float
     announce_wait: float
+    npc: bool
+    npc_dir: str
+    npc_fake: bool
+    npc_model: str
+    npc_thinking: str
+    gemini_api_key: str | None
 
     @property
     def login_enabled(self) -> bool:
@@ -82,4 +89,10 @@ def from_env(env: dict[str, str] | None = None) -> Config:
         deploy_poll=float(g("SGL_DEPLOY_POLL") or 30),
         deploy_gap=float(g("SGL_DEPLOY_MIN_GAP") or 300),
         announce_wait=float(g("SGL_DEPLOY_ANNOUNCE") or 60),
+        npc=_flag(e.get("SGL_NPC"), True),
+        npc_dir=g("SGL_NPC_DIR") or str(REPO_NPC_DIR),
+        npc_fake=_flag(e.get("SGL_NPC_FAKE"), False),
+        npc_model=g("SGL_NPC_MODEL") or "gemini-3.8-flash",
+        npc_thinking=g("SGL_NPC_THINKING") or "low",
+        gemini_api_key=g("GEMINI_API_KEY"),
     )
