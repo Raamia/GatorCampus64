@@ -286,6 +286,5 @@ def test_push_disabled_keeps_outbox(client, bridge, conn):
 def test_sign_vector():
     """A fixed vector, shared with companion/app/src/server/ingest-routes.test.ts."""
     h = deepspace.sign("s3cret", b'{"runId":"r1"}', timestamp="1760000000", nonce="0" * 32)
-    assert h["X-SGL-Signature"] == "v1=" + hmac.new(
-        b"s3cret", b'v1:1760000000:' + b"0" * 32 + b':{"runId":"r1"}', hashlib.sha256).hexdigest()
+    assert h["X-SGL-Signature"] == "v1=3d19ad467ef59d58cb86868105871536d42b5edbbe0e2c62ef9a8ccacaa1b9d0"
     assert deepspace.backoff(1) == 30 and deepspace.backoff(2) == 60 and deepspace.backoff(30) == 3600
