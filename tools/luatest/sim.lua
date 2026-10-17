@@ -725,6 +725,20 @@ function World:build_env(c)
         return a
     end
     S.soft_reset_camera = function(cam) assert(cam ~= nil) end
+    S.degrees_to_sm64 = function(deg)
+        assert(type(deg) == "number")
+        return math.floor(deg * 65536 / 360 + 0.5)
+    end
+    -- vanilla object animations (sgl_npc.lua; stage tests replace these with their own tables)
+    S.gObjectAnimations = setmetatable({}, { __index = function(_, k) return "ANIM:" .. k end })
+    S.obj_init_animation = function(o, i) raw(o)._anim = i end
+    S.approach_s16_symmetric = function(cur, target, inc)
+        assert(math.type(cur) == "integer" and math.type(target) == "integer" and type(inc) == "number")
+        local d = (target - cur + 32768) % 65536 - 32768
+        if d > inc then d = inc elseif d < -inc then d = -inc end
+        local v = (cur + d + 32768) % 65536 - 32768
+        return math.floor(v)
+    end
     S.set_mario_action = function(m, a, arg)
         raw(m).action = a
         raw(m).actionArg = arg

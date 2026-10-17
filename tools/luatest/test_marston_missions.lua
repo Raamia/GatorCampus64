@@ -1125,7 +1125,7 @@ test("whole mod: every file loads with the Marston missions; /campus marston 3 m
     for _, f in ipairs(Sim.ALL_FILES) do if f == "uf_marston_missions.lua" then has = true end end
     check(has, "uf_marston_missions.lua is a mod file")
     local order = table.concat(Sim.ALL_FILES, " ")
-    check(order:find("sgl_mission.lua swamp_missions.lua uf_lake_missions.lua uf_marston_missions.lua", 1, true) ~= nil,
+    check(order:find("sgl_mission.lua sgl_npc.lua swamp_missions.lua uf_lake_missions.lua uf_marston_missions.lua", 1, true) ~= nil,
         "it loads after sgl_mission.lua (strcmp order): " .. order)
     check(H.env.sgl_mission_get(CCM, 3) ~= nil and H.env.sgl_mission_get(C.LEVEL_JRB, 3) ~= nil, "Marston + Lake missions registered")
     local ok = pcall(Sim.cmd, H, "campus", "marston 3")
