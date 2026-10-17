@@ -34,6 +34,16 @@ function jwtConfig(env: Env): JwtVerifierConfig {
   return { publicKey: env.AUTH_JWT_PUBLIC_KEY, issuer: env.AUTH_JWT_ISSUER }
 }
 
+export function socialLoginUrl(requestUrl: string, authWorkerUrl: string, provider: string): string {
+  const appOrigin = new URL(requestUrl).origin
+  const authOrigin = new URL(authWorkerUrl).origin
+  const callback = new URL('/api/auth/oauth-complete', appOrigin)
+  const login = new URL('/login/social', authOrigin)
+  login.searchParams.set('provider', provider)
+  login.searchParams.set('returnTo', callback.toString())
+  return login.toString()
+}
+
 export async function resolveAuth(req: Request, env: Env): Promise<VerifyResult | null> {
   const header = req.headers.get('Authorization')
   const token = header?.startsWith('Bearer ') ? header.slice(7) : null
@@ -85,12 +95,7 @@ export function registerAuthAndIntegrationRoutes(app: Hono<AppContext>): void {
     const provider = c.req.query('provider')
     if (!provider) return c.json({ error: 'Missing provider' }, 400)
 
-    const appOrigin = new URL(c.req.url).origin
-    const authOrigin = new URL(c.env.AUTH_WORKER_URL).origin
-
-    return c.redirect(
-      `${authOrigin}/login/social?provider=${encodeURIComponent(provider)}&returnTo=${encodeURIComponent(appOrigin)}`,
-    )
+    return c.redirect(socialLoginUrl(c.req.url, c.env.AUTH_WORKER_URL, provider))
   })
 
   app.get('/api/auth/oauth-complete', async (c) => {
