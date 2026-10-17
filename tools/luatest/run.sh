@@ -7,8 +7,9 @@
 #      file names): every read resolves, load-time reads only use earlier files, no shadowed coopdx
 #      names, no global assigned by two files
 #   4. test_missions.lua: multi-client simulation of the mission framework + Swamp missions
-#   5. test_flow.lua: the whole mod (every file) + the real levels/castle_grounds and levels/bob
-#      scripts: doors, warp nodes, return spawns, act select, stars, character select, Study Group
+#   5. test_flow.lua: the whole mod (every file) + the real level scripts of every built stage
+#      (castle_grounds, bob, wf, jrb, ccm, bbh): doors, warp nodes, return spawns, act select, stars,
+#      character select, Study Group
 #   6. check_swamp_points.py: SWAMP_POINTS still match data/uf/swamp_points.json (the built Swamp)
 #      (skipped when tools/.venv is missing)
 #   7. test_reitz_missions.lua: course 2 (wf_reitz_missions.lua): the rooftop climb + window-washer lift,
@@ -26,6 +27,14 @@
 #  12. check_marston_points.py: MARSTON_POINTS vs data/uf/marston_points.json or data/uf/marston_layout.json (layout
 #      sanity: walkable floor, patrol clearance, lifts in the void, kiosk reach), and the built levels/ccm collision
 #      once it exists (skipped when tools/.venv is missing)
+#  13. test_libwest_missions.lua: course 5 (uf_west_library_missions.lua): the all-nighter climb (stair barriers, rolling
+#      ladders, sleepy Boos, the route marker), the coffee run (race, route, cups, stairwell Boos), the co-op quiet-hours
+#      hide and seek (roles, counting, touch / lantern beam / line of sight, noise, sneezes, chime, out of the stacks,
+#      infection, rotation, tallies), act select, levels/bbh contract once built
+#  14. check_libwest_points.py: LIBWEST_POINTS vs data/uf/libwest_points.json or data/uf/libwest_layout.json (layout
+#      sanity: walkable floor, columns, barriers on the doors, ladder decks, star humps, the arena, the coffee run's par),
+#      and the built levels/bbh collision once it exists, incl. a walk through every door anchor and a
+#      floor-crack scan (skipped when tools/.venv is missing)
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
 # Fixtures (regenerate only for a new coopdx version): coopdx_constants_v151.lua,
 # coopdx_api_v151.lua, coopdx_structs_v151.lua (gen_coopdx_*.py, see their headers).
@@ -66,6 +75,9 @@ echo "== test_lake_missions (course 3: Lake Alice)"
 echo "== test_marston_missions (course 4: Marston Science Library)"
 "$LUA" "$HERE/test_marston_missions.lua"
 
+echo "== test_libwest_missions (course 5: Library West After Dark)"
+"$LUA" "$HERE/test_libwest_missions.lua"
+
 PY="$HERE/../.venv/bin/python"
 if [ -x "$PY" ]; then
     echo "== check_swamp_points"
@@ -80,7 +92,10 @@ if [ -x "$PY" ]; then
     echo "== check_marston_points"
     out="$("$PY" -I "$HERE/check_marston_points.py")" || { echo "$out"; exit 1; }
     echo "$out"
+    echo "== check_libwest_points"
+    out="$("$PY" -I "$HERE/check_libwest_points.py")" || { echo "$out"; exit 1; }
+    echo "$out"
 else
-    echo "== check_swamp_points / check_reitz_points / check_lake_points / check_marston_points skipped (no tools/.venv)"
+    echo "== check_swamp_points / check_reitz_points / check_lake_points / check_marston_points / check_libwest_points skipped (no tools/.venv)"
 fi
 echo "== all luatest checks passed"

@@ -10,8 +10,8 @@
 --   door 2 wf              LEVEL_WF  / COURSE_WF   Reitz Union + Engineering (The Hub door)    built (2 stars)
 --   door 3 jrb             LEVEL_JRB / COURSE_JRB  Lake Alice (Newell Hall door)               built (5 stars)
 --   door 4 ccm             LEVEL_CCM / COURSE_CCM  Marston Science Library (Marston door)      built (8 stars; an interior)
---   door 5 bbh             LEVEL_BBH / COURSE_BBH  Library West After Dark (Library West door) reserved
---   door 6 ttc             LEVEL_TTC / COURSE_TTC  Century Tower interior (tower base door)    reserved
+--   door 5 bbh             LEVEL_BBH / COURSE_BBH  Library West After Dark (Library West door) built (11 stars; an interior)
+--   door 6 ttc             LEVEL_TTC / COURSE_TTC  Century Tower interior (tower base door)    reserved (14 stars)
 --
 -- Stars: act k (1..6) mission star = star id k - 1 of the stage's course; the 100-coin star is id 6
 -- (vanilla). Star collection is shared by coopdx (packet_collect_star).
@@ -33,6 +33,12 @@
 -- quiet floor's Shushers guarding 8 textbooks), 3 Study Room Booking (design act 3, co-op); design acts 4 (Lost Lab
 -- Notebook Pages), 5 (Printer Jam) and 6 (Overdue Book Express) come later as 4/5/6. Built: levels/ccm (an interior,
 -- tools/campus/build_interior.py marston).
+-- Library West After Dark: 1 All-Nighter (design 7.5 act 1), 2 Coffee Run (design act 5, a race), 3 Quiet Hours Hide &
+-- Seek (design act 2, co-op / competitive); design acts 3 (The Ghost of Finals Past), 4 (Lights Out) and 6 (Re-shelve the
+-- Glowing Books) come later as 4/5/6. Missions: uf_west_library_missions.lua. Built: levels/bbh (an interior at night,
+-- tools/campus/build_interior.py libwest).
+-- Star curve: doors open at 0, 2, 5, 8, 11, 14. Every built course gives a solo player 3 stars (2 solo acts + 100 coins),
+-- so door k >= 2 needs 3 (k - 1) - 1 and is reachable alone with one star to spare (docs/flow.md 11).
 
 ---------------------------------------------------------------------------------------------
 -- warp nodes (area 1 everywhere)
@@ -92,9 +98,17 @@ SGL_STAGES = {
           "COMING SOON - PRINTER JAM",    -- design 7.3 act 5 "Printer Jam" (no mission yet)
           "COMING SOON - BOOK EXPRESS",   -- design 7.3 act 6 "Overdue Book Express" (no mission yet)
       } },
-    { door = 5, key = "libwest", slot = "bbh", level = LEVEL_BBH, course = COURSE_BBH, stars = 14,
-      name = "LIBRARY WEST AFTER DARK", building = "LIBRARY WEST" },
-    { door = 6, key = "tower", slot = "ttc", level = LEVEL_TTC, course = COURSE_TTC, stars = 20,
+    { door = 5, key = "libwest", slot = "bbh", level = LEVEL_BBH, course = COURSE_BBH, stars = 11,
+      name = "LIBRARY WEST AFTER DARK", building = "LIBRARY WEST",
+      acts = {
+          "ALL-NIGHTER",                  -- uf_west_library_missions.lua libwest_allnighter (lobby to the 6F big window; spawns star id 0)
+          "COFFEE RUN",                   -- uf_west_library_missions.lua libwest_coffee (race: 6F desk -> lobby cup -> back, par 1'00)
+          "QUIET HOURS HIDE & SEEK - 2P", -- uf_west_library_missions.lua libwest_hideseek (2+ players, night librarian vs hiders)
+          "COMING SOON - GHOST HUNT",     -- design 7.5 act 3 "The Ghost of Finals Past" (no mission yet)
+          "COMING SOON - LIGHTS OUT",     -- design 7.5 act 4 "Lights Out" (no mission yet)
+          "COMING SOON - GLOWING BOOKS",  -- design 7.5 act 6 "Re-shelve the Glowing Books" (no mission yet)
+      } },
+    { door = 6, key = "tower", slot = "ttc", level = LEVEL_TTC, course = COURSE_TTC, stars = 14,
       name = "CENTURY TOWER", building = "CENTURY TOWER" },
 }
 

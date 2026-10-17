@@ -1129,7 +1129,12 @@ def elevator(floors=(0.0, 4.2), width=2.4, depth=2.4, door_w=REAL["elevator_door
     roof (default last floor + 3.6). Closed doors are brushed-steel panels; open_floors leave the opening
     (the shaft behind is dark). out_of_order: floor indices that get the OUT OF ORDER sign. labels: floor
     numbers for the indicators (default 1, 2, ...). hollow=True: the shaft has thick walls with inner faces
-    and a pit floor (a wall-kick shaft if a door is open); False: one solid block."""
+    and a pit floor (a wall-kick shaft if a door is open); False: one solid block.
+    Thresholds (hollow): the doorway's floor strip y -wall_t..0 on floors[k], k > 0, is the top of floor k-1's
+    lintel box; floors[0] gets NO threshold floor. If floors[0]'s door is open and the caller's slab does not run
+    under the front wall (e.g. the shaft rect is cut out of it), add a threshold floor there, or that doorway has a
+    wall_t-wide out-of-bounds strip (SM64: a step onto no floor is a wall) and a fall into the pit is a trap
+    (Library West car A, interiors/libwest.py build_elevators). Kept as is so existing builds stay byte-identical."""
     floors = [float(z) for z in floors]
     top = float(top if top is not None else floors[-1] + 3.6)
     P = Prop("elevator", floors=floors, width=width, depth=depth, top=top, col_closed=True)

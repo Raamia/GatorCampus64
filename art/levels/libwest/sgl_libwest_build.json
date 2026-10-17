@@ -1,0 +1,2708 @@
+{
+ "level": "bbh",
+ "stage": "libwest",
+ "generated_by": "tools/campus/build_interior.py libwest (tools/campus/interiors/libwest.py)",
+ "center_m": [
+  38.9,
+  285.6
+ ],
+ "slot": "bbh",
+ "level_script": "level_bbh_entry",
+ "music": "SEQ_LEVEL_SPOOKY",
+ "terrain": "TERRAIN_SPOOKY",
+ "background": null,
+ "kit_tris": {
+  "total": {
+   "visual": 97731,
+   "collision": 11110
+  },
+  "by_group": {
+   "F1": {
+    "visual": 14549,
+    "collision": 1922
+   },
+   "F2": {
+    "visual": 16983,
+    "collision": 2100
+   },
+   "F3": {
+    "visual": 14719,
+    "collision": 1956
+   },
+   "F4": {
+    "visual": 10949,
+    "collision": 1256
+   },
+   "F5": {
+    "visual": 3738,
+    "collision": 336
+   },
+   "F6": {
+    "visual": 8860,
+    "collision": 762
+   },
+   "roof": {
+    "visual": 868,
+    "collision": 114
+   },
+   "halls": {
+    "visual": 12046,
+    "collision": 2664
+   },
+   "backdrop": {
+    "visual": 15019,
+    "collision": 0
+   }
+  }
+ },
+ "warp_nodes": [
+  {
+   "id": "0x0A",
+   "dest_level": "LEVEL_BBH",
+   "dest_area": 1,
+   "dest_node": "0x0A",
+   "note": "stage entry spawn"
+  },
+  {
+   "id": "0xF0",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x25",
+   "note": "star exit -> hub outside door 5"
+  },
+  {
+   "id": "0xF1",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x35",
+   "note": "death / Exit course -> hub outside door 5"
+  }
+ ],
+ "spawn": {
+  "name": "spawn_0x0A",
+  "map_m": [
+   38.9,
+   262.4,
+   0.0
+  ],
+  "game": [
+   0,
+   0,
+   2320
+  ],
+  "floor_m": 1.1920928955078125e-07,
+  "clearance_m": 2.2,
+  "facing_deg": 0.0,
+  "game_yaw": "0x8000",
+  "node": "0x0A",
+  "spawn_object_game": [
+   0,
+   100,
+   2320
+  ],
+  "note": "stage entry spawn (bhvSpinAirborneWarp, MARIO_POS) in the entrance vestibule just inside the locked revolving door, facing north up the escalators; the object hovers 1 m above this floor"
+ },
+ "pickups": {
+  "coins_placed": 206,
+  "coins_with_goombas": 210,
+  "objects": 83,
+  "by_kind": {
+   "coin_line": 30,
+   "coin": 40,
+   "coin_ring": 2,
+   "heart": 4,
+   "1up": 3,
+   "goomba": 4
+  },
+  "skipped": [],
+  "items": [
+   {
+    "kind": "coin_line",
+    "name": "F1 cafe",
+    "map_m": [
+     31.6,
+     263.0,
+     -0.0
+    ],
+    "game": [
+     -730,
+     0,
+     2260
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 coffee bar",
+    "map_m": [
+     47.0,
+     264.0,
+     -0.0
+    ],
+    "game": [
+     810,
+     0,
+     2160
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 1 x37.1",
+    "map_m": [
+     37.1,
+     266.29,
+     1.28
+    ],
+    "game": [
+     -180,
+     128,
+     1931
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 1 x40.5",
+    "map_m": [
+     40.5,
+     266.29,
+     1.28
+    ],
+    "game": [
+     160,
+     128,
+     1931
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 2 x37.1",
+    "map_m": [
+     37.1,
+     268.33,
+     2.46
+    ],
+    "game": [
+     -180,
+     246,
+     1727
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 2 x40.5",
+    "map_m": [
+     40.5,
+     268.33,
+     2.46
+    ],
+    "game": [
+     160,
+     246,
+     1727
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 3 x37.1",
+    "map_m": [
+     37.1,
+     270.38,
+     3.64
+    ],
+    "game": [
+     -180,
+     364,
+     1522
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 3 x40.5",
+    "map_m": [
+     40.5,
+     270.38,
+     3.64
+    ],
+    "game": [
+     160,
+     364,
+     1522
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 4 x37.1",
+    "map_m": [
+     37.1,
+     272.43,
+     4.83
+    ],
+    "game": [
+     -180,
+     483,
+     1317
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 4 x40.5",
+    "map_m": [
+     40.5,
+     272.43,
+     4.83
+    ],
+    "game": [
+     160,
+     483,
+     1317
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 5 x37.1",
+    "map_m": [
+     37.1,
+     274.48,
+     6.01
+    ],
+    "game": [
+     -180,
+     601,
+     1112
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 5 x40.5",
+    "map_m": [
+     40.5,
+     274.48,
+     6.01
+    ],
+    "game": [
+     160,
+     601,
+     1112
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 compact aisle north",
+    "map_m": [
+     38.75,
+     305.4,
+     0.0
+    ],
+    "game": [
+     -15,
+     0,
+     -1980
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 compact aisle south",
+    "map_m": [
+     38.75,
+     296.9,
+     0.0
+    ],
+    "game": [
+     -15,
+     0,
+     -1130
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 Judaica aisle",
+    "map_m": [
+     17.8,
+     304.4,
+     0.0
+    ],
+    "game": [
+     -2110,
+     0,
+     -1880
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 curve bay",
+    "map_m": [
+     38.8,
+     317.6,
+     0.0
+    ],
+    "game": [
+     -10,
+     0,
+     -3200
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 east stacks",
+    "map_m": [
+     66.0,
+     260.2,
+     0.0
+    ],
+    "game": [
+     2710,
+     0,
+     2540
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 west stacks",
+    "map_m": [
+     8.6,
+     275.0,
+     -0.0
+    ],
+    "game": [
+     -3030,
+     0,
+     1060
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 middle band",
+    "map_m": [
+     38.8,
+     279.0,
+     0.0
+    ],
+    "game": [
+     -10,
+     0,
+     660
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 HV stacks (single)",
+    "map_m": [
+     50.4,
+     270.4,
+     0.6
+    ],
+    "game": [
+     1150,
+     60,
+     1520
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F2 arrival hall (line)",
+    "map_m": [
+     38.8,
+     280.3,
+     6.0
+    ],
+    "game": [
+     -10,
+     600,
+     530
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 study room corridor 1",
+    "map_m": [
+     13.5,
+     267.1,
+     6.6
+    ],
+    "game": [
+     -2540,
+     660,
+     1850
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 study room corridor 2",
+    "map_m": [
+     15.2,
+     267.1,
+     6.6
+    ],
+    "game": [
+     -2370,
+     660,
+     1850
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 study room corridor 3",
+    "map_m": [
+     16.9,
+     267.1,
+     6.6
+    ],
+    "game": [
+     -2200,
+     660,
+     1850
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F2 balcony",
+    "map_m": [
+     49.6,
+     273.9,
+     6.0
+    ],
+    "game": [
+     1070,
+     600,
+     1170
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F2 stacks aisle west",
+    "map_m": [
+     28.3,
+     305.4,
+     6.0
+    ],
+    "game": [
+     -1060,
+     600,
+     -1980
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F2 stacks aisle east",
+    "map_m": [
+     49.2,
+     305.4,
+     6.0
+    ],
+    "game": [
+     1030,
+     600,
+     -1980
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F2 curve bay",
+    "map_m": [
+     38.8,
+     317.6,
+     6.0
+    ],
+    "game": [
+     -10,
+     600,
+     -3200
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F2 east windows",
+    "map_m": [
+     70.2,
+     305.0,
+     6.0
+    ],
+    "game": [
+     3130,
+     600,
+     -1940
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F3 south study",
+    "map_m": [
+     38.8,
+     263.2,
+     12.0
+    ],
+    "game": [
+     -10,
+     1200,
+     2240
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "F3 open floor",
+    "map_m": [
+     7.6,
+     271.0,
+     12.0
+    ],
+    "game": [
+     -3130,
+     1200,
+     1460
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F3 east tables",
+    "map_m": [
+     76.0,
+     278.0,
+     12.0
+    ],
+    "game": [
+     3710,
+     1200,
+     760
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F3 periodicals aisle",
+    "map_m": [
+     38.75,
+     305.4,
+     12.0
+    ],
+    "game": [
+     -15,
+     1200,
+     -1980
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F3 microforms aisle",
+    "map_m": [
+     59.67,
+     303.0,
+     12.0
+    ],
+    "game": [
+     2077,
+     1200,
+     -1740
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F3 west tables",
+    "map_m": [
+     6.0,
+     271.0,
+     12.0
+    ],
+    "game": [
+     -3290,
+     1200,
+     1460
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 range top f2_f2_wing_c1r4",
+    "map_m": [
+     9.8,
+     311.9,
+     9.6
+    ],
+    "game": [
+     -2910,
+     960,
+     -2630
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 range top f2_f2_wing_c2r2",
+    "map_m": [
+     22.16,
+     303.1,
+     9.6
+    ],
+    "game": [
+     -1674,
+     960,
+     -1750
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 range top f2_f2_wing_c3r4",
+    "map_m": [
+     32.62,
+     311.9,
+     9.6
+    ],
+    "game": [
+     -628,
+     960,
+     -2630
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 range top f2_f2_wing_c4r2",
+    "map_m": [
+     44.88,
+     303.1,
+     9.6
+    ],
+    "game": [
+     598,
+     960,
+     -1750
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 range top f2_f2_wing_c5r2",
+    "map_m": [
+     55.34,
+     303.1,
+     9.6
+    ],
+    "game": [
+     1644,
+     960,
+     -1750
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 range top f2_f2_wing_c6r2",
+    "map_m": [
+     65.8,
+     303.1,
+     9.6
+    ],
+    "game": [
+     2690,
+     960,
+     -1750
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 range top f2_f2_wing_c6r4",
+    "map_m": [
+     67.75,
+     311.9,
+     9.6
+    ],
+    "game": [
+     2885,
+     960,
+     -2630
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_f3_wing_c2r2",
+    "map_m": [
+     22.16,
+     303.1,
+     15.6
+    ],
+    "game": [
+     -1674,
+     1560,
+     -1750
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_f3_wing_c3r4",
+    "map_m": [
+     32.62,
+     311.9,
+     15.6
+    ],
+    "game": [
+     -628,
+     1560,
+     -2630
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_f3_wing_c4r2",
+    "map_m": [
+     44.88,
+     303.1,
+     15.6
+    ],
+    "game": [
+     598,
+     1560,
+     -1750
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 north window desks",
+    "map_m": [
+     35.0,
+     280.6,
+     18.0
+    ],
+    "game": [
+     -390,
+     1800,
+     500
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 south band",
+    "map_m": [
+     38.8,
+     261.0,
+     18.0
+    ],
+    "game": [
+     -10,
+     1800,
+     2460
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "F4 north terrace",
+    "map_m": [
+     39.0,
+     304.0,
+     18.0
+    ],
+    "game": [
+     10,
+     1800,
+     -1840
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 north terrace east",
+    "map_m": [
+     56.0,
+     292.0,
+     18.0
+    ],
+    "game": [
+     1710,
+     1800,
+     -640
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 north terrace west",
+    "map_m": [
+     21.0,
+     291.0,
+     18.0
+    ],
+    "game": [
+     -1790,
+     1800,
+     -540
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 west terrace",
+    "map_m": [
+     4.5,
+     270.0,
+     18.0
+    ],
+    "game": [
+     -3440,
+     1800,
+     1560
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 east terrace",
+    "map_m": [
+     72.0,
+     270.0,
+     18.0
+    ],
+    "game": [
+     3310,
+     1800,
+     1560
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F5 corridor",
+    "map_m": [
+     38.8,
+     276.0,
+     24.0
+    ],
+    "game": [
+     -10,
+     2400,
+     960
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F6 reading room",
+    "map_m": [
+     38.9,
+     265.6,
+     30.0
+    ],
+    "game": [
+     0,
+     3000,
+     2000
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F6 grad desks",
+    "map_m": [
+     35.0,
+     280.4,
+     30.0
+    ],
+    "game": [
+     -390,
+     3000,
+     520
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F6 lounge",
+    "map_m": [
+     15.2,
+     266.5,
+     30.0
+    ],
+    "game": [
+     -2370,
+     3000,
+     1910
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_e_F1_turn",
+    "map_m": [
+     55.2,
+     259.78,
+     3.6
+    ],
+    "game": [
+     1630,
+     360,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_e_F2_turn",
+    "map_m": [
+     55.2,
+     259.78,
+     9.6
+    ],
+    "game": [
+     1630,
+     960,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_e_F3_turn",
+    "map_m": [
+     55.2,
+     259.78,
+     15.6
+    ],
+    "game": [
+     1630,
+     1560,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_e_F4_turn",
+    "map_m": [
+     55.2,
+     259.78,
+     21.6
+    ],
+    "game": [
+     1630,
+     2160,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_e_F5_turn",
+    "map_m": [
+     55.2,
+     259.78,
+     27.6
+    ],
+    "game": [
+     1630,
+     2760,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_ne_F1_turn",
+    "map_m": [
+     58.95,
+     317.19,
+     3.6
+    ],
+    "game": [
+     2005,
+     360,
+     -3159
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_ne_F2_turn",
+    "map_m": [
+     58.95,
+     317.19,
+     9.6
+    ],
+    "game": [
+     2005,
+     960,
+     -3159
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_ne_F3_turn",
+    "map_m": [
+     58.95,
+     317.19,
+     15.6
+    ],
+    "game": [
+     2005,
+     1560,
+     -3159
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_nw_F1_turn",
+    "map_m": [
+     18.8,
+     317.27,
+     3.6
+    ],
+    "game": [
+     -2010,
+     360,
+     -3167
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_nw_F2_turn",
+    "map_m": [
+     18.8,
+     317.27,
+     9.6
+    ],
+    "game": [
+     -2010,
+     960,
+     -3167
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_nw_F3_turn",
+    "map_m": [
+     18.8,
+     317.27,
+     15.6
+    ],
+    "game": [
+     -2010,
+     1560,
+     -3167
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_w_F1_turn",
+    "map_m": [
+     22.3,
+     259.78,
+     3.6
+    ],
+    "game": [
+     -1660,
+     360,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_w_F2_turn",
+    "map_m": [
+     22.3,
+     259.78,
+     9.6
+    ],
+    "game": [
+     -1660,
+     960,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_w_F3_turn",
+    "map_m": [
+     22.3,
+     259.78,
+     15.6
+    ],
+    "game": [
+     -1660,
+     1560,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_w_F4_turn",
+    "map_m": [
+     22.3,
+     259.78,
+     21.6
+    ],
+    "game": [
+     -1660,
+     2160,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_w_F5_turn",
+    "map_m": [
+     22.3,
+     259.78,
+     27.6
+    ],
+    "game": [
+     -1660,
+     2760,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart F1 lobby",
+    "map_m": [
+     30.8,
+     266.7,
+     1.0
+    ],
+    "game": [
+     -810,
+     100,
+     1890
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart F2 stacks",
+    "map_m": [
+     38.75,
+     309.8,
+     7.0
+    ],
+    "game": [
+     -15,
+     700,
+     -2420
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart F4 north terrace",
+    "map_m": [
+     22.0,
+     300.0,
+     19.0
+    ],
+    "game": [
+     -1690,
+     1900,
+     -1440
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart F6 lounge",
+    "map_m": [
+     15.2,
+     270.8,
+     31.0
+    ],
+    "game": [
+     -2370,
+     3100,
+     1480
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up F5 electrical room",
+    "map_m": [
+     45.0,
+     261.5,
+     24.6
+    ],
+    "game": [
+     610,
+     2460,
+     2410
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up NE bulkhead roof",
+    "map_m": [
+     58.95,
+     313.45,
+     24.6
+    ],
+    "game": [
+     2005,
+     2460,
+     -2785
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up F3 range top f3_f3_wing_c3r4",
+    "map_m": [
+     31.12,
+     311.9,
+     15.6
+    ],
+    "game": [
+     -778,
+     1560,
+     -2630
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba F1 compact stacks",
+    "map_m": [
+     38.75,
+     309.8,
+     0.0
+    ],
+    "game": [
+     -15,
+     0,
+     -2420
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ]
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba F1 east stacks",
+    "map_m": [
+     66.0,
+     269.0,
+     0.0
+    ],
+    "game": [
+     2710,
+     0,
+     1660
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba F2 stacks",
+    "map_m": [
+     59.67,
+     301.0,
+     6.0
+    ],
+    "game": [
+     2077,
+     600,
+     -1540
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ]
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba F3 periodicals",
+    "map_m": [
+     28.3,
+     309.8,
+     12.0
+    ],
+    "game": [
+     -1060,
+     1200,
+     -2420
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ]
+   }
+  ]
+ },
+ "stats": {
+  "partitions": {
+   "F1": {
+    "glass": 0,
+    "solid": 24
+   },
+   "F2": {
+    "glass": 19,
+    "solid": 24
+   },
+   "F3": {
+    "glass": 4,
+    "solid": 27
+   },
+   "F4": {
+    "glass": 6,
+    "solid": 17
+   },
+   "F5": {
+    "glass": 0,
+    "solid": 11
+   },
+   "F6": {
+    "glass": 8,
+    "solid": 15
+   }
+  },
+  "columns": {
+   "F1": 12,
+   "F2": 6,
+   "F3": 18,
+   "F4": 3,
+   "F5": 3,
+   "F6": 3
+  },
+  "troffers": {
+   "F1": {
+    "on": 44,
+    "off": 90
+   },
+   "F2": {
+    "on": 39,
+    "off": 76
+   },
+   "F3": {
+    "on": 51,
+    "off": 99
+   },
+   "F4": {
+    "on": 9,
+    "off": 14
+   },
+   "F5": {
+    "on": 4,
+    "off": 0
+   },
+   "F6": {
+    "on": 9,
+    "off": 15
+   }
+  },
+  "exterior_wall_runs": {
+   "F1": 39,
+   "F2": 39,
+   "F3": 39,
+   "F4": 26,
+   "F5": 26,
+   "F6": 26
+  },
+  "range_bridges": {
+   "F2": 6,
+   "F3": 11
+  },
+  "bridges_skipped_for_ladders": {
+   "F2": [
+    "f2_wing_c3r2",
+    "f2_wing_c5r2"
+   ],
+   "F3": [
+    "f3_wing_c2r2",
+    "f3_wing_c4r4"
+   ]
+  },
+  "parapet_runs": 32,
+  "backdrop_lamp_spots": [
+   [
+    102.79581815399398,
+    419.3415942159557
+   ],
+   [
+    80.82746070539133,
+    419.3802892963006
+   ],
+   [
+    3.0946994841886575,
+    378.8577145121446
+   ],
+   [
+    3.0283570148546683,
+    400.8576144818436
+   ],
+   [
+    2.9620145455206783,
+    422.8575144515426
+   ],
+   [
+    -21.43878098126489,
+    148.71426091276527
+   ],
+   [
+    -21.419139678087696,
+    170.70234075900692
+   ],
+   [
+    -21.49820002047581,
+    192.7021987008724
+   ],
+   [
+    -21.430418884866857,
+    214.73980264376715
+   ],
+   [
+    -21.08449142385952,
+    236.7370827981799
+   ],
+   [
+    -21.90343710294646,
+    277.1927933856384
+   ],
+   [
+    -21.677048931895794,
+    299.19162854561927
+   ],
+   [
+    -21.545974224367672,
+    321.1708460984071
+   ],
+   [
+    -21.454947128991243,
+    343.17065778096264
+   ],
+   [
+    -69.65208111077773,
+    353.7208914583026
+   ],
+   [
+    -47.65380761335521,
+    353.63725463207544
+   ],
+   [
+    116.31437011501122,
+    371.7290790468568
+   ],
+   [
+    94.28498466395278,
+    371.70264806421585
+   ],
+   [
+    72.28675641957875,
+    371.98185069390394
+   ],
+   [
+    -11.751335961563887,
+    145.1374542691941
+   ],
+   [
+    10.065201438101377,
+    144.74390540063445
+   ],
+   [
+    32.06625379742079,
+    144.5933015425607
+   ],
+   [
+    54.0596703654958,
+    144.33629715491674
+   ],
+   [
+    76.07933861125282,
+    144.0509538089452
+   ],
+   [
+    75.30726748624878,
+    223.44500856006573
+   ],
+   [
+    62.321900135588564,
+    205.68606054030937
+   ],
+   [
+    49.129919726304536,
+    187.91375837916897
+   ],
+   [
+    35.5734253016218,
+    170.67645327710812
+   ],
+   [
+    22.04543553307768,
+    153.3367580542408
+   ],
+   [
+    11.935044281743265,
+    192.76378359233706
+   ],
+   [
+    33.928842114717355,
+    192.82700184933375
+   ],
+   [
+    77.89308483528394,
+    193.49583654555926
+   ],
+   [
+    13.575563316032033,
+    221.98223477457583
+   ],
+   [
+    30.96986645581587,
+    208.4663163352928
+   ],
+   [
+    13.013232382769411,
+    247.01985544146615
+   ],
+   [
+    -12.296671427208384,
+    156.6802137896776
+   ],
+   [
+    -12.183424436655201,
+    178.70537814951132
+   ],
+   [
+    -12.132970916101804,
+    200.66928951816362
+   ],
+   [
+    -11.95780830904333,
+    222.71066881113018
+   ],
+   [
+    8.988939225104863,
+    329.7578054293257
+   ],
+   [
+    27.75385215881354,
+    341.2416219809052
+   ],
+   [
+    50.539075302787474,
+    340.02494862016107
+   ],
+   [
+    69.59086890887639,
+    329.02362322769176
+   ],
+   [
+    66.47,
+    343.22
+   ],
+   [
+    82.16635157408092,
+    347.8992314650871
+   ],
+   [
+    -7.3521113095314945,
+    314.6627519410692
+   ],
+   [
+    120.47562777318146,
+    173.82767669520086
+   ],
+   [
+    132.3017552556145,
+    353.39988038382216
+   ],
+   [
+    154.33435011450365,
+    353.78819181242653
+   ],
+   [
+    99.72237440543465,
+    284.9154799578326
+   ],
+   [
+    102.70133495387425,
+    304.21367808335697
+   ],
+   [
+    102.96551394766225,
+    326.2174963304487
+   ],
+   [
+    92.99357464711515,
+    314.28603560157507
+   ],
+   [
+    123.17212900651491,
+    214.61395576717854
+   ],
+   [
+    123.28723537867847,
+    192.60559437102216
+   ],
+   [
+    109.58396256085128,
+    212.14646364904326
+   ],
+   [
+    109.7340399675883,
+    234.1606319514812
+   ],
+   [
+    143.29321292474108,
+    189.0894015517638
+   ],
+   [
+    -7.330592067401373,
+    283.5590399494012
+   ],
+   [
+    -7.1311019093042685,
+    261.5599444298844
+   ],
+   [
+    80.93820054956426,
+    155.93398673912608
+   ],
+   [
+    135.6720752008797,
+    173.2993641449544
+   ],
+   [
+    99.7303956782598,
+    165.15740457315061
+   ],
+   [
+    109.21583768511046,
+    166.29397319753542
+   ],
+   [
+    185.74530876536133,
+    265.7222349390522
+   ],
+   [
+    168.2195547759,
+    309.40813176377515
+   ],
+   [
+    158.4718356726402,
+    317.79082759010197
+   ],
+   [
+    136.47278996054945,
+    317.99573673421605
+   ],
+   [
+    114.4814047422685,
+    318.1301445650341
+   ],
+   [
+    154.49466513195642,
+    334.6065081570833
+   ],
+   [
+    174.74722035976592,
+    328.12736100562034
+   ],
+   [
+    126.98305058018269,
+    345.73360825720215
+   ],
+   [
+    149.26107418016156,
+    344.1168312173412
+   ],
+   [
+    170.49797125871842,
+    346.47421971676994
+   ],
+   [
+    95.38916073826984,
+    148.68784219686881
+   ],
+   [
+    95.34,
+    192.6899330305672
+   ],
+   [
+    95.31550884648846,
+    214.6879646335602
+   ],
+   [
+    95.28645589521282,
+    236.6874932602867
+   ],
+   [
+    -36.1942740411441,
+    206.82597138811286
+   ],
+   [
+    -56.22538857014475,
+    196.65335499124282
+   ],
+   [
+    -56.12711976690515,
+    174.67454892583325
+   ],
+   [
+    -64.48812651477891,
+    251.54928349165175
+   ],
+   [
+    -42.46831827424992,
+    251.4035328448887
+   ],
+   [
+    -52.73523946082765,
+    329.6570527741891
+   ],
+   [
+    -33.83754161577417,
+    322.5043570464724
+   ],
+   [
+    -88.44045139473118,
+    271.57458798073526
+   ],
+   [
+    -88.38952364989312,
+    293.5733922639304
+   ],
+   [
+    -88.35094413884852,
+    315.5733584371164
+   ],
+   [
+    -68.31734392026455,
+    327.90780017572126
+   ],
+   [
+    -48.091419450812616,
+    337.39982683618615
+   ],
+   [
+    -32.117625589343994,
+    342.47726134382845
+   ],
+   [
+    12.632305384358368,
+    353.774249569661
+   ],
+   [
+    34.65343978499788,
+    353.82990147405474
+   ],
+   [
+    56.668019529795004,
+    353.7500848143103
+   ],
+   [
+    48.80923443700876,
+    223.06174375570583
+   ],
+   [
+    49.213763475007376,
+    201.07861378223862
+   ],
+   [
+    58.88910259079275,
+    184.71012723278568
+   ],
+   [
+    75.21635900223961,
+    169.9649348612068
+   ],
+   [
+    49.37381064835219,
+    166.7004858467426
+   ],
+   [
+    -74.15302924742046,
+    362.9968594005175
+   ],
+   [
+    -52.15304523689637,
+    362.970335134573
+   ],
+   [
+    -13.239736008882714,
+    362.85635045108836
+   ],
+   [
+    29.214852150487946,
+    362.61336876686113
+   ],
+   [
+    51.2147793112322,
+    362.55675673679883
+   ],
+   [
+    73.21470647197644,
+    362.5001447067365
+   ],
+   [
+    95.21463363272068,
+    362.4435326766741
+   ],
+   [
+    118.59949074324868,
+    362.36555913496534
+   ],
+   [
+    140.69383600246556,
+    362.24274328797685
+   ],
+   [
+    45.81288133526424,
+    431.91404986488584
+   ],
+   [
+    46.15163540284519,
+    409.9166580721824
+   ],
+   [
+    23.03945175425217,
+    408.6031067848912
+   ],
+   [
+    20.194879899397097,
+    430.9309495328162
+   ],
+   [
+    -27.73081665431738,
+    254.49165794905488
+   ],
+   [
+    -47.10161874280767,
+    177.33143906703512
+   ],
+   [
+    -31.488779057534636,
+    192.8329264180661
+   ],
+   [
+    -34.512160952105475,
+    167.30202189029382
+   ],
+   [
+    -12.505021420370253,
+    167.39519202911924
+   ],
+   [
+    -101.06955635794102,
+    328.7076350769836
+   ],
+   [
+    -56.64956538936287,
+    342.86975817254347
+   ],
+   [
+    -78.64706723561883,
+    343.20128875026705
+   ],
+   [
+    -81.66614929049625,
+    308.8072877176128
+   ],
+   [
+    -81.36978739174876,
+    330.80301345422873
+   ],
+   [
+    -87.75214461819319,
+    340.2404077028627
+   ],
+   [
+    106.19008376358619,
+    353.33785129294324
+   ],
+   [
+    32.93176263450482,
+    223.0415844136413
+   ],
+   [
+    32.795580746130774,
+    157.03869037906978
+   ],
+   [
+    41.077673619778444,
+    247.05085819303113
+   ],
+   [
+    63.07812708679784,
+    246.9704764895742
+   ],
+   [
+    85.0782609471753,
+    246.87832170022588
+   ],
+   [
+    107.07374332515954,
+    246.8250908870201
+   ],
+   [
+    119.43331068554896,
+    336.86033907286856
+   ],
+   [
+    101.10455177929332,
+    266.2712806054793
+   ],
+   [
+    116.39503790993776,
+    282.08902487855977
+   ],
+   [
+    -22.593086816557683,
+    371.82425064084316
+   ],
+   [
+    -44.59306015880527,
+    371.8584988582543
+   ],
+   [
+    -66.59303350105283,
+    371.8927470756654
+   ],
+   [
+    12.640430197525479,
+    395.6769632882293
+   ],
+   [
+    12.296539015564182,
+    417.67427537073087
+   ],
+   [
+    56.99517161399034,
+    389.6344627533185
+   ],
+   [
+    57.31075845608558,
+    411.6321991128873
+   ],
+   [
+    -56.009645518142584,
+    293.2152189211175
+   ],
+   [
+    -57.09038693696598,
+    281.6043155130281
+   ],
+   [
+    -43.804977428385335,
+    294.316956898291
+   ],
+   [
+    142.84679297195584,
+    389.6487422031614
+   ],
+   [
+    -29.460890276451057,
+    361.06623266911913
+   ],
+   [
+    136.29770125698408,
+    373.479374747076
+   ],
+   [
+    152.33967168272684,
+    373.85717335524674
+   ],
+   [
+    -56.55803943507245,
+    271.5113693828436
+   ],
+   [
+    -32.41968697910857,
+    266.7755729229862
+   ],
+   [
+    136.62963197882146,
+    337.556007654207
+   ],
+   [
+    157.6545867720116,
+    248.16350236420453
+   ],
+   [
+    177.40309898198666,
+    302.84890953564127
+   ],
+   [
+    165.76945221305536,
+    285.4104766636233
+   ],
+   [
+    143.76945306750758,
+    285.41660821299496
+   ],
+   [
+    57.853434039015326,
+    255.03501437372609
+   ],
+   [
+    57.391254607614705,
+    319.3467300534349
+   ],
+   [
+    28.656693513670188,
+    371.8841700599336
+   ]
+  ],
+  "century_tower": [
+   -0.91,
+   -0.94
+  ],
+  "backdrop": {
+   "buildings": 26,
+   "trees": 100,
+   "way_segments": 921,
+   "lamps": 157,
+   "ground_rects": 308,
+   "stars": 160
+  },
+  "uv_splits": 431,
+  "moonlit_faces": 2756,
+  "lights": 684
+ },
+ "notes": {
+  "scale": "Plan (x, y) 1:1 to the registered UF floor plans (docs/libwest_layout.md 3); floors 6.0 m apart in the game (real ~4.2 m, estimate): 5.4 m clear for the SM64 camera.",
+  "deviations": [
+   "Floor-to-floor 6.0 m (real ~4.2 m): camera headroom over 2.3-3.0 m stacks; a floor is not one backflip.",
+   "The Plaza Hall: a 25.9 x 12.7 m void over the lobby, 11.4 m tall, behind the real two-storey glass (the real 2nd floor runs up to the glass): the design's 'rotunda' (Act 3 Big Boo) and the night showpiece.",
+   "West / east stair halls 7.0 x 10.0 m (real ~3.2 x 7.2 m), NW / NE halls 7.6 x 10.2 m with a roof door onto the north terrace (only the tower boxes are on the plans); 30 deg switchbacks, 3.15-3.45 m lanes.",
+   "Escalators: two static 30 deg ramps (switched off after hours), bottom 2.6 m further in for the spawn.",
+   "Stacks 1.2 m deep with 3.2 m / 2.86 m aisles (real compact shelving ~0.6 m, no fixed aisles); the 3.6 m rows are built 3.0 m (a jump on top fits under the 5.4 m ceiling), end-cap steps, book-cart bridges.",
+   "Doors 2.0-2.6 m wide, 2.6 m tall; glass partitions run floor to ceiling, so every room is sealed except its door gap (no door leaves are modelled in the gaps).",
+   "The base roof (z 18) is walkable: west, north and east ROOF TERRACES with 1.1 m parapets, reached by the F4 terrace doors and the NW / NE stair-hall roof doors.",
+   "Floor 5 (staff offices, no plan published) is closed except a corridor ring, the staff break room and the electrical room; its stair-hall doors are open gaps in the geometry (the layout's 'locked except Acts 4-5' needs act masks, which static geometry cannot have: the missions add Lua barriers).",
+   "Floor 6 reuses floor 4's core; its plaza-face slots become one big view window (Act 1's star).",
+   "The main elevators' car A is OUT OF ORDER with its doors open on every floor (a wall-kick shaft, as at Marston); car B, the east elevator and the ADA elevator are closed.",
+   "The coffee counter is unbranded and narrower (x 42.0..51.7; the real Starbucks runs to x 58.3).",
+   "Entrance: the revolving door and the north doors are locked after hours; nothing outside is walkable. The revolving door's drum is centred on the glass line (the layout's spot is 1 m inside it).",
+   "The F3 electrical room's south wall moves 0.9 m north (y 267.6 -> 268.5) and the F5 breaker panel to the electrical room's east wall: the layout put them across the west stair hall's F3 door and in the F5 electrical room's doorway. Free columns within 2.2 m of a stair-hall door and in the north wing's stack aisles are left out.",
+   "Rolling ladders, Boos, breakers, the coffee cup and the glowing books are mission devices (Lua), not level geometry; the electrical rooms, the break room and the hide-and-seek spots are in place for them."
+  ],
+  "fix_round": [
+   "Car A's F1 threshold: a 1.7 x 0.2 m floor (+ a metal sill) in the doorway. K.elevator's thresholds are the lintel tops of the storey below, so its lowest floor had none, and the BANK hole in the F1 slab left a 0.2 m strip with no floor (an SM64 invisible wall) that trapped anyone who dropped into the shaft.",
+   "Finals-week clutter (visual only): open laptops glowing at about a third of the study seats (each a small cool light), energy-drink cans, and students asleep on the desks of about one table cluster in six.",
+   "The far F3 range-top 1-up moved 1.5 m along its range: it shared the spot with the range top's coin."
+  ],
+  "escalators": {
+   "first_riser_y": 265.26,
+   "run_m": 10.24,
+   "risers": 34,
+   "ramp_deg": 30.0
+  },
+  "coins_dropped_for_red_coins": [
+   "F2 west wing",
+   "F3 Neuharth",
+   "F2 range top f2_f2_wing_c1r2",
+   "F2 range top f2_f2_wing_c3r2",
+   "F2 range top f2_f2_wing_c4r4",
+   "F3 range top f3_f3_wing_c3r2",
+   "F3 range top f3_f3_wing_c4r4"
+  ],
+  "goombas_not_in_hide_and_seek": [
+   "goomba F1 compact stacks",
+   "goomba F2 stacks",
+   "goomba F3 periodicals"
+  ]
+ },
+ "fog": {
+  "start_m": 200.0,
+  "end_m": 1000.0,
+  "gsSPFogFactor": [
+   31949,
+   -31725
+  ],
+  "color_srgb": [
+   16,
+   22,
+   48
+  ]
+ },
+ "objects": {
+  "libwest F1 visual": {
+   "group": "F1",
+   "tris": 7344,
+   "collision": false
+  },
+  "libwest F1 collision": {
+   "group": "F1",
+   "tris": 973,
+   "collision": true
+  },
+  "libwest F2 visual": {
+   "group": "F2",
+   "tris": 8509,
+   "collision": false
+  },
+  "libwest F2 collision": {
+   "group": "F2",
+   "tris": 1059,
+   "collision": true
+  },
+  "libwest F3 visual": {
+   "group": "F3",
+   "tris": 7379,
+   "collision": false
+  },
+  "libwest F3 collision": {
+   "group": "F3",
+   "tris": 985,
+   "collision": true
+  },
+  "libwest F4 visual": {
+   "group": "F4",
+   "tris": 5492,
+   "collision": false
+  },
+  "libwest F4 collision": {
+   "group": "F4",
+   "tris": 634,
+   "collision": true
+  },
+  "libwest F5 visual": {
+   "group": "F5",
+   "tris": 1869,
+   "collision": false
+  },
+  "libwest F5 collision": {
+   "group": "F5",
+   "tris": 168,
+   "collision": true
+  },
+  "libwest F6 visual": {
+   "group": "F6",
+   "tris": 4430,
+   "collision": false
+  },
+  "libwest F6 collision": {
+   "group": "F6",
+   "tris": 377,
+   "collision": true
+  },
+  "libwest roof visual": {
+   "group": "roof",
+   "tris": 435,
+   "collision": false
+  },
+  "libwest roof collision": {
+   "group": "roof",
+   "tris": 58,
+   "collision": true
+  },
+  "libwest halls visual": {
+   "group": "halls",
+   "tris": 6023,
+   "collision": false
+  },
+  "libwest halls collision": {
+   "group": "halls",
+   "tris": 1462,
+   "collision": true
+  },
+  "libwest backdrop visual": {
+   "group": "backdrop",
+   "tris": 9987,
+   "collision": false
+  }
+ },
+ "export_hygiene": {
+  "geometry_mode_lines_sorted": 174,
+  "trailing_ws_lines": 3,
+  "max_abs_vertex": 29672,
+  "common0_jump_link": true
+ },
+ "collision_repair": {
+  "area_1": {
+   "vertices": [
+    8233,
+    8214
+   ],
+   "welded_vertices": 19,
+   "collapsed_tris": 29,
+   "tjunction_splits": 551,
+   "triangles": [
+    10978,
+    11500
+   ]
+  }
+ },
+ "validation": {
+  "errors": [],
+  "warnings": [],
+  "collision_tris": 11500,
+  "render_tris": 97731,
+  "lua_names": [],
+  "fog_patched": [
+   53,
+   53
+  ]
+ },
+ "level_dir": "mods/sgl64/levels/bbh",
+ "points_file": "data/uf/libwest_points.json",
+ "point_checks": []
+}

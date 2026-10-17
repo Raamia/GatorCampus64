@@ -54,9 +54,28 @@ VENV_PY = os.path.join(ROOT, "tools", ".venv", "bin", "python")
 import build_stage as BS  # noqa: E402  (helpers only: warps, fog, hygiene, common0, probe; its main() does not run)
 import interior_kit as K  # noqa: E402
 
-INTERIORS = {"marston": os.path.join(HERE, "interiors", "marston.py")}
+INTERIORS = {"marston": os.path.join(HERE, "interiors", "marston.py"),
+             "libwest": os.path.join(HERE, "interiors", "libwest.py")}
 SHOWCASE = {"marston": ["marston_lobby", "marston_atrium", "marston_stacks", "marston_study_rooms",
-                        "marston_5th_floor_view"]}
+                        "marston_5th_floor_view"],
+            "libwest": ["libwest_entrance", "libwest_stacks", "libwest_study_floor", "libwest_windows_plaza",
+                        "libwest_top_floor"]}
+# Optional interior-module overrides (added for Course 5; a module without them builds exactly as before):
+#   BACKGROUND_COLOR (linear RGB 0..1, with BACKGROUND None: a solid background), SPAWN_NOTE,
+#   POINTS_COORDINATES_MAP_M, POINTS_NOTE, PREVIEW_OVERVIEW ((camera), (target), vfov) in stage-local metres,
+#   preview_world() (sets the Blender world after interior_kit_demo.setup_render).
+MARSTON_SPAWN_NOTE = ("stage entry spawn (bhvSpinAirborneWarp, MARIO_POS) in the lobby just inside the north "
+                      "doors, facing the atrium; the object hovers 1 m above this floor")
+MARSTON_POINTS_MAP_M = ("x = east, y = north, z = metres above the hub's grade (F2 entrance floor = 0; F1 basement -6, "
+                        "F3 6, F4 12, F5 18, roof 24); origin = Century Tower")
+MARSTON_POINTS_NOTE = ("Anchor points for the Course 4 mission author (docs/game_design.md 7.3), measured on the built "
+                       "collision of levels/ccm. 'actN_' keys use the design act numbers (7.3: 1 Out-of-Order Elevator, "
+                       "2 Quiet Floor, 3 Group Study Room Booking (co-op), 4 Lost Lab Notebook Pages = the 8 'lost "
+                       "textbook' red-coin spots, 5 Printer Jam, 6 Overdue Book Express); course act order is the "
+                       "mission author's (docs/flow.md 5.1: solo acts first, co-op last). Points with a 'check' key did "
+                       "not measure as designed. No level-script star: every mission spawns its own (spawn_default_star "
+                       "from the controller, star id act - 1).")
+MARSTON_OVERVIEW = ((30.0, -45.0, 70.0), (0.0, 2.0, 2.0), 42.0)
 SLIDE_SURFACE = "SURFACE_SLIPPERY"
 
 
@@ -162,7 +181,8 @@ def main():
     setup_fast64()
     scene = L.configure_scene()
     scene.fast64.sm64.fix_coop_fog = True
-    root = L.make_level(f"{slot} Level Root", background=mod.BACKGROUND)
+    root = L.make_level(f"{slot} Level Root", background=mod.BACKGROUND,
+                        background_color=getattr(mod, "BACKGROUND_COLOR", None))
     area = L.make_area(root, 1, music=mod.MUSIC, terrain=mod.TERRAIN, camera="CAMERA_MODE_FREE_ROAM",
                        envfx="ENVFX_MODE_NONE", clip=(BS.NEAR_CLIP, BS.FAR_CLIP))
     area.fast64.sm64.area.set_fog = True
@@ -207,12 +227,12 @@ def main():
                  "floor_m": spawn_floor, "clearance_m": round(spawn_clear, 2), "facing_deg": facing,
                  "game_yaw": "0x%04X" % (int(round(((180.0 - facing) % 360.0) / 360.0 * 65536)) & 0xFFFF),
                  "node": "0x0A", "spawn_object_game": [round(sx * 100), round(spawn_z * 100), round(-sy * 100)],
-                 "note": "stage entry spawn (bhvSpinAirborneWarp, MARIO_POS) in the lobby just inside the north "
-                         "doors, facing the atrium; the object hovers 1 m above this floor"}
+                 "note": getattr(mod, "SPAWN_NOTE", MARSTON_SPAWN_NOTE)}
     import stage_pickups
     Pl = stage_pickups.Placer(S, probe)
     for it in M.pickups:
         k, name, p = it["kind"], it["name"], it["pos"]
+        n_placed = len(Pl.items)
         if k == "coin":
             Pl.coin(name, p)
         elif k == "coin_line":
@@ -225,6 +245,9 @@ def main():
             Pl.one_up(name, p)
         elif k == "goomba":
             Pl.goomba(name, p, it.get("facing", 0.0))
+        if it.get("acts"):      # optional (Course 5 integration): an act-only pickup -> OBJECT_WITH_ACTS
+            for placed in Pl.items[n_placed:]:
+                placed["acts"] = list(it["acts"])
     for it in Pl.items:
         L.add_object(area, it["name"], it["stage"], it["behavior"], it["model"], it["bparams"],
                      BS.yaw_for_facing(it["facing_deg"]), acts=it.get("acts"))
@@ -292,20 +315,13 @@ def main():
               "generated_at": report["built_at"], "stage": key, "level": slot, "slot": slot,
               "level_const": mod.LEVEL_CONST, "course": mod.COURSE_CONST, "door": mod.DOOR, "center_m": [cx, cy],
               "coordinates": {
-                  "map_m": "x = east, y = north, z = metres above the hub's grade (F2 entrance floor = 0; F1 basement -6, "
-                           "F3 6, F4 12, F5 18, roof 24); origin = Century Tower",
+                  "map_m": getattr(mod, "POINTS_COORDINATES_MAP_M", MARSTON_POINTS_MAP_M),
                   "game": "X = (x - cx) * 100, Y = z * 100, Z = -(y - cy) * 100 with (cx, cy) = center_m; Y is the "
                           "ray-cast collision floor (Mario's feet). Objects that hover (stars, coins) add their own offset.",
                   "game_yaw": "0 = faces +Z (south), 0x4000 = east, 0x8000 = north, 0xC000 = west",
                   "floor_m": "collision floor measured by ray-casting the built level (1.5 m above the design height, "
                              "straight down)"},
-              "note": "Anchor points for the Course 4 mission author (docs/game_design.md 7.3), measured on the built "
-                      "collision of levels/ccm. 'actN_' keys use the design act numbers (7.3: 1 Out-of-Order Elevator, "
-                      "2 Quiet Floor, 3 Group Study Room Booking (co-op), 4 Lost Lab Notebook Pages = the 8 'lost "
-                      "textbook' red-coin spots, 5 Printer Jam, 6 Overdue Book Express); course act order is the "
-                      "mission author's (docs/flow.md 5.1: solo acts first, co-op last). Points with a 'check' key did "
-                      "not measure as designed. No level-script star: every mission spawns its own (spawn_default_star "
-                      "from the controller, star id act - 1).",
+              "note": getattr(mod, "POINTS_NOTE", MARSTON_POINTS_NOTE),
               "spawn": spawn_out, "warp_nodes": warp_nodes, "stars": []}
     points.update(measured)
     points["pickups"] = pickups
@@ -324,7 +340,7 @@ def main():
     # ---- 7. previews
     if o["previews"]:
         pv = o["previews_dir"] or os.path.join(art_dir, "previews")
-        paths = render_previews(M, objs, pv, cx, cy)
+        paths = render_previews(M, objs, pv, cx, cy, mod=mod)
         sc = os.path.join(os.path.dirname(pv.rstrip("/")), "showcase")
         os.makedirs(sc, exist_ok=True)
         for name in SHOWCASE.get(key, []):
@@ -335,8 +351,10 @@ def main():
     print(f"SGL: done in {time.time() - t0:.1f}s")
 
 
-def render_previews(M, objs, out, cx, cy):
-    """Eevee previews with preview materials (texture x baked vertex shade), a 1.6 m Mario stand-in."""
+def render_previews(M, objs, out, cx, cy, mod=None):
+    """Eevee previews with preview materials (texture x baked vertex shade), a 1.6 m Mario stand-in. The module
+    may set the world (preview_world) and the overview camera (PREVIEW_OVERVIEW); the overview files are named
+    <key>_overview.png / <key>_collision.png."""
     import interior_kit_demo as D
     os.makedirs(out, exist_ok=True)
     for ob in objs:
@@ -352,6 +370,8 @@ def render_previews(M, objs, out, cx, cy):
             c.objects.unlink(ob)
         (vis_c if not ob.ignore_render else col_c).objects.link(ob)
     D.setup_render()
+    if mod is not None and hasattr(mod, "preview_world"):
+        mod.preview_world()
     D.set_visible(col_c, False)
     mario_c = D.new_collection("PV mario")
     paths = []
@@ -366,13 +386,15 @@ def render_previews(M, objs, out, cx, cy):
     for ob in list(mario_c.objects):
         bpy.data.objects.remove(ob, do_unlink=True)
     # cutaway overview (back faces culled: the near walls vanish) + collision overview
-    cam = D.camera("marston_overview", (30.0, -45.0, 70.0), (0.0, 2.0, 2.0), 42.0)
+    key = getattr(mod, "KEY", "marston") if mod is not None else "marston"
+    ov_loc, ov_tgt, ov_fov = getattr(mod, "PREVIEW_OVERVIEW", MARSTON_OVERVIEW) if mod is not None else MARSTON_OVERVIEW
+    cam = D.camera(f"{key}_overview", ov_loc, ov_tgt, ov_fov)
     cam.data.clip_end = 1200.0
-    paths.append(D.render(os.path.join(out, "marston_overview.png"), cam, (1600, 900)))
+    paths.append(D.render(os.path.join(out, f"{key}_overview.png"), cam, (1600, 900)))
     D.set_visible(vis_c, False)
     D.set_visible(col_c, True)
-    cam = D.camera("marston_collision", (30.0, -45.0, 70.0), (0.0, 2.0, 2.0), 42.0)
-    paths.append(D.render(os.path.join(out, "marston_collision.png"), cam, (1600, 900)))
+    cam = D.camera(f"{key}_collision", ov_loc, ov_tgt, ov_fov)
+    paths.append(D.render(os.path.join(out, f"{key}_collision.png"), cam, (1600, 900)))
     D.set_visible(col_c, False)
     D.set_visible(vis_c, True)
     return paths

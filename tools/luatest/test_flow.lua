@@ -1,6 +1,6 @@
 -- Integration tests: the WHOLE mod (every mods/sgl64/*.lua, in coopdx's load order) plus the REAL
--- generated level scripts (levels/castle_grounds, levels/bob, levels/wf, levels/jrb, levels/ccm) in the offline coopdx
--- simulation.
+-- generated level scripts (levels/castle_grounds, levels/bob, levels/wf, levels/jrb, levels/ccm, levels/bbh) in the
+-- offline coopdx simulation.
 -- The built stages are the ones on disk (Sim.built_on_disk), as in the game.
 -- What it pins down (docs/flow.md):
 --   * every file loads with strict globals in strcmp order; no two files register the same chat
@@ -42,21 +42,22 @@ local function test(name, fn)
     print((failed == before and "PASS " or "FAIL ") .. name)
 end
 
-local HUB, BOB, WF, JRB, CCM = C.LEVEL_CASTLE_GROUNDS, C.LEVEL_BOB, C.LEVEL_WF, C.LEVEL_JRB, C.LEVEL_CCM
+local HUB, BOB, WF, JRB, CCM, BBH = C.LEVEL_CASTLE_GROUNDS, C.LEVEL_BOB, C.LEVEL_WF, C.LEVEL_JRB, C.LEVEL_CCM, C.LEVEL_BBH
 local MS = { IDLE = 0, WAITING = 1, INTRO = 2, ACTIVE = 3, SUCCESS = 4, FAILED = 5, DONE = 6 }
 local HUB_SCRIPT = assert(Sim.level_script("castle_grounds"), "levels/castle_grounds/script.c")
 local BOB_SCRIPT = assert(Sim.level_script("bob"), "levels/bob/script.c")
 local WF_SCRIPT = Sim.level_script("wf")      -- nil until course 2 is built
 local JRB_SCRIPT = Sim.level_script("jrb")    -- nil until course 3 is built
 local CCM_SCRIPT = Sim.level_script("ccm")    -- nil until course 4 is built
+local BBH_SCRIPT = Sim.level_script("bbh")    -- nil until course 5 is built
 -- the contract table of docs/flow.md section 2 (door -> slot, level, stars to open)
 local CONTRACT = {
     { door = 1, slot = "bob", level = "LEVEL_BOB", stars = 0 },
     { door = 2, slot = "wf", level = "LEVEL_WF", stars = 2 },
     { door = 3, slot = "jrb", level = "LEVEL_JRB", stars = 5 },
     { door = 4, slot = "ccm", level = "LEVEL_CCM", stars = 8 },
-    { door = 5, slot = "bbh", level = "LEVEL_BBH", stars = 14 },
-    { door = 6, slot = "ttc", level = "LEVEL_TTC", stars = 20 },
+    { door = 5, slot = "bbh", level = "LEVEL_BBH", stars = 11 },
+    { door = 6, slot = "ttc", level = "LEVEL_TTC", stars = 14 },
 }
 
 local function full_world(opts)
@@ -267,10 +268,19 @@ test("single player: hub -> character select -> door -> act 1 -> star -> back ou
     end
     check(#flames == 12 and shown == 10, "two flames per door, hidden only at the open door (" .. shown .. " shown)")
 
-    -- Library West: coming soon
+    -- Library West: built (Course 5) and LOCKED at 0 stars (coming soon while levels/bbh is not built)
     at_door(H, 5, 50)
     w:step(3)
-    check(Sim.find(H.popups, "LIBRARY WEST AFTER DARK.-coming soon %(opens at 14 stars%)") ~= nil, "Library West: coming soon popup")
+    if BBH_SCRIPT ~= nil then
+        check(Sim.find(H.popups, "Locked!.-LIBRARY WEST AFTER DARK needs 11 stars %(you have 0%)") ~= nil, "Library West: locked popup (11 stars)")
+    else
+        check(Sim.find(H.popups, "LIBRARY WEST AFTER DARK.-coming soon %(opens at 11 stars%)") ~= nil, "Library West: coming soon popup")
+    end
+    check(H.action ~= C.ACT_DISAPPEARED and H.level == HUB, "stays in the hub")
+    -- Century Tower: not built yet, coming soon
+    at_door(H, 6, 50)
+    w:step(3)
+    check(Sim.find(H.popups, "CENTURY TOWER.-coming soon %(opens at 14 stars%)") ~= nil, "Century Tower: coming soon popup (14 stars)")
     check(H.action ~= C.ACT_DISAPPEARED and H.level == HUB, "stays in the hub")
 
     -- the Auditorium door label, then walk in
@@ -695,6 +705,178 @@ test("door 4: Marston (8 stars) -> Marston Science Library act 1 -> star -> back
     w:step(3)
     check(H.level == CCM and H.act == 2, "/campus marston 2 -> Marston act 2")
     check(#Sim.objects_with(H, env.id_bhvSglMarstonSolid) == 0, "act 2: no stair barriers")
+end)
+
+test("door 5: Library West (11 stars) -> Library West After Dark act 1 -> star -> back outside the Library West door", function()
+    if BBH_SCRIPT == nil then
+        print("  (levels/bbh not built: skipped)")
+        return
+    end
+    -- the engine names the Library West missions use (a Boo's touch, the act 3 lantern's ray, the optional lantern light)
+    -- and levels.lua's interior camera: stubbed per client as in test_libwest_missions.lua's prep, which tests the acts
+    local function libwest_stubs(c)
+        c.stubs.hurt_and_set_mario_action = function(m, action) raw(m).action = action return 1 end
+        c.stubs.collision_find_surface_on_ray = function(x, y, z, dx, dy, dz)
+            return { surface = nil, hitPos = { x = x + dx, y = y + dy, z = z + dz } }
+        end
+        c.stubs.obj_init_animation = function(o, i) raw(o)._anim = i end
+        c.stubs.gObjectAnimations = { toad_seg6_anims_0600FB58 = "ANIM:toad", bookend_seg5_anims_05002540 = "ANIM:bookend",
+            swoop_seg6_anims_060070D0 = "ANIM:swoop", sushi_seg5_anims_0500AE54 = "ANIM:sushi" }
+        c.cam = { zoomed_in_dist = 900, zoomed_out_dist = 1400, zoomed_in_height = 300, zoomed_out_height = 450, collisions = 0 }
+        for f in pairs(c.cam) do
+            c.stubs["camera_romhack_get_" .. f] = function() return c.cam[f] end
+            c.stubs["camera_romhack_set_" .. f] = function(v) assert(math.type(v) == "integer"); c.cam[f] = v end
+        end
+        for i = 0, C.MAX_PLAYERS - 1 do raw(c.ms[i]).marioBodyState = { modelState = 0 } end
+        local m = raw(c.ms[0])
+        m.invincTimer, m.hurtCounter, m.flags = 0, 0, 0
+    end
+    -- 10 stars, alone (acts 1-2 + the 100-coin star of courses 1-3, Marston act 1): built but LOCKED
+    local SOLO = 0x43
+    local w = full_world({ starFlags = { [C.COURSE_BOB] = SOLO, [C.COURSE_WF] = SOLO, [C.COURSE_JRB] = SOLO,
+        [C.COURSE_CCM] = 0x01 } })
+    local H = w:connect("Host")
+    H.strStorage.friend = "josh"
+    libwest_stubs(H)
+    local signs = {}
+    H.stubs.smlua_text_utils_dialog_replace = function(id, _, _, _, _, text) signs[id] = text end
+    w:step(3)
+    w:warp(H, HUB, 1, 0)
+    w:seconds(2)
+    local env = H.env
+    local function sign_says(building, line)
+        for _, t in pairs(signs) do
+            if t:find(building, 1, true) == 1 and t:find(line, 1, true) ~= nil then return true end
+        end
+        return false
+    end
+    check(sign_says("LIBRARY WEST", "Opens at 11 stars.") and sign_says("LIBRARY WEST", "Walk into the door"),
+        "Library West's signpost: opens at 11 stars, walk in (built)")
+    check(sign_says("CENTURY TOWER", "Opens at 14 stars.") and sign_says("CENTURY TOWER", "Coming soon!"),
+        "Century Tower's signpost: opens at 14 stars, coming soon (the star curve 0 / 2 / 5 / 8 / 11 / 14)")
+    check(env.sgl_stage_ready(env.sgl_stage_by_door(5)), "levels/bbh is ours: course 5 is built")
+    check(env.sgl_total_stars() == 10, "10 stars")
+    check(env.sgl_next_stage() ~= env.sgl_stage_by_door(5), "Library West locked: the NEXT stage is not Library West")
+    at_door(H, 5, 600)
+    w:step(2)
+    check(Sim.hud_has(H, "LIBRARY WEST AFTER DARK") and Sim.hud_has(H, "LOCKED %- 11 stars %(you have 10%)"), "door 5 label: LOCKED")
+    at_door(H, 5, 50)
+    w:step(3)
+    check(Sim.find(H.popups, "Locked!.-LIBRARY WEST AFTER DARK needs 11 stars %(you have 10%)") ~= nil, "locked popup")
+    check(H.action ~= C.ACT_DISAPPEARED and H.level == HUB, "a locked door does not open")
+
+    -- 12 stars, alone (acts 1-2 + the 100-coin star of courses 1-4: what a solo player can earn): open, the hint skips
+    -- the four co-op act 3s and points at the Library West door
+    w = full_world({ starFlags = { [C.COURSE_BOB] = SOLO, [C.COURSE_WF] = SOLO, [C.COURSE_JRB] = SOLO, [C.COURSE_CCM] = SOLO } })
+    H = w:connect("Host")
+    H.strStorage.friend = "josh"
+    libwest_stubs(H)
+    w:step(3)
+    w:warp(H, HUB, 1, 0)
+    w:seconds(2)
+    env = H.env
+    check(env.sgl_total_stars() == 12, "12 stars (solo)")
+    check(Sim.find(H.popups, "Walk into the Library West door to enter LIBRARY WEST AFTER DARK!") ~= nil,
+        "first hub visit: door hint names the Library West door")
+    check(Sim.hud_has(H, "NEXT: LIBRARY WEST AFTER DARK") and Sim.hud_has(H, "LIBRARY WEST door"), "hub NEXT panel: Library West")
+    local model5
+    for _, o in ipairs(Sim.objects_with(H, env.id_bhvSglDoor)) do
+        if ((raw(o).oBehParams >> 24) & 0xFF) == 5 then model5 = raw(o)._model end
+    end
+    check(model5 == C.E_MODEL_STAR, "door 5: gold star (open)")
+    at_door(H, 5, 600)
+    w:step(2)
+    check(Sim.hud_has(H, "LIBRARY WEST AFTER DARK") and Sim.hud_has(H, "Walk in!"), "door 5 label: Walk in!")
+    at_door(H, 5, 50)
+    w:step(2)
+    local m = H.ms[0]
+    check(H.action == C.ACT_DISAPPEARED and raw(m).actionArg == (C.WARP_OP_WARP_OBJECT << 16) + 2, "door 5: vanilla warp-object entry")
+    local used = raw(m).usedObj
+    check(used ~= nil and ((raw(used).oBehParams >> 16) & 0xFF) == 0x15, "usedObj carries hub node 0x15")
+    local lv, area, node = follow_node(HUB_SCRIPT, 0x15)
+    check(lv == BBH and area == 1 and node == 0x0A, "hub 0x15 -> BBH 0x0A")
+    local acts = Sim.selectable_acts(w.starFlags[C.COURSE_BBH] or 0)
+    check(#acts == 1 and acts[1] == 1, "act select offers act 1 only")
+    H.action = C.ACT_IDLE
+    w:warp(H, lv, area, acts[1])
+    local sp0 = H.levelSpawns[0x0A]
+    check(sp0 and sp0.bhv == "bhvSpinAirborneWarp", "BBH entry spawn 0x0A (spin-in)")
+    check(sp0 and sp0.yaw == 0x8000, "BBH spawn faces north (into the building, up the escalators)")
+    H.pos.x, H.pos.y, H.pos.z = sp0.x, sp0.y - 100, sp0.z
+    w:step(5)
+    check(Sim.hud_has(H, "LIBRARY WEST AFTER DARK %- ACT 1") and Sim.hud_has(H, "ALL%-NIGHTER"), "act 1 banner")
+    check(Sim.stars_of(H, 0) == 0, "no level-script star: the mission spawns act 1's")
+    check(Sim.find(H.console, "sleeps") == nil, "the mission's geometry probes pass on the real spawn")
+    local P = env.LIBWEST_POINTS
+    check(sp0.x == P.spawn.x and sp0.z == P.spawn.z and sp0.y - 100 == P.spawn.y, "LIBWEST_POINTS.spawn = the level script's spawn")
+    Sim.cmd(H, "campus", "where")
+    -- the spawn in campus map metres (stages.json library_west_interior centre (38.9, 285.6): x = X/100 + 38.9, y = -Z/100 + 285.6)
+    local mx, my = sp0.x / 100 + 38.9, -sp0.z / 100 + 285.6
+    check(Sim.find(H.chat, string.format("campus map: %.1f m east, %.1f m north", mx, my):gsub("%-", "%%-"):gsub("%.", "%%.")) ~= nil,
+        string.format("/campus where: campus map metres at the spawn (%.1f, %.1f)", mx, my))
+    check(math.abs(mx - 38.9) < 0.6 and math.abs(my - 262.4) < 0.6, "BBH spawn in the vestibule (layout entrance.spawn)")
+    -- the hub door the player walked through and the spawn are the same place on the campus map (the warp is a teleport)
+    local d5 = HUB_DOORS[5]
+    local hx, hy = d5.x / 100 - 45, -d5.z / 100 + 98
+    check(math.abs(hx - mx) < 1.5 and math.abs(hy - my) < 5, string.format("spawn %.1f m from the hub's door 5 on the map",
+        math.sqrt((hx - mx) ^ 2 + (hy - my) ^ 2)))
+    w:seconds(3.5)
+    check(state(H) == MS.ACTIVE, "mission active")
+    local camBBH = env.SGL_STAGE_CAMERA[BBH]
+    check(camBBH ~= nil and H.cam.zoomed_in_dist == camBBH.inDist and H.cam.zoomed_out_height == camBBH.outHeight
+        and H.cam.collisions == 1, "inside Library West: the interior rom-hack camera (SGL_STAGE_CAMERA[LEVEL_BBH], collision on)")
+    check(#Sim.objects_with(H, env.id_bhvSglLibwestSolid) == #P.stair_doors + #P.staff_doors,
+        "act 1: the stair barriers and the 5th floor's staff-only doors stand")
+    for _, p in ipairs({ P.esc_top, { x = 0, y = P.y_f4, z = -1500 }, P.f6_door_w, P.climb_goal }) do
+        H.pos.x, H.pos.y, H.pos.z = p.x, p.y, p.z
+        w:step(3)
+    end
+    check(state(H) == MS.SUCCESS, "at the 6th floor's big window: success")
+    w:step(3)
+    check(#H.starSpawns == 1 and Sim.stars_of(H, 0) == 1, "one star, id 0")
+    local star = Sim.objects_with(H, C.id_bhvStarSpawnCoordinates)[1]
+    Sim.run_hooks(H, C.HOOK_ON_INTERACT, H.ms[0], star, C.INTERACT_STAR_OR_KEY, true)
+    w.starFlags[C.COURSE_BBH] = (w.starFlags[C.COURSE_BBH] or 0) | (1 << ((raw(star).oBehParams >> 24) & 0xFF))
+    raw(star).activeFlags = C.ACTIVE_FLAG_DEACTIVATED
+    w:step(3)
+    check(state(H) == MS.DONE, "mission DONE")
+    -- star exit: BBH 0xF0 -> hub 0x25, outside the Library West door
+    local lv2, a2, n2 = follow_node(BBH_SCRIPT, 0xF0)
+    check(lv2 == HUB and n2 == 0x25, "BBH 0xF0 -> hub 0x25")
+    w:warp(H, lv2, a2, 0)
+    local sp = H.levelSpawns[n2]
+    check(sp ~= nil and sp.bhv == "bhvPaintingStarCollectWarp", "hub 0x25 is a star-return spawn")
+    check(math.sqrt((sp.x - d5.x) ^ 2 + (sp.z - d5.z) ^ 2) < 400, "0x25 is right outside the Library West door")
+    H.pos.x, H.pos.y, H.pos.z = sp.x, sp.y - 80, sp.z
+    H.face.y = sp.yaw
+    w:step(5)
+    check(H.action ~= C.ACT_DISAPPEARED, "landing outside Library West does not re-enter the door")
+    check(H.cam.zoomed_in_dist == 900 and H.cam.zoomed_out_height == 450 and H.cam.collisions == 0,
+        "back in the hub: the player's own camera settings")
+    check(env.sgl_total_stars() == 13, "13 stars")
+    acts = Sim.selectable_acts(w.starFlags[C.COURSE_BBH])
+    check(acts[#acts] == 2 and env.sgl_mission_get(BBH, 2).id == "libwest_coffee", "next visit: act 2 = COFFEE RUN")
+    check(env.sgl_next_stage().key == "libwest", "the hint stays on Library West (act 2)")
+    -- death / Exit course: BBH 0xF1 -> hub 0x35, the same spot
+    local lv3, _, n3 = follow_node(BBH_SCRIPT, 0xF1)
+    check(lv3 == HUB and n3 == 0x35 and H.levelSpawns[0x35].bhv == "bhvPaintingDeathWarp"
+        and H.levelSpawns[0x35].x == sp.x and H.levelSpawns[0x35].z == sp.z, "BBH 0xF1 -> hub 0x35 (same spot)")
+    -- /campus libwest 2 from the host: straight into act 2 (the door lock and act select skipped, as for the other stages)
+    Sim.cmd(H, "campus", "libwest 2")
+    w:step(3)
+    check(H.level == BBH and H.act == 2, "/campus libwest 2 -> Library West act 2")
+    w:step(3)
+    check(#Sim.objects_with(H, env.id_bhvSglLibwestSolid) == #P.staff_doors, "act 2: only the staff-only doors, no stair barriers")
+    -- the level's Goombas: none in act 3's hide-and-seek arena in act 3 (OBJECT_WITH_ACTS), all four in acts 1 and 2
+    local function goombas(act)
+        local n = 0
+        for _, o in ipairs(BBH_SCRIPT.objects) do
+            if o.bhv == "bhvGoomba" and (o.acts & (1 << (act - 1))) ~= 0 then n = n + 1 end
+        end
+        return n
+    end
+    check(goombas(1) == 4 and goombas(2) == 4 and goombas(3) == 1, string.format(
+        "Goombas: 4 in acts 1-2, only the one outside the hide-and-seek arena in act 3 (%d / %d / %d)", goombas(1), goombas(2), goombas(3)))
 end)
 
 test("coming soon acts: free roam notice, no mission, no star, no invite; exit works", function()

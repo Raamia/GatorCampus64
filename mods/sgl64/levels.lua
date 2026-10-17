@@ -11,6 +11,8 @@
 --   levels/jrb/             course 3, Lake Alice, tools/campus/build_stage.py lake_alice (missions: uf_lake_missions.lua)
 --   levels/ccm/             course 4, Marston Science Library (an interior), tools/campus/build_interior.py marston
 --                           (missions: uf_marston_missions.lua)
+--   levels/bbh/             course 5, Library West After Dark (an interior at night), tools/campus/build_interior.py
+--                           libwest (missions: uf_west_library_missions.lua)
 -- coopdx compiles each folder into levels/level_<slot>_entry.lvl at launch and the .lvl replaces the
 -- vanilla level. sgl_test stays a custom (non-vanilla) test level, registered below.
 --
@@ -139,9 +141,9 @@ ENGINEERING", 2, 2)
 SGL_HUB_SIGN_NEWELL_HALL = door_sign("NEWELL HALL", "LAKE ALICE", 5, 3)
 SGL_HUB_SIGN_MARSTON = door_sign("MARSTON SCIENCE LIBRARY", "MARSTON", 8, 4)
 SGL_HUB_SIGN_LIBRARY_WEST = door_sign("LIBRARY WEST", "LIBRARY WEST\
-AFTER DARK", 14, 5)
+AFTER DARK", 11, 5)
 SGL_HUB_SIGN_CENTURY_TOWER = door_sign("CENTURY TOWER", "CENTURY TOWER\
-(INSIDE)", 20, 6)
+(INSIDE)", 14, 6)
 -- no stage slot yet (bonus slide, finale): always "coming soon"
 SGL_HUB_SIGN_SMATHERS = door_sign("SMATHERS LIBRARY", "SMATHERS STACKS\
 SLIDE", 3, nil)
@@ -484,8 +486,12 @@ end
 -- survives the engine re-initialising them), camera collision included; the player's own values are
 -- saved on arrival and restored on leaving.
 ---------------------------------------------------------------------------------------------
+-- Library West (the same 5.4 m rooms, 3.0 m stack tops): the same numbers. Course 5 integration, the Marston review's
+-- camera model on the built levels/bbh (395 anchor spots x 8 yaws): zoomed in, the camera ends above the next slab in
+-- 0.3 % of cases (coopdx's 900 / 300: 3.6 %) and sees Mario unobstructed in 70 % (55 %).
 SGL_STAGE_CAMERA = {
     [LEVEL_CCM] = { inDist = 650, outDist = 1000, inHeight = 220, outHeight = 330, collisions = 1 },   -- u32s, u8
+    [LEVEL_BBH] = { inDist = 650, outDist = 1000, inHeight = 220, outHeight = 330, collisions = 1 },
 }
 local sCamSaved = nil
 
@@ -658,6 +664,7 @@ SGL_MAP_CENTERS = {
     [LEVEL_WF] = { -470, -293 },      -- Reitz & Engineering (stages.json reitz_eng window centre; data/uf/reitz_points.json)
     [LEVEL_JRB] = { -1760, -660 },    -- Lake Alice (stages.json lake_alice window centre; data/uf/lake_points.json)
     [LEVEL_CCM] = { -59.6, -98.9 },   -- Marston Science Library (stages.json marston centre_m; data/uf/marston_points.json)
+    [LEVEL_BBH] = { 38.9, 285.6 },    -- Library West (stages.json library_west_interior center_m; data/uf/libwest_points.json)
 }
 
 local function warp_hub()
@@ -786,4 +793,4 @@ hook_event(HOOK_MARIO_UPDATE, lives_mario_update)
 hook_event(HOOK_ON_HUD_RENDER, door_hud)
 hook_event(HOOK_UPDATE, hub_hint_update)
 hook_event(HOOK_ON_HUD_RENDER, hub_hint_hud)
-hook_chat_command("campus", "where | list | hub | back | test | swamp | reitz | alice | marston [act] [me] - Super Gatorlator 64 levels", on_campus_command)
+hook_chat_command("campus", "where | list | hub | back | test | swamp | reitz | alice | marston | libwest [act] [me] - Super Gatorlator 64 levels", on_campus_command)

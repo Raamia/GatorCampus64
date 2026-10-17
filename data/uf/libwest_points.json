@@ -1,0 +1,10618 @@
+{
+ "schema": "sgl64.libwest_points/1",
+ "generated_by": "tools/campus/build_interior.py libwest (tools/campus/interiors/libwest.py)",
+ "stage": "libwest",
+ "level": "bbh",
+ "slot": "bbh",
+ "level_const": "LEVEL_BBH",
+ "course": "COURSE_BBH",
+ "door": 5,
+ "center_m": [
+  38.9,
+  285.6
+ ],
+ "coordinates": {
+  "map_m": "x = east, y = north, z = metres above the hub's grade (F1 lobby floor = 0; F2 6, F3 12, F4 + roof terraces 18, F5 24, F6 30, tower eaves 36); origin = Century Tower",
+  "game": "X = (x - cx) * 100, Y = z * 100, Z = -(y - cy) * 100 with (cx, cy) = center_m; Y is the ray-cast collision floor (Mario's feet). Objects that hover (stars, coins) add their own offset.",
+  "game_yaw": "0 = faces +Z (south), 0x4000 = east, 0x8000 = north, 0xC000 = west",
+  "floor_m": "collision floor measured by ray-casting the built level (1.5 m above the design height, straight down)"
+ },
+ "note": "Anchor points for the Course 5 mission author (docs/game_design.md 7.5), measured on the built collision of levels/bbh. 'actN_' keys use the design act numbers (7.5: 1 All-Nighter, 2 Quiet Hours Hide-and-Seek (co-op), 3 The Ghost of Finals Past, 4 Lights Out, 5 Coffee Run, 6 Re-shelve the Glowing Books); course act order is the mission author's (docs/flow.md 5.1: solo acts first, co-op last; suggested 1 = design 1, 2 = design 3, 3 = design 2). Points with a 'check' key did not measure as designed. No level-script star: every mission spawns its own (spawn_default_star from the controller, star id act - 1). Act-only devices (stair barriers, rolling ladders, Boos, breakers, the cup) are Lua objects: static level geometry cannot be act-masked.",
+ "spawn": {
+  "name": "spawn_0x0A",
+  "map_m": [
+   38.9,
+   262.4,
+   0.0
+  ],
+  "game": [
+   0,
+   0,
+   2320
+  ],
+  "floor_m": 1.1920928955078125e-07,
+  "clearance_m": 2.2,
+  "facing_deg": 0.0,
+  "game_yaw": "0x8000",
+  "node": "0x0A",
+  "spawn_object_game": [
+   0,
+   100,
+   2320
+  ],
+  "note": "stage entry spawn (bhvSpinAirborneWarp, MARIO_POS) in the entrance vestibule just inside the locked revolving door, facing north up the escalators; the object hovers 1 m above this floor"
+ },
+ "warp_nodes": [
+  {
+   "id": "0x0A",
+   "dest_level": "LEVEL_BBH",
+   "dest_area": 1,
+   "dest_node": "0x0A",
+   "note": "stage entry spawn"
+  },
+  {
+   "id": "0xF0",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x25",
+   "note": "star exit -> hub outside door 5"
+  },
+  {
+   "id": "0xF1",
+   "dest_level": "LEVEL_CASTLE_GROUNDS",
+   "dest_area": 1,
+   "dest_node": "0x35",
+   "note": "death / Exit course -> hub outside door 5"
+  }
+ ],
+ "stars": [],
+ "act1_all_nighter": {
+  "start": {
+   "name": "act1_start",
+   "map_m": [
+    38.9,
+    262.4,
+    0.0
+   ],
+   "game": [
+    0,
+    0,
+    2320
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.2,
+   "headroom_m": 11.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000",
+   "note": "= the spawn (vestibule, facing the escalators)"
+  },
+  "star_target": {
+   "name": "act1_star_target",
+   "map_m": [
+    38.9,
+    259.9,
+    30.0
+   ],
+   "game": [
+    0,
+    3000,
+    2570
+   ],
+   "floor_m": 30.0,
+   "clearance_m": 0.4,
+   "headroom_m": 5.4,
+   "note": "F6 big window over the Plaza (Century Tower lit, 188 deg); hover the star ~1.6 m up"
+  },
+  "route": [
+   {
+    "name": "act1_route_0",
+    "map_m": [
+     38.9,
+     263.4,
+     0.0
+    ],
+    "game": [
+     0,
+     0,
+     2220
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.71,
+    "headroom_m": 11.4,
+    "note": "vestibule; the escalators are switched off - climb them like stairs"
+   },
+   {
+    "name": "act1_route_1",
+    "map_m": [
+     38.8,
+     277.0,
+     6.0
+    ],
+    "game": [
+     -10,
+     600,
+     860
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.15,
+    "headroom_m": 5.4,
+    "note": "top of the escalators, arrival hall"
+   },
+   {
+    "name": "act1_route_2",
+    "map_m": [
+     27.9,
+     290.0,
+     6.0
+    ],
+    "game": [
+     -1100,
+     600,
+     -440
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.58,
+    "headroom_m": 5.4,
+    "note": "west corridor past Rm 211 into the stacks"
+   },
+   {
+    "name": "act1_route_3",
+    "map_m": [
+     17.8,
+     304.9,
+     6.0
+    ],
+    "game": [
+     -2110,
+     600,
+     -1930
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.98,
+    "headroom_m": 5.4,
+    "note": "N-S aisle of the stacks: Boos; ladders onto the tall ranges"
+   },
+   {
+    "name": "act1_route_4",
+    "map_m": [
+     17.8,
+     307.6,
+     6.0
+    ],
+    "game": [
+     -2110,
+     600,
+     -2200
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.4,
+    "headroom_m": 5.4,
+    "note": "NW stair hall door"
+   },
+   {
+    "name": "act1_route_5",
+    "map_m": [
+     17.8,
+     307.6,
+     12.0
+    ],
+    "game": [
+     -2110,
+     1200,
+     -2200
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.4,
+    "headroom_m": 5.4,
+    "note": "NW stair hall door on F3 (keep climbing)"
+   },
+   {
+    "name": "act1_route_6",
+    "map_m": [
+     17.8,
+     306.9,
+     18.0
+    ],
+    "game": [
+     -2110,
+     1800,
+     -2130
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 1.7,
+    "headroom_m": null,
+    "note": "roof door of the NW stair onto the north terrace (z 18, outdoors at night)"
+   },
+   {
+    "name": "act1_route_7",
+    "map_m": [
+     38.8,
+     284.6,
+     18.0
+    ],
+    "game": [
+     -10,
+     1800,
+     100
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 2.1,
+    "headroom_m": null,
+    "note": "across the terrace to the tower's north door"
+   },
+   {
+    "name": "act1_route_8",
+    "map_m": [
+     38.8,
+     280.0,
+     18.0
+    ],
+    "game": [
+     -10,
+     1800,
+     560
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 1.34,
+    "headroom_m": 5.4,
+    "note": "the quiet floor"
+   },
+   {
+    "name": "act1_route_9",
+    "map_m": [
+     50.4,
+     267.2,
+     18.0
+    ],
+    "game": [
+     1150,
+     1800,
+     1840
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 1.18,
+    "headroom_m": 5.4,
+    "note": "east stair hall, west door"
+   },
+   {
+    "name": "act1_route_10",
+    "map_m": [
+     50.4,
+     267.2,
+     30.0
+    ],
+    "game": [
+     1150,
+     3000,
+     1840
+    ],
+    "floor_m": 30.0,
+    "clearance_m": 1.18,
+    "headroom_m": 5.4,
+    "note": "6th floor (its 5th-floor door is locked: staff only)"
+   }
+  ],
+  "boos": [
+   {
+    "name": "act1_boo_0",
+    "map_m": [
+     28.3,
+     305.3,
+     6.0
+    ],
+    "game": [
+     -1060,
+     600,
+     -1970
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 2.26,
+    "headroom_m": 5.4,
+    "note": "N-S aisle between columns 2 and 3"
+   },
+   {
+    "name": "act1_boo_1",
+    "map_m": [
+     49.2,
+     301.0,
+     6.0
+    ],
+    "game": [
+     1030,
+     600,
+     -1540
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 2.12,
+    "headroom_m": 5.4,
+    "note": "N-S aisle between columns 4 and 5"
+   },
+   {
+    "name": "act1_boo_2",
+    "map_m": [
+     38.75,
+     309.7,
+     12.0
+    ],
+    "game": [
+     -15,
+     1200,
+     -2410
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 2.26,
+    "headroom_m": 5.4,
+    "note": "central aisle, periodicals"
+   },
+   {
+    "name": "act1_boo_3",
+    "map_m": [
+     39.0,
+     296.5,
+     18.0
+    ],
+    "game": [
+     10,
+     1800,
+     -1090
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "north terrace, between the rooftop units"
+   },
+   {
+    "name": "act1_boo_4",
+    "map_m": [
+     30.0,
+     275.9,
+     18.0
+    ],
+    "game": [
+     -890,
+     1800,
+     970
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 2.12,
+    "headroom_m": 5.4,
+    "note": "core corridor of the quiet floor"
+   },
+   {
+    "name": "act1_boo_5",
+    "map_m": [
+     44.0,
+     266.6,
+     30.0
+    ],
+    "game": [
+     510,
+     3000,
+     1900
+    ],
+    "floor_m": 30.0,
+    "clearance_m": 1.18,
+    "headroom_m": 5.4,
+    "note": "grad reading room"
+   }
+  ],
+  "book_ladder_tracks": [
+   {
+    "name": "act1_ladder_F2_0",
+    "map_m": [
+     30.0,
+     302.2,
+     6.0
+    ],
+    "game": [
+     -890,
+     600,
+     -1660
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 0.3,
+    "headroom_m": 5.4,
+    "note": "rolling library ladder along the south face of a 3.0 m range (a Lua platform; its top step at 2.2 m)",
+    "end_m": [
+     37.0,
+     302.2
+    ],
+    "range": "f2_wing_c3r2"
+   },
+   {
+    "name": "act1_ladder_F2_1",
+    "map_m": [
+     51.0,
+     302.2,
+     6.0
+    ],
+    "game": [
+     1210,
+     600,
+     -1660
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 0.3,
+    "headroom_m": 5.4,
+    "note": "rolling library ladder along the south face of a 3.0 m range (a Lua platform; its top step at 2.2 m)",
+    "end_m": [
+     57.9,
+     302.2
+    ],
+    "range": "f2_wing_c5r2"
+   },
+   {
+    "name": "act1_ladder_F3_2",
+    "map_m": [
+     19.6,
+     302.2,
+     12.0
+    ],
+    "game": [
+     -1930,
+     1200,
+     -1660
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 0.3,
+    "headroom_m": 5.4,
+    "note": "rolling library ladder along the south face of a 3.0 m range (a Lua platform; its top step at 2.2 m)",
+    "end_m": [
+     26.5,
+     302.2
+    ],
+    "range": "f3_wing_c2r2"
+   },
+   {
+    "name": "act1_ladder_F3_3",
+    "map_m": [
+     40.5,
+     310.4,
+     12.0
+    ],
+    "game": [
+     160,
+     1200,
+     -2480
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 0.9,
+    "headroom_m": 5.4,
+    "note": "rolling library ladder along the south face of a 3.0 m range (a Lua platform; its top step at 2.2 m)",
+    "end_m": [
+     47.5,
+     310.4
+    ],
+    "range": "f3_wing_c4r4"
+   }
+  ],
+  "closed_for_cleaning_doors": [
+   {
+    "name": "stair_w_door_F1",
+    "map_m": [
+     17.9,
+     267.23,
+     0.0
+    ],
+    "game": [
+     -2100,
+     0,
+     1838
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.8,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000",
+    "note": "act 1: a Lua barrier here ('CLOSED FOR CLEANING')",
+    "a_m": [
+     18.8,
+     266.15
+    ],
+    "b_m": [
+     18.8,
+     268.3
+    ],
+    "inside_m": [
+     19.7,
+     267.225
+    ]
+   },
+   {
+    "name": "stair_w_door_F2",
+    "map_m": [
+     17.9,
+     267.23,
+     6.0
+    ],
+    "game": [
+     -2100,
+     600,
+     1838
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.8,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000",
+    "note": "act 1: a Lua barrier here ('CLOSED FOR CLEANING')",
+    "a_m": [
+     18.8,
+     266.15
+    ],
+    "b_m": [
+     18.8,
+     268.3
+    ],
+    "inside_m": [
+     19.7,
+     267.225
+    ]
+   },
+   {
+    "name": "stair_w_door_F3",
+    "map_m": [
+     17.9,
+     267.23,
+     12.0
+    ],
+    "game": [
+     -2100,
+     1200,
+     1838
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.15,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000",
+    "note": "act 1: a Lua barrier here ('CLOSED FOR CLEANING')",
+    "a_m": [
+     18.8,
+     266.15
+    ],
+    "b_m": [
+     18.8,
+     268.3
+    ],
+    "inside_m": [
+     19.7,
+     267.225
+    ]
+   },
+   {
+    "name": "stair_e_door_F1",
+    "map_m": [
+     59.6,
+     267.23,
+     0.0
+    ],
+    "game": [
+     2070,
+     0,
+     1838
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.6,
+    "headroom_m": 5.4,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000",
+    "note": "act 1: a Lua barrier here ('CLOSED FOR CLEANING')",
+    "a_m": [
+     58.7,
+     266.15
+    ],
+    "b_m": [
+     58.7,
+     268.3
+    ],
+    "inside_m": [
+     57.8,
+     267.225
+    ]
+   },
+   {
+    "name": "stair_e_door_F2",
+    "map_m": [
+     53.4,
+     269.4,
+     6.0
+    ],
+    "game": [
+     1450,
+     600,
+     1620
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.52,
+    "headroom_m": 5.4,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000",
+    "note": "act 1: a Lua barrier here ('CLOSED FOR CLEANING')",
+    "a_m": [
+     52.2,
+     268.5
+    ],
+    "b_m": [
+     54.6,
+     268.5
+    ],
+    "inside_m": [
+     53.4,
+     267.6
+    ]
+   },
+   {
+    "name": "stair_e_door_F3",
+    "map_m": [
+     50.8,
+     267.23,
+     12.0
+    ],
+    "game": [
+     1190,
+     1200,
+     1838
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.8,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000",
+    "note": "act 1: a Lua barrier here ('CLOSED FOR CLEANING')",
+    "a_m": [
+     51.7,
+     266.15
+    ],
+    "b_m": [
+     51.7,
+     268.3
+    ],
+    "inside_m": [
+     52.6,
+     267.225
+    ]
+   }
+  ],
+  "staff_only_doors_f5": [
+   {
+    "name": "stair_w_door_F5_locked",
+    "map_m": [
+     26.7,
+     267.23,
+     24.0
+    ],
+    "game": [
+     -1220,
+     2400,
+     1838
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 1.8,
+    "headroom_m": 5.4,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000",
+    "note": "the F5 staff floor's stair door: an open gap in the geometry; lock it with a Lua barrier except in acts 4-5",
+    "a_m": [
+     25.8,
+     266.15
+    ],
+    "b_m": [
+     25.8,
+     268.3
+    ],
+    "inside_m": [
+     24.9,
+     267.225
+    ]
+   },
+   {
+    "name": "stair_e_door_F5_locked",
+    "map_m": [
+     50.8,
+     267.23,
+     24.0
+    ],
+    "game": [
+     1190,
+     2400,
+     1838
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 1.15,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000",
+    "note": "the F5 staff floor's stair door: an open gap in the geometry; lock it with a Lua barrier except in acts 4-5",
+    "a_m": [
+     51.7,
+     266.15
+    ],
+    "b_m": [
+     51.7,
+     268.3
+    ],
+    "inside_m": [
+     52.6,
+     267.225
+    ]
+   }
+  ]
+ },
+ "act2_quiet_hours_hide_and_seek": {
+  "players": "2+",
+  "round_s": 150,
+  "arena": {
+   "floors": [
+    "F1",
+    "F2",
+    "F3"
+   ],
+   "poly_m": [
+    [
+     16.1,
+     287.6
+    ],
+    [
+     61.5,
+     287.6
+    ],
+    [
+     61.6,
+     295.6
+    ],
+    [
+     71.7,
+     295.6
+    ],
+    [
+     71.7,
+     302.3
+    ],
+    [
+     73.0,
+     302.3
+    ],
+    [
+     73.0,
+     309.5
+    ],
+    [
+     72.0,
+     309.5
+    ],
+    [
+     72.0,
+     315.8
+    ],
+    [
+     62.7,
+     315.8
+    ],
+    [
+     62.7,
+     318.5
+    ],
+    [
+     55.2,
+     318.5
+    ],
+    [
+     55.2,
+     316.3
+    ],
+    [
+     53.7,
+     316.3
+    ],
+    [
+     53.7,
+     318.75
+    ],
+    [
+     46.35,
+     319.63
+    ],
+    [
+     39.17,
+     320.07
+    ],
+    [
+     31.71,
+     319.89
+    ],
+    [
+     23.93,
+     318.85
+    ],
+    [
+     23.93,
+     316.3
+    ],
+    [
+     22.6,
+     316.3
+    ],
+    [
+     22.6,
+     318.6
+    ],
+    [
+     15.0,
+     318.6
+    ],
+    [
+     15.0,
+     315.8
+    ],
+    [
+     6.1,
+     315.8
+    ],
+    [
+     6.1,
+     309.35
+    ],
+    [
+     4.8,
+     309.35
+    ],
+    [
+     4.8,
+     302.4
+    ],
+    [
+     6.1,
+     302.4
+    ],
+    [
+     6.1,
+     295.9
+    ],
+    [
+     16.15,
+     295.9
+    ]
+   ],
+   "note": "The north wing + neck on floors 1-3 (the stacks: 'quiet areas ... the book shelving areas of the 1st, 2nd and 3rd floors', S10), linked by the NW and NE stair halls. Out of bounds during a round: the south block (y < 287.6) except the F2 arrival hall where the round starts."
+  },
+  "seeker_start": {
+   "name": "act2_seeker_start",
+   "map_m": [
+    38.0,
+    282.6,
+    6.0
+   ],
+   "game": [
+    -90,
+    600,
+    300
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 0.9,
+   "headroom_m": 5.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000",
+   "note": "the night librarian counts at the circulation desk (facing the counter)"
+  },
+  "hider_release": {
+   "name": "act2_hider_release",
+   "map_m": [
+    27.9,
+    288.6,
+    6.0
+   ],
+   "game": [
+    -1100,
+    600,
+    -300
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.98,
+   "headroom_m": 5.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000",
+   "note": "west corridor into the stacks (the east corridor x 48-51 leads in too)"
+  },
+  "hider_release_east": {
+   "name": "act2_hider_release_east",
+   "map_m": [
+    49.6,
+    288.6,
+    6.0
+   ],
+   "game": [
+    1070,
+    600,
+    -300
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.48,
+   "headroom_m": 5.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000",
+   "note": "the east corridor into the stacks (x 48.0..51.2)"
+  },
+  "star_target": {
+   "name": "act2_star_target",
+   "map_m": [
+    38.0,
+    283.9,
+    7.2
+   ],
+   "game": [
+    -90,
+    720,
+    170
+   ],
+   "floor_m": 7.2,
+   "clearance_m": 0.28,
+   "headroom_m": 4.2,
+   "note": "on the circulation desk counter (top 1.2 m): the star appears here (design)"
+  },
+  "results_board": {
+   "name": "act2_results_board",
+   "map_m": [
+    29.88,
+    288.4,
+    6.0
+   ],
+   "game": [
+    -902,
+    600,
+    -280
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 0.0,
+   "headroom_m": 5.4,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000",
+   "note": "whiteboard + a lit header screen on the desk enclosure's west face"
+  },
+  "hiding_spots": [
+   {
+    "name": "act2_hide_0",
+    "map_m": [
+     38.75,
+     296.9,
+     0.0
+    ],
+    "game": [
+     -15,
+     0,
+     -1130
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.02,
+    "headroom_m": 5.4,
+    "note": "F1 south cross aisle of the compact stacks"
+   },
+   {
+    "name": "act2_hide_1",
+    "map_m": [
+     38.8,
+     317.6,
+     0.0
+    ],
+    "game": [
+     -10,
+     0,
+     -3200
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.46,
+    "headroom_m": 5.4,
+    "note": "F1 curved glass bay"
+   },
+   {
+    "name": "act2_hide_2",
+    "map_m": [
+     7.4,
+     305.9,
+     0.0
+    ],
+    "game": [
+     -3150,
+     0,
+     -2030
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.98,
+    "headroom_m": 5.4,
+    "note": "F1 west window bay (bike desks)"
+   },
+   {
+    "name": "act2_hide_3",
+    "map_m": [
+     59.67,
+     305.3,
+     6.0
+    ],
+    "game": [
+     2077,
+     600,
+     -1970
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 2.26,
+    "headroom_m": 5.4,
+    "note": "F2 aisle south of the NE stair door"
+   },
+   {
+    "name": "act2_hide_4",
+    "map_m": [
+     70.2,
+     311.0,
+     6.0
+    ],
+    "game": [
+     3130,
+     600,
+     -2540
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.8,
+    "headroom_m": 5.4,
+    "note": "F2 east window seats"
+   },
+   {
+    "name": "act2_hide_5",
+    "map_m": [
+     59.67,
+     300.9,
+     12.0
+    ],
+    "game": [
+     2077,
+     1200,
+     -1530
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 2.26,
+    "headroom_m": 5.4,
+    "note": "F3 microform cabinets (1.5 m: crouch behind them)"
+   },
+   {
+    "name": "act2_hide_6",
+    "map_m": [
+     12.6,
+     305.3,
+     12.0
+    ],
+    "game": [
+     -2630,
+     1200,
+     -1970
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.6,
+    "headroom_m": 5.4,
+    "note": "F3 oversized folios (1.8 m)"
+   },
+   {
+    "name": "act2_hide_7",
+    "map_m": [
+     38.75,
+     292.5,
+     12.0
+    ],
+    "game": [
+     -15,
+     1200,
+     -690
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 0.55,
+    "headroom_m": 5.4,
+    "note": "F3 neck: Bloomberg Terminal and the reading counters"
+   },
+   {
+    "name": "act2_hide_8",
+    "map_m": [
+     7.4,
+     314.5,
+     0.0
+    ],
+    "game": [
+     -3150,
+     0,
+     -2890
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.3,
+    "headroom_m": 5.4,
+    "note": "F1 NW window corner behind the bike desks"
+   },
+   {
+    "name": "act2_hide_9",
+    "map_m": [
+     64.0,
+     313.0,
+     0.0
+    ],
+    "game": [
+     2510,
+     0,
+     -2740
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.0,
+    "headroom_m": 5.4,
+    "note": "F1 behind the short GV-HD range by the NE stair"
+   },
+   {
+    "name": "act2_hide_10",
+    "map_m": [
+     10.6,
+     313.8,
+     6.0
+    ],
+    "game": [
+     -2830,
+     600,
+     -2820
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.3,
+    "headroom_m": 5.4,
+    "note": "F2 behind the short manga-row end (NW corner)"
+   },
+   {
+    "name": "act2_hide_11",
+    "map_m": [
+     26.0,
+     317.2,
+     6.0
+    ],
+    "game": [
+     -1290,
+     600,
+     -3160
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.93,
+    "headroom_m": 5.4,
+    "note": "F2 curved glass bay, west end"
+   },
+   {
+    "name": "act2_hide_12",
+    "map_m": [
+     5.4,
+     305.9,
+     6.0
+    ],
+    "game": [
+     -3350,
+     600,
+     -2030
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 0.6,
+    "headroom_m": 5.4,
+    "note": "F2 west window bay"
+   },
+   {
+    "name": "act2_hide_13",
+    "map_m": [
+     70.2,
+     312.0,
+     12.0
+    ],
+    "game": [
+     3130,
+     1200,
+     -2640
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.5,
+    "headroom_m": 5.4,
+    "note": "F3 east window seats behind the microforms"
+   },
+   {
+    "name": "act2_hide_14",
+    "map_m": [
+     26.8,
+     317.4,
+     12.0
+    ],
+    "game": [
+     -1210,
+     1200,
+     -3180
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.83,
+    "headroom_m": 5.4,
+    "note": "F3 curved glass bay, west end"
+   },
+   {
+    "name": "act2_hide_15",
+    "map_m": [
+     49.2,
+     309.8,
+     12.0
+    ],
+    "game": [
+     1030,
+     1200,
+     -2420
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 2.12,
+    "headroom_m": 5.4,
+    "note": "F3 aisle between periodicals and microforms"
+   }
+  ],
+  "stair_links": [
+   {
+    "name": "stair_nw_door_F1",
+    "map_m": [
+     17.8,
+     307.5,
+     0.0
+    ],
+    "game": [
+     -2110,
+     0,
+     -2190
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.4,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000",
+    "a_m": [
+     16.6,
+     308.4
+    ],
+    "b_m": [
+     19.0,
+     308.4
+    ],
+    "inside_m": [
+     17.8,
+     309.3
+    ]
+   },
+   {
+    "name": "stair_nw_door_F2",
+    "map_m": [
+     17.8,
+     307.5,
+     6.0
+    ],
+    "game": [
+     -2110,
+     600,
+     -2190
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.4,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000",
+    "a_m": [
+     16.6,
+     308.4
+    ],
+    "b_m": [
+     19.0,
+     308.4
+    ],
+    "inside_m": [
+     17.8,
+     309.3
+    ]
+   },
+   {
+    "name": "stair_nw_door_F3",
+    "map_m": [
+     17.8,
+     307.5,
+     12.0
+    ],
+    "game": [
+     -2110,
+     1200,
+     -2190
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.4,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000",
+    "a_m": [
+     16.6,
+     308.4
+    ],
+    "b_m": [
+     19.0,
+     308.4
+    ],
+    "inside_m": [
+     17.8,
+     309.3
+    ]
+   },
+   {
+    "name": "stair_ne_door_F1",
+    "map_m": [
+     59.7,
+     307.5,
+     0.0
+    ],
+    "game": [
+     2080,
+     0,
+     -2190
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.4,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000",
+    "a_m": [
+     58.5,
+     308.4
+    ],
+    "b_m": [
+     60.9,
+     308.4
+    ],
+    "inside_m": [
+     59.7,
+     309.3
+    ]
+   },
+   {
+    "name": "stair_ne_door_F2",
+    "map_m": [
+     59.7,
+     307.5,
+     6.0
+    ],
+    "game": [
+     2080,
+     600,
+     -2190
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.4,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000",
+    "a_m": [
+     58.5,
+     308.4
+    ],
+    "b_m": [
+     60.9,
+     308.4
+    ],
+    "inside_m": [
+     59.7,
+     309.3
+    ]
+   },
+   {
+    "name": "stair_ne_door_F3",
+    "map_m": [
+     59.7,
+     307.5,
+     12.0
+    ],
+    "game": [
+     2080,
+     1200,
+     -2190
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.4,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000",
+    "a_m": [
+     58.5,
+     308.4
+    ],
+    "b_m": [
+     60.9,
+     308.4
+    ],
+    "inside_m": [
+     59.7,
+     309.3
+    ]
+   }
+  ],
+  "seeker_light": "le_add_light + le_set_light_pos each frame on the seeker (design 7.5); stacks aisles stay dark."
+ },
+ "act3_ghost_of_finals_past": {
+  "boos": {
+   "G1": {
+    "name": "act3_boo_G1",
+    "map_m": [
+     38.75,
+     301.0,
+     0.0
+    ],
+    "game": [
+     -15,
+     0,
+     -1540
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.12,
+    "headroom_m": 5.4,
+    "note": "F1 compact stacks"
+   },
+   "G2": {
+    "name": "act3_boo_G2",
+    "map_m": [
+     14.0,
+     267.1,
+     6.0
+    ],
+    "game": [
+     -2490,
+     600,
+     1850
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.81,
+    "headroom_m": 5.4,
+    "note": "F2 study-room corridor"
+   },
+   "G3": {
+    "name": "act3_boo_G3",
+    "map_m": [
+     66.6,
+     259.7,
+     12.0
+    ],
+    "game": [
+     2770,
+     1200,
+     2590
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 3.0,
+    "headroom_m": 5.4,
+    "note": "F3 Neuharth Reading Room"
+   },
+   "G4": {
+    "name": "act3_boo_G4",
+    "map_m": [
+     14.8,
+     270.8,
+     18.0
+    ],
+    "game": [
+     -2410,
+     1800,
+     1480
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 3.0,
+    "headroom_m": 5.4,
+    "note": "F4 Houston Gator Club Reading Nook"
+   },
+   "G5": {
+    "name": "act3_boo_G5",
+    "map_m": [
+     15.2,
+     265.5,
+     30.0
+    ],
+    "game": [
+     -2370,
+     3000,
+     2010
+    ],
+    "floor_m": 30.0,
+    "clearance_m": 3.0,
+    "headroom_m": 5.4,
+    "note": "F6 grad lounge"
+   }
+  },
+  "big_boo_arena": {
+   "poly_m": [
+    [
+     25.8,
+     258.5
+    ],
+    [
+     51.7,
+     258.5
+    ],
+    [
+     51.7,
+     271.2
+    ],
+    [
+     25.8,
+     271.2
+    ]
+   ],
+   "z_floor": 0.0,
+   "z_ceiling": 11.4,
+   "note": "the Plaza Hall (the design's 'rotunda'); the cafe tables stay (static geometry has no act masks): a low obstacle course under Big Boo"
+  },
+  "big_boo_spawn": {
+   "name": "act3_big_boo_spawn",
+   "map_m": [
+    45.6,
+    266.8,
+    3.0
+   ],
+   "game": [
+    670,
+    300,
+    1880
+   ],
+   "air": true,
+   "floor_below_m": 0.0,
+   "height_above_floor_m": 3.0,
+   "note": "3 m over the coffee bar floor"
+  },
+  "star_ghost_hunt": {
+   "name": "act3_star_GhostHuntBooStarPos",
+   "map_m": [
+    30.7,
+    266.6,
+    0.0
+   ],
+   "game": [
+    -820,
+    0,
+    1900
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.45,
+   "headroom_m": 11.4,
+   "note": "gLevelValues.starPositions.GhostHuntBooStarPos = this game point + 1.6 m up (vec3f_set, game units)"
+  },
+  "star_balcony": {
+   "name": "act3_star_BalconyBooStarPos",
+   "map_m": [
+    48.6,
+    273.8,
+    6.0
+   ],
+   "game": [
+    970,
+    600,
+    1180
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.0,
+   "headroom_m": 5.4,
+   "note": "optional BalconyBooStarPos: the F2 balcony over the Plaza Hall (+1.4 m)"
+  }
+ },
+ "act4_lights_out": {
+  "breakers": {
+   "B1": {
+    "name": "act4_breaker_B1",
+    "map_m": [
+     2.4,
+     285.6,
+     0.0
+    ],
+    "game": [
+     -3650,
+     0,
+     0
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 2.0,
+    "headroom_m": 5.4,
+    "note": "F1 electrical room (north-west, off the west stacks)"
+   },
+   "B2": {
+    "name": "act4_breaker_B2",
+    "map_m": [
+     15.4,
+     270.9,
+     12.0
+    ],
+    "game": [
+     -2350,
+     1200,
+     1470
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 2.28,
+    "headroom_m": 5.4,
+    "note": "F3 electrical room (west core)"
+   },
+   "B3": {
+    "name": "act4_breaker_B3",
+    "map_m": [
+     47.8,
+     262.6,
+     24.0
+    ],
+    "game": [
+     890,
+     2400,
+     2300
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 1.81,
+    "headroom_m": 5.4,
+    "note": "F5 electrical room on the staff floor (stair doors open this act)"
+   }
+  },
+  "breaker_panels": [
+   {
+    "name": "breaker_panel_breaker_panel_3",
+    "map_m": [
+     51.39,
+     261.4,
+     24.0
+    ],
+    "game": [
+     1249,
+     2400,
+     2420
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 0.0,
+    "headroom_m": 5.4,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   }
+  ],
+  "electrical_room_doors": [
+   {
+    "floor": "F1",
+    "room": "f1_electrical",
+    "door": {
+     "name": "act4_door_f1_electrical",
+     "map_m": [
+      2.4,
+      280.4,
+      0.0
+     ],
+     "game": [
+      -3650,
+      0,
+      520
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 1.2,
+     "headroom_m": 2.6,
+     "facing_deg": 180.0,
+     "game_yaw": "0x0000"
+    }
+   },
+   {
+    "floor": "F3",
+    "room": "f3_electrical",
+    "door": {
+     "name": "act4_door_f3_electrical",
+     "map_m": [
+      12.0,
+      271.0,
+      12.0
+     ],
+     "game": [
+      -2690,
+      1200,
+      1460
+     ],
+     "floor_m": 12.0,
+     "clearance_m": 1.2,
+     "headroom_m": 2.6,
+     "facing_deg": 270.0,
+     "game_yaw": "0xC000"
+    }
+   },
+   {
+    "floor": "F5",
+    "room": "f5_electrical",
+    "door": {
+     "name": "act4_door_f5_electrical",
+     "map_m": [
+      47.8,
+      264.0,
+      24.0
+     ],
+     "game": [
+      890,
+      2400,
+      2160
+     ],
+     "floor_m": 24.0,
+     "clearance_m": 1.2,
+     "headroom_m": 2.6,
+     "facing_deg": 0.0,
+     "game_yaw": "0x8000"
+    }
+   }
+  ],
+  "star_target": {
+   "name": "act4_star_target",
+   "map_m": [
+    76.6,
+    261.0,
+    12.0
+   ],
+   "game": [
+    3770,
+    1200,
+    2460
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 2.2,
+   "headroom_m": 5.4,
+   "note": "the Neuharth Reading Room, in front of the news TV; hover ~1.2 m"
+  },
+  "lighting": "le_set_mode(LE_MODE_AFFECT_ALL_SHADED_AND_COLORED), le_set_ambient_color(20, 20, 30); a point light on every Mario (design 7.5)."
+ },
+ "act5_coffee_run": {
+  "start": {
+   "name": "act5_start",
+   "map_m": [
+    31.0,
+    262.1,
+    24.0
+   ],
+   "game": [
+    -790,
+    2400,
+    2350
+   ],
+   "floor_m": 24.0,
+   "clearance_m": 1.48,
+   "headroom_m": 5.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000",
+   "note": "F5 staff break room (open this act)"
+  },
+  "cup": {
+   "name": "act5_cup",
+   "map_m": [
+    48.85,
+    266.0,
+    1.1
+   ],
+   "game": [
+    995,
+    110,
+    1960
+   ],
+   "floor_m": 1.1,
+   "clearance_m": 0.43,
+   "headroom_m": 10.3,
+   "note": "on the coffee counter (top 1.1 m)"
+  },
+  "goal": {
+   "name": "act5_goal",
+   "map_m": [
+    27.9,
+    263.1,
+    25.0
+   ],
+   "game": [
+    -1100,
+    2500,
+    2250
+   ],
+   "floor_m": 25.0,
+   "clearance_m": 0.78,
+   "headroom_m": 4.4,
+   "note": "the break room counter's coffee maker (counter top 1.0 m)"
+  },
+  "par_s": 60,
+  "boo_blocks": [
+   {
+    "name": "act5_boo_block_0",
+    "map_m": [
+     22.3,
+     259.78,
+     9.0
+    ],
+    "game": [
+     -1660,
+     900,
+     2582
+    ],
+    "floor_m": 9.0,
+    "clearance_m": 1.28,
+    "headroom_m": 5.75,
+    "note": "stair_w turn landing F2-F3"
+   },
+   {
+    "name": "act5_boo_block_1",
+    "map_m": [
+     55.2,
+     259.78,
+     15.0
+    ],
+    "game": [
+     1630,
+     1500,
+     2582
+    ],
+    "floor_m": 15.0,
+    "clearance_m": 1.28,
+    "headroom_m": 5.75,
+    "note": "stair_e turn landing F3-F4"
+   },
+   {
+    "name": "act5_boo_block_2",
+    "map_m": [
+     22.3,
+     259.78,
+     21.0
+    ],
+    "game": [
+     -1660,
+     2100,
+     2582
+    ],
+    "floor_m": 21.0,
+    "clearance_m": 1.28,
+    "headroom_m": 5.75,
+    "note": "stair_w turn landing F4-F5"
+   }
+  ],
+  "route": "F5 break room -> west or east stair hall down to F2 -> arrival hall -> down escalator -> lobby coffee counter -> back up the up escalator -> stair hall -> F5. The real 5th floor is staff offices (S1); design 7.5 says 'start on the 5th floor', so its break room opens for this act."
+ },
+ "act6_glowing_books": {
+  "red_coins": [
+   {
+    "name": "act6_red_1",
+    "map_m": [
+     12.6,
+     303.1,
+     2.3
+    ],
+    "game": [
+     -2630,
+     230,
+     -1750
+    ],
+    "floor_m": 2.3,
+    "clearance_m": 3.0,
+    "headroom_m": 3.1,
+    "note": "R1 top of a Judaica compact range (2.3 m)",
+    "float_m": 0.6
+   },
+   {
+    "name": "act6_red_2",
+    "map_m": [
+     20.7,
+     278.85,
+     7.2
+    ],
+    "game": [
+     -1820,
+     720,
+     675
+    ],
+    "floor_m": 7.2,
+    "clearance_m": 1.03,
+    "headroom_m": 4.2,
+    "note": "R2 on the Recreational Reading Area shelf",
+    "float_m": 0.6
+   },
+   {
+    "name": "act6_red_3",
+    "map_m": [
+     44.0,
+     311.9,
+     9.0
+    ],
+    "game": [
+     510,
+     900,
+     -2630
+    ],
+    "floor_m": 9.0,
+    "clearance_m": 3.0,
+    "headroom_m": 2.4,
+    "note": "R3 top of a 3.6 m range (F2 column 4, row 4)",
+    "float_m": 0.6
+   },
+   {
+    "name": "act6_red_4",
+    "map_m": [
+     69.5,
+     265.8,
+     13.4
+    ],
+    "game": [
+     3060,
+     1340,
+     1980
+    ],
+    "floor_m": 13.4,
+    "clearance_m": 3.0,
+    "headroom_m": 4.0,
+    "note": "R4 on the Neuharth newspaper racks",
+    "float_m": 0.6
+   },
+   {
+    "name": "act6_red_5",
+    "map_m": [
+     33.5,
+     303.1,
+     15.0
+    ],
+    "game": [
+     -540,
+     1500,
+     -1750
+    ],
+    "floor_m": 15.0,
+    "clearance_m": 3.0,
+    "headroom_m": 2.4,
+    "note": "R5 top of a 3.6 m periodicals range",
+    "float_m": 0.6
+   },
+   {
+    "name": "act6_red_6",
+    "map_m": [
+     10.7,
+     270.75,
+     19.8
+    ],
+    "game": [
+     -2820,
+     1980,
+     1485
+    ],
+    "floor_m": 19.8,
+    "clearance_m": 0.4,
+    "headroom_m": 3.6,
+    "note": "R6 on the Houston Gator Club Reading Nook shelf",
+    "float_m": 0.6
+   },
+   {
+    "name": "act6_red_7",
+    "map_m": [
+     30.0,
+     301.0,
+     19.8
+    ],
+    "game": [
+     -890,
+     1980,
+     -1540
+    ],
+    "floor_m": 19.8,
+    "clearance_m": 3.0,
+    "headroom_m": null,
+    "note": "R7 north terrace, on a rooftop unit (outdoors)",
+    "float_m": 0.6
+   },
+   {
+    "name": "act6_red_8",
+    "map_m": [
+     15.4,
+     280.2,
+     31.9
+    ],
+    "game": [
+     -2350,
+     3190,
+     540
+    ],
+    "floor_m": 31.9,
+    "clearance_m": 0.4,
+    "headroom_m": 3.5,
+    "note": "R8 on the grad lockers",
+    "float_m": 0.6
+   }
+  ]
+ },
+ "stack_tops": [
+  {
+   "name": "f1_f1_west_1a",
+   "map_m": [
+    3.35,
+    268.6,
+    2.3
+   ],
+   "game": [
+    -3555,
+    230,
+    1700
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 2.18,
+   "headroom_m": 3.1,
+   "note": "HD 30.2 - HQ 799",
+   "length_m": 6.3,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_west_1a_step1",
+   "map_m": [
+    6.95,
+    268.6,
+    1.07
+   ],
+   "game": [
+    -3195,
+    107,
+    1700
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "HD 30.2 - HQ 799",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_west_1b",
+   "map_m": [
+    12.55,
+    268.6,
+    2.3
+   ],
+   "game": [
+    -2635,
+    230,
+    1700
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "HD 30.2 - HQ 799",
+   "length_m": 5.5,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_west_1b_step1",
+   "map_m": [
+    15.75,
+    268.6,
+    1.07
+   ],
+   "game": [
+    -2315,
+    107,
+    1700
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "HD 30.2 - HQ 799",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_west_2a",
+   "map_m": [
+    3.35,
+    273.0,
+    2.3
+   ],
+   "game": [
+    -3555,
+    230,
+    1260
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "HD 30.2 - HQ 799",
+   "length_m": 6.3,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_west_2a_step1",
+   "map_m": [
+    6.95,
+    273.0,
+    1.07
+   ],
+   "game": [
+    -3195,
+    107,
+    1260
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "HD 30.2 - HQ 799",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_west_2b",
+   "map_m": [
+    12.55,
+    273.0,
+    2.3
+   ],
+   "game": [
+    -2635,
+    230,
+    1260
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "HD 30.2 - HQ 799",
+   "length_m": 5.5,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_west_2b_step1",
+   "map_m": [
+    15.75,
+    273.0,
+    1.07
+   ],
+   "game": [
+    -2315,
+    107,
+    1260
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "HD 30.2 - HQ 799",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_west_3a",
+   "map_m": [
+    3.35,
+    277.4,
+    2.3
+   ],
+   "game": [
+    -3555,
+    230,
+    820
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 2.88,
+   "headroom_m": 3.1,
+   "note": "HD 30.2 - HQ 799",
+   "length_m": 6.3,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_west_3a_step1",
+   "map_m": [
+    6.95,
+    277.4,
+    1.07
+   ],
+   "game": [
+    -3195,
+    107,
+    820
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "HD 30.2 - HQ 799",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_west_3b",
+   "map_m": [
+    12.55,
+    277.4,
+    2.3
+   ],
+   "game": [
+    -2635,
+    230,
+    820
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 2.88,
+   "headroom_m": 3.1,
+   "note": "HD 30.2 - HQ 799",
+   "length_m": 5.5,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_west_3b_step1",
+   "map_m": [
+    15.75,
+    277.4,
+    1.07
+   ],
+   "game": [
+    -2315,
+    107,
+    820
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "HD 30.2 - HQ 799",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_west_s1",
+   "map_m": [
+    12.95,
+    257.8,
+    2.3
+   ],
+   "game": [
+    -2595,
+    230,
+    2780
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "HF 3922 - HQ 799",
+   "length_m": 4.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_west_s1_step1",
+   "map_m": [
+    15.75,
+    257.8,
+    1.07
+   ],
+   "game": [
+    -2315,
+    107,
+    2780
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "HF 3922 - HQ 799",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_west_s2",
+   "map_m": [
+    12.95,
+    262.2,
+    2.3
+   ],
+   "game": [
+    -2595,
+    230,
+    2340
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "HF 3922 - HQ 799",
+   "length_m": 4.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_west_s2_step1",
+   "map_m": [
+    15.75,
+    262.2,
+    1.07
+   ],
+   "game": [
+    -2315,
+    107,
+    2340
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "HF 3922 - HQ 799",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_east_1",
+   "map_m": [
+    66.5,
+    258.0,
+    2.3
+   ],
+   "game": [
+    2760,
+    230,
+    2760
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "PG 2640 - HV 6692",
+   "length_m": 8.8,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_east_1_step1",
+   "map_m": [
+    61.65,
+    258.0,
+    1.07
+   ],
+   "game": [
+    2275,
+    107,
+    2760
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PG 2640 - HV 6692",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_east_2",
+   "map_m": [
+    66.95,
+    262.4,
+    3.0
+   ],
+   "game": [
+    2805,
+    300,
+    2320
+   ],
+   "floor_m": 3.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "PG 2640 - HV 6692",
+   "length_m": 7.9,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f1_f1_east_2_step1",
+   "map_m": [
+    62.55,
+    262.4,
+    2.29
+   ],
+   "game": [
+    2365,
+    229,
+    2320
+   ],
+   "floor_m": 2.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "PG 2640 - HV 6692",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f1_f1_east_2_step2",
+   "map_m": [
+    61.65,
+    262.4,
+    1.07
+   ],
+   "game": [
+    2275,
+    107,
+    2320
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PG 2640 - HV 6692",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_east_3",
+   "map_m": [
+    66.5,
+    266.8,
+    2.3
+   ],
+   "game": [
+    2760,
+    230,
+    1880
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "PG 2640 - HV 6692",
+   "length_m": 8.8,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_east_3_step1",
+   "map_m": [
+    61.65,
+    266.8,
+    1.07
+   ],
+   "game": [
+    2275,
+    107,
+    1880
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PG 2640 - HV 6692",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_east_4",
+   "map_m": [
+    66.95,
+    271.2,
+    3.0
+   ],
+   "game": [
+    2805,
+    300,
+    1440
+   ],
+   "floor_m": 3.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "PG 2640 - HV 6692",
+   "length_m": 7.9,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f1_f1_east_4_step1",
+   "map_m": [
+    62.55,
+    271.2,
+    2.29
+   ],
+   "game": [
+    2365,
+    229,
+    1440
+   ],
+   "floor_m": 2.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "PG 2640 - HV 6692",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f1_f1_east_4_step2",
+   "map_m": [
+    61.65,
+    271.2,
+    1.07
+   ],
+   "game": [
+    2275,
+    107,
+    1440
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PG 2640 - HV 6692",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_east_5",
+   "map_m": [
+    66.5,
+    275.6,
+    2.3
+   ],
+   "game": [
+    2760,
+    230,
+    1000
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "PG 2640 - HV 6692",
+   "length_m": 8.8,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_east_5_step1",
+   "map_m": [
+    61.65,
+    275.6,
+    1.07
+   ],
+   "game": [
+    2275,
+    107,
+    1000
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PG 2640 - HV 6692",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_hv_1",
+   "map_m": [
+    50.65,
+    272.6,
+    2.3
+   ],
+   "game": [
+    1175,
+    230,
+    1300
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 1.28,
+   "headroom_m": 3.1,
+   "note": "HQ 799 - HV 6692",
+   "length_m": 7.5,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_hv_1_step1",
+   "map_m": [
+    46.45,
+    272.6,
+    1.07
+   ],
+   "game": [
+    755,
+    107,
+    1300
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "HQ 799 - HV 6692",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_hv_2",
+   "map_m": [
+    50.65,
+    277.0,
+    2.3
+   ],
+   "game": [
+    1175,
+    230,
+    860
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "HQ 799 - HV 6692",
+   "length_m": 7.5,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_hv_2_step1",
+   "map_m": [
+    46.45,
+    277.0,
+    1.07
+   ],
+   "game": [
+    755,
+    107,
+    860
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "HQ 799 - HV 6692",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c1r1",
+   "map_m": [
+    12.15,
+    298.7,
+    2.3
+   ],
+   "game": [
+    -2675,
+    230,
+    -1310
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 2.8,
+   "headroom_m": 3.1,
+   "note": "Judaica",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c1r1_step1",
+   "map_m": [
+    15.95,
+    298.7,
+    1.07
+   ],
+   "game": [
+    -2295,
+    107,
+    -1310
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Judaica",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c1r2",
+   "map_m": [
+    12.15,
+    303.1,
+    2.3
+   ],
+   "game": [
+    -2675,
+    230,
+    -1750
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Judaica",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c1r2_step1",
+   "map_m": [
+    15.95,
+    303.1,
+    1.07
+   ],
+   "game": [
+    -2295,
+    107,
+    -1750
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Judaica",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c1r3",
+   "map_m": [
+    12.15,
+    307.5,
+    2.3
+   ],
+   "game": [
+    -2675,
+    230,
+    -2190
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Judaica",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c1r3_step1",
+   "map_m": [
+    15.95,
+    307.5,
+    1.07
+   ],
+   "game": [
+    -2295,
+    107,
+    -2190
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Judaica",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c1r4",
+   "map_m": [
+    10.25,
+    311.9,
+    2.3
+   ],
+   "game": [
+    -2865,
+    230,
+    -2630
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Judaica",
+   "length_m": 2.9,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c1r4_step1",
+   "map_m": [
+    12.15,
+    311.9,
+    1.07
+   ],
+   "game": [
+    -2675,
+    107,
+    -2630
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Judaica",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c2r1",
+   "map_m": [
+    22.61,
+    298.7,
+    2.3
+   ],
+   "game": [
+    -1629,
+    230,
+    -1310
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 2.68,
+   "headroom_m": 3.1,
+   "note": "Judaica",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c2r1_step1",
+   "map_m": [
+    26.41,
+    298.7,
+    1.07
+   ],
+   "game": [
+    -1249,
+    107,
+    -1310
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Judaica",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c2r2",
+   "map_m": [
+    22.61,
+    303.1,
+    2.3
+   ],
+   "game": [
+    -1629,
+    230,
+    -1750
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Judaica",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c2r2_step1",
+   "map_m": [
+    26.41,
+    303.1,
+    1.07
+   ],
+   "game": [
+    -1249,
+    107,
+    -1750
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Judaica",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c2r3",
+   "map_m": [
+    22.61,
+    307.5,
+    2.3
+   ],
+   "game": [
+    -1629,
+    230,
+    -2190
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 0.85,
+   "headroom_m": 3.1,
+   "note": "Judaica",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c2r3_step1",
+   "map_m": [
+    26.41,
+    307.5,
+    1.07
+   ],
+   "game": [
+    -1249,
+    107,
+    -2190
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Judaica",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c3r1",
+   "map_m": [
+    33.07,
+    298.7,
+    2.3
+   ],
+   "game": [
+    -583,
+    230,
+    -1310
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "A 62.5 - DA 565",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c3r1_step1",
+   "map_m": [
+    36.87,
+    298.7,
+    1.07
+   ],
+   "game": [
+    -203,
+    107,
+    -1310
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "A 62.5 - DA 565",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c3r2",
+   "map_m": [
+    33.07,
+    303.1,
+    2.3
+   ],
+   "game": [
+    -583,
+    230,
+    -1750
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "A 62.5 - DA 565",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c3r2_step1",
+   "map_m": [
+    36.87,
+    303.1,
+    1.07
+   ],
+   "game": [
+    -203,
+    107,
+    -1750
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "A 62.5 - DA 565",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c3r3",
+   "map_m": [
+    33.07,
+    307.5,
+    2.3
+   ],
+   "game": [
+    -583,
+    230,
+    -2190
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "A 62.5 - DA 565",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c3r3_step1",
+   "map_m": [
+    36.87,
+    307.5,
+    1.07
+   ],
+   "game": [
+    -203,
+    107,
+    -2190
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "A 62.5 - DA 565",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c3r4",
+   "map_m": [
+    33.07,
+    311.9,
+    2.3
+   ],
+   "game": [
+    -583,
+    230,
+    -2630
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "A 62.5 - DA 565",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c3r4_step1",
+   "map_m": [
+    36.87,
+    311.9,
+    1.07
+   ],
+   "game": [
+    -203,
+    107,
+    -2630
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "A 62.5 - DA 565",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c4r1",
+   "map_m": [
+    44.43,
+    298.7,
+    2.3
+   ],
+   "game": [
+    553,
+    230,
+    -1310
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "DA 565 - E 741",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c4r1_step1",
+   "map_m": [
+    40.63,
+    298.7,
+    1.07
+   ],
+   "game": [
+    173,
+    107,
+    -1310
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "DA 565 - E 741",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c4r2",
+   "map_m": [
+    44.43,
+    303.1,
+    2.3
+   ],
+   "game": [
+    553,
+    230,
+    -1750
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "DA 565 - E 741",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c4r2_step1",
+   "map_m": [
+    40.63,
+    303.1,
+    1.07
+   ],
+   "game": [
+    173,
+    107,
+    -1750
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "DA 565 - E 741",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c4r3",
+   "map_m": [
+    44.43,
+    307.5,
+    2.3
+   ],
+   "game": [
+    553,
+    230,
+    -2190
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "DA 565 - E 741",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c4r3_step1",
+   "map_m": [
+    40.63,
+    307.5,
+    1.07
+   ],
+   "game": [
+    173,
+    107,
+    -2190
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "DA 565 - E 741",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c4r4",
+   "map_m": [
+    44.43,
+    311.9,
+    2.3
+   ],
+   "game": [
+    553,
+    230,
+    -2630
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "DA 565 - E 741",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c4r4_step1",
+   "map_m": [
+    40.63,
+    311.9,
+    1.07
+   ],
+   "game": [
+    173,
+    107,
+    -2630
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "DA 565 - E 741",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c5r1",
+   "map_m": [
+    54.89,
+    298.7,
+    2.3
+   ],
+   "game": [
+    1599,
+    230,
+    -1310
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 2.98,
+   "headroom_m": 3.1,
+   "note": "E 741 - GV 951.8",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c5r1_step1",
+   "map_m": [
+    51.09,
+    298.7,
+    1.07
+   ],
+   "game": [
+    1219,
+    107,
+    -1310
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "E 741 - GV 951.8",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c5r2",
+   "map_m": [
+    54.89,
+    303.1,
+    2.3
+   ],
+   "game": [
+    1599,
+    230,
+    -1750
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "E 741 - GV 951.8",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c5r2_step1",
+   "map_m": [
+    51.09,
+    303.1,
+    1.07
+   ],
+   "game": [
+    1219,
+    107,
+    -1750
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "E 741 - GV 951.8",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c5r3",
+   "map_m": [
+    54.89,
+    307.5,
+    2.3
+   ],
+   "game": [
+    1599,
+    230,
+    -2190
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 0.85,
+   "headroom_m": 3.1,
+   "note": "E 741 - GV 951.8",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c5r3_step1",
+   "map_m": [
+    51.09,
+    307.5,
+    1.07
+   ],
+   "game": [
+    1219,
+    107,
+    -2190
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "E 741 - GV 951.8",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c6r1",
+   "map_m": [
+    65.35,
+    298.7,
+    2.3
+   ],
+   "game": [
+    2645,
+    230,
+    -1310
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "GV 951.8 - HD 30.2",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c6r1_step1",
+   "map_m": [
+    61.55,
+    298.7,
+    1.07
+   ],
+   "game": [
+    2265,
+    107,
+    -1310
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "GV 951.8 - HD 30.2",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c6r2",
+   "map_m": [
+    65.35,
+    303.1,
+    2.3
+   ],
+   "game": [
+    2645,
+    230,
+    -1750
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "GV 951.8 - HD 30.2",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c6r2_step1",
+   "map_m": [
+    61.55,
+    303.1,
+    1.07
+   ],
+   "game": [
+    2265,
+    107,
+    -1750
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "GV 951.8 - HD 30.2",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c6r3",
+   "map_m": [
+    65.35,
+    307.5,
+    2.3
+   ],
+   "game": [
+    2645,
+    230,
+    -2190
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "GV 951.8 - HD 30.2",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c6r3_step1",
+   "map_m": [
+    61.55,
+    307.5,
+    1.07
+   ],
+   "game": [
+    2265,
+    107,
+    -2190
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "GV 951.8 - HD 30.2",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_wing_c6r4",
+   "map_m": [
+    67.3,
+    311.9,
+    2.3
+   ],
+   "game": [
+    2840,
+    230,
+    -2630
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "GV 951.8 - HD 30.2",
+   "length_m": 2.8,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_wing_c6r4_step1",
+   "map_m": [
+    65.45,
+    311.9,
+    1.07
+   ],
+   "game": [
+    2655,
+    107,
+    -2630
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "GV 951.8 - HD 30.2",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_neck_c3r1",
+   "map_m": [
+    33.07,
+    294.3,
+    2.3
+   ],
+   "game": [
+    -583,
+    230,
+    -870
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "A 62.5 - DA 565",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_neck_c3r1_step1",
+   "map_m": [
+    36.87,
+    294.3,
+    1.07
+   ],
+   "game": [
+    -203,
+    107,
+    -870
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "A 62.5 - DA 565",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_neck_c3r2",
+   "map_m": [
+    33.07,
+    289.9,
+    2.3
+   ],
+   "game": [
+    -583,
+    230,
+    -430
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "A 62.5 - DA 565",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_neck_c3r2_step1",
+   "map_m": [
+    36.87,
+    289.9,
+    1.07
+   ],
+   "game": [
+    -203,
+    107,
+    -430
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "A 62.5 - DA 565",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_neck_c3r3",
+   "map_m": [
+    33.07,
+    285.5,
+    2.3
+   ],
+   "game": [
+    -583,
+    230,
+    10
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "A 62.5 - DA 565",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_neck_c3r3_step1",
+   "map_m": [
+    36.87,
+    285.5,
+    1.07
+   ],
+   "game": [
+    -203,
+    107,
+    10
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "A 62.5 - DA 565",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_neck_c3r4",
+   "map_m": [
+    33.07,
+    281.1,
+    2.3
+   ],
+   "game": [
+    -583,
+    230,
+    450
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 1.91,
+   "headroom_m": 3.1,
+   "note": "A 62.5 - DA 565",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_neck_c3r4_step1",
+   "map_m": [
+    36.87,
+    281.1,
+    1.07
+   ],
+   "game": [
+    -203,
+    107,
+    450
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "A 62.5 - DA 565",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_neck_c4r1",
+   "map_m": [
+    44.43,
+    294.3,
+    2.3
+   ],
+   "game": [
+    553,
+    230,
+    -870
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "DA 565 - E 741",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_neck_c4r1_step1",
+   "map_m": [
+    40.63,
+    294.3,
+    1.07
+   ],
+   "game": [
+    173,
+    107,
+    -870
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "DA 565 - E 741",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_neck_c4r2",
+   "map_m": [
+    44.43,
+    289.9,
+    2.3
+   ],
+   "game": [
+    553,
+    230,
+    -430
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "DA 565 - E 741",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_neck_c4r2_step1",
+   "map_m": [
+    40.63,
+    289.9,
+    1.07
+   ],
+   "game": [
+    173,
+    107,
+    -430
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "DA 565 - E 741",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_neck_c4r3",
+   "map_m": [
+    44.43,
+    285.5,
+    2.3
+   ],
+   "game": [
+    553,
+    230,
+    10
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "DA 565 - E 741",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_neck_c4r3_step1",
+   "map_m": [
+    40.63,
+    285.5,
+    1.07
+   ],
+   "game": [
+    173,
+    107,
+    10
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "DA 565 - E 741",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f1_f1_neck_c4r4",
+   "map_m": [
+    44.43,
+    281.1,
+    2.3
+   ],
+   "game": [
+    553,
+    230,
+    450
+   ],
+   "floor_m": 2.3,
+   "clearance_m": 2.43,
+   "headroom_m": 3.1,
+   "note": "DA 565 - E 741",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f1_f1_neck_c4r4_step1",
+   "map_m": [
+    40.63,
+    281.1,
+    1.07
+   ],
+   "game": [
+    173,
+    107,
+    450
+   ],
+   "floor_m": 1.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "DA 565 - E 741",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c1r1",
+   "map_m": [
+    12.15,
+    298.7,
+    7.8
+   ],
+   "game": [
+    -2675,
+    780,
+    -1310
+   ],
+   "floor_m": 7.8,
+   "clearance_m": 2.8,
+   "headroom_m": 3.6,
+   "note": "Manga",
+   "length_m": 6.7,
+   "height_m": 1.8,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c1r1_step1",
+   "map_m": [
+    15.95,
+    298.7,
+    7.07
+   ],
+   "game": [
+    -2295,
+    707,
+    -1310
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Manga",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c1r2",
+   "map_m": [
+    11.7,
+    303.1,
+    9.0
+   ],
+   "game": [
+    -2720,
+    900,
+    -1750
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "PG 2640 - PN 1992.6",
+   "length_m": 5.8,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c1r2_step1",
+   "map_m": [
+    15.05,
+    303.1,
+    8.29
+   ],
+   "game": [
+    -2385,
+    829,
+    -1750
+   ],
+   "floor_m": 8.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "PG 2640 - PN 1992.6",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c1r2_step2",
+   "map_m": [
+    15.95,
+    303.1,
+    7.07
+   ],
+   "game": [
+    -2295,
+    707,
+    -1750
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PG 2640 - PN 1992.6",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c1r3",
+   "map_m": [
+    12.15,
+    307.5,
+    8.3
+   ],
+   "game": [
+    -2675,
+    830,
+    -2190
+   ],
+   "floor_m": 8.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "PG 2640 - PN 1992.6",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c1r3_step1",
+   "map_m": [
+    15.95,
+    307.5,
+    7.07
+   ],
+   "game": [
+    -2295,
+    707,
+    -2190
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PG 2640 - PN 1992.6",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c1r4",
+   "map_m": [
+    9.8,
+    311.9,
+    9.0
+   ],
+   "game": [
+    -2910,
+    900,
+    -2630
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "PG 2640 - PN 1992.6",
+   "length_m": 2.0,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c1r4_step1",
+   "map_m": [
+    11.25,
+    311.9,
+    8.29
+   ],
+   "game": [
+    -2765,
+    829,
+    -2630
+   ],
+   "floor_m": 8.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "PG 2640 - PN 1992.6",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c1r4_step2",
+   "map_m": [
+    12.15,
+    311.9,
+    7.07
+   ],
+   "game": [
+    -2675,
+    707,
+    -2630
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PG 2640 - PN 1992.6",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c2r1",
+   "map_m": [
+    22.61,
+    298.7,
+    7.8
+   ],
+   "game": [
+    -1629,
+    780,
+    -1310
+   ],
+   "floor_m": 7.8,
+   "clearance_m": 2.68,
+   "headroom_m": 3.6,
+   "note": "VHS & DVD",
+   "length_m": 6.7,
+   "height_m": 1.8,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c2r1_step1",
+   "map_m": [
+    26.41,
+    298.7,
+    7.07
+   ],
+   "game": [
+    -1249,
+    707,
+    -1310
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "VHS & DVD",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c2r2",
+   "map_m": [
+    22.16,
+    303.1,
+    9.0
+   ],
+   "game": [
+    -1674,
+    900,
+    -1750
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "PN 1992.6 - PQ 3989.2",
+   "length_m": 5.8,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c2r2_step1",
+   "map_m": [
+    25.51,
+    303.1,
+    8.29
+   ],
+   "game": [
+    -1339,
+    829,
+    -1750
+   ],
+   "floor_m": 8.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "PN 1992.6 - PQ 3989.2",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c2r2_step2",
+   "map_m": [
+    26.41,
+    303.1,
+    7.07
+   ],
+   "game": [
+    -1249,
+    707,
+    -1750
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PN 1992.6 - PQ 3989.2",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c2r3",
+   "map_m": [
+    22.61,
+    307.5,
+    8.3
+   ],
+   "game": [
+    -1629,
+    830,
+    -2190
+   ],
+   "floor_m": 8.3,
+   "clearance_m": 0.85,
+   "headroom_m": 3.1,
+   "note": "PN 1992.6 - PQ 3989.2",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c2r3_step1",
+   "map_m": [
+    26.41,
+    307.5,
+    7.07
+   ],
+   "game": [
+    -1249,
+    707,
+    -2190
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PN 1992.6 - PQ 3989.2",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c3r1",
+   "map_m": [
+    33.07,
+    298.7,
+    7.8
+   ],
+   "game": [
+    -583,
+    780,
+    -1310
+   ],
+   "floor_m": 7.8,
+   "clearance_m": 2.68,
+   "headroom_m": 3.6,
+   "note": "DVD / Blu-ray",
+   "length_m": 6.7,
+   "height_m": 1.8,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c3r1_step1",
+   "map_m": [
+    36.87,
+    298.7,
+    7.07
+   ],
+   "game": [
+    -203,
+    707,
+    -1310
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "DVD / Blu-ray",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c3r2",
+   "map_m": [
+    32.62,
+    303.1,
+    9.0
+   ],
+   "game": [
+    -628,
+    900,
+    -1750
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "PQ 3989.2 - PR 6005",
+   "length_m": 5.8,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c3r2_step1",
+   "map_m": [
+    35.97,
+    303.1,
+    8.29
+   ],
+   "game": [
+    -293,
+    829,
+    -1750
+   ],
+   "floor_m": 8.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "PQ 3989.2 - PR 6005",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c3r2_step2",
+   "map_m": [
+    36.87,
+    303.1,
+    7.07
+   ],
+   "game": [
+    -203,
+    707,
+    -1750
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PQ 3989.2 - PR 6005",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c3r3",
+   "map_m": [
+    33.07,
+    307.5,
+    8.3
+   ],
+   "game": [
+    -583,
+    830,
+    -2190
+   ],
+   "floor_m": 8.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "PQ 3989.2 - PR 6005",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c3r3_step1",
+   "map_m": [
+    36.87,
+    307.5,
+    7.07
+   ],
+   "game": [
+    -203,
+    707,
+    -2190
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PQ 3989.2 - PR 6005",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c3r4",
+   "map_m": [
+    32.62,
+    311.9,
+    9.0
+   ],
+   "game": [
+    -628,
+    900,
+    -2630
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "PQ 3989.2 - PR 6005",
+   "length_m": 5.8,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c3r4_step1",
+   "map_m": [
+    35.97,
+    311.9,
+    8.29
+   ],
+   "game": [
+    -293,
+    829,
+    -2630
+   ],
+   "floor_m": 8.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "PQ 3989.2 - PR 6005",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c3r4_step2",
+   "map_m": [
+    36.87,
+    311.9,
+    7.07
+   ],
+   "game": [
+    -203,
+    707,
+    -2630
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PQ 3989.2 - PR 6005",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c4r1",
+   "map_m": [
+    44.43,
+    298.7,
+    7.8
+   ],
+   "game": [
+    553,
+    780,
+    -1310
+   ],
+   "floor_m": 7.8,
+   "clearance_m": 2.68,
+   "headroom_m": 3.6,
+   "note": "DVD / Blu-ray",
+   "length_m": 6.7,
+   "height_m": 1.8,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c4r1_step1",
+   "map_m": [
+    40.63,
+    298.7,
+    7.07
+   ],
+   "game": [
+    173,
+    707,
+    -1310
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "DVD / Blu-ray",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c4r2",
+   "map_m": [
+    44.88,
+    303.1,
+    9.0
+   ],
+   "game": [
+    598,
+    900,
+    -1750
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "PR 6005 - PS 3561",
+   "length_m": 5.8,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c4r2_step1",
+   "map_m": [
+    41.53,
+    303.1,
+    8.29
+   ],
+   "game": [
+    263,
+    829,
+    -1750
+   ],
+   "floor_m": 8.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "PR 6005 - PS 3561",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c4r2_step2",
+   "map_m": [
+    40.63,
+    303.1,
+    7.07
+   ],
+   "game": [
+    173,
+    707,
+    -1750
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PR 6005 - PS 3561",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c4r3",
+   "map_m": [
+    44.43,
+    307.5,
+    8.3
+   ],
+   "game": [
+    553,
+    830,
+    -2190
+   ],
+   "floor_m": 8.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "PR 6005 - PS 3561",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c4r3_step1",
+   "map_m": [
+    40.63,
+    307.5,
+    7.07
+   ],
+   "game": [
+    173,
+    707,
+    -2190
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PR 6005 - PS 3561",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c4r4",
+   "map_m": [
+    44.88,
+    311.9,
+    9.0
+   ],
+   "game": [
+    598,
+    900,
+    -2630
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "PR 6005 - PS 3561",
+   "length_m": 5.8,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c4r4_step1",
+   "map_m": [
+    41.53,
+    311.9,
+    8.29
+   ],
+   "game": [
+    263,
+    829,
+    -2630
+   ],
+   "floor_m": 8.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "PR 6005 - PS 3561",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c4r4_step2",
+   "map_m": [
+    40.63,
+    311.9,
+    7.07
+   ],
+   "game": [
+    173,
+    707,
+    -2630
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PR 6005 - PS 3561",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c5r1",
+   "map_m": [
+    54.89,
+    298.7,
+    7.8
+   ],
+   "game": [
+    1599,
+    780,
+    -1310
+   ],
+   "floor_m": 7.8,
+   "clearance_m": 2.98,
+   "headroom_m": 3.6,
+   "note": "DVD / Blu-ray",
+   "length_m": 6.7,
+   "height_m": 1.8,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c5r1_step1",
+   "map_m": [
+    51.09,
+    298.7,
+    7.07
+   ],
+   "game": [
+    1219,
+    707,
+    -1310
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "DVD / Blu-ray",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c5r2",
+   "map_m": [
+    55.34,
+    303.1,
+    9.0
+   ],
+   "game": [
+    1644,
+    900,
+    -1750
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "PS 3561 - RA 565",
+   "length_m": 5.8,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c5r2_step1",
+   "map_m": [
+    51.99,
+    303.1,
+    8.29
+   ],
+   "game": [
+    1309,
+    829,
+    -1750
+   ],
+   "floor_m": 8.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "PS 3561 - RA 565",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c5r2_step2",
+   "map_m": [
+    51.09,
+    303.1,
+    7.07
+   ],
+   "game": [
+    1219,
+    707,
+    -1750
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PS 3561 - RA 565",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c5r3",
+   "map_m": [
+    54.89,
+    307.5,
+    8.3
+   ],
+   "game": [
+    1599,
+    830,
+    -2190
+   ],
+   "floor_m": 8.3,
+   "clearance_m": 0.85,
+   "headroom_m": 3.1,
+   "note": "PS 3561 - RA 565",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c5r3_step1",
+   "map_m": [
+    51.09,
+    307.5,
+    7.07
+   ],
+   "game": [
+    1219,
+    707,
+    -2190
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "PS 3561 - RA 565",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c6r1",
+   "map_m": [
+    65.35,
+    298.7,
+    7.8
+   ],
+   "game": [
+    2645,
+    780,
+    -1310
+   ],
+   "floor_m": 7.8,
+   "clearance_m": 3.0,
+   "headroom_m": 3.6,
+   "note": "Blu-ray",
+   "length_m": 6.7,
+   "height_m": 1.8,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c6r1_step1",
+   "map_m": [
+    61.55,
+    298.7,
+    7.07
+   ],
+   "game": [
+    2265,
+    707,
+    -1310
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Blu-ray",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c6r2",
+   "map_m": [
+    65.8,
+    303.1,
+    9.0
+   ],
+   "game": [
+    2690,
+    900,
+    -1750
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "RA 565 - ZA 5075",
+   "length_m": 5.8,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c6r2_step1",
+   "map_m": [
+    62.45,
+    303.1,
+    8.29
+   ],
+   "game": [
+    2355,
+    829,
+    -1750
+   ],
+   "floor_m": 8.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "RA 565 - ZA 5075",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c6r2_step2",
+   "map_m": [
+    61.55,
+    303.1,
+    7.07
+   ],
+   "game": [
+    2265,
+    707,
+    -1750
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "RA 565 - ZA 5075",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c6r3",
+   "map_m": [
+    65.35,
+    307.5,
+    8.3
+   ],
+   "game": [
+    2645,
+    830,
+    -2190
+   ],
+   "floor_m": 8.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "RA 565 - ZA 5075",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c6r3_step1",
+   "map_m": [
+    61.55,
+    307.5,
+    7.07
+   ],
+   "game": [
+    2265,
+    707,
+    -2190
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "RA 565 - ZA 5075",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c6r4",
+   "map_m": [
+    67.75,
+    311.9,
+    9.0
+   ],
+   "game": [
+    2885,
+    900,
+    -2630
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "RA 565 - ZA 5075",
+   "length_m": 1.9,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f2_f2_wing_c6r4_step1",
+   "map_m": [
+    66.35,
+    311.9,
+    8.29
+   ],
+   "game": [
+    2745,
+    829,
+    -2630
+   ],
+   "floor_m": 8.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "RA 565 - ZA 5075",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f2_f2_wing_c6r4_step2",
+   "map_m": [
+    65.45,
+    311.9,
+    7.07
+   ],
+   "game": [
+    2655,
+    707,
+    -2630
+   ],
+   "floor_m": 7.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "RA 565 - ZA 5075",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c1r1",
+   "map_m": [
+    12.15,
+    298.7,
+    13.8
+   ],
+   "game": [
+    -2675,
+    1380,
+    -1310
+   ],
+   "floor_m": 13.8,
+   "clearance_m": 2.8,
+   "headroom_m": 3.6,
+   "note": "Oversized",
+   "length_m": 6.7,
+   "height_m": 1.8,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c1r1_step1",
+   "map_m": [
+    15.95,
+    298.7,
+    13.07
+   ],
+   "game": [
+    -2295,
+    1307,
+    -1310
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Oversized",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c1r2",
+   "map_m": [
+    12.15,
+    303.1,
+    13.8
+   ],
+   "game": [
+    -2675,
+    1380,
+    -1750
+   ],
+   "floor_m": 13.8,
+   "clearance_m": 3.0,
+   "headroom_m": 3.6,
+   "note": "Oversized",
+   "length_m": 6.7,
+   "height_m": 1.8,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c1r2_step1",
+   "map_m": [
+    15.95,
+    303.1,
+    13.07
+   ],
+   "game": [
+    -2295,
+    1307,
+    -1750
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Oversized",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c1r3",
+   "map_m": [
+    12.15,
+    307.5,
+    13.8
+   ],
+   "game": [
+    -2675,
+    1380,
+    -2190
+   ],
+   "floor_m": 13.8,
+   "clearance_m": 3.0,
+   "headroom_m": 3.6,
+   "note": "Oversized",
+   "length_m": 6.7,
+   "height_m": 1.8,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c1r3_step1",
+   "map_m": [
+    15.95,
+    307.5,
+    13.07
+   ],
+   "game": [
+    -2295,
+    1307,
+    -2190
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Oversized",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c1r4",
+   "map_m": [
+    10.25,
+    311.9,
+    13.8
+   ],
+   "game": [
+    -2865,
+    1380,
+    -2630
+   ],
+   "floor_m": 13.8,
+   "clearance_m": 3.0,
+   "headroom_m": 3.6,
+   "note": "Oversized",
+   "length_m": 2.9,
+   "height_m": 1.8,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c1r4_step1",
+   "map_m": [
+    12.15,
+    311.9,
+    13.07
+   ],
+   "game": [
+    -2675,
+    1307,
+    -2630
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Oversized",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c2r1",
+   "map_m": [
+    22.61,
+    298.7,
+    14.3
+   ],
+   "game": [
+    -1629,
+    1430,
+    -1310
+   ],
+   "floor_m": 14.3,
+   "clearance_m": 2.68,
+   "headroom_m": 3.1,
+   "note": "Reference",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c2r1_step1",
+   "map_m": [
+    26.41,
+    298.7,
+    13.07
+   ],
+   "game": [
+    -1249,
+    1307,
+    -1310
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Reference",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c2r2",
+   "map_m": [
+    22.16,
+    303.1,
+    15.0
+   ],
+   "game": [
+    -1674,
+    1500,
+    -1750
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "Reference",
+   "length_m": 5.8,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c2r2_step1",
+   "map_m": [
+    25.51,
+    303.1,
+    14.29
+   ],
+   "game": [
+    -1339,
+    1429,
+    -1750
+   ],
+   "floor_m": 14.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "Reference",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c2r2_step2",
+   "map_m": [
+    26.41,
+    303.1,
+    13.07
+   ],
+   "game": [
+    -1249,
+    1307,
+    -1750
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Reference",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c2r3",
+   "map_m": [
+    22.61,
+    307.5,
+    14.3
+   ],
+   "game": [
+    -1629,
+    1430,
+    -2190
+   ],
+   "floor_m": 14.3,
+   "clearance_m": 0.85,
+   "headroom_m": 3.1,
+   "note": "Reference",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c2r3_step1",
+   "map_m": [
+    26.41,
+    307.5,
+    13.07
+   ],
+   "game": [
+    -1249,
+    1307,
+    -2190
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Reference",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c3r1",
+   "map_m": [
+    33.07,
+    298.7,
+    14.3
+   ],
+   "game": [
+    -583,
+    1430,
+    -1310
+   ],
+   "floor_m": 14.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Periodicals AC 5 - HG 2401",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c3r1_step1",
+   "map_m": [
+    36.87,
+    298.7,
+    13.07
+   ],
+   "game": [
+    -203,
+    1307,
+    -1310
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals AC 5 - HG 2401",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c3r2",
+   "map_m": [
+    32.62,
+    303.1,
+    15.0
+   ],
+   "game": [
+    -628,
+    1500,
+    -1750
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "Periodicals AC 5 - HG 2401",
+   "length_m": 5.8,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c3r2_step1",
+   "map_m": [
+    35.97,
+    303.1,
+    14.29
+   ],
+   "game": [
+    -293,
+    1429,
+    -1750
+   ],
+   "floor_m": 14.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "Periodicals AC 5 - HG 2401",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c3r2_step2",
+   "map_m": [
+    36.87,
+    303.1,
+    13.07
+   ],
+   "game": [
+    -203,
+    1307,
+    -1750
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals AC 5 - HG 2401",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c3r3",
+   "map_m": [
+    33.07,
+    307.5,
+    14.3
+   ],
+   "game": [
+    -583,
+    1430,
+    -2190
+   ],
+   "floor_m": 14.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Periodicals AC 5 - HG 2401",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c3r3_step1",
+   "map_m": [
+    36.87,
+    307.5,
+    13.07
+   ],
+   "game": [
+    -203,
+    1307,
+    -2190
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals AC 5 - HG 2401",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c3r4",
+   "map_m": [
+    32.62,
+    311.9,
+    15.0
+   ],
+   "game": [
+    -628,
+    1500,
+    -2630
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "Periodicals AC 5 - HG 2401",
+   "length_m": 5.8,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c3r4_step1",
+   "map_m": [
+    35.97,
+    311.9,
+    14.29
+   ],
+   "game": [
+    -293,
+    1429,
+    -2630
+   ],
+   "floor_m": 14.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "Periodicals AC 5 - HG 2401",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c3r4_step2",
+   "map_m": [
+    36.87,
+    311.9,
+    13.07
+   ],
+   "game": [
+    -203,
+    1307,
+    -2630
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals AC 5 - HG 2401",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c4r1",
+   "map_m": [
+    44.43,
+    298.7,
+    14.3
+   ],
+   "game": [
+    553,
+    1430,
+    -1310
+   ],
+   "floor_m": 14.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Periodicals HG 2401 - ZA 4080",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c4r1_step1",
+   "map_m": [
+    40.63,
+    298.7,
+    13.07
+   ],
+   "game": [
+    173,
+    1307,
+    -1310
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals HG 2401 - ZA 4080",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c4r2",
+   "map_m": [
+    44.88,
+    303.1,
+    15.0
+   ],
+   "game": [
+    598,
+    1500,
+    -1750
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "Periodicals HG 2401 - ZA 4080",
+   "length_m": 5.8,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c4r2_step1",
+   "map_m": [
+    41.53,
+    303.1,
+    14.29
+   ],
+   "game": [
+    263,
+    1429,
+    -1750
+   ],
+   "floor_m": 14.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "Periodicals HG 2401 - ZA 4080",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c4r2_step2",
+   "map_m": [
+    40.63,
+    303.1,
+    13.07
+   ],
+   "game": [
+    173,
+    1307,
+    -1750
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals HG 2401 - ZA 4080",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c4r3",
+   "map_m": [
+    44.43,
+    307.5,
+    14.3
+   ],
+   "game": [
+    553,
+    1430,
+    -2190
+   ],
+   "floor_m": 14.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Periodicals HG 2401 - ZA 4080",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c4r3_step1",
+   "map_m": [
+    40.63,
+    307.5,
+    13.07
+   ],
+   "game": [
+    173,
+    1307,
+    -2190
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals HG 2401 - ZA 4080",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c4r4",
+   "map_m": [
+    44.88,
+    311.9,
+    15.0
+   ],
+   "game": [
+    598,
+    1500,
+    -2630
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 3.0,
+   "headroom_m": 2.4,
+   "note": "Periodicals HG 2401 - ZA 4080",
+   "length_m": 5.8,
+   "height_m": 3.0,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c4r4_step1",
+   "map_m": [
+    41.53,
+    311.9,
+    14.29
+   ],
+   "game": [
+    263,
+    1429,
+    -2630
+   ],
+   "floor_m": 14.29,
+   "clearance_m": 0.45,
+   "headroom_m": 3.11,
+   "note": "Periodicals HG 2401 - ZA 4080",
+   "length_m": 0.9,
+   "height_m": 2.29,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c4r4_step2",
+   "map_m": [
+    40.63,
+    311.9,
+    13.07
+   ],
+   "game": [
+    173,
+    1307,
+    -2630
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals HG 2401 - ZA 4080",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c5r1",
+   "map_m": [
+    54.89,
+    298.7,
+    13.5
+   ],
+   "game": [
+    1599,
+    1350,
+    -1310
+   ],
+   "floor_m": 13.5,
+   "clearance_m": 2.98,
+   "headroom_m": 3.9,
+   "note": "Microforms",
+   "length_m": 6.7,
+   "height_m": 1.5,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c5r1_step1",
+   "map_m": [
+    51.09,
+    298.7,
+    13.07
+   ],
+   "game": [
+    1219,
+    1307,
+    -1310
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 3.0,
+   "headroom_m": 4.33,
+   "note": "Microforms",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c5r2",
+   "map_m": [
+    54.89,
+    303.1,
+    13.5
+   ],
+   "game": [
+    1599,
+    1350,
+    -1750
+   ],
+   "floor_m": 13.5,
+   "clearance_m": 3.0,
+   "headroom_m": 3.9,
+   "note": "Microforms",
+   "length_m": 6.7,
+   "height_m": 1.5,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c5r2_step1",
+   "map_m": [
+    51.09,
+    303.1,
+    13.07
+   ],
+   "game": [
+    1219,
+    1307,
+    -1750
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 3.0,
+   "headroom_m": 4.33,
+   "note": "Microforms",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c5r3",
+   "map_m": [
+    54.89,
+    307.5,
+    13.5
+   ],
+   "game": [
+    1599,
+    1350,
+    -2190
+   ],
+   "floor_m": 13.5,
+   "clearance_m": 0.85,
+   "headroom_m": 3.9,
+   "note": "Microforms",
+   "length_m": 6.7,
+   "height_m": 1.5,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c5r3_step1",
+   "map_m": [
+    51.09,
+    307.5,
+    13.07
+   ],
+   "game": [
+    1219,
+    1307,
+    -2190
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 3.0,
+   "headroom_m": 4.33,
+   "note": "Microforms",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c6r1",
+   "map_m": [
+    65.35,
+    298.7,
+    13.5
+   ],
+   "game": [
+    2645,
+    1350,
+    -1310
+   ],
+   "floor_m": 13.5,
+   "clearance_m": 3.0,
+   "headroom_m": 3.9,
+   "note": "Microforms",
+   "length_m": 6.7,
+   "height_m": 1.5,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c6r1_step1",
+   "map_m": [
+    61.55,
+    298.7,
+    13.07
+   ],
+   "game": [
+    2265,
+    1307,
+    -1310
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 3.0,
+   "headroom_m": 4.33,
+   "note": "Microforms",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c6r2",
+   "map_m": [
+    65.35,
+    303.1,
+    13.5
+   ],
+   "game": [
+    2645,
+    1350,
+    -1750
+   ],
+   "floor_m": 13.5,
+   "clearance_m": 3.0,
+   "headroom_m": 3.9,
+   "note": "Microforms",
+   "length_m": 6.7,
+   "height_m": 1.5,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c6r2_step1",
+   "map_m": [
+    61.55,
+    303.1,
+    13.07
+   ],
+   "game": [
+    2265,
+    1307,
+    -1750
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 3.0,
+   "headroom_m": 4.33,
+   "note": "Microforms",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c6r3",
+   "map_m": [
+    65.35,
+    307.5,
+    13.5
+   ],
+   "game": [
+    2645,
+    1350,
+    -2190
+   ],
+   "floor_m": 13.5,
+   "clearance_m": 3.0,
+   "headroom_m": 3.9,
+   "note": "Microforms",
+   "length_m": 6.7,
+   "height_m": 1.5,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c6r3_step1",
+   "map_m": [
+    61.55,
+    307.5,
+    13.07
+   ],
+   "game": [
+    2265,
+    1307,
+    -2190
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.6,
+   "headroom_m": 4.33,
+   "note": "Microforms",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_wing_c6r4",
+   "map_m": [
+    67.3,
+    311.9,
+    13.5
+   ],
+   "game": [
+    2840,
+    1350,
+    -2630
+   ],
+   "floor_m": 13.5,
+   "clearance_m": 3.0,
+   "headroom_m": 3.9,
+   "note": "Microforms",
+   "length_m": 2.8,
+   "height_m": 1.5,
+   "main": true
+  },
+  {
+   "name": "f3_f3_wing_c6r4_step1",
+   "map_m": [
+    65.45,
+    311.9,
+    13.07
+   ],
+   "game": [
+    2655,
+    1307,
+    -2630
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 2.45,
+   "headroom_m": 4.33,
+   "note": "Microforms",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_neck_c3",
+   "map_m": [
+    33.07,
+    294.3,
+    14.3
+   ],
+   "game": [
+    -583,
+    1430,
+    -870
+   ],
+   "floor_m": 14.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Periodicals",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_f3_neck_c3_step1",
+   "map_m": [
+    36.87,
+    294.3,
+    13.07
+   ],
+   "game": [
+    -203,
+    1307,
+    -870
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  },
+  {
+   "name": "f3_f3_neck_c4",
+   "map_m": [
+    44.43,
+    294.3,
+    14.3
+   ],
+   "game": [
+    553,
+    1430,
+    -870
+   ],
+   "floor_m": 14.3,
+   "clearance_m": 3.0,
+   "headroom_m": 3.1,
+   "note": "Periodicals",
+   "length_m": 6.7,
+   "height_m": 2.3,
+   "main": true
+  },
+  {
+   "name": "f3_f3_neck_c4_step1",
+   "map_m": [
+    40.63,
+    294.3,
+    13.07
+   ],
+   "game": [
+    173,
+    1307,
+    -870
+   ],
+   "floor_m": 13.07,
+   "clearance_m": 0.45,
+   "headroom_m": 4.33,
+   "note": "Periodicals",
+   "length_m": 0.9,
+   "height_m": 1.07,
+   "main": false
+  }
+ ],
+ "group_study_rooms": [
+  {
+   "room": "R227",
+   "floor": "F2",
+   "name": "227",
+   "door_a_m": [
+    12.8,
+    265.4
+   ],
+   "door_b_m": [
+    14.8,
+    265.4
+   ],
+   "door_width_m": 2.0,
+   "door_head_m": 2.6,
+   "facing_deg": 0.0,
+   "door": {
+    "name": "room_R227_door",
+    "map_m": [
+     13.8,
+     265.4,
+     6.0
+    ],
+    "game": [
+     -2510,
+     600,
+     2020
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.0,
+    "headroom_m": 2.6,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   },
+   "inside": {
+    "name": "room_R227_inside",
+    "map_m": [
+     13.8,
+     264.5,
+     6.0
+    ],
+    "game": [
+     -2510,
+     600,
+     2110
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.41,
+    "headroom_m": 5.4,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   }
+  },
+  {
+   "room": "R228",
+   "floor": "F2",
+   "name": "228",
+   "door_a_m": [
+    16.15,
+    265.4
+   ],
+   "door_b_m": [
+    18.15,
+    265.4
+   ],
+   "door_width_m": 2.0,
+   "door_head_m": 2.6,
+   "facing_deg": 0.0,
+   "door": {
+    "name": "room_R228_door",
+    "map_m": [
+     17.15,
+     265.4,
+     6.0
+    ],
+    "game": [
+     -2175,
+     600,
+     2020
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.0,
+    "headroom_m": 2.6,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   },
+   "inside": {
+    "name": "room_R228_inside",
+    "map_m": [
+     17.15,
+     264.5,
+     6.0
+    ],
+    "game": [
+     -2175,
+     600,
+     2110
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.35,
+    "headroom_m": 5.4,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   }
+  },
+  {
+   "room": "R229",
+   "floor": "F2",
+   "name": "229",
+   "door_a_m": [
+    12.1,
+    257.3
+   ],
+   "door_b_m": [
+    12.1,
+    259.3
+   ],
+   "door_width_m": 2.0,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_R229_door",
+    "map_m": [
+     12.1,
+     258.3,
+     6.0
+    ],
+    "game": [
+     -2680,
+     600,
+     2730
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.0,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_R229_inside",
+    "map_m": [
+     13.0,
+     258.3,
+     6.0
+    ],
+    "game": [
+     -2590,
+     600,
+     2730
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.41,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "R230",
+   "floor": "F2",
+   "name": "230",
+   "door_a_m": [
+    12.1,
+    254.4
+   ],
+   "door_b_m": [
+    12.1,
+    256.4
+   ],
+   "door_width_m": 2.0,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_R230_door",
+    "map_m": [
+     12.1,
+     255.4,
+     6.0
+    ],
+    "game": [
+     -2680,
+     600,
+     3020
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.0,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_R230_inside",
+    "map_m": [
+     13.0,
+     255.4,
+     6.0
+    ],
+    "game": [
+     -2590,
+     600,
+     3020
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.08,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "R224",
+   "floor": "F2",
+   "name": "224",
+   "door_a_m": [
+    12.8,
+    268.5
+   ],
+   "door_b_m": [
+    14.8,
+    268.5
+   ],
+   "door_width_m": 2.0,
+   "door_head_m": 2.6,
+   "facing_deg": 180.0,
+   "door": {
+    "name": "room_R224_door",
+    "map_m": [
+     13.8,
+     268.5,
+     6.0
+    ],
+    "game": [
+     -2510,
+     600,
+     1710
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.0,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   "inside": {
+    "name": "room_R224_inside",
+    "map_m": [
+     13.8,
+     269.4,
+     6.0
+    ],
+    "game": [
+     -2510,
+     600,
+     1620
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 0.57,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "R225",
+   "floor": "F2",
+   "name": "225",
+   "door_a_m": [
+    16.15,
+    268.5
+   ],
+   "door_b_m": [
+    18.15,
+    268.5
+   ],
+   "door_width_m": 2.0,
+   "door_head_m": 2.6,
+   "facing_deg": 180.0,
+   "door": {
+    "name": "room_R225_door",
+    "map_m": [
+     17.15,
+     268.5,
+     6.0
+    ],
+    "game": [
+     -2175,
+     600,
+     1710
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.0,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   "inside": {
+    "name": "room_R225_inside",
+    "map_m": [
+     17.15,
+     269.4,
+     6.0
+    ],
+    "game": [
+     -2175,
+     600,
+     1620
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 0.57,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "R222",
+   "floor": "F2",
+   "name": "222",
+   "door_a_m": [
+    12.8,
+    275.15
+   ],
+   "door_b_m": [
+    14.8,
+    275.15
+   ],
+   "door_width_m": 2.0,
+   "door_head_m": 2.6,
+   "facing_deg": 0.0,
+   "door": {
+    "name": "room_R222_door",
+    "map_m": [
+     13.8,
+     275.15,
+     6.0
+    ],
+    "game": [
+     -2510,
+     600,
+     1045
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.0,
+    "headroom_m": 2.6,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   },
+   "inside": {
+    "name": "room_R222_inside",
+    "map_m": [
+     13.8,
+     274.25,
+     6.0
+    ],
+    "game": [
+     -2510,
+     600,
+     1135
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 0.64,
+    "headroom_m": 5.4,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   }
+  },
+  {
+   "room": "R223",
+   "floor": "F2",
+   "name": "223",
+   "door_a_m": [
+    16.15,
+    275.15
+   ],
+   "door_b_m": [
+    18.15,
+    275.15
+   ],
+   "door_width_m": 2.0,
+   "door_head_m": 2.6,
+   "facing_deg": 0.0,
+   "door": {
+    "name": "room_R223_door",
+    "map_m": [
+     17.15,
+     275.15,
+     6.0
+    ],
+    "game": [
+     -2175,
+     600,
+     1045
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.0,
+    "headroom_m": 2.6,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   },
+   "inside": {
+    "name": "room_R223_inside",
+    "map_m": [
+     17.15,
+     274.25,
+     6.0
+    ],
+    "game": [
+     -2175,
+     600,
+     1135
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 0.64,
+    "headroom_m": 5.4,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   }
+  },
+  {
+   "room": "R220",
+   "floor": "F2",
+   "name": "220",
+   "door_a_m": [
+    11.8,
+    281.1
+   ],
+   "door_b_m": [
+    11.8,
+    283.1
+   ],
+   "door_width_m": 2.0,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_R220_door",
+    "map_m": [
+     11.8,
+     282.1,
+     6.0
+    ],
+    "game": [
+     -2710,
+     600,
+     350
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.0,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_R220_inside",
+    "map_m": [
+     12.7,
+     282.1,
+     6.0
+    ],
+    "game": [
+     -2620,
+     600,
+     350
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 0.79,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "R219",
+   "floor": "F2",
+   "name": "219",
+   "door_a_m": [
+    11.8,
+    284.8
+   ],
+   "door_b_m": [
+    11.8,
+    286.8
+   ],
+   "door_width_m": 2.0,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_R219_door",
+    "map_m": [
+     11.8,
+     285.8,
+     6.0
+    ],
+    "game": [
+     -2710,
+     600,
+     -20
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.0,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_R219_inside",
+    "map_m": [
+     12.7,
+     285.8,
+     6.0
+    ],
+    "game": [
+     -2620,
+     600,
+     -20
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 0.79,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "f3_rm336",
+   "floor": "F3",
+   "name": "336",
+   "door_a_m": [
+    67.2,
+    273.0
+   ],
+   "door_b_m": [
+    67.2,
+    275.2
+   ],
+   "door_width_m": 2.2,
+   "door_head_m": 2.6,
+   "facing_deg": 90.0,
+   "door": {
+    "name": "room_f3_rm336_door",
+    "map_m": [
+     67.2,
+     274.1,
+     12.0
+    ],
+    "game": [
+     2830,
+     1200,
+     1150
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.1,
+    "headroom_m": 2.6,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   },
+   "inside": {
+    "name": "room_f3_rm336_inside",
+    "map_m": [
+     66.3,
+     274.1,
+     12.0
+    ],
+    "game": [
+     2740,
+     1200,
+     1150
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 0.4,
+    "headroom_m": 5.4,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   }
+  },
+  {
+   "room": "R416",
+   "floor": "F4",
+   "name": "416",
+   "door_a_m": [
+    29.75,
+    267.9
+   ],
+   "door_b_m": [
+    31.75,
+    267.9
+   ],
+   "door_width_m": 2.0,
+   "door_head_m": 2.6,
+   "facing_deg": 180.0,
+   "door": {
+    "name": "room_R416_door",
+    "map_m": [
+     30.75,
+     267.9,
+     18.0
+    ],
+    "game": [
+     -815,
+     1800,
+     1770
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 1.0,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   "inside": {
+    "name": "room_R416_inside",
+    "map_m": [
+     30.75,
+     268.8,
+     18.0
+    ],
+    "game": [
+     -815,
+     1800,
+     1680
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 0.59,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "R417",
+   "floor": "F4",
+   "name": "417",
+   "door_a_m": [
+    34.05,
+    267.9
+   ],
+   "door_b_m": [
+    36.05,
+    267.9
+   ],
+   "door_width_m": 2.0,
+   "door_head_m": 2.6,
+   "facing_deg": 180.0,
+   "door": {
+    "name": "room_R417_door",
+    "map_m": [
+     35.05,
+     267.9,
+     18.0
+    ],
+    "game": [
+     -385,
+     1800,
+     1770
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 0.95,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   "inside": {
+    "name": "room_R417_inside",
+    "map_m": [
+     35.05,
+     268.8,
+     18.0
+    ],
+    "game": [
+     -385,
+     1800,
+     1680
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 0.59,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "R401",
+   "floor": "F4",
+   "name": "401",
+   "door_a_m": [
+    19.68,
+    282.8
+   ],
+   "door_b_m": [
+    21.68,
+    282.8
+   ],
+   "door_width_m": 2.0,
+   "door_head_m": 2.6,
+   "facing_deg": 180.0,
+   "door": {
+    "name": "room_R401_door",
+    "map_m": [
+     20.68,
+     282.8,
+     18.0
+    ],
+    "game": [
+     -1822,
+     1800,
+     280
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 1.0,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   "inside": {
+    "name": "room_R401_inside",
+    "map_m": [
+     20.68,
+     283.7,
+     18.0
+    ],
+    "game": [
+     -1822,
+     1800,
+     190
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 1.35,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "R405",
+   "floor": "F4",
+   "name": "405",
+   "door_a_m": [
+    48.2,
+    278.4
+   ],
+   "door_b_m": [
+    48.2,
+    280.6
+   ],
+   "door_width_m": 2.2,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_R405_door",
+    "map_m": [
+     48.2,
+     279.5,
+     18.0
+    ],
+    "game": [
+     930,
+     1800,
+     610
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 1.1,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_R405_inside",
+    "map_m": [
+     49.1,
+     279.5,
+     18.0
+    ],
+    "game": [
+     1020,
+     1800,
+     610
+    ],
+    "floor_m": 18.0,
+    "clearance_m": 1.04,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  },
+  {
+   "room": "f6_group_A",
+   "floor": "F6",
+   "name": "GA",
+   "door_a_m": [
+    29.75,
+    267.9
+   ],
+   "door_b_m": [
+    31.75,
+    267.9
+   ],
+   "door_width_m": 2.0,
+   "door_head_m": 2.6,
+   "facing_deg": 180.0,
+   "door": {
+    "name": "room_f6_group_A_door",
+    "map_m": [
+     30.75,
+     267.9,
+     30.0
+    ],
+    "game": [
+     -815,
+     3000,
+     1770
+    ],
+    "floor_m": 30.0,
+    "clearance_m": 1.0,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   "inside": {
+    "name": "room_f6_group_A_inside",
+    "map_m": [
+     30.75,
+     268.8,
+     30.0
+    ],
+    "game": [
+     -815,
+     3000,
+     1680
+    ],
+    "floor_m": 30.0,
+    "clearance_m": 0.59,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "f6_group_B",
+   "floor": "F6",
+   "name": "GB",
+   "door_a_m": [
+    34.05,
+    267.9
+   ],
+   "door_b_m": [
+    36.05,
+    267.9
+   ],
+   "door_width_m": 2.0,
+   "door_head_m": 2.6,
+   "facing_deg": 180.0,
+   "door": {
+    "name": "room_f6_group_B_door",
+    "map_m": [
+     35.05,
+     267.9,
+     30.0
+    ],
+    "game": [
+     -385,
+     3000,
+     1770
+    ],
+    "floor_m": 30.0,
+    "clearance_m": 0.95,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   },
+   "inside": {
+    "name": "room_f6_group_B_inside",
+    "map_m": [
+     35.05,
+     268.8,
+     30.0
+    ],
+    "game": [
+     -385,
+     3000,
+     1680
+    ],
+    "floor_m": 30.0,
+    "clearance_m": 0.59,
+    "headroom_m": 5.4,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "f6_group_C",
+   "floor": "F6",
+   "name": "GC",
+   "door_a_m": [
+    48.2,
+    278.4
+   ],
+   "door_b_m": [
+    48.2,
+    280.6
+   ],
+   "door_width_m": 2.2,
+   "door_head_m": 2.6,
+   "facing_deg": 270.0,
+   "door": {
+    "name": "room_f6_group_C_door",
+    "map_m": [
+     48.2,
+     279.5,
+     30.0
+    ],
+    "game": [
+     930,
+     3000,
+     610
+    ],
+    "floor_m": 30.0,
+    "clearance_m": 1.1,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   },
+   "inside": {
+    "name": "room_f6_group_C_inside",
+    "map_m": [
+     49.1,
+     279.5,
+     30.0
+    ],
+    "game": [
+     1020,
+     3000,
+     610
+    ],
+    "floor_m": 30.0,
+    "clearance_m": 1.04,
+    "headroom_m": 5.4,
+    "facing_deg": 90.0,
+    "game_yaw": "0x4000"
+   }
+  }
+ ],
+ "rooms": [
+  {
+   "room": "f1_electrical",
+   "floor": "F1",
+   "type": "electrical_room",
+   "name": "f1_electrical",
+   "door": {
+    "name": "room_f1_electrical_door",
+    "map_m": [
+     2.4,
+     280.4,
+     0.0
+    ],
+    "game": [
+     -3650,
+     0,
+     520
+    ],
+    "floor_m": 0.0,
+    "clearance_m": 1.2,
+    "headroom_m": 2.6,
+    "facing_deg": 180.0,
+    "game_yaw": "0x0000"
+   }
+  },
+  {
+   "room": "f2_rm211",
+   "floor": "F2",
+   "type": "classroom",
+   "name": "f2_rm211",
+   "door": {
+    "name": "room_f2_rm211_door",
+    "map_m": [
+     29.6,
+     292.65,
+     6.0
+    ],
+    "game": [
+     -930,
+     600,
+     -705
+    ],
+    "floor_m": 6.0,
+    "clearance_m": 1.2,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   }
+  },
+  {
+   "room": "f3_electrical",
+   "floor": "F3",
+   "type": "electrical_room",
+   "name": "f3_electrical",
+   "door": {
+    "name": "room_f3_electrical_door",
+    "map_m": [
+     12.0,
+     271.0,
+     12.0
+    ],
+    "game": [
+     -2690,
+     1200,
+     1460
+    ],
+    "floor_m": 12.0,
+    "clearance_m": 1.2,
+    "headroom_m": 2.6,
+    "facing_deg": 270.0,
+    "game_yaw": "0xC000"
+   }
+  },
+  {
+   "room": "f5_lounge",
+   "floor": "F5",
+   "type": "staff_lounge",
+   "name": "f5_lounge",
+   "door": {
+    "name": "room_f5_lounge_door",
+    "map_m": [
+     30.8,
+     264.0,
+     24.0
+    ],
+    "game": [
+     -810,
+     2400,
+     2160
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 1.2,
+    "headroom_m": 2.6,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "f5_electrical",
+   "floor": "F5",
+   "type": "electrical_room",
+   "name": "f5_electrical",
+   "door": {
+    "name": "room_f5_electrical_door",
+    "map_m": [
+     47.8,
+     264.0,
+     24.0
+    ],
+    "game": [
+     890,
+     2400,
+     2160
+    ],
+    "floor_m": 24.0,
+    "clearance_m": 1.2,
+    "headroom_m": 2.6,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  },
+  {
+   "room": "f6_media",
+   "floor": "F6",
+   "type": "computer_lab",
+   "name": "f6_media",
+   "door": {
+    "name": "room_f6_media_door",
+    "map_m": [
+     50.3,
+     274.4,
+     30.0
+    ],
+    "game": [
+     1140,
+     3000,
+     1120
+    ],
+    "floor_m": 30.0,
+    "clearance_m": 1.1,
+    "headroom_m": 2.6,
+    "facing_deg": 0.0,
+    "game_yaw": "0x8000"
+   }
+  }
+ ],
+ "locked_doors": [
+  {
+   "floor": "F1",
+   "room": "f1_mindfulness",
+   "id": "door_mindfulness",
+   "a_m": [
+    73.0,
+    263.0
+   ],
+   "b_m": [
+    73.0,
+    265.0
+   ]
+  },
+  {
+   "floor": "F1",
+   "room": "f1_one_button",
+   "id": "door_one_button",
+   "a_m": [
+    73.0,
+    256.0
+   ],
+   "b_m": [
+    73.0,
+    258.0
+   ]
+  },
+  {
+   "floor": "F3",
+   "room": "f3_rm339",
+   "id": "door_rm339",
+   "a_m": [
+    62.4,
+    280.4
+   ],
+   "b_m": [
+    64.4,
+    280.4
+   ]
+  },
+  {
+   "floor": "F3",
+   "room": "f3_rm335",
+   "id": "door_rm335",
+   "a_m": [
+    62.0,
+    276.4
+   ],
+   "b_m": [
+    64.0,
+    276.4
+   ]
+  },
+  {
+   "floor": "F5",
+   "room": "f5_offices_s",
+   "id": "door_office_1",
+   "a_m": [
+    39.0,
+    264.0
+   ],
+   "b_m": [
+    41.0,
+    264.0
+   ]
+  },
+  {
+   "floor": "F5",
+   "room": "f5_offices_w",
+   "id": "door_office_2",
+   "a_m": [
+    16.0,
+    274.4
+   ],
+   "b_m": [
+    18.0,
+    274.4
+   ]
+  },
+  {
+   "floor": "F5",
+   "room": "f5_offices_n",
+   "id": "door_office_3",
+   "a_m": [
+    30.0,
+    277.4
+   ],
+   "b_m": [
+    32.0,
+    277.4
+   ]
+  },
+  {
+   "floor": "F5",
+   "room": "f5_offices_n",
+   "id": "door_office_4",
+   "a_m": [
+    44.0,
+    277.4
+   ],
+   "b_m": [
+    46.0,
+    277.4
+   ]
+  },
+  {
+   "floor": "F5",
+   "room": "f5_staff_e",
+   "id": "door_office_5",
+   "a_m": [
+    55.0,
+    275.0
+   ],
+   "b_m": [
+    55.0,
+    277.0
+   ]
+  },
+  {
+   "floor": "F5",
+   "room": "f5_staff_core",
+   "id": "door_office_6",
+   "a_m": [
+    40.0,
+    268.5
+   ],
+   "b_m": [
+    42.0,
+    268.5
+   ]
+  }
+ ],
+ "circulation": [
+  {
+   "name": "ada_elevator_F1",
+   "map_m": [
+    43.9,
+    270.4,
+    0.0
+   ],
+   "game": [
+    500,
+    0,
+    1520
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.8,
+   "headroom_m": 11.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "ada_elevator_F2",
+   "map_m": [
+    43.9,
+    275.0,
+    6.0
+   ],
+   "game": [
+    500,
+    600,
+    1060
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 0.8,
+   "headroom_m": 5.4,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "elevator_a_door_F1",
+   "map_m": [
+    30.15,
+    275.1,
+    0.0
+   ],
+   "game": [
+    -875,
+    0,
+    1050
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.4,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "elevator_a_door_F2",
+   "map_m": [
+    30.15,
+    275.1,
+    6.0
+   ],
+   "game": [
+    -875,
+    600,
+    1050
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.4,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "elevator_a_door_F3",
+   "map_m": [
+    30.15,
+    275.1,
+    12.0
+   ],
+   "game": [
+    -875,
+    1200,
+    1050
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.4,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "elevator_a_door_F4",
+   "map_m": [
+    30.15,
+    275.1,
+    18.0
+   ],
+   "game": [
+    -875,
+    1800,
+    1050
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.4,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "elevator_a_door_F5",
+   "map_m": [
+    30.15,
+    275.1,
+    24.0
+   ],
+   "game": [
+    -875,
+    2400,
+    1050
+   ],
+   "floor_m": 24.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.4,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "elevator_a_door_F6",
+   "map_m": [
+    30.15,
+    275.1,
+    30.0
+   ],
+   "game": [
+    -875,
+    3000,
+    1050
+   ],
+   "floor_m": 30.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.4,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "escalator_bottom",
+   "map_m": [
+    38.8,
+    264.21,
+    0.0
+   ],
+   "game": [
+    -10,
+    0,
+    2139
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.9,
+   "headroom_m": 11.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "escalator_top",
+   "map_m": [
+    38.8,
+    276.7,
+    6.0
+   ],
+   "game": [
+    -10,
+    600,
+    890
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 0.85,
+   "headroom_m": 5.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_e_F1_landing",
+   "map_m": [
+    55.2,
+    267.3,
+    0.0
+   ],
+   "game": [
+    1630,
+    0,
+    1830
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.7,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_e_F1_turn",
+   "map_m": [
+    55.2,
+    259.78,
+    3.0
+   ],
+   "game": [
+    1630,
+    300,
+    2582
+   ],
+   "floor_m": 3.0,
+   "clearance_m": 1.28,
+   "headroom_m": 5.75,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_e_F2_landing",
+   "map_m": [
+    55.2,
+    267.3,
+    6.0
+   ],
+   "game": [
+    1630,
+    600,
+    1830
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.7,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_e_F2_turn",
+   "map_m": [
+    55.2,
+    259.78,
+    9.0
+   ],
+   "game": [
+    1630,
+    900,
+    2582
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 1.28,
+   "headroom_m": 5.75,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_e_F3_landing",
+   "map_m": [
+    55.2,
+    267.3,
+    12.0
+   ],
+   "game": [
+    1630,
+    1200,
+    1830
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.7,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_e_F3_turn",
+   "map_m": [
+    55.2,
+    259.78,
+    15.0
+   ],
+   "game": [
+    1630,
+    1500,
+    2582
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 1.28,
+   "headroom_m": 5.75,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_e_F4_landing",
+   "map_m": [
+    55.2,
+    267.3,
+    18.0
+   ],
+   "game": [
+    1630,
+    1800,
+    1830
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.7,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_e_F4_turn",
+   "map_m": [
+    55.2,
+    259.78,
+    21.0
+   ],
+   "game": [
+    1630,
+    2100,
+    2582
+   ],
+   "floor_m": 21.0,
+   "clearance_m": 1.28,
+   "headroom_m": 5.75,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_e_F5_landing",
+   "map_m": [
+    55.2,
+    267.3,
+    24.0
+   ],
+   "game": [
+    1630,
+    2400,
+    1830
+   ],
+   "floor_m": 24.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.7,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_e_F5_turn",
+   "map_m": [
+    55.2,
+    259.78,
+    27.0
+   ],
+   "game": [
+    1630,
+    2700,
+    2582
+   ],
+   "floor_m": 27.0,
+   "clearance_m": 1.28,
+   "headroom_m": 8.4,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_e_F6_landing",
+   "map_m": [
+    55.2,
+    267.3,
+    30.0
+   ],
+   "game": [
+    1630,
+    3000,
+    1830
+   ],
+   "floor_m": 30.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.4,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_e_door_F1",
+   "map_m": [
+    59.6,
+    267.23,
+    0.0
+   ],
+   "game": [
+    2070,
+    0,
+    1838
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.6,
+   "headroom_m": 5.4,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000"
+  },
+  {
+   "name": "stair_e_door_F2",
+   "map_m": [
+    53.4,
+    269.4,
+    6.0
+   ],
+   "game": [
+    1450,
+    600,
+    1620
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.52,
+   "headroom_m": 5.4,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_e_door_F3",
+   "map_m": [
+    50.8,
+    267.23,
+    12.0
+   ],
+   "game": [
+    1190,
+    1200,
+    1838
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 1.8,
+   "headroom_m": 5.4,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "stair_e_door_F4",
+   "map_m": [
+    50.8,
+    267.23,
+    18.0
+   ],
+   "game": [
+    1190,
+    1800,
+    1838
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.15,
+   "headroom_m": 5.4,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "stair_e_door_F4_north",
+   "map_m": [
+    53.7,
+    269.4,
+    18.0
+   ],
+   "game": [
+    1480,
+    1800,
+    1620
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.18,
+   "headroom_m": 5.4,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_e_door_F5_locked",
+   "map_m": [
+    50.8,
+    267.23,
+    24.0
+   ],
+   "game": [
+    1190,
+    2400,
+    1838
+   ],
+   "floor_m": 24.0,
+   "clearance_m": 1.15,
+   "headroom_m": 5.4,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "stair_e_door_F6",
+   "map_m": [
+    50.8,
+    267.23,
+    30.0
+   ],
+   "game": [
+    1190,
+    3000,
+    1838
+   ],
+   "floor_m": 30.0,
+   "clearance_m": 1.15,
+   "headroom_m": 5.4,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "stair_ne_F1_landing",
+   "map_m": [
+    58.95,
+    309.62,
+    0.0
+   ],
+   "game": [
+    2005,
+    0,
+    -2402
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.73,
+   "headroom_m": 5.7,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_ne_F1_turn",
+   "map_m": [
+    58.95,
+    317.19,
+    3.0
+   ],
+   "game": [
+    2005,
+    300,
+    -3159
+   ],
+   "floor_m": 3.0,
+   "clearance_m": 1.31,
+   "headroom_m": 5.75,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_ne_F2_landing",
+   "map_m": [
+    58.95,
+    309.62,
+    6.0
+   ],
+   "game": [
+    2005,
+    600,
+    -2402
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.73,
+   "headroom_m": 5.7,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_ne_F2_turn",
+   "map_m": [
+    58.95,
+    317.19,
+    9.0
+   ],
+   "game": [
+    2005,
+    900,
+    -3159
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 1.31,
+   "headroom_m": 5.75,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_ne_F3_landing",
+   "map_m": [
+    58.95,
+    309.62,
+    12.0
+   ],
+   "game": [
+    2005,
+    1200,
+    -2402
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 1.73,
+   "headroom_m": 5.7,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_ne_F3_turn",
+   "map_m": [
+    58.95,
+    317.19,
+    15.0
+   ],
+   "game": [
+    2005,
+    1500,
+    -3159
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 1.31,
+   "headroom_m": 8.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_ne_F4_landing",
+   "map_m": [
+    58.95,
+    309.62,
+    18.0
+   ],
+   "game": [
+    2005,
+    1800,
+    -2402
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.73,
+   "headroom_m": 5.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_ne_door_F1",
+   "map_m": [
+    59.7,
+    307.5,
+    0.0
+   ],
+   "game": [
+    2080,
+    0,
+    -2190
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.4,
+   "headroom_m": 5.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_ne_door_F2",
+   "map_m": [
+    59.7,
+    307.5,
+    6.0
+   ],
+   "game": [
+    2080,
+    600,
+    -2190
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.4,
+   "headroom_m": 5.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_ne_door_F3",
+   "map_m": [
+    59.7,
+    307.5,
+    12.0
+   ],
+   "game": [
+    2080,
+    1200,
+    -2190
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 1.4,
+   "headroom_m": 5.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_ne_door_F4_roof",
+   "map_m": [
+    59.7,
+    307.5,
+    18.0
+   ],
+   "game": [
+    2080,
+    1800,
+    -2190
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_nw_F1_landing",
+   "map_m": [
+    18.8,
+    309.65,
+    0.0
+   ],
+   "game": [
+    -2010,
+    0,
+    -2405
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.77,
+   "headroom_m": 5.7,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_nw_F1_turn",
+   "map_m": [
+    18.8,
+    317.27,
+    3.0
+   ],
+   "game": [
+    -2010,
+    300,
+    -3167
+   ],
+   "floor_m": 3.0,
+   "clearance_m": 1.33,
+   "headroom_m": 5.75,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_nw_F2_landing",
+   "map_m": [
+    18.8,
+    309.65,
+    6.0
+   ],
+   "game": [
+    -2010,
+    600,
+    -2405
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.77,
+   "headroom_m": 5.7,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_nw_F2_turn",
+   "map_m": [
+    18.8,
+    317.27,
+    9.0
+   ],
+   "game": [
+    -2010,
+    900,
+    -3167
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 1.33,
+   "headroom_m": 5.75,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_nw_F3_landing",
+   "map_m": [
+    18.8,
+    309.65,
+    12.0
+   ],
+   "game": [
+    -2010,
+    1200,
+    -2405
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 1.77,
+   "headroom_m": 5.7,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_nw_F3_turn",
+   "map_m": [
+    18.8,
+    317.27,
+    15.0
+   ],
+   "game": [
+    -2010,
+    1500,
+    -3167
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 1.33,
+   "headroom_m": 8.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_nw_F4_landing",
+   "map_m": [
+    18.8,
+    309.65,
+    18.0
+   ],
+   "game": [
+    -2010,
+    1800,
+    -2405
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.77,
+   "headroom_m": 5.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_nw_door_F1",
+   "map_m": [
+    17.8,
+    307.5,
+    0.0
+   ],
+   "game": [
+    -2110,
+    0,
+    -2190
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.4,
+   "headroom_m": 5.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_nw_door_F2",
+   "map_m": [
+    17.8,
+    307.5,
+    6.0
+   ],
+   "game": [
+    -2110,
+    600,
+    -2190
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.4,
+   "headroom_m": 5.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_nw_door_F3",
+   "map_m": [
+    17.8,
+    307.5,
+    12.0
+   ],
+   "game": [
+    -2110,
+    1200,
+    -2190
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 1.4,
+   "headroom_m": 5.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_nw_door_F4_roof",
+   "map_m": [
+    17.8,
+    307.5,
+    18.0
+   ],
+   "game": [
+    -2110,
+    1800,
+    -2190
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_w_F1_landing",
+   "map_m": [
+    22.3,
+    267.3,
+    0.0
+   ],
+   "game": [
+    -1660,
+    0,
+    1830
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.7,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_w_F1_turn",
+   "map_m": [
+    22.3,
+    259.78,
+    3.0
+   ],
+   "game": [
+    -1660,
+    300,
+    2582
+   ],
+   "floor_m": 3.0,
+   "clearance_m": 1.28,
+   "headroom_m": 5.75,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_w_F2_landing",
+   "map_m": [
+    22.3,
+    267.3,
+    6.0
+   ],
+   "game": [
+    -1660,
+    600,
+    1830
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.7,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_w_F2_turn",
+   "map_m": [
+    22.3,
+    259.78,
+    9.0
+   ],
+   "game": [
+    -1660,
+    900,
+    2582
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 1.28,
+   "headroom_m": 5.75,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_w_F3_landing",
+   "map_m": [
+    22.3,
+    267.3,
+    12.0
+   ],
+   "game": [
+    -1660,
+    1200,
+    1830
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.7,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_w_F3_turn",
+   "map_m": [
+    22.3,
+    259.78,
+    15.0
+   ],
+   "game": [
+    -1660,
+    1500,
+    2582
+   ],
+   "floor_m": 15.0,
+   "clearance_m": 1.28,
+   "headroom_m": 5.75,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_w_F4_landing",
+   "map_m": [
+    22.3,
+    267.3,
+    18.0
+   ],
+   "game": [
+    -1660,
+    1800,
+    1830
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.7,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_w_F4_turn",
+   "map_m": [
+    22.3,
+    259.78,
+    21.0
+   ],
+   "game": [
+    -1660,
+    2100,
+    2582
+   ],
+   "floor_m": 21.0,
+   "clearance_m": 1.28,
+   "headroom_m": 5.75,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_w_F5_landing",
+   "map_m": [
+    22.3,
+    267.3,
+    24.0
+   ],
+   "game": [
+    -1660,
+    2400,
+    1830
+   ],
+   "floor_m": 24.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.7,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_w_F5_turn",
+   "map_m": [
+    22.3,
+    259.78,
+    27.0
+   ],
+   "game": [
+    -1660,
+    2700,
+    2582
+   ],
+   "floor_m": 27.0,
+   "clearance_m": 1.28,
+   "headroom_m": 8.4,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_w_F6_landing",
+   "map_m": [
+    22.3,
+    267.3,
+    30.0
+   ],
+   "game": [
+    -1660,
+    3000,
+    1830
+   ],
+   "floor_m": 30.0,
+   "clearance_m": 1.2,
+   "headroom_m": 5.4,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "stair_w_door_F1",
+   "map_m": [
+    17.9,
+    267.23,
+    0.0
+   ],
+   "game": [
+    -2100,
+    0,
+    1838
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.8,
+   "headroom_m": 5.4,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "stair_w_door_F2",
+   "map_m": [
+    17.9,
+    267.23,
+    6.0
+   ],
+   "game": [
+    -2100,
+    600,
+    1838
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 1.8,
+   "headroom_m": 5.4,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "stair_w_door_F3",
+   "map_m": [
+    17.9,
+    267.23,
+    12.0
+   ],
+   "game": [
+    -2100,
+    1200,
+    1838
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 1.15,
+   "headroom_m": 5.4,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "stair_w_door_F3_east",
+   "map_m": [
+    26.7,
+    267.23,
+    12.0
+   ],
+   "game": [
+    -1220,
+    1200,
+    1838
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 1.8,
+   "headroom_m": 5.4,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000"
+  },
+  {
+   "name": "stair_w_door_F4",
+   "map_m": [
+    17.9,
+    267.23,
+    18.0
+   ],
+   "game": [
+    -2100,
+    1800,
+    1838
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.8,
+   "headroom_m": 5.4,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "stair_w_door_F4_east",
+   "map_m": [
+    26.7,
+    267.23,
+    18.0
+   ],
+   "game": [
+    -1220,
+    1800,
+    1838
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.8,
+   "headroom_m": 5.4,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000"
+  },
+  {
+   "name": "stair_w_door_F5_locked",
+   "map_m": [
+    26.7,
+    267.23,
+    24.0
+   ],
+   "game": [
+    -1220,
+    2400,
+    1838
+   ],
+   "floor_m": 24.0,
+   "clearance_m": 1.8,
+   "headroom_m": 5.4,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000"
+  },
+  {
+   "name": "stair_w_door_F6",
+   "map_m": [
+    26.7,
+    267.23,
+    30.0
+   ],
+   "game": [
+    -1220,
+    3000,
+    1838
+   ],
+   "floor_m": 30.0,
+   "clearance_m": 1.8,
+   "headroom_m": 5.4,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000"
+  },
+  {
+   "name": "stair_w_door_F6_west",
+   "map_m": [
+    17.9,
+    267.23,
+    30.0
+   ],
+   "game": [
+    -2100,
+    3000,
+    1838
+   ],
+   "floor_m": 30.0,
+   "clearance_m": 1.8,
+   "headroom_m": 5.4,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  }
+ ],
+ "elevator_a_shaft": {
+  "name": "elevator_a_shaft_bottom",
+  "map_m": [
+   30.15,
+   272.8,
+   0.0
+  ],
+  "game": [
+   -875,
+   0,
+   1280
+  ],
+  "floor_m": 0.0,
+  "clearance_m": 1.35,
+  "headroom_m": null,
+  "note": "car A (OUT OF ORDER): an open wall-kick shaft F1 -> F6 ceiling, inner [2.7, 2.8] m"
+ },
+ "landmarks": [
+  {
+   "name": "balcony_rail",
+   "map_m": [
+    48.6,
+    271.9,
+    6.0
+   ],
+   "game": [
+    970,
+    600,
+    1370
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 0.1,
+   "headroom_m": 5.4,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000"
+  },
+  {
+   "name": "bloomberg_terminal",
+   "map_m": [
+    44.6,
+    289.1,
+    12.0
+   ],
+   "game": [
+    570,
+    1200,
+    -350
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 0.2,
+   "headroom_m": 5.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "coffee_counter_top",
+   "map_m": [
+    48.85,
+    266.0,
+    1.1
+   ],
+   "game": [
+    995,
+    110,
+    1960
+   ],
+   "floor_m": 1.1,
+   "clearance_m": 0.43,
+   "headroom_m": 10.3,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000"
+  },
+  {
+   "name": "coffee_customer_side",
+   "map_m": [
+    47.45,
+    266.0,
+    0.0
+   ],
+   "game": [
+    855,
+    0,
+    1960
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 0.68,
+   "headroom_m": 11.4,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "counter_circ_counter",
+   "map_m": [
+    38.1,
+    283.9,
+    7.2
+   ],
+   "game": [
+    -80,
+    720,
+    170
+   ],
+   "floor_m": 7.2,
+   "clearance_m": 0.28,
+   "headroom_m": 4.2,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "counter_research_desk",
+   "map_m": [
+    28.7,
+    282.2,
+    7.0
+   ],
+   "game": [
+    -1020,
+    700,
+    340
+   ],
+   "floor_m": 7.0,
+   "clearance_m": 2.78,
+   "headroom_m": 4.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "lockers_top_lockers_f6",
+   "map_m": [
+    15.4,
+    280.2,
+    31.9
+   ],
+   "game": [
+    -2350,
+    3190,
+    540
+   ],
+   "floor_m": 31.9,
+   "clearance_m": 0.4,
+   "headroom_m": 3.5,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "news_tv",
+   "map_m": [
+    77.5,
+    261.0,
+    12.0
+   ],
+   "game": [
+    3860,
+    1200,
+    2460
+   ],
+   "floor_m": 12.0,
+   "clearance_m": 1.3,
+   "headroom_m": 5.4,
+   "facing_deg": 90.0,
+   "game_yaw": "0x4000"
+  },
+  {
+   "name": "plaza_hall_centre",
+   "map_m": [
+    38.8,
+    263.5,
+    0.0
+   ],
+   "game": [
+    -10,
+    0,
+    2210
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 1.61,
+   "headroom_m": 11.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "roof_unit_ne_step1",
+   "map_m": [
+    52.2,
+    310.3,
+    19.6
+   ],
+   "game": [
+    1330,
+    1960,
+    -2470
+   ],
+   "floor_m": 19.6,
+   "clearance_m": 0.8,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "roof_unit_ne_step2",
+   "map_m": [
+    53.92,
+    310.3,
+    21.2
+   ],
+   "game": [
+    1502,
+    2120,
+    -2470
+   ],
+   "floor_m": 21.2,
+   "clearance_m": 0.98,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "roof_unit_rooftop_unit_1",
+   "map_m": [
+    30.0,
+    301.0,
+    19.8
+   ],
+   "game": [
+    -890,
+    1980,
+    -1540
+   ],
+   "floor_m": 19.8,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "roof_unit_rooftop_unit_2",
+   "map_m": [
+    47.0,
+    301.0,
+    19.8
+   ],
+   "game": [
+    810,
+    1980,
+    -1540
+   ],
+   "floor_m": 19.8,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "roof_unit_rooftop_unit_3",
+   "map_m": [
+    38.5,
+    311.0,
+    19.8
+   ],
+   "game": [
+    -40,
+    1980,
+    -2540
+   ],
+   "floor_m": 19.8,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "self_checkout",
+   "map_m": [
+    47.2,
+    283.6,
+    6.0
+   ],
+   "game": [
+    830,
+    600,
+    200
+   ],
+   "floor_m": 6.0,
+   "clearance_m": 0.58,
+   "headroom_m": 5.4,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_ne_bulkhead_top",
+   "map_m": [
+    58.95,
+    313.45,
+    24.0
+   ],
+   "game": [
+    2005,
+    2400,
+    -2785
+   ],
+   "floor_m": 24.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  },
+  {
+   "name": "stair_nw_bulkhead_top",
+   "map_m": [
+    18.8,
+    313.5,
+    24.0
+   ],
+   "game": [
+    -2010,
+    2400,
+    -2790
+   ],
+   "floor_m": 24.0,
+   "clearance_m": 3.0,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  }
+ ],
+ "terraces": [
+  {
+   "name": "terrace_w",
+   "map_m": [
+    4.5,
+    270.0,
+    18.0
+   ],
+   "game": [
+    -3440,
+    1800,
+    1560
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 3.0,
+   "headroom_m": null
+  },
+  {
+   "name": "terrace_n",
+   "map_m": [
+    39.0,
+    300.0,
+    18.0
+   ],
+   "game": [
+    10,
+    1800,
+    -1440
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 3.0,
+   "headroom_m": null
+  },
+  {
+   "name": "terrace_e",
+   "map_m": [
+    72.0,
+    270.0,
+    18.0
+   ],
+   "game": [
+    3310,
+    1800,
+    1560
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 3.0,
+   "headroom_m": null
+  },
+  {
+   "name": "terrace_door_w",
+   "map_m": [
+    10.6,
+    263.2,
+    18.0
+   ],
+   "game": [
+    -2830,
+    1800,
+    2240
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.7,
+   "headroom_m": null,
+   "facing_deg": 270.0,
+   "game_yaw": "0xC000"
+  },
+  {
+   "name": "terrace_door_n",
+   "map_m": [
+    38.8,
+    284.2,
+    18.0
+   ],
+   "game": [
+    -10,
+    1800,
+    140
+   ],
+   "floor_m": 18.0,
+   "clearance_m": 1.7,
+   "headroom_m": null,
+   "facing_deg": 0.0,
+   "game_yaw": "0x8000"
+  }
+ ],
+ "views": [
+  {
+   "name": "view_f6_big_window",
+   "map_m": [
+    38.9,
+    260.6,
+    30.0
+   ],
+   "game": [
+    0,
+    3000,
+    2500
+   ],
+   "floor_m": 30.0,
+   "clearance_m": 1.1,
+   "headroom_m": 5.4,
+   "facing_deg": 188.0,
+   "game_yaw": "0xFA50",
+   "note": "Century Tower lit, 289 m at 188 deg, over the Plaza of the Americas"
+  },
+  {
+   "name": "view_stair_w_turn_landing",
+   "map_m": [
+    22.3,
+    259.78,
+    9.0
+   ],
+   "game": [
+    -1660,
+    900,
+    2582
+   ],
+   "floor_m": 9.0,
+   "clearance_m": 1.28,
+   "headroom_m": 5.75,
+   "facing_deg": 180.0,
+   "game_yaw": "0x0000",
+   "note": "a turn landing against the glass: the Plaza at night"
+  }
+ ],
+ "pickups": {
+  "coins_placed": 206,
+  "coins_with_goombas": 210,
+  "objects": 83,
+  "by_kind": {
+   "coin_line": 30,
+   "coin": 40,
+   "coin_ring": 2,
+   "heart": 4,
+   "1up": 3,
+   "goomba": 4
+  },
+  "skipped": [],
+  "items": [
+   {
+    "kind": "coin_line",
+    "name": "F1 cafe",
+    "map_m": [
+     31.6,
+     263.0,
+     -0.0
+    ],
+    "game": [
+     -730,
+     0,
+     2260
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 coffee bar",
+    "map_m": [
+     47.0,
+     264.0,
+     -0.0
+    ],
+    "game": [
+     810,
+     0,
+     2160
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 1 x37.1",
+    "map_m": [
+     37.1,
+     266.29,
+     1.28
+    ],
+    "game": [
+     -180,
+     128,
+     1931
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 1 x40.5",
+    "map_m": [
+     40.5,
+     266.29,
+     1.28
+    ],
+    "game": [
+     160,
+     128,
+     1931
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 2 x37.1",
+    "map_m": [
+     37.1,
+     268.33,
+     2.46
+    ],
+    "game": [
+     -180,
+     246,
+     1727
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 2 x40.5",
+    "map_m": [
+     40.5,
+     268.33,
+     2.46
+    ],
+    "game": [
+     160,
+     246,
+     1727
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 3 x37.1",
+    "map_m": [
+     37.1,
+     270.38,
+     3.64
+    ],
+    "game": [
+     -180,
+     364,
+     1522
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 3 x40.5",
+    "map_m": [
+     40.5,
+     270.38,
+     3.64
+    ],
+    "game": [
+     160,
+     364,
+     1522
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 4 x37.1",
+    "map_m": [
+     37.1,
+     272.43,
+     4.83
+    ],
+    "game": [
+     -180,
+     483,
+     1317
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 4 x40.5",
+    "map_m": [
+     40.5,
+     272.43,
+     4.83
+    ],
+    "game": [
+     160,
+     483,
+     1317
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 5 x37.1",
+    "map_m": [
+     37.1,
+     274.48,
+     6.01
+    ],
+    "game": [
+     -180,
+     601,
+     1112
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 escalator coin 5 x40.5",
+    "map_m": [
+     40.5,
+     274.48,
+     6.01
+    ],
+    "game": [
+     160,
+     601,
+     1112
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 compact aisle north",
+    "map_m": [
+     38.75,
+     305.4,
+     0.0
+    ],
+    "game": [
+     -15,
+     0,
+     -1980
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 compact aisle south",
+    "map_m": [
+     38.75,
+     296.9,
+     0.0
+    ],
+    "game": [
+     -15,
+     0,
+     -1130
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 Judaica aisle",
+    "map_m": [
+     17.8,
+     304.4,
+     0.0
+    ],
+    "game": [
+     -2110,
+     0,
+     -1880
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 curve bay",
+    "map_m": [
+     38.8,
+     317.6,
+     0.0
+    ],
+    "game": [
+     -10,
+     0,
+     -3200
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 east stacks",
+    "map_m": [
+     66.0,
+     260.2,
+     0.0
+    ],
+    "game": [
+     2710,
+     0,
+     2540
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 west stacks",
+    "map_m": [
+     8.6,
+     275.0,
+     -0.0
+    ],
+    "game": [
+     -3030,
+     0,
+     1060
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 middle band",
+    "map_m": [
+     38.8,
+     279.0,
+     0.0
+    ],
+    "game": [
+     -10,
+     0,
+     660
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F1 HV stacks (single)",
+    "map_m": [
+     50.4,
+     270.4,
+     0.6
+    ],
+    "game": [
+     1150,
+     60,
+     1520
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F2 arrival hall (line)",
+    "map_m": [
+     38.8,
+     280.3,
+     6.0
+    ],
+    "game": [
+     -10,
+     600,
+     530
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 study room corridor 1",
+    "map_m": [
+     13.5,
+     267.1,
+     6.6
+    ],
+    "game": [
+     -2540,
+     660,
+     1850
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 study room corridor 2",
+    "map_m": [
+     15.2,
+     267.1,
+     6.6
+    ],
+    "game": [
+     -2370,
+     660,
+     1850
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 study room corridor 3",
+    "map_m": [
+     16.9,
+     267.1,
+     6.6
+    ],
+    "game": [
+     -2200,
+     660,
+     1850
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F2 balcony",
+    "map_m": [
+     49.6,
+     273.9,
+     6.0
+    ],
+    "game": [
+     1070,
+     600,
+     1170
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F2 stacks aisle west",
+    "map_m": [
+     28.3,
+     305.4,
+     6.0
+    ],
+    "game": [
+     -1060,
+     600,
+     -1980
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F2 stacks aisle east",
+    "map_m": [
+     49.2,
+     305.4,
+     6.0
+    ],
+    "game": [
+     1030,
+     600,
+     -1980
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F2 curve bay",
+    "map_m": [
+     38.8,
+     317.6,
+     6.0
+    ],
+    "game": [
+     -10,
+     600,
+     -3200
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F2 east windows",
+    "map_m": [
+     70.2,
+     305.0,
+     6.0
+    ],
+    "game": [
+     3130,
+     600,
+     -1940
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F3 south study",
+    "map_m": [
+     38.8,
+     263.2,
+     12.0
+    ],
+    "game": [
+     -10,
+     1200,
+     2240
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "F3 open floor",
+    "map_m": [
+     7.6,
+     271.0,
+     12.0
+    ],
+    "game": [
+     -3130,
+     1200,
+     1460
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F3 east tables",
+    "map_m": [
+     76.0,
+     278.0,
+     12.0
+    ],
+    "game": [
+     3710,
+     1200,
+     760
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F3 periodicals aisle",
+    "map_m": [
+     38.75,
+     305.4,
+     12.0
+    ],
+    "game": [
+     -15,
+     1200,
+     -1980
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F3 microforms aisle",
+    "map_m": [
+     59.67,
+     303.0,
+     12.0
+    ],
+    "game": [
+     2077,
+     1200,
+     -1740
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F3 west tables",
+    "map_m": [
+     6.0,
+     271.0,
+     12.0
+    ],
+    "game": [
+     -3290,
+     1200,
+     1460
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 range top f2_f2_wing_c1r4",
+    "map_m": [
+     9.8,
+     311.9,
+     9.6
+    ],
+    "game": [
+     -2910,
+     960,
+     -2630
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 range top f2_f2_wing_c2r2",
+    "map_m": [
+     22.16,
+     303.1,
+     9.6
+    ],
+    "game": [
+     -1674,
+     960,
+     -1750
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 range top f2_f2_wing_c3r4",
+    "map_m": [
+     32.62,
+     311.9,
+     9.6
+    ],
+    "game": [
+     -628,
+     960,
+     -2630
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 range top f2_f2_wing_c4r2",
+    "map_m": [
+     44.88,
+     303.1,
+     9.6
+    ],
+    "game": [
+     598,
+     960,
+     -1750
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 range top f2_f2_wing_c5r2",
+    "map_m": [
+     55.34,
+     303.1,
+     9.6
+    ],
+    "game": [
+     1644,
+     960,
+     -1750
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 range top f2_f2_wing_c6r2",
+    "map_m": [
+     65.8,
+     303.1,
+     9.6
+    ],
+    "game": [
+     2690,
+     960,
+     -1750
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F2 range top f2_f2_wing_c6r4",
+    "map_m": [
+     67.75,
+     311.9,
+     9.6
+    ],
+    "game": [
+     2885,
+     960,
+     -2630
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_f3_wing_c2r2",
+    "map_m": [
+     22.16,
+     303.1,
+     15.6
+    ],
+    "game": [
+     -1674,
+     1560,
+     -1750
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_f3_wing_c3r4",
+    "map_m": [
+     32.62,
+     311.9,
+     15.6
+    ],
+    "game": [
+     -628,
+     1560,
+     -2630
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F3 range top f3_f3_wing_c4r2",
+    "map_m": [
+     44.88,
+     303.1,
+     15.6
+    ],
+    "game": [
+     598,
+     1560,
+     -1750
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 north window desks",
+    "map_m": [
+     35.0,
+     280.6,
+     18.0
+    ],
+    "game": [
+     -390,
+     1800,
+     500
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 south band",
+    "map_m": [
+     38.8,
+     261.0,
+     18.0
+    ],
+    "game": [
+     -10,
+     1800,
+     2460
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_ring",
+    "name": "F4 north terrace",
+    "map_m": [
+     39.0,
+     304.0,
+     18.0
+    ],
+    "game": [
+     10,
+     1800,
+     -1840
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00020000",
+    "facing_deg": 0.0,
+    "coins": 8,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 north terrace east",
+    "map_m": [
+     56.0,
+     292.0,
+     18.0
+    ],
+    "game": [
+     1710,
+     1800,
+     -640
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 north terrace west",
+    "map_m": [
+     21.0,
+     291.0,
+     18.0
+    ],
+    "game": [
+     -1790,
+     1800,
+     -540
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 west terrace",
+    "map_m": [
+     4.5,
+     270.0,
+     18.0
+    ],
+    "game": [
+     -3440,
+     1800,
+     1560
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F4 east terrace",
+    "map_m": [
+     72.0,
+     270.0,
+     18.0
+    ],
+    "game": [
+     3310,
+     1800,
+     1560
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F5 corridor",
+    "map_m": [
+     38.8,
+     276.0,
+     24.0
+    ],
+    "game": [
+     -10,
+     2400,
+     960
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F6 reading room",
+    "map_m": [
+     38.9,
+     265.6,
+     30.0
+    ],
+    "game": [
+     0,
+     3000,
+     2000
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F6 grad desks",
+    "map_m": [
+     35.0,
+     280.4,
+     30.0
+    ],
+    "game": [
+     -390,
+     3000,
+     520
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F6 lounge",
+    "map_m": [
+     15.2,
+     266.5,
+     30.0
+    ],
+    "game": [
+     -2370,
+     3000,
+     1910
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_e_F1_turn",
+    "map_m": [
+     55.2,
+     259.78,
+     3.6
+    ],
+    "game": [
+     1630,
+     360,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_e_F2_turn",
+    "map_m": [
+     55.2,
+     259.78,
+     9.6
+    ],
+    "game": [
+     1630,
+     960,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_e_F3_turn",
+    "map_m": [
+     55.2,
+     259.78,
+     15.6
+    ],
+    "game": [
+     1630,
+     1560,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_e_F4_turn",
+    "map_m": [
+     55.2,
+     259.78,
+     21.6
+    ],
+    "game": [
+     1630,
+     2160,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_e_F5_turn",
+    "map_m": [
+     55.2,
+     259.78,
+     27.6
+    ],
+    "game": [
+     1630,
+     2760,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_ne_F1_turn",
+    "map_m": [
+     58.95,
+     317.19,
+     3.6
+    ],
+    "game": [
+     2005,
+     360,
+     -3159
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_ne_F2_turn",
+    "map_m": [
+     58.95,
+     317.19,
+     9.6
+    ],
+    "game": [
+     2005,
+     960,
+     -3159
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_ne_F3_turn",
+    "map_m": [
+     58.95,
+     317.19,
+     15.6
+    ],
+    "game": [
+     2005,
+     1560,
+     -3159
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_nw_F1_turn",
+    "map_m": [
+     18.8,
+     317.27,
+     3.6
+    ],
+    "game": [
+     -2010,
+     360,
+     -3167
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_nw_F2_turn",
+    "map_m": [
+     18.8,
+     317.27,
+     9.6
+    ],
+    "game": [
+     -2010,
+     960,
+     -3167
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_nw_F3_turn",
+    "map_m": [
+     18.8,
+     317.27,
+     15.6
+    ],
+    "game": [
+     -2010,
+     1560,
+     -3167
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_w_F1_turn",
+    "map_m": [
+     22.3,
+     259.78,
+     3.6
+    ],
+    "game": [
+     -1660,
+     360,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_w_F2_turn",
+    "map_m": [
+     22.3,
+     259.78,
+     9.6
+    ],
+    "game": [
+     -1660,
+     960,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_w_F3_turn",
+    "map_m": [
+     22.3,
+     259.78,
+     15.6
+    ],
+    "game": [
+     -1660,
+     1560,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_w_F4_turn",
+    "map_m": [
+     22.3,
+     259.78,
+     21.6
+    ],
+    "game": [
+     -1660,
+     2160,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "turn landing stair_w_F5_turn",
+    "map_m": [
+     22.3,
+     259.78,
+     27.6
+    ],
+    "game": [
+     -1660,
+     2760,
+     2582
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart F1 lobby",
+    "map_m": [
+     30.8,
+     266.7,
+     1.0
+    ],
+    "game": [
+     -810,
+     100,
+     1890
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart F2 stacks",
+    "map_m": [
+     38.75,
+     309.8,
+     7.0
+    ],
+    "game": [
+     -15,
+     700,
+     -2420
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart F4 north terrace",
+    "map_m": [
+     22.0,
+     300.0,
+     19.0
+    ],
+    "game": [
+     -1690,
+     1900,
+     -1440
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "heart",
+    "name": "heart F6 lounge",
+    "map_m": [
+     15.2,
+     270.8,
+     31.0
+    ],
+    "game": [
+     -2370,
+     3100,
+     1480
+    ],
+    "behavior": "bhvRecoveryHeart",
+    "model": "MODEL_HEART",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up F5 electrical room",
+    "map_m": [
+     45.0,
+     261.5,
+     24.6
+    ],
+    "game": [
+     610,
+     2460,
+     2410
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up NE bulkhead roof",
+    "map_m": [
+     58.95,
+     313.45,
+     24.6
+    ],
+    "game": [
+     2005,
+     2460,
+     -2785
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "1up",
+    "name": "1-up F3 range top f3_f3_wing_c3r4",
+    "map_m": [
+     31.12,
+     311.9,
+     15.6
+    ],
+    "game": [
+     -778,
+     1560,
+     -2630
+    ],
+    "behavior": "bhv1Up",
+    "model": "MODEL_1UP",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 0,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba F1 compact stacks",
+    "map_m": [
+     38.75,
+     309.8,
+     0.0
+    ],
+    "game": [
+     -15,
+     0,
+     -2420
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ]
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba F1 east stacks",
+    "map_m": [
+     66.0,
+     269.0,
+     0.0
+    ],
+    "game": [
+     2710,
+     0,
+     1660
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba F2 stacks",
+    "map_m": [
+     59.67,
+     301.0,
+     6.0
+    ],
+    "game": [
+     2077,
+     600,
+     -1540
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ]
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba F3 periodicals",
+    "map_m": [
+     28.3,
+     309.8,
+     12.0
+    ],
+    "game": [
+     -1060,
+     1200,
+     -2420
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ]
+   }
+  ]
+ },
+ "checks": []
+}
