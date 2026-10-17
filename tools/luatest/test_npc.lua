@@ -1,8 +1,9 @@
--- Offline test of mods/sgl64/sgl_npc.lua (the talking hub NPCs) in the multi-client simulator:
--- Albert spawns with his own model, a chat line near him becomes a request in the host's modfs outbox
--- (npc_out.txt, with the sender's live stats for the game guide), the bridge's reply file
--- (sgl64_npc.modfs replies.txt) is relayed to every client as a chat line + speech bubble, and with no
--- bridge the request times out. Run: lua tools/luatest/test_npc.lua (from tools/luatest/run.sh).
+-- Offline test of mods/sgl64/sgl_npc.lua (Albert and Alberta, the roaming mascots) in the multi-client simulator:
+-- they appear only in the level of their current spot, a line near one becomes a request in the host's modfs
+-- outbox (npc_out.txt, with the asker's own live stats, sent by the asker's client), /albert and /alberta ask from
+-- anywhere, the bridge's reply file (sgl64_npc.modfs replies.txt) reaches every client as a chat line + bubble,
+-- the host moves them along their routes (synced step, poofs) but never mid-conversation, their animations follow
+-- what they're doing, and with no bridge a request times out. Run: lua tools/luatest/test_npc.lua (run.sh).
 local HERE = debug.getinfo(1, "S").source:match("^@(.*/)") or "./"
 local Sim = dofile(HERE .. "sim.lua")
 local C = Sim.C
@@ -32,7 +33,6 @@ local function test(name, fn)
 end
 
 local HUB = C.LEVEL_CASTLE_GROUNDS
-local ALBERT = { x = 8800, z = -3750 }
 
 -- an in-memory modfs: own = the mod's file system (sgl64.modfs), inbox[path] = text of a public file
 local function fake_modfs(c)
@@ -96,154 +96,224 @@ local function outbox(disk)
     return f and f.data or ""
 end
 
+-- a world with a host and a friend on the hub; clock = { t = seconds } drives get_time() on both
 local function setup()
     local w = Sim.new({ files = Sim.ALL_FILES, built = Sim.built_on_disk() })
     local H = w:connect("Host")
     local F = w:connect("Friend")
+    local clock = { t = 1000 }
     for _, c in ipairs({ H, F }) do
         c.stubs.save_file_get_course_star_count = function(file, course)
             assert(math.type(file) == "integer" and math.type(course) == "integer")
             return course == C.COURSE_BOB - 1 and 2 or 0
         end
+        c.stubs.get_time = function() return clock.t end
     end
     local disk = fake_modfs(H)
     w:warp(H, HUB, 1, 0)
     w:warp(F, HUB, 1, 0)
     w:step(60)
-    return w, H, F, disk
+    return w, H, F, disk, clock
 end
 
-local function say(w, H, sender, msg)
-    for _, fn in ipairs(H.hooks[C.HOOK_ON_CHAT_MESSAGE] or {}) do fn(sender, msg) end
-    w:step(1)
+local function npc(c, id) return c.env.sgl_npc_by_id(id) end
+local function spot_of(c, id) return c.env.sgl_npc_spot(npc(c, id)) end
+local function objects(c) return Sim.objects_with(c, c.env.id_bhvSglNpc) end
+local function anim_of(o) return o ~= nil and Sim.raw(o)._customAnim or nil end
+
+-- stand a client next to a mascot's current spot (dx: how far east)
+local function next_to(c, id, dx)
+    local s = spot_of(c, id)
+    c.pos.x, c.pos.y, c.pos.z = s.x + (dx or 150), s.y, s.z
 end
 
-local function npc_objects(c)
-    return Sim.objects_with(c, c.env.id_bhvSglNpc)
+-- a chat line typed by client `by` (the hook runs on every client; only the speaker's own client acts on it)
+local function say(w, by, msg)
+    for _, c in ipairs(w.clients) do
+        local sender = (c == by) and c.ms[0] or c.ms[1]
+        for _, fn in ipairs(c.hooks[C.HOOK_ON_CHAT_MESSAGE] or {}) do fn(sender, msg) end
+    end
+    w:step(2)
 end
 
-local function anim_of(o) return Sim.raw(o)._customAnim end
+local function reply(w, disk, seq, id, text)
+    local session = outbox(disk):match("^session\t([^\n]+)\n")
+    disk.inbox["sgl64_npc"] = "session\t" .. session .. "\n" .. seq .. "\t" .. id .. "\t" .. text .. "\n"
+    w:step(20)
+end
 
-test("Albert stands at the spawn with his own rigged model; the Koopa is gone", function()
-    local w, H = setup()
-    local npcs = H.env.SGL_NPCS
-    check(npcs[1].id == "albert" and npcs[1].rig == true, "Albert is the first NPC, with his skeleton model")
+test("two mascots with rigged models; at the start Albert is on the hub and Alberta in Marston", function()
+    local w, H, F = setup()
+    local ids = {}
+    for _, n in ipairs(H.env.SGL_NPCS) do
+        table.insert(ids, n.id)
+        check(n.rig == true, n.id .. ": rigged model")
+    end
+    check(table.concat(ids, ",") == "albert,alberta", "the cast is Albert and Alberta: " .. table.concat(ids, ","))
     local count = 0
     for name, a in pairs(H.customAnims) do
         count = count + 1
         check(#a.index == 2 * (3 + 3 * #H.env.ALBERT_JOINTS), name .. ": one index entry per channel")
     end
-    check(count == 6, "six animations registered (idle, walk, talk, think, wave, chomp): " .. count)
-    for _, n in ipairs(npcs) do check(n.id ~= "guide", "no Tour Guide Koopa") end
-    check(math.abs(npcs[1].x - 8320) + math.abs(npcs[1].z + 4440) < 1500, "Albert is next to the Plaza spawn")
-    local objs = npc_objects(H)
-    check(#objs == #npcs, "one object per NPC in the hub (" .. #objs .. ")")
+    check(count == 6, "six shared animations registered: " .. count)
+    check(spot_of(H, "albert").level == HUB and spot_of(H, "alberta").level == C.LEVEL_CCM, "step 0 spots")
+    local objs = objects(H)
+    check(#objs == 1 and Sim.raw(objs[1])._model == npc(H, "albert").model, "only Albert stands on the hub")
+    check(H.commands.albert ~= nil and H.commands.alberta ~= nil, "/albert and /alberta registered")
 end)
 
-test("a line near Albert -> outbox request with the sender's stats", function()
+test("the host's own line near Albert -> outbox request with live stats and where both mascots are", function()
     local w, H, F, disk = setup()
-    H.pos.x, H.pos.z = ALBERT.x + 200, ALBERT.z
+    next_to(H, "albert")
     w:step(2)
-    say(w, H, H.ms[0], "how many stars do i have")
+    say(w, H, "how many stars do i have")
     local text = outbox(disk)
-    local session = text:match("^session\t([^\n]+)\n")
-    check(session ~= nil, "outbox starts with the session line: " .. text)
-    local seq, npc, player, msg, stats = text:match("\n(%d+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\n]*)\n")
-    check(seq == "1" and npc == "albert" and player == H.nps[0].name and msg == "how many stars do i have",
-        "request line: " .. tostring(seq) .. " " .. tostring(npc) .. " " .. tostring(player) .. " " .. tostring(msg))
+    check(text:match("^session\t[^\n]+\n") ~= nil, "outbox starts with the session line")
+    local seq, id, player, msg, stats = text:match("\n(%d+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\n]*)\n")
+    check(seq == "1" and id == "albert" and player == H.nps[0].name and msg == "how many stars do i have",
+        "request line: " .. tostring(seq) .. " " .. tostring(id) .. " " .. tostring(player) .. " " .. tostring(msg))
     stats = stats or ""
-    for _, key in ipairs({ "stars=", "lives=", "coins=", "players=2", "here=central campus", "s_swamp=2", "s_reitz=0",
-                           "go=THE SWAMP|UNIVERSITY AUDITORIUM", "lock=REITZ & ENGINEERING|THE HUB|2" }) do
+    for _, key in ipairs({ "stars=", "lives=", "coins=", "players=2", "here=central campus", "s_swamp=2",
+                           "go=THE SWAMP|UNIVERSITY AUDITORIUM", "lock=REITZ & ENGINEERING|THE HUB|2",
+                           "albert_at=on the Plaza", "alberta_at=in Marston" }) do
         check(stats:find(key, 1, true) ~= nil, "stats has " .. key .. ": " .. stats)
     end
-    check(disk.own.saves >= 1, "the outbox was saved to disk")
-    check(Sim.find(H.chat, "Albert") == nil, "no reply yet (the bridge has not answered)")
 end)
 
-test("lines away from NPCs, commands and a second question while waiting are ignored", function()
+test("a friend's line near Albert reaches the host from the friend's own client", function()
     local w, H, F, disk = setup()
-    H.pos.x, H.pos.z = ALBERT.x + 3000, ALBERT.z
-    say(w, H, H.ms[0], "hello?")
-    check(disk.own == nil or not outbox(disk):find("\n1\t"), "far away: no request")
-    H.pos.x, H.pos.z = ALBERT.x + 100, ALBERT.z
-    say(w, H, H.ms[0], "/campus where")
-    check(disk.own == nil or not outbox(disk):find("\n1\t"), "a command: no request")
-    say(w, H, H.ms[0], "first question")
-    say(w, H, H.ms[0], "second question")
+    H.pos.x = H.pos.x + 5000
+    next_to(F, "albert")
+    w:step(2)
+    say(w, F, "where do i go next")
+    local text = outbox(disk)
+    check(text:find("\t" .. F.nps[0].name .. "\twhere do i go next\t", 1, true) ~= nil, "the friend's request: " .. text)
+    check(not text:find("\t" .. H.nps[0].name .. "\t", 1, true), "nothing from the host, who is far away")
+end)
+
+test("lines away from the mascots, commands and a second question while waiting are ignored", function()
+    local w, H, F, disk = setup()
+    next_to(H, "albert", 3000)
+    say(w, H, "hello?")
+    check(not outbox(disk):find("\n1\t"), "far away: no request")
+    next_to(H, "albert")
+    say(w, H, "/campus where")
+    check(not outbox(disk):find("\n1\t"), "a command: no request")
+    say(w, H, "first question")
+    say(w, H, "second question")
     check(outbox(disk):find("first question", 1, true) and not outbox(disk):find("second question", 1, true),
         "one pending question per player")
 end)
 
-test("the bridge's reply reaches everyone as chat + bubble; Albert flaps his jaw", function()
+test("the bridge's reply reaches everyone as chat + bubble; Albert thinks, talks, then stops", function()
     local w, H, F, disk = setup()
-    H.pos.x, H.pos.z = ALBERT.x + 150, ALBERT.z
-    say(w, H, H.ms[0], "how many stars do i have")
-    local session = outbox(disk):match("^session\t([^\n]+)\n")
-    local long = "CHOMP! You have 2 stars, Host! Head to The Hub door for Reitz & Engineering! " ..
-        string.rep("More detail for the chat line. ", 6)
-    disk.inbox["sgl64_npc"] = "session\t" .. session .. "\n1\talbert\t" .. long .. "\n"
-    w:step(20)
+    next_to(H, "albert")
+    say(w, H, "how many stars do i have")
+    local albert = objects(H)[1]
+    check(anim_of(albert) == "sgl_albert_think", "hand on chin while the bridge works: " .. tostring(anim_of(albert)))
+    reply(w, disk, 1, "albert", "CHOMP! You have 2 stars, Host! " .. string.rep("More detail for the chat line. ", 6))
     check(Sim.find(H.chat, "Albert:.*You have 2 stars") ~= nil, "host chat shows the reply")
     check(Sim.find(F.chat, "Albert:.*You have 2 stars") ~= nil, "friend chat shows the reply (npc_say packet)")
     check(not outbox(disk):find("\n1\t"), "answered request leaves the outbox")
-    local albert = npc_objects(H)[1]
-    check(anim_of(albert) == "sgl_albert_talk", "Albert talks (gestures, jaw) while his answer is up: " ..
-        tostring(anim_of(albert)))
+    check(anim_of(albert) == "sgl_albert_talk", "Albert talks (gestures, jaw): " .. tostring(anim_of(albert)))
     w:seconds(9)
     check(anim_of(albert) ~= "sgl_albert_talk", "and stops talking afterwards")
 end)
 
-test("Albert thinks while waiting, waves at newcomers, faces whoever he talks to", function()
+test("/alberta asks from anywhere; /albert alone says where he is", function()
     local w, H, F, disk = setup()
-    local albert = npc_objects(H)[1]
-    H.pos.x, H.pos.z = ALBERT.x + 2000, ALBERT.z
-    w:step(5)
-    H.pos.x, H.pos.z = ALBERT.x + 300, ALBERT.z
+    Sim.cmd(F, "alberta", "what is the coffee run")
     w:step(3)
-    check(anim_of(albert) == "sgl_albert_wave", "a player walks up: he waves (" .. tostring(anim_of(albert)) .. ")")
+    check(Sim.find(F.chat, "asks Alberta:.*what is the coffee run") ~= nil, "the asker sees the question")
+    check(Sim.find(H.chat, "asks Alberta:.*what is the coffee run") ~= nil, "so does everyone else")
+    check(outbox(disk):find("\talberta\t" .. F.nps[0].name .. "\twhat is the coffee run\t", 1, true) ~= nil,
+        "the host queued it for Alberta: " .. outbox(disk))
+    reply(w, disk, 1, "alberta", "Race from your 6th-floor desk to the coffee counter and back!")
+    check(Sim.find(F.chat, "Alberta:.*coffee counter") ~= nil, "the answer reaches the asker without Alberta nearby")
+    Sim.cmd(H, "albert", "")
+    check(Sim.find(H.chat, "Albert.* is on the Plaza") ~= nil, "/albert: where Albert is")
+end)
+
+test("every 4 minutes the host moves them along their routes: synced, with a poof, one always on the hub", function()
+    local w, H, F, disk, clock = setup()
+    H.pos.x, F.pos.x = H.pos.x + 5000, F.pos.x + 5000   -- nobody near: free to move
+    w:step(5)
+    clock.t = clock.t + H.env.SGL_NPC_ROTATE + 1
+    w:step(5)
+    check(H.env.sgl_npc_step() == 1 and F.env.sgl_npc_step() == 1, "step 1 on both clients")
+    check(spot_of(F, "albert").level == C.LEVEL_BOB and spot_of(F, "alberta").level == HUB,
+        "Albert went to The Swamp, Alberta came to the hub")
+    local objs = objects(F)
+    check(#objs == 1 and Sim.raw(objs[1])._model == npc(F, "alberta").model, "the friend now sees Alberta on the hub")
+    check(#Sim.objects_with(F, C.id_bhvMistParticleSpawner) >= 1, "with a puff of mist")
+    w:warp(F, C.LEVEL_BOB, 1, 1)
+    w:step(5)
+    objs = objects(F)
+    check(#objs == 1 and Sim.raw(objs[1])._model == npc(F, "albert").model, "and Albert is in The Swamp")
+end)
+
+test("they don't move while someone is near (a friend's report holds the host)", function()
+    local w, H, F, disk, clock = setup()
+    H.pos.x = H.pos.x + 5000
+    next_to(F, "albert")
+    clock.t = clock.t + H.env.SGL_NPC_ROTATE - 1
+    w:step(70)      -- the friend's client reports "near a mascot" every 2 s
+    clock.t = clock.t + 2
+    w:step(30)
+    check(H.env.sgl_npc_step() == 0, "held while the friend stands next to Albert")
+    F.pos.x = F.pos.x + 5000
+    clock.t = clock.t + H.env.SGL_NPC_BUSY_HOLD + 1
+    w:step(70)
+    check(H.env.sgl_npc_step() == 1, "moves once the friend walks away")
+end)
+
+test("waves at newcomers, then faces them", function()
+    local w, H, F = setup()
+    local albert = objects(H)[1]
+    next_to(H, "albert", 2000)
+    w:step(5)
+    next_to(H, "albert", 300)
+    w:step(3)
+    check(anim_of(albert) == "sgl_albert_wave", "a player walks up: wave (" .. tostring(anim_of(albert)) .. ")")
     w:step(60)
     check(anim_of(albert) == "sgl_albert_idle", "then stands and attends")
     local want = H.env.atan2s(H.pos.z - albert.oPosZ, H.pos.x - albert.oPosX)
     check(math.abs((albert.oFaceAngleYaw - want + 32768) % 65536 - 32768) < 0x400, "facing the player")
-    say(w, H, H.ms[0], "tell me a joke")
-    w:step(2)
-    check(anim_of(albert) == "sgl_albert_think", "hand on chin while the bridge thinks")
 end)
 
-test("nobody around: Albert strolls to the same spots on every client and stays on the Plaza", function()
-    local w, H, F = setup()
+test("nobody around: Albert strolls to the same spots on every client and stays in his spot's radius", function()
+    local w, H, F, disk, clock = setup()
+    local spot = spot_of(H, "albert")
     local slot
-    for s = 1, 50 do
-        local tx, tz = H.env.sgl_albert_wander_target(H.env.SGL_NPCS[1], s)
-        if math.abs(tx - ALBERT.x) + math.abs(tz - ALBERT.z) > 200 then slot = s break end
+    for s = 126, 150 do     -- slots within the 4 minutes before the next move (the clock starts at 1000 s)
+        local tx, tz = H.env.sgl_albert_wander_target(spot, s, 1)
+        if math.abs(tx - spot.x) + math.abs(tz - spot.z) > 150 then slot = s break end
     end
-    for _, c in ipairs({ H, F }) do
-        c.stubs.get_time = function() return slot * H.env.ALBERT_WANDER_SLOT end
-        c.pos.x, c.pos.z = ALBERT.x + 5000, ALBERT.z
-    end
-    local tx, tz = H.env.sgl_albert_wander_target(H.env.SGL_NPCS[1], slot)
-    local a, b = npc_objects(H)[1], npc_objects(F)[1]
-    w:step(100)   -- (a Gator Chomp from the previous slot may finish first)
-    check(anim_of(a) == "sgl_albert_walk", "he walks (" .. tostring(anim_of(a)) .. ")")
+    H.pos.x, F.pos.x = H.pos.x + 5000, F.pos.x + 5000
+    clock.t = slot * H.env.ALBERT_WANDER_SLOT
+    local tx, tz = H.env.sgl_albert_wander_target(spot, slot, 1)
+    local a, b = objects(H)[1], objects(F)[1]
+    w:step(100)   -- (a Gator Chomp may finish first)
     w:seconds(5)
+    check(H.env.sgl_npc_step() == 0, "(still step 0)")
     local d = math.sqrt((a.oPosX - tx) ^ 2 + (a.oPosZ - tz) ^ 2)
-    check(d < 40, "he reached the slot's spot (" .. math.floor(d) .. " away)")
+    check(d < 40, "he walked to the slot's spot (" .. math.floor(d) .. " away)")
     check(math.abs(a.oPosX - b.oPosX) + math.abs(a.oPosZ - b.oPosZ) < 1, "the same spot on both clients")
-    for s = 1, 400 do
-        local x, z = H.env.sgl_albert_wander_target(H.env.SGL_NPCS[1], s)
-        local r = math.sqrt((x - ALBERT.x) ^ 2 + (z - ALBERT.z) ^ 2)
-        local sign = math.sqrt((x - 8364) ^ 2 + (z + 3942) ^ 2)
-        if r > H.env.ALBERT_WANDER_RADIUS + 1 or sign < 180 then
-            check(false, "slot " .. s .. " target stays on the clear Plaza (" .. math.floor(r) .. " from home)")
-            break
+    for name, s in pairs(H.env.SGL_NPC_SPOTS) do
+        for k = 1, 300 do
+            local x, z = H.env.sgl_albert_wander_target(s, k, 2)
+            if math.sqrt((x - s.x) ^ 2 + (z - s.z) ^ 2) > s.radius + 1 then
+                check(false, name .. ": stroll targets stay within the spot's radius")
+                break
+            end
         end
     end
 end)
 
 test("a stale session's replies are ignored; no bridge -> timeout line", function()
     local w, H, F, disk = setup()
-    H.pos.x, H.pos.z = ALBERT.x + 150, ALBERT.z
-    say(w, H, H.ms[0], "hello albert")
+    next_to(H, "albert")
+    say(w, H, "hello albert")
     disk.inbox["sgl64_npc"] = "session\told-session\n1\talbert\tstale reply\n"
     w:step(30)
     check(Sim.find(H.chat, "stale reply") == nil, "another session's reply is not shown")

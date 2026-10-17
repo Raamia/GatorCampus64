@@ -36,12 +36,15 @@
 #      sanity: walkable floor, columns, barriers on the doors, ladder decks, star humps, the arena, the coffee run's par),
 #      and the built levels/bbh collision once it exists, incl. a walk through every door anchor and a
 #      floor-crack scan (skipped when tools/.venv is missing)
-#  15. test_npc.lua: the talking hub NPCs (sgl_npc.lua): Albert, chat -> outbox with live stats, the bridge's replies
-#      relayed to everyone, timeouts
+#  15. test_npc.lua: the roaming mascots (sgl_npc.lua): Albert and Alberta in the level of their spot, chat ->
+#      outbox with the asker's live stats, /albert and /alberta, the bridge's replies relayed to everyone, the host's
+#      synced moves (poofs, held while someone is near), their animations, timeouts
 #  16. check_npc_ids.py: the NPCs of sgl_npc.lua match the personas in tools/npc_bridge/npcs.json
+#  16b. check_npc_spots.py: every mascot spot stands on flat, clear floor in the built level; routes keep exactly
+#      one mascot on the hub
 #  17. check_game_guide.py: tools/npc_bridge/game_guide.md covers every stage, door, star count and act of course.lua
 #  18. tools/npc_bridge/test_*.py: the NPC chat bridge and the game guide (modfs protocol, routing, Gemini requests;
-#      offline) and tools/actors/test_make_albert.py (Albert's generated actor is valid and up to date)
+#      offline) and tools/actors/test_make_gators.py (the generated Albert and Alberta actors are valid and up to date)
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
 # Fixtures (regenerate only for a new coopdx version): coopdx_constants_v151.lua,
 # coopdx_api_v151.lua, coopdx_structs_v151.lua (gen_coopdx_*.py, see their headers).
@@ -109,12 +112,14 @@ echo "== test_npc (talking hub NPCs)"
 "$LUA" "$HERE/test_npc.lua"
 echo "== check_npc_ids"
 python3 -I "$HERE/check_npc_ids.py"
+echo "== check_npc_spots"
+python3 -I "$HERE/check_npc_spots.py"
 echo "== check_game_guide"
 python3 -I "$HERE/check_game_guide.py"
 echo "== npc_bridge tests"
 out="$(python3 -m unittest discover -s "$HERE/../npc_bridge" 2>&1)" || { echo "$out"; exit 1; }
 echo "$out" | tail -1
-echo "== Albert actor tests"
+echo "== mascot actor tests"
 out="$(python3 -m unittest discover -s "$HERE/../actors" 2>&1)" || { echo "$out"; exit 1; }
 echo "$out" | tail -1
 echo "== all luatest checks passed"
