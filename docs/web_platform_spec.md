@@ -102,19 +102,24 @@ every 2 s (SSE later if wanted).
 
    Validation: schema check, then clamp/repair (unknown enum → default, bad hex → sampled colour).
    Colours are cross-checked against k-means samples from the photos (face crop for skin, top
-   crop for hair) and replaced when the model's value is far off. `id` is assigned by the server
-   (`guest_<slot>`), never by the model.
+   crop for hair) and replaced when the model's value is far off. `id` is assigned by the server,
+   never by the model: every job builds under the neutral actor id **`sglguest`** (the slot is only
+   known once the API slots the ready character, and may change on re-deploy); the deploy renames
+   the export to `guest_<slot>` with `server/worker/actor_rename.py` (Fast64 derives every symbol
+   from the id, see `server/worker/README.md`).
    Model: Vultr Serverless Inference if it offers a vision model (keeps it all on Vultr); otherwise
    an open VLM (Qwen2.5-VL-7B class) served with vLLM on the same GPU. Decide in spike S3.
-3. **Face.** `python3 tools/blender/sgl_face_gen.py guest_<slot> <out>`: the existing procedural
-   eyes (8 states) and mouth from the spec. No new AI here.
+3. **Face.** `SGL_ART_DIR=<job>/art python3 tools/blender/sgl_face_gen.py sglguest
+   <job>/art/sglguest/textures`: the existing procedural eyes (8 states) and mouth from the spec.
+   No new AI here.
 4. **Build + export + validate.** `BLENDER=<linux blender> tools/blender/run_blender.sh
-   tools/blender/build_character.py -- guest_<slot> --build-dir <job>/build --actors-dir <job>/actors`
-   then `validate_export.py`. No per-character module in `tools/blender/characters/` (optional
-   there). Hard timeout 10 min.
-5. **Preview.** The builder's previews (`<job>/build/previews/`) plus a 64×64 portrait cropped from
-   the front preview for the character-select card (`sgl_portrait_guest_<slot>.png`).
-6. **Store.** Previews, portrait, `character.json` and the `actors/guest_<slot>/` export are
+   tools/blender/build_character.py -- sglguest --art-dir <job>/art --build-dir <job>/build
+   --actors-dir <job>/actors`, then `validate_export.py` (also on a copy renamed to `guest_8`). No
+   per-character module in `tools/blender/characters/` (optional there). Hard timeout 10 min.
+5. **Preview.** The builder's previews (`<job>/build/previews/`) plus a 64×64 portrait from the
+   head/front preview for the character-select card (deployed as `sgl_portrait_guest_<slot>.png`).
+6. **Store.** Previews, `portrait.png`, `character.json`, `manifest.json` and the
+   `actors/sglguest/` export are
    uploaded to `builds/<job>/`. Photos are **deleted** when the job ends (success or failure).
 
 The worker claims jobs with `SELECT … FOR UPDATE SKIP LOCKED` (one Blender at a time per GPU VM;

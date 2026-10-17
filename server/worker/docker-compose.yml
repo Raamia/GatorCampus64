@@ -1,0 +1,80 @@
+# sgl-gpu: the Gatorize Me worker, plus an optional local vision model.
+#   cd /opt/sgl64/server/worker && cp .env.example .env   # fill in DATABASE_URL, S3_*, VLM_*
+#   docker compose up -d --build                    # worker only (Vultr Serverless Inference / no model)
+#   docker compose --profile vllm up -d --build     # + Qwen2.5-VL-7B-AWQ on the same GPU
+#
+# VRAM budget, one 16 GB A16 GPU shared by vLLM and Blender (one job at a time):
+#   vLLM  --gpu-memory-utilization 0.60 = 9.6 GB hard cap
+#         weights ~6.7 GB (AWQ 4-bit LLM + fp16 vision tower), activations/profiling ~0.8 GB,
+#         KV cache ~2 GB = ~35k tokens (56 KB/token) >= 2 sequences x 8192 (4 images at
+#         768 px are ~2.4k visual tokens), --enforce-eager skips the CUDA-graph memory
+#   Blender 4.5 (EEVEE/EGL preview renders of a ~5k-tri character, 768 px) ~1-2 GB peak
+#   headroom ~4 GB for the driver/context and spikes
+# vLLM reserves its share at startup and fails if it is not free: start it before the worker
+# (depends_on below) and do not run other GPU work on the VM.
+services:
+  worker:
+    build: .
+    image: sgl-worker:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      SGL_REPO: /opt/sgl64
+      BLENDER: /opt/blender-4.5.3/blender
+      WORK_ROOT: /work
+    volumes:
+      - /opt/sgl64:/opt/sgl64:ro              # repo (provision_gpu.sh): tools/, vendor, Fast64, this code
+      - /opt/blender-4.5.3:/opt/blender-4.5.3:ro
+      - work:/work                           # per-job temp trees (deleted after each job)
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu, graphics, utility, compute]
+    stop_grace_period: 11m                   # let a running build (10 min cap) finish on SIGTERM
+    depends_on:
+      vllm:
+        condition: service_healthy
+        required: false                      # compose >= 2.20: ignored without --profile vllm
+
+  vllm:
+    profiles: ["vllm"]
+    image: ${VLLM_IMAGE:-vllm/vllm-openai:v0.8.5}
+    restart: unless-stopped
+    ipc: host
+    environment:
+      HF_TOKEN: ${HF_TOKEN:-}
+    command:
+      - --model=${VLLM_MODEL:-Qwen/Qwen2.5-VL-7B-Instruct-AWQ}
+      - --served-model-name=qwen2.5-vl-7b
+      - --dtype=float16
+      - --max-model-len=8192
+      - --max-num-seqs=2
+      - --gpu-memory-utilization=0.60
+      - --enforce-eager
+      - --limit-mm-per-prompt=image=4
+      - '--mm-processor-kwargs={"max_pixels": 602112}'
+      - --api-key=${VLM_API_KEY:-local}
+    volumes:
+      - hf-cache:/root/.cache/huggingface
+    ports:
+      - "127.0.0.1:8000:8000"                # local only; the worker reaches it as http://vllm:8000/v1
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 60
+      start_period: 120s
+
+volumes:
+  work:
+  hf-cache:

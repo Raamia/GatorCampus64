@@ -88,8 +88,10 @@ def _haar_face(arr):
         import cv2
     except ImportError:
         return None
-    path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-    det = cv2.CascadeClassifier(path)
+    try:  # opencv-python(-headless) 4.x; 5.x moved the cascades out of the main package
+        det = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+    except AttributeError:
+        return None
     if det.empty():
         return None
     gray = cv2.cvtColor(arr, cv2.COLOR_RGB2GRAY)
