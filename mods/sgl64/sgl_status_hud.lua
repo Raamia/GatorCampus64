@@ -48,7 +48,9 @@ local function draw_status_hud()
 
     local coin = gator_coin_texture()
     if coin ~= nil then
-        djui_hud_render_texture(coin, sw - 77, 15, 16 / coin.width, 16 / coin.height)
+        -- Center the coin around the counter's text line and give the small badge
+        -- a little more weight without moving the existing counter alignment.
+        djui_hud_render_texture(coin, sw - 81, 9, 20 / coin.width, 20 / coin.height)
     end
     sgl_hud_text("X" .. stars, sw - 56, 15, 0.55, { 255, 255, 255 }, 1)
 end
