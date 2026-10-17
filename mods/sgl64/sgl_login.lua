@@ -12,15 +12,20 @@
 --   * a "*" on the player's name tag pill in the character select cards (charselect.lua),
 -- and the player's own client selects their guest gator (guest_<slot>) when their account owns one.
 --
--- Transport: sgl_bridge.lua (loads before this file) relays client -> host -> bridge process and back:
---   _G.sglBridgeEmit(t, fields)        client -> host: login_req { name }, link_req { name, code }
---   _G.sglBridgeOnCommand(name, fn)    fn(cmd) on the client a command targets:
---       login_code   { gi, user_code, uri, expires }   uri = verification_uri_complete (the QR content),
---                                                       expires = seconds left (or a Unix time)
---       verified     { gi, nickname, guest_slot }       broadcast; guest_slot may be nil
---       login_failed { gi, reason }                     "expired", "denied" / "access_denied", or text
--- Both are looked up when used, so this file also loads (and stays inert) without the bridge: offline
--- /login and /link only answer "Login is only available on the hosted server".
+-- Transport: sgl_bridge.lua (loads before this file; server/bridge/README.md) relays client -> host ->
+-- bridge process and back:
+--   sglBridgeEmit(t, fields)        client -> host: login_req { name }, link_req { name, code },
+--                                   login_cancel {} (the bridge stops polling). Returns false offline or
+--                                   without a headless host: then /login and /link only answer
+--                                   "Login is only available on the hosted server".
+--   sglBridgeOnCommand(name, fn)    fn(fields) on the client(s) a command is routed to (no t / seq):
+--       login_code   { gi, user_code, uri, page, expires }  uri = verification_uri_complete (the QR),
+--                                   page = verification_uri (the address to type), expires = seconds left
+--                                   (a Unix time works too)
+--       verified     { gi, name, nickname, guest_slot?, uf?, resend? }  broadcast, host included; the
+--                                   bridge re-broadcasts every linked player with resend = true when
+--                                   somebody joins: that only (re)sets the marks, nothing pops up
+--       login_failed { gi, reason }  expired, denied, invalid_token, bad_code, unavailable, error
 -- The verified marks are client-side decoration; the API is the source of truth (spec §14).
 
 local ACTIVATE_TEXT = "login.chooseyourgator.select/activate"
@@ -31,6 +36,7 @@ local LINK_CODE_LEN = 6
 local sPanel = nil       -- { state = "requesting" | "code" | "ok" | "failed", ... } while the panel is up
 local sVerified = {}     -- [global index] = { name = coopdx name when verified, nickname = account nickname }
 local sLinkTimer = 0     -- frames left waiting for a /link answer
+local sPending = false   -- a /login is waiting for its login_code / approval (late codes are ignored otherwise)
 local sRegistered = false
 local sFrame = 0
 
@@ -38,9 +44,15 @@ local sFrame = 0
 -- helpers
 ---------------------------------------------------------------------------------------------
 
--- sgl_bridge.lua's exports, looked up when needed (nil offline / before the bridge exists)
+-- sgl_bridge.lua's exports, looked up when needed (nil only if the bridge file is missing)
 local function bridge(name)
     return _G[name]
+end
+
+-- send an event through the bridge: false offline / without a headless host
+local function emit(t, fields)
+    local fn = bridge("sglBridgeEmit")
+    return fn ~= nil and fn(t, fields) == true
 end
 
 local function trim(s)
@@ -120,7 +132,11 @@ local function failure_text(reason)
         return "The login was denied on the website."
     elseif r == "bad_code" or r == "invalid_code" then
         return "That link code is not valid (or was already used)."
-    elseif r == "" then
+    elseif r == "invalid_token" then
+        return "The login could not be checked. Try /login again."
+    elseif r == "unavailable" then
+        return "The login server is unavailable right now. Try again in a moment."
+    elseif r == "" or r == "error" then
         return "The login did not work. Try /login again."
     end
     return clean(reason, 80)
@@ -135,8 +151,16 @@ local function for_me(cmd)
     return gi == nil or gi == my_gi()
 end
 
+-- the address to type, without scheme / query (nil when unusable)
+local function address(s)
+    if type(s) ~= "string" then return nil end
+    s = clean(s:gsub("^%a+://", ""):gsub("[?#].*$", ""):gsub("/$", ""), 64)
+    if s == "" or #s > 48 then return nil end
+    return s
+end
+
 local function on_login_code(cmd)
-    if type(cmd) ~= "table" or not for_me(cmd) then return end
+    if type(cmd) ~= "table" or not for_me(cmd) or not sPending then return end
     local code = clean(cmd.user_code, 16)
     local uri = type(cmd.uri) == "string" and cmd.uri or ""
     if code == "" and uri == "" then return end
@@ -150,9 +174,8 @@ local function on_login_code(cmd)
         if qr == nil then qr, err = sgl_qr_encode(uri) end
         if qr == nil then log_to_console("[SGL] login QR failed: " .. tostring(err), CONSOLE_MESSAGE_WARNING) end
     end
-    -- the address to type: the uri without scheme / query, else the default
-    local shown = uri:gsub("^%a+://", ""):gsub("[?#].*$", "")
-    if shown == "" or #shown > 48 then shown = ACTIVATE_TEXT end
+    -- the address to type: page (verification_uri), else the uri without its query, else the default
+    local shown = address(cmd.page) or address(uri) or ACTIVATE_TEXT
     open_panel("code", { code = code, uri = uri, qr = qr, url = shown, frames = math.floor(secs * 30) })
     sfx(SOUND_MENU_MESSAGE_APPEAR)
 end
@@ -164,8 +187,12 @@ local function on_verified(cmd)
     local li = local_index_of(gi)
     local nickname = clean(cmd.nickname, 32)
     local np = li ~= nil and gNetworkPlayers[li] or nil
-    sVerified[gi] = { name = np and np.name or nil, nickname = nickname }
+    local name = np and np.name or (type(cmd.name) == "string" and cmd.name or nil)
+    sVerified[gi] = { name = name, nickname = nickname }
     if np ~= nil then network_player_set_description(np, "GATOR PASS", 255, 215, 0, 255) end
+    -- a re-broadcast (somebody joined): the marks only, no chat / popup / panel / gator change
+    local resend = cmd.resend == true or cmd.resend == 1 or cmd.resend == "true"
+    if resend then return end
     if li ~= 0 then
         if np ~= nil then
             djui_chat_message_create("\\#ffd700\\*\\#dcdcdc\\ " .. np.name .. " is verified with Gator Pass.")
@@ -174,6 +201,7 @@ local function on_verified(cmd)
     end
     -- me
     sLinkTimer = 0
+    sPending = false
     local who = nickname ~= "" and nickname or gNetworkPlayers[0].name
     open_panel("ok", { msg = "Welcome, " .. who .. "!" })
     djui_popup_create("\\#ffd700\\Gator Pass:\\#dcdcdc\\ verified as " .. who .. "!", 2)
@@ -195,6 +223,7 @@ local function on_login_failed(cmd)
     if type(cmd) ~= "table" or not for_me(cmd) then return end
     local text = failure_text(cmd.reason)
     sLinkTimer = 0
+    sPending = false
     open_panel("failed", { msg = text })
     djui_popup_create("\\#ff8080\\Gator Pass:\\#dcdcdc\\ " .. text, 2)
     sfx(SOUND_MENU_CAMERA_BUZZ)
@@ -218,11 +247,24 @@ end
 
 local OFFLINE_TEXT = "Login is only available on the hosted server"
 
+-- stop waiting for a /login: the bridge stops polling Auth0, late codes are ignored
+local function cancel_pending()
+    if not sPending then return end
+    sPending = false
+    emit("login_cancel", {})
+end
+
+-- close the panel (B, /login cancel); a login still waiting is cancelled
+local function close_by_player()
+    if sPanel ~= nil and (sPanel.state == "requesting" or sPanel.state == "code") then cancel_pending() end
+    close_panel()
+end
+
 local function on_login_command(msg)
     msg = trim(msg):lower()
     if msg == "cancel" or msg == "close" or msg == "off" then
         if sPanel ~= nil then
-            close_panel()
+            close_by_player()
             djui_chat_message_create("Login panel closed.")
         else
             djui_chat_message_create("No login in progress.")
@@ -231,11 +273,6 @@ local function on_login_command(msg)
     end
     if msg ~= "" then
         djui_chat_message_create("Usage: /login (log in with a QR code), /login cancel, or /link <code>")
-        return true
-    end
-    local emit = bridge("sglBridgeEmit")
-    if emit == nil then
-        djui_chat_message_create(OFFLINE_TEXT)
         return true
     end
     local me = sVerified[my_gi()]
@@ -248,7 +285,11 @@ local function on_login_command(msg)
         return true
     end
     register()
-    emit("login_req", { name = gNetworkPlayers[0].name })
+    if not emit("login_req", { name = gNetworkPlayers[0].name }) then
+        djui_chat_message_create(OFFLINE_TEXT)
+        return true
+    end
+    sPending = true
     open_panel("requesting", { frames = REQUEST_TIMEOUT })
     return true
 end
@@ -260,13 +301,11 @@ local function on_link_command(msg)
             "-character code chooseyourgator.select shows after you log in (e.g. /link K7Q2XF)")
         return true
     end
-    local emit = bridge("sglBridgeEmit")
-    if emit == nil then
+    register()
+    if not emit("link_req", { name = gNetworkPlayers[0].name, code = code }) then
         djui_chat_message_create(OFFLINE_TEXT)
         return true
     end
-    register()
-    emit("link_req", { name = gNetworkPlayers[0].name, code = code })
     sLinkTimer = REQUEST_TIMEOUT
     djui_chat_message_create("Linking with code " .. code .. "...")
     return true
@@ -291,6 +330,7 @@ local function on_update()
     if st == "requesting" or st == "code" then
         sPanel.frames = sPanel.frames - 1
         if sPanel.frames <= 0 then
+            cancel_pending()
             if st == "requesting" then
                 open_panel("failed", { msg = "No answer from the login server. Try /login again in a moment." })
             else
@@ -313,7 +353,7 @@ local function on_before_mario_update(m)
     local c = m.controller
     if (c.buttonPressed & B_BUTTON) ~= 0 then
         c.buttonPressed = c.buttonPressed & ~B_BUTTON
-        close_panel()
+        close_by_player()
         sfx(SOUND_MENU_MESSAGE_DISAPPEAR)
     end
 end

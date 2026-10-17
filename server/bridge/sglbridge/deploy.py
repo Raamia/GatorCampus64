@@ -28,6 +28,7 @@ import io
 import json
 import logging
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -54,7 +55,12 @@ class DeployError(Exception):
 
 
 def clean_name(name: Any, slot: int) -> str:
-    s = "".join(c for c in str(name or "") if 32 <= ord(c) < 127).strip()[:MAX_NAME]
+    """The same cleaning as characters.lua guest_name (so the site and the game show the same name):
+    DJUI colour codes, non-printable / non-ASCII characters and backslashes removed, trimmed, at most
+    12 characters."""
+    s = re.sub(r"\\#[0-9A-Fa-f]+\\", "", str(name or ""))
+    s = "".join(c for c in s if 32 <= ord(c) < 127 and c != "\\").strip()
+    s = s[:MAX_NAME].rstrip()
     return s or f"Guest {slot}"
 
 

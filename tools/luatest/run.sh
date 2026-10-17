@@ -39,7 +39,9 @@
 #  15. test_qr.lua: sgl_qr.lua (vendored QR encoder) against known vectors (thonky.com HELLO WORLD 1-M codewords,
 #      a pinned zbarimg-decoded 5-M matrix of the Gator Pass URL), QR structure, the HUD draw helper
 #  16. test_login.lua: web platform mod side: guests.lua slots in characters.lua, charselect.lua paging,
-#      sgl_login.lua (/login, /link, QR panel, verified marks) against a stub sgl_bridge.lua
+#      sgl_login.lua (/login, /link, QR panel, login_cancel, verified marks + resend) against the real
+#      sgl_bridge.lua with a simulated headless host, and a guests.lua rendered by server/bridge's
+#      deploy.py (needs python3, or $PYTHON) loaded into characters.lua
 #  17. test_bridge.lua: sgl_bridge.lua (hosted server bridge): JSON encoder / decoder, SGLEVT events (host prints,
 #      client relay), inbox sequencing + routing, inert without a headless host
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)

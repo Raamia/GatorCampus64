@@ -3,12 +3,13 @@ import json
 import shutil
 import subprocess
 import zipfile
+from pathlib import Path
 
 import pytest
 
 from sglbridge.api import ApiUnavailable
-from sglbridge.deploy import (DEFAULT_RENAME_TOOL, DeployError, DeployLoop, extract_zip, render_guests_lua,
-                              snapshot_placeholders, stage_build)
+from sglbridge.deploy import (DEFAULT_RENAME_TOOL, DeployError, DeployLoop, clean_name, extract_zip,
+                              render_guests_lua, snapshot_placeholders, stage_build)
 from sglbridge.inbox import Inbox, read_modfs
 
 # stand-in for server/worker/actor_rename.py (same CLI: <src actor dir> <dst actors dir> <new id>)
@@ -99,14 +100,34 @@ def test_guests_lua(tmp_path):
     lua = render_guests_lua({2: {"name": 'Al "the" \\gator\\ with a long name', "owner": "auth0|1"}})
     assert lua.count("sgl_guests_register({") == 1 and lua.rstrip().endswith("})")
     assert '    { slot = 1, name = "Guest 1", owner = nil },' in lua
-    assert '    { slot = 2, name = "Al \\"the\\" \\\\ga", owner = "auth0|1" },' in lua
+    assert '    { slot = 2, name = "Al \\"the\\" gat", owner = "auth0|1" },' in lua
     assert lua.count("slot =") == 8
     if shutil.which("lua"):
         prelude = "function sgl_guests_register(t) G = t end\n"
         (tmp_path / "guests.lua").write_text(prelude + lua + "io.write(G[2].name, '|', #G, '|', tostring(G[1].owner))\n")
         r = subprocess.run(["lua", str(tmp_path / "guests.lua")], capture_output=True)
         assert r.returncode == 0, r.stderr
-        assert r.stdout.decode() == 'Al "the" \\ga|8|nil'
+        assert r.stdout.decode() == 'Al "the" gat|8|nil'
+
+
+def test_clean_name_matches_characters_lua():
+    # characters.lua guest_name: colour codes, non-printables and backslashes out, trim, 12 chars, rtrim
+    assert clean_name("\\#ff0000\\Evil\tName That Is Far Too Long", 4) == "EvilName Tha"
+    assert clean_name("  caf\u00e9 \\o/  ", 1) == "caf o/"
+    assert clean_name("Twelve chars x", 2) == "Twelve chars"
+    assert clean_name("abcdefghijk  z", 2) == "abcdefghijk"
+    assert clean_name("   ", 6) == clean_name(None, 6) == "Guest 6"
+
+
+def test_guests_lua_placeholders_match_the_checked_in_file():
+    """The empty-roster render is the checked-in mods/sgl64/guests.lua's register call, line for line
+    (the mod's format, spec 5.2). tools/luatest/test_login.lua loads a render in the Lua sim."""
+    checked_in = (Path(__file__).resolve().parents[3] / "mods/sgl64/guests.lua").read_text()
+
+    def call(text):
+        return text[text.index("\nsgl_guests_register({") + 1:].rstrip()   # the call, not the comment
+
+    assert call(render_guests_lua({})) == call(checked_in)
 
 
 class FakeApi:
