@@ -1,0 +1,2973 @@
+{
+ "level": "sgl_hub",
+ "stage": "hub",
+ "center_m": [
+  -45,
+  98
+ ],
+ "window_m": [
+  -335.0,
+  -192.0,
+  245.0,
+  388.0
+ ],
+ "play_m": [
+  -285.0,
+  -142.0,
+  195.0,
+  338.0
+ ],
+ "extent_half_m": 324.0,
+ "collision_tris": 8729,
+ "visual_tris": 55295,
+ "collision_by_object": {
+  "Ground collision": 1552,
+  "Pond basins collision": 195,
+  "Props collision": 188,
+  "Buildings collision": 3232,
+  "Trees collision": 1038,
+  "Boundary walls": 192,
+  "Dressing collision": 134,
+  "LM century_tower collision": 370,
+  "LM university_auditorium collision": 298,
+  "LM The Hub collision": 207,
+  "LM Newell Hall collision": 145,
+  "LM library_west.collision": 167,
+  "LM library_colonnade.collision": 74,
+  "LM smathers_library.collision": 277,
+  "LM plaza_americas.collision": 86,
+  "LM marston_collision": 237,
+  "LM turlington_collision": 298,
+  "LM turlington_potato_collision": 39
+ },
+ "visual_by_object": {
+  "Ground visual": 9155,
+  "Roads and paths visual": 6272,
+  "Pond basins visual": 195,
+  "Pond water": 137,
+  "Props visual": 252,
+  "Buildings visual": 7685,
+  "Backdrop buildings": 4376,
+  "Trees visual": 16460,
+  "Tree line": 560,
+  "Dressing visual": 1492,
+  "LM century_tower visual": 1474,
+  "LM university_auditorium visual": 1199,
+  "LM The Hub visual": 704,
+  "LM Newell Hall visual": 597,
+  "LM library_west.visual": 945,
+  "LM library_colonnade.visual": 278,
+  "LM smathers_library.visual": 1127,
+  "LM plaza_americas.visual": 498,
+  "LM plaza_americas.walks": 132,
+  "LM marston_visual": 639,
+  "LM turlington_visual": 922,
+  "LM turlington_potato_visual": 196
+ },
+ "landmark_modules": [
+  {
+   "module": "century_tower_auditorium",
+   "ok": true,
+   "slugs": [
+    "century_tower",
+    "university_auditorium"
+   ],
+   "parts": 4,
+   "collision_tris": 668,
+   "visual_tris": 2673,
+   "budget_collision": 750,
+   "budget_visual": 2800,
+   "per_landmark": {
+    "century_tower": {
+     "collision_tris": 370,
+     "visual_tris": 1474,
+     "budget_collision": 450,
+     "budget_visual": 1600
+    },
+    "university_auditorium": {
+     "collision_tris": 298,
+     "visual_tris": 1199,
+     "budget_collision": 300,
+     "budget_visual": 1200
+    }
+   }
+  },
+  {
+   "module": "hub_newell",
+   "ok": true,
+   "slugs": [
+    "the_hub",
+    "newell_hall"
+   ],
+   "parts": 4,
+   "collision_tris": 352,
+   "visual_tris": 1301,
+   "budget_collision": 350,
+   "budget_visual": 1300,
+   "per_landmark": {
+    "the_hub": {
+     "collision_tris": 207,
+     "visual_tris": 704,
+     "budget_collision": 200,
+     "budget_visual": 700
+    },
+    "newell_hall": {
+     "collision_tris": 145,
+     "visual_tris": 597,
+     "budget_collision": 150,
+     "budget_visual": 600
+    }
+   }
+  },
+  {
+   "module": "library_west_smathers_plaza",
+   "ok": true,
+   "slugs": [
+    "library_west",
+    "library_colonnade",
+    "smathers_library",
+    "plaza_of_the_americas"
+   ],
+   "parts": 9,
+   "collision_tris": 604,
+   "visual_tris": 2980,
+   "budget_collision": 670,
+   "budget_visual": 2800,
+   "per_landmark": {
+    "library_west": {
+     "collision_tris": 167,
+     "visual_tris": 945,
+     "budget_collision": 250,
+     "budget_visual": 900
+    },
+    "library_colonnade": {
+     "collision_tris": 74,
+     "visual_tris": 278,
+     "budget_collision": null,
+     "budget_visual": null
+    },
+    "smathers_library": {
+     "collision_tris": 277,
+     "visual_tris": 1127,
+     "budget_collision": 300,
+     "budget_visual": 1000
+    },
+    "plaza_of_the_americas": {
+     "collision_tris": 86,
+     "visual_tris": 630,
+     "budget_collision": 120,
+     "budget_visual": 900
+    }
+   }
+  },
+  {
+   "module": "marston_turlington",
+   "ok": true,
+   "slugs": [
+    "marston",
+    "turlington",
+    "turlington_potato"
+   ],
+   "parts": 6,
+   "collision_tris": 574,
+   "visual_tris": 1757,
+   "budget_collision": 590,
+   "budget_visual": 2100,
+   "per_landmark": {
+    "marston": {
+     "collision_tris": 237,
+     "visual_tris": 639,
+     "budget_collision": 250,
+     "budget_visual": 900
+    },
+    "turlington": {
+     "collision_tris": 298,
+     "visual_tris": 922,
+     "budget_collision": 300,
+     "budget_visual": 1000
+    },
+    "turlington_potato": {
+     "collision_tris": 39,
+     "visual_tris": 196,
+     "budget_collision": 40,
+     "budget_visual": 200
+    }
+   }
+  }
+ ],
+ "replaced_osm_ids": [
+  "n4741925737",
+  "r12122775/196848215",
+  "r12122775/891179070",
+  "w150684197",
+  "w150860043",
+  "w150860048",
+  "w150926630",
+  "w150926632",
+  "w154223625",
+  "w154223635",
+  "w859919293",
+  "w859919297",
+  "w859953340",
+  "w863677836"
+ ],
+ "replaced_ways": [
+  "w1005260344",
+  "w1105642064",
+  "w1476020971",
+  "w427929302",
+  "w427929303",
+  "w427929304",
+  "w427929305",
+  "w436088983",
+  "w481256524",
+  "w586111820",
+  "w586114121",
+  "w595211017",
+  "w595211057",
+  "w606699058",
+  "w860122323",
+  "w860122325"
+ ],
+ "replaced_areas": [
+  "w595211010",
+  "w595211012",
+  "w595211013",
+  "w595211014",
+  "w595211015",
+  "w595211016",
+  "w595211018"
+ ],
+ "removed_points": [
+  "n5623470779",
+  "n9291780785",
+  "n9291780786",
+  "n9291780787",
+  "n9291780788",
+  "n9291780789",
+  "n9291780790",
+  "n9291780791",
+  "n9291780792",
+  "n9291780793",
+  "n9291780794",
+  "n9291780795",
+  "n9291780796",
+  "n9291780797",
+  "n9291780798",
+  "n9291780799",
+  "n9291780800",
+  "n9291780801"
+ ],
+ "spawn": {
+  "map_m": [
+   38.2,
+   142.4
+  ],
+  "game_units": [
+   8320,
+   100,
+   -4440
+  ],
+  "facing_deg": 190.0,
+  "floor_m": -2.384185791015625e-07,
+  "clearance_m": 3.0
+ },
+ "doors": [
+  {
+   "slug": "university_auditorium",
+   "name": "DOOR_university_auditorium_1",
+   "label": "UNIVERSITY AUDITORIUM",
+   "building_osm_id": "w154223635",
+   "stage": "THE SWAMP",
+   "stars_required": 0,
+   "map_m": [
+    38.5,
+    62.85,
+    0.0
+   ],
+   "facing_deg": 1.5,
+   "game_units": [
+    8350,
+    0,
+    3515
+   ],
+   "game_yaw": 32495,
+   "sign_lua_bparam": "SGL_HUB_SIGN_UNIVERSITY_AUDITORIUM",
+   "sign_map_m": [
+    35.98,
+    65.92
+   ],
+   "source": "landmark module century_tower_auditorium (module primary door)",
+   "marker_drawn": false,
+   "module_primary": true,
+   "note": "centre door of the three-door porch facing the Plaza of the Americas (OSM entrance node 8064445595); the NW/NE porch doors are decorative; visual door leaf 0.5 m behind pos_m"
+  },
+  {
+   "slug": "the_hub",
+   "name": "DOOR_the_hub_0",
+   "label": "THE HUB",
+   "building_osm_id": "w150926632",
+   "stage": "REITZ UNION + ENGINEERING",
+   "stars_required": 2,
+   "map_m": [
+    -194.85,
+    -84.65,
+    0.0
+   ],
+   "facing_deg": 144.1,
+   "game_units": [
+    -14985,
+    0,
+    18265
+   ],
+   "game_yaw": 6535,
+   "sign_lua_bparam": "SGL_HUB_SIGN_THE_HUB",
+   "sign_map_m": [
+    -190.98,
+    -85.56
+   ],
+   "source": "landmark module hub_newell (module primary door)",
+   "marker_drawn": false,
+   "module_primary": true,
+   "note": "south entrance on the Union Lawn side (OSM entrance node), the side that faces the Reitz Union: suggested door to the Reitz + Engineering stage"
+  },
+  {
+   "slug": "marston",
+   "name": "DOOR_marston_1",
+   "label": "MARSTON SCIENCE LIBRARY",
+   "building_osm_id": "w150860048",
+   "stage": "MARSTON (INSIDE)",
+   "stars_required": 5,
+   "map_m": [
+    -58.5,
+    -69.0,
+    0.0
+   ],
+   "facing_deg": 0.0,
+   "game_units": [
+    -1350,
+    0,
+    16700
+   ],
+   "game_yaw": 32768,
+   "sign_lua_bparam": "SGL_HUB_SIGN_MARSTON",
+   "sign_map_m": [
+    -61.7,
+    -64.5
+   ],
+   "source": "landmark module marston_turlington (module primary door)",
+   "marker_drawn": false,
+   "module_primary": true,
+   "note": "main entrance on the stepped north wing, facing the entry plaza"
+  },
+  {
+   "slug": "newell_hall",
+   "name": "DOOR_newell_hall_1",
+   "label": "NEWELL HALL",
+   "building_osm_id": "w150926630",
+   "stage": "LAKE ALICE",
+   "stars_required": 8,
+   "map_m": [
+    -154.68,
+    30.25,
+    1.2
+   ],
+   "facing_deg": 90.0,
+   "game_units": [
+    -10968,
+    120,
+    6775
+   ],
+   "game_yaw": 16384,
+   "sign_lua_bparam": "SGL_HUB_SIGN_NEWELL_HALL",
+   "sign_map_m": [
+    -151.68,
+    32.85
+   ],
+   "source": "landmark module hub_newell (door named in DOOR_DEFAULTS)",
+   "marker_drawn": false,
+   "module_primary": false,
+   "note": "historic arched main entry in the east facade, top of the stoop (OSM entrance=main)"
+  },
+  {
+   "slug": "library_west",
+   "name": "DOOR_library_west_1",
+   "label": "LIBRARY WEST",
+   "building_osm_id": "r12122775/196848215",
+   "stage": "LIBRARY WEST AFTER DARK",
+   "stars_required": 14,
+   "map_m": [
+    38.91,
+    258.43,
+    0.0
+   ],
+   "facing_deg": 180.0,
+   "game_units": [
+    8391,
+    0,
+    -16043
+   ],
+   "game_yaw": 0,
+   "sign_lua_bparam": "SGL_HUB_SIGN_LIBRARY_WEST",
+   "sign_map_m": [
+    41.51,
+    255.43
+   ],
+   "source": "landmark module library_west_smathers_plaza (module primary door)",
+   "marker_drawn": false,
+   "module_primary": true,
+   "note": "Main revolving door (OSM 4741830154) in the two-storey glass wall, under the colonnade's entrance canopy -> 'Library West After Dark' [generator: moved 0.35 m out of the recess onto the facade plane]"
+  },
+  {
+   "slug": "century_tower",
+   "name": "DOOR_century_tower_1",
+   "label": "CENTURY TOWER",
+   "building_osm_id": "w150860043",
+   "stage": "CENTURY TOWER (INSIDE)",
+   "stars_required": 20,
+   "map_m": [
+    -0.93,
+    3.31,
+    0.0
+   ],
+   "facing_deg": 359.8,
+   "game_units": [
+    4407,
+    0,
+    9469
+   ],
+   "game_yaw": 32804,
+   "sign_lua_bparam": "SGL_HUB_SIGN_CENTURY_TOWER",
+   "sign_map_m": [
+    1.66,
+    6.32
+   ],
+   "source": "landmark module century_tower_auditorium (module primary door)",
+   "marker_drawn": false,
+   "module_primary": true,
+   "note": "north face, in the recessed bay; visual door leaf sits 0.35 m behind pos_m"
+  },
+  {
+   "slug": "smathers",
+   "name": "DOOR_smathers_library_1",
+   "label": "SMATHERS LIBRARY",
+   "building_osm_id": "w154223625",
+   "stage": "SMATHERS STACKS SLIDE",
+   "stars_required": 3,
+   "map_m": [
+    126.95,
+    244.81,
+    0.0
+   ],
+   "facing_deg": 270.0,
+   "game_units": [
+    17195,
+    0,
+    -14681
+   ],
+   "game_yaw": 49152,
+   "sign_lua_bparam": "SGL_HUB_SIGN_SMATHERS",
+   "sign_map_m": [
+    123.95,
+    242.21
+   ],
+   "source": "landmark module library_west_smathers_plaza (module primary door)",
+   "marker_drawn": false,
+   "module_primary": true,
+   "note": "Main entrance (OSM 4741830122) in the west face of the entrance tower, facing the Plaza -> 'Smathers Stacks Slide' [generator: moved 0.6 m out of the recess onto the facade plane]"
+  },
+  {
+   "slug": "final_exam",
+   "name": "DOOR_century_tower_2",
+   "label": "FINAL EXAM",
+   "building_osm_id": "w150860043",
+   "stage": "FINALS WEEK ASCENT",
+   "stars_required": 30,
+   "map_m": [
+    -5.08,
+    -0.96,
+    0.0
+   ],
+   "facing_deg": 269.8,
+   "game_units": [
+    3992,
+    0,
+    9896
+   ],
+   "game_yaw": 49188,
+   "sign_lua_bparam": "SGL_HUB_SIGN_FINAL_EXAM",
+   "sign_map_m": [
+    -8.07,
+    -3.57
+   ],
+   "source": "landmark module century_tower_auditorium (door named in DOOR_DEFAULTS)",
+   "marker_drawn": false,
+   "module_primary": false,
+   "note": "west face, in the recessed bay; visual door leaf sits 0.35 m behind pos_m"
+  },
+  {
+   "slug": "the_hub",
+   "name": "DOOR_the_hub_1",
+   "label": "THE HUB",
+   "building_osm_id": "w150926632",
+   "stage": null,
+   "stars_required": null,
+   "map_m": [
+    -194.05,
+    -55.09,
+    0.0
+   ],
+   "facing_deg": 326.9,
+   "game_units": [
+    -14905,
+    0,
+    15309
+   ],
+   "game_yaw": 38794,
+   "sign_lua_bparam": null,
+   "sign_map_m": null,
+   "source": "landmark module hub_newell (not a stage door)",
+   "marker_drawn": false,
+   "module_primary": false,
+   "note": "main two-storey glass entry under the curving north awning (OSM entrance=main)"
+  },
+  {
+   "slug": "the_hub",
+   "name": "DOOR_the_hub_2",
+   "label": "THE HUB",
+   "building_osm_id": "w150926632",
+   "stage": null,
+   "stars_required": null,
+   "map_m": [
+    -170.32,
+    -44.96,
+    0.0
+   ],
+   "facing_deg": 42.9,
+   "game_units": [
+    -12532,
+    0,
+    14296
+   ],
+   "game_yaw": 24958,
+   "sign_lua_bparam": null,
+   "sign_map_m": null,
+   "source": "landmark module hub_newell (not a stage door)",
+   "marker_drawn": false,
+   "module_primary": false,
+   "note": "food-court entry in the rounded east wing (OSM entrance=main)"
+  },
+  {
+   "slug": "newell_hall",
+   "name": "DOOR_newell_hall_0",
+   "label": "NEWELL HALL",
+   "building_osm_id": "w150926630",
+   "stage": null,
+   "stars_required": null,
+   "map_m": [
+    -206.38,
+    30.25,
+    0.0
+   ],
+   "facing_deg": 270.0,
+   "game_units": [
+    -16138,
+    0,
+    6775
+   ],
+   "game_yaw": 49152,
+   "sign_lua_bparam": null,
+   "sign_map_m": null,
+   "source": "landmark module hub_newell (not a stage door)",
+   "marker_drawn": false,
+   "module_primary": true,
+   "note": "west gable door of the 2017 addition (mirrors the east entry): suggested stage door, west side toward the stadium (stages.json); no real door here"
+  },
+  {
+   "slug": "newell_hall",
+   "name": "DOOR_newell_hall_2",
+   "label": "NEWELL HALL",
+   "building_osm_id": "w150926630",
+   "stage": null,
+   "stars_required": null,
+   "map_m": [
+    -190.08,
+    26.9,
+    0.0
+   ],
+   "facing_deg": 180.0,
+   "game_units": [
+    -14508,
+    0,
+    7110
+   ],
+   "game_yaw": 0,
+   "sign_lua_bparam": null,
+   "sign_map_m": null,
+   "source": "landmark module hub_newell (not a stage door)",
+   "marker_drawn": false,
+   "module_primary": false,
+   "note": "student entry in the glass connector, inside the south wall-kick slot (OSM entrance)"
+  },
+  {
+   "slug": "library_west",
+   "name": "DOOR_library_west_2",
+   "label": "LIBRARY WEST",
+   "building_osm_id": "r12122775/196848215",
+   "stage": null,
+   "stars_required": null,
+   "map_m": [
+    23.27,
+    316.3,
+    0.0
+   ],
+   "facing_deg": 0.0,
+   "game_units": [
+    6827,
+    0,
+    -21830
+   ],
+   "game_yaw": 32768,
+   "sign_lua_bparam": null,
+   "sign_map_m": null,
+   "source": "landmark module library_west_smathers_plaza (not a stage door)",
+   "marker_drawn": false,
+   "module_primary": false,
+   "note": "North door (OSM 10117492280) in the notch west of the curved glass front"
+  },
+  {
+   "slug": "library_west",
+   "name": "DOOR_library_west_3",
+   "label": "LIBRARY WEST",
+   "building_osm_id": "r12122775/196848215",
+   "stage": null,
+   "stars_required": null,
+   "map_m": [
+    54.46,
+    316.29,
+    0.0
+   ],
+   "facing_deg": 0.0,
+   "game_units": [
+    9946,
+    0,
+    -21829
+   ],
+   "game_yaw": 32768,
+   "sign_lua_bparam": null,
+   "sign_map_m": null,
+   "source": "landmark module library_west_smathers_plaza (not a stage door)",
+   "marker_drawn": false,
+   "module_primary": false,
+   "note": "North door (OSM 10117492278) in the notch east of the curved glass front"
+  },
+  {
+   "slug": "smathers_library",
+   "name": "DOOR_smathers_library_2",
+   "label": "SMATHERS LIBRARY",
+   "building_osm_id": "w154223625",
+   "stage": null,
+   "stars_required": null,
+   "map_m": [
+    161.59,
+    253.63,
+    0.0
+   ],
+   "facing_deg": 180.0,
+   "game_units": [
+    20659,
+    0,
+    -15563
+   ],
+   "game_yaw": 0,
+   "sign_lua_bparam": null,
+   "sign_map_m": null,
+   "source": "landmark module library_west_smathers_plaza (not a stage door)",
+   "marker_drawn": false,
+   "module_primary": false,
+   "note": "Side door (OSM 10083724148) on the north range, facing the east courtyard"
+  }
+ ],
+ "lua_globals_needed": [
+  "SGL_HUB_SIGN_WELCOME",
+  "SGL_HUB_SIGN_UNIVERSITY_AUDITORIUM",
+  "SGL_HUB_SIGN_THE_HUB",
+  "SGL_HUB_SIGN_MARSTON",
+  "SGL_HUB_SIGN_NEWELL_HALL",
+  "SGL_HUB_SIGN_LIBRARY_WEST",
+  "SGL_HUB_SIGN_CENTURY_TOWER",
+  "SGL_HUB_SIGN_SMATHERS",
+  "SGL_HUB_SIGN_FINAL_EXAM"
+ ],
+ "landmark_extras": {
+  "century_tower": {
+   "spots": {
+    "top_deck_north": [
+     -0.93,
+     2.25,
+     41.2
+    ],
+    "top_deck_south": [
+     -0.9,
+     -4.14,
+     41.2
+    ],
+    "top_deck_east": [
+     2.24,
+     -0.93,
+     41.2
+    ],
+    "top_deck_west": [
+     -4.07,
+     -0.96,
+     41.2
+    ],
+    "pyramid_apex": [
+     -0.91,
+     -0.95,
+     47.9
+    ],
+    "clock_north_center": [
+     -0.93,
+     3.43,
+     28.1
+    ]
+   },
+   "climb_route_m": [
+    [
+     -6.0,
+     4.18,
+     2.0
+    ],
+    [
+     -0.94,
+     4.3,
+     4.2
+    ],
+    [
+     4.13,
+     4.23,
+     6.4
+    ],
+    [
+     4.25,
+     -0.92,
+     8.6
+    ],
+    [
+     4.17,
+     -6.07,
+     10.8
+    ],
+    [
+     -0.89,
+     -6.19,
+     13.0
+    ],
+    [
+     -5.96,
+     -6.12,
+     15.2
+    ],
+    [
+     -6.08,
+     -0.97,
+     17.4
+    ],
+    [
+     -6.0,
+     4.18,
+     19.6
+    ],
+    [
+     -0.94,
+     4.3,
+     21.8
+    ],
+    [
+     4.13,
+     4.23,
+     24.0
+    ],
+    [
+     4.25,
+     -0.92,
+     26.2
+    ],
+    [
+     4.17,
+     -6.07,
+     28.4
+    ],
+    [
+     -0.89,
+     -6.19,
+     30.6
+    ],
+    [
+     -5.96,
+     -6.12,
+     32.8
+    ],
+    [
+     -6.08,
+     -0.97,
+     35.0
+    ],
+    [
+     -6.0,
+     4.18,
+     37.2
+    ],
+    [
+     -0.94,
+     4.3,
+     39.4
+    ]
+   ],
+   "top_platform": {
+    "z_m": 41.2,
+    "ring_inner_half_m": 2.35,
+    "ring_outer_half_m": 3.97,
+    "note": "~1.6 m walkway inside the 0.65 m parapet around the pyramid; parapet top 42.2 m"
+   },
+   "height_m": 47.9
+  },
+  "university_auditorium": {
+   "spots": {
+    "porch_roof": [
+     38.4,
+     59.4,
+     5.2
+    ],
+    "west_arcade_roof": [
+     24.07,
+     1.8,
+     5.2
+    ],
+    "east_arcade_roof": [
+     51.7,
+     1.8,
+     5.2
+    ],
+    "south_flat_roof": [
+     38.0,
+     -15.2,
+     9.0
+    ],
+    "nw_flat_roof": [
+     27.6,
+     11.8,
+     9.0
+    ],
+    "ne_flat_roof": [
+     48.2,
+     11.7,
+     9.0
+    ],
+    "north_wing_ridge": [
+     38.27,
+     48.0,
+     18.0
+    ],
+    "ta_portico_npc": [
+     38.4,
+     61.6,
+     0.0
+    ]
+   },
+   "height_m": 18.0
+  },
+  "library_west": {
+   "height_m": 26.0
+  },
+  "library_colonnade": {
+   "height_m": 4.6
+  },
+  "smathers_library": {
+   "height_m": 18.0
+  },
+  "marston": {
+   "markers": [
+    {
+     "name": "marston_entry_plaza",
+     "pos_m": [
+      -58.5,
+      -61.0,
+      0.0
+     ],
+     "facing_deg": 180.0,
+     "note": "open paving between the two brick planters (TA Office Hours #2 spot)"
+    }
+   ],
+   "height_m": 22.5
+  },
+  "turlington": {
+   "markers": [
+    {
+     "name": "turlington_steps",
+     "pos_m": [
+      -57.0,
+      24.7,
+      0.0
+     ],
+     "facing_deg": 90.0,
+     "note": "east mouth of the breezeway onto Turlington Plaza (Tabling Gauntlet start)"
+    },
+    {
+     "name": "turlington_stair_top",
+     "pos_m": [
+      -66.0,
+      87.0,
+      9.0
+     ],
+     "facing_deg": 180.0,
+     "note": "top of the exterior stair, on the 9 m terrace ring"
+    }
+   ],
+   "height_m": 20.0
+  },
+  "turlington_potato": {
+   "height_m": 2.95
+  }
+ },
+ "pole_objects": [
+  {
+   "kind": "tree",
+   "osm_id": "n5621188068",
+   "map_m": [
+    4.59,
+    124.75
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5673717545",
+   "map_m": [
+    3.78,
+    149.66
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5673717557",
+   "map_m": [
+    2.85,
+    174.2
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5673717589",
+   "map_m": [
+    3.99,
+    168.11
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5673717592",
+   "map_m": [
+    2.09,
+    182.6
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5673717620",
+   "map_m": [
+    5.19,
+    158.49
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5673791161",
+   "map_m": [
+    11.23,
+    139.54
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735665",
+   "map_m": [
+    52.59,
+    136.85
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735667",
+   "map_m": [
+    102.33,
+    136.64
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735673",
+   "map_m": [
+    101.51,
+    118.85
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735678",
+   "map_m": [
+    108.67,
+    134.47
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735681",
+   "map_m": [
+    85.57,
+    151.46
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735701",
+   "map_m": [
+    51.81,
+    126.1
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735705",
+   "map_m": [
+    108.87,
+    146.08
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735716",
+   "map_m": [
+    101.28,
+    130.69
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735821",
+   "map_m": [
+    59.46,
+    119.29
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735824",
+   "map_m": [
+    102.88,
+    126.32
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735833",
+   "map_m": [
+    61.81,
+    148.45
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735840",
+   "map_m": [
+    51.93,
+    161.53
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735857",
+   "map_m": [
+    92.86,
+    133.17
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735870",
+   "map_m": [
+    79.12,
+    158.82
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735874",
+   "map_m": [
+    52.87,
+    147.19
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735875",
+   "map_m": [
+    72.32,
+    135.45
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735882",
+   "map_m": [
+    80.33,
+    127.74
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5678663358",
+   "map_m": [
+    93.15,
+    151.48
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5678663372",
+   "map_m": [
+    93.01,
+    188.99
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5678663418",
+   "map_m": [
+    92.46,
+    180.2
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5678663758",
+   "map_m": [
+    92.45,
+    167.27
+   ],
+   "floor_m": 0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    26.8,
+    96.5
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    49.6,
+    96.5
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    14.0,
+    88.6
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    62.0,
+    88.6
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    2.0,
+    88.6
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    74.0,
+    88.6
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    29.5,
+    66.9
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    47.3,
+    66.9
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -48.0,
+    12.0
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -48.0,
+    -14.0
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -72.0,
+    -16.0
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -102.0,
+    -18.0
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -120.0,
+    -23.5
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -41.5,
+    40.0
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  }
+ ],
+ "climb_routes": {
+  "Leigh Hall": {
+   "facade_mid_m": [
+    -62.3,
+    170.7
+   ],
+   "canopy_m": [
+    -61.21,
+    168.83,
+    3.0
+   ],
+   "ledge_tops_m": [
+    6.0,
+    9.0,
+    12.0,
+    15.0
+   ],
+   "roof_m": 16.0,
+   "facing_deg": 88.2
+  },
+  "Griffin-Floyd Hall": {
+   "facade_mid_m": [
+    -33.5,
+    144.0
+   ],
+   "canopy_m": [
+    -32.48,
+    142.15,
+    3.0
+   ],
+   "ledge_tops_m": [
+    6.0,
+    9.0,
+    12.0
+   ],
+   "roof_m": 12.0,
+   "facing_deg": 89.8
+  },
+  "Anderson Hall": {
+   "facade_mid_m": [
+    123.6,
+    296.1
+   ],
+   "canopy_m": [
+    121.82,
+    294.96,
+    3.0
+   ],
+   "ledge_tops_m": [
+    6.0,
+    9.0,
+    12.0
+   ],
+   "roof_m": 12.0,
+   "facing_deg": 175.7
+  },
+  "Peabody Hall": {
+   "facade_mid_m": [
+    110.9,
+    141.3
+   ],
+   "canopy_m": [
+    109.88,
+    143.22,
+    3.0
+   ],
+   "ledge_tops_m": [
+    6.0,
+    9.0,
+    12.0
+   ],
+   "roof_m": 12.0,
+   "facing_deg": 270.0
+  },
+  "Criser Hall": {
+   "facade_mid_m": [
+    147.4,
+    168.8
+   ],
+   "canopy_m": [
+    146.44,
+    173.9,
+    3.0
+   ],
+   "ledge_tops_m": [
+    6.0,
+    9.0,
+    12.0
+   ],
+   "roof_m": 12.0,
+   "facing_deg": 270.1
+  }
+ },
+ "fog": {
+  "start_m": 200.0,
+  "end_m": 1000.0,
+  "gsSPFogFactor": [
+   31949,
+   -31725
+  ],
+  "color_srgb": [
+   176,
+   200,
+   226
+  ],
+  "far_clip_units": 32767,
+  "override_far_units": 100000,
+  "lua_far_units": 100000
+ },
+ "water_boxes": [
+  {
+   "name": "Dairy Pond",
+   "stage_m": [
+    -97.64,
+    -283.57,
+    -56.15,
+    -237.51
+   ],
+   "surface_m": -0.3
+  },
+  {
+   "name": "Gator Pond",
+   "stage_m": [
+    222.39,
+    -181.82,
+    258.92,
+    -145.66
+   ],
+   "surface_m": -0.3
+  }
+ ],
+ "stats": {
+  "landmark_conflicts": {
+   "trees_removed": [],
+   "trees_shrunk": 3,
+   "pois_removed": [
+    "n5623470779"
+   ],
+   "barriers_removed": [
+    "w1476020971"
+   ],
+   "fountains_removed": [],
+   "buildings_overlapped": [],
+   "shadow_hiding_faces": {}
+  },
+  "buildings": [
+   {
+    "id": "r2075617/154223654",
+    "name": "Leigh Hall",
+    "h": 17.0,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 16.0,
+    "top": 18.92,
+    "floors": 4,
+    "climb_route": {
+     "facade_mid_m": [
+      -62.3,
+      170.7
+     ],
+     "canopy_m": [
+      -61.21,
+      168.83,
+      3.0
+     ],
+     "ledge_tops_m": [
+      6.0,
+      9.0,
+      12.0,
+      15.0
+     ],
+     "roof_m": 16.0,
+     "facing_deg": 88.2
+    },
+    "collision": true
+   },
+   {
+    "id": "r2805449/208630204",
+    "name": "Antevy Hall",
+    "h": 17.0,
+    "style": "glass",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "r7173438/154223621",
+    "name": "Stuzin Hall",
+    "h": 13.0,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 12.0,
+    "top": 14.92,
+    "floors": 3,
+    "collision": true
+   },
+   {
+    "id": "r14577491/1094363308",
+    "name": null,
+    "h": 11.8,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 10.8,
+    "top": 11.8,
+    "floors": 3,
+    "collision": false
+   },
+   {
+    "id": "w45719891",
+    "name": "Florida Gym",
+    "h": 14.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 13.0,
+    "top": 14.0,
+    "floors": 3,
+    "collision": false
+   },
+   {
+    "id": "w118249564",
+    "name": "McCarty Hall A",
+    "h": 17.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": false
+   },
+   {
+    "id": "w150800197",
+    "name": "McCarty Hall C",
+    "h": 17.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 17.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": false
+   },
+   {
+    "id": "w150800198",
+    "name": "McCarty Hall B",
+    "h": 17.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": false
+   },
+   {
+    "id": "w150823413",
+    "name": "Rinker Hall",
+    "h": 13.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": false
+   },
+   {
+    "id": "w150858519",
+    "name": "Rolfs Hall",
+    "h": 17.0,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 16.0,
+    "top": 18.19,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w150858520",
+    "name": "Weimer Hall",
+    "h": 13.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": false
+   },
+   {
+    "id": "w150858521",
+    "name": "Williamson Hall",
+    "h": 13.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": true
+   },
+   {
+    "id": "w150858523",
+    "name": "Walker Hall Chilled Water Plant (CWP3)",
+    "h": 5.0,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w150858526",
+    "name": "Microkelvin Laboratory",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w150859388",
+    "name": "Aquatic Food Products Lab",
+    "h": 13.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": false
+   },
+   {
+    "id": "w150860042",
+    "name": "Carleton Auditorium",
+    "h": 5.0,
+    "style": "gothic",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w150860044",
+    "name": null,
+    "h": 25.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 24.0,
+    "top": 25.0,
+    "floors": 6,
+    "collision": true
+   },
+   {
+    "id": "w150860045",
+    "name": "Fine Arts A",
+    "h": 13.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": false
+   },
+   {
+    "id": "w150860047",
+    "name": "Grinter Hall",
+    "h": 17.0,
+    "style": "band",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w150860049",
+    "name": "Music Building",
+    "h": 13.0,
+    "style": "band",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": true
+   },
+   {
+    "id": "w150861257",
+    "name": "Broward Hall",
+    "h": 19.6,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 19.6,
+    "top": 19.6,
+    "floors": 6,
+    "collision": false
+   },
+   {
+    "id": "w150861258",
+    "name": "Fine Arts C",
+    "h": 17.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": false
+   },
+   {
+    "id": "w150926626",
+    "name": "Bryant Space Science Center",
+    "h": 17.0,
+    "style": "band",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w150926629",
+    "name": "Murphree Hall",
+    "h": 13.4,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 12.4,
+    "top": 15.32,
+    "floors": 4,
+    "collision": false
+   },
+   {
+    "id": "w150926631",
+    "name": "Student Recreation & Fitness Center",
+    "h": 13.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": false
+   },
+   {
+    "id": "w150926633",
+    "name": "Ustler Hall",
+    "h": 17.0,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 16.0,
+    "top": 18.92,
+    "floors": 4,
+    "collision": false
+   },
+   {
+    "id": "w154223613",
+    "name": "Matherly Hall",
+    "h": 13.0,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 12.0,
+    "top": 14.19,
+    "floors": 3,
+    "collision": true
+   },
+   {
+    "id": "w154223630",
+    "name": "Pugh Hall",
+    "h": 17.0,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 16.0,
+    "top": 18.92,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w154223637",
+    "name": "Bryan Hall",
+    "h": 13.0,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 12.0,
+    "top": 12.92,
+    "floors": 3,
+    "collision": false
+   },
+   {
+    "id": "w154223641",
+    "name": "Walker Hall",
+    "h": 13.0,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 12.0,
+    "top": 13.23,
+    "floors": 3,
+    "collision": true
+   },
+   {
+    "id": "w154223646",
+    "name": "Gerson Hall",
+    "h": 13.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": false
+   },
+   {
+    "id": "w154223652",
+    "name": "Student Infirmary",
+    "h": 9.0,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 8.0,
+    "top": 10.34,
+    "floors": 2,
+    "collision": false
+   },
+   {
+    "id": "w154223663",
+    "name": "Hough Hall",
+    "h": 13.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": false
+   },
+   {
+    "id": "w154223690",
+    "name": "Griffin-Floyd Hall",
+    "h": 13.0,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 12.0,
+    "top": 12.92,
+    "floors": 3,
+    "climb_route": {
+     "facade_mid_m": [
+      -33.5,
+      144.0
+     ],
+     "canopy_m": [
+      -32.48,
+      142.15,
+      3.0
+     ],
+     "ledge_tops_m": [
+      6.0,
+      9.0,
+      12.0
+     ],
+     "roof_m": 12.0,
+     "facing_deg": 89.8
+    },
+    "collision": true
+   },
+   {
+    "id": "w154223693",
+    "name": "Sisler Hall",
+    "h": 17.0,
+    "style": "band",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w154223698",
+    "name": "Keene-Flint Hall",
+    "h": 13.0,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 12.0,
+    "top": 12.92,
+    "floors": 3,
+    "collision": true
+   },
+   {
+    "id": "w154223782",
+    "name": "Farrior Hall",
+    "h": 17.0,
+    "style": "gothic",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w154223803",
+    "name": "Little Hall",
+    "h": 21.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 20.0,
+    "top": 21.0,
+    "floors": 5,
+    "collision": false
+   },
+   {
+    "id": "w154223807",
+    "name": "Anderson Hall",
+    "h": 13.0,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "climb_route": {
+     "facade_mid_m": [
+      123.6,
+      296.1
+     ],
+     "canopy_m": [
+      121.82,
+      294.96,
+      3.0
+     ],
+     "ledge_tops_m": [
+      6.0,
+      9.0,
+      12.0
+     ],
+     "roof_m": 12.0,
+     "facing_deg": 175.7
+    },
+    "collision": true
+   },
+   {
+    "id": "w196848214",
+    "name": "Peabody Hall",
+    "h": 13.0,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 12.0,
+    "top": 14.19,
+    "floors": 3,
+    "climb_route": {
+     "facade_mid_m": [
+      110.9,
+      141.3
+     ],
+     "canopy_m": [
+      109.88,
+      143.22,
+      3.0
+     ],
+     "ledge_tops_m": [
+      6.0,
+      9.0,
+      12.0
+     ],
+     "roof_m": 12.0,
+     "facing_deg": 270.0
+    },
+    "collision": true
+   },
+   {
+    "id": "w196848217",
+    "name": "Criser Hall",
+    "h": 13.0,
+    "style": "band",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "climb_route": {
+     "facade_mid_m": [
+      147.4,
+      168.8
+     ],
+     "canopy_m": [
+      146.44,
+      173.9,
+      3.0
+     ],
+     "ledge_tops_m": [
+      6.0,
+      9.0,
+      12.0
+     ],
+     "roof_m": 12.0,
+     "facing_deg": 270.1
+    },
+    "collision": true
+   },
+   {
+    "id": "w208630203",
+    "name": "Broward Dining Center",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w220368156",
+    "name": "Steinbrenner Band Hall",
+    "h": 9.0,
+    "style": "band",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 8.0,
+    "top": 9.0,
+    "floors": 2,
+    "collision": true
+   },
+   {
+    "id": "w220368157",
+    "name": "Little Hall Express",
+    "h": 5.0,
+    "style": "glass",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w264182363",
+    "name": "Dauer Hall",
+    "h": 17.0,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 16.0,
+    "top": 18.19,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w264182366",
+    "name": "Chemistry Laboratory",
+    "h": 13.0,
+    "style": "band",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": true
+   },
+   {
+    "id": "w294197706",
+    "name": "Thomas Hall",
+    "h": 10.3,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 9.3,
+    "top": 11.34,
+    "floors": 3,
+    "collision": true
+   },
+   {
+    "id": "w294197707",
+    "name": "Sledd Hall",
+    "h": 13.4,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "flat",
+    "eave": 12.4,
+    "top": 13.4,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w294197708",
+    "name": "Fletcher Hall",
+    "h": 13.4,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 12.4,
+    "top": 14.59,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w294197709",
+    "name": "Buckman Hall",
+    "h": 13.4,
+    "style": "gothic",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 12.4,
+    "top": 14.59,
+    "floors": 4,
+    "collision": true
+   },
+   {
+    "id": "w294197710",
+    "name": "Murphree Area Commons Building",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w294203176",
+    "name": "Food Science & Human Nutrition",
+    "h": 17.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 16.0,
+    "top": 17.0,
+    "floors": 4,
+    "collision": false
+   },
+   {
+    "id": "w294203177",
+    "name": "Aquatic Food Pilot Plant",
+    "h": 9.0,
+    "style": "brick",
+    "roof": "hip",
+    "kind": "hip",
+    "eave": 8.0,
+    "top": 9.75,
+    "floors": 2,
+    "collision": true
+   },
+   {
+    "id": "w481243471",
+    "name": "Scott Family Hall",
+    "h": 21.0,
+    "style": "band",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 20.0,
+    "top": 21.0,
+    "floors": 5,
+    "collision": true
+   },
+   {
+    "id": "w481247882",
+    "name": "Criser CIB",
+    "h": 3.0,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 2.4,
+    "top": 3.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w481410623",
+    "name": "\u0394\u03a5",
+    "h": 6.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 5.0,
+    "top": 6.0,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w541057525",
+    "name": "Baptist Collegiate Ministries",
+    "h": 8.2,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 7.2,
+    "top": 8.2,
+    "floors": 2,
+    "collision": false
+   },
+   {
+    "id": "w668261582",
+    "name": "Roberts' Stadium Club",
+    "h": 29.8,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 28.8,
+    "top": 29.8,
+    "floors": 7,
+    "collision": false
+   },
+   {
+    "id": "w858346683",
+    "name": "Stadium Club Parking Garage",
+    "h": 13.8,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.8,
+    "top": 13.8,
+    "floors": 3,
+    "collision": false
+   },
+   {
+    "id": "w858346687",
+    "name": "Saint Augustine Catholic Church & Student Center",
+    "h": 9.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 8.0,
+    "top": 9.0,
+    "floors": 2,
+    "collision": false
+   },
+   {
+    "id": "w858346689",
+    "name": "UF Plaza",
+    "h": 8.2,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 7.2,
+    "top": 8.2,
+    "floors": 2,
+    "collision": false
+   },
+   {
+    "id": "w858346690",
+    "name": null,
+    "h": 8.2,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 7.2,
+    "top": 8.2,
+    "floors": 2,
+    "collision": false
+   },
+   {
+    "id": "w858346691",
+    "name": null,
+    "h": 4.6,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.0,
+    "top": 4.6,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w858346692",
+    "name": null,
+    "h": 8.2,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 7.2,
+    "top": 8.2,
+    "floors": 2,
+    "collision": false
+   },
+   {
+    "id": "w858346693",
+    "name": null,
+    "h": 4.0,
+    "style": "canopy",
+    "roof": "flat",
+    "kind": "canopy",
+    "collision": false
+   },
+   {
+    "id": "w858346694",
+    "name": null,
+    "h": 4.6,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.0,
+    "top": 4.6,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w858346695",
+    "name": null,
+    "h": 8.2,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 7.2,
+    "top": 8.2,
+    "floors": 2,
+    "collision": false
+   },
+   {
+    "id": "w858697924",
+    "name": "Racquet Club Dining Center",
+    "h": 9.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 8.0,
+    "top": 9.0,
+    "floors": 2,
+    "collision": true
+   },
+   {
+    "id": "w858697927",
+    "name": "Florida Pool Compressor Building",
+    "h": 5.0,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w858697956",
+    "name": "UF Information",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w858697957",
+    "name": "Computer Power Supply",
+    "h": 4.6,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.0,
+    "top": 4.6,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w858697958",
+    "name": "Enterprise Infrastructure & Operations Generator",
+    "h": 4.6,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.0,
+    "top": 4.6,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w859919280",
+    "name": null,
+    "h": 4.0,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 3.4,
+    "top": 4.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w859953311",
+    "name": null,
+    "h": 4.0,
+    "style": "canopy",
+    "roof": "flat",
+    "kind": "canopy",
+    "collision": true
+   },
+   {
+    "id": "w859953318",
+    "name": null,
+    "h": 5.0,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w864249478",
+    "name": "Field & Fork Pantry",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w864249479",
+    "name": "Fiber Hut CSE",
+    "h": 5.0,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w864485373",
+    "name": "Charles R. Perry Construction Yard",
+    "h": 5.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.4,
+    "top": 5.0,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w910750370",
+    "name": "Institute of Black Culture",
+    "h": 9.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 8.0,
+    "top": 9.0,
+    "floors": 2,
+    "collision": false
+   },
+   {
+    "id": "w943079467",
+    "name": "La Casita (Institute of Hispanic/Latina Culture)",
+    "h": 9.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 8.0,
+    "top": 9.0,
+    "floors": 2,
+    "collision": false
+   },
+   {
+    "id": "w1001184496",
+    "name": "Chipotle",
+    "h": 4.6,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.0,
+    "top": 4.6,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w1010270690",
+    "name": null,
+    "h": 5.5,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.9,
+    "top": 5.5,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w1010270691",
+    "name": null,
+    "h": 4.6,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.0,
+    "top": 4.6,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w1010270692",
+    "name": null,
+    "h": 4.6,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.0,
+    "top": 4.6,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w1010270695",
+    "name": null,
+    "h": 4.6,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.0,
+    "top": 4.6,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w1010270696",
+    "name": null,
+    "h": 5.5,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.9,
+    "top": 5.5,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w1012225877",
+    "name": "Episcopal Chapel of the Incarnation",
+    "h": 9.0,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 8.0,
+    "top": 9.0,
+    "floors": 2,
+    "collision": false
+   },
+   {
+    "id": "w1012225878",
+    "name": null,
+    "h": 4.6,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.0,
+    "top": 4.6,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w1094363306",
+    "name": null,
+    "h": 5.5,
+    "style": "brick",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.9,
+    "top": 5.5,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w1094363307",
+    "name": "Wawa",
+    "h": 4.6,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.0,
+    "top": 4.6,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w1101942234",
+    "name": null,
+    "h": 4.6,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.0,
+    "top": 4.6,
+    "floors": 1,
+    "collision": true
+   },
+   {
+    "id": "w1105246265",
+    "name": null,
+    "h": 4.6,
+    "style": "service",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 4.0,
+    "top": 4.6,
+    "floors": 1,
+    "collision": false
+   },
+   {
+    "id": "w1105246276",
+    "name": null,
+    "h": 4.0,
+    "style": "canopy",
+    "roof": "flat",
+    "kind": "canopy",
+    "collision": false
+   },
+   {
+    "id": "w1460861931",
+    "name": "Ramos Collaboratory",
+    "h": 13.0,
+    "style": "glass",
+    "roof": "flat",
+    "kind": "flat",
+    "eave": 12.0,
+    "top": 13.0,
+    "floors": 3,
+    "collision": true
+   },
+   {
+    "id": "w1472984610",
+    "name": null,
+    "h": 4.0,
+    "style": "canopy",
+    "roof": "flat",
+    "kind": "canopy",
+    "collision": true
+   },
+   {
+    "id": "w1472984611",
+    "name": null,
+    "h": 4.0,
+    "style": "canopy",
+    "roof": "flat",
+    "kind": "canopy",
+    "collision": true
+   }
+  ],
+  "props": [
+   "flagpole",
+   "The French Fries",
+   "Murphree statue"
+  ],
+  "trees": {
+   "oak": 116,
+   "pine": 7,
+   "palm": 170,
+   "colliders": 173,
+   "climbable": 28
+  },
+  "dressing": {
+   "lamps": [
+    [
+     26.8,
+     96.5
+    ],
+    [
+     49.6,
+     96.5
+    ],
+    [
+     14.0,
+     88.6
+    ],
+    [
+     62.0,
+     88.6
+    ],
+    [
+     2.0,
+     88.6
+    ],
+    [
+     74.0,
+     88.6
+    ],
+    [
+     29.5,
+     66.9
+    ],
+    [
+     47.3,
+     66.9
+    ],
+    [
+     -48.0,
+     12.0
+    ],
+    [
+     -48.0,
+     -14.0
+    ],
+    [
+     -72.0,
+     -16.0
+    ],
+    [
+     -102.0,
+     -18.0
+    ],
+    [
+     -120.0,
+     -23.5
+    ],
+    [
+     -41.5,
+     40.0
+    ]
+   ],
+   "benches": [
+    [
+     20.0,
+     89.0
+    ],
+    [
+     56.0,
+     89.0
+    ],
+    [
+     20.0,
+     93.6
+    ],
+    [
+     56.0,
+     93.6
+    ],
+    [
+     -60.0,
+     -3.0
+    ],
+    [
+     -88.0,
+     -33.0
+    ],
+    [
+     -38.0,
+     34.0
+    ]
+   ],
+   "planters": [
+    [
+     -78.0,
+     -15.5
+    ],
+    [
+     -56.0,
+     -38.0
+    ],
+    [
+     -38.0,
+     -48.0
+    ]
+   ],
+   "tables": [
+    [
+     -50.0,
+     17.0
+    ],
+    [
+     -50.0,
+     10.0
+    ],
+    [
+     -42.0,
+     14.0
+    ]
+   ],
+   "skipped": [],
+   "hammocks": [
+    [
+     [
+      101.3,
+      130.7
+     ],
+     [
+      102.9,
+      126.3
+     ]
+    ]
+   ]
+  }
+ },
+ "attribution": "Map data (c) OpenStreetMap contributors, ODbL 1.0",
+ "export_hygiene": {
+  "geometry_mode_lines_sorted": 104,
+  "trailing_ws_lines": 3,
+  "max_abs_vertex": 32400
+ },
+ "validation": {
+  "errors": [],
+  "warnings": [],
+  "collision_tris": 8723,
+  "render_tris": 55295,
+  "lua_names": [
+   "SGL_HUB_SIGN_CENTURY_TOWER",
+   "SGL_HUB_SIGN_FINAL_EXAM",
+   "SGL_HUB_SIGN_LIBRARY_WEST",
+   "SGL_HUB_SIGN_MARSTON",
+   "SGL_HUB_SIGN_NEWELL_HALL",
+   "SGL_HUB_SIGN_SMATHERS",
+   "SGL_HUB_SIGN_THE_HUB",
+   "SGL_HUB_SIGN_UNIVERSITY_AUDITORIUM",
+   "SGL_HUB_SIGN_WELCOME"
+  ],
+  "fog_patched": [
+   49,
+   49
+  ]
+ },
+ "level_dir": "mods/sgl64/levels/sgl_hub"
+}
