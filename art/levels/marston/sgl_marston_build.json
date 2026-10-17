@@ -13,40 +13,40 @@
  "background": "OCEAN_SKY",
  "kit_tris": {
   "total": {
-   "visual": 143547,
-   "collision": 11427
+   "visual": 145453,
+   "collision": 11523
   },
   "by_group": {
    "F1": {
-    "visual": 43984,
-    "collision": 3592
+    "visual": 45170,
+    "collision": 3570
    },
    "F2": {
-    "visual": 19714,
-    "collision": 1896
+    "visual": 19746,
+    "collision": 1924
    },
    "F3": {
-    "visual": 17106,
-    "collision": 1300
+    "visual": 17372,
+    "collision": 1310
    },
    "F4": {
-    "visual": 16536,
-    "collision": 1234
+    "visual": 16740,
+    "collision": 1274
    },
    "F5": {
-    "visual": 18254,
-    "collision": 860
+    "visual": 18454,
+    "collision": 900
    },
    "roof": {
     "visual": 1018,
     "collision": 274
    },
    "towers": {
-    "visual": 9258,
+    "visual": 9338,
     "collision": 2019
    },
    "atrium": {
-    "visual": 2032,
+    "visual": 2074,
     "collision": 252
    },
    "court": {
@@ -54,7 +54,7 @@
     "collision": 0
    },
    "backdrop": {
-    "visual": 15438,
+    "visual": 15334,
     "collision": 0
    }
   }
@@ -107,12 +107,12 @@
   "note": "stage entry spawn (bhvSpinAirborneWarp, MARIO_POS) in the lobby just inside the north doors, facing the atrium; the object hovers 1 m above this floor"
  },
  "pickups": {
-  "coins_placed": 190,
-  "coins_with_goombas": 195,
-  "objects": 93,
+  "coins_placed": 203,
+  "coins_with_goombas": 208,
+  "objects": 102,
   "by_kind": {
-   "coin_line": 24,
-   "coin": 54,
+   "coin_line": 25,
+   "coin": 62,
    "coin_ring": 2,
    "heart": 4,
    "1up": 4,
@@ -518,6 +518,26 @@
     "bparams": "0x00000000",
     "facing_deg": 0.0,
     "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 to the sorting-room door",
+    "map_m": [
+     -67.6,
+     -84.6,
+     -6.0
+    ],
+    "game": [
+     -800,
+     -600,
+     -1430
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
     "acts": null
    },
    {
@@ -945,13 +965,13 @@
     "name": "F4 range top f4_qcz_s_01",
     "map_m": [
      -72.4,
-     -112.45,
+     -112.25,
      14.9
     ],
     "game": [
      -1280,
      1490,
-     1355
+     1335
     ],
     "behavior": "bhvYellowCoin",
     "model": "MODEL_YELLOW_COIN",
@@ -965,13 +985,13 @@
     "name": "F4 range top f4_qcz_s_02",
     "map_m": [
      -67.83,
-     -112.9,
+     -112.7,
      15.6
     ],
     "game": [
      -823,
      1560,
-     1400
+     1380
     ],
     "behavior": "bhvYellowCoin",
     "model": "MODEL_YELLOW_COIN",
@@ -985,13 +1005,13 @@
     "name": "F4 range top f4_qcz_s_03",
     "map_m": [
      -63.26,
-     -112.45,
+     -112.25,
      14.9
     ],
     "game": [
      -366,
      1490,
-     1355
+     1335
     ],
     "behavior": "bhvYellowCoin",
     "model": "MODEL_YELLOW_COIN",
@@ -1005,13 +1025,13 @@
     "name": "F4 range top f4_qcz_s_04",
     "map_m": [
      -58.68,
-     -112.9,
+     -112.7,
      15.6
     ],
     "game": [
      92,
      1560,
-     1400
+     1380
     ],
     "behavior": "bhvYellowCoin",
     "model": "MODEL_YELLOW_COIN",
@@ -1025,13 +1045,13 @@
     "name": "F4 range top f4_qcz_s_05",
     "map_m": [
      -54.11,
-     -112.45,
+     -112.25,
      14.9
     ],
     "game": [
      549,
      1490,
-     1355
+     1335
     ],
     "behavior": "bhvYellowCoin",
     "model": "MODEL_YELLOW_COIN",
@@ -1198,6 +1218,166 @@
     "bparams": "0x00000000",
     "facing_deg": 90.0,
     "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 terrace planter coin 1",
+    "map_m": [
+     -38.0,
+     -112.5,
+     13.22
+    ],
+    "game": [
+     2160,
+     1322,
+     1360
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 terrace planter coin 2",
+    "map_m": [
+     -38.0,
+     -93.5,
+     13.22
+    ],
+    "game": [
+     2160,
+     1322,
+     -540
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 terrace planter coin 3",
+    "map_m": [
+     -66.5,
+     -120.4,
+     13.22
+    ],
+    "game": [
+     -690,
+     1322,
+     2150
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 terrace planter coin 4",
+    "map_m": [
+     -52.5,
+     -120.4,
+     13.22
+    ],
+    "game": [
+     710,
+     1322,
+     2150
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F5 terrace planter coin 5",
+    "map_m": [
+     -47.2,
+     -113.0,
+     19.22
+    ],
+    "game": [
+     1240,
+     1922,
+     1410
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F5 terrace planter coin 6",
+    "map_m": [
+     -47.2,
+     -84.5,
+     19.22
+    ],
+    "game": [
+     1240,
+     1922,
+     -1440
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F5 terrace planter coin 7",
+    "map_m": [
+     -58.5,
+     -112.0,
+     19.22
+    ],
+    "game": [
+     110,
+     1922,
+     1310
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F5 terrace planter coin 8",
+    "map_m": [
+     -76.0,
+     -112.5,
+     19.22
+    ],
+    "game": [
+     -1640,
+     1922,
+     1360
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
     "acts": null
    },
    {
@@ -1978,7 +2158,13 @@
     "bparams": "0x00000000",
     "facing_deg": 90.0,
     "coins": 1,
-    "acts": null
+    "acts": [
+     1,
+     3,
+     4,
+     5,
+     6
+    ]
    }
   ]
  },
@@ -2121,7 +2307,7 @@
    "F5": 0
   },
   "ceiling_lights": {
-   "F1": 157,
+   "F1": 158,
    "F2": 73,
    "F3": 90,
    "F4": 61,
@@ -2156,23 +2342,23 @@
    "ground_rects": 340
   },
   "dressing": {
-   "F1": 76,
+   "F1": 79,
    "F2": 29,
-   "F3": 20,
+   "F3": 21,
    "F4": 10,
    "F5": 4
   },
   "dressing_skipped": 5,
   "collision_clean": {
-   "back_to_back_dropped": 344,
+   "back_to_back_dropped": 341,
    "doubled_dropped": 8,
    "default_inside_nocam_kept": 0
   },
-  "finish_swaps": 3626,
-  "uv_splits": 581,
+  "finish_swaps": 3662,
+  "uv_splits": 646,
   "coplanar_overlap": {
-   "m2": 2.23,
-   "pairs": 130,
+   "m2": 1.69,
+   "pairs": 106,
    "worst": [
     [
      0.04,
@@ -2272,7 +2458,7 @@
     ]
    ]
   },
-  "lights": 901
+  "lights": 902
  },
  "notes": {
   "scale": "Plan (x, y) 1:1 to the registered UF floor plans (docs/marston_layout.md 3); floors 6.0 m apart in the game (real ~4.2 m, estimate): 5.4 m clear for the SM64 camera.",
@@ -2301,7 +2487,7 @@
    "Porch: its open north and west sides are invisible walls (camera passes) up to the F4 slab, so nobody steps off into the plaza (the basement runs under it).",
    "Fidelity-1: the F1 study-room fronts (#38 #36) are clear glass with a pale blue film band (1.05-1.40 m) up to 2.9 m under a white drywall bulkhead to the 5.4 m game ceiling (the bulkhead also brings the tall glass back to the photo's proportions); the names are lettered on the bulkhead in dark grey serif (Heisenberg, Carson, Jemison, Franklin, Curie, Darwin, Hopper, Newton cycle; three are photographed), white piers stand between the rooms, 'L1xx' plaques sit on the glass at ~1.5 m and the doors are honey maple.",
    "Fidelity-1: L136 (#47) faces the photo: lectern with dual monitors south (left) of the 3.0 x 1.7 m screens, the whiteboard on the north wall west of the door, projectors on ~2 m rods. The 2014 tiled visualization wall (#48) is kept on the unphotographed east wall (3 x 2 displays, ~3.0 x 1.5 m): source S15 still calls the room a 'Conference/Visualization space' and #47 shows only the west wall (inferred).",
-   "Fidelity-1: elevator lobby (#69): the white service door with its red sign and a wall clock are on the 1.2 m of brick west of elevator 1 (the photo shows ~2 m; the core plan keeps 1.2 m); no big '1' over elevator 2, only the small blue sign beside it; the wave ribbons are 1.25-1.35 m wide with a white edge in two overlapping layers of pale, unstreaked blue acrylic. The blue ring by L120 moved 1 m south-west to clear the new bulkhead.",
+   "Fidelity-1: elevator lobby (#69): the white service door with its red sign and a wall clock are on the 1.2 m of brick west of elevator 1 (the photo shows ~2 m; the core plan keeps 1.2 m); no big '1' over elevator 2, only the small blue sign beside it; the wave ribbons are 0.90-0.95 m wide with a white edge in two layers of pale, unstreaked blue acrylic, the upper one 7 degrees off the lower so the bands cross with white ceiling between them (iteration 4). The blue ring by L120 moved 1 m south-west to clear the new bulkhead.",
    "Fidelity-1: Commons centre (#37 4243): eight more round maple tables with four Sayl chairs each fill the gaps between the core and the lounge (a spot just south of the coin diamond crowds its coins and stays open); the Sayl chairs' Y spine is grey frame plastic (black read as a stick figure from the game camera).",
    "fidelity-3: the north entrance's black door leaves stand pinned open square to the storefront at the jambs of the wide door gap (real: four leaves closing inside the storefront line), carrying the name vinyl (#1); the porch box's bronze faces are tinted from a mid-tone panel texture so its soffit underside can stay lighter (#2).",
    "fidelity-4: the F3-F5 ribbon / view windows have a 2.6 m head (the layout JSON's 3.6-4.4 m heads read as a curtain wall; #76 #97 #100 #104) under a dark grey fascia; sills 0.9-1.0 m (the layout's floor-height F4 / F5 east and south glass included). L308 has a dropped tile ceiling at 3.5 m (visual only; real ~2.9 m, #78). The F4 carrel rows stop 1.2 m short of the east glass for the window bar (#97). The plaza canopy masses between the oaks (#99 #104) are inferred positions.",
@@ -2314,6 +2500,19 @@
   ],
   "photo_pass_2": [
    "F1 makerspace (fidelity-2): storefront with mullions ~1.75 m, transom 2.4 m, glass to 3.4 m under a white bulkhead, string lights, the neon centred at x -75.7 over a butcher-block counter, two wire racks of small 3D printers inside the glass, the 2.4 m door gap moved to the east end (#53), hexagon pinboards on a brick pier outside the NE corner; east wall white drywall + clerestory 2.4-3.4 m with the pegboard and the spool wall (+ two sewing stations) below, the 4.8 m gameplay opening kept; brick only on the south wall (TV + perimeter bench); six islands in two N-S rows; 2x4 tile with lensed troffers and EXIT signs. The layout's printer benches, sewing bench and the maker-books shelf are not built (the racks / sewing table replace them; the act 4 red coin stands on the NW island top, 0.92 m)"
+  ],
+  "furnish_skipped": [],
+  "bench120_dressed": [
+   [
+    -79.6,
+    -71.6,
+    [
+     -80.96,
+     -72.93,
+     -78.27,
+     -70.3
+    ]
+   ]
   ],
   "grand_stair": {
    "first_riser_y": -94.66,
@@ -2345,52 +2544,52 @@
  "objects": {
   "marston F1 visual": {
    "group": "F1",
-   "tris": 22949,
+   "tris": 23538,
    "collision": false
   },
   "marston F1 collision": {
    "group": "F1",
-   "tris": 1916,
+   "tris": 1895,
    "collision": true
   },
   "marston F2 visual": {
    "group": "F2",
-   "tris": 10488,
+   "tris": 10504,
    "collision": false
   },
   "marston F2 collision": {
    "group": "F2",
-   "tris": 971,
+   "tris": 985,
    "collision": true
   },
   "marston F3 visual": {
    "group": "F3",
-   "tris": 9185,
+   "tris": 9318,
    "collision": false
   },
   "marston F3 collision": {
    "group": "F3",
-   "tris": 666,
+   "tris": 671,
    "collision": true
   },
   "marston F4 visual": {
    "group": "F4",
-   "tris": 8782,
+   "tris": 8884,
    "collision": false
   },
   "marston F4 collision": {
    "group": "F4",
-   "tris": 627,
+   "tris": 647,
    "collision": true
   },
   "marston F5 visual": {
    "group": "F5",
-   "tris": 9713,
+   "tris": 9813,
    "collision": false
   },
   "marston F5 collision": {
    "group": "F5",
-   "tris": 431,
+   "tris": 451,
    "collision": true
   },
   "marston roof visual": {
@@ -2405,7 +2604,7 @@
   },
   "marston towers visual": {
    "group": "towers",
-   "tris": 4647,
+   "tris": 4687,
    "collision": false
   },
   "marston towers collision": {
@@ -2415,7 +2614,7 @@
   },
   "marston atrium visual": {
    "group": "atrium",
-   "tris": 1086,
+   "tris": 1123,
    "collision": false
   },
   "marston atrium collision": {
@@ -2430,12 +2629,12 @@
   },
   "marston backdrop visual": {
    "group": "backdrop",
-   "tris": 12864,
+   "tris": 12760,
    "collision": false
   }
  },
  "export_hygiene": {
-  "geometry_mode_lines_sorted": 410,
+  "geometry_mode_lines_sorted": 418,
   "trailing_ws_lines": 4,
   "max_abs_vertex": 20518,
   "common0_jump_link": true
@@ -2443,27 +2642,27 @@
  "collision_repair": {
   "area_1": {
    "vertices": [
-    8833,
-    8822
+    8913,
+    8902
    ],
    "welded_vertices": 11,
    "collapsed_tris": 0,
-   "tjunction_splits": 415,
+   "tjunction_splits": 423,
    "triangles": [
-    11250,
-    11665
+    11342,
+    11765
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [],
-  "collision_tris": 11665,
-  "render_tris": 143547,
+  "collision_tris": 11765,
+  "render_tris": 145453,
   "lua_names": [],
   "fog_patched": [
-   112,
-   112
+   114,
+   114
   ]
  },
  "level_dir": "mods/sgl64/levels/ccm",

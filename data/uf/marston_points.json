@@ -728,7 +728,7 @@
      1530
     ],
     "floor_m": -6.0,
-    "clearance_m": 2.83,
+    "clearance_m": 3.0,
     "headroom_m": 5.4,
     "note": "kiosk spot (layout); the act 3 mission spawns the kiosk itself (no level geometry)"
    },
@@ -937,8 +937,8 @@
      150
     ],
     "air": true,
-    "floor_below_m": 0.0,
-    "height_above_floor_m": 15.0,
+    "floor_below_m": 0.44,
+    "height_above_floor_m": 14.56,
     "note": "on the atrium chandelier ring (z 15.0), over the void",
     "float_m": 0.6
    },
@@ -1162,7 +1162,7 @@
     -190
    ],
    "floor_m": 0.0,
-   "clearance_m": 0.95,
+   "clearance_m": 3.0,
    "headroom_m": 25.82
   }
  },
@@ -2171,19 +2171,19 @@
    "name": "f4_qcz_s_01",
    "map_m": [
     -72.4,
-    -112.45,
+    -112.25,
     14.3
    ],
    "game": [
     -1280,
     1430,
-    1355
+    1335
    ],
    "floor_m": 14.3,
    "clearance_m": 1.98,
    "headroom_m": 3.1,
    "note": "QC-Z",
-   "length_m": 4.9,
+   "length_m": 4.5,
    "height_m": 2.3,
    "main": true
   },
@@ -2211,19 +2211,19 @@
    "name": "f4_qcz_s_02",
    "map_m": [
     -67.83,
-    -112.9,
+    -112.7,
     15.0
    ],
    "game": [
     -823,
     1500,
-    1400
+    1380
    ],
    "floor_m": 15.0,
    "clearance_m": 3.0,
    "headroom_m": 2.4,
    "note": "QC-Z",
-   "length_m": 4.0,
+   "length_m": 3.6,
    "height_m": 3.0,
    "main": true
   },
@@ -2271,19 +2271,19 @@
    "name": "f4_qcz_s_03",
    "map_m": [
     -63.26,
-    -112.45,
+    -112.25,
     14.3
    ],
    "game": [
     -366,
     1430,
-    1355
+    1335
    ],
    "floor_m": 14.3,
    "clearance_m": 3.0,
    "headroom_m": 3.1,
    "note": "QC-Z",
-   "length_m": 4.9,
+   "length_m": 4.5,
    "height_m": 2.3,
    "main": true
   },
@@ -2311,19 +2311,19 @@
    "name": "f4_qcz_s_04",
    "map_m": [
     -58.68,
-    -112.9,
+    -112.7,
     15.0
    ],
    "game": [
     92,
     1500,
-    1400
+    1380
    ],
    "floor_m": 15.0,
    "clearance_m": 3.0,
    "headroom_m": 2.4,
    "note": "QC-Z",
-   "length_m": 4.0,
+   "length_m": 3.6,
    "height_m": 3.0,
    "main": true
   },
@@ -2371,19 +2371,19 @@
    "name": "f4_qcz_s_05",
    "map_m": [
     -54.11,
-    -112.45,
+    -112.25,
     14.3
    ],
    "game": [
     549,
     1430,
-    1355
+    1335
    ],
    "floor_m": 14.3,
    "clearance_m": 3.0,
    "headroom_m": 3.1,
    "note": "QC-Z",
-   "length_m": 4.9,
+   "length_m": 4.5,
    "height_m": 2.3,
    "main": true
   },
@@ -4642,18 +4642,18 @@
   {
    "name": "atrium_court_centre",
    "map_m": [
-    -56.6,
+    -55.2,
     -100.4,
     0.0
    ],
    "game": [
-    300,
+    440,
     0,
     150
    ],
    "floor_m": 0.0,
-   "clearance_m": 1.03,
-   "headroom_m": 14.82,
+   "clearance_m": 0.88,
+   "headroom_m": 25.54,
    "facing_deg": 0.0,
    "game_yaw": "0x8000"
   },
@@ -4670,8 +4670,8 @@
     150
    ],
    "air": true,
-   "floor_below_m": 1.15,
-   "height_above_floor_m": 13.85
+   "floor_below_m": 0.0,
+   "height_above_floor_m": 15.0
   },
   {
    "name": "duct_step_sorting_table",
@@ -4974,12 +4974,12 @@
   }
  ],
  "pickups": {
-  "coins_placed": 190,
-  "coins_with_goombas": 195,
-  "objects": 93,
+  "coins_placed": 203,
+  "coins_with_goombas": 208,
+  "objects": 102,
   "by_kind": {
-   "coin_line": 24,
-   "coin": 54,
+   "coin_line": 25,
+   "coin": 62,
    "coin_ring": 2,
    "heart": 4,
    "1up": 4,
@@ -5385,6 +5385,26 @@
     "bparams": "0x00000000",
     "facing_deg": 0.0,
     "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin_line",
+    "name": "F1 to the sorting-room door",
+    "map_m": [
+     -67.6,
+     -84.6,
+     -6.0
+    ],
+    "game": [
+     -800,
+     -600,
+     -1430
+    ],
+    "behavior": "bhvCoinFormation",
+    "model": "MODEL_NONE",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 5,
     "acts": null
    },
    {
@@ -5812,13 +5832,13 @@
     "name": "F4 range top f4_qcz_s_01",
     "map_m": [
      -72.4,
-     -112.45,
+     -112.25,
      14.9
     ],
     "game": [
      -1280,
      1490,
-     1355
+     1335
     ],
     "behavior": "bhvYellowCoin",
     "model": "MODEL_YELLOW_COIN",
@@ -5832,13 +5852,13 @@
     "name": "F4 range top f4_qcz_s_02",
     "map_m": [
      -67.83,
-     -112.9,
+     -112.7,
      15.6
     ],
     "game": [
      -823,
      1560,
-     1400
+     1380
     ],
     "behavior": "bhvYellowCoin",
     "model": "MODEL_YELLOW_COIN",
@@ -5852,13 +5872,13 @@
     "name": "F4 range top f4_qcz_s_03",
     "map_m": [
      -63.26,
-     -112.45,
+     -112.25,
      14.9
     ],
     "game": [
      -366,
      1490,
-     1355
+     1335
     ],
     "behavior": "bhvYellowCoin",
     "model": "MODEL_YELLOW_COIN",
@@ -5872,13 +5892,13 @@
     "name": "F4 range top f4_qcz_s_04",
     "map_m": [
      -58.68,
-     -112.9,
+     -112.7,
      15.6
     ],
     "game": [
      92,
      1560,
-     1400
+     1380
     ],
     "behavior": "bhvYellowCoin",
     "model": "MODEL_YELLOW_COIN",
@@ -5892,13 +5912,13 @@
     "name": "F4 range top f4_qcz_s_05",
     "map_m": [
      -54.11,
-     -112.45,
+     -112.25,
      14.9
     ],
     "game": [
      549,
      1490,
-     1355
+     1335
     ],
     "behavior": "bhvYellowCoin",
     "model": "MODEL_YELLOW_COIN",
@@ -6065,6 +6085,166 @@
     "bparams": "0x00000000",
     "facing_deg": 90.0,
     "coins": 5,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 terrace planter coin 1",
+    "map_m": [
+     -38.0,
+     -112.5,
+     13.22
+    ],
+    "game": [
+     2160,
+     1322,
+     1360
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 terrace planter coin 2",
+    "map_m": [
+     -38.0,
+     -93.5,
+     13.22
+    ],
+    "game": [
+     2160,
+     1322,
+     -540
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 terrace planter coin 3",
+    "map_m": [
+     -66.5,
+     -120.4,
+     13.22
+    ],
+    "game": [
+     -690,
+     1322,
+     2150
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F4 terrace planter coin 4",
+    "map_m": [
+     -52.5,
+     -120.4,
+     13.22
+    ],
+    "game": [
+     710,
+     1322,
+     2150
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F5 terrace planter coin 5",
+    "map_m": [
+     -47.2,
+     -113.0,
+     19.22
+    ],
+    "game": [
+     1240,
+     1922,
+     1410
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F5 terrace planter coin 6",
+    "map_m": [
+     -47.2,
+     -84.5,
+     19.22
+    ],
+    "game": [
+     1240,
+     1922,
+     -1440
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F5 terrace planter coin 7",
+    "map_m": [
+     -58.5,
+     -112.0,
+     19.22
+    ],
+    "game": [
+     110,
+     1922,
+     1310
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "coin",
+    "name": "F5 terrace planter coin 8",
+    "map_m": [
+     -76.0,
+     -112.5,
+     19.22
+    ],
+    "game": [
+     -1640,
+     1922,
+     1360
+    ],
+    "behavior": "bhvYellowCoin",
+    "model": "MODEL_YELLOW_COIN",
+    "bparams": "0x00000000",
+    "facing_deg": 0.0,
+    "coins": 1,
     "acts": null
    },
    {
@@ -6845,7 +7025,13 @@
     "bparams": "0x00000000",
     "facing_deg": 90.0,
     "coins": 1,
-    "acts": null
+    "acts": [
+     1,
+     3,
+     4,
+     5,
+     6
+    ]
    }
   ]
  },

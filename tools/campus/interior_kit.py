@@ -1797,12 +1797,15 @@ def light_grid(width, depth, spacing=3.6, margin=1.2, radius=7.0, strength=0.38)
     return P
 
 
-def light_ring(radius=3.0, ring_w=0.5, thickness=0.18, segments=8, drop=2.0, hangable=True, strength=0.45):
+def light_ring(radius=3.0, ring_w=0.5, thickness=0.18, segments=8, drop=2.0, hangable=True, strength=0.45,
+               top_tint=None, band_tint=None):
     """The atrium light fixture: an n-gon ring hung on four cables. Local: ring centre, z = 0 at its
     UNDERSIDE (the glowing strip), the walkable top at z = thickness, cables up to z = thickness + drop
     (place it at ceiling - thickness - drop; keep drop >= 1.8 m so Mario, 1.6 m, fits on top). Collision:
     walkable top, rim walls and a 'COL hangable' underside (jump up into it to hang and shimmy round).
-    Anchors: "top_<k>" spots on the ring."""
+    Anchors: "top_<k>" spots on the ring.
+    top_tint (optional): the walkable top as a lit coloured halo (glowing, tinted) instead of plain metal;
+    band_tint (optional): a tint on the rim faces. Both default to None (the plain metal ring)."""
     P = Prop("light_ring", radius=radius, col_closed=True)
     V, C = P.visual, P.collision
     ro, ri = radius + ring_w / 2.0, radius - ring_w / 2.0
@@ -1812,10 +1815,18 @@ def light_ring(radius=3.0, ring_w=0.5, thickness=0.18, segments=8, drop=2.0, han
     T = thickness
     for k in range(segments):
         k2 = (k + 1) % segments
-        V.wall(O[k], O[k2], 0.0, T, "int_metal")
-        V.wall(I[k2], I[k], 0.0, T, "int_metal")
-        V.poly([(O[k][0], O[k][1], T), (O[k2][0], O[k2][1], T), (I[k2][0], I[k2][1], T), (I[k][0], I[k][1], T)],
-               "int_metal", normal_hint=(0, 0, 1))
+        if band_tint is None:
+            V.wall(O[k], O[k2], 0.0, T, "int_metal")
+            V.wall(I[k2], I[k], 0.0, T, "int_metal")
+        else:
+            V.wall(O[k], O[k2], 0.0, T, "int_metal", tint=band_tint)
+            V.wall(I[k2], I[k], 0.0, T, "int_metal", tint=band_tint)
+        if top_tint is None:
+            V.poly([(O[k][0], O[k][1], T), (O[k2][0], O[k2][1], T), (I[k2][0], I[k2][1], T), (I[k][0], I[k][1], T)],
+                   "int_metal", normal_hint=(0, 0, 1))
+        else:
+            V.poly([(O[k][0], O[k][1], T), (O[k2][0], O[k2][1], T), (I[k2][0], I[k2][1], T), (I[k][0], I[k][1], T)],
+                   "int_drywall", tint=top_tint, glow=True, normal_hint=(0, 0, 1))
         V.poly([(O[k][0], O[k][1], 0.0), (I[k][0], I[k][1], 0.0), (I[k2][0], I[k2][1], 0.0), (O[k2][0], O[k2][1], 0.0)],
                "int_light", uvs=[(0, 0), (0, 1), (1, 1), (1, 0)], glow=True, normal_hint=(0, 0, -1))
         C.wall(O[k], O[k2], 0.0, T, COL_NOCAM)

@@ -8905,11 +8905,11 @@
    }
   ],
   "pickups": {
-   "coins_placed": 84,
-   "coins_with_goombas": 84,
-   "objects": 39,
+   "coins_placed": 89,
+   "coins_with_goombas": 89,
+   "objects": 40,
    "by_kind": {
-    "coin_line": 12,
+    "coin_line": 13,
     "coin": 24,
     "heart": 1,
     "1up": 2
@@ -9254,6 +9254,26 @@
      "bparams": "0x00000000",
      "facing_deg": 0.0,
      "coins": 0,
+     "acts": null
+    },
+    {
+     "kind": "coin_line",
+     "name": "outdoor dining terrace coins (line)",
+     "map_m": [
+      -422.1,
+      -331.4,
+      6.0
+     ],
+     "game": [
+      4790,
+      600,
+      3840
+     ],
+     "behavior": "bhvCoinFormation",
+     "model": "MODEL_NONE",
+     "bparams": "0x00000000",
+     "facing_deg": 90.0,
+     "coins": 5,
      "acts": null
     },
     {

@@ -5874,8 +5874,8 @@
    "area": 2,
    "module": "tools/campus/interiors/reitz.py",
    "kit_tris": {
-    "visual": 124960,
-    "collision": 12261
+    "visual": 124674,
+    "collision": 12315
    },
    "warp_nodes": [
     {
@@ -7264,7 +7264,7 @@
     "floors": {
      "LL": {
       "walls": 186,
-      "doors_open": 12,
+      "doors_open": 11,
       "doors_closed": 36,
       "void_edge_fill": 0,
       "void_caps": 0,
@@ -7423,7 +7423,7 @@
       "plaques": 58
      }
     },
-    "lights": 1912,
+    "lights": 1914,
     "instant_warps": [
      {
       "index": 0,
@@ -7475,52 +7475,52 @@
    "objects": {
     "reitz LL visual": {
      "group": "LL",
-     "tris": 2762,
+     "tris": 2740,
      "collision": false
     },
     "reitz LL collision": {
      "group": "LL",
-     "tris": 302,
+     "tris": 298,
      "collision": true
     },
     "reitz G visual": {
      "group": "G",
-     "tris": 16571,
+     "tris": 16720,
      "collision": false
     },
     "reitz G collision": {
      "group": "G",
-     "tris": 1485,
+     "tris": 1500,
      "collision": true
     },
     "reitz L1 visual": {
      "group": "L1",
-     "tris": 13421,
+     "tris": 13618,
      "collision": false
     },
     "reitz L1 collision": {
      "group": "L1",
-     "tris": 1185,
+     "tris": 1200,
      "collision": true
     },
     "reitz L2 visual": {
      "group": "L2",
-     "tris": 15959,
+     "tris": 15996,
      "collision": false
     },
     "reitz L2 collision": {
      "group": "L2",
-     "tris": 1806,
+     "tris": 1809,
      "collision": true
     },
     "reitz L3 visual": {
      "group": "L3",
-     "tris": 11474,
+     "tris": 10543,
      "collision": false
     },
     "reitz L3 collision": {
      "group": "L3",
-     "tris": 1098,
+     "tris": 1093,
      "collision": true
     },
     "reitz L4 visual": {
@@ -7535,7 +7535,7 @@
     },
     "reitz L5 visual": {
      "group": "L5",
-     "tris": 1980,
+     "tris": 2030,
      "collision": false
     },
     "reitz L5 collision": {
@@ -7555,16 +7555,21 @@
     },
     "reitz ext visual": {
      "group": "ext",
-     "tris": 3823,
+     "tris": 4194,
      "collision": false
+    },
+    "reitz ext collision": {
+     "group": "ext",
+     "tris": 5,
+     "collision": true
     }
    },
-   "vertex_lit_material_lists": 308
+   "vertex_lit_material_lists": 324
   }
  ],
  "export_hygiene": {
-  "geometry_mode_lines_sorted": 724,
-  "trailing_ws_lines": 4,
+  "geometry_mode_lines_sorted": 756,
+  "trailing_ws_lines": 2,
   "max_abs_vertex": 32416,
   "common0_jump_link": true
  },
@@ -7584,30 +7589,30 @@
   },
   "area_2": {
    "vertices": [
-    14131,
-    13983
+    14182,
+    14034
    ],
    "welded_vertices": 147,
    "collapsed_tris": 14,
-   "tjunction_splits": 406,
+   "tjunction_splits": 412,
    "triangles": [
-    12240,
-    12632
+    12294,
+    12692
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [
-   "12632 static collision triangles in the largest area (22411 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
+   "12692 static collision triangles in the largest area (22471 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
   ],
-  "collision_tris": 22411,
-  "render_tris": 206773,
+  "collision_tris": 22471,
+  "render_tris": 206487,
   "lua_names": [],
   "fog_patched": [
-   202,
-   202
+   210,
+   210
   ]
  },
- "level_dir": "mods/sgl64/levels/wf"
+ "level_dir": "work/interiors/polish3/r4/fidelity-2/reitz_f2/b1/levels/wf"
 }

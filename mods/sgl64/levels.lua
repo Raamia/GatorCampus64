@@ -489,9 +489,14 @@ end
 -- Library West (the same 5.4 m rooms, 3.0 m stack tops): the same numbers. Course 5 integration, the Marston review's
 -- camera model on the built levels/bbh (395 anchor spots x 8 yaws): zoomed in, the camera ends above the next slab in
 -- 0.3 % of cases (coopdx's 900 / 300: 3.6 %) and sees Mario unobstructed in 70 % (55 %).
+-- An entry with `area` applies only in that area of the level: the Reitz Union interior is wf area 2 (2.0-5.5 m
+-- clear rooms, a 2 m L6 corridor), while wf area 1 is the open campus and keeps the player's own camera. The design
+-- review's camera sweep (8 floors x every reachable 1 m cell x 8 yaws, collision on, zoomed out): Mario hidden in
+-- 22 % (L5) / 35 % (L6) of samples at coopdx's 1400 / 450, 12 % / 14 % with these values.
 SGL_STAGE_CAMERA = {
     [LEVEL_CCM] = { inDist = 650, outDist = 1000, inHeight = 220, outHeight = 330, collisions = 1 },   -- u32s, u8
     [LEVEL_BBH] = { inDist = 650, outDist = 1000, inHeight = 220, outHeight = 330, collisions = 1 },
+    [LEVEL_WF] = { area = 2, inDist = 650, outDist = 1000, inHeight = 220, outHeight = 330, collisions = 1 },
 }
 local sCamSaved = nil
 
@@ -510,8 +515,10 @@ local function camera_set(want, have)
 end
 
 local function stage_camera_update()
-    local lvl = gNetworkPlayers[0].currLevelNum
+    local np = gNetworkPlayers[0]
+    local lvl = np.currLevelNum
     local want = SGL_STAGE_CAMERA[lvl]
+    if want ~= nil and want.area ~= nil and np.currAreaIndex ~= want.area then want = nil end
     if want ~= nil and sgl_far_level(lvl) then
         local have = camera_get()
         if sCamSaved == nil then sCamSaved = have end

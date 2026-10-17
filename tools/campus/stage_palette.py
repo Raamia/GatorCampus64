@@ -157,6 +157,8 @@ INTERIOR_MATERIALS.update({
                                "kind": "cutout"},
     "int_ms_neon_open":       {"tex": "int_ms_neon_open.png",       "tile_m": 1.0, "color": "#FFD84A", "map": "once",
                                "kind": "cutout"},
+    # iteration 4 (fidelity-2, #51): the makerspace west door's red OPEN sign (white letters)
+    "int_ms_open_sign":       {"tex": "int_ms_open_sign.png",       "tile_m": 0.4, "color": "#D42A20", "map": "once"},
     "int_ms_glass_444":       {"tex": "int_ms_glass_444.png",       "tile_m": 1.2, "color": "#F4F4F0", "map": "once",
                                "kind": "cutout"},
     "int_ms_sign_rest":       {"tex": "int_ms_sign_rest.png",       "tile_m": 1.2, "color": "#2E2C2C", "map": "once"},
@@ -195,6 +197,8 @@ INTERIOR_MATERIALS.update({
     # fidelity-2: the labs' blue-wallpaper monitors (#61 #63) and the makerspace's 2' x 4' lay-in tile (#54 #56)
     "int_ms_monitor":         {"tex": "int_ms_monitor.png",         "tile_m": 1.0, "color": "#2A6CC0", "map": "once"},
     "int_ms_tile24":          {"tex": "int_ms_tile24.png",          "tile_m": 1.2, "color": "#ECEAE4"},
+    # iteration 4 (design r3 #6): galvanised sheet steel inside the F1 vent duct (27 texels/m, two-pixel seams)
+    "int_ms_duct":            {"tex": "int_ms_duct.png",            "tile_m": 1.2, "color": "#B4BAC0"},
     # fidelity-3: the porch's near-black storefront glass (#2), the F2 science fiction stacks' spines and end sign,
     # the entrance door vinyl (#1)
     "int_ms_glass_black":     {"tex": "int_ms_glass_black.png",     "tile_m": 1.2, "color": "#1E2226", "map": "once"},

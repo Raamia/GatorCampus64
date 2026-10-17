@@ -1086,5 +1086,39 @@ test("whole mod: /campus reitz 3 starts the co-op lab; invite for act 1; coming-
     end
 end)
 
+---------------------------------------------------------------------------------------------
+-- whole mod: the interior rom-hack camera in wf area 2 only (levels.lua SGL_STAGE_CAMERA[LEVEL_WF].area)
+---------------------------------------------------------------------------------------------
+test("whole mod: the Reitz Union interior (wf area 2) gets the interior camera; area 1 keeps the player's own", function()
+    local w = Sim.new({ files = Sim.ALL_FILES, built = { [HUB] = true, [C.LEVEL_BOB] = true, [WF] = true }, stars = 2 })
+    local H = install_stick(w:connect("Host"))
+    local FIELDS = { { "zoomed_in_dist", "inDist" }, { "zoomed_out_dist", "outDist" }, { "zoomed_in_height", "inHeight" },
+        { "zoomed_out_height", "outHeight" }, { "collisions", "collisions" } }
+    H.cam = { inDist = 900, outDist = 1400, inHeight = 300, outHeight = 450, collisions = 0 }
+    for _, f in ipairs(FIELDS) do
+        H.stubs["camera_romhack_get_" .. f[1]] = function() return H.cam[f[2]] end
+        H.stubs["camera_romhack_set_" .. f[1]] = function(v)
+            assert(math.type(v) == "integer", "camera value is an integer")
+            H.cam[f[2]] = v
+        end
+    end
+    local want = H.env.SGL_STAGE_CAMERA[WF]
+    check(want ~= nil and want.area == 2, "SGL_STAGE_CAMERA[LEVEL_WF] is for area 2 only")
+    w:step(3)
+    w:warp(H, HUB, 1, 0); w:step(5)
+    w:warp(H, WF, 1, 1); w:step(5)
+    check(H.cam.inDist == 900 and H.cam.outHeight == 450 and H.cam.collisions == 0, "wf area 1 (campus): the player's camera")
+    -- a door's instant warp: same level, area 2
+    H.area = 2; w:refresh_views(); w:step(3)
+    check(H.cam.inDist == want.inDist and H.cam.outDist == want.outDist and H.cam.inHeight == want.inHeight
+        and H.cam.outHeight == want.outHeight and H.cam.collisions == 1, "inside the Reitz Union: the interior camera, collision on")
+    H.area = 1; w:refresh_views(); w:step(3)
+    check(H.cam.inDist == 900 and H.cam.outDist == 1400 and H.cam.outHeight == 450 and H.cam.collisions == 0,
+        "back out on the campus: the player's own camera restored")
+    H.area = 2; w:refresh_views(); w:step(3)
+    w:warp(H, HUB, 1, 0); w:step(3)
+    check(H.cam.inDist == 900 and H.cam.collisions == 0, "leaving the stage from inside: restored")
+end)
+
 print(string.format("\n%d checks passed, %d failed", passed, failed))
 os.exit(failed == 0 and 0 or 1)

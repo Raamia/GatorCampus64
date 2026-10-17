@@ -91,6 +91,12 @@ def arc(cx, cy, r, a0, a1, n):
 
 
 # ================================================================== seating
+# iteration 4 (fidelity-4, #75 #76 #96 #99): the F3-F5 Sayls are near-black charcoal in the photos; the default mid
+# grey (mesh 0.92) made them the lightest objects on those floors. marston.build_floor sets this per floor
+# ({"mesh", "frame", "seat"} default tints, or None for the defaults below) while it builds F3-F5
+SAYL_FLOOR = None
+
+
 def sayl_chair(mesh_tint=None, frame_tint=None, seat_tint=None):
     """Grey task chair with a Y-shaped back (Herman Miller Sayl: nearly every task chair in the photos, #27 #28 #36
     #61 #76 #97): black five-star base and post, a charcoal seat, a light grey lattice back leaning back with the
@@ -101,12 +107,14 @@ def sayl_chair(mesh_tint=None, frame_tint=None, seat_tint=None):
     P = K.Prop("sayl_chair", col_closed=True)
     V = P.visual
     blk = T_BLACK
+    fd = SAYL_FLOOR or {}
     V.poly([(-0.30, -0.035, 0.06), (0.30, -0.035, 0.06), (0.30, 0.035, 0.06), (-0.30, -0.035 + 0.07, 0.06)],
            "int_plastic", tint=blk)
     V.poly([(-0.035, -0.30, 0.06), (0.035, -0.30, 0.06), (0.035, 0.30, 0.06), (-0.035, 0.30, 0.06)], "int_plastic",
            tint=blk)
     V.box(-0.03, -0.03, 0.06, 0.03, 0.03, 0.40, "int_metal", faces="+x-x+y-y", tint=(0.42, 0.42, 0.44))
-    V.box(-0.24, -0.22, 0.40, 0.24, 0.24, 0.47, "int_ms_felt", faces="+x-x+y-y+z", tint=seat_tint or (0.78, 0.79, 0.82))
+    V.box(-0.24, -0.22, 0.40, 0.24, 0.24, 0.47, "int_ms_felt", faces="+x-x+y-y+z",
+          tint=seat_tint or fd.get("seat") or (0.78, 0.79, 0.82))
     # back: a tapered lattice panel leaning back (both faces)
     b0, b1 = (-0.21, -0.22, 0.52), (0.21, -0.22, 0.52)
     t0, t1 = (-0.25, -0.31, 1.02), (0.25, -0.31, 1.02)
@@ -115,7 +123,7 @@ def sayl_chair(mesh_tint=None, frame_tint=None, seat_tint=None):
     # mid grey (still well under the light grey 0.85 backs that design round 1 found loud)
     # design fix round 2 (p_f4_carrels, the gameplay camera; #97 mid-grey mesh): with the vertex shade the 0.66 mesh
     # still read near-black (texel mean 0.57 x 0.66 = 0.38 before lighting): now ~0.53 grey, the Y spine 0.1 darker
-    tint = mesh_tint or (0.92, 0.92, 0.96)
+    tint = mesh_tint or fd.get("mesh") or (0.92, 0.92, 0.96)
     V.poly([b0, b1, t1, t0], "int_ms_mesh", tint=tint, normal_hint=(0, 1, 0))
     V.poly([t0, t1, b1, b0], "int_ms_mesh", tint=(tint[0] * 0.8, tint[1] * 0.8, tint[2] * 0.8), normal_hint=(0, -1, 0))
 
@@ -138,7 +146,7 @@ def sayl_chair(mesh_tint=None, frame_tint=None, seat_tint=None):
             # figure from the game camera, where the photos show uniformly grey chairs
             # design fix round 1: a dark grey Y, barely lighter than the charcoal mesh (as in #36 #100)
             # fix round 2 fidelity-1: lifted with the mesh (0.30 -> 0.38), a slightly darker grey frame on it
-            V.poly(quad, "int_metal", tint=frame_tint or (0.64, 0.64, 0.67), normal_hint=nh)
+            V.poly(quad, "int_metal", tint=frame_tint or fd.get("frame") or (0.64, 0.64, 0.67), normal_hint=nh)
     return P
 
 
@@ -232,7 +240,8 @@ def shell_chair(tint=T_TAUPE, col=True, col_box=(-0.34, -0.36, 0.0, 0.34, 0.32, 
     prism(V, seat, zb, zs, "int_ms_leather", tint=tint, top_mat="int_ms_leather")
     V.poly([(x, y, zb) for x, y in seat], "int_metal", tint=dk, normal_hint=(0, 0, -1))
     # the top of the cushion a shade lighter (it catches the ceiling light in #44)
-    V.poly([(x * 0.86, y * 0.86 + 0.02, zs + 0.004) for x, y in seat], "int_ms_leather", tint=lt,
+    # iteration 4 (technical): 1.5 cm proud (the old 4 mm rounded onto the seat top in game units: z-fight)
+    V.poly([(x * 0.86, y * 0.86 + 0.02, zs + 0.015) for x, y in seat], "int_ms_leather", tint=lt,
            normal_hint=(0, 0, 1))
     ox_, oy_, rx, ry, t = 0.0, -0.02, 0.40, 0.34, 0.09
     n = 8
@@ -462,7 +471,9 @@ def commons_pod(arm=1.25, h=1.35, col=True):
     for (dx, dy) in ((1, 0), (0, 1), (-1, 0), (0, -1)):
         x0, x1 = sorted((0.0, dx * arm)) if dx else (-t, t)
         y0, y1 = sorted((0.0, dy * arm)) if dy else (-t, t)
-        V.box(x0, y0, 0.22, x1, y1, h - 0.08, "int_ms_felt", faces="+x-x+y-y+z", tint=(1.25, 1.27, 1.32))
+        # iteration 4 (fidelity-1, #36 4212): the photo's pod panels are a light blue-grey (RGB ~116 / 120 / 147); the
+        # (1.25, 1.27, 1.32) felt rendered a neutral 87-109 / 93-114 / 99-119
+        V.box(x0, y0, 0.22, x1, y1, h - 0.08, "int_ms_felt", faces="+x-x+y-y+z", tint=(1.35, 1.38, 1.60))
         ex, ey = dx * arm, dy * arm
         # fidelity-1: posts 5 cm square (were 8 cm: their faces sat 1 cm off the 10 cm felt panel's, z-fighting)
         V.box(ex - 0.025, ey - 0.025, 0.0, ex + 0.025, ey + 0.025, h, "int_metal", faces="+x-x+y-y+z")
@@ -750,8 +761,9 @@ def lab_cubicles(n=4, w=1.0, depth=0.78, desk_h=0.74, double=True, col=True, cha
     return P
 
 
-def white_benching_120(arms=3, arm_l=1.5, h=0.74, col=True):
-    """The basement lab's white 120-degree benching with frosted dividers (#64): `arms` desks round a hub."""
+def white_benching_120(arms=3, arm_l=1.5, h=0.74, col=True, chair=None, monitors=False):
+    """The basement lab's white 120-degree benching with frosted dividers (#64): `arms` desks round a hub.
+    iteration 4: chair = sayl_chair kwargs (the lab's light grey LAB_CHAIR), monitors = a monitor on each desk."""
     P = K.Prop("bench120", col_closed=True)
     V = P.visual
     for k in range(arms):
@@ -768,7 +780,10 @@ def white_benching_120(arms=3, arm_l=1.5, h=0.74, col=True):
         lx, ly = rot(arm_l - 0.1, 0.0)
         V.box(lx - 0.03, ly - 0.03, 0.0, lx + 0.03, ly + 0.03, h - 0.03, "int_metal", faces="+x-x+y-y")
         cx, cy = rot(arm_l * 0.6, -0.62)
-        P.merge(sayl_chair(), cx, cy, 0.0, (math.degrees(-a)) % 360.0)
+        P.merge(sayl_chair(**(chair or {})), cx, cy, 0.0, (math.degrees(-a)) % 360.0)
+        if monitors:
+            mx, my = rot(arm_l * 0.6, 0.12)
+            P.merge(K.monitor(screen_w=0.56, screen_h=0.36), mx, my, h, (math.degrees(-a) + 180.0) % 360.0)
         if col:
             col_prism(P.collision, pts, 0.0, h)
     return P
@@ -861,8 +876,10 @@ def low_shelf(L=1.4, W=0.9, h=1.15, sign=None, books="int_ms_stacks", seed=0, co
                tint=(0.9, 0.9, 0.92))
         for k in range(1, 3):                              # grey steel shelf boards
             z = 0.08 + (h - 0.14) * k / 3
-            V.box(-hl + 0.03, y * 0.98 - (0.03 if sgn > 0 else 0), z - 0.02, hl - 0.03,
-                  y * 0.98 + (0 if sgn > 0 else 0.03), z, "int_drywall", faces="+y-y+z", tint=g)
+            # iteration 4 (fidelity-4): the board's front face stands 6 mm proud of the book quad (it was coplanar with
+            # it: a z-fighting strip along every board, coplanar_report)
+            V.box(-hl + 0.03, y * 0.98 - (0.03 if sgn > 0 else 0.006), z - 0.02, hl - 0.03,
+                  y * 0.98 + (0.006 if sgn > 0 else 0.03), z, "int_drywall", faces="+y-y+z", tint=g)
         V.box(-hl, y - (0.03 if sgn > 0 else 0), 0.0, -hl + 0.04, y + (0 if sgn > 0 else 0.03), h - 0.04, "int_drywall",
               faces="+x-x+y-y", tint=g)
         V.box(hl - 0.04, y - (0.03 if sgn > 0 else 0), 0.0, hl, y + (0 if sgn > 0 else 0.03), h - 0.04, "int_drywall",
@@ -1088,10 +1105,15 @@ def led_strip(L, w=0.10):
     return P
 
 
-def soffit_lantern(s=5.6, band=0.5, drop=1.2, corner=0.7):
+def soffit_lantern(s=5.6, band=0.5, drop=1.2, corner=0.7, closed=False, top_copper=False):
     """The suspended square 'lantern' of the floor-2 lounge (#24 #25 #26): a grey square frame lit white underneath,
     copper-veneer boxes on its corners and mid-sides, green LED downlights. Local origin = its centre on the CEILING
-    plane it hangs from; it hangs `drop` m below it. Visual only."""
+    plane it hangs from; it hangs `drop` m below it. Visual only.
+    closed (iteration 4, fidelity-3, #24 #25): from below the photographed lantern is CLOSED, a white ceiling inside
+    the band with a glowing cove strip round its edge: one down-facing white panel at the band top plus the strip
+    (both one-sided, so a camera above it, e.g. on the F3 balcony or the walkable frame top, sees through).
+    top_copper (iteration 4, design r3 #5): the frame's walkable top in the copper veneer with a ring of green LED
+    dots, so the secret reads from the F3 balcony (a readability cheat: the real top is never seen; was grey drywall)."""
     P = K.Prop("lantern", col_closed=True)
     V = P.visual
     h = s / 2
@@ -1107,8 +1129,12 @@ def soffit_lantern(s=5.6, band=0.5, drop=1.2, corner=0.7):
         V.wall(ib, ia, z0, z1, "int_drywall", tint=(0.92, 0.92, 0.92), glow=True)
         V.poly([(a[0], a[1], z0), (ia[0], ia[1], z0), (ib[0], ib[1], z0), (b[0], b[1], z0)], "int_ms_led", glow=True,
                tint=(0.98, 0.98, 0.96), normal_hint=(0, 0, -1))
-        V.poly([(b[0], b[1], z1), (ib[0], ib[1], z1), (ia[0], ia[1], z1), (a[0], a[1], z1)], "int_drywall",
-               normal_hint=(0, 0, 1), tint=(0.7, 0.7, 0.7))
+        if top_copper:
+            V.poly([(b[0], b[1], z1), (ib[0], ib[1], z1), (ia[0], ia[1], z1), (a[0], a[1], z1)], "int_ms_copper",
+                   normal_hint=(0, 0, 1), tint=(1.08, 1.04, 1.0))
+        else:
+            V.poly([(b[0], b[1], z1), (ib[0], ib[1], z1), (ia[0], ia[1], z1), (a[0], a[1], z1)], "int_drywall",
+                   normal_hint=(0, 0, 1), tint=(0.7, 0.7, 0.7))
     for (x, y) in [(-h, -h), (h, -h), (h, h), (-h, h), (0, -h), (h, 0), (0, h), (-h, 0)]:
         c = corner * (1.0 if abs(x) == abs(y) else 0.8)
         V.box(x - c / 2, y - c / 2, z0 - 0.08, x + c / 2, y + c / 2, z1 + 0.10, "int_ms_copper", faces=K.BOX_ALL)
@@ -1119,6 +1145,25 @@ def soffit_lantern(s=5.6, band=0.5, drop=1.2, corner=0.7):
                normal_hint=(0, 0, -1))
     for (x, y) in [(-h + 0.2, -h + 0.2), (h - 0.2, -h + 0.2), (h - 0.2, h - 0.2), (-h + 0.2, h - 0.2)]:
         V.box(x - 0.008, y - 0.008, z1, x + 0.008, y + 0.008, 0.0, "int_metal", faces="+x-x+y-y")
+    if top_copper:
+        # green LED dots along the frame's centre line between the copper boxes, 6 mm proud of the top (no z-fight)
+        m = h - t / 2
+        for (x, y) in [(-m * 0.5, -m), (m * 0.5, -m), (m, -m * 0.5), (m, m * 0.5), (m * 0.5, m), (-m * 0.5, m),
+                       (-m, m * 0.5), (-m, -m * 0.5)]:
+            V.poly([(x + 0.11 * math.cos(a), y + 0.11 * math.sin(a), z1 + 0.006) for a in
+                    [2 * math.pi * k / 6 for k in range(6)]], "int_ms_led", glow=True, tint=(0.55, 1.0, 0.35),
+                   normal_hint=(0, 0, 1))
+    if closed:
+        hi, hs = h - t, h - t - 0.16          # the inner edge of the frame; the cove strip's inner edge
+        V.poly([(-hs, -hs, z1), (-hs, hs, z1), (hs, hs, z1), (hs, -hs, z1)], "int_ms_wall", tint=(0.97, 0.97, 0.96),
+               glow=True, normal_hint=(0, 0, -1))
+        ring_o = [(-hi, -hi), (hi, -hi), (hi, hi), (-hi, hi)]
+        ring_i = [(-hs, -hs), (hs, -hs), (hs, hs), (-hs, hs)]
+        for k in range(4):
+            a, b = ring_o[k], ring_o[(k + 1) % 4]
+            ia, ib = ring_i[k], ring_i[(k + 1) % 4]
+            V.poly([(a[0], a[1], z1), (ia[0], ia[1], z1), (ib[0], ib[1], z1), (b[0], b[1], z1)], "int_ms_led",
+                   glow=True, tint=(1.0, 0.98, 0.92), normal_hint=(0, 0, -1))
     P.lights.append(K.Light((0.0, 0.0, z0 - 0.8), radius=8.0, strength=0.30))
     return P
 
@@ -1304,22 +1349,28 @@ def vending_machine(w=1.0, d=0.85, h=1.85):
     return P
 
 
-def drinking_fountain_pair():
+def drinking_fountain_pair(stainless=False):
     """Bi-level drinking fountains (#69). On the wall plane y = 0, facing +y. Visual only.
     fix round 2 fidelity-1 (#69 4317): white enamel bodies (the photo's fountain on the lobby's west wall is white,
-    the stainless boxes did not read), a recessed stainless basin and bubbler on top, a white back plate."""
+    the stainless boxes did not read), a recessed stainless basin and bubbler on top, a white back plate.
+    iteration 4 (fidelity-1, #69 4317): stainless=True gives the F1 lobby unit its brushed stainless bodies (bright
+    int_metal, lighter than the old stainless boxes) on a stainless back plate; the default keeps the F2 pair white."""
     P = K.Prop("fountains", col_closed=True)
     V = P.visual
     wh = (0.97, 0.97, 0.96)
-    V.poly(K.front_quad(-0.62, 0.62, 0.006, 0.70, 1.30), "int_drywall", tint=(0.93, 0.93, 0.92), ao=1.0)
+    bmat, btint = ("int_metal", (1.08, 1.10, 1.14)) if stainless else ("int_drywall", wh)
+    V.poly(K.front_quad(-0.62, 0.62, 0.006, 0.70, 1.30), bmat,
+           tint=(1.0, 1.02, 1.06) if stainless else (0.93, 0.93, 0.92), ao=1.0)
     for x, z in ((-0.35, 0.80), (0.35, 0.95)):
-        V.box(x - 0.24, 0.006, z, x + 0.24, 0.42, z + 0.20, "int_drywall", faces="+x-x+y-z", tint=wh)
+        V.box(x - 0.24, 0.006, z, x + 0.24, 0.42, z + 0.20, bmat, faces="+x-x+y-z", tint=btint)
         V.poly([(x - 0.24, 0.006, z + 0.20), (x + 0.24, 0.006, z + 0.20), (x + 0.24, 0.42, z + 0.20),
-                (x - 0.24, 0.42, z + 0.20)], "int_drywall", tint=wh, normal_hint=(0, 0, 1))
+                (x - 0.24, 0.42, z + 0.20)], bmat, tint=btint, normal_hint=(0, 0, 1))
         V.poly([(x - 0.17, 0.08, z + 0.21), (x + 0.17, 0.08, z + 0.21), (x + 0.17, 0.36, z + 0.21),
                 (x - 0.17, 0.36, z + 0.21)], "int_metal", tint=(0.82, 0.84, 0.88), normal_hint=(0, 0, 1))
         V.box(x - 0.02, 0.14, z + 0.21, x + 0.02, 0.18, z + 0.26, "int_metal", faces="+x-x+y-y+z",
               tint=(1.0, 1.0, 1.04))
+    # iteration 4 (technical): a NO_CAM block round the bodies (no back face: it stands on the wall plane)
+    P.collision.box(-0.62, 0.0, 0.0, 0.62, 0.42, 1.15, NOCAM, faces="+x-x+y+z")
     return P
 
 
@@ -1567,16 +1618,18 @@ def bulk_name(mat, row, w=1.28, h=0.32, z=3.12):
 
 # ================================================================== check
 # ================================================================== photo pass 2 (more pieces from the photos)
-def bentply_chair(shell=(0.42, 0.26, 0.16), cushion=(0.92, 0.92, 0.90)):
-    """Bent-plywood lounge chair on four thin steel legs (the F1 lounge by the glass rooms #38): a dark walnut shell
-    (seat + back in one curve) with a white cushion. Visual only; the sitter faces +y."""
+def bentply_chair(shell=(0.60, 0.40, 0.25), cushion=(0.80, 0.81, 0.83)):
+    """Bent-plywood lounge chair on four thin steel legs (the F1 lounge by the glass rooms #38): a mid walnut shell
+    (seat + back in one curve) with a light grey cushion. Visual only; the sitter faces +y.
+    iteration 4 (fidelity-1, #38 4272): light grey seats (were white) and a lighter shell (was (0.42, 0.26, 0.16):
+    from behind its 0.8-shaded back read near-black in lounge_c); the back's outer face is shaded 0.9, not 0.8."""
     P = K.Prop("bentply_chair", col_closed=True)
     V = P.visual
     V.box(-0.30, -0.26, 0.36, 0.30, 0.26, 0.40, "int_ms_veneer", faces="+x-x+y-y-z", tint=shell)
     V.box(-0.27, -0.22, 0.40, 0.27, 0.24, 0.45, "int_ms_leather", faces="+x-x+y+z", tint=cushion)
     back = [(-0.30, -0.26, 0.40), (0.30, -0.26, 0.40), (0.33, -0.40, 0.86), (-0.33, -0.40, 0.86)]
     V.poly(back, "int_ms_veneer", tint=shell, normal_hint=(0, 1, 0.3))
-    V.poly(list(reversed(back)), "int_ms_veneer", tint=(shell[0] * 0.8, shell[1] * 0.8, shell[2] * 0.8),
+    V.poly(list(reversed(back)), "int_ms_veneer", tint=(shell[0] * 0.9, shell[1] * 0.9, shell[2] * 0.9),
            normal_hint=(0, -1, -0.3))
     V.poly([(-0.27, -0.25, 0.46), (0.27, -0.25, 0.46), (0.29, -0.36, 0.80), (-0.29, -0.36, 0.80)], "int_ms_leather",
            tint=cushion, normal_hint=(0, 1, 0.3))
@@ -1658,9 +1711,10 @@ def glass_sign(mat, w, h, z, glow=True):
     return P
 
 
-def wire_shelving(L=1.2, d=0.46, h=1.85, seed=0, col=True):
+def wire_shelving(L=1.2, d=0.46, h=1.85, seed=0, col=True, bins=False):
     """Chrome wire shelving with cardboard boxes, bins and binders (the staff / tool-lending room behind the service
-    desk #23, the makerspace #53): four posts, five wire shelves, a mix of boxes on them. Local front = +y."""
+    desk #23, the makerspace #53): four posts, five wire shelves, a mix of boxes on them. Local front = +y.
+    bins (iteration 4, fidelity-3, #23): the tool-lending bay: rows of red and orange plastic bins instead."""
     P = K.Prop("wire_shelving", col_closed=True)
     V = P.visual
     rng = random.Random(seed)
@@ -1680,6 +1734,14 @@ def wire_shelving(L=1.2, d=0.46, h=1.85, seed=0, col=True):
             w = rng.uniform(0.18, 0.42)
             hh = rng.uniform(0.12, (h - 0.2) / 4 - 0.06)
             kind = rng.random()
+            if bins:
+                w = 0.36
+                hh = min((h - 0.2) / 4 - 0.07, 0.30)
+                tint = rng.choice([(1.0, 0.24, 0.14), (1.0, 0.24, 0.14), (1.0, 0.50, 0.12)])
+                V.box(x, -hd + 0.03, z, min(hl - 0.03, x + w), hd - 0.05, z + hh, "int_ms_wall", faces="+x-x+y+z",
+                      tint=tint)
+                x += w + 0.03
+                continue
             if kind < 0.55:
                 mat, tint = "int_wood", (0.95, 0.80, 0.58)                        # cardboard
             elif kind < 0.8:
@@ -1707,20 +1769,23 @@ T_STEEL_FRAME = (0.62, 0.64, 0.68)       # the islands' grey steel frames [#54 #
 T_WIRE_BLACK = (0.28, 0.28, 0.30)        # black wire shelving [#53]
 
 
-def ms_monitor(screen_w=0.60, screen_h=0.37, z=0.12):
+def ms_monitor(screen_w=0.60, screen_h=0.37, z=0.12, dark=False):
     """fidelity-2 (#61 #63 #64): a large lab monitor showing the blue desktop wallpaper (int_ms_monitor; the kit's
     int_monitor window read as an error dialog from the game camera). Base centre at the desk surface, the screen
-    faces +y and glows. Visual only."""
+    faces +y and glows. Visual only.
+    iteration 4 (fidelity-4, #76 the data consultation room): dark=True is a monitor that is off: the glossy black
+    int_ms_tv screen (faint diagonal sheen), not lit."""
     P = K.Prop("ms_monitor", col_closed=True)
     V = P.visual
     hw = screen_w / 2.0
+    scr = "int_ms_tv" if dark else "int_ms_monitor"
     V.box(-0.12, -0.1, 0.0, 0.12, 0.08, 0.015, "int_plastic", faces="+x-x+y-y+z", tint=T_BLACK)
     V.box(-0.03, -0.06, 0.015, 0.03, -0.03, z + 0.08, "int_plastic", faces="+x-x+y-y", tint=T_BLACK)
-    V.box(-hw, -0.03, z, hw, 0.0, z + screen_h, "int_plastic", faces=K.BOX_ALL, mats={"+y": "int_ms_monitor"},
+    V.box(-hw, -0.03, z, hw, 0.0, z + screen_h, "int_plastic", faces=K.BOX_ALL, mats={"+y": scr},
           uvs={"+y": K.ONCE}, tint=T_BLACK)
     for p in V.polys[-6:]:
-        if p.mat == "int_ms_monitor":
-            p.glow = True
+        if p.mat == scr:
+            p.glow = not dark
             p.tint = None
     return P
 
@@ -1963,7 +2028,7 @@ def x_side_table(r=0.24, h=0.56, top=(0.97, 0.97, 0.96), leg=(0.26, 0.24, 0.24))
     return P
 
 
-def sink_counter(L=1.5, D=0.60, h=0.91, col=True):
+def sink_counter(L=1.5, D=0.60, h=0.91, col=True, ada=False):
     """fidelity-2 fix 2 (#73 #74, wellness room): the white sink counter: a white solid-surface top with an inset
     stainless sink and a gooseneck faucet on a white base cabinet (door joints, small pulls, a dark recessed toe kick),
     a white paper-towel dispenser and a soap dispenser on the wall above. Local: the wall face is y = 0, the counter
@@ -1972,15 +2037,24 @@ def sink_counter(L=1.5, D=0.60, h=0.91, col=True):
     V = P.visual
     hl = L / 2
     white = (0.95, 0.95, 0.94)
-    V.box(-hl + 0.02, 0.0, 0.0, hl - 0.02, D - 0.09, 0.10, "int_plastic", faces="+y+x-x", tint=(0.32, 0.32, 0.34))
-    V.box(-hl + 0.02, 0.0, 0.10, hl - 0.02, D - 0.03, h - 0.04, "int_drywall", faces="+y+x-x-z", tint=white)
-    nd = max(2, int(round(L / 0.5)))
-    for k in range(1, nd):
-        x = -hl + 0.02 + (L - 0.04) * k / nd
-        V.poly(K.front_quad(x - 0.005, x + 0.005, D - 0.028, 0.14, h - 0.08), "int_plastic", tint=(0.62, 0.62, 0.64))
-    for k in range(nd):
-        x = -hl + 0.02 + (L - 0.04) * (k + 0.5) / nd + (0.12 if k % 2 == 0 else -0.12)
-        V.box(x - 0.012, D - 0.03, h - 0.22, x + 0.012, D - 0.01, h - 0.12, "int_metal", faces="+y+x-x+z-z")
+    if ada:
+        # iteration 4 (fidelity-2, #74 f3_wellness_room_sink): the wall-hung ADA counter: a 0.17 m white apron under
+        # the top and open knee space below (the wall shows through), a small white pipe shroud under the bowl
+        V.box(-hl, D - 0.05, h - 0.21, hl, D - 0.01, h - 0.04, "int_drywall", faces="+y-y+x-x-z", tint=white)
+        V.box(-hl, 0.0, h - 0.21, -hl + 0.03, D - 0.05, h - 0.04, "int_drywall", faces="+x-x-z", tint=white)
+        V.box(hl - 0.03, 0.0, h - 0.21, hl, D - 0.05, h - 0.04, "int_drywall", faces="+x-x-z", tint=white)
+        V.box(-0.16, 0.0, h - 0.48, 0.16, 0.20, h - 0.21, "int_drywall", faces="+y+x-x-z", tint=(0.90, 0.90, 0.89))
+    else:
+        V.box(-hl + 0.02, 0.0, 0.0, hl - 0.02, D - 0.09, 0.10, "int_plastic", faces="+y+x-x", tint=(0.32, 0.32, 0.34))
+        V.box(-hl + 0.02, 0.0, 0.10, hl - 0.02, D - 0.03, h - 0.04, "int_drywall", faces="+y+x-x-z", tint=white)
+        nd = max(2, int(round(L / 0.5)))
+        for k in range(1, nd):
+            x = -hl + 0.02 + (L - 0.04) * k / nd
+            V.poly(K.front_quad(x - 0.005, x + 0.005, D - 0.028, 0.14, h - 0.08), "int_plastic",
+                   tint=(0.62, 0.62, 0.64))
+        for k in range(nd):
+            x = -hl + 0.02 + (L - 0.04) * (k + 0.5) / nd + (0.12 if k % 2 == 0 else -0.12)
+            V.box(x - 0.012, D - 0.03, h - 0.22, x + 0.012, D - 0.01, h - 0.12, "int_metal", faces="+y+x-x+z-z")
     V.box(-hl, 0.0, h - 0.04, hl, D, h, "int_drywall", faces="+x-x+y+z-z", tint=(0.99, 0.99, 0.98))
     V.poly([(-0.24, 0.14, h + 0.006), (0.24, 0.14, h + 0.006), (0.24, 0.46, h + 0.006), (-0.24, 0.46, h + 0.006)],
            "int_metal", tint=(0.70, 0.72, 0.76))

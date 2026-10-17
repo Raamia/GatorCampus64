@@ -1948,6 +1948,37 @@ def tx_ms_wc_plaques():
             if ch == "#":
                 t.set(16 + x, y, w)
     t.rect(16, 16, 31, 31, hexc("#D8D8D2"))
+    # iteration 4 (fidelity-2, z_wcm): the bottom-right cell (16 x 16 px) is the men's room plaque: the dark grey
+    # plaque with a white man pictogram and the wheelchair symbol (the men's door showed the all-gender plaque)
+    t.rect(16, 16, 31, 31, hexc("#3A3C40"))
+    mens = ["................",
+            "...##...........",
+            "...##.....##....",
+            "..........##....",
+            "..####..........",
+            ".######...#.....",
+            ".######...####..",
+            ".######...#.....",
+            "..####...####...",
+            "..#..#..#....#..",
+            "..#..#..#....##.",
+            "..#..#..#...#...",
+            "..#..#...#.#....",
+            "..#..#....#.....",
+            "................",
+            "................"]
+    for y, row in enumerate(mens):
+        for x, ch in enumerate(row):
+            if ch == "#":
+                t.set(16 + x, 16 + y, w)
+    return t
+
+
+def tx_ms_open_sign():
+    """iteration 4 (fidelity-2, #51 f1_makerspace_front_neon): the red OPEN sign hanging in the makerspace's west glass
+    door: white FONT5 capitals (2x) on bright red, 64 x 32 (the 0.34 x 0.16 m sign)."""
+    t = Tex(64, 32, hexc("#D42A20"), 0)
+    font_text(t, "OPEN", 9, 9, hexc("#FFFFFF"), scale=2, spacing=1)     # no border: thin lines shimmer (no mipmaps)
     return t
 
 
@@ -2357,6 +2388,7 @@ def build_interior_marston():
         "int_ms_sign_newbooks": tx_ms_sign_newbooks(229),
         "int_ms_neon_maker": tx_ms_neon_maker(230),
         "int_ms_neon_open": tx_ms_neon_open(231),
+        "int_ms_open_sign": tx_ms_open_sign(),
         "int_ms_glass_444": tx_ms_glass_444(232),
         "int_ms_sign_rest": tx_ms_sign_rest(233),
         "int_ms_wc_plaques": tx_ms_wc_plaques(),
@@ -2386,6 +2418,7 @@ def build_interior_marston():
         "int_ms_roomnum_2": tx_ms_roomnums(MS_F1_ROOM_NUMBERS[16:24]),
         "int_ms_monitor": tx_ms_monitor(252),
         "int_ms_tile24": tx_ms_tile24(253),
+        "int_ms_duct": tx_ms_duct(254),
         "int_ms_glass_black": tx_ms_glass_black(254),
         "int_ms_fiction": tx_ms_fiction(255),
         "int_ms_sign_scifi": tx_ms_sign_scifi(256),
@@ -2571,6 +2604,31 @@ def tx_ms_tile24(seed):
             t.set(k + 1, i, hexc("#D0CEC6"))
         t.set(i, 0, hexc("#F8F8F6"))
         t.set(i, 1, hexc("#D0CEC6"))
+    return t
+
+
+def tx_ms_duct(seed):
+    """iteration 4 (design r3 #6): the inside of the F1 walk-in vent duct (a game secret): galvanised sheet steel,
+    32 px = 1.2 m (27 texels/m), one panel per tile with a two-pixel seam (shadow + highlight, no shimmer) on two
+    edges, a raised cross-break crease (low contrast) and soft zinc spangle mottling."""
+    base = hexc("#B4BAC0")
+    t = Tex(32, 32, base, seed)
+    for _ in range(40):                                   # spangle: soft lighter / darker flakes, 2 x 2 px
+        x, y = t.r.randrange(2, 31), t.r.randrange(2, 31)
+        c = shade(base, 1.0 + t.r.choice((-0.045, -0.03, 0.03, 0.045)))
+        for dx in (0, 1):
+            for dy in (0, 1):
+                t.set(x + dx if x + dx < 32 else x, y + dy if y + dy < 32 else y, c)
+    t.noise(1.5)
+    for i in range(2, 30):                                # cross-break: the two diagonals, one px, low contrast
+        for (x, y) in ((i, i), (i, 31 - i)):
+            t.set(x, y, shade(t.get(x, y)[:3], 1.04))
+    for i in range(32):                                   # panel seams
+        t.set(i, 0, shade(base, 0.70))
+        t.set(i, 1, shade(base, 1.08))
+        if i > 1:
+            t.set(0, i, shade(base, 0.74))
+            t.set(1, i, shade(base, 1.07))
     return t
 
 
