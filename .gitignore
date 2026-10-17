@@ -1,0 +1,15 @@
+# Nintendo's ROM and save files: never commit these
+*.z64
+*.n64
+*.v64
+*.eeprom
+
+# The sm64coopdx game itself (download it from its GitHub releases page instead)
+sm64coopdx.app/
+download/
+
+# Blender autosaves
+*.blend1
+*.blend2
+
+.DS_Store
