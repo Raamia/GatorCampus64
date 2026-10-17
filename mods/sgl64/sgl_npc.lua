@@ -4,20 +4,22 @@
 -- tools/npc_bridge/game_guide.md and everything else with Gemini; the reply shows as a speech bubble over the
 -- NPC and a chat line for everyone.
 --
--- NPCs are local props (spawn_non_sync_object on every client, like the Marston Shushers): they stand
--- still, play their idle animation (Albert has no skeleton: Lua breathes, hops and flaps his jaw) and turn
--- to face the nearest player within SGL_NPC_FACE_DIST.
+-- NPCs are local props (spawn_non_sync_object on every client, like the Marston Shushers). Libby and Professor
+-- Bob stand still, play their idle animation and turn to face the nearest player within SGL_NPC_FACE_DIST.
+-- Albert is alive (albert_loop below, animations in sgl_albert.lua): he strolls around the Plaza, waves when
+-- someone walks up, turns to whoever he's talking to, strokes his chin while thinking, gestures and flaps his jaw
+-- while answering, and breaks into the Gator Chomp now and then.
 -- Ids must match tools/npc_bridge/npcs.json (tools/luatest/check_npc_ids.py checks this).
 
 SGL_NPC_TALK_DIST = 600      -- chat within 6 m of an NPC goes to it
 SGL_NPC_FACE_DIST = 800      -- NPCs turn toward a player within 8 m
 
 -- y is the hub ground (the generated plaza is flat at 0); yaw in degrees (0 = facing +Z, south)
--- Albert: about 8 m from the Plaza spawn (8320, -4440), facing it. jaw = his model's GEO_SWITCH_CASE on oAnimState
--- (0 closed, 1 open); without the model (it failed to load) he falls back to a Yoshi.
+-- Albert: home about 8 m from the Plaza spawn (8320, -4440), facing it. rig = his own skeleton model (animated by
+-- sgl_albert.lua); without the model (it failed to load) he falls back to a Yoshi that only turns to face you.
 local ALBERT_MODEL = smlua_model_util_get_id("albert_geo")
 SGL_NPCS = {
-    { id = "albert", name = "Albert", model = ALBERT_MODEL, jaw = true, scale = 1.0,
+    { id = "albert", name = "Albert", model = ALBERT_MODEL, rig = true, scale = 1.0,
       x = 8800, y = 0, z = -3750, yaw = -120, col = { 250, 140, 40 } },
     { id = "libby", name = "Libby", model = E_MODEL_TOAD, anims = "toad_seg6_anims_0600FB58",
       anim = 6, scale = 1.2, x = 8000, y = 0, z = -15550, yaw = 150, col = { 150, 200, 255 } },
@@ -27,12 +29,13 @@ SGL_NPCS = {
 
 if ALBERT_MODEL == E_MODEL_ERROR_MODEL then
     local a = SGL_NPCS[1]
-    a.model, a.jaw, a.anims, a.anim, a.scale = E_MODEL_YOSHI, false, "yoshi_seg5_anims_05024100", 0, 1.2
+    a.model, a.rig, a.anims, a.anim, a.scale = E_MODEL_YOSHI, false, "yoshi_seg5_anims_05024100", 0, 1.2
 end
 
 local sNpcById = {}
 for i, npc in ipairs(SGL_NPCS) do
     npc.index = i
+    npc.homeX, npc.homeZ = npc.x, npc.z
     sNpcById[npc.id] = npc
 end
 
@@ -72,14 +75,100 @@ local function npc_init(o)
     o.oIntangibleTimer = -1
 end
 
+---------------------------------------------------------------------------------------------
+-- Albert's brain. What he does, most important first:
+--   talk    a reply is up (his bubble, not "..."): gesture + jaw, facing whoever he's talking to
+--   think   the host is waiting for the bridge ("..." bubble): hand on chin
+--   wave    a player just walked up (within ALBERT_GREET_DIST)
+--   chomp   the Gator Chomp: sometimes after an answer, and now and then on his strolls
+--   idle    a player is around (within ALBERT_ATTEND_DIST): stand and face them
+--   walk    nobody around: stroll to the wander target of the current time slot, then idle there
+-- Every client runs this locally. The wander targets come from get_time() // ALBERT_WANDER_SLOT, so every
+-- client walks him to the same spots; what he does around players depends on their positions, which every
+-- client knows, so he looks (nearly) the same everywhere.
+---------------------------------------------------------------------------------------------
+ALBERT_GREET_DIST = 750
+ALBERT_ATTEND_DIST = 900
+ALBERT_WANDER_RADIUS = 520      -- the Plaza around his home is flat and clear for 7 m (checked offline)
+ALBERT_WANDER_SLOT = 8          -- seconds per stroll target
+ALBERT_WALK_SPEED = 6           -- units per frame (about 1.8 m/s)
+local SIGNPOST = { x = 8364, z = -3942 }   -- the Plaza welcome sign: never walk through it
+
+-- the stroll target of a time slot: the same point on every client
+function sgl_albert_wander_target(npc, slot)
+    local h = (slot * 2654435761) % 4294967296
+    if (h >> 3) % 4 == 0 then return npc.homeX, npc.homeZ end
+    local a = (h % 3600) / 3600 * 2 * math.pi
+    local r = 150 + (h >> 12) % (ALBERT_WANDER_RADIUS - 149)
+    local x, z = npc.homeX + math.sin(a) * r, npc.homeZ + math.cos(a) * r
+    if dist2d(x, z, SIGNPOST.x, SIGNPOST.z) < 180 then return npc.homeX, npc.homeZ end
+    return x, z
+end
+
+local function talk_frames(text) return math.min(240, 45 + #text * 2) end
+
+local function albert_loop(o, npc, target, targetD)
+    local b = sBubbles[npc.id]
+    local anim, faceYaw, moving = "idle", nil, false
+    local near = target ~= nil and targetD < ALBERT_GREET_DIST
+    if near and not npc.wasNear then npc.greet, npc.chomp = 50, 0 end   -- a newcomer comes first
+    npc.wasNear = near
+    if b ~= nil and not b.thinking and b.age < talk_frames(b.text) then
+        anim = "talk"
+        npc.talked = true
+    elseif b ~= nil and b.thinking then
+        anim = "think"
+    else
+        if npc.talked then             -- just finished an answer: sometimes a Gator Chomp to celebrate
+            npc.talked = false
+            if math.random() < 0.4 then npc.chomp = 96 end
+        end
+        if (npc.greet or 0) > 0 then
+            npc.greet = npc.greet - 1
+            anim = "wave"
+        elseif (npc.chomp or 0) > 0 then
+            npc.chomp = npc.chomp - 1
+            anim = "chomp"
+        elseif target == nil or targetD >= ALBERT_ATTEND_DIST then
+            local slot = get_time() // ALBERT_WANDER_SLOT
+            local tx, tz = sgl_albert_wander_target(npc, slot)
+            if dist2d(o.oPosX, o.oPosZ, tx, tz) > 30 then
+                moving, anim = true, "walk"
+                faceYaw = atan2s(tz - o.oPosZ, tx - o.oPosX)
+            elseif npc.arrivedSlot ~= slot then
+                npc.arrivedSlot = slot
+                if slot % 3 == 0 then npc.chomp = 96 end
+            end
+        end
+    end
+    if not moving and target ~= nil and targetD < ALBERT_ATTEND_DIST then
+        faceYaw = atan2s(target.pos.z - o.oPosZ, target.pos.x - o.oPosX)
+    end
+    if faceYaw ~= nil then o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, faceYaw, 0x500) end
+    o.oMoveAngleYaw = o.oFaceAngleYaw
+    if moving then
+        -- step once he's roughly facing the way (no moonwalking)
+        local diff = math.abs((faceYaw - o.oFaceAngleYaw + 32768) % 65536 - 32768)
+        if diff < 0x2000 then
+            o.oPosX = o.oPosX + sins(o.oFaceAngleYaw) * ALBERT_WALK_SPEED
+            o.oPosZ = o.oPosZ + coss(o.oFaceAngleYaw) * ALBERT_WALK_SPEED
+        end
+    end
+    npc.x, npc.z = o.oPosX, o.oPosZ
+    if npc.playing ~= anim then
+        npc.playing = anim
+        sgl_albert_play(o, anim)
+    end
+end
+
 local function npc_loop(o)
     local npc = SGL_NPCS[o.oBehParams]
     if npc == nil then
         obj_mark_for_deletion(o)
         return
     end
-    -- face the nearest player in range, else turn back to the resting yaw
-    local target, bestD = nil, SGL_NPC_FACE_DIST
+    -- the nearest player in the hub
+    local target, bestD = nil, math.huge
     for i = 0, MAX_PLAYERS - 1 do
         local m = gMarioStates[i]
         if gNetworkPlayers[i].connected and in_hub(gNetworkPlayers[i]) then
@@ -87,25 +176,25 @@ local function npc_loop(o)
             if d < bestD then target, bestD = m, d end
         end
     end
-    local want = degrees_to_sm64(npc.yaw)
-    if target ~= nil then want = atan2s(target.pos.z - o.oPosZ, target.pos.x - o.oPosX) end
-    o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, want, 0x400)
-    o.oMoveAngleYaw = o.oFaceAngleYaw
-    -- a hop when a reply arrives; Albert also breathes and flaps his jaw while his bubble is up
+    if npc.rig then
+        albert_loop(o, npc, target, bestD)
+    else
+        -- face the nearest player in range, else turn back to the resting yaw
+        local want = degrees_to_sm64(npc.yaw)
+        if target ~= nil and bestD < SGL_NPC_FACE_DIST then
+            want = atan2s(target.pos.z - o.oPosZ, target.pos.x - o.oPosX)
+        end
+        o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, want, 0x400)
+        o.oMoveAngleYaw = o.oFaceAngleYaw
+    end
+    -- a little hop when a reply arrives
     local y = npc.y
     if npc.hop ~= nil and npc.hop < HOP_FRAMES then
         npc.hop = npc.hop + 1
         local t = npc.hop / HOP_FRAMES
-        y = y + 60 * 4 * t * (1 - t)
+        y = y + 40 * 4 * t * (1 - t)
     end
     o.oPosY = y
-    if npc.jaw then
-        local b = sBubbles[npc.id]
-        local talking = b ~= nil and not b.thinking and b.age < math.min(150, 20 + #b.text * 2)
-        o.oAnimState = (talking and (b.age // 4) % 2 == 0) and 1 or 0
-        local breath = 1 + 0.012 * math.sin(o.oTimer * 0.12)
-        obj_scale_xyz(o, npc.scale, npc.scale * breath, npc.scale)
-    end
 end
 
 id_bhvSglNpc = hook_behavior(nil, OBJ_LIST_DEFAULT, true, npc_init, npc_loop, "bhvSglNpc")
@@ -127,7 +216,10 @@ local function spawn_npcs()
 end
 
 local function on_level_init()
-    for _, npc in ipairs(SGL_NPCS) do npc.obj = nil end
+    for _, npc in ipairs(SGL_NPCS) do
+        npc.obj, npc.playing, npc.wasNear, npc.greet, npc.chomp = nil, nil, false, 0, 0
+        npc.x, npc.z = npc.homeX, npc.homeZ
+    end
     if in_hub(gNetworkPlayers[0]) then spawn_npcs() end
 end
 

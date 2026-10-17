@@ -6,8 +6,9 @@ that DynOS compiles at launch into actors/albert_geo.bin (smlua_model_util_get_i
 
   mods/sgl64/actors/albert/model.inc.c   lights, materials (the lit solid-colour Fast64 pattern of the friend
                                           models), vertices, display lists
-  mods/sgl64/actors/albert/geo.inc.c     albert_geo: shadow -> body -> GEO_SWITCH_CASE(2, geo_switch_anim_state)
-                                          with the jaw closed (oAnimState 0) / open (1), flapped by sgl_npc.lua
+  mods/sgl64/actors/albert/geo.inc.c     albert_geo: shadow -> a skeleton of GEO_ANIMATED_PART joints (JOINTS:
+                                          root, hips, torso, head, jaw, arms, tail, legs), animated by the
+                                          keyframes of mods/sgl64/sgl_albert.lua
   mods/sgl64/actors/albert/geo_header.h  extern declarations
 
 Units are game units (1 = 1 cm), +Y up, he faces +Z (an object's yaw 0). About 1.9 m tall.
@@ -159,20 +160,40 @@ def rot_z(deg, pivot):
 # Albert
 # --------------------------------------------------------------------------------------------
 HEAD_Y = 136          # bottom of the skull
-HINGE = (0, HEAD_Y + 5, 4)   # jaw hinge at the back of the mouth (y, z used)
 
 
-def build_body(m):
+# The skeleton: GEO_ANIMATED_PART joints in depth-first order (= the order of the animation channels;
+# mods/sgl64/sgl_albert.lua ALBERT_JOINTS must list the same names). pivot = the joint's world position at rest;
+# every part's vertices are written relative to its own pivot.
+JOINTS = [
+    # name      parent   pivot (x, y, z)
+    ("root",   None,    (0, 0, 0)),
+    ("hips",   "root",  (0, 46, 0)),
+    ("torso",  "hips",  (0, 66, 0)),
+    ("head",   "torso", (0, 130, 0)),
+    ("jaw",    "head",  (0, HEAD_Y + 5, 4)),
+    ("arm_l",  "torso", (34, 118, 0)),     # his left = +X (he faces +Z)
+    ("arm_r",  "torso", (-34, 118, 0)),
+    ("tail",   "hips",  (0, 50, -14)),
+    ("leg_l",  "root",  (17, 46, 0)),
+    ("leg_r",  "root",  (-17, 46, 0)),
+]
+PIVOT = {name: pivot for name, _, pivot in JOINTS}
+
+
+def build_body(P):
     # sneakers (orange, white soles) and green legs
-    for s in (-1, 1):
+    for s, leg in ((1, "leg_l"), (-1, "leg_r")):
+        m = P[leg]
         x = 17 * s
         m.box("white", x - 11, x + 11, 0, 4, -10, 22)
         m.box("shoe", x - 11, x + 11, 4, 13, -10, 22)
-        m.box("skin", x - 8, x + 8, 13, 46, -7, 9)
+        m.box("skin", x - 8, x + 8, 13, 50, -7, 9)
     # blue shorts
-    m.taper("blue", 42, 68, (-31, 31, -18, 18), (-29, 29, -18, 18))
+    P["hips"].taper("blue", 42, 68, (-31, 31, -18, 18), (-29, 29, -18, 18))
+    m = P["torso"]
     # orange jersey: a torso that widens to the shoulders, with a round tummy in front
-    m.taper("jersey", 66, 126, (-30, 30, -19, 19), (-36, 36, -20, 20))
+    m.taper("jersey", 64, 126, (-30, 30, -19, 19), (-36, 36, -20, 20))
     m.ball("jersey", (0, 84, 6), (25, 18, 15))
     # blue collar and sleeve caps
     m.taper("blue", 122, 130, (-24, 24, -15, 15), (-18, 18, -12, 12))
@@ -183,10 +204,13 @@ def build_body(m):
     for x0, x1, y0, y1 in ((-19, -15, 102, 121), (-9, -5, 102, 121), (-19, -5, 102, 106),   # U
                            (3, 7, 102, 121), (3, 18, 117, 121), (3, 14, 110, 114)):         # F
         m.box("blue", x0, x1, y0, y1, z0, z1)
+    # neck
+    m.taper("skin", 126, HEAD_Y + 4, (-16, 16, -13, 11), (-17, 17, -14, 12))
     # green arms hanging a little outward, white claws
-    for s in (-1, 1):
-        tilt = rot_z(-10 * s, (34 * s, 118, 0))
-        m.box("skin", 34 * s - 7, 34 * s + 7, 78, 108, -7, 7, tilt)
+    for s, arm in ((1, "arm_l"), (-1, "arm_r")):
+        m = P[arm]
+        tilt = rot_z(10 * s, (34 * s, 118, 0))
+        m.box("skin", 34 * s - 7, 34 * s + 7, 78, 112, -7, 7, tilt)
         hand = tilt((34 * s, 72, 0))
         m.ball("skin", hand, (9, 8, 9))
         for k in (-1, 0, 1):
@@ -195,15 +219,14 @@ def build_body(m):
                                 (cx + 1.5, hand[1] - 4, cz + 3), (cx - 1.5, hand[1] - 4, cz + 3)],
                       (cx, hand[1] - 10, cz + 2))
     # tail: a tapered green bar from the shorts down to the ground behind him, with dark scutes
-    m.zbar("skin", -14, -90, (-14, 14, 38, 60), (-3, 3, 4, 12))
+    m = P["tail"]
+    m.zbar("skin", -10, -90, (-14, 14, 38, 60), (-3, 3, 4, 12))
     for i in range(5):
         z = -24 - 13 * i
         y = 60 + (12 - 60) * ((-14 - z) / 76)   # the tail's top edge at z
         w = 9 - i * 1.4
         m.pyramid("skin_dark", [(-w / 2, y - 1, z - 4), (w / 2, y - 1, z - 4), (w / 2, y - 1, z + 4), (-w / 2, y - 1, z + 4)],
                   (0, y + 7 - i, z))
-    # neck
-    m.taper("skin", 126, HEAD_Y + 4, (-16, 16, -13, 11), (-17, 17, -14, 12))
 
 
 def build_head(m):
@@ -214,6 +237,8 @@ def build_head(m):
     # upper snout: long and flat, tapering to the nose, from the skull forward to z = 80
     m.zbar("skin", 10, 80, (-22, 22, y0 + 7, y0 + 25), (-15, 15, y0 + 9, y0 + 19))
     m.ball("skin", (0, y0 + 14, 79), (15, 6, 7))          # rounded nose tip
+    # the red roof of the mouth (inside the lower jaw while it's closed, shows when he talks)
+    m.box("mouth", -15, 15, y0 + 6.2, y0 + 7, 10, 70)
     # nostrils on top of the nose
     for s in (-1, 1):
         m.box("black", 6 * s - 2.5, 6 * s + 2.5, y0 + 19.6, y0 + 21.2, 70, 75)
@@ -236,22 +261,27 @@ def build_head(m):
                                 (x - 1.6, y0 + 8, z + 2)], (x, y0 + 2.5, z))
 
 
-def build_jaw(m, open_deg):
-    """The lower jaw (pale belly green) + the mouth's red inside, hinged at HINGE."""
+def build_jaw(m):
+    """The lower jaw (pale belly green) + the mouth's red inside; the jaw joint opens it."""
     y0 = HEAD_Y
-    f = rot_x(open_deg, HINGE)
-    m.zbar("belly", 4, 76, (-20, 20, y0 - 2, y0 + 7), (-13, 13, y0 + 2, y0 + 8.5), f)
-    m.box("mouth", -15, 15, y0 + 7, y0 + 8, 10, 70, f)
+    m.zbar("belly", 4, 76, (-20, 20, y0 - 2, y0 + 7), (-13, 13, y0 + 2, y0 + 8.5))
+    m.box("mouth", -15, 15, y0 + 7, y0 + 8, 10, 70)
     # lower teeth
     for s in (-1, 1):
         for k in range(5):
             z = 26 + 10 * k
             x = (17 - 5 * (z - 4) / 72) * s
-            m.pyramid("white", [f((x - 1.5, y0 + 7, z - 2)), f((x + 1.5, y0 + 7, z - 2)), f((x + 1.5, y0 + 7, z + 2)),
-                                f((x - 1.5, y0 + 7, z + 2))], f((x, y0 + 12, z)))
-    if open_deg:
-        # the red inside of the upper jaw shows when the mouth opens
-        m.box("mouth", -15, 15, y0 + 6, y0 + 7.5, 10, 70)
+            m.pyramid("white", [(x - 1.5, y0 + 7, z - 2), (x + 1.5, y0 + 7, z - 2), (x + 1.5, y0 + 7, z + 2),
+                                (x - 1.5, y0 + 7, z + 2)], (x, y0 + 12, z))
+
+
+def build_parts():
+    """-> {joint name: Mesh in world coordinates at rest}."""
+    P = {name: Mesh() for name, _, _ in JOINTS}
+    build_body(P)
+    build_head(P["head"])
+    build_jaw(P["jaw"])
+    return P
 
 
 # --------------------------------------------------------------------------------------------
@@ -265,8 +295,8 @@ def normal_bytes(n):
     return [max(-127, min(127, int(round(c * 127)))) for c in n]
 
 
-def emit_mesh(mesh, part, out_vtx, out_dl, used_mats):
-    """Vertex arrays + triangle lists of one part; returns the part's top display list name."""
+def emit_mesh(mesh, part, out_vtx, out_dl, used_mats, pivot=(0, 0, 0)):
+    """Vertex arrays + triangle lists of one part (vertices relative to pivot); returns its display list name."""
     top = "%s_%s_mesh_layer_1" % (NAME, part)
     body = []
     for mat in sorted(mesh.tris):
@@ -282,7 +312,8 @@ def emit_mesh(mesh, part, out_vtx, out_dl, used_mats):
                 nb = normal_bytes(n)
                 for v in (a, b, c):
                     lines.append("\t{{{%d, %d, %d}, 0, {-16, -16}, {%s, %s, %s, 0xFF}}}," % (
-                        int(round(v[0])), int(round(v[1])), int(round(v[2])), b8(nb[0]), b8(nb[1]), b8(nb[2])))
+                        int(round(v[0] - pivot[0])), int(round(v[1] - pivot[1])), int(round(v[2] - pivot[2])),
+                        b8(nb[0]), b8(nb[1]), b8(nb[2])))
             lines.append("};\n")
             out_vtx.append("\n".join(lines))
             tl = ["Gfx %s[] = {" % tname, "\tgsSPVertex(%s + 0, %d, 0)," % (vname, 3 * len(chunk))]
@@ -318,37 +349,49 @@ def materials(used):
     return out
 
 
+def geo_layout(tops):
+    """albert_geo: the joints as nested GEO_ANIMATED_PARTs (translation = offset from the parent's pivot)."""
+    children = {}
+    for name, parent, _ in JOINTS:
+        children.setdefault(parent, []).append(name)
+    lines = []
+
+    def part(name, depth):
+        parent = next(p for n, p, _ in JOINTS if n == name)
+        px, py, pz = PIVOT[name]
+        ox, oy, oz = (0, 0, 0) if parent is None else PIVOT[parent]
+        tab = "\t" * depth
+        lines.append("%sGEO_ANIMATED_PART(LAYER_OPAQUE, %d, %d, %d, %s)," % (
+            tab, px - ox, py - oy, pz - oz, tops.get(name) or "NULL"))
+        kids = children.get(name, [])
+        if kids:
+            lines.append(tab + "GEO_OPEN_NODE(),")
+            for k in kids:
+                part(k, depth + 1)
+            lines.append(tab + "GEO_CLOSE_NODE(),")
+    part("root", 3)
+    return ("// GENERATED by tools/actors/make_albert.py. Do not edit; edit the script and re-run it.\n\n"
+            "const GeoLayout %s_geo[] = {\n"
+            "\tGEO_NODE_START(),\n"
+            "\tGEO_OPEN_NODE(),\n"
+            "\t\tGEO_SHADOW(0, 150, 90),\n"
+            "\t\tGEO_OPEN_NODE(),\n"
+            "%s\n"
+            "\t\tGEO_CLOSE_NODE(),\n"
+            "\tGEO_CLOSE_NODE(),\n"
+            "\tGEO_END(),\n"
+            "};\n") % (NAME, "\n".join(lines))
+
+
 def build():
     """-> (model.inc.c text, geo.inc.c text, geo_header.h text, triangle count)."""
-    parts = {}
-    body = Mesh()
-    build_body(body)
-    build_head(body)
-    parts["body"] = body
-    for name, deg in (("jaw_closed", 0), ("jaw_open", 22)):
-        jm = Mesh()
-        build_jaw(jm, deg)
-        parts[name] = jm
+    parts = build_parts()
     vtx, dls, used = [], [], set()
-    tops = {name: emit_mesh(mesh, name, vtx, dls, used) for name, mesh in parts.items()}
+    tops = {name: emit_mesh(parts[name], name, vtx, dls, used, PIVOT[name])
+            for name, _, _ in JOINTS if parts[name].tris}
     model = "// GENERATED by tools/actors/make_albert.py. Do not edit; edit the script and re-run it.\n\n"
     model += "\n".join(materials(used)) + "\n" + "\n".join(vtx) + "\n" + "\n".join(dls)
-    geo = ("// GENERATED by tools/actors/make_albert.py. Do not edit; edit the script and re-run it.\n\n"
-           "const GeoLayout %s_geo[] = {\n"
-           "\tGEO_NODE_START(),\n"
-           "\tGEO_OPEN_NODE(),\n"
-           "\t\tGEO_SHADOW(0, 150, 90),\n"
-           "\t\tGEO_OPEN_NODE(),\n"
-           "\t\t\tGEO_DISPLAY_LIST(LAYER_OPAQUE, %s),\n"
-           "\t\t\tGEO_SWITCH_CASE(2, geo_switch_anim_state),\n"
-           "\t\t\tGEO_OPEN_NODE(),\n"
-           "\t\t\t\tGEO_DISPLAY_LIST(LAYER_OPAQUE, %s),\n"
-           "\t\t\t\tGEO_DISPLAY_LIST(LAYER_OPAQUE, %s),\n"
-           "\t\t\tGEO_CLOSE_NODE(),\n"
-           "\t\tGEO_CLOSE_NODE(),\n"
-           "\tGEO_CLOSE_NODE(),\n"
-           "\tGEO_END(),\n"
-           "};\n") % (NAME, tops["body"], tops["jaw_closed"], tops["jaw_open"])
+    geo = geo_layout(tops)
     header = ["extern const GeoLayout %s_geo[];" % NAME]
     for mat in sorted(used):
         header += ["extern Lights1 %s_%s_lights;" % (NAME, mat), "extern Gfx mat_%s_%s[];" % (NAME, mat),

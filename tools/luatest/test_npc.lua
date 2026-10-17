@@ -122,10 +122,18 @@ local function npc_objects(c)
     return Sim.objects_with(c, c.env.id_bhvSglNpc)
 end
 
-test("Albert stands at the spawn with his own model; the Koopa is gone", function()
+local function anim_of(o) return Sim.raw(o)._customAnim end
+
+test("Albert stands at the spawn with his own rigged model; the Koopa is gone", function()
     local w, H = setup()
     local npcs = H.env.SGL_NPCS
-    check(npcs[1].id == "albert" and npcs[1].jaw == true, "Albert is the first NPC and flaps his jaw")
+    check(npcs[1].id == "albert" and npcs[1].rig == true, "Albert is the first NPC, with his skeleton model")
+    local count = 0
+    for name, a in pairs(H.customAnims) do
+        count = count + 1
+        check(#a.index == 2 * (3 + 3 * #H.env.ALBERT_JOINTS), name .. ": one index entry per channel")
+    end
+    check(count == 6, "six animations registered (idle, walk, talk, think, wave, chomp): " .. count)
     for _, n in ipairs(npcs) do check(n.id ~= "guide", "no Tour Guide Koopa") end
     check(math.abs(npcs[1].x - 8320) + math.abs(npcs[1].z + 4440) < 1500, "Albert is next to the Plaza spawn")
     local objs = npc_objects(H)
@@ -179,12 +187,57 @@ test("the bridge's reply reaches everyone as chat + bubble; Albert flaps his jaw
     check(Sim.find(F.chat, "Albert:.*You have 2 stars") ~= nil, "friend chat shows the reply (npc_say packet)")
     check(not outbox(disk):find("\n1\t"), "answered request leaves the outbox")
     local albert = npc_objects(H)[1]
-    local opened = false
-    for _ = 1, 10 do
-        w:step(1)
-        if albert.oAnimState == 1 then opened = true end
+    check(anim_of(albert) == "sgl_albert_talk", "Albert talks (gestures, jaw) while his answer is up: " ..
+        tostring(anim_of(albert)))
+    w:seconds(9)
+    check(anim_of(albert) ~= "sgl_albert_talk", "and stops talking afterwards")
+end)
+
+test("Albert thinks while waiting, waves at newcomers, faces whoever he talks to", function()
+    local w, H, F, disk = setup()
+    local albert = npc_objects(H)[1]
+    H.pos.x, H.pos.z = ALBERT.x + 2000, ALBERT.z
+    w:step(5)
+    H.pos.x, H.pos.z = ALBERT.x + 300, ALBERT.z
+    w:step(3)
+    check(anim_of(albert) == "sgl_albert_wave", "a player walks up: he waves (" .. tostring(anim_of(albert)) .. ")")
+    w:step(60)
+    check(anim_of(albert) == "sgl_albert_idle", "then stands and attends")
+    local want = H.env.atan2s(H.pos.z - albert.oPosZ, H.pos.x - albert.oPosX)
+    check(math.abs((albert.oFaceAngleYaw - want + 32768) % 65536 - 32768) < 0x400, "facing the player")
+    say(w, H, H.ms[0], "tell me a joke")
+    w:step(2)
+    check(anim_of(albert) == "sgl_albert_think", "hand on chin while the bridge thinks")
+end)
+
+test("nobody around: Albert strolls to the same spots on every client and stays on the Plaza", function()
+    local w, H, F = setup()
+    local slot
+    for s = 1, 50 do
+        local tx, tz = H.env.sgl_albert_wander_target(H.env.SGL_NPCS[1], s)
+        if math.abs(tx - ALBERT.x) + math.abs(tz - ALBERT.z) > 200 then slot = s break end
     end
-    check(opened, "Albert's jaw opens while he talks")
+    for _, c in ipairs({ H, F }) do
+        c.stubs.get_time = function() return slot * H.env.ALBERT_WANDER_SLOT end
+        c.pos.x, c.pos.z = ALBERT.x + 5000, ALBERT.z
+    end
+    local tx, tz = H.env.sgl_albert_wander_target(H.env.SGL_NPCS[1], slot)
+    local a, b = npc_objects(H)[1], npc_objects(F)[1]
+    w:step(100)   -- (a Gator Chomp from the previous slot may finish first)
+    check(anim_of(a) == "sgl_albert_walk", "he walks (" .. tostring(anim_of(a)) .. ")")
+    w:seconds(5)
+    local d = math.sqrt((a.oPosX - tx) ^ 2 + (a.oPosZ - tz) ^ 2)
+    check(d < 40, "he reached the slot's spot (" .. math.floor(d) .. " away)")
+    check(math.abs(a.oPosX - b.oPosX) + math.abs(a.oPosZ - b.oPosZ) < 1, "the same spot on both clients")
+    for s = 1, 400 do
+        local x, z = H.env.sgl_albert_wander_target(H.env.SGL_NPCS[1], s)
+        local r = math.sqrt((x - ALBERT.x) ^ 2 + (z - ALBERT.z) ^ 2)
+        local sign = math.sqrt((x - 8364) ^ 2 + (z + 3942) ^ 2)
+        if r > H.env.ALBERT_WANDER_RADIUS + 1 or sign < 180 then
+            check(false, "slot " .. s .. " target stays on the clear Plaza (" .. math.floor(r) .. " from home)")
+            break
+        end
+    end
 end)
 
 test("a stale session's replies are ignored; no bridge -> timeout line", function()

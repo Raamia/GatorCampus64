@@ -43,12 +43,24 @@ class AlbertActorTest(unittest.TestCase):
         used |= set(re.findall(r"GEO_DISPLAY_LIST\(LAYER_\w+, (\w+)\)", self.geo))
         self.assertEqual(used - defined, set())
         self.assertIn("const GeoLayout albert_geo[]", self.geo)
-        self.assertIn("GEO_SWITCH_CASE(2, geo_switch_anim_state)", self.geo)
         self.assertEqual(self.geo.count("GEO_OPEN_NODE()"), self.geo.count("GEO_CLOSE_NODE()"))
+
+    def test_skeleton_matches_the_lua_animations(self):
+        # one GEO_ANIMATED_PART per joint, in JOINTS order (= the animation channel order of sgl_albert.lua)
+        parts = re.findall(r"GEO_ANIMATED_PART\(LAYER_OPAQUE, (-?\d+), (-?\d+), (-?\d+), (\w+)\)", self.geo)
+        self.assertEqual(len(parts), len(make_albert.JOINTS))
+        for (name, parent, pivot), (x, y, z, dl) in zip(make_albert.JOINTS, parts):
+            base = (0, 0, 0) if parent is None else make_albert.PIVOT[parent]
+            self.assertEqual((int(x), int(y), int(z)), tuple(p - b for p, b in zip(pivot, base)), name)
+            self.assertIn(dl, ("NULL", "albert_%s_mesh_layer_1" % name))
+        lua = open(os.path.join(make_albert.ROOT, "mods", "sgl64", "sgl_albert.lua")).read()
+        joints = re.search(r"ALBERT_JOINTS = \{([^}]*)\}", lua).group(1)
+        self.assertEqual(re.findall(r'"(\w+)"', joints), [n for n, _, _ in make_albert.JOINTS])
 
     def test_size_is_sane(self):
         self.assertTrue(500 < self.ntris < 4000, self.ntris)
-        ys = [int(y) for y in re.findall(r"\{\{\{-?\d+, (-?\d+), -?\d+\}", self.model)]
+        parts = make_albert.build_parts()   # world coordinates at rest (the C files are relative to each joint)
+        ys = [p[1] for m in parts.values() for ts in m.tris.values() for tri, _ in ts for p in tri]
         self.assertTrue(min(ys) >= -1 and 170 <= max(ys) <= 200, (min(ys), max(ys)))   # ~1.9 m, feet on y = 0
 
 

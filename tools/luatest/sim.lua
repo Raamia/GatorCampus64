@@ -729,6 +729,22 @@ function World:build_env(c)
         assert(type(deg) == "number")
         return math.floor(deg * 65536 / 360 + 0.5)
     end
+    -- custom Lua animations (sgl_albert.lua): registered tables per client, the object's current one in _customAnim
+    c.customAnims = {}
+    S.smlua_anim_util_register_animation = function(name, flags, div, start, loopStart, loopEnd, values, index)
+        assert(type(name) == "string" and c.customAnims[name] == nil, "register_animation: new name " .. tostring(name))
+        for _, v in ipairs({ flags, div, start, loopStart, loopEnd }) do assert(math.type(v) == "integer") end
+        assert(#values > 0 and #index > 0 and #index % 2 == 0, "register_animation: values / index tables")
+        for _, v in ipairs(values) do assert(math.type(v) == "integer" and v >= 0 and v <= 0xFFFF, "u16 value") end
+        for i = 1, #index, 2 do
+            assert(index[i] >= 1 and index[i + 1] + index[i] <= #values, "index entry inside the values")
+        end
+        c.customAnims[name] = { values = values, index = index, frames = loopEnd }
+    end
+    S.smlua_anim_util_set_animation = function(o, name)
+        assert(c.customAnims[name] ~= nil, "set_animation: unknown animation " .. tostring(name))
+        raw(o)._customAnim = name
+    end
     -- vanilla object animations (sgl_npc.lua; stage tests replace these with their own tables)
     S.gObjectAnimations = setmetatable({}, { __index = function(_, k) return "ANIM:" .. k end })
     S.obj_init_animation = function(o, i) raw(o)._anim = i end
@@ -790,7 +806,7 @@ function World:build_env(c)
             activeFlags = C.ACTIVE_FLAG_ACTIVE, oAnimState = 0, oTimer = 0, oFaceAngleYaw = 0, oMoveAngleYaw = 0,
             oIntangibleTimer = 0,
             oDrawingDistance = 4000, oCollisionDistance = 1000, oStarSpawnExtCutsceneFlags = 0, oHealth = 0,
-            header = { gfx = { node = { flags = 0 }, scale = { x = 1, y = 1, z = 1 } } },
+            header = { gfx = { node = { flags = 0 }, scale = { x = 1, y = 1, z = 1 }, animInfo = { animFrame = 0 } } },
             _inited = false, _id = c.nextObj }
         c.nextObj = c.nextObj + 1
         local o = strict("Object", s)
