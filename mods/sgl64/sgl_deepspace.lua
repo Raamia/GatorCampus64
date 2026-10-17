@@ -71,6 +71,7 @@ local function open_leaderboard_menu()
     sLeaderboardRepeat = 0
     sLeaderboardDirection = 0
     sLeaderboardBoard = nil
+    djui_popup_create("Campus leaderboards ready. Close Mods to view.", 2)
 end
 
 local function load_cached_board(board)
@@ -241,4 +242,15 @@ end
 
 if hook_mod_menu_button ~= nil then
     hook_mod_menu_button("Campus leaderboards", open_leaderboard_menu)
+end
+
+if hook_mod_menu_text ~= nil then
+    hook_mod_menu_text("Select Campus leaderboards, then close Mods to open the centered board menu.")
+end
+
+if hook_chat_command ~= nil then
+    hook_chat_command("leaderboard", "Open the campus leaderboard menu", function()
+        open_leaderboard_menu()
+        return true
+    end)
 end
