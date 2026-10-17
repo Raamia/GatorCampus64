@@ -23,7 +23,7 @@ from .auth import Cancelled, LoginFailed
 
 log = logging.getLogger("sglbridge.login")
 
-UF_CLAIM = "https://chooseyourgator.select/uf"
+UF_CLAIM = "https://gatorcamp.us/uf"
 
 
 class LoginService:

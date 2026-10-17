@@ -18,9 +18,9 @@ DEVICE_GRANT = "urn:ietf:params:oauth:grant-type:device_code"
 
 @dataclass
 class Auth0Config:
-    domain: str                    # e.g. login.chooseyourgator.select (custom domain) or <tenant>.us.auth0.com
+    domain: str                    # e.g. login.gatorcamp.us (custom domain) or <tenant>.us.auth0.com
     client_id: str                 # "Gator Pass" native app (device code grant on, no secret)
-    audience: str                  # https://api.chooseyourgator.select
+    audience: str                  # https://api.gatorcamp.us
     issuer: str | None = None      # default https://<domain>/ (Auth0 uses the domain the flow ran on)
     scope: str = "openid profile email"
 

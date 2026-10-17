@@ -44,8 +44,8 @@ local function test(name, fn)
 end
 
 local HUB = C.LEVEL_CASTLE_GROUNDS
-local URL = "https://login.chooseyourgator.select/activate?user_code=ABCD-EFGH"
-local PAGE = "https://login.chooseyourgator.select/activate"
+local URL = "https://login.gatorcamp.us/activate?user_code=ABCD-EFGH"
+local PAGE = "https://login.gatorcamp.us/activate"
 local OFFLINE = "Login is only available on the hosted server"
 
 -- a world with every mod file; each client has a saved pick (no first-spawn menu over the panel)
@@ -349,10 +349,10 @@ test("/login: request, QR + code panel, countdown, B closes it and sends login_c
     check(panel(G) == nil, "login_code without a /login: ignored")
     inbox(w, "login_code", { gi = F.gi, user_code = "ABCD-EFGH", uri = URL, page = PAGE, expires = 900 })
     local p = panel(F)
-    check(p.state == "code" and p.code == "ABCD-EFGH" and p.qr ~= nil and p.qr.version == 5, "panel: code + version 5 QR")
+    check(p.state == "code" and p.code == "ABCD-EFGH" and p.qr ~= nil and p.qr.version == 4, "panel: code + version 4 QR")
     w:step(1)
     check(Sim.hud_has(F, "^ABCD%-EFGH$"), "the code in big letters")
-    check(Sim.hud_has(F, "^login%.chooseyourgator%.select/activate$"), "the activate address (page)")
+    check(Sim.hud_has(F, "^login%.gatorcamp%.us/activate$"), "the activate address (page)")
     check(Sim.hud_has(F, "Code expires in 15:00") or Sim.hud_has(F, "Code expires in 14:59"), "countdown from 15 minutes")
     check(Sim.hud_has(F, "Waiting for approval"), "waiting line")
     check(Sim.hud_has(F, "B or /login cancel: close"), "how to close")
@@ -426,7 +426,7 @@ test("/login: cancel, failure reasons, expiry and no-answer timeouts", function(
     inbox(w, "login_code", { gi = P.gi, user_code = "ABCD-EFGH", uri = URL, expires = P.env.get_time() + 600 })
     check(panel(P).frames > 590 * 30 and panel(P).frames <= 600 * 30, "Unix-time expiry -> about 10 minutes")
     w:step(1)
-    check(Sim.hud_has(P, "^login%.chooseyourgator%.select/activate$"), "no page: the uri without its query")
+    check(Sim.hud_has(P, "^login%.gatorcamp%.us/activate$"), "no page: the uri without its query")
     Sim.cmd(P, "login", "cancel")
     check(cancels() == 3, "cancelled")
 

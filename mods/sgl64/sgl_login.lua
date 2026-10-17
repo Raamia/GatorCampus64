@@ -1,7 +1,7 @@
 -- Super Gatorlator 64: Gator Pass, the in-game login (docs/web_platform_spec.md §7.1, §7.2).
 --
 --   /login            ask the hosted server for a login code: a panel shows a QR code (scan it with a
---                     phone) plus "login.chooseyourgator.select/activate" and the code to type there,
+--                     phone) plus "login.gatorcamp.us/activate" and the code to type there,
 --                     the time left and "Waiting for approval...". B or /login cancel closes it.
 --   /link <code>      link with the 6-character code the website shows after you log in there
 --                     (the fallback when the QR / device flow is a problem).
@@ -28,7 +28,7 @@
 --       login_failed { gi, reason }  expired, denied, invalid_token, bad_code, unavailable, error
 -- The verified marks are client-side decoration; the API is the source of truth (spec §14).
 
-local ACTIVATE_TEXT = "login.chooseyourgator.select/activate"
+local ACTIVATE_TEXT = "login.gatorcamp.us/activate"
 local REQUEST_TIMEOUT = 20 * 30   -- frames to wait for login_code after /login (and for /link's answer)
 local RESULT_FRAMES = 5 * 30      -- frames the success / failure panel stays up
 local LINK_CODE_LEN = 6
@@ -298,7 +298,7 @@ local function on_link_command(msg)
     local code = trim(msg):upper():gsub("[%s%-]", "")
     if #code ~= LINK_CODE_LEN or code:match("^[A-Z0-9]+$") == nil then
         djui_chat_message_create("Usage: /link <code>, the " .. LINK_CODE_LEN ..
-            "-character code chooseyourgator.select shows after you log in (e.g. /link K7Q2XF)")
+            "-character code gatorcamp.us shows after you log in (e.g. /link K7Q2XF)")
         return true
     end
     register()
@@ -487,4 +487,4 @@ hook_event(HOOK_ON_PLAYER_DISCONNECTED, on_player_disconnected)
 hook_event(HOOK_ON_NAMETAGS_RENDER, on_nametags_render)
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 hook_chat_command("login", "[cancel] Log in with Gator Pass (QR code) to get verified and your own gator", on_login_command)
-hook_chat_command("link", "<code> Link your chooseyourgator.select account with the code from the website", on_link_command)
+hook_chat_command("link", "<code> Link your gatorcamp.us account with the code from the website", on_link_command)
