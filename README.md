@@ -18,6 +18,7 @@ Our school in Super Mario 64, with online co-op and playable versions of our fri
 - `docs/flow.md` is the level-flow contract (doors, warp nodes, stars, act order, load order); `docs/game_design.md` is the full design.
 - `tools/campus/` builds the stages from campus data (`build_stage.py` for the outdoor stages, `build_interior.py` + `interiors/marston.py` / `interiors/libwest.py` for the Marston and Library West interiors; `stage_pickups.py`: the coins, hearts, 1-ups, Goombas and poles of a stage); `tools/luatest/` checks the Lua offline.
 - `install-mods.sh` copies `mods/` into the game's mods folder.
+- `companion/app/` is the DeepSpace-powered squad field board for the six Reitz and Marston missions; see its README for local setup and optional service configuration.
 
 ## Testing
 
