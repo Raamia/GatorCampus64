@@ -1,0 +1,60 @@
+# Caddy on the API VM: /etc/caddy/Caddyfile. Certificates from Let's Encrypt (CAA: letsencrypt.org, §4).
+#   chooseyourgator.select      static site (server/web/ → /srv/www/chooseyourgator)
+#   www.chooseyourgator.select  → apex (one Auth0 callback URL)
+#   api.chooseyourgator.select  → uvicorn on 127.0.0.1:8000 (sgl-api.service)
+#   chompwith.us/<code>         → chooseyourgator.select/join/<code> (short invite links)
+# login. is Auth0's custom domain (CNAME at the registrar), play. is the game host: neither is served here.
+{
+	email {$ACME_EMAIL:team@chooseyourgator.select}
+}
+
+(security) {
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		-Server
+	}
+}
+
+chooseyourgator.select {
+	import security
+	root * /srv/www/chooseyourgator
+	encode zstd gzip
+	header {
+		X-Frame-Options DENY
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.auth0.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.vultrobjects.com; connect-src 'self' https://api.chooseyourgator.select https://login.chooseyourgator.select; frame-src https://login.chooseyourgator.select; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+	}
+	@static path *.css *.js *.svg *.png
+	header @static Cache-Control "public, max-age=300"
+	# Invite links land on the home page (the code is for the page script / future use)
+	rewrite /join/* /index.html
+	try_files {path} {path}.html {path}/index.html
+	file_server
+	handle_errors {
+		rewrite * /index.html
+		file_server
+	}
+}
+
+www.chooseyourgator.select {
+	redir https://chooseyourgator.select{uri} permanent
+}
+
+api.chooseyourgator.select {
+	import security
+	encode zstd gzip
+	request_body {
+		max_size 40MB # 4 photos × 8 MB + form overhead (§5.1); the API enforces per-photo limits
+	}
+	reverse_proxy 127.0.0.1:8000 {
+		transport http {
+			read_timeout 120s
+		}
+	}
+}
+
+chompwith.us, www.chompwith.us {
+	redir https://chooseyourgator.select/join{uri} 302
+}

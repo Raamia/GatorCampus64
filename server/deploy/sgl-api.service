@@ -1,0 +1,33 @@
+# Super Gatorlator 64 web API (server/api) behind Caddy: api.chooseyourgator.select → 127.0.0.1:8000.
+# Install: code in /opt/sgl-api (server/api/ contents), venv in /opt/sgl-api/.venv
+#   python3.12 -m venv /opt/sgl-api/.venv && /opt/sgl-api/.venv/bin/pip install -r /opt/sgl-api/requirements.txt
+# Config: /etc/sgl/api.env (mode 640 root:sgl-api), from server/api/.env.example.
+# Logs: journalctl -u sgl-api -f
+[Unit]
+Description=Super Gatorlator 64 web API (FastAPI)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=sgl-api
+Group=sgl-api
+WorkingDirectory=/opt/sgl-api
+EnvironmentFile=/etc/sgl/api.env
+ExecStart=/opt/sgl-api/.venv/bin/uvicorn --factory sgl_api.app:create_app \
+    --host 127.0.0.1 --port 8000 --workers 2 \
+    --proxy-headers --forwarded-allow-ips 127.0.0.1 --no-server-header
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryMax=1G
+
+[Install]
+WantedBy=multi-user.target
