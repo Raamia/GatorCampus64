@@ -44,6 +44,10 @@
 #      deploy.py (needs python3, or $PYTHON) loaded into characters.lua
 #  17. test_bridge.lua: sgl_bridge.lua (hosted server bridge): JSON encoder / decoder, SGLEVT events (host prints,
 #      client relay), inbox sequencing + routing, inert without a headless host
+#  18. test_runs.lua: verified leaderboards (spec 10): the headless host's own timing of mission rounds and its
+#      "run" event (solo, co-op with a pause, races GO -> finish, retries, dedupe, lost reports, offline inert),
+#      the "leaderboard" inbox command and the leaderboard menu (live rows + age, scrolling, .sav fallback),
+#      the solo outbox never written on a headless host
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
 # Fixtures (regenerate only for a new coopdx version): coopdx_constants_v151.lua,
 # coopdx_api_v151.lua, coopdx_structs_v151.lua (gen_coopdx_*.py, see their headers).
@@ -94,6 +98,8 @@ echo "== test_login (guest slots, character select pages, Gator Pass login)"
 "$LUA" "$HERE/test_login.lua"
 echo "== test_bridge (sgl_bridge.lua: events, inbox)"
 "$LUA" "$HERE/test_bridge.lua"
+echo "== test_runs (verified runs, leaderboard command + menu)"
+"$LUA" "$HERE/test_runs.lua"
 
 PY="$HERE/../.venv/bin/python"
 if [ -x "$PY" ]; then
