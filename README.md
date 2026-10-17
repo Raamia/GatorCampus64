@@ -12,11 +12,30 @@ Our school in Super Mario 64, with online co-op and playable versions of our fri
    ```
 4. Restart the game, choose **Host**, open **Mods**, enable **Super Gatorlator 64**, and start the game.
 
+## NPC chat (Gemini)
+
+Four UF characters stand on the hub and chat with you, with replies from Google's Gemini API: **Tour Guide Koopa** next to the spawn, **Albert** the Alligator by the University Auditorium, **Professor Bob** by Century Tower and **Libby** the librarian by Library West. Walk up to one (the prompt "TALK TO …" appears within 6 m), press Enter and type. The answer pops up in a speech bubble over the NPC and as a chat line everyone sees.
+
+The game's Lua can't reach the internet, so **the host** runs a small helper next to the game. The helper relays chat through two files in the game's `sav` folder (details in `tools/npc_bridge/bridge.py`):
+
+1. Get a free API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey) and put it in `tools/npc_bridge/.env` (gitignored, never commit it):
+   ```
+   GEMINI_API_KEY=your-key-here
+   ```
+2. Start the bridge and leave it running while you play:
+   ```bash
+   python3 tools/npc_bridge/bridge.py
+   ```
+   Without a key, `python3 tools/npc_bridge/bridge.py --fake` answers with canned lines. `--model` picks another Gemini model (default `gemini-3.8-flash`).
+
+Only the host needs the bridge, and friends who join talk to the same NPCs. If the bridge isn't running, the NPC answers "ask me again in a bit" after 15 s, and the host sees a reminder in chat. The personas live in `tools/npc_bridge/npcs.json` and the NPCs (models, places) in `mods/sgl64/sgl_npc.lua`. Their ids must match, which `tools/luatest/run.sh` checks.
+
 ## Layout
 
 - `mods/sgl64/` holds the main mod: Lua scripts, friend models (`actors/`), portraits (`textures/`) and levels (`levels/castle_grounds` = the hub, `levels/bob` = The Swamp, `levels/wf` = Reitz Union & Engineering, `levels/jrb` = Lake Alice, `levels/ccm` = the Marston Science Library interior, `levels/bbh` = Library West After Dark, the Library West interior at night, `levels/sgl_test`). Each stage's missions are in their own file (`swamp_missions.lua`, `wf_reitz_missions.lua`, `uf_lake_missions.lua`, `uf_marston_missions.lua`, `uf_west_library_missions.lua`).
 - `docs/flow.md` is the level-flow contract (doors, warp nodes, stars, act order, load order); `docs/game_design.md` is the full design.
 - `tools/campus/` builds the stages from campus data (`build_stage.py` for the outdoor stages, `build_interior.py` + `interiors/marston.py` / `interiors/libwest.py` for the Marston and Library West interiors; `stage_pickups.py`: the coins, hearts, 1-ups, Goombas and poles of a stage); `tools/luatest/` checks the Lua offline.
+- `mods/sgl64/sgl_npc.lua` holds the talking hub NPCs; `tools/npc_bridge/` is the host-side helper that gets their replies from Gemini (see NPC chat above).
 - `install-mods.sh` copies `mods/` into the game's mods folder.
 
 ## Testing
@@ -151,6 +170,16 @@ The second indoor stage: Library West at night, six floors 6 m apart (real: abou
 9. **Shared acts**: in act 1 both of you see the ladders in the same place (each of you is chased by your own Boos); in act 2 you race each other and see each other's cup.
 
 Shortcuts: `/campus swamp 1|2|3 [me]`, `/campus reitz 1|2|3 [me]`, `/campus alice 1|2|3 [me]`, `/campus marston 1|2|3 [me]`, `/campus libwest 1|2|3 [me]`, `/campus hub`, `/campus where`, `/mission`, `/mission reset`, `/mission start`, `/join [name]`. The Reitz Union interior has no shortcut of its own: `/campus reitz 4 me`, then walk in through a door.
+
+### NPC chat
+
+With `python3 tools/npc_bridge/bridge.py --fake` (or a real key) running on the host:
+
+1. **NPCs**: on the Plaza, Tour Guide Koopa stands about 8 m south-east of the spawn with his name over his head. He turns to face you as you come near, and "TALK TO TOUR GUIDE KOOPA" shows at the bottom of the screen.
+2. **A reply**: press Enter and type "hi". A "..." bubble appears over him, then within a second or two (a few seconds with Gemini) the reply shows as a bubble and as a chat line. The bridge's terminal prints the exchange.
+3. **The others**: Albert stands just east of the Auditorium door, Professor Bob by Century Tower's north door, Libby under the Library West colonnade. Each answers in character.
+4. **No bridge**: stop the bridge and ask again. After 15 s the NPC says "Hmm... ask me again in a bit" and the host gets a chat reminder to start the bridge.
+5. **With a friend**: the friend walks up and types. Both of you see the same bubble and chat line, while only the host runs the bridge.
 
 ## Campus data
 
