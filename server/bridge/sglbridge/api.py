@@ -51,7 +51,7 @@ class ApiClient:
         raise ApiUnavailable(f"{method} {path}: unauthorized")
 
     # POST /events {t, payload, at}. The event's own fields are repeated at the top level because
-    # server/api (web/api) stores the body as is and reads e.g. char's `id` from the top level.
+    # server/api reads fields such as char's `friend` from the top level.
     def post_event(self, t: str, payload: dict[str, Any], at: str) -> None:
         body = {k: v for k, v in payload.items() if k not in ("t", "payload", "at")}
         body.update({"t": t, "payload": payload, "at": at})
@@ -72,14 +72,14 @@ class ApiClient:
         return self._call("POST", "/links", {"code": code, "coopdx_name": coopdx_name, "gi": gi}) or {}
 
     # GET /deploys/pending -> {"deploys": [{id, slot, kind, name, owner_sub, files: [{path, url}], ...}],
-    # "roster": [...]} (web/api); a bare list of deploys is accepted too
+    # "roster": [...]}; a bare list of deploys is accepted too
     def pending_deploys(self) -> list[dict[str, Any]]:
         out = self._call("GET", "/deploys/pending")
         if isinstance(out, dict):
             out = out.get("deploys")
         return [d for d in out if isinstance(d, dict)] if isinstance(out, list) else []
 
-    # POST /deploys/{id}: web/api reads {state, error}; {status, detail} (the original contract) is sent too
+    # POST /deploys/{id}: server/api reads {state, error}; {status, detail} is sent too
     def report_deploy(self, deploy_id: Any, status: str, detail: str = "") -> None:
         detail = detail[:2000]
         self._call("POST", f"/deploys/{deploy_id}", {"state": status, "error": detail if status == "failed" else None,

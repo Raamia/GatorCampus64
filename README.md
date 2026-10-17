@@ -18,6 +18,7 @@ Our school in Super Mario 64, with online co-op and playable versions of our fri
 - `docs/flow.md` is the level-flow contract (doors, warp nodes, stars, act order, load order); `docs/game_design.md` is the full design.
 - `tools/campus/` builds the stages from campus data (`build_stage.py` for the outdoor stages, `build_interior.py` + `interiors/marston.py` / `interiors/libwest.py` for the Marston and Library West interiors; `stage_pickups.py`: the coins, hearts, 1-ups, Goombas and poles of a stage); `tools/luatest/` checks the Lua offline.
 - `install-mods.sh` copies `mods/` into the game's mods folder.
+- `server/` is the online side at [gatorcamp.us](https://gatorcamp.us) (`docs/web_platform_spec.md`): `api/` (FastAPI + Postgres) and `web/` (the website), `worker/` (Gatorize Me: photos → a playable guest gator on a Vultr GPU), `bridge/` (runs the headless game server, Gator Pass login and guest deploys) and `deploy/` (provisioning, systemd units, Caddyfile).
 
 ## Testing
 
@@ -151,6 +152,14 @@ The second indoor stage: Library West at night, six floors 6 m apart (real: abou
 9. **Shared acts**: in act 1 both of you see the ladders in the same place (each of you is chased by your own Boos); in act 2 you race each other and see each other's cup.
 
 Shortcuts: `/campus swamp 1|2|3 [me]`, `/campus reitz 1|2|3 [me]`, `/campus alice 1|2|3 [me]`, `/campus marston 1|2|3 [me]`, `/campus libwest 1|2|3 [me]`, `/campus hub`, `/campus where`, `/mission`, `/mission reset`, `/mission start`, `/join [name]`. The Reitz Union interior has no shortcut of its own: `/campus reitz 4 me`, then walk in through a door.
+
+### Online (play.gatorcamp.us)
+
+1. **Join**: sm64coopdx → **Join** → Direct Connect `play.gatorcamp.us`, port 7777. The mod downloads from the server.
+2. **Gator Pass**: type `/login`. A QR code and a code appear; scan it (or open `login.gatorcamp.us/activate` and type the code) and approve on your phone. You get a gold `*` before your name tag and "GATOR PASS" in the player list, and if you made a gator on the website it is selected for you. `/link <code>` with the code from gatorcamp.us/link does the same without a QR; `/login cancel` or B closes the panel.
+3. **Gatorize Me**: on gatorcamp.us, log in, upload 1-4 photos and watch the build. Once it is ready, the server announces the new gator, restarts within about a minute, and it appears on character select page 2.
+
+Offline checks: `tools/luatest/run.sh` covers the mod side (`test_bridge`, `test_login`, `test_qr`); `server/api`, `server/worker` and `server/bridge` each have a pytest suite (the database tests start a throwaway Postgres in Docker; `server/worker/README.md` has the commands).
 
 ## Campus data
 

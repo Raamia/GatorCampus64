@@ -78,7 +78,7 @@ def lua_string(s: str) -> str:
 
 
 def render_guests_lua(roster: dict[int, dict[str, Any]]) -> str:
-    """mods/sgl64/guests.lua (format owned by web/mod-login, spec §5.2: ONE sgl_guests_register call,
+    """mods/sgl64/guests.lua (the format characters.lua reads, spec §5.2: ONE sgl_guests_register call,
     one line per slot, slots 1..8 in order, owner = Auth0 sub or nil). The only place that knows it."""
     lines = [
         "-- GENERATED FILE: the hosted server's bridge rewrites it on every character deploy",

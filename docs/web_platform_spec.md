@@ -1,8 +1,9 @@
-# Web platform spec: Gatorize Me, Gator Pass, hosted server
+# Web platform: Gatorize Me, Gator Pass, hosted server
 
-Status: draft. Owner: networking / web (Adi).
-Targets the SwampHacks XII sponsor tracks **Best Use of Vultr**, **Best Use of Auth0** and
-**Best Domain Name from GoDaddy Registry**. DeepSpace is shelved (see §11).
+The online side of Super Gatorlator 64: a hosted game server, photo-to-character builds and accounts
+linked inside the game. Built for the SwampHacks XII sponsor tracks **Best Use of Vultr**,
+**Best Use of Auth0** and **Best Domain Name from GoDaddy Registry**. Code: `server/` and the
+web-facing files in `mods/sgl64/` (§9).
 
 ## 1. Goal
 
@@ -23,7 +24,7 @@ plays step 4 on the expo laptops.
 
 | Track | What we show | Products / features |
 |---|---|---|
-| Vultr | GPU job pipeline that produces game assets, deployed live to a game server we host | Cloud GPU, Cloud Compute, Managed PostgreSQL, Object Storage, Firewall, (Serverless Inference if it has a vision model) |
+| Vultr | GPU job pipeline that produces game assets, deployed live to a game server we host | Cloud GPU, Cloud Compute, Managed PostgreSQL, Object Storage, VPC, Firewall, Serverless Inference (vision model) |
 | Auth0 | Login from inside an N64 game (device flow), accounts that own characters, API scopes | Device Authorization Flow, Universal Login on a custom domain, social connections, a post-login Action, API access tokens, M2M |
 | GoDaddy | gatorcamp.us (.us, a GoDaddy Registry TLD); subdomains route the whole system (www, api, login, play) | gatorcamp.us, DNS records |
 
@@ -31,26 +32,26 @@ plays step 4 on the expo laptops.
 
 ```
                  gatorcamp.us (.us, GoDaddy Registry)
-   www. ─────────┐ api. ─────┐ login. ──── Auth0 custom domain play. ─── A record, UDP 7777
-                 ▼ ▼ ▼
+   www. ─────────┐   api. ─────┐   login. ──── Auth0 custom domain   play. ─── A record, UDP 7777
+                 ▼             ▼                                      ▼
   Browser ──► web (static) ─► api (FastAPI) ◄──► Postgres (Vultr Managed)
-                                 │ ▲ ▲
-                     signed URLs │ │ job status │ claim jobs (SKIP LOCKED)
-                                 ▼ │ │
+                                 │   ▲                ▲
+                     signed URLs │   │ job status     │ claim jobs (SKIP LOCKED)
+                                 ▼   │                │
                           Object Storage ◄──── gpu-worker (Vultr Cloud GPU)
-                          (photos, builds, VLM → character.json → sgl_face_gen →
-                           previews, actors) Blender build/export/validate → previews
+                          (photos, builds,       VLM → character.json → sgl_face_gen →
+                           previews, actors)     Blender build/export/validate → previews
                                  │
-                                 ▼ (artifacts pulled on deploy)
+                                 ▼  (artifacts pulled on deploy)
    game-host (Vultr Cloud Compute) ─────────────────────────────────────────────
      sm64coopdx --headless --server 7777 --enable-mod sgl64 --savepath /srv/sgl
-         │ stdout: "SGLEVT {json}" ▲ sav/sgl64.modfs (inbox, mod_fs_reload)
-         ▼ │
+         │ stdout: "SGLEVT {json}"                ▲ sav/sgl64.modfs (inbox, mod_fs_reload)
+         ▼                                        │
      bridge (Python) ──────────────────────────────┘ ── api (M2M token): device flow, linking,
                                                         guest roster, deploys
 ```
 
-Four deployables, all in a new top-level `server/` directory (Python 3.12, matching `tools/`):
+Four deployables in `server/` (Python 3.12+, like `tools/`):
 
 | Dir | Runs on | Purpose |
 |---|---|---|
@@ -58,15 +59,14 @@ Four deployables, all in a new top-level `server/` directory (Python 3.12, match
 | `server/worker/` | Cloud GPU | Claims build jobs, runs the character pipeline |
 | `server/bridge/` | game host | Pipes the game's stdout, writes the modfs inbox, runs the Auth0 device flow, applies deploys |
 | `server/web/` | static, served by Caddy on the API VM | Upload page, job progress, gallery, `/activate` helper, `/tv` expo view |
-| `server/deploy/` | — | Caddyfile, systemd units, `provision.sh`, `.env.example` |
+| `server/deploy/` | — | Caddyfile, systemd units, `provision.sh` / `provision_gpu.sh`, `vultr.py` + `create_managed.sh` (Vultr API), env examples |
 
 Mod changes live in `mods/sgl64/` as usual (§7).
 
 ## 4. Domain and DNS (GoDaddy)
 
-Registered: **gatorcamp.us**..us is a GoDaddy Registry TLD. A second short-link domain
-(e.g. chompwith.us) is optional and not claimed.
-Fallbacks if refused: gatorlator.courses, herewegators.club. **Not.co** (no longer GoDaddy Registry).
+**gatorcamp.us** (.us is a GoDaddy Registry TLD; registered at Porkbun, nameservers at Porkbun).
+The API, website and Caddyfile take the domain from one setting, `SGL_DOMAIN`.
 
 | Record | Points to | Use |
 |---|---|---|
@@ -74,9 +74,7 @@ Fallbacks if refused: gatorlator.courses, herewegators.club. **Not.co** (no long
 | `api` | API VM | REST API |
 | `login` | Auth0 CNAME | Universal Login on our domain (Auth0 custom domain, 1 free) |
 | `play` | game host A | `play.gatorcamp.us:7777` in coopdx Direct Connect |
-| `_sm64coopdx._udp.play` | SRV 0 0 7777 play | Server advertisement (documented; coopdx itself takes host:port) |
-| `play` TXT | `sgl64=<mod version>; coopdx=v1.5.1` | Version check from `dig` |
-| CAA | `letsencrypt.org` | Caddy's certificates only |
+| CAA (optional) | `letsencrypt.org` | Caddy's certificates only |
 
 ## 5. Gatorize Me (Vultr)
 
@@ -109,8 +107,10 @@ contract in the header of `server/api/schema.sql`.
    known once the API slots the ready character, and may change on re-deploy); the deploy renames
    the export to `guest_<slot>` with `server/worker/actor_rename.py` (Fast64 derives every symbol
    from the id, see `server/worker/README.md`).
-   Model: Vultr Serverless Inference if it offers a vision model (keeps it all on Vultr); otherwise
-   an open VLM (Qwen2.5-VL-7B class) served with vLLM on the same GPU. Decide in spike S3.
+   Model: any OpenAI-compatible endpoint with image input (`VLM_BASE_URL`, `VLM_MODEL`): Vultr
+   Serverless Inference (e.g. `qwen3.8-flash-next`, which takes images), or a local vLLM on the
+   GPU (`docker compose --profile vllm`). Without a model the worker falls back to photo colours
+   and defaults.
 3. **Face.** `SGL_ART_DIR=<job>/art python3 tools/blender/sgl_face_gen.py sglguest
    <job>/art/sglguest/textures`: the existing procedural eyes (8 states) and mouth from the spec.
    No new AI here.
@@ -166,11 +166,12 @@ bounded and the Lua static:
     sgl_guests_register({
         { slot = 1, name = "Guest 1", owner = nil },
         { slot = 2, name = "Alice", owner = "google-oauth2|1234" },
-        --... through slot = 8
+        -- ... through slot = 8
     })
     ```
-- Size check before deploy: compiled mod must stay under coopdx's 35 MB download cap
-  (`MAX_MOD_SIZE`, compiled `.bin/.lvl/.tex`). **Measure the current mod first** (spike S1).
+- Size: the compiled mod must stay under coopdx's 35 MB download cap (`MAX_MOD_SIZE`, compiled
+  `.bin/.lvl/.tex`). Measured on the server with all 8 placeholders: 11.6 MB (each guest actor
+  compiles to about 40 KB).
 
 ### 5.3 Deploy to the server
 
@@ -188,7 +189,8 @@ shipped placeholder for `guest_<slot>`. When a build is `ready` and slotted:
    `<mod>/textures/sgl_portrait_guest_<slot>.png`, regenerate `guests.lua`;
 2. if players are online, announce "New gator <name> arrives in 60 s: the server will restart"
    via the inbox (§6.3), wait 60 s (or until empty);
-3. restart the `sgl-game` systemd unit; clients rejoin and download the changed mod;
+3. stop the game (the bridge's child process), swap the staged files in, start it again; clients
+   rejoin and download the changed mod;
 4. report `deployed` to the API (`POST /deploys/{id}` `{"state": "deployed"}`, or `"failed"` with
    an `error`). Deploys are batched: at most one restart per 5 min.
 
@@ -196,29 +198,34 @@ shipped placeholder for `guest_<slot>`. When a build is `ready` and slotted:
 
 ### 6.1 Game host
 
-- Vultr Cloud Compute, Miami or Atlanta, Ubuntu 24.04, 2 vCPU / 4 GB (headless coopdx uses about
-  a core). Firewall group: UDP 7777, TCP 22 (team IPs), TCP 80/443 if the API shares the VM.
-- coopdx v1.5.1 Linux build (release or built from source with the headless option) plus SDL2 and
-  libGL runtime libs. `sm64coopdx --headless --server 7777 --enable-mod sgl64 --savepath
-  /srv/sgl --playername "Campus" --no-discord --skip-update-check`, as the `sgl-game` systemd unit
-  with `StandardOutput=` piped to the bridge (bridge launches the game as its child).
+- Vultr Cloud Compute (dedicated CPU) in Atlanta, Debian 13, 2 vCPU / 8 GB: headless coopdx uses
+  about a core and about 3 GB once the levels are compiled. The API, Caddy and the bridge share
+  the VM. Firewall (Vultr group + ufw): UDP 7777, TCP 80/443, TCP 22. The GPU worker and the
+  managed Postgres sit on the same VPC (MTU 1450).
+- coopdx v1.5.1 Linux release (it has `--headless`) plus SDL2/GL runtime libs (`provision.sh`).
+  `sgl-bridge.service` runs the bridge, which launches `sm64coopdx --headless --server 7777
+  --enable-mod sgl64 --savepath /srv/sgl --playername Campus --no-discord --skip-update-check` as
+  its child. `sgl-game.service` runs the game alone, without the bridge.
 - **ROM:** a team member's own `baserom.us.z64`, copied by hand to `/srv/sgl/` with mode 600.
   Never in the repo, an image, Object Storage or a backup.
 
 ### 6.2 Game → bridge (events)
 
-The mod prints one line per event to stdout: `SGLEVT {"t":"...",...}` (a small JSON encoder in
-`sgl_bridge.lua`). Only the headless host prints (`network_is_server()`); clients send what the
-host needs via `network_send_to(0, …)`. Events for this spec:
+The mod prints one line per event to stdout: `SGLEVT {"t":"...", ...}` (a small JSON encoder in
+`sgl_bridge.lua`). Only the headless host prints (`network_is_server()` and
+`gServerSettings.headlessServer`); clients relay to the host's local index
+(`network_local_index_from_global(0)`). `server/bridge/README.md` has the exact fields.
 
 | `t` | Fields | From |
 |---|---|---|
-| `hello` | mod version | host, on load |
+| `hello` | version, proto | host, on load |
 | `join` / `leave` | gi, name | host hooks |
 | `login_req` | gi, name | `/login` on a client → host |
 | `link_req` | gi, name, code | `/link <code>` on a client → host (fallback, §7.2) |
-| `char` | gi, friend id | character pick changes |
-| `fin` | gi, race, frames | existing race `fin` event (for the optional leaderboard, §10) |
+| `login_cancel` | gi | a waiting login closed on a client |
+| `char` | gi, name, friend (id, e.g. `guest_3`), index | character pick changes |
+| `fin` | gi, name, race, frames, level, act | race finish (for the optional leaderboard, §10) |
+| `exit` | code | added by the bridge when the game process ends |
 
 ### 6.3 Bridge → game (inbox)
 
@@ -228,13 +235,13 @@ higher than the last one it handled:
 
 | Command | Effect |
 |---|---|
-| `login_code {gi, user_code, uri, expires}` | Sent to that player only: QR + code on their HUD |
-| `verified {gi, nickname, guest_slot?}` | Broadcast: star name tag; if the user owns a slot, select it on that client |
-| `login_failed {gi, reason}` | To that player: expired / denied |
+| `login_code {gi, user_code, uri, page, expires}` | Sent to that player only: QR + code on their HUD |
+| `verified {gi, name, nickname, guest_slot?, uf?, resend?}` | Broadcast: star name tag; if the user owns a slot, select it on that client. Re-sent with `resend` to late joiners (marks only) |
+| `login_failed {gi, reason}` | To that player: expired / denied / invalid_token / bad_code / unavailable / error |
 | `announce {text, secs}` | Popup for everyone (deploy warnings) |
 
-The modfs file layout (`properties.json` optional) is the main unknown: spike S2 makes the mod
-save a modfs once and copies its exact format.
+The modfs archive is a plain zip with an optional `properties.json` (format checked against
+coopdx v1.5.1's `mod_fs.cpp`; `server/bridge/README.md` lists what is verified).
 
 ### 6.4 Bridge process
 
@@ -250,7 +257,7 @@ journal.
 Auth0 application **"Gator Pass"**: type Native, token endpoint auth None, Device Code grant on.
 
 1. Player types `/login`. Client sends `login_req` to the host; host prints it.
-2. Bridge `POSThttps://login.gatorcamp.us/oauth/device/code` (client_id, scope
+2. Bridge `POST https://login.gatorcamp.us/oauth/device/code` (client_id, scope
    `openid profile email`, audience `https://api.gatorcamp.us`).
 3. Inbox `login_code` → the player's HUD: QR of `verification_uri_complete`, plus
    "login.gatorcamp.us/activate  ABCD-EFGH". QR drawn with `djui_hud_render_rect` from a
@@ -285,7 +292,7 @@ login (`POST /link-codes`) and the player types `/link K7Q2XF`. Same result, no 
 ### 7.4 Limits
 
 - Free plan: 25k MAU, unlimited social connections, 1 custom domain, Actions. New tenants get a
-  22-day trial of paid features. Create the tenant before the weekend's work starts.
+  22-day trial of paid features.
 - One character in progress per user, 3 per user total, 20 jobs per hour overall (GPU budget).
 
 ## 8. API (FastAPI)
@@ -332,8 +339,8 @@ Object Storage: private bucket; the API hands out short-lived presigned GET URLs
 
 All network-facing behaviour is inert offline: without a headless host nothing prints and the inbox
 never appears. `tools/luatest` gets tests for the JSON encoder, inbox sequencing and the guest list
-(`test_qr.lua`: the QR encoder against known vectors; `test_login.lua`: guest slots, charselect pages and
-`sgl_login.lua` against a stub bridge).
+(`test_bridge.lua`: events and inbox; `test_qr.lua`: the QR encoder against known vectors;
+`test_login.lua`: guest slots, charselect pages and `sgl_login.lua` against the real bridge).
 
 ## 10. Optional: verified leaderboard
 
@@ -341,32 +348,12 @@ If the core is done: the host already sees each race's `fin`. Store it via `/eve
 linked (`sub`) players, show the board on the site and `/tv`, and push the top 3 back through the
 inbox for the results board. Same Auth0 + Vultr pieces; no new infrastructure.
 
-## 11. Shelved
+## 11. Not built
 
-DeepSpace (live map, crowd voting, spectator realtime). The bridge's event stream (§6.2) is the
-hook for it if we come back.
+A live spectator map and crowd voting (DeepSpace realtime). The bridge's event stream (§6.2) is
+where they would plug in.
 
-## 12. Spikes (do these first, each ≤ 1-2 h)
-
-| # | Question | Pass when |
-|---|---|---|
-| S1 | Does headless coopdx v1.5.1 run our mod on a Linux VM, and how big is the compiled mod? | A laptop joins `play.…:7777`, sees the hub; compiled size noted vs the 35 MB cap |
-| S2 | Can an outside process write `sgl64.modfs` and the mod read it after `mod_fs_reload()`? | A bridge-written `inbox.json` shows a popup in game |
-| S3 | Vision model choice: Vultr Serverless Inference vision support, else vLLM on the GPU | Valid `character.json` from 3 test photos, schema-clean |
-| S4 | Does the character pipeline run headless on Linux (Blender + Fast64-Gart + template from `tools/vendor/`)? | `build_character.py -- daniel` reproduces `mods/sgl64/actors/daniel/` (export validates) on the GPU VM |
-| S5 | Does a client re-download the mod after the server's guest actors change? | Rejoin after a restart shows the new model |
-
-## 13. Build order
-
-1. Accounts: Vultr credits (mlh.link/vultr), Auth0 tenant, domain claim. DNS for `play`, `api`, `www`.
-2. Spikes S1, S2, S4 in parallel; S3 and S5 next.
-3. Game host + bridge (events out, inbox in), `sgl_bridge.lua`.
-4. Gator Pass: device flow, `sgl_login.lua`, QR, verified star.
-5. Worker + API + web upload/progress page; guest slots + deploy.
-6. Expo polish: `/tv`, QR codes on a printed star, README section.
-7. Optional leaderboard (§10).
-
-## 14. Risks
+## 12. Risks
 
 - **ROM on the server**: own dump only, private, documented as such; judges can't join without one.
 - **Device flow**: phishable by design; codes expire in 15 min, the page shows the requesting
@@ -377,11 +364,6 @@ hook for it if we come back.
   their owner, admin delete for anything inappropriate.
 - **Restart on deploy** interrupts play: batched, announced, skipped while a mission is running if
   possible.
-- **Pipeline flakiness**: Blender's ~1-in-14 Fast64 segfault is retried by `run_blender.sh`.
-  Untested hair presets may look rough; S3 can bias the model toward the reviewed presets.
-
-## 15. Open questions
-
-- Linux Blender version that matches the Fast64-Gart build in `tools/vendor/`.
-- Vultr credit amount and GPU availability in Miami/Atlanta.
-- Whether one project may claim prizes in several MLH tracks at this event (ask the MLH coach).
+- **Pipeline flakiness**: Fast64's SceneProperties upgrade crashed Blender (every load on Linux);
+  `sgl_blender.setup_fast64` works around it, and `run_blender.sh` still retries crashes.
+  Untested hair presets may look rough; the prompt can bias the model toward the reviewed presets.

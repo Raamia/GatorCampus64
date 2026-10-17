@@ -13,11 +13,11 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
 .venv/bin/python -m pytest -q          # unit tests (no network, no game)
 ```
 
-## Install on sgl-host (manual for now; the main session does the live test)
+## Install on sgl-host
 
 1. Copy the repo subset to `/opt/sgl`, keeping its layout:
    - `server/bridge/`
-   - `server/worker/actor_rename.py` (from branch web/worker)
+   - `server/worker/actor_rename.py`
    - `mods/sgl64/` (fallback source for the guest placeholders)
 
    Then `python3 -m venv /opt/sgl/server/bridge/.venv && /opt/sgl/server/bridge/.venv/bin/pip install -r /opt/sgl/server/bridge/requirements.txt`.
@@ -41,7 +41,7 @@ Each event is one line, `SGLEVT {"t":"<type>",...}`. `t` comes first, the other 
 | login_cancel | gi, name (optional; sent by sgl_login.lua if it wants) |
 | exit | code (added by the bridge when the game process ends, not printed by the game) |
 
-`POST /events` body: `{t, payload, at}` plus a copy of the payload's fields at the top level, because web/api reads `friend` from the top level.
+`POST /events` body: `{t, payload, at}` plus a copy of the payload's fields at the top level, because server/api reads `friend` from the top level.
 
 ## Inbox format (bridge to game)
 
@@ -83,13 +83,9 @@ I verified these points against the v1.5.1 source (`src/pc/mods/mod_fs.cpp`, `mo
 - **Headless detection.** `headlessServer` is set in `network_init` for `--headless` servers and is sent to joiners in the join packet.
 - **Test coverage.** `tests/test_modfs_miniz.py` compiles coopdx's own miniz and reads the bridge's archive with the same calls as `mod_fs_read`. It is skipped unless `/tmp/sm64coopdx` (or `SM64COOPDX_SRC`) and a C compiler are present.
 
-These are assumed and still need the live test (spike S2):
+Checked on the live server (sgl-host): the game starts under the bridge with the inbox in place, the bridge (user `sgl`) writes it with mode 644, and the game's `hello` event reaches the bridge. Still to confirm with a client connected: a replaced inbox is picked up on the next reload and its popup appears.
 
-- the running game picks up a file replaced by rename on its next reload (no caching besides the object `mod_fs_reload` drops);
-- ownership and permissions: the bridge runs as `sgl`, the same user as the game, and writes mode 644;
-- the end-to-end popup appears.
-
-## Deploys (spec §5.3, web/api + web/worker contracts)
+## Deploys (spec §5.3)
 
 The bridge polls `GET /deploys/pending` (`{"deploys": [...], "roster": [...]}`). Each item looks like `{id, slot, kind, name, owner_sub, files: [{path, url}]}`. The file URLs are presigned, so the bridge needs no S3 credentials. A single zip `artifacts_url` is also accepted. Each deploy is handled in four steps:
 
@@ -101,5 +97,5 @@ The bridge polls `GET /deploys/pending` (`{"deploys": [...], "roster": [...]}`).
 A build that can't be staged is reported `failed`. A download outage leaves the deploy pending.
 
 - **Placeholders.** `kind: "placeholder"` restores the slot from a pristine snapshot that the bridge takes of the installed placeholders at first start (`<state>/placeholders/`), falling back to `SGL_PLACEHOLDER_MOD`.
-- **guests.lua.** The file is generated in the web/mod-login format: one `sgl_guests_register({ { slot = n, name = "...", owner = "<sub>" or nil }, ... })` call covering 8 slots. The format is isolated in `render_guests_lua()`.
+- **guests.lua.** The file is generated in the format `characters.lua` reads: one `sgl_guests_register({ { slot = n, name = "...", owner = "<sub>" or nil }, ... })` call covering 8 slots. The format is isolated in `render_guests_lua()`.
 - **Roster.** The bridge keeps its own roster in `<state>/roster.json`.
