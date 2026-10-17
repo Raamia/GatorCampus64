@@ -56,6 +56,8 @@ ROUTES = [
     ("hi albert how do i get into marston", "marston-door"),
     ("where are you", "where-am-i-albert"),
     ("who else can i talk to", "npcs"),
+    ("how do i beat the bulls", "mini-bulls"),
+    ("what are those little bulls", "mini-bulls"),
 ]
 
 STATS = {"albert_at": "in The Swamp, near where you arrive", "alberta_at": "on the Plaza of the Americas, right by the spawn",
