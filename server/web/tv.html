@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CHOOSE YOUR GATOR! · TV</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/config.js" defer></script>
+  <script src="/app.js" defer></script>
+  <style>
+    body { overflow: hidden; cursor: none; }
+    .tv { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 3vw; height: 100vh; padding: 4vh 4vw; }
+    .tv .title { font-size: 4.2vw; margin: 0 0 2vh; }
+    .stage { position: relative; border-radius: 24px; overflow: hidden; background: linear-gradient(160deg, #13308f, #050b2c); border: 4px solid var(--orange); }
+    .stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 1s; }
+    .stage img.on { opacity: 1; }
+    .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 2vh 2vw; background: linear-gradient(transparent, rgba(0, 0, 0, 0.75)); }
+    .cap .n { font-family: var(--pixel); font-size: 2.6vw; color: var(--yellow); text-shadow: 3px 3px 0 var(--orange); }
+    .cap .o { font-size: 1.6vw; color: var(--ink); }
+    .side { display: flex; flex-direction: column; gap: 2.4vh; }
+    .side .card { font-size: 1.5vw; }
+    .big { font-family: var(--pixel); font-size: 4vw; color: var(--yellow); }
+    .dotlive { display: inline-block; width: 1.4vw; height: 1.4vw; border-radius: 50%; background: var(--red); margin-right: 0.8vw; vertical-align: middle; }
+    .dotlive.on { background: var(--green); box-shadow: 0 0 20px var(--green); }
+    .players { color: var(--muted); font-size: 1.3vw; }
+    .url { font-family: var(--pixel); font-size: 1.15vw; color: var(--ink); overflow-wrap: anywhere; margin-top: 0.6vh; }
+    .empty[hidden] { display: none; }
+    .empty { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--pixel); font-size: 2.4vw; color: var(--muted); text-align: center; padding: 4vw; }
+  </style>
+</head>
+<body>
+  <div class="tv">
+    <div style="display:flex;flex-direction:column;min-height:0">
+      <h1 class="title">CHOOSE YOUR GATOR<span class="tld">.SELECT</span></h1>
+      <div class="stage" id="stage" style="flex:1"><div class="empty" id="empty">No gators yet.<br><br>Make yours at chooseyourgator.select</div></div>
+    </div>
+    <div class="side">
+      <div class="card"><div id="srv"><span class="dotlive"></span>Server…</div>
+        <div class="big" id="count">–</div><div>gators online</div>
+        <div class="players" id="players"></div></div>
+      <div class="card"><div>Play now (sm64coopdx · Direct Connect)</div><div class="url" id="addr"></div></div>
+      <div class="card"><div>Make your own gator</div><div class="url">chooseyourgator.select</div>
+        <div class="players">Upload a photo → watch the GPU build it → play it here.</div></div>
+      <div class="card"><div class="big" id="total">–</div><div>gators cooked</div><div class="players" id="queue"></div></div>
+    </div>
+  </div>
+  <script>
+  (function () {
+    let items = [], idx = 0, imgs = [];
+
+    async function status() {
+      const { api } = SGL;
+      try {
+        const s = await api("/status");
+        document.getElementById("srv").replaceChildren(
+          Object.assign(document.createElement("span"), { className: "dotlive" + (s.online ? " on" : "") }),
+          s.online ? "Server online" + (s.version ? " · v" + s.version : "") : "Server offline");
+        document.getElementById("count").textContent = s.online ? s.player_count : "0";
+        document.getElementById("players").textContent = (s.players || []).map((p) => p.name).filter(Boolean).join(" · ");
+        document.getElementById("queue").textContent = s.jobs_in_progress ? s.jobs_in_progress + " in the oven right now" : "";
+      } catch (e) { /* keep last values */ }
+    }
+
+    async function gallery() {
+      const { api, h } = SGL;
+      try {
+        const { characters } = await api("/characters?limit=100");
+        document.getElementById("total").textContent = characters.length;
+        items = characters.map((c) => ({ c, p: c.previews.find((x) => /front/i.test(x.name)) || c.previews[0] })).filter((x) => x.p);
+        const stage = document.getElementById("stage");
+        document.getElementById("empty").hidden = items.length > 0;
+        imgs.forEach((el) => el.remove());
+        imgs = items.map((it) => {
+          const wrap = h("div", { style: "position:absolute;inset:0" }, h("img", { src: it.p.url, alt: it.c.name }),
+            h("div", { class: "cap" }, h("div", { class: "n" }, it.c.name),
+              h("div", { class: "o" }, "by " + (it.c.owner || "a gator") + (it.c.deployed ? " · on the server" : ""))));
+          wrap.style.opacity = "0";
+          wrap.style.transition = "opacity 1s";
+          wrap.querySelector("img").classList.add("on");
+          stage.append(wrap);
+          return wrap;
+        });
+        idx = Math.min(idx, Math.max(0, imgs.length - 1));
+        show();
+      } catch (e) { /* retry next round */ }
+    }
+
+    function show() { imgs.forEach((el, i) => { el.style.opacity = i === idx ? "1" : "0"; }); }
+    function next() { if (imgs.length) { idx = (idx + 1) % imgs.length; show(); } }
+
+    document.addEventListener("sgl:ready", () => {
+      document.getElementById("addr").textContent = SGL.C.playAddress;
+      status(); gallery();
+      setInterval(status, 10000);
+      setInterval(gallery, 5 * 60 * 1000);   // presigned URLs last 15 min
+      setInterval(next, 6000);
+    });
+  })();
+  </script>
+</body>
+</html>
