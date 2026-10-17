@@ -1,0 +1,2713 @@
+{
+ "schema": "sgl64.stages/1",
+ "generated_by": "tools/campus/stage_planner.py",
+ "source": {
+  "campus_json": "data/uf/campus.json",
+  "raw_tiles": "data/uf/tiles/*.osm",
+  "attribution": "Map data (c) OpenStreetMap contributors, ODbL 1.0"
+ },
+ "images": {
+  "overview": "art/campus/map_overview.png",
+  "stages": "art/campus/map_stages.png",
+  "hub": "art/campus/stage_hub.png",
+  "swamp": "art/campus/stage_swamp.png",
+  "reitz_eng": "art/campus/stage_reitz_eng.png",
+  "lake_alice": "art/campus/stage_lake_alice.png"
+ },
+ "coordinate_system": {
+  "map": "meters; x = east, y = north; origin = Century Tower centroid",
+  "origin_latlon": [
+   29.648822260000003,
+   -82.34331180000001
+  ],
+  "game_units_per_meter": 100,
+  "map_to_game": "X = round((x - center_x) * 100); Z = round(-(y - center_y) * 100); Y = round(height_m * 100)",
+  "level_bounds_units": [
+   -32768,
+   32767
+  ],
+  "note": "SM64 is Y-up and +Z points south, hence the minus sign on Z. Windows are axis-aligned (north up)."
+ },
+ "engine_budget": {
+  "surface_pool_design_cap": 16384,
+  "reserve_for_objects_players": 4000,
+  "static_cap": 12384,
+  "cell_size_units": 1024,
+  "num_cells_per_axis": 64,
+  "ground_patch_m": 40.96,
+  "default_play_margin_m": 50,
+  "notes": [
+   "In the v1.5.1 source, src/engine/surface_load.c allocates surfaces and nodes from GrowingArrays that double on demand, and nothing in that file reads SURFACE_POOL_SIZE. So 16384 works as a performance/design cap, not as a crash limit. Per-cell density (surfaces per 10.24 m cell) is what find_floor/find_wall pay for each player and object every frame.",
+   "DynOS COL_VERTEX/COL_TRI args are s16: <= 32767 verts per collision; coords fit +-32767 (window <= 655 m).",
+   "Object (non-level) collision models are capped at 4095 vertices.",
+   "Environment (water) regions are capped at 20 per area.",
+   "GEO_CAMERA_FRUSTUM far plane is s16: max draw distance ~32767 units (327 m). Use fog and keep backdrop shells cheap."
+  ]
+ },
+ "height_rules": {
+  "priority": [
+   "landmark_heights (hand-set below)",
+   "OSM height / building:height",
+   "OSM building:levels x floor_height[type] + 1 m parapet (flat roofs)",
+   "default levels by type + footprint area (rule below)"
+  ],
+  "floor_height_m": {
+   "university": 4.0,
+   "college": 4.0,
+   "school": 4.0,
+   "office": 3.8,
+   "commercial": 3.8,
+   "retail": 4.5,
+   "hospital": 4.2,
+   "civic": 4.0,
+   "public": 4.0,
+   "government": 4.0,
+   "apartments": 3.1,
+   "residential": 3.0,
+   "house": 3.0,
+   "detached": 3.0,
+   "dormitory": 3.1,
+   "hotel": 3.3,
+   "industrial": 5.0,
+   "warehouse": 5.5,
+   "service": 4.0,
+   "garage": 3.0,
+   "garages": 3.0,
+   "parking": 3.2,
+   "greenhouse": 4.0,
+   "farm_auxiliary": 4.5,
+   "barn": 4.5,
+   "shed": 3.0,
+   "church": 5.0,
+   "chapel": 5.0,
+   "stadium": 6.0,
+   "grandstand": 4.0,
+   "pavilion": 4.0,
+   "yes": 3.6
+  },
+  "default_levels": {
+   "university/college/school/office/commercial/civic": "1 if area<150 m2, 2 if <1500, 3 if <5000, else 4",
+   "hospital": 5,
+   "dormitory": 4,
+   "hotel": 5,
+   "apartments": "2 if area<800 else 3",
+   "residential": "1 if area<150 else 2",
+   "parking (structure)": 4,
+   "house/detached/industrial/warehouse/service/garage/barn/greenhouse/shed/retail/grandstand": 1,
+   "yes (unknown)": "1 if area<400, 2 if <2000, else 3; any building <30 m2 -> 3.0 m",
+   "roof/pavilion/carport/shelter": "canopy slab at 4.0 m, no walls",
+   "stadium (other)": "20 m",
+   "church/chapel": "9 m + steep roof"
+  },
+  "parapet_m": 1.0,
+  "roof": "hip for house/detached/residential/church/chapel/barn/shed with <= 8 verts or roof:shape hipped/gabled; otherwise flat. Hip ridge = min(0.25 x short side, 4 m). Collision may use flat roofs everywhere.",
+  "coverage": {
+   "default": 1645,
+   "osm_levels": 559,
+   "landmark": 16,
+   "osm_height": 5
+  }
+ },
+ "landmark_heights": [
+  {
+   "osm_id": "w150860043",
+   "name": "Century Tower",
+   "height_m": 47.9,
+   "floors": null,
+   "basis": "published height 157 ft",
+   "source": "Century Tower (University of Florida) - Wikipedia",
+   "url": "https://en.wikipedia.org/wiki/Century_Tower_(University_of_Florida)",
+   "confidence": "high"
+  },
+  {
+   "osm_id": "r12122775/196848215",
+   "name": "Library West",
+   "height_m": 26.0,
+   "floors": 6,
+   "basis": "6 floors x 4.0 m + 2 m parapet/roof (OSM says 5 levels)",
+   "source": "R-BARC: University of Florida Library West",
+   "url": "https://r-barc.com/work/university-of-florida-library-west",
+   "confidence": "medium"
+  },
+  {
+   "osm_id": "w150860048",
+   "name": "Marston Science Library",
+   "height_m": 22.5,
+   "floors": 5,
+   "basis": "5 floors x 4.2 m + 1.5 m",
+   "source": "Wikipedia: UF Marston Science Library; UF ULC minutes 2026-02-26",
+   "url": "https://en.wikipedia.org/wiki/University_of_Florida_Marston_Science_Library",
+   "confidence": "medium"
+  },
+  {
+   "osm_id": "w150684197",
+   "name": "Turlington Hall",
+   "height_m": 20.0,
+   "floors": 5,
+   "basis": "OSM building:levels=5 x 3.8 m + 1 m; floor count not confirmed by a public source",
+   "source": "OpenStreetMap way 150684197",
+   "url": "https://www.openstreetmap.org/way/150684197",
+   "confidence": "low"
+  },
+  {
+   "osm_id": "w154223635",
+   "name": "University Auditorium",
+   "height_m": 18.0,
+   "floors": null,
+   "basis": "Collegiate Gothic hall; ridge estimate from OSM levels=3 + pitched roof",
+   "source": "Wikipedia: University Auditorium (Gainesville, Florida)",
+   "url": "https://en.wikipedia.org/wiki/University_Auditorium_(Gainesville,_Florida)",
+   "confidence": "low"
+  },
+  {
+   "osm_id": "w863211313",
+   "name": "J. Wayne Reitz Union",
+   "height_m": 27.0,
+   "floors": 6,
+   "basis": "hotel occupies 5th + 6th floors -> 6 floors x 4.2 m + 2 m; OSM says 8 levels",
+   "source": "UF conference accommodations page (Reitz Union Hotel, 5th and 6th floors)",
+   "url": "https://conference.ifas.ufl.edu/waterinstitute/past/waterinstitute20/accommodations.html",
+   "confidence": "medium"
+  },
+  {
+   "osm_id": "w445808709",
+   "name": "Weil Hall",
+   "height_m": 24.0,
+   "floors": 6,
+   "basis": "6 levels x 3.8 m + 1 m",
+   "source": "UF Herbert Wertheim College of Engineering building directory: Joseph Weil Hall",
+   "url": "https://www.eng.ufl.edu/facilities/hwcoe-buildings-information/hwcoe-building-directory/name/joseph-weil-hall",
+   "confidence": "medium"
+  },
+  {
+   "osm_id": "w1094502850",
+   "name": "Malachowsky Hall",
+   "height_m": 33.0,
+   "floors": 7,
+   "basis": "7 stories x 4.5 m (lab floors) + 1.5 m; 263,440 sq ft",
+   "source": "UF News 2020-12: UF to begin construction on Malachowsky Hall",
+   "url": "https://news.ufl.edu/2020/12/malachowsky-hall-/",
+   "confidence": "medium"
+  },
+  {
+   "osm_id": "w154223625",
+   "name": "Smathers Library",
+   "height_m": 18.0,
+   "floors": 4,
+   "basis": "OSM levels=4 x 3.8 m + pitched roof",
+   "source": "OpenStreetMap way 154223625",
+   "url": "https://www.openstreetmap.org/way/154223625",
+   "confidence": "low"
+  },
+  {
+   "osm_id": "r1640985/45719890",
+   "name": "Ben Hill Griffin Stadium",
+   "height_m": 24.0,
+   "floors": null,
+   "basis": "main east/west stands top at 24 m above street grade (OSM building:part); field at -10 m; skybox tower to 66 m",
+   "source": "OpenStreetMap relation 1640985 + building:part ways; Wikipedia (~30 rows below grade)",
+   "url": "https://en.wikipedia.org/wiki/Ben_Hill_Griffin_Stadium",
+   "confidence": "medium"
+  },
+  {
+   "osm_id": "w425690658",
+   "name": "Baughman Center",
+   "height_m": 12.0,
+   "floors": 1,
+   "basis": "estimate: tall gable 'cathedral' roof pavilion, 1,500 sq ft, built 2000; no published height",
+   "source": "Wikipedia: Baughman Center",
+   "url": "https://en.wikipedia.org/wiki/Baughman_Center",
+   "confidence": "low"
+  },
+  {
+   "osm_id": "w45719889",
+   "name": "Exactech Arena (O'Connell Center)",
+   "height_m": 28.0,
+   "floors": null,
+   "basis": "estimate for the dome crown; no public height found",
+   "source": "estimate",
+   "url": "",
+   "confidence": "low"
+  },
+  {
+   "osm_id": "w45719891",
+   "name": "Florida Gym",
+   "height_m": 14.0,
+   "floors": null,
+   "basis": "estimate (1949 gym hall); no public height found",
+   "source": "estimate",
+   "url": "",
+   "confidence": "low"
+  },
+  {
+   "osm_id": "w196848221",
+   "name": "Bat House",
+   "height_m": 10.7,
+   "floors": null,
+   "basis": "original UF bat house ~35 ft tall x 16 ft across (OSM: 9 m)",
+   "source": "UF bat houses page",
+   "url": "https://bats.ufl.edu/?p=2291",
+   "confidence": "medium"
+  },
+  {
+   "osm_id": "w424512419",
+   "name": "Bat House",
+   "height_m": 9.0,
+   "floors": null,
+   "basis": "OSM height=9",
+   "source": "OpenStreetMap",
+   "url": "https://www.openstreetmap.org/way/424512419",
+   "confidence": "low"
+  },
+  {
+   "osm_id": "w866087250",
+   "name": "Bat House",
+   "height_m": 9.0,
+   "floors": null,
+   "basis": "OSM height=9",
+   "source": "OpenStreetMap",
+   "url": "https://www.openstreetmap.org/way/866087250",
+   "confidence": "low"
+  }
+ ],
+ "simplification_rules": {
+  "skip": "area < 15 m2, or building in construction/no/corridor/ruins/bridge -> not built",
+  "tiny": "15-60 m2 -> minimum-area bounding rectangle (4 verts): 8 wall + 2 roof tris",
+  "small": "60-300 m2 -> Douglas-Peucker 1.0 m, max 8 verts",
+  "normal": "300-3000 m2 -> Douglas-Peucker 0.75 m, max 16 verts",
+  "large": "> 3000 m2 -> Douglas-Peucker 0.75 m, max 24 verts (tolerance x1.4 until it fits); fallback to min-area rectangle if area drops > 40%",
+  "canopy": "roof/pavilion/shelter -> roof slab only (max 8 verts), posts visual-only",
+  "building_parts": "OSM building:part ways are used only to guide hand-modeled landmarks (the stadium tiers)",
+  "shared_walls": "adjacent buildings that share edges: cull the hidden wall of the lower building (both are in OSM as separate ways)",
+  "backdrop": "buildings whose centroid lies in the outer backdrop band (stages[].play_margin_m): visual-only shells (<= 8 verts, flat), no collision",
+  "trees": "mapped trees are visual low-poly (12 tris); woods are scattered billboards (1 per 80 m2); only gameplay trees become climbable tree objects (0 static tris, use object slots)",
+  "paths_roads": "painted into the ground texture / visual ribbons only; no collision. Curbs are not modeled.",
+  "steps": "each simplified steps segment -> ramp + 2 cheek walls (4 tris)",
+  "barriers": "walls/fences -> double-sided thin wall, 4 tris per simplified segment",
+  "ground": "40.96 m collision patches (4x4 cells, offset half a cell); 10.24 m visual grid for vertex color",
+  "landmarks": "hand-modeled in Blender with the per-landmark collision budgets in stages[].landmarks"
+ },
+ "features": {
+  "ben_hill_griffin_stadium": {
+   "osm_relation": 1640985,
+   "name": "Ben Hill Griffin Stadium (Steve Spurrier-Florida Field)",
+   "capacity": 88548,
+   "field_elevation_m": -10.0,
+   "rows_below_grade": "approximately 30 rows of seating are below the surrounding grade (Wikipedia)",
+   "osm_part_heights_m": {
+    "east/west main stands (w859154006, w859154007)": [
+     0,
+     24
+    ],
+    "east upper deck (w858341225)": [
+     24,
+     44
+    ],
+    "Sunshine Seats, north upper deck (w857391718)": [
+     24,
+     46
+    ],
+    "Touchdown Terrace (w858341226)": [
+     16,
+     24
+    ],
+    "Bull Gator Deck (w858341222)": [
+     44,
+     52
+    ],
+    "West Skybox Tower (w857391715, 7 levels)": [
+     52,
+     66
+    ],
+    "south ramp (w858341236)": [
+     -10,
+     12
+    ]
+   },
+   "sources": [
+    [
+     "Wikipedia: Ben Hill Griffin Stadium",
+     "https://en.wikipedia.org/wiki/Ben_Hill_Griffin_Stadium"
+    ],
+    [
+     "D.H. Griffin: press box tower renovation (7-story structure)",
+     "https://www.dhgriffin.com/projects/demolition/university-florida-press-box-tower-renovation.aspx"
+    ],
+    [
+     "OpenStreetMap building:part ways around relation 1640985 (mapper heights, unverified)",
+     "https://www.openstreetmap.org/relation/1640985"
+    ]
+   ],
+   "gameplay_simplification": "3 tiers: lower bowl 0..-10 m (field) to +8 m in 8 terraces (1.0 m rise, 2.2 m tread), upper decks +24..+44 m in 6 terraces, skybox tower block to +66 m. Real rows (~0.45 m rise) are too fine for Mario (single jump ~1.2 m).",
+   "outer_ring_m": [
+    [
+     -612.1,
+     212.2
+    ],
+    [
+     -629.1,
+     156.7
+    ],
+    [
+     -641.9,
+     153.3
+    ],
+    [
+     -647.2,
+     137.1
+    ],
+    [
+     -632.9,
+     135.7
+    ],
+    [
+     -633.4,
+     94.8
+    ],
+    [
+     -612.9,
+     36.7
+    ],
+    [
+     -591.3,
+     45.0
+    ],
+    [
+     -607.3,
+     28.7
+    ],
+    [
+     -592.8,
+     1.3
+    ],
+    [
+     -571.7,
+     19.8
+    ],
+    [
+     -568.3,
+     -4.7
+    ],
+    [
+     -461.1,
+     -5.2
+    ],
+    [
+     -462.4,
+     14.8
+    ],
+    [
+     -441.7,
+     35.0
+    ],
+    [
+     -422.6,
+     80.3
+    ],
+    [
+     -422.6,
+     166.6
+    ],
+    [
+     -435.4,
+     198.4
+    ],
+    [
+     -450.9,
+     206.3
+    ],
+    [
+     -433.3,
+     239.9
+    ],
+    [
+     -446.1,
+     253.8
+    ],
+    [
+     -459.0,
+     224.0
+    ],
+    [
+     -469.8,
+     231.4
+    ],
+    [
+     -462.1,
+     251.1
+    ],
+    [
+     -477.7,
+     259.7
+    ],
+    [
+     -490.1,
+     249.4
+    ],
+    [
+     -486.7,
+     231.5
+    ],
+    [
+     -503.4,
+     233.9
+    ],
+    [
+     -499.9,
+     268.4
+    ],
+    [
+     -515.8,
+     275.0
+    ],
+    [
+     -527.2,
+     268.4
+    ],
+    [
+     -523.9,
+     234.0
+    ],
+    [
+     -540.7,
+     231.8
+    ],
+    [
+     -538.1,
+     252.1
+    ],
+    [
+     -554.5,
+     260.1
+    ],
+    [
+     -566.3,
+     247.6
+    ],
+    [
+     -558.2,
+     231.8
+    ],
+    [
+     -572.7,
+     220.4
+    ],
+    [
+     -568.1,
+     227.5
+    ],
+    [
+     -581.0,
+     254.6
+    ],
+    [
+     -594.7,
+     240.9
+    ],
+    [
+     -582.7,
+     228.9
+    ],
+    [
+     -585.7,
+     201.3
+    ]
+   ],
+   "bowl_opening_ring_m": [
+    [
+     -548.0,
+     63.4
+    ],
+    [
+     -547.7,
+     180.3
+    ],
+    [
+     -542.0,
+     185.2
+    ],
+    [
+     -485.9,
+     185.0
+    ],
+    [
+     -480.2,
+     180.0
+    ],
+    [
+     -481.2,
+     62.7
+    ],
+    [
+     -482.8,
+     60.9
+    ],
+    [
+     -473.6,
+     51.3
+    ],
+    [
+     -476.6,
+     48.3
+    ],
+    [
+     -486.1,
+     57.6
+    ],
+    [
+     -487.6,
+     56.4
+    ],
+    [
+     -512.8,
+     56.6
+    ],
+    [
+     -512.9,
+     49.7
+    ],
+    [
+     -516.1,
+     49.7
+    ],
+    [
+     -516.1,
+     56.6
+    ],
+    [
+     -541.9,
+     56.6
+    ],
+    [
+     -543.4,
+     58.3
+    ],
+    [
+     -548.5,
+     53.5
+    ],
+    [
+     -550.6,
+     55.8
+    ],
+    [
+     -545.6,
+     60.5
+    ]
+   ],
+   "field_ring_m": [
+    [
+     -542.0,
+     185.2
+    ],
+    [
+     -547.7,
+     180.3
+    ],
+    [
+     -548.1,
+     66.8
+    ],
+    [
+     -545.4,
+     66.8
+    ],
+    [
+     -540.1,
+     62.2
+    ],
+    [
+     -540.1,
+     60.9
+    ],
+    [
+     -516.1,
+     60.9
+    ],
+    [
+     -512.6,
+     60.9
+    ],
+    [
+     -489.6,
+     60.8
+    ],
+    [
+     -489.6,
+     62.0
+    ],
+    [
+     -483.7,
+     66.7
+    ],
+    [
+     -481.1,
+     66.6
+    ],
+    [
+     -480.2,
+     180.0
+    ],
+    [
+     -485.9,
+     185.0
+    ]
+   ],
+   "field_center_m": [
+    -514.3,
+    123.4
+   ],
+   "outer_bbox_m": [
+    -647.2,
+    -5.2,
+    -422.6,
+    275.0
+   ],
+   "parts": [
+    {
+     "osm_id": "w857073724",
+     "name": null,
+     "min_height_m": 48.0,
+     "height_m": 58.0,
+     "area_m2": 88
+    },
+    {
+     "osm_id": "w857073737",
+     "name": null,
+     "min_height_m": 46.0,
+     "height_m": 56.0,
+     "area_m2": 129
+    },
+    {
+     "osm_id": "w857391715",
+     "name": "West Skybox Tower",
+     "min_height_m": 52.0,
+     "height_m": 66.0,
+     "area_m2": 5484
+    },
+    {
+     "osm_id": "w857391718",
+     "name": "Sunshine Seats",
+     "min_height_m": 24.0,
+     "height_m": 46.0,
+     "area_m2": 3568
+    },
+    {
+     "osm_id": "w858341222",
+     "name": "Bull Gator Deck",
+     "min_height_m": 44.0,
+     "height_m": 52.0,
+     "area_m2": 1165
+    },
+    {
+     "osm_id": "w858341223",
+     "name": null,
+     "min_height_m": 16.0,
+     "height_m": 24.0,
+     "area_m2": 1404
+    },
+    {
+     "osm_id": "w858341224",
+     "name": null,
+     "min_height_m": 0.0,
+     "height_m": 16.0,
+     "area_m2": 1497
+    },
+    {
+     "osm_id": "w858341225",
+     "name": null,
+     "min_height_m": 24.0,
+     "height_m": 44.0,
+     "area_m2": 10922
+    },
+    {
+     "osm_id": "w858341226",
+     "name": "Touchdown Terrace",
+     "min_height_m": 16.0,
+     "height_m": 24.0,
+     "area_m2": 1368
+    },
+    {
+     "osm_id": "w858341227",
+     "name": null,
+     "min_height_m": 0.0,
+     "height_m": 16.0,
+     "area_m2": 2644
+    },
+    {
+     "osm_id": "w858341228",
+     "name": "Gator Sportshop (North End Zone)",
+     "min_height_m": 0.0,
+     "height_m": 5.0,
+     "area_m2": 553
+    },
+    {
+     "osm_id": "w858341232",
+     "name": null,
+     "min_height_m": 0.0,
+     "height_m": 15.4,
+     "area_m2": 29
+    },
+    {
+     "osm_id": "w858341236",
+     "name": "South Ramp",
+     "min_height_m": -10.0,
+     "height_m": 12.0,
+     "area_m2": 890
+    },
+    {
+     "osm_id": "w858341237",
+     "name": null,
+     "min_height_m": 12.0,
+     "height_m": 16.0,
+     "area_m2": 693
+    },
+    {
+     "osm_id": "w858371792",
+     "name": null,
+     "min_height_m": 0.0,
+     "height_m": 15.4,
+     "area_m2": 31
+    },
+    {
+     "osm_id": "w859154006",
+     "name": null,
+     "min_height_m": 0.0,
+     "height_m": 24.0,
+     "area_m2": 3648
+    },
+    {
+     "osm_id": "w859154007",
+     "name": null,
+     "min_height_m": 0.0,
+     "height_m": 24.0,
+     "area_m2": 3598
+    },
+    {
+     "osm_id": "w858371793",
+     "name": null,
+     "min_height_m": 0.0,
+     "height_m": 15.4,
+     "area_m2": 18
+    }
+   ]
+  },
+  "lake_alice": {
+   "osm_relation": 1630473,
+   "surface_elevation_m": 20.0,
+   "open_water_area_osm_ha": 8.59,
+   "uf_figure": "UF kiosk: lake ~82 acres of open water + marsh; conservation area ~129.5 acres",
+   "sources": [
+    [
+     "Wikipedia: Lake Alice (Gainesville, Florida)",
+     "https://en.wikipedia.org/wiki/Lake_Alice_(Gainesville,_Florida)"
+    ],
+    [
+     "UF Facilities Services Lake Alice kiosk",
+     "https://www.facilitiesservices.ufl.edu/wp-content/uploads/2022/10/Lake-Alice-kiosk_v5.pdf"
+    ],
+    [
+     "UF bat houses",
+     "https://bats.ufl.edu/"
+    ]
+   ],
+   "outer_ring_m": [
+    [
+     -1869.7,
+     -616.3
+    ],
+    [
+     -1893.9,
+     -608.7
+    ],
+    [
+     -1922.3,
+     -616.4
+    ],
+    [
+     -1919.4,
+     -635.5
+    ],
+    [
+     -1940.9,
+     -648.8
+    ],
+    [
+     -1936.1,
+     -658.9
+    ],
+    [
+     -1947.3,
+     -694.5
+    ],
+    [
+     -1979.0,
+     -711.9
+    ],
+    [
+     -1980.4,
+     -725.1
+    ],
+    [
+     -1970.9,
+     -729.2
+    ],
+    [
+     -1968.2,
+     -719.4
+    ],
+    [
+     -1946.8,
+     -710.9
+    ],
+    [
+     -1928.6,
+     -728.3
+    ],
+    [
+     -1877.4,
+     -730.3
+    ],
+    [
+     -1865.0,
+     -743.3
+    ],
+    [
+     -1871.4,
+     -760.9
+    ],
+    [
+     -1869.1,
+     -839.0
+    ],
+    [
+     -1861.5,
+     -847.6
+    ],
+    [
+     -1838.7,
+     -829.3
+    ],
+    [
+     -1812.1,
+     -827.2
+    ],
+    [
+     -1779.2,
+     -811.2
+    ],
+    [
+     -1765.4,
+     -823.5
+    ],
+    [
+     -1772.3,
+     -868.1
+    ],
+    [
+     -1764.3,
+     -873.0
+    ],
+    [
+     -1716.9,
+     -869.9
+    ],
+    [
+     -1687.6,
+     -858.3
+    ],
+    [
+     -1688.4,
+     -819.2
+    ],
+    [
+     -1720.4,
+     -817.1
+    ],
+    [
+     -1725.3,
+     -806.5
+    ],
+    [
+     -1720.5,
+     -772.0
+    ],
+    [
+     -1746.8,
+     -751.1
+    ],
+    [
+     -1742.0,
+     -721.7
+    ],
+    [
+     -1694.8,
+     -698.9
+    ],
+    [
+     -1646.8,
+     -709.4
+    ],
+    [
+     -1635.5,
+     -700.9
+    ],
+    [
+     -1600.3,
+     -714.1
+    ],
+    [
+     -1559.8,
+     -711.2
+    ],
+    [
+     -1545.6,
+     -679.3
+    ],
+    [
+     -1521.1,
+     -674.7
+    ],
+    [
+     -1544.6,
+     -632.2
+    ],
+    [
+     -1540.6,
+     -608.4
+    ],
+    [
+     -1556.4,
+     -571.0
+    ],
+    [
+     -1571.0,
+     -561.1
+    ],
+    [
+     -1598.7,
+     -566.0
+    ],
+    [
+     -1607.4,
+     -555.0
+    ],
+    [
+     -1593.6,
+     -540.7
+    ],
+    [
+     -1580.3,
+     -498.5
+    ],
+    [
+     -1585.9,
+     -464.2
+    ],
+    [
+     -1597.1,
+     -471.4
+    ],
+    [
+     -1626.3,
+     -460.2
+    ],
+    [
+     -1630.5,
+     -449.9
+    ],
+    [
+     -1650.8,
+     -446.9
+    ],
+    [
+     -1669.8,
+     -459.1
+    ],
+    [
+     -1685.3,
+     -500.6
+    ],
+    [
+     -1708.2,
+     -515.0
+    ],
+    [
+     -1752.7,
+     -511.2
+    ],
+    [
+     -1753.3,
+     -520.7
+    ],
+    [
+     -1804.0,
+     -570.5
+    ],
+    [
+     -1827.9,
+     -573.7
+    ],
+    [
+     -1834.3,
+     -610.4
+    ],
+    [
+     -1845.7,
+     -594.5
+    ],
+    [
+     -1848.8,
+     -621.8
+    ],
+    [
+     -1854.9,
+     -614.2
+    ]
+   ],
+   "islands_m": [
+    [
+     [
+      -1803.5,
+      -589.3
+     ],
+     [
+      -1815.9,
+      -603.1
+     ],
+     [
+      -1822.0,
+      -604.4
+     ],
+     [
+      -1828.6,
+      -611.0
+     ],
+     [
+      -1827.5,
+      -617.1
+     ],
+     [
+      -1815.1,
+      -623.4
+     ],
+     [
+      -1803.2,
+      -614.4
+     ],
+     [
+      -1790.3,
+      -611.9
+     ],
+     [
+      -1785.8,
+      -594.0
+     ],
+     [
+      -1795.6,
+      -589.5
+     ]
+    ],
+    [
+     [
+      -1644.0,
+      -511.1
+     ],
+     [
+      -1627.8,
+      -505.4
+     ],
+     [
+      -1634.4,
+      -491.9
+     ],
+     [
+      -1645.4,
+      -494.5
+     ],
+     [
+      -1656.3,
+      -486.1
+     ],
+     [
+      -1671.2,
+      -482.6
+     ],
+     [
+      -1677.8,
+      -494.5
+     ],
+     [
+      -1670.8,
+      -503.2
+     ],
+     [
+      -1658.1,
+      -503.2
+     ]
+    ],
+    [
+     [
+      -1719.5,
+      -519.8
+     ],
+     [
+      -1732.0,
+      -529.3
+     ],
+     [
+      -1724.7,
+      -534.9
+     ],
+     [
+      -1714.7,
+      -536.1
+     ],
+     [
+      -1714.0,
+      -527.0
+     ]
+    ]
+   ],
+   "bbox_m": [
+    -1981.4,
+    -873.0,
+    -1521.1,
+    -446.9
+   ],
+   "water_box_suggestion": "one env region over bbox_m at water level y=0; lake bed -2.5 m, banks +0.5 m"
+  },
+  "plaza_of_the_americas": {
+   "osm_id": "w264182367",
+   "ring_m": [
+    [
+     -17.0,
+     248.9
+    ],
+    [
+     19.1,
+     248.7
+    ],
+    [
+     19.0,
+     241.1
+    ],
+    [
+     58.4,
+     241.2
+    ],
+    [
+     58.4,
+     242.1
+    ],
+    [
+     109.1,
+     242.1
+    ],
+    [
+     109.1,
+     241.0
+    ],
+    [
+     126.9,
+     241.0
+    ],
+    [
+     126.9,
+     239.2
+    ],
+    [
+     129.6,
+     239.2
+    ],
+    [
+     129.4,
+     192.1
+    ],
+    [
+     132.7,
+     192.1
+    ],
+    [
+     132.7,
+     188.9
+    ],
+    [
+     139.0,
+     188.9
+    ],
+    [
+     139.1,
+     162.2
+    ],
+    [
+     97.8,
+     162.3
+    ],
+    [
+     97.2,
+     114.8
+    ],
+    [
+     -16.6,
+     114.8
+    ]
+   ],
+   "bbox_m": [
+    -17.0,
+    114.8,
+    139.1,
+    248.9
+   ],
+   "area_m2": 17536
+  },
+  "bat_houses": [
+   {
+    "osm_id": "w196848221",
+    "center_m": [
+     -1882.6,
+     -510.6
+    ],
+    "area_m2": 47.8,
+    "height_m": 10.7
+   },
+   {
+    "osm_id": "w424512419",
+    "center_m": [
+     -1895.8,
+     -511.5
+    ],
+    "area_m2": 41.4,
+    "height_m": 9.0
+   },
+   {
+    "osm_id": "w866087250",
+    "center_m": [
+     -1908.9,
+     -502.7
+    ],
+    "area_m2": 33.3,
+    "height_m": 9.0
+   }
+  ],
+  "turlington_rock": {
+   "osm_id": "n4741925737",
+   "name": "The Potato",
+   "center_m": [
+    -44.31,
+    26.92
+   ],
+   "height_m": 3.0,
+   "notes": "OSM historic=stone, height=3; 'Turlington Rock, 1984' marker (HMdb)",
+   "source": "https://www.hmdb.org/m.asp?m=151249"
+  }
+ },
+ "stages": [
+  {
+   "key": "hub",
+   "name": "Hub - Plaza of the Americas + Century Tower",
+   "suggested_hub_entrance": "Game start; Century Tower is the 'castle'. Building doors act as paintings.",
+   "center_m": [
+    -45,
+    98
+   ],
+   "size_m": 580,
+   "bounds_m": {
+    "xmin": -335.0,
+    "ymin": -192.0,
+    "xmax": 245.0,
+    "ymax": 388.0
+   },
+   "play_margin_m": 50,
+   "play_bounds_m": {
+    "xmin": -285.0,
+    "ymin": -142.0,
+    "xmax": 195.0,
+    "ymax": 338.0
+   },
+   "game_bounds_units": {
+    "x": [
+     -29000,
+     29000
+    ],
+    "z": [
+     -29000,
+     29000
+    ]
+   },
+   "map_color": "#2a78d6",
+   "landmarks": [
+    {
+     "name": "Century Tower",
+     "osm_id": "w150860043",
+     "treatment": "hero",
+     "center_m": [
+      -0.9,
+      -0.9
+     ],
+     "game_xz": [
+      4409,
+      9894
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 191.1,
+     "collision_tris": 450,
+     "visual_tris": 1600,
+     "notes": "Climbable exterior (buttress ledges, belfry arches); door -> Century Tower interior stage; finale arena sits on top (47.9 m = 4790 units).",
+     "footprint_bbox_m": [
+      -5.5,
+      -5.7,
+      3.7,
+      3.8
+     ],
+     "footprint_area_m2": 86.8,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 136.3,
+     "height_m": 47.9,
+     "height_source": "landmark"
+    },
+    {
+     "name": "University Auditorium",
+     "osm_id": "w154223635",
+     "treatment": "detailed",
+     "center_m": [
+      38.0,
+      16.3
+     ],
+     "game_xz": [
+      8303,
+      8169
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 207.0,
+     "collision_tris": 300,
+     "visual_tris": 1200,
+     "notes": "Collegiate Gothic, pitched roof + front arcade.",
+     "footprint_bbox_m": [
+      23.1,
+      -18.3,
+      52.8,
+      62.9
+     ],
+     "footprint_area_m2": 1739.5,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 123.7,
+     "height_m": 18.0,
+     "height_source": "landmark"
+    },
+    {
+     "name": "Library West",
+     "osm_id": "r12122775/196848215",
+     "treatment": "detailed",
+     "center_m": [
+      38.9,
+      285.6
+     ],
+     "game_xz": [
+      8390,
+      -18757
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 102.4,
+     "collision_tris": 250,
+     "visual_tris": 900,
+     "notes": "Door -> Library West interior stage.",
+     "footprint_bbox_m": [
+      -1.3,
+      254.1,
+      78.8,
+      320.1
+     ],
+     "footprint_area_m2": 4363.6,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 17.9,
+     "height_m": 26.0,
+     "height_source": "landmark"
+    },
+    {
+     "name": "Smathers Library",
+     "osm_id": "w154223625",
+     "treatment": "detailed",
+     "center_m": [
+      145.4,
+      232.8
+     ],
+     "game_xz": [
+      19038,
+      -13475
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 99.6,
+     "collision_tris": 300,
+     "visual_tris": 1000,
+     "notes": "Library East; faces the Plaza.",
+     "footprint_bbox_m": [
+      112.8,
+      188.9,
+      173.3,
+      266.7
+     ],
+     "footprint_area_m2": 2900.7,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 21.7,
+     "height_m": 18.0,
+     "height_source": "landmark"
+    },
+    {
+     "name": "Marston Science Library",
+     "osm_id": "w150860048",
+     "treatment": "detailed",
+     "center_m": [
+      -59.6,
+      -98.9
+     ],
+     "game_xz": [
+      -1459,
+      19688
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 93.1,
+     "collision_tris": 250,
+     "visual_tris": 900,
+     "notes": "Door -> Marston interior stage.",
+     "footprint_bbox_m": [
+      -90.8,
+      -125.0,
+      -33.5,
+      -67.4
+     ],
+     "footprint_area_m2": 2588.9,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 17.0,
+     "height_m": 22.5,
+     "height_source": "landmark"
+    },
+    {
+     "name": "Turlington Hall",
+     "osm_id": "w150684197",
+     "treatment": "detailed",
+     "center_m": [
+      -75.9,
+      40.7
+     ],
+     "game_xz": [
+      -3089,
+      5733
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 232.7,
+     "collision_tris": 300,
+     "visual_tris": 1000,
+     "notes": "Plaza + courtyard; Turlington rock in front.",
+     "footprint_bbox_m": [
+      -125.2,
+      -16.4,
+      -30.4,
+      88.3
+     ],
+     "footprint_area_m2": 5277.5,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 125.7,
+     "height_m": 20.0,
+     "height_source": "landmark"
+    },
+    {
+     "name": "The Hub",
+     "osm_id": "w150926632",
+     "treatment": "detailed",
+     "center_m": [
+      -218.7,
+      -72.4
+     ],
+     "game_xz": [
+      -17365,
+      17036
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 116.3,
+     "collision_tris": 200,
+     "visual_tris": 700,
+     "notes": "Door -> Reitz + Engineering (it faces south-west, toward Reitz).",
+     "footprint_bbox_m": [
+      -264.8,
+      -109.5,
+      -162.2,
+      -39.0
+     ],
+     "footprint_area_m2": 4199.9,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 20.2,
+     "height_m": 9.0,
+     "height_source": "osm_levels"
+    },
+    {
+     "name": "Newell Hall",
+     "osm_id": "w150926630",
+     "treatment": "detailed",
+     "center_m": [
+      -181.0,
+      29.1
+     ],
+     "game_xz": [
+      -13599,
+      6891
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 154.0,
+     "collision_tris": 150,
+     "visual_tris": 600,
+     "notes": "Door -> The Swamp (west side, toward the stadium).",
+     "footprint_bbox_m": [
+      -206.4,
+      12.1,
+      -154.7,
+      40.2
+     ],
+     "footprint_area_m2": 972.6,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 78.6,
+     "height_m": 17.0,
+     "height_source": "osm_levels"
+    },
+    {
+     "name": "Plaza of the Americas",
+     "osm_id": "w264182367",
+     "treatment": "terrain",
+     "center_m": [
+      51.8,
+      182.6
+     ],
+     "game_xz": [
+      9676,
+      -8460
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 193.2,
+     "collision_tris": 120,
+     "visual_tris": 900,
+     "notes": "Lawn + diagonal walks; live oaks as climbable tree objects (0 static tris).",
+     "footprint_bbox_m": [
+      -17.0,
+      114.8,
+      139.1,
+      248.9
+     ],
+     "footprint_area_m2": 17536.1,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 55.9
+    },
+    {
+     "name": "Turlington rock ('The Potato')",
+     "osm_id": "n4741925737",
+     "treatment": "prop",
+     "center_m": [
+      -44.3,
+      26.9
+     ],
+     "game_xz": [
+      69,
+      7108
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 218.9,
+     "collision_tris": 40,
+     "visual_tris": 200,
+     "notes": "3 m boulder; 1984 marker; hide-and-seek spot."
+    }
+   ],
+   "stats": {
+    "buildings": 62,
+    "buildings_in_play_zone": 49,
+    "backdrop_buildings": 13,
+    "building_classes": {
+     "large": 6,
+     "normal": 37,
+     "small": 9,
+     "tiny": 3,
+     "canopy": 6,
+     "skip": 1
+    },
+    "height_sources": {
+     "osm_levels": 40,
+     "landmark": 6,
+     "default": 16
+    },
+    "footprint_area_m2": 83716,
+    "footprint_area_share": 0.249,
+    "footprint_vertices_raw": 1471,
+    "footprint_vertices_simplified_generic": 567,
+    "shared_wall_edges": 13,
+    "raw_prism_tris_flat_roofs": 4289,
+    "segments": {
+     "path": 2237,
+     "path_simplified": 1203,
+     "road": 406,
+     "road_simplified": 172,
+     "steps": 64,
+     "steps_simplified": 54,
+     "barrier": 10,
+     "barrier_simplified": 10
+    },
+    "length_m": {
+     "path": 23051,
+     "road": 5328,
+     "steps": 273,
+     "barrier": 77
+    },
+    "trees_osm": 283,
+    "wood_area_m2": 762,
+    "wood_scatter_trees_est": 9,
+    "water_area_m2": 2557,
+    "naive_collision_tris": 17939
+   },
+   "collision_budget": {
+    "items": {
+     "generic_buildings": 1237,
+     "landmarks_hand_modeled": 2360,
+     "steps_as_ramps": 144,
+     "barriers_walls_fences": 20,
+     "pond_basins": 71,
+     "ground_grid": 450,
+     "boundary_walls": 96,
+     "props_allowance": 300
+    },
+    "static_total": 4678,
+    "reserve_objects_players": 4000,
+    "total": 8678,
+    "cap": 16384,
+    "headroom": 7706,
+    "static_cap": 12384
+   },
+   "visual_estimate": {
+    "items": {
+     "generic_buildings": 1868,
+     "backdrop_shells": 214,
+     "landmarks_hand_modeled": 9000,
+     "path_ribbons": 2858,
+     "trees_osm_lowpoly": 3396,
+     "trees_wood_scatter_billboards": 36,
+     "pond_basins": 92,
+     "ground_visual_grid_10m": 6498
+    },
+    "total": 23962
+   },
+   "collision_cells": {
+    "nodes_est": 23651,
+    "occupied_cells": 3721,
+    "max_surfaces_per_cell": 184,
+    "p95_surfaces_per_cell": 17,
+    "mean_surfaces_per_cell": 6.4
+   },
+   "overlaps": [
+    {
+     "stage": "swamp",
+     "area_m2": 29040,
+     "landmarks_of_other_stage_inside": []
+    },
+    {
+     "stage": "reitz_eng",
+     "area_m2": 32835,
+     "landmarks_of_other_stage_inside": [
+      "Reitz Union North Lawn"
+     ]
+    }
+   ]
+  },
+  {
+   "key": "swamp",
+   "name": "The Swamp - Ben Hill Griffin Stadium district",
+   "suggested_hub_entrance": "Hub: Newell Hall door (west side, toward the stadium).",
+   "center_m": [
+    -580,
+    160
+   ],
+   "size_m": 600,
+   "bounds_m": {
+    "xmin": -880.0,
+    "ymin": -140.0,
+    "xmax": -280.0,
+    "ymax": 460.0
+   },
+   "play_margin_m": 40,
+   "play_bounds_m": {
+    "xmin": -840.0,
+    "ymin": -100.0,
+    "xmax": -320.0,
+    "ymax": 420.0
+   },
+   "game_bounds_units": {
+    "x": [
+     -30000,
+     30000
+    ],
+    "z": [
+     -30000,
+     30000
+    ]
+   },
+   "map_color": "#4a3aa7",
+   "landmarks": [
+    {
+     "name": "Ben Hill Griffin Stadium",
+     "osm_id": "r1640985/45719890",
+     "treatment": "hero",
+     "center_m": [
+      -525.4,
+      124.8
+     ],
+     "game_xz": [
+      5465,
+      3523
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 245.4,
+     "collision_tris": 2600,
+     "visual_tris": 9000,
+     "notes": "Bowl from OSM outer + inner rings; field sunk 10 m (~30 rows below grade); lower bowl 8 terraces + upper decks 6 terraces, west skybox tower; tunnels.",
+     "footprint_bbox_m": [
+      -647.2,
+      -5.2,
+      -422.6,
+      275.0
+     ],
+     "footprint_area_m2": 46070.3,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 94.8,
+     "height_m": 24.0,
+     "height_source": "landmark"
+    },
+    {
+     "name": "Exactech Arena (O'Connell Center)",
+     "osm_id": "w45719889",
+     "treatment": "detailed",
+     "center_m": [
+      -754.0,
+      67.2
+     ],
+     "game_xz": [
+      -17396,
+      9276
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 126.0,
+     "collision_tris": 350,
+     "visual_tris": 1200,
+     "notes": "Low dome; roof is a race checkpoint.",
+     "footprint_bbox_m": [
+      -830.5,
+      -1.9,
+      -679.4,
+      137.2
+     ],
+     "footprint_area_m2": 16538.6,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 9.5,
+     "height_m": 28.0,
+     "height_source": "landmark"
+    },
+    {
+     "name": "Florida Gym",
+     "osm_id": "w45719891",
+     "treatment": "detailed",
+     "center_m": [
+      -383.0,
+      62.7
+     ],
+     "game_xz": [
+      19698,
+      9725
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 103.0,
+     "collision_tris": 200,
+     "visual_tris": 700,
+     "notes": "",
+     "footprint_bbox_m": [
+      -415.9,
+      4.5,
+      -350.1,
+      113.3
+     ],
+     "footprint_area_m2": 5747.4,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 30.1,
+     "height_m": 14.0,
+     "height_source": "landmark"
+    },
+    {
+     "name": "Roberts' Stadium Club",
+     "osm_id": "w668261582",
+     "treatment": "backdrop",
+     "center_m": [
+      -312.2,
+      390.9
+     ],
+     "game_xz": [
+      26777,
+      -23094
+     ],
+     "in_play_zone": false,
+     "edge_clearance_m": 32.2,
+     "collision_tris": 0,
+     "visual_tris": 500,
+     "notes": "Across University Ave; straddles the play edge -> visual only.",
+     "footprint_bbox_m": [
+      -327.1,
+      375.3,
+      -297.4,
+      406.5
+     ],
+     "footprint_area_m2": 856.6,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": -22.6,
+     "height_m": 29.8,
+     "height_source": "osm_levels"
+    },
+    {
+     "name": "Heisman Plaza",
+     "osm_id": "w857391716",
+     "treatment": "terrain",
+     "center_m": [
+      -646.5,
+      142.9
+     ],
+     "game_xz": [
+      -6647,
+      1708
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 233.5,
+     "collision_tris": 60,
+     "visual_tris": 600,
+     "notes": "Heisman statues as objects.",
+     "footprint_bbox_m": [
+      -650.2,
+      132.0,
+      -641.9,
+      153.3
+     ],
+     "footprint_area_m2": 102.6,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 189.8
+    },
+    {
+     "name": "Bull Gator statue",
+     "osm_id": "n7984819939",
+     "treatment": "prop",
+     "center_m": [
+      -608.1,
+      -2.9
+     ],
+     "game_xz": [
+      -2812,
+      16287
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 137.1,
+     "collision_tris": 60,
+     "visual_tris": 400,
+     "notes": "Object."
+    },
+    {
+     "name": "Gatorade birthplace marker",
+     "osm_id": "n7994037191",
+     "treatment": "prop",
+     "center_m": [
+      -674.8,
+      131.4
+     ],
+     "game_xz": [
+      -9484,
+      2862
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 205.2,
+     "collision_tris": 20,
+     "visual_tris": 100,
+     "notes": "Object."
+    }
+   ],
+   "stats": {
+    "buildings": 57,
+    "buildings_in_play_zone": 38,
+    "backdrop_buildings": 19,
+    "building_classes": {
+     "large": 6,
+     "normal": 24,
+     "canopy": 5,
+     "skip": 4,
+     "small": 17,
+     "tiny": 1
+    },
+    "height_sources": {
+     "landmark": 4,
+     "default": 26,
+     "osm_levels": 25,
+     "osm_height": 2
+    },
+    "footprint_area_m2": 114501,
+    "footprint_area_share": 0.318,
+    "footprint_vertices_raw": 1055,
+    "footprint_vertices_simplified_generic": 386,
+    "shared_wall_edges": 11,
+    "raw_prism_tris_flat_roofs": 3051,
+    "segments": {
+     "road": 663,
+     "road_simplified": 290,
+     "path": 1546,
+     "path_simplified": 882,
+     "steps": 68,
+     "steps_simplified": 64,
+     "barrier": 77,
+     "barrier_simplified": 43
+    },
+    "length_m": {
+     "road": 8573,
+     "path": 14184,
+     "steps": 277,
+     "barrier": 1032
+    },
+    "trees_osm": 175,
+    "wood_area_m2": 3805,
+    "wood_scatter_trees_est": 47,
+    "water_area_m2": 1481,
+    "naive_collision_tris": 15925
+   },
+   "collision_budget": {
+    "items": {
+     "generic_buildings": 676,
+     "landmarks_hand_modeled": 3290,
+     "steps_as_ramps": 184,
+     "barriers_walls_fences": 168,
+     "ground_grid": 450,
+     "boundary_walls": 104,
+     "props_allowance": 300
+    },
+    "static_total": 5172,
+    "reserve_objects_players": 4000,
+    "total": 9172,
+    "cap": 16384,
+    "headroom": 7212,
+    "static_cap": 12384
+   },
+   "visual_estimate": {
+    "items": {
+     "generic_buildings": 1068,
+     "backdrop_shells": 289,
+     "landmarks_hand_modeled": 12500,
+     "path_ribbons": 2472,
+     "trees_osm_lowpoly": 2100,
+     "trees_wood_scatter_billboards": 188,
+     "ground_visual_grid_10m": 6962
+    },
+    "total": 25579
+   },
+   "collision_cells": {
+    "nodes_est": 22093,
+    "occupied_cells": 3721,
+    "max_surfaces_per_cell": 36,
+    "p95_surfaces_per_cell": 14,
+    "mean_surfaces_per_cell": 5.9
+   },
+   "overlaps": [
+    {
+     "stage": "hub",
+     "area_m2": 29040,
+     "landmarks_of_other_stage_inside": []
+    },
+    {
+     "stage": "reitz_eng",
+     "area_m2": 72030,
+     "landmarks_of_other_stage_inside": [
+      "Weil Hall",
+      "Engineering Clock Tower"
+     ]
+    }
+   ]
+  },
+  {
+   "key": "reitz_eng",
+   "name": "Reitz Union + Engineering quad",
+   "suggested_hub_entrance": "Hub: The Hub door (south-west side).",
+   "center_m": [
+    -470,
+    -293
+   ],
+   "size_m": 600,
+   "bounds_m": {
+    "xmin": -770.0,
+    "ymin": -593.0,
+    "xmax": -170.0,
+    "ymax": 7.0
+   },
+   "play_margin_m": 30,
+   "play_bounds_m": {
+    "xmin": -740.0,
+    "ymin": -563.0,
+    "xmax": -200.0,
+    "ymax": -23.0
+   },
+   "game_bounds_units": {
+    "x": [
+     -30000,
+     30000
+    ],
+    "z": [
+     -30000,
+     30000
+    ]
+   },
+   "map_color": "#c83c78",
+   "landmarks": [
+    {
+     "name": "J. Wayne Reitz Union",
+     "osm_id": "w863211313",
+     "treatment": "hero",
+     "center_m": [
+      -436.8,
+      -277.1
+     ],
+     "game_xz": [
+      3316,
+      -1587
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 266.8,
+     "collision_tris": 500,
+     "visual_tris": 1800,
+     "notes": "Enterable ground floor + food court; roof terraces.",
+     "footprint_bbox_m": [
+      -523.3,
+      -336.9,
+      -359.6,
+      -241.7
+     ],
+     "footprint_area_m2": 9579.6,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 159.6,
+     "height_m": 27.0,
+     "height_source": "landmark"
+    },
+    {
+     "name": "Reitz Union Amphitheater",
+     "osm_id": "w863211344",
+     "treatment": "terrain",
+     "center_m": [
+      -383.9,
+      -305.1
+     ],
+     "game_xz": [
+      8612,
+      1213
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 213.9,
+     "collision_tris": 150,
+     "visual_tris": 500,
+     "notes": "Terraced seating ring.",
+     "footprint_bbox_m": [
+      -404.6,
+      -321.1,
+      -362.3,
+      -294.5
+     ],
+     "footprint_area_m2": 442.1,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 162.3
+    },
+    {
+     "name": "Weil Hall",
+     "osm_id": "w445808709",
+     "treatment": "detailed",
+     "center_m": [
+      -496.6,
+      -52.7
+     ],
+     "game_xz": [
+      -2656,
+      -24029
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 59.7,
+     "collision_tris": 300,
+     "visual_tris": 1000,
+     "notes": "",
+     "footprint_bbox_m": [
+      -560.0,
+      -82.9,
+      -435.2,
+      -30.5
+     ],
+     "footprint_area_m2": 3484.2,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 7.5,
+     "height_m": 24.0,
+     "height_source": "landmark"
+    },
+    {
+     "name": "Engineering Clock Tower",
+     "osm_id": "w481256532",
+     "treatment": "detailed",
+     "center_m": [
+      -577.7,
+      -46.3
+     ],
+     "game_xz": [
+      -10775,
+      -24671
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 53.3,
+     "collision_tris": 60,
+     "visual_tris": 300,
+     "notes": "8 m tower on Engineering Plaza.",
+     "footprint_bbox_m": [
+      -579.4,
+      -48.0,
+      -576.0,
+      -44.6
+     ],
+     "footprint_area_m2": 11.6,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 21.6,
+     "height_m": 8.0,
+     "height_source": "osm_height"
+    },
+    {
+     "name": "Malachowsky Hall",
+     "osm_id": "w1094502850",
+     "treatment": "detailed",
+     "center_m": [
+      -432.2,
+      -531.5
+     ],
+     "game_xz": [
+      3780,
+      23850
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 61.5,
+     "collision_tris": 300,
+     "visual_tris": 1200,
+     "notes": "Glass atrium; newest building (2023).",
+     "footprint_bbox_m": [
+      -485.7,
+      -555.0,
+      -378.8,
+      -511.0
+     ],
+     "footprint_area_m2": 3940.5,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 8.0,
+     "height_m": 33.0,
+     "height_source": "landmark"
+    },
+    {
+     "name": "Reitz Ravine Woods",
+     "osm_id": "w150928196",
+     "treatment": "terrain",
+     "center_m": [
+      -594.3,
+      -369.9
+     ],
+     "game_xz": [
+      -12435,
+      7694
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 175.7,
+     "collision_tris": 300,
+     "visual_tris": 1500,
+     "notes": "Ravine dip + boardwalk; only real relief in the stage.",
+     "footprint_bbox_m": [
+      -675.2,
+      -430.1,
+      -520.5,
+      -292.3
+     ],
+     "footprint_area_m2": 17911.1,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 64.8
+    },
+    {
+     "name": "Reitz Union North Lawn",
+     "osm_id": "w294203169",
+     "treatment": "terrain",
+     "center_m": [
+      -283.9,
+      -177.4
+     ],
+     "game_xz": [
+      18610,
+      -11564
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 113.9,
+     "collision_tris": 40,
+     "visual_tris": 300,
+     "notes": "Open lawn, race start/finish.",
+     "footprint_bbox_m": [
+      -517.5,
+      -258.8,
+      -94.1,
+      -76.9
+     ],
+     "footprint_area_m2": 36669.9,
+     "fully_inside_window": false,
+     "play_zone_clearance_m": -105.9
+    }
+   ],
+   "stats": {
+    "buildings": 49,
+    "buildings_in_play_zone": 43,
+    "backdrop_buildings": 6,
+    "building_classes": {
+     "large": 10,
+     "normal": 24,
+     "canopy": 2,
+     "skip": 2,
+     "small": 7,
+     "tiny": 4
+    },
+    "height_sources": {
+     "osm_levels": 37,
+     "default": 8,
+     "landmark": 3,
+     "osm_height": 1
+    },
+    "footprint_area_m2": 80163,
+    "footprint_area_share": 0.223,
+    "footprint_vertices_raw": 974,
+    "footprint_vertices_simplified_generic": 450,
+    "shared_wall_edges": 15,
+    "raw_prism_tris_flat_roofs": 2824,
+    "segments": {
+     "path": 1836,
+     "path_simplified": 1009,
+     "road": 520,
+     "road_simplified": 226,
+     "stream": 42,
+     "stream_simplified": 31,
+     "steps": 69,
+     "steps_simplified": 63,
+     "barrier": 55,
+     "barrier_simplified": 25
+    },
+    "length_m": {
+     "path": 16921,
+     "road": 5235,
+     "stream": 484,
+     "steps": 384,
+     "barrier": 270
+    },
+    "trees_osm": 152,
+    "wood_area_m2": 47502,
+    "wood_scatter_trees_est": 593,
+    "water_area_m2": 2996,
+    "naive_collision_tris": 15768
+   },
+   "collision_budget": {
+    "items": {
+     "generic_buildings": 1076,
+     "landmarks_hand_modeled": 1650,
+     "steps_as_ramps": 192,
+     "barriers_walls_fences": 76,
+     "pond_basins": 98,
+     "ground_grid": 450,
+     "boundary_walls": 112,
+     "props_allowance": 300
+    },
+    "static_total": 3954,
+    "reserve_objects_players": 4000,
+    "total": 7954,
+    "cap": 16384,
+    "headroom": 8430,
+    "static_cap": 12384
+   },
+   "visual_estimate": {
+    "items": {
+     "generic_buildings": 1675,
+     "backdrop_shells": 108,
+     "landmarks_hand_modeled": 6600,
+     "path_ribbons": 2596,
+     "trees_osm_lowpoly": 1824,
+     "trees_wood_scatter_billboards": 2372,
+     "pond_basins": 128,
+     "ground_visual_grid_10m": 6962
+    },
+    "total": 22265
+   },
+   "collision_cells": {
+    "nodes_est": 23706,
+    "occupied_cells": 3750,
+    "max_surfaces_per_cell": 50,
+    "p95_surfaces_per_cell": 17,
+    "mean_surfaces_per_cell": 6.3
+   },
+   "overlaps": [
+    {
+     "stage": "hub",
+     "area_m2": 32835,
+     "landmarks_of_other_stage_inside": [
+      "The Hub"
+     ]
+    },
+    {
+     "stage": "swamp",
+     "area_m2": 72030,
+     "landmarks_of_other_stage_inside": [
+      "Bull Gator statue"
+     ]
+    }
+   ]
+  },
+  {
+   "key": "lake_alice",
+   "name": "Lake Alice",
+   "suggested_hub_entrance": "Hub: Turlington Hall door (west side; Lake Alice is the farthest west).",
+   "center_m": [
+    -1760,
+    -660
+   ],
+   "size_m": 600,
+   "bounds_m": {
+    "xmin": -2060.0,
+    "ymin": -960.0,
+    "xmax": -1460.0,
+    "ymax": -360.0
+   },
+   "play_margin_m": 50,
+   "play_bounds_m": {
+    "xmin": -2010.0,
+    "ymin": -910.0,
+    "xmax": -1510.0,
+    "ymax": -410.0
+   },
+   "game_bounds_units": {
+    "x": [
+     -30000,
+     30000
+    ],
+    "z": [
+     -30000,
+     30000
+    ]
+   },
+   "map_color": "#158c62",
+   "landmarks": [
+    {
+     "name": "Lake Alice (water)",
+     "osm_id": "rel1630473",
+     "treatment": "terrain",
+     "center_m": [
+      -1734.1,
+      -655.3
+     ],
+     "game_xz": [
+      2590,
+      -470
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 274.1,
+     "collision_tris": 450,
+     "visual_tris": 2500,
+     "notes": "Basin: lake bed + banks from the OSM outer ring (decimated to 64 verts) + 3 bog islands; one water box (env region) over the lake bbox.",
+     "footprint_bbox_m": [
+      -1981.4,
+      -873.0,
+      -1521.1,
+      -446.9
+     ],
+     "footprint_area_m2": 87610.1,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 11.1
+    },
+    {
+     "name": "Bat House",
+     "osm_id": "w424512419",
+     "treatment": "detailed",
+     "center_m": [
+      -1895.8,
+      -511.5
+     ],
+     "game_xz": [
+      -13581,
+      -14852
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 151.5,
+     "collision_tris": 60,
+     "visual_tris": 400,
+     "notes": "Bat houses on the north side of Museum Road.",
+     "footprint_bbox_m": [
+      -1899.0,
+      -515.1,
+      -1892.6,
+      -507.9
+     ],
+     "footprint_area_m2": 41.4,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 97.9,
+     "height_m": 9.0,
+     "height_source": "landmark"
+    },
+    {
+     "name": "Bat House",
+     "osm_id": "w196848221",
+     "treatment": "detailed",
+     "center_m": [
+      -1882.6,
+      -510.6
+     ],
+     "game_xz": [
+      -12257,
+      -14943
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 150.6,
+     "collision_tris": 60,
+     "visual_tris": 400,
+     "notes": "",
+     "footprint_bbox_m": [
+      -1886.2,
+      -514.2,
+      -1879.0,
+      -506.9
+     ],
+     "footprint_area_m2": 47.8,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 96.9,
+     "height_m": 10.7,
+     "height_source": "landmark"
+    },
+    {
+     "name": "Bat House",
+     "osm_id": "w866087250",
+     "treatment": "detailed",
+     "center_m": [
+      -1908.9,
+      -502.7
+     ],
+     "game_xz": [
+      -14891,
+      -15729
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 142.7,
+     "collision_tris": 60,
+     "visual_tris": 400,
+     "notes": "OSM maps 3; UF says 2 are active now - check photos.",
+     "footprint_bbox_m": [
+      -1912.0,
+      -505.8,
+      -1905.8,
+      -499.7
+     ],
+     "footprint_area_m2": 33.3,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 89.7,
+     "height_m": 9.0,
+     "height_source": "landmark"
+    },
+    {
+     "name": "Bat House Gardens",
+     "osm_id": "w1493433580",
+     "treatment": "terrain",
+     "center_m": [
+      -1839.3,
+      -479.5
+     ],
+     "game_xz": [
+      -7933,
+      -18053
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 119.5,
+     "collision_tris": 20,
+     "visual_tris": 200,
+     "notes": "",
+     "footprint_bbox_m": [
+      -1862.1,
+      -492.0,
+      -1816.6,
+      -466.9
+     ],
+     "footprint_area_m2": 1092.1,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 56.9
+    },
+    {
+     "name": "Baughman Center",
+     "osm_id": "w425690658",
+     "treatment": "detailed",
+     "center_m": [
+      -1959.2,
+      -733.7
+     ],
+     "game_xz": [
+      -19925,
+      7371
+     ],
+     "in_play_zone": true,
+     "edge_clearance_m": 100.8,
+     "collision_tris": 150,
+     "visual_tris": 600,
+     "notes": "Lakeside pavilion/chapel (2000), steep gable roof.",
+     "footprint_bbox_m": [
+      -1971.2,
+      -741.5,
+      -1947.6,
+      -726.0
+     ],
+     "footprint_area_m2": 215.1,
+     "fully_inside_window": true,
+     "play_zone_clearance_m": 38.8,
+     "height_m": 12.0,
+     "height_source": "landmark"
+    }
+   ],
+   "stats": {
+    "buildings": 25,
+    "buildings_in_play_zone": 13,
+    "backdrop_buildings": 12,
+    "building_classes": {
+     "small": 13,
+     "skip": 2,
+     "tiny": 5,
+     "normal": 5
+    },
+    "height_sources": {
+     "landmark": 4,
+     "osm_levels": 13,
+     "default": 8
+    },
+    "footprint_area_m2": 5776,
+    "footprint_area_share": 0.016,
+    "footprint_vertices_raw": 172,
+    "footprint_vertices_simplified_generic": 109,
+    "shared_wall_edges": 0,
+    "raw_prism_tris_flat_roofs": 466,
+    "segments": {
+     "road": 386,
+     "road_simplified": 183,
+     "path": 534,
+     "path_simplified": 261,
+     "stream": 27,
+     "stream_simplified": 13
+    },
+    "length_m": {
+     "road": 3723,
+     "path": 3544,
+     "stream": 153
+    },
+    "trees_osm": 0,
+    "wood_area_m2": 221354,
+    "wood_scatter_trees_est": 2766,
+    "water_area_m2": 85995,
+    "naive_collision_tris": 9268
+   },
+   "collision_budget": {
+    "items": {
+     "generic_buildings": 97,
+     "landmarks_hand_modeled": 800,
+     "pond_basins": 19,
+     "ground_grid": 450,
+     "boundary_walls": 104,
+     "props_allowance": 300
+    },
+    "static_total": 1770,
+    "reserve_objects_players": 4000,
+    "total": 5770,
+    "cap": 16384,
+    "headroom": 10614,
+    "static_cap": 12384
+   },
+   "visual_estimate": {
+    "items": {
+     "generic_buildings": 179,
+     "backdrop_shells": 168,
+     "landmarks_hand_modeled": 4500,
+     "path_ribbons": 888,
+     "trees_osm_lowpoly": 0,
+     "trees_wood_scatter_billboards": 11064,
+     "pond_basins": 24,
+     "ground_visual_grid_10m": 6962
+    },
+    "total": 23785
+   },
+   "collision_cells": {
+    "nodes_est": 12807,
+    "occupied_cells": 3721,
+    "max_surfaces_per_cell": 98,
+    "p95_surfaces_per_cell": 8,
+    "mean_surfaces_per_cell": 3.4
+   },
+   "overlaps": []
+  }
+ ],
+ "interior_stages": [
+  {
+   "key": "century_tower_interior",
+   "osm_id": "w150860043",
+   "name": "Century Tower interior",
+   "floors": null,
+   "notes": "Vertical stage: 194 steps to the carillon; 61 bells (Wikipedia). Ends at the belfry -> finale 'the Final Exam' on top.",
+   "footprint_area_m2": 86.8,
+   "footprint_dims_m": [
+    9.2,
+    9.4
+   ],
+   "height_m": 47.9,
+   "center_m": [
+    -0.9,
+    -0.9
+   ],
+   "window_m": 29,
+   "collision_budget_hint": 4000
+  },
+  {
+   "key": "marston_interior",
+   "osm_id": "w150860048",
+   "name": "Marston Science Library interior",
+   "floors": 5,
+   "notes": "5 floors (UF ULC minutes 2026 / Wikipedia); aquarium on 3rd floor; Makerspace on 1st.",
+   "footprint_area_m2": 2588.9,
+   "footprint_dims_m": [
+    57.3,
+    57.6
+   ],
+   "height_m": 22.5,
+   "center_m": [
+    -59.6,
+    -98.9
+   ],
+   "window_m": 78,
+   "collision_budget_hint": 7000
+  },
+  {
+   "key": "library_west_interior",
+   "osm_id": "r12122775/196848215",
+   "name": "Library West interior",
+   "floors": 6,
+   "notes": "6 floors after the 2006 renovation (R-BARC architect page); 6th floor = grad study.",
+   "footprint_area_m2": 4363.6,
+   "footprint_dims_m": [
+    65.9,
+    80.1
+   ],
+   "height_m": 26.0,
+   "center_m": [
+    38.9,
+    285.6
+   ],
+   "window_m": 100,
+   "collision_budget_hint": 7000
+  }
+ ],
+ "finale": {
+  "name": "The Final Exam",
+  "where": "top of Century Tower (hub)",
+  "top_height_m": 47.9,
+  "notes": "Build as its own small level: an arena floating at belfry height with the hub as backdrop (baked low-poly skybox ring), so the hub level doesn't need boss collision."
+ }
+}

@@ -38,3 +38,7 @@ art/*/build/tex/
 
 # Raw OpenStreetMap tiles (re-downloadable; data/uf/campus.json is the processed copy)
 data/uf/tiles/
+
+# DynOS compiles these at game launch (only in the installed copy, but just in case)
+mods/*/levels/*.lvl
+mods/*/actors/*.bin
