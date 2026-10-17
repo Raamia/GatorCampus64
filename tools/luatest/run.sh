@@ -40,6 +40,8 @@
 #      a pinned zbarimg-decoded 5-M matrix of the Gator Pass URL), QR structure, the HUD draw helper
 #  16. test_login.lua: web platform mod side: guests.lua slots in characters.lua, charselect.lua paging,
 #      sgl_login.lua (/login, /link, QR panel, verified marks) against a stub sgl_bridge.lua
+#  17. test_bridge.lua: sgl_bridge.lua (hosted server bridge): JSON encoder / decoder, SGLEVT events (host prints,
+#      client relay), inbox sequencing + routing, inert without a headless host
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
 # Fixtures (regenerate only for a new coopdx version): coopdx_constants_v151.lua,
 # coopdx_api_v151.lua, coopdx_structs_v151.lua (gen_coopdx_*.py, see their headers).
@@ -88,6 +90,8 @@ echo "== test_qr (sgl_qr.lua: QR encoder known vectors)"
 
 echo "== test_login (guest slots, character select pages, Gator Pass login)"
 "$LUA" "$HERE/test_login.lua"
+echo "== test_bridge (sgl_bridge.lua: events, inbox)"
+"$LUA" "$HERE/test_bridge.lua"
 
 PY="$HERE/../.venv/bin/python"
 if [ -x "$PY" ]; then

@@ -119,15 +119,16 @@ end
 test("load: every mod file in coopdx order, strict globals, no duplicate registrations", function()
     local names = table.concat(Sim.ALL_FILES, " ")
     check(#Sim.ALL_FILES >= 8, "found the mod files: " .. names)
-    -- relative strcmp order of the files whose load order matters (other files may sit in between)
-    local order = { "characters.lua", "charselect.lua", "course.lua", "guests.lua", "levels.lua", "main.lua",
-        "sgl_hud.lua", "sgl_login.lua", "sgl_mission.lua", "sgl_qr.lua", "swamp_missions.lua" }
-    local last = 0
-    for _, f in ipairs(order) do
-        local at = names:find(f, 1, true)
-        check(at ~= nil and at > last, "strcmp load order: " .. f .. " in " .. names)
-        last = at or last
+    -- relative order of the files whose load order matters (other files may sit in between)
+    local pos, ordered = 0, true
+    for _, f in ipairs({ "characters.lua", "charselect.lua", "course.lua", "guests.lua", "levels.lua", "main.lua",
+        "sgl_bridge.lua", "sgl_hud.lua", "sgl_login.lua", "sgl_mission.lua", "sgl_qr.lua", "swamp_missions.lua" }) do
+        local at = nil
+        for i, g in ipairs(Sim.ALL_FILES) do if g == f then at = i end end
+        if at == nil or at <= pos then ordered = false break end
+        pos = at
     end
+    check(ordered, "strcmp load order: " .. names)
     local w = full_world()
     local H = w:connect("Host")      -- loading errors (undefined global at load, duplicate command) throw here
     w:step(3)
