@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CHOOSE YOUR GATOR! · Super Gatorlator 64</title>
+  <meta name="description" content="Turn your photos into a playable N64 gator and play it on the Super Gatorlator 64 server.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js" defer></script>
+  <script src="/config.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="/"><b>SUPER</b> GATORLATOR <i>64</i></a>
+    <nav><a href="/" class="on">Gatorize me</a><a href="/gallery">Gallery</a><a href="/link">Link game</a><a href="#play">Play</a></nav>
+    <div id="session"></div>
+  </header>
+  <main>
+    <h1 class="title">CHOOSE YOUR GATOR<span class="tld">!</span></h1>
+    <p class="sub">Upload a few photos and our GPU kitchen cooks you into a playable N64-style gator.
+      Then run around campus in Super Gatorlator 64 with your friends.</p>
+
+    <div class="steps3">
+      <div class="card"><div class="n">1</div><b>Snap</b><p class="hint">1 to 4 photos of yourself: face, and an outfit shot if you like.</p></div>
+      <div class="card"><div class="n">2</div><b>Gatorize</b><p class="hint">AI reads your look, Blender builds the model, and you watch it happen live.</p></div>
+      <div class="card"><div class="n">3</div><b>Play</b><p class="hint">Your gator joins the guest roster on our server. Type <code>/login</code> in game to claim it.</p></div>
+    </div>
+
+    <div class="two" style="margin-top:28px">
+      <section class="card" id="make">
+        <h2 style="margin-top:0">GATORIZE ME</h2>
+        <div id="make-out"><span class="spin"></span></div>
+      </section>
+      <section class="card" id="play">
+        <h2 style="margin-top:0">PLAY ONLINE</h2>
+        <p>Open <a href="https://github.com/coop-deluxe/sm64coopdx/releases">sm64coopdx v1.5.1</a> with your own
+          US Super Mario 64 ROM, install the <b>Super Gatorlator 64</b> mod, then <b>Join → Direct Connect</b>:</p>
+        <p><span class="play" id="addr">play.gatorcamp.us:7777</span></p>
+        <p class="hint">In game, type <code>/login</code> and scan the QR code with your phone to link your account:
+          your gator gets picked for you and your name tag gets a star. No QR? Use <a href="/link">a link code</a>.</p>
+        <p class="hint" id="srv"></p>
+      </section>
+    </div>
+
+    <section id="mine-wrap" hidden>
+      <h2>YOUR GATORS</h2>
+      <div class="grid" id="mine"></div>
+    </section>
+  </main>
+  <footer>Super Gatorlator 64 · SwampHacks XII · Photos are deleted as soon as your gator is built.</footer>
+
+  <script>
+  (function () {
+    const MAX = 4, MAX_BYTES = 8 * 1024 * 1024;
+
+    function form() {
+      const { h, api } = SGL;
+      let files = [];
+      const thumbs = h("div", { class: "thumbs" });
+      const input = h("input", { type: "file", accept: "image/jpeg,image/png", multiple: true, hidden: true });
+      const drop = h("div", { class: "drop", tabindex: "0" }, "Drop photos here or click to choose (JPEG/PNG, up to 4, 8 MB each)");
+      const name = h("input", { type: "text", id: "name", maxlength: "12", placeholder: "e.g. ALBERT", autocomplete: "off" });
+      const consent = h("input", { type: "checkbox", id: "consent" });
+      const msg = h("div");
+      const go = h("button", { class: "btn", type: "submit" }, "GATORIZE ME!");
+
+      function setFiles(list) {
+        msg.replaceChildren();
+        const picked = Array.from(list).filter((f) => /^image\/(jpeg|png)$/.test(f.type));
+        files = files.concat(picked).slice(0, MAX);
+        const big = files.find((f) => f.size > MAX_BYTES);
+        if (big) { files = files.filter((f) => f !== big); msg.replaceChildren(h("p", { class: "err" }, big.name + " is over 8 MB")); }
+        thumbs.replaceChildren(...files.map((f) => h("img", { src: URL.createObjectURL(f), alt: f.name, title: "click to remove",
+          onclick: () => { files = files.filter((x) => x !== f); setFiles([]); } })));
+      }
+      drop.addEventListener("click", () => input.click());
+      drop.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") input.click(); });
+      input.addEventListener("change", () => { setFiles(input.files); input.value = ""; });
+      ["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); }));
+      ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
+      drop.addEventListener("drop", (e) => setFiles(e.dataTransfer.files));
+
+      const f = h("form", {},
+        h("label", { for: "name" }, "Gator name (up to 12 letters, shown in game)"), name,
+        h("label", {}, "Photos"), drop, input, thumbs,
+        h("label", { class: "consent" }, consent,
+          h("span", {}, "These are photos of me (or I have permission). I agree they may be processed by an AI model " +
+            "to build a game character, and that the character is shown publicly in the gallery and on the game server. " +
+            "Photos are deleted when the build ends; I can delete the character any time.")),
+        h("p", {}, go), msg);
+      f.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        msg.replaceChildren();
+        const n = name.value.trim();
+        if (!n) return msg.replaceChildren(h("p", { class: "err" }, "Give your gator a name."));
+        if (!/^[\x20-\x7e]{1,12}$/.test(n)) return msg.replaceChildren(h("p", { class: "err" }, "Name: up to 12 plain letters, numbers or symbols."));
+        if (!files.length) return msg.replaceChildren(h("p", { class: "err" }, "Add at least one photo."));
+        if (!consent.checked) return msg.replaceChildren(h("p", { class: "err" }, "Please tick the consent box."));
+        const fd = new FormData();
+        fd.append("name", n);
+        fd.append("consent", "true");
+        files.forEach((x) => fd.append("photos", x, x.name));
+        go.disabled = true;
+        go.replaceChildren(h("span", { class: "spin" }), " UPLOADING");
+        try {
+          const r = await api("/characters", { method: "POST", body: fd, auth: true });
+          location.href = "/job?id=" + encodeURIComponent(r.job_id);
+        } catch (err) {
+          msg.replaceChildren(h("p", { class: "err" }, err.message));
+          go.disabled = false;
+          go.replaceChildren("GATORIZE ME!");
+        }
+      });
+      return f;
+    }
+
+    function gatorCard(c) {
+      const { h, STEP_LABELS } = SGL;
+      const href = c.job_id ? "/job?id=" + encodeURIComponent(c.job_id) : "#";
+      return h("a", { class: "card gator", href, style: "text-decoration:none;color:inherit" },
+        h("div", { class: "pic" }, h("div", { class: "none" }, c.state === "ready" ? "✓" : "…")),
+        h("div", { class: "meta" }, h("div", { class: "name" }, c.name),
+          h("span", { class: "badge" }, STEP_LABELS[c.state] || c.state),
+          c.slot ? h("span", { class: "badge slot" }, "guest_" + c.slot) : null,
+          c.deployed_at ? h("span", { class: "badge live" }, "on the server") : null));
+    }
+
+    document.addEventListener("sgl:ready", async () => {
+      const { h, api, isLoggedIn, login, C } = SGL;
+      document.getElementById("addr").textContent = C.playAddress;
+      const out = document.getElementById("make-out");
+      if (await isLoggedIn()) {
+        out.replaceChildren(form());
+        try {
+          const me = await api("/me", { auth: true });
+          if (me.characters.length) {
+            document.getElementById("mine-wrap").hidden = false;
+            document.getElementById("mine").replaceChildren(...me.characters.map(gatorCard));
+          }
+        } catch (e) { console.warn(e); }
+      } else {
+        out.replaceChildren(h("p", {}, "Log in to make your gator. Google, GitHub, Discord or an email code all work."),
+          h("button", { class: "btn", onclick: login }, "LOG IN TO START"));
+      }
+      try {
+        const s = await api("/status");
+        document.getElementById("srv").textContent = s.online
+          ? "Server is up: " + s.player_count + " gator" + (s.player_count === 1 ? "" : "s") + " online right now."
+          : "Server is offline right now.";
+      } catch (e) { /* status is decoration */ }
+    });
+  })();
+  </script>
+</body>
+</html>

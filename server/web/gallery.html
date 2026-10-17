@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gallery · Super Gatorlator 64</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js" defer></script>
+  <script src="/config.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="/"><b>SUPER</b> GATORLATOR <i>64</i></a>
+    <nav><a href="/">Gatorize me</a><a href="/gallery" class="on">Gallery</a><a href="/link">Link game</a></nav>
+    <div id="session"></div>
+  </header>
+  <main>
+    <h1 class="title">THE GATOR GALLERY</h1>
+    <p class="sub">Every gator cooked so far. A green badge means it is on the game server right now.</p>
+    <div class="grid" id="g"><span class="spin"></span></div>
+  </main>
+  <footer>Something here that shouldn't be? Tell the team at the SwampHacks table: admins can remove any gator.</footer>
+  <script>
+  document.addEventListener("sgl:ready", async () => {
+    const { h, api } = SGL;
+    const g = document.getElementById("g");
+    try {
+      const { characters } = await api("/characters");
+      if (!characters.length) { g.replaceChildren(h("p", { class: "hint" }, "No gators yet. ", h("a", { href: "/" }, "Be the first!"))); return; }
+      g.replaceChildren(...characters.map((c) => {
+        const front = c.previews.find((p) => /front/i.test(p.name)) || c.previews[0];
+        return h("div", { class: "card gator" },
+          h("div", { class: "pic" }, front ? h("img", { src: front.url, alt: c.name, loading: "lazy" }) : h("div", { class: "none" }, "?")),
+          h("div", { class: "meta" },
+            h("div", { class: "name" }, c.name),
+            h("div", { class: "hint" }, "by " + (c.owner || "a gator")),
+            c.uf ? h("span", { class: "badge uf" }, "GATOR") : null,
+            c.deployed ? h("span", { class: "badge live" }, "on the server") : null,
+            c.slot ? h("span", { class: "badge slot" }, "guest_" + c.slot) : null,
+            c.pinned ? h("span", { class: "badge" }, "team") : null));
+      }));
+    } catch (e) {
+      g.replaceChildren(h("p", { class: "err" }, "Couldn't load the gallery: " + e.message));
+    }
+  });
+  </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gatorizing… · Super Gatorlator 64</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js" defer></script>
+  <script src="/config.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="/"><b>SUPER</b> GATORLATOR <i>64</i></a>
+    <nav><a href="/">Gatorize me</a><a href="/gallery">Gallery</a><a href="/link">Link game</a></nav>
+    <div id="session"></div>
+  </header>
+  <main>
+    <h1 class="title" id="name">…</h1>
+    <section class="card">
+      <div class="bigstate" id="state"><span class="spin"></span></div>
+      <div class="pipeline" id="pipe"></div>
+      <div id="note" class="hint"></div>
+      <div id="fail" hidden>
+        <p class="err" id="err"></p>
+        <details><summary>Build log</summary><pre class="log" id="log"></pre></details>
+        <p><a class="btn" href="/">TRY AGAIN</a></p>
+      </div>
+    </section>
+    <section id="pv-wrap" hidden>
+      <h2>PREVIEW</h2>
+      <div class="previews" id="pv"></div>
+    </section>
+    <p style="margin-top:30px"><button class="btn danger small" id="del" hidden>Delete this gator</button></p>
+  </main>
+  <footer>Your photos are deleted when the build ends. Previews are private links that expire after a few minutes.</footer>
+
+  <script>
+  (function () {
+    const id = new URLSearchParams(location.search).get("id");
+    let timer = null, lastPreviewKey = "";
+
+    function render(j) {
+      const { h, STEP_LABELS } = SGL;
+      document.title = j.name + " · " + (STEP_LABELS[j.state] || j.state);
+      document.getElementById("name").textContent = j.name;
+      const failed = j.state === "failed";
+      const idx = j.step_index ?? (failed ? j.pipeline.indexOf(j.step) : j.pipeline.indexOf(j.state));
+      document.getElementById("pipe").replaceChildren(...j.pipeline.map((st, i) => {
+        let cls = "st";
+        if (failed && i === idx) cls += " fail";
+        else if (i < idx || j.state === "ready") cls += " done";
+        else if (i === idx) cls += " now";
+        return h("div", { class: cls }, h("div", { class: "dot" }), STEP_LABELS[st] || st);
+      }));
+      const stateEl = document.getElementById("state");
+      if (j.state === "ready") stateEl.replaceChildren("YOUR GATOR IS READY!");
+      else if (failed) stateEl.replaceChildren("BUILD FAILED AT: " + (STEP_LABELS[j.step] || j.step).toUpperCase());
+      else stateEl.replaceChildren(h("span", { class: "spin" }), " " + (STEP_LABELS[j.state] || j.state).toUpperCase() + "…");
+
+      const note = document.getElementById("note");
+      if (j.state === "ready") {
+        if (j.deployed) note.replaceChildren(h("p", { class: "ok" }, "On the server as guest_" + j.slot + ". Join ",
+          h("code", {}, SGL.C.playAddress), " and type ", h("code", {}, "/login"), " to play as " + j.name + "."));
+        else if (j.slot) note.replaceChildren(h("p", {}, h("span", { class: "spin" }), " Moving into guest slot " + j.slot +
+          ": the server picks up new gators every few minutes (it restarts to load them)."));
+        else note.replaceChildren(h("p", {}, "Every guest slot is taken right now: your gator waits in the gallery for a free one."));
+      } else if (j.state === "queued") {
+        note.textContent = "Waiting for the GPU. Each gator takes a few minutes; you can leave this page and come back.";
+      } else note.textContent = "";
+
+      const fail = document.getElementById("fail");
+      fail.hidden = !failed;
+      if (failed) {
+        document.getElementById("err").textContent = j.error || "The build failed. Different photos (clear face, good light) often help.";
+        document.getElementById("log").textContent = j.log || "(no log)";
+      }
+
+      const key = j.previews.map((p) => p.name).join("|") + (j.portrait ? "|portrait" : "");
+      if (key && key !== lastPreviewKey) {          // keep the <img>s when nothing changed (no flicker)
+        lastPreviewKey = key;
+        const imgs = j.previews.map((p) => h("img", { src: p.url, alt: j.name + " " + p.name, loading: "lazy" }));
+        if (j.portrait) imgs.push(h("img", { src: j.portrait, alt: j.name + " portrait", style: "image-rendering:pixelated" }));
+        document.getElementById("pv").replaceChildren(...imgs);
+        document.getElementById("pv-wrap").hidden = false;
+      }
+      document.getElementById("del").hidden = false;
+    }
+
+    async function poll() {
+      const { api, h } = SGL;
+      let next = 2000;
+      try {
+        const j = await api("/jobs/" + encodeURIComponent(id), { auth: true });
+        render(j);
+        if (j.state === "failed") return;
+        if (j.state === "ready") { if (j.deployed) return; next = 10000; }
+      } catch (e) {
+        if (e.status === 404 || e.status === 422) {
+          document.getElementById("state").replaceChildren("NO SUCH GATOR");
+          return;
+        }
+        if (e.status === 401 || e.status === 403) {
+          document.getElementById("state").replaceChildren(h("button", { class: "btn", onclick: SGL.login }, "LOG IN TO SEE THIS GATOR"));
+          return;
+        }
+        next = 5000;  // network blip: keep trying
+      }
+      timer = setTimeout(poll, next);
+    }
+
+    document.addEventListener("sgl:ready", async () => {
+      if (!id) { document.getElementById("state").textContent = "NO JOB ID"; return; }
+      if (!(await SGL.isLoggedIn())) {
+        document.getElementById("state").replaceChildren(SGL.h("button", { class: "btn", onclick: SGL.login }, "LOG IN TO SEE THIS GATOR"));
+        return;
+      }
+      document.getElementById("del").addEventListener("click", async () => {
+        if (!confirm("Delete this gator for good? It also leaves the game server.")) return;
+        try {
+          const j = await SGL.api("/jobs/" + encodeURIComponent(id), { auth: true });
+          await SGL.api("/characters/" + encodeURIComponent(j.character_id), { method: "DELETE", auth: true });
+          clearTimeout(timer);
+          location.href = "/";
+        } catch (e) { alert(e.message); }
+      });
+      poll();
+    });
+  })();
+  </script>
+</body>
+</html>

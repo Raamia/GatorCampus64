@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest>=8
+# the API + worker integration test (tests/test_integration_api.py) needs the API too
+-r ../api/requirements-dev.txt

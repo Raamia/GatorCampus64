@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Link your game · Super Gatorlator 64</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js" defer></script>
+  <script src="/config.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="/"><b>SUPER</b> GATORLATOR <i>64</i></a>
+    <nav><a href="/">Gatorize me</a><a href="/gallery">Gallery</a><a href="/link" class="on">Link game</a></nav>
+    <div id="session"></div>
+  </header>
+  <main>
+    <h1 class="title">LINK YOUR GAME</h1>
+    <section class="card" style="text-align:center">
+      <p class="sub" style="margin:0 auto">The quickest way is <code>/login</code> in game and scanning the QR code.
+        If that doesn't work on your client, get a code here and type it in the game chat.</p>
+      <div id="out" style="margin-top:20px"><span class="spin"></span></div>
+    </section>
+  </main>
+  <footer>Codes work once and expire after 10 minutes.</footer>
+  <script>
+  (function () {
+    let tick = null;
+    function show(r) {
+      const { h } = SGL;
+      const out = document.getElementById("out");
+      const left = h("p", { class: "hint" });
+      out.replaceChildren(
+        h("p", {}, "In Super Gatorlator 64, open chat and type:"),
+        h("div", { class: "code" }, r.code),
+        h("p", {}, h("span", { class: "play" }, r.command)),
+        left,
+        h("p", {}, h("button", { class: "btn blue small", onclick: get }, "New code")));
+      const end = Date.parse(r.expires_at);
+      clearInterval(tick);
+      const upd = () => {
+        const s = Math.max(0, Math.round((end - Date.now()) / 1000));
+        left.textContent = s ? "Expires in " + Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0") : "Expired: get a new code.";
+        if (!s) clearInterval(tick);
+      };
+      upd();
+      tick = setInterval(upd, 1000);
+    }
+    async function get() {
+      const { h, api } = SGL;
+      const out = document.getElementById("out");
+      try { show(await api("/link-codes", { method: "POST", auth: true })); }
+      catch (e) { out.replaceChildren(h("p", { class: "err" }, e.message)); }
+    }
+    document.addEventListener("sgl:ready", async () => {
+      const { h, isLoggedIn, login } = SGL;
+      if (await isLoggedIn()) {
+        document.getElementById("out").replaceChildren(h("button", { class: "btn", onclick: get }, "GET MY LINK CODE"));
+      } else {
+        document.getElementById("out").replaceChildren(h("button", { class: "btn", onclick: login }, "LOG IN FIRST"));
+      }
+    });
+  })();
+  </script>
+</body>
+</html>
