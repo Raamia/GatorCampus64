@@ -56,3 +56,4 @@ art/levels/*/compare/
 
 # Gemini API key for tools/npc_bridge (never commit it)
 tools/npc_bridge/.env
+tools/npc_bridge/unanswered.log

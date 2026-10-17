@@ -1,4 +1,8 @@
-"""NPC chat bridge for Super Gatorlator 64: carries chat between the game and an AI.
+"""NPC chat bridge for Super Gatorlator 64: carries chat between the game and the NPCs' answers.
+
+Game questions are answered locally from game_guide.md (guide.py, no AI call); everything else
+(general knowledge, small talk) goes to Gemini. Questions about the game the guide doesn't cover well go
+to Gemini grounded in the closest guide entries, and are logged to unanswered.log for new entries.
 
 sm64coopdx's Lua cannot open sockets or make web requests, but a mod can read and write "modfs" files
 (zip archives in the game's sav folder), and mod_fs_reload() re-reads one from disk. So the host runs
@@ -9,7 +13,9 @@ this script beside the game:
 
 Each side only writes its own file. Both files are tab-separated lines (backslash, tab and newline
 escaped as \\\\ \\t \\n):
-  npc_out.txt   "session\\t<sid>" then one "<seq>\\t<npc id>\\t<player>\\t<message>" per pending request
+  npc_out.txt   "session\\t<sid>" then one "<seq>\\t<npc id>\\t<player>\\t<message>\\t<stats>" per pending request
+                (<stats>: "key=value;key=value" from the game: stars, lives, coins, here, char, players, go, lock,
+                s_<stage>; see sgl_npc.lua)
   replies.txt   "session\\t<sid>" then one "<seq>\\t<npc id>\\t<reply>" per recent reply
 <sid> changes every time the mod loads; <seq> counts up within a session.
 
@@ -29,13 +35,16 @@ import urllib.error
 import urllib.request
 import zipfile
 
+import guide as guide_mod
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT_MODFS = "sgl64.modfs"         # the mod's own modfs (modPath "sgl64")
 OUT_FILE = "npc_out.txt"
 IN_MODFS = "sgl64_npc.modfs"      # read by the mod with mod_fs_reload("sgl64_npc")
 IN_FILE = "replies.txt"
 KEEP_REPLIES = 16                 # replies kept in replies.txt (the game skips the ones it has shown)
-MAX_REPLY = 200                   # characters; the speech bubble wraps about 4 lines of this
+MAX_REPLY = 600                   # characters; the bubble shows the first ~200 (sgl_npc.lua), chat shows it all
+UNANSWERED = os.path.join(HERE, "unanswered.log")
 DEFAULT_MODEL = "gemini-3.8-flash"
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent"
 
@@ -79,15 +88,26 @@ def clean_reply(text):
     return text
 
 
+def parse_stats(text):
+    """ "stars=3;lives=4;here=THE HUB" -> {"stars": "3", ...} """
+    out = {}
+    for pair in unescape(text).split(";"):
+        k, sep, v = pair.partition("=")
+        if sep and k.strip():
+            out[k.strip()] = v.strip()
+    return out
+
+
 def parse_requests(text):
-    """npc_out.txt -> (session, [(seq, npc, player, message), ...])."""
+    """npc_out.txt -> (session, [(seq, npc, player, message, stats), ...])."""
     session, reqs = None, []
     for line in text.splitlines():
         parts = line.split("\t")
         if parts[0] == "session" and len(parts) >= 2:
             session = parts[1]
         elif len(parts) >= 4 and parts[0].isdigit():
-            reqs.append((int(parts[0]), parts[1], unescape(parts[2]), unescape("\t".join(parts[3:]))))
+            stats = parse_stats(parts[4]) if len(parts) >= 5 else {}
+            reqs.append((int(parts[0]), parts[1], unescape(parts[2]), unescape(parts[3]), stats))
     return session, reqs
 
 
@@ -126,7 +146,7 @@ class FakeReplier:
         self.cast = cast
         self.turn = {}
 
-    def reply(self, npc, player, message, history):
+    def reply(self, npc, player, message, history, context=None):
         lines = self.cast["npcs"].get(npc, {}).get("fake") or ["Hi, %s!"]
         k = self.turn.get(npc, random.randrange(len(lines)))
         self.turn[npc] = (k + 1) % len(lines)
@@ -144,11 +164,16 @@ class GeminiReplier:
         self.timeout = timeout
         self.urlopen = urlopen
 
-    def system_prompt(self, npc):
+    def system_prompt(self, npc, context=None):
         c = self.cast
-        return "\n\n".join([c["rules"], c["npcs"][npc]["persona"], c["world"]])
+        parts = [c["rules"], c["npcs"][npc]["persona"], c["world"]]
+        if context:
+            parts.append("Notes from the official game guide that may help with this question:\n" + context +
+                         "\nUse only these notes for facts about the game. If they don't answer it, say you're "
+                         "not sure about that part and suggest asking about something else; never invent game details.")
+        return "\n\n".join(parts)
 
-    def body(self, npc, player, message, history):
+    def body(self, npc, player, message, history, context=None):
         contents = []
         for role, text in history:
             contents.append({"role": role, "parts": [{"text": ("%s says: %s" % (player, text)) if role == "user" else text}]})
@@ -156,7 +181,7 @@ class GeminiReplier:
         config = {"maxOutputTokens": 1024, "temperature": 1.0}
         if self.thinking:
             config["thinkingConfig"] = {"thinkingLevel": self.thinking}
-        return {"systemInstruction": {"parts": [{"text": self.system_prompt(npc)}]},
+        return {"systemInstruction": {"parts": [{"text": self.system_prompt(npc, context)}]},
                 "contents": contents, "generationConfig": config}
 
     def post(self, body):
@@ -165,8 +190,8 @@ class GeminiReplier:
         with self.urlopen(req, timeout=self.timeout) as resp:
             return json.loads(resp.read().decode())
 
-    def reply(self, npc, player, message, history):
-        body = self.body(npc, player, message, history)
+    def reply(self, npc, player, message, history, context=None):
+        body = self.body(npc, player, message, history, context)
         try:
             data = self.post(body)
         except urllib.error.HTTPError as e:
@@ -198,11 +223,13 @@ def load_api_key(path=os.path.join(HERE, ".env")):
 
 
 class Bridge:
-    def __init__(self, sav_dir, replier, cast, log=print):
+    def __init__(self, sav_dir, replier, cast, log=print, guide=None, unanswered=UNANSWERED):
         self.sav_dir = sav_dir
         self.replier = replier
         self.cast = cast
         self.log = log
+        self.guide = guide              # guide_mod.Guide, or None to send everything to the replier
+        self.unanswered = unanswered    # log file of game questions the guide couldn't answer (None: off)
         self.session = None
         self.done = 0          # highest seq answered in this session
         self.replies = []      # (seq, npc, text), newest last
@@ -216,7 +243,7 @@ class Bridge:
         if session != self.session:   # the mod (re)loaded: start over
             self.session, self.done, self.replies = session, 0, []
         answered = 0
-        for seq, npc, player, message in sorted(reqs):
+        for seq, npc, player, message, stats in sorted(reqs, key=lambda r: r[0]):
             if seq <= self.done:
                 continue
             self.done = seq
@@ -225,7 +252,8 @@ class Bridge:
                 continue
             hist = self.history.setdefault((player, npc), [])
             try:
-                text = clean_reply(self.replier.reply(npc, player, message, hist))
+                text, route = self.answer(npc, player, message, stats, hist)
+                text = clean_reply(text)
             except Exception as e:   # network/API trouble: the game shows its own "lost in thought" line
                 self.log("[npc] %s -> %s failed: %s" % (player, npc, e))
                 continue
@@ -235,10 +263,35 @@ class Bridge:
             del hist[:-12]   # the last 6 exchanges
             self.replies.append((seq, npc, text))
             answered += 1
-            self.log("[npc] %s -> %s: %s\n      %s: %s" % (player, npc, message, self.cast["npcs"][npc]["name"], text))
+            self.log("[npc] %s -> %s: %s\n      [%s] %s: %s" % (player, npc, message, route,
+                                                             self.cast["npcs"][npc]["name"], text))
         if answered:
             write_replies(self.sav_dir, self.session, self.replies)
         return answered
+
+    def answer(self, npc, player, message, stats, hist):
+        """-> (reply text, route label). Guide first; the replier (Gemini or fake) for everything else."""
+        if self.guide is None:
+            return self.replier.reply(npc, player, message, hist), "ai"
+        ranked = self.guide.match(message, npc=npc)
+        score, entry = ranked[0] if ranked else (0.0, None)
+        if entry is not None and score >= guide_mod.ANSWER:
+            flair = self.cast["npcs"][npc].get("guide_flair") or [""]
+            return random.choice(flair) + self.guide.answer(entry, player, stats), "guide: %s %.2f" % (entry.id, score)
+        if entry is not None and score >= guide_mod.RELATED:
+            self.note_unanswered(player, message, entry.id, score)
+            ctx = self.guide.context(ranked)
+            return self.replier.reply(npc, player, message, hist, context=ctx), "ai+guide: near %s %.2f" % (entry.id, score)
+        return self.replier.reply(npc, player, message, hist), "ai"
+
+    def note_unanswered(self, player, message, near, score):
+        if not self.unanswered:
+            return
+        try:
+            with open(self.unanswered, "a") as f:
+                f.write("%s\t%s\t%s\tnear %s %.2f\n" % (time.strftime("%Y-%m-%d %H:%M"), player, message, near, score))
+        except OSError:
+            pass
 
 
 def load_cast(path=os.path.join(HERE, "npcs.json")):
@@ -267,8 +320,9 @@ def main(argv=None):
             return 1
         thinking = None if args.thinking.lower() == "none" else args.thinking
         replier, mode = GeminiReplier(cast, key, args.model, thinking), "Gemini " + args.model
-    bridge = Bridge(args.sav_dir, replier, cast)
-    print("[npc] bridge up (%s), watching %s" % (mode, args.sav_dir))
+    guide = guide_mod.Guide()
+    bridge = Bridge(args.sav_dir, replier, cast, guide=guide)
+    print("[npc] bridge up (%s; game guide: %d entries), watching %s" % (mode, len(guide.entries), args.sav_dir))
     while True:
         bridge.poll()
         if args.once:

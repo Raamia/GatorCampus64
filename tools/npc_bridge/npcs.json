@@ -9,6 +9,12 @@
         "CHOMP CHOMP! Welcome to campus, %s! Go Gators!",
         "That gets five out of five chomps from me, %s!",
         "The University Auditorium door leads to the Swamp, %s. Go get that first star!"
+      ],
+      "guide_flair": [
+        "CHOMP! ",
+        "Great question! ",
+        "Go Gators! ",
+        ""
       ]
     },
     "libby": {
@@ -18,6 +24,11 @@
         "Shhh... indoor voices please, %s. Marston opens at 8 stars.",
         "Library West after dark is spooky, %s. Bring coffee.",
         "Have you tried booking a study room, %s?"
+      ],
+      "guide_flair": [
+        "Shhh... here you go: ",
+        "Let me look that up. ",
+        ""
       ]
     },
     "prof": {
@@ -27,6 +38,11 @@
         "Pop quiz, %s: when was UF founded? 1853!",
         "Century Tower has a carillon with 61 bells, %s. Fascinating!",
         "Study tip, %s: sleep beats cramming. Usually."
+      ],
+      "guide_flair": [
+        "Ah, a fine question! ",
+        "Excellent query! ",
+        ""
       ]
     }
   }

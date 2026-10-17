@@ -6,9 +6,10 @@ tools/npc_bridge/guide.py reads it; tools/npc_bridge/test_guide.py and tools/lua
 
 ## How to add or change an entry
 
-Every entry is a `###` heading (a sample question) followed by three lines:
+Every entry is a `###` heading (a sample question) followed by these lines:
 
 - `id:` a short unique name (letters, digits, dashes). Tests refer to it, so keep it once it exists.
+- `npc:` (optional) only this NPC answers with the entry, e.g. `npc: albert` for "Who are you?".
 - `ask:` comma-separated ways a player might ask, and keywords. More phrasings = better matching.
   The heading counts as one more phrasing.
 - `answer:` what the NPC says, on one line. The first sentence or two (about 200 characters) go in the
@@ -36,7 +37,7 @@ answer: Five stages behind real campus doors (The Swamp, Reitz Union & Engineeri
 
 ### Which stages are there?
 id: stages
-ask: list the stages, what stages are there, how many levels, which levels, what courses, all the stages, levels list, worlds
+ask: list the stages, what stages are there, how many levels, which levels, what courses, all the stages, levels list, worlds in the game
 answer: Five stages so far: 1 THE SWAMP (University Auditorium door, open from the start), 2 REITZ & ENGINEERING (The Hub, 2 stars), 3 LAKE ALICE (Newell Hall, 5 stars), 4 MARSTON LIBRARY (Marston Science Library, 8 stars) and 5 LIBRARY WEST AFTER DARK (Library West, 11 stars). CENTURY TOWER (14 stars) is coming soon.
 
 ### Where should I go next?
@@ -53,12 +54,12 @@ answer: Stars open the stage doors around campus. You earn one by finishing a mi
 
 ### How many stars do I have?
 id: my-stars
-ask: how many stars do i have, my stars, star count, how many stars, stars do we have, total stars, how many stars have i got
+ask: how many stars do i have, my stars, my star count, how many stars, how many stars do we have, total stars, how many stars have i got
 answer: You have {stars} stars, {player}! {next_hint}
 
 ### How many stars do I have in each stage?
 id: stage-stars
-ask: stars per stage, stars in each stage, stars per level, which stars am i missing, stage progress, my progress, how far am i, completion, what have i finished
+ask: stars per stage, stars in each stage, stars per level, which stars am i missing, stage progress, my progress, how far along am i, completion, what have i finished
 answer: Stars per stage: {stage_stars}. Each stage has 3 mission stars and a 100-coin star.
 
 ### How many lives do I have?
@@ -78,7 +79,7 @@ answer: You're in {here}. Type /campus where for the exact level, area and act, 
 
 ### Which character am I playing?
 id: my-character
-ask: who am i playing, my character, which character am i, what character, who am i
+ask: my character, which character am i, what character am i playing, which friend am i, who am i
 answer: You're playing as {character}. Press L + START (Left Shift + Space on a keyboard) or type /char to pick someone else.
 
 ### Who is online?
@@ -377,7 +378,8 @@ answer: Stadium Stair Sprint (Swamp act 2): par 1'10, gold 0'45. Coffee Run (Lib
 
 ### Who are you?
 id: who-albert
-ask: who are you, albert, who is albert, what are you, are you a gator, mascot, albert the alligator
+npc: albert
+ask: who are you, who is albert, what are you, are you a gator, mascot, albert the alligator, whats your name, your name, introduce yourself
 answer: I'm Albert the Alligator, UF's official mascot and your host on campus! I stand right by the spawn on the Plaza of the Americas. Ask me anything about the game. CHOMP CHOMP!
 
 ### Who else can I talk to?
