@@ -24,6 +24,8 @@ services:
       WORK_ROOT: /work
     volumes:
       - /opt/sgl64:/opt/sgl64:ro              # repo (provision_gpu.sh): tools/, vendor, Fast64, this code
+      # Fast64 writes its updater status and presets into its own add-on folder; owned by uid 1001
+      - /opt/sgl64/tools/blender-scripts:/opt/sgl64/tools/blender-scripts
       - /opt/blender-4.5.3:/opt/blender-4.5.3:ro
       - work:/work                           # per-job temp trees (deleted after each job)
     deploy:
