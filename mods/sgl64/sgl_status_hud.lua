@@ -1,7 +1,7 @@
 -- Replace the two vanilla Mario-era HUD counters with campus art. Stars still
 -- drive course progression; only their on-screen icon is renamed to gator coins.
 
-local HIDE_VANILLA = HUD_DISPLAY_FLAGS_LIVES | HUD_DISPLAY_FLAGS_STAR_COUNT
+local HIDE_VANILLA = HUD_DISPLAY_FLAGS_LIVES | HUD_DISPLAY_FLAGS_STAR_COUNT | HUD_DISPLAY_FLAGS_CAMERA
 local sCoinTexture = nil
 local sPortraits = {}
 
@@ -53,6 +53,11 @@ local function draw_status_hud()
         djui_hud_render_texture(coin, sw - 81, 9, 20 / coin.width, 20 / coin.height)
     end
     sgl_hud_text("X" .. stars, sw - 56, 15, 0.55, { 255, 255, 255 }, 1)
+
+    -- Replace CoopDX's camera/Lakitu glyphs with a compact UF badge in the same corner.
+    sgl_hud_rect(sw - 54, 203, 32, 18, 250, 110, 30, 255)
+    sgl_hud_rect(sw - 52, 205, 28, 14, 20, 45, 95, 255)
+    sgl_hud_text_center("UF", sw - 38, 207, 0.34, { 255, 140, 35 }, 1)
 end
 
 hook_event(HOOK_UPDATE, hide_vanilla_icons)
