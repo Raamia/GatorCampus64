@@ -137,8 +137,9 @@ more VMs scale horizontally). No separate queue service.
 DynOS compiles actors when the mod loads, so a new character needs a mod reload. To keep that
 bounded and the Lua static:
 
-- The mod ships **8 guest slots**, `guest_1` … `guest_8`, each with a placeholder actor (a recoloured
-  default gator) and a placeholder portrait, so the mod always loads.
+- The mod ships **8 guest slots**, `guest_1` … `guest_8`, each with a placeholder actor (a copy of
+  `actors/donald`, the plainest friend, with every `donald_` symbol renamed `guest_<n>_` and grey hair)
+  and a placeholder portrait (a "?" gator card with the slot number), so the mod always loads.
 - A deploy overwrites `actors/guest_<n>/` and `textures/sgl_portrait_guest_<n>.png` in the server's
   installed mod and rewrites `mods/sgl64/guests.lua` (generated, display names + owner ids).
 - Slot assignment happens **only when a character is ready**, never at claim, so a live gator is
@@ -148,6 +149,26 @@ bounded and the Lua static:
   recently played unpinned slot whose character is finished. Pinned slots (team demo characters)
   are never evicted. An evicted character keeps its row (`evicted_at`) and is not re-slotted
   automatically.
+  - Symbols: every build exports as the neutral actor `sglguest`; the deploy renames it to
+    `guest_<n>` (`server/worker/actor_rename.py`), so the root GeoLayout is `guest_<n>_geo` (DynOS compiles `actors/guest_<n>/` into `guest_<n>_geo.bin`, which
+    `smlua_model_util_get_id("guest_<n>_geo")` loads). Check with
+    `tools/blender/validate_export.py actors/guest_<n> guest_<n>`.
+  - Portrait: clients only download `textures/*.tex`, which DynOS generates on the host from a `.png`
+    that is newer than its `.tex` (`dynos_bin_tex.cpp`), so a freshly written `.png` is enough. Safer:
+    the deploy also writes `sgl_portrait_guest_<n>.tex` itself (u8 `2`, u8 name length, the name, s32
+    PNG size little endian, the PNG bytes; the committed portraits are exactly this).
+  - `guests.lua` format: one call, one line per slot, slots 1..8 in order. `characters.lua` defines
+    `sgl_guests_register` and loads first (coopdx loads a mod's files in strcmp order:
+    `characters` < `charselect` < `guests`), so the file keeps its name and the guests are in the
+    friend list before any hook runs. Names: ≤ 12 printable ASCII characters (the mod strips colour
+    codes and anything else); `owner` is the Auth0 `sub` or `nil`.
+    ```lua
+    sgl_guests_register({
+        { slot = 1, name = "Guest 1", owner = nil },
+        { slot = 2, name = "Alice", owner = "google-oauth2|1234" },
+        --... through slot = 8
+    })
+    ```
 - Size check before deploy: compiled mod must stay under coopdx's 35 MB download cap
   (`MAX_MOD_SIZE`, compiled `.bin/.lvl/.tex`). **Measure the current mod first** (spike S1).
 
@@ -233,7 +254,8 @@ Auth0 application **"Gator Pass"**: type Native, token endpoint auth None, Devic
    `openid profile email`, audience `https://api.gatorcamp.us`).
 3. Inbox `login_code` → the player's HUD: QR of `verification_uri_complete`, plus
    "login.gatorcamp.us/activate  ABCD-EFGH". QR drawn with `djui_hud_render_rect` from a
-   pure-Lua encoder (speedata/luaqrcode, MIT, vendored as `sgl_qr.lua`).
+   pure-Lua encoder (speedata/luaqrcode, BSD-3-Clause, vendored as `sgl_qr.lua`; EC level M,
+   version 4 for the usual 55-character URI).
 4. Bridge polls `/oauth/token` at the returned interval (`authorization_pending`, `slow_down`,
    `expired_token`, `access_denied`).
 5. On success: validate the ID token (issuer, audience, exp, JWKS), then `POST /links` to the API
@@ -301,15 +323,17 @@ Object Storage: private bucket; the API hands out short-lived presigned GET URLs
 | File | Change |
 |---|---|
 | `sgl_bridge.lua` (new) | JSON encode, `SGLEVT` printing on the host, client→host relay, inbox polling via `mod_fs_reload()` |
-| `sgl_qr.lua` (new) | Vendored QR encoder + a HUD draw helper |
-| `sgl_login.lua` (new) | `/login`, `/link`; QR/code panel; verified name-tag star |
-| `guests.lua` (generated) | Guest slot names/owners; checked in with 8 placeholders |
-| `characters.lua` | Append the guest slots from `guests.lua` to `FRIENDS` |
-| `charselect.lua` | A second page ("GUEST GATORS") when there are more than 10 cards |
-| `actors/guest_1..8/`, `textures/sgl_portrait_guest_*.png` | Placeholders |
+| `sgl_qr.lua` (new) | Vendored QR encoder (`sgl_qr_encode`) + a HUD draw helper (`sgl_qr_draw`) |
+| `sgl_login.lua` (new) | `/login [cancel]`, `/link <code>`; QR/code panel (B closes it); verified marks: a gold `*` before the name tag (`HOOK_ON_NAMETAGS_RENDER`), "GATOR PASS" as the player-list description, `*` on the charselect name-tag pills; selects the owned guest slot |
+| `guests.lua` (generated) | Guest slot names/owners as one `sgl_guests_register({...})` call (§5.2); checked in with 8 placeholders |
+| `characters.lua` | Defines `sgl_guests_register`: appends the guest slots to `FRIENDS` (ids `guest_<n>`, models `guest_<n>_geo`) |
+| `charselect.lua` | Pages of 10 cards: page 2 "GUEST GATORS"; L / R turn the page, D-pad left / right run across pages |
+| `actors/guest_1..8/`, `textures/sgl_portrait_guest_*.png` + `.tex` | Placeholders |
 
 All network-facing behaviour is inert offline: without a headless host nothing prints and the inbox
-never appears. `tools/luatest` gets tests for the JSON encoder, inbox sequencing and the guest list.
+never appears. `tools/luatest` gets tests for the JSON encoder, inbox sequencing and the guest list
+(`test_qr.lua`: the QR encoder against known vectors; `test_login.lua`: guest slots, charselect pages and
+`sgl_login.lua` against a stub bridge).
 
 ## 10. Optional: verified leaderboard
 
