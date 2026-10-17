@@ -50,6 +50,16 @@ def find_source(char_id, spec, out_root=None):
     final = os.path.join(art_dir(char_id), "textures")
     if os.path.isdir(final) and _complete(final) == len(REQUIRED):
         return final, "final"
+    # characters "based_on" another (e.g. Josh -> Anh) share its face art; the flat
+    # border colour is keyed to alpha 0 even when it is the base character's skin
+    from sgl_util import load_spec
+    base, seen = spec.get("based_on"), {char_id}
+    while base and base not in seen:
+        seen.add(base)
+        base_final = os.path.join(art_dir(base), "textures")
+        if os.path.isdir(base_final) and _complete(base_final) == len(REQUIRED):
+            return base_final, f"final:{base}"
+        base = load_spec(base).get("based_on")
     cands = [d for d in glob.glob(os.path.join(art_dir(char_id), "candidates", "*")) if os.path.isdir(d)]
     cands = [d for d in cands if _complete(d) == len(REQUIRED)]
     if cands:

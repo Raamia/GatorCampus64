@@ -9,6 +9,7 @@ import bpy
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
+import sgl_characters
 import sgl_materials as smat
 from sgl_heads import BoneFrame, Geo, emit
 from sgl_preview import PREVIEW_ACTION
@@ -744,8 +745,9 @@ def build_body(spec, mats):
     ctx = {"obj": obj, "arm": arm, "mats": mats, "spec": spec}
     acc = {}
     build = spec.get("build", {})
+    custom = sgl_characters.get(spec, "ACCESSORIES", {})
     for name in build.get("accessories", []):
-        fn = ACCESSORIES.get(name, _todo(name))
+        fn = custom.get(name) or ACCESSORIES.get(name, _todo(name))
         acc[name] = fn(ctx)
     report["accessories"] = acc
     return report

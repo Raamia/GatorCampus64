@@ -20,6 +20,7 @@ import bpy
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
+import sgl_characters
 import sgl_materials as smat
 
 SEG = 12
@@ -189,11 +190,17 @@ def configure(style):
 
 
 def hair_style(spec):
-    name = spec.get("build", {}).get("hair_style", DEFAULT_STYLE)
+    custom = sgl_characters.get(spec, "HAIR_STYLE")
+    name = (custom or {}).get("base") or spec.get("build", {}).get("hair_style", DEFAULT_STYLE)
     if name not in HAIR_STYLES:
-        print(f"SGL WARNING: hair_style {name!r} has no preset yet, using {DEFAULT_STYLE!r}")
+        if custom is None:
+            print(f"SGL WARNING: hair_style {name!r} has no preset yet, using {DEFAULT_STYLE!r}")
         name = DEFAULT_STYLE
-    return name, HAIR_STYLES[name]
+    style = HAIR_STYLES[name]
+    if custom:
+        style = dict(style, **{k: v for k, v in custom.items() if k != "base"})
+        name = f"{name} + characters/{sgl_characters.load(spec).__name__.removeprefix('sgl_char_')}.py"
+    return name, style
 
 
 # ------------------------------------------------------------------ skull
@@ -666,6 +673,9 @@ def build_full_head(spec, body_bvh=None):
     add_nose(g, style.get("nose"))
     if style.get("ears"):
         add_ears(g, style.get("ears"))
+    head_parts = sgl_characters.get(spec, "head_parts")
+    if head_parts:
+        head_parts(g, style, spec)
     g.style_name = name
     return g
 
@@ -794,10 +804,12 @@ def replace_heads(spec, mats, body_bvh=None):
     """Replace the head in Mario Mesh and all head variant meshes. Returns stats."""
     geo = build_full_head(spec, body_bvh)
     stats = {"style": geo.style_name, "tris": geo.tri_count(), "meshes": []}
+    head_roles = sgl_characters.get(spec, "head_roles")
+    extra_roles = head_roles(spec, mats) if head_roles else {}
     for obj, arm, group in head_targets():
         state = find_eye_state(obj) or "open"
         roles = {"skin": mats["skin"], "hair": mats["hair"], "eyes": mats["eyes_" + state],
-                 "mouth": mats["mouth"]}
+                 "mouth": mats["mouth"], **extra_roles}
         removed = remove_group_geometry(obj, group)
         emit(geo, obj, group, BoneFrame(obj, arm, group), roles)
         smat.compact_material_slots(obj)

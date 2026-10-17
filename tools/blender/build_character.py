@@ -128,6 +128,10 @@ def main():
     hs = sgl_heads.replace_heads(spec, mats, bvh)
     report["heads"] = {"style": hs["style"], "tris_per_head": hs["tris"],
                        "meshes": [f"{n} ({s})" for n, s, _r in hs["meshes"]]}
+    import sgl_characters
+    post_build = sgl_characters.get(spec, "post_build")
+    if post_build:
+        report["post_build"] = post_build({"spec": spec, "mats": mats, "report": report})
     for o in bpy.data.objects:
         if o.type == "MESH" and o.parent is not None and o.parent.type == "ARMATURE":
             sgl_materials.compact_material_slots(o)
