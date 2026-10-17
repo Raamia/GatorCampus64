@@ -39,7 +39,7 @@ end
 
 local CCM, HUB = C.LEVEL_CCM, C.LEVEL_CASTLE_GROUNDS
 local MS = { IDLE = 0, WAITING = 1, INTRO = 2, ACTIVE = 3, SUCCESS = 4, FAILED = 5, DONE = 6 }
-local FILES = { "course.lua", "sgl_hud.lua", "sgl_mission.lua", "uf_marston_missions.lua" }
+local FILES = { "course.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_mission.lua", "uf_marston_missions.lua" }
 local PTOP = 26
 
 for _, n in ipairs({ "obj_init_animation", "hurt_and_set_mario_action" }) do assert(API[n] ~= nil, n .. " is a v1.5.1 binding") end

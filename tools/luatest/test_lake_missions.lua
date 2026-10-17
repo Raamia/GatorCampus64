@@ -40,7 +40,7 @@ end
 
 local JRB, HUB = C.LEVEL_JRB, C.LEVEL_CASTLE_GROUNDS
 local MS = { IDLE = 0, WAITING = 1, INTRO = 2, ACTIVE = 3, SUCCESS = 4, FAILED = 5, DONE = 6 }
-local FILES = { "course.lua", "sgl_hud.lua", "sgl_mission.lua", "swamp_missions.lua", "uf_lake_missions.lua" }
+local FILES = { "course.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_mission.lua", "swamp_missions.lua", "uf_lake_missions.lua" }
 local PTOP = 26
 
 -- the extra engine names (see the header), all real v1.5.1 bindings

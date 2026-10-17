@@ -9,6 +9,8 @@ DEST="$HOME/Library/Application Support/sm64coopdx/mods"
 mkdir -p "$DEST"
 for mod in "$SRC"/*/; do
     name="$(basename "$mod")"
-    rsync -a --delete "$mod" "$DEST/$name/"
+    # DynOS generates compiled level and actor files in the installed mod directory.
+    # Keep them across source installs; they are ignored in git and absent from ./mods.
+    rsync -a --delete --exclude='/levels/*.lvl' --exclude='/actors/*.bin' "$mod" "$DEST/$name/"
     echo "Installed $name"
 done

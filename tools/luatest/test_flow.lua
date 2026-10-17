@@ -122,7 +122,8 @@ test("load: every mod file in coopdx order, strict globals, no duplicate registr
     -- relative order of the files whose load order matters (other files may sit in between)
     local pos, ordered = 0, true
     for _, f in ipairs({ "characters.lua", "charselect.lua", "course.lua", "guests.lua", "levels.lua", "main.lua",
-        "sgl_bridge.lua", "sgl_hud.lua", "sgl_login.lua", "sgl_mission.lua", "sgl_qr.lua", "swamp_missions.lua" }) do
+        "sgl_bridge.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_login.lua", "sgl_mission.lua", "sgl_qr.lua",
+        "sgl_status_hud.lua", "swamp_missions.lua" }) do
         local at = nil
         for i, g in ipairs(Sim.ALL_FILES) do if g == f then at = i end end
         if at == nil or at <= pos then ordered = false break end
@@ -260,7 +261,20 @@ test("single player: hub -> character select -> door -> act 1 -> star -> back ou
     check(H.strStorage.friend == "anh" and env.gPlayerSyncTable[0].friend == 4, "pick saved + synced (Anh)")
     w:step(2)
     check(raw(H.ms[0].marioObj)._model == env._G.sglFriends[4].model, "characters.lua swapped the model")
+    check(raw(H.ms[0].marioObj).hookRender == 1, "selected character checks its model before rendering")
+    raw(H.ms[0].marioObj)._model = C.E_MODEL_MARIO -- engine restores the base model after Mario update
+    Sim.run_hooks(H, C.HOOK_ON_OBJECT_RENDER, H.ms[0].marioObj)
+    check(raw(H.ms[0].marioObj)._model == env._G.sglFriends[4].model,
+        "character model restored before the Mario frame is drawn")
     check(H.ms[0].numLives == 4, "4 lives")
+    check((H.hudFlags & (C.HUD_DISPLAY_FLAGS_LIVES | C.HUD_DISPLAY_FLAGS_STAR_COUNT)) == 0,
+        "vanilla Mario and star HUD icons hidden")
+    local portraitDrawn, coinDrawn = false, false
+    for _, d in ipairs(H.draw) do
+        if d.k == "tex" and d.name == "sgl_portrait_anh" then portraitDrawn = true end
+        if d.k == "tex" and d.name == "sgl_gator_coin" then coinDrawn = true end
+    end
+    check(portraitDrawn and coinDrawn, "chosen friend portrait and gator coin replace the HUD icons")
 
     -- doors: 6 objects from the hub script; with 0 stars only The Swamp's opens (Reitz is built but locked)
     local doors = Sim.objects_with(H, env.id_bhvSglDoor)
@@ -346,6 +360,44 @@ test("single player: hub -> character select -> door -> act 1 -> star -> back ou
     H.ms[0].numLives = 2
     w:step(2)
     check(H.ms[0].numLives == 4, "hub tops lives back up to 4")
+end)
+
+test("campus boards: direct button and mouse open a later board without the mapped B click closing it", function()
+    local w = full_world()
+    local H = w:connect("Host")
+    w:step(3)
+    arrive_and_pick(w, H, 1)
+
+    H.mouseX, H.mouseY, H.mouseButtons = 213, 12, C.L_MOUSE_BUTTON
+    H.pressed = C.B_BUTTON -- CoopDX maps left click to B during gameplay.
+    w:step(1)
+    check(table.concat(H.hudText, " | "):find("CAMPUS LEADERBOARDS", 1, true) ~= nil,
+        "gameplay BOARDS button opens the list directly")
+
+    H.mouseButtons = 0
+    w:step(2)
+    H.mouseX, H.mouseY, H.mouseButtons = 213, 152, C.L_MOUSE_BUTTON -- fourth row
+    H.pressed = C.B_BUTTON
+    w:step(1)
+    check(table.concat(H.hudText, " | "):find("SKYBOX CLIMB", 1, true) ~= nil,
+        "clicking the fourth board opens it instead of closing the menu")
+
+    H.mouseButtons = 0
+    w:step(1)
+    H.mouseY, H.mouseButtons = 200, C.L_MOUSE_BUTTON -- Back to boards footer
+    H.pressed = C.B_BUTTON
+    w:step(1)
+    check(table.concat(H.hudText, " | "):find("Skybox Climb", 1, true) ~= nil,
+        "clicking the board footer returns to the four-board list")
+
+    H.mouseButtons = 0
+    w:step(1)
+    H.pressed = C.D_CBUTTONS -- keyboard Down arrow is mapped to C-down in CoopDX
+    w:step(1)
+    H.pressed = C.A_BUTTON
+    w:step(1)
+    check(table.concat(H.hudText, " | "):find("REITZ ROOFTOP", 1, true) ~= nil,
+        "keyboard Down arrow wraps from fourth to first board, then A opens it")
 end)
 
 test("door 2: The Hub (2 stars) -> Reitz & Engineering act 1 -> star -> back outside The Hub door", function()
@@ -986,6 +1038,28 @@ test("with a friend: invite, D-pad Up joins the act, co-op act 3 with every file
     w:step(3)
     check(F.level == BOB and F.act == 2 and H.level == HUB, "a friend's /campus swamp 2 moves only the friend")
     check(Sim.find(F.chat, "Only the host moves everyone") ~= nil, "and says so")
+end)
+
+test("remembered character is applied before the first synced render", function()
+    local w = full_world()
+    local H = w:connect("Returning player", { storage = { friend = "josh" } })
+    H.syncIn = 10 -- keep the sync-valid callback pending while the first local frame runs
+    w:warp(H, HUB, 1, 0)
+    w:step(1)
+    local env = H.env
+    check(not H.synced, "first player frame runs before sync-valid")
+    check(env.gPlayerSyncTable[0].friend == 5, "saved character restored in the pre-update hook")
+    check(raw(H.ms[0].marioObj)._model == env._G.sglFriends[5].model,
+        "saved character model is active on the first frame")
+    check(raw(H.ms[0].marioObj).hookRender == 1, "first-frame render guard is installed")
+    raw(H.ms[0].marioObj)._model = C.E_MODEL_MARIO -- simulate CoopDX resetting the base model before render
+    Sim.run_hooks(H, C.HOOK_ON_OBJECT_RENDER, H.ms[0].marioObj)
+    check(raw(H.ms[0].marioObj)._model == env._G.sglFriends[5].model,
+        "render hook restores the saved model before drawing")
+    env._G.sglSetFriend(4)
+    w:step(1)
+    check(env.gPlayerSyncTable[0].friend == 4 and raw(H.ms[0].marioObj)._model == env._G.sglFriends[4].model,
+        "a new character choice replaces the startup restore")
 end)
 
 test("character select: remembered pick, overlay hides the other HUDs", function()

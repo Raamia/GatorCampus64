@@ -1,0 +1,281 @@
+@import "tailwindcss" source(none);
+@import "./themes.css";
+
+/* Scan local source + SDK components for Tailwind class usage */
+@source "./**/*.{ts,tsx}";
+@source "../node_modules/deepspace/dist/**/*.js";
+
+/* Gator Field Board: a campus field notebook in warm paper, ink and orange. */
+@theme {
+  --color-background: #f4f1e8;
+  --color-foreground: #173e32;
+  --color-card: #fffdf7;
+  --color-card-foreground: #173e32;
+  --color-primary: #ed6b37;
+  --color-primary-foreground: #fffaf1;
+  --color-muted: #e9e5d9;
+  --color-muted-foreground: #6f786f;
+  --color-border: #d8d6ca;
+  --color-input: #d8d6ca;
+  --color-ring: #ed6b37;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: #f4f1e8; color: #173e32; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+.landing-shell { min-height: 100vh; max-width: 1600px; margin: auto; padding: 28px clamp(24px, 5vw, 76px) 20px; display: flex; flex-direction: column; }
+.landing-nav,.landing-footer { display:flex; align-items:center; justify-content:space-between; font-size:10px; letter-spacing:.13em; color:#788078; }
+.brand-mark { color:#173e32; text-decoration:none; font-size:12px; font-weight:800; letter-spacing:.1em; display:flex; align-items:center; gap:10px; }
+.brand-mark span { display:grid; place-items:center; width:29px; height:29px; background:#173e32; color:#f6f1e6; border-radius:50%; font:italic 20px Georgia; letter-spacing:0; }
+.landing-hero { display:grid; grid-template-columns: 1fr minmax(390px, .92fr); align-items:center; gap:clamp(32px,7vw,110px); flex:1; padding:70px 0; }
+.eyebrow { display:flex; align-items:center; gap:8px; color:#7d806f; font-size:10px; font-weight:700; letter-spacing:.14em; }
+.landing-copy h1,.welcome-card h1 { font:500 clamp(54px,7.5vw,104px)/.96 Georgia, "Times New Roman", serif; letter-spacing:-.055em; margin:27px 0 20px; color:#173e32; }
+.landing-copy h1 em,.welcome-card h1 em { color:#e36a37; font-weight:400; }
+.landing-copy>p:not(.eyebrow),.welcome-card>p { max-width:440px; color:#6d756c; font-size:16px; line-height:1.7; margin:0 0 32px; }
+.primary-action { border:0; border-radius:4px; display:inline-flex; align-items:center; justify-content:center; gap:14px; background:#ed6b37; color:#fffaf1; padding:15px 19px; font-size:12px; font-weight:700; letter-spacing:.02em; text-decoration:none; transition:transform .15s, background .15s; }
+.primary-action:hover { background:#d95d2e; transform:translateY(-1px); }
+.landing-small { margin-top:36px; display:flex; gap:12px; align-items:center; font-size:9px; letter-spacing:.12em; color:#8c9087; }
+.landing-small span,.privacy-note span { width:5px; height:5px; border-radius:50%; background:#e97541; }
+.landing-map,.map-graphic { position:relative; min-height:490px; height:min(62vh,650px); overflow:hidden; background:#dfe5d4; border:1px solid #d0d8c6; }
+.map-grid { position:absolute; inset:0; opacity:.46; background-image:linear-gradient(28deg,transparent 48%,#c4cfbd 49%,#c4cfbd 50%,transparent 51%),linear-gradient(115deg,transparent 48%,#c4cfbd 49%,#c4cfbd 50%,transparent 51%),linear-gradient(#d0d9c8 1px,transparent 1px),linear-gradient(90deg,#d0d9c8 1px,transparent 1px); background-size:230px 210px,250px 190px,38px 38px,38px 38px; }
+.landing-map:before,.map-graphic:before,.landing-map:after,.map-graphic:after { content:""; position:absolute; border:1px solid #c4cfbd; border-radius:48%; transform:rotate(-26deg); }
+.landing-map:before,.map-graphic:before { width:78%; height:20%; left:6%; top:38%; }.landing-map:after,.map-graphic:after { width:62%; height:28%; left:26%; top:9%; transform:rotate(58deg); }
+.route { position:absolute; height:3px; background:#e87848; transform-origin:left; border-radius:9px; box-shadow:0 0 0 5px #e878481c; }.route-one { width:52%; left:22%; top:57%; transform:rotate(-33deg); }.route-two { width:29%; left:56%; top:37%; transform:rotate(54deg); }
+.pin { position:absolute; width:12px; height:12px; border:3px solid #fff8e9; border-radius:50%; background:#e96d3a; box-shadow:0 1px 6px #37453766; }.pin-a { left:20%; top:59%; }.pin-b { left:70%; top:32%; }.pin-c { left:57%; top:58%; }
+.map-label { position:absolute; font-size:8px; font-weight:800; letter-spacing:.12em; color:#566654; }.label-a { left:13%; top:65%; }.label-b { left:71%; top:25%; }.label-c { left:59%; top:62%; }
+.map-caption { position:absolute; bottom:23px; left:25px; background:#f8f4e8ed; padding:16px 19px; }.map-caption span,.map-caption strong { display:block; }.map-caption span { font-size:8px; letter-spacing:.14em; color:#929382; margin-bottom:9px; }.map-caption strong { font:24px/1.02 Georgia,serif; letter-spacing:-.03em; font-weight:400; }
+.landing-footer { border-top:1px solid #d8d6ca; padding-top:14px; }
+.board-wrap { max-width:1250px; margin:auto; padding:40px 28px; display:grid; grid-template-columns:1fr .85fr; gap:30px; min-height:calc(100vh - 72px); align-items:center; }
+.welcome-card { background:#fffdf7; padding:clamp(30px,5vw,65px); border:1px solid #e0ddd2; }.welcome-card h1 { font-size:clamp(48px,6vw,76px); }.welcome-actions { display:flex; flex-direction:column; gap:14px; align-items:flex-start; }.join-row { display:flex; gap:8px; width:100%; max-width:420px; }.join-row input,.result-dialog input { min-width:0; border:1px solid #d8d6ca; background:#fbfaf4; padding:13px 14px; color:#173e32; outline-color:#ed6b37; }.join-row input { flex:1; text-transform:uppercase; letter-spacing:.1em; }.join-row button,.invite-button { border:1px solid #d8d6ca; background:#f4f1e8; color:#173e32; padding:0 13px; display:flex; align-items:center; gap:8px; font-size:11px; font-weight:700; }.join-row button:disabled { opacity:.45; cursor:not-allowed; }.privacy-note { display:flex; align-items:center; gap:9px; margin-top:30px; color:#878a80; font-size:10px; line-height:1.5; }.map-graphic { min-height:440px; height:100%; }
+.board-page { max-width:1400px; padding:34px clamp(20px,4vw,62px) 58px; margin:auto; }.board-topline { display:flex; justify-content:space-between; align-items:end; border-bottom:1px solid #d9d7cc; padding:8px 0 22px; margin-bottom:28px; }.board-topline h1 { font:44px Georgia,serif; letter-spacing:-.04em; margin:8px 0 0; }.invite-button { height:42px; padding:0 10px 0 14px; }.invite-button span { border-left:1px solid #d8d6ca; padding-left:11px; margin-left:4px; letter-spacing:.12em; font-size:10px; }.field-layout { display:grid; grid-template-columns:minmax(0,1fr) 290px; gap:32px; }.section-heading { display:flex; align-items:end; justify-content:space-between; margin-bottom:16px; }.section-index,.tiny-caption { font-size:9px; font-weight:800; color:#85897d; letter-spacing:.14em; }.section-heading h2 { font:28px Georgia,serif; margin:7px 0 0; letter-spacing:-.03em; }.tiny-caption { padding-bottom:5px; }.mission-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }.mission-card { text-align:left; border:1px solid #dfddd2; background:#fffdf7; padding:17px 18px 13px; min-height:175px; color:#173e32; transition:border .15s,transform .15s,box-shadow .15s; }.mission-card:hover,.mission-card.is-selected { border-color:#e87848; transform:translateY(-2px); box-shadow:0 8px 22px #45543a0c; }.mission-meta,.mission-foot { display:flex; justify-content:space-between; align-items:center; }.mission-meta { color:#8b8d82; font-size:8px; text-transform:uppercase; font-weight:800; letter-spacing:.1em; }.mission-card h3 { font:18px/1.1 Georgia,serif; margin:15px 0 6px; letter-spacing:-.02em; }.mission-card p { color:#7a8076; font-size:11px; line-height:1.5; margin:0 0 14px; }.mission-foot { border-top:1px solid #eeece4; padding-top:10px; color:#7f857c; font-size:9px; }.mission-foot span:first-child { display:flex; align-items:center; gap:5px; }.card-arrow { font-size:17px; color:#e87848; }.activity-card,.board-note { border:1px solid #dfddd2; background:#fffdf7; padding:19px; }.compact { align-items:center; }.compact .section-heading h2 { font-size:23px; }.live-dot { width:7px;height:7px;border-radius:50%;background:#63a07a; box-shadow:0 0 0 4px #63a01c; }.stat-row { display:flex; align-items:center; gap:12px; padding:22px 0; border-bottom:1px solid #edeae1; }.stat-row strong { font:56px/.9 Georgia,serif; letter-spacing:-.06em; }.stat-row span { color:#80867a; font-size:10px; line-height:1.35; }.stat-row i { flex:1; border-top:1px dashed #d9d6c9; margin-left:10px; }.empty-activity { color:#858a7f; font-size:11px; line-height:1.6; padding:18px 0 4px; }.last-run { display:flex; flex-direction:column; gap:7px; padding-top:18px; }.last-run span,.board-note>span { color:#8b8e83; font-size:8px; letter-spacing:.13em; font-weight:800; }.last-run strong { font:16px Georgia,serif; }.last-run p { margin:0; color:#84877e; font-size:10px; }.board-note { margin-top:12px; background:#e5e9dc; border-color:#d9dfcf; }.board-note p { font:17px/1.4 Georgia,serif; margin:12px 0 18px; }.note-rule { height:1px; background:#c9d1c1; margin-bottom:12px; }.board-note small { font-size:8px; letter-spacing:.11em; color:#858c7e; }.leave-squad { display:block; margin:17px auto; color:#8c8e83; border:0; background:none; text-decoration:underline; font-size:10px; }.selected-run { margin-top:16px; padding:20px; background:#173e32; color:#f7f2e7; display:flex; align-items:center; justify-content:space-between; gap:18px; }.selected-run .section-index { color:#b7c6ad; }.selected-run h2 { font:21px Georgia,serif; margin:7px 0; }.selected-run p { max-width:510px; color:#d0d8c9; font-size:11px; line-height:1.5; }.reported-label { display:flex; align-items:center; gap:6px; color:#c3cdb8; font-size:8px; letter-spacing:.1em; }.selected-run .primary-action { flex-shrink:0; }.signin-hint { position:fixed; bottom:15px; right:20px; background:#173e32; color:white; padding:11px 14px; font-size:10px; box-shadow:0 4px 18px #12281f22; }.modal-backdrop { position:fixed; inset:0; display:grid; place-items:center; padding:20px; background:#13271f88; z-index:100; }.result-dialog { position:relative; width:min(100%,440px); padding:30px; background:#fffdf7; box-shadow:0 18px 70px #061a1266; }.modal-close { position:absolute; top:12px; right:15px; border:0; background:none; font-size:26px; color:#7b8279; }.result-dialog h2 { font:34px Georgia,serif; margin:10px 0 5px; }.result-dialog>p { font-size:12px; color:#747b71; margin:0 0 22px; }.result-dialog label { display:flex; flex-direction:column; gap:7px; font-size:10px; letter-spacing:.04em; color:#687368; margin-top:14px; }.result-dialog input { width:100%; }.form-pair { display:grid; grid-template-columns:1fr 1fr; gap:14px; }.dialog-note { align-items:flex-start; margin:20px 0; }.submit-run { width:100%; }.submit-run:disabled { opacity:.5; cursor:not-allowed; }
+@media (max-width:900px) { .landing-hero { grid-template-columns:1fr 1fr; gap:28px; }.landing-map { min-height:400px; }.field-layout { grid-template-columns:1fr; }.activity-column { display:grid; grid-template-columns:1fr 1fr; gap:12px; }.board-note { margin:0; }.leave-squad { grid-column:1/-1; } }
+@media (max-width:640px) { .landing-shell { padding:20px 20px 14px; }.landing-nav>span { display:none; }.landing-hero { display:flex; flex-direction:column; align-items:stretch; padding:62px 0 30px; gap:34px; }.landing-copy h1 { font-size:59px; }.landing-map { min-height:350px; }.landing-footer span:nth-child(2) { display:none; }.board-wrap { padding:20px; display:flex; flex-direction:column; }.welcome-card { padding:25px 22px; }.welcome-aside { width:100%; }.map-graphic { min-height:340px; }.join-row { flex-wrap:wrap; }.join-row button { height:44px; }.board-page { padding:24px 16px 50px; }.board-topline { align-items:start; gap:15px; }.board-topline h1 { font-size:36px; }.invite-button { gap:5px; padding:0 8px; font-size:9px; }.invite-button span { font-size:8px; padding-left:6px; }.mission-grid { grid-template-columns:1fr; }.mission-card { min-height:152px; }.activity-column { display:flex; flex-direction:column; }.selected-run { align-items:flex-start; flex-direction:column; }.selected-run .primary-action { width:100%; }.section-heading .tiny-caption { font-size:7px; }.landing-footer { font-size:8px; } }
+
+/*
+ * Theming — pure shadcn/ui CSS variables with [data-theme] selectors.
+ *
+ * The @theme block below holds the default theme (slate). All other themes
+ * live in `themes.css` as `[data-theme="<id>"]` override blocks. Switching
+ * themes = changing the data-theme attribute on <html> in index.html. No
+ * JS, no FOUC.
+ *
+ * Status colors (success, warning, info) are intentionally NOT themed —
+ * they stay consistent across every preset.
+ */
+@theme {
+  /* shadcn core tokens — slate (default): neutral gray on near-black, indigo accent */
+  --color-background: #0a0a0a;
+  --color-foreground: #e8eaed;
+  --color-card: #161616;
+  --color-card-foreground: #e8eaed;
+  --color-popover: #161616;
+  --color-popover-foreground: #e8eaed;
+  --color-primary: #818cf8;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #1e1e1e;
+  --color-secondary-foreground: #e8eaed;
+  --color-muted: #1e1e1e;
+  --color-muted-foreground: #9ca3af;
+  --color-accent: #262626;
+  --color-accent-foreground: #e8eaed;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-border: rgba(60, 64, 67, 0.6);
+  --color-input: rgba(60, 64, 67, 0.6);
+  --color-ring: #818cf8;
+  --radius: 0.5rem;
+
+  /*
+   * Map the rounded-* utilities onto --radius so a theme (or you) can change
+   * the app's shape language in one place. At the default 0.5rem these equal
+   * Tailwind's stock values, so there is no visual change until a theme
+   * overrides --radius.
+   */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+
+  /* Status colors — constant across all themes */
+  --color-success: #10b981;
+  --color-success-foreground: #ffffff;
+  --color-warning: #f59e0b;
+  --color-warning-foreground: #ffffff;
+  --color-info: #3b82f6;
+  --color-info-foreground: #ffffff;
+
+  /*
+   * Shadows — slate (default). Each theme in themes.css tunes these.
+   *
+   * Toned down 2026-05: previous values were 8px/12px offset with
+   * 32px/40px blur which read as a heavy halo under every Card on
+   * the page. New values are Linear/Stripe-style: barely-there at
+   * rest, slightly more present on hover.
+   *
+   * IMPORTANT: starter components (`Card`, `Dialog`, `CardGrid`,
+   * `Navigation`, `Toast`) intentionally use literal shadow values
+   * via `shadow-[…]` arbitrary-value classes, NOT the
+   * `shadow-card` / `shadow-card-hover` token classes Tailwind v4
+   * generates from this @theme block. Why: Tailwind's @theme directive
+   * compiles these tokens into the utility-class definitions at build
+   * time, and runtime [data-theme] overrides don't always cancel the
+   * baked baseline cleanly — apps switching themes were getting the
+   * slate value carried forward on the compiled `shadow-card` class.
+   * Sidestepping the token system in starter components is the
+   * deterministic fix. See docs/platform/theming-shadows.md.
+   */
+  --shadow-card: 0 1px 2px 0 rgba(0, 0, 0, 0.12);
+  --shadow-card-hover: 0 2px 8px 0 rgba(0, 0, 0, 0.16);
+
+  /* Shell tokens: the area behind a multi-panel layout, and the raised
+     surface a page renders into. Used by templates whose (app)/_layout is a
+     shell (e.g. copilot's sidebar | panel | chat); a single-column layout
+     simply doesn't reference them. In every theme keep the panel reading as
+     elevated: dark → panel lighter than shell; light → white panel on a
+     faintly darker shell. */
+  --color-shell: #0a0a0a;
+  --color-shell-panel: #161616;
+
+  /* Animations */
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Theme override blocks live in `themes.css` — imported above. */
+
+/*
+ * Animation keyframes for shadcn components.
+ * These replace the tailwindcss-animate plugin which is not compatible with Tailwind v4.
+ */
+@keyframes animate-in {
+  from { opacity: var(--tw-enter-opacity, 1); transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0) scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), var(--tw-enter-scale, 1)) rotate(var(--tw-enter-rotate, 0)); }
+}
+
+@keyframes animate-out {
+  to { opacity: var(--tw-exit-opacity, 1); transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0) scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1)) rotate(var(--tw-exit-rotate, 0)); }
+}
+
+@utility animate-in {
+  animation-name: animate-in;
+  animation-duration: 150ms;
+  /* `both` prevents a one-frame flash before entry / after exit. */
+  animation-fill-mode: both;
+  --tw-enter-opacity: initial;
+  --tw-enter-scale: initial;
+  --tw-enter-translate-x: initial;
+  --tw-enter-translate-y: initial;
+  --tw-enter-rotate: initial;
+}
+
+@utility animate-out {
+  animation-name: animate-out;
+  animation-duration: 150ms;
+  /* `both` prevents a one-frame flash before entry / after exit. */
+  animation-fill-mode: both;
+  --tw-exit-opacity: initial;
+  --tw-exit-scale: initial;
+  --tw-exit-translate-x: initial;
+  --tw-exit-translate-y: initial;
+  --tw-exit-rotate: initial;
+}
+
+@utility fade-in-0 { --tw-enter-opacity: 0; }
+@utility fade-out-0 { --tw-exit-opacity: 0; }
+@utility zoom-in-95 { --tw-enter-scale: .95; }
+@utility zoom-out-95 { --tw-exit-scale: .95; }
+@utility slide-in-from-top-2 { --tw-enter-translate-y: -0.5rem; }
+@utility slide-in-from-bottom-2 { --tw-enter-translate-y: 0.5rem; }
+@utility slide-in-from-left-2 { --tw-enter-translate-x: -0.5rem; }
+@utility slide-in-from-right-2 { --tw-enter-translate-x: 0.5rem; }
+@utility slide-out-to-top-2 { --tw-exit-translate-y: -0.5rem; }
+@utility slide-out-to-bottom-2 { --tw-exit-translate-y: 0.5rem; }
+@utility slide-out-to-left-2 { --tw-exit-translate-x: -0.5rem; }
+@utility slide-out-to-right-2 { --tw-exit-translate-x: 0.5rem; }
+
+
+/*
+ * Custom base styles — must be in @layer base so utility classes can override.
+ */
+@layer base {
+  html {
+    /* Default to dark for native form controls (calendar icons, scrollbars).
+     * Light themes opt into `color-scheme: light` in themes.css. */
+    color-scheme: dark;
+  }
+
+  html, body, #root {
+    min-height: 100vh;
+    background-color: var(--color-background);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 14px;
+    color: var(--color-foreground);
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 0.25rem;
+    background-color: var(--color-border);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-muted-foreground);
+  }
+
+  /* Selection styling */
+  ::selection {
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+  }
+
+  /*
+   * Focus indication is intentionally NOT applied app-wide via a
+   * `*:focus-visible` rule. Doing so paints a colored outline onto
+   * every focusable element on the page — including programmatically
+   * focusable containers like Radix DismissableLayer wrappers,
+   * dialog overlays, and any element with `tabindex={-1}` used for
+   * scroll containment. The result reads as "the entire panel /
+   * dialog is selected" the moment a child button is clicked.
+   *
+   * Per-component focus indicators (e.g. shadcn's
+   * `focus-visible:ring-1` on Button, `focus-visible:border-ring` on
+   * Input / Textarea / Select) are sufficient for keyboard
+   * accessibility and don't bleed onto containers.
+   *
+   * If you DO need a global indicator for very keyboard-heavy apps,
+   * scope it tightly — e.g. only to interactive elements:
+   *
+   *   a:focus-visible,
+   *   button:focus-visible,
+   *   [role="button"]:focus-visible,
+   *   input:focus-visible,
+   *   select:focus-visible,
+   *   textarea:focus-visible {
+   *     outline: 2px solid var(--color-primary);
+   *     outline-offset: 2px;
+   *   }
+   *
+   * — never `*`.
+   */
+
+  /* Prevent 300ms tap delay on mobile */
+  a, button, [role="button"], input, select, textarea {
+    touch-action: manipulation;
+  }
+}

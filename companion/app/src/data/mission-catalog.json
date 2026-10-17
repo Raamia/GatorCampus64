@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "missions": [
+    {
+      "id": "reitz_rooftop",
+      "stage": "Reitz & Engineering",
+      "act": 1,
+      "title": "ROOFTOP OF THE REITZ",
+      "objective": "Climb the Reitz Union to its penthouse roof, 28.8 m!",
+      "minimumPlayers": 1,
+      "hint": "Start on the ravine side and use the terraces and window-washer lift to reach the tower roof.",
+      "hintTags": ["climb", "lift", "rooftop"]
+    },
+    {
+      "id": "reitz_tokens",
+      "stage": "Reitz & Engineering",
+      "act": 2,
+      "title": "MEAL SWIPE TOKENS",
+      "objective": "Find the 8 meal-swipe tokens around the quad!",
+      "minimumPlayers": 1,
+      "hint": "Follow the quad route and check elevated spots as well as ground level.",
+      "hintTags": ["exploration", "collection"]
+    },
+    {
+      "id": "reitz_robotics",
+      "stage": "Reitz & Engineering",
+      "act": 3,
+      "title": "REMOTE ROBOTICS LAB - 2P",
+      "objective": "One drives the crane, one rides it up to the ledge!",
+      "minimumPlayers": 2,
+      "hint": "The rider jumps into each yellow sensor box to open a gate while the driver lines up the crane.",
+      "hintTags": ["co-op", "crane", "coordination"]
+    },
+    {
+      "id": "marston_climb",
+      "stage": "Marston Library",
+      "act": 1,
+      "title": "OUT-OF-ORDER ELEVATOR",
+      "objective": "The elevator's broken! Climb the atrium to the 5th floor!",
+      "minimumPlayers": 1,
+      "hint": "Use the atrium stairs and book-cart lifts to climb toward the fifth floor.",
+      "hintTags": ["climb", "atrium", "lift"]
+    },
+    {
+      "id": "marston_quiet",
+      "stage": "Marston Library",
+      "act": 2,
+      "title": "SHHH! LOST TEXTBOOKS",
+      "objective": "Find 8 lost textbooks on the silent 5th floor. Shhh!",
+      "minimumPlayers": 1,
+      "hint": "Hold L to tiptoe on the fifth floor, and keep an eye on the librarian patrols.",
+      "hintTags": ["stealth", "collection"]
+    },
+    {
+      "id": "marston_booking",
+      "stage": "Marston Library",
+      "act": 3,
+      "title": "STUDY ROOM BOOKING - 2P",
+      "objective": "Swap booking codes, then book every kiosk within 4 s!",
+      "minimumPlayers": 2,
+      "hint": "Coordinate the kiosk punches with your teammates; the booking window is only four seconds.",
+      "hintTags": ["co-op", "coordination", "timing"]
+    }
+  ]
+}
