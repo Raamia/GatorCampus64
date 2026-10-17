@@ -1,0 +1,30 @@
+{
+  "name": "Raami",
+  "id": "raami",
+  "reference_photos": "reference/friends/raami/",
+  "colors": {
+    "skin": "#D8A07E",
+    "skin_shadow": "#C08766",
+    "hair": "#1B171A",
+    "eyebrows": "#2A1D1B",
+    "top": "#5A6777",
+    "top_detail": "#4C5868",
+    "pants": "#222226",
+    "shoes": "#F2F2F2",
+    "shoe_soles": "#DADADA"
+  },
+  "outfit": {
+    "top": "slate blue crewneck sweatshirt with a ribbed collar",
+    "accessory": "none",
+    "pants": "black pants",
+    "shoes": "white sneakers",
+    "headwear": "none (cap power-ups show on his hair)"
+  },
+  "signature_traits": [
+    "big voluminous tight black curls, wider than the head, with curls falling over the forehead to the eyebrows",
+    "thick dark eyebrows visible just under the curls",
+    "large dark brown eyes",
+    "calm, slight closed-mouth smile; faint mustache shadow"
+  ],
+  "notes": "This is the user's own character. Hold face art until Daniel's textures are approved."
+}

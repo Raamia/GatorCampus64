@@ -1,0 +1,35 @@
+{
+  "name": "Jaime",
+  "id": "jaime",
+  "reference_photos": "reference/friends/jaime/",
+  "reference_notes": "photo3 has two people: Jaime is on the right (white tee, headphones around his neck). photo2: Jaime is in the foreground drinking.",
+  "colors": {
+    "skin": "#DCA588",
+    "skin_shadow": "#C48C70",
+    "hair": "#4A362C",
+    "hair_highlight": "#6B4E3E",
+    "eyebrows": "#241A17",
+    "top": "#F2EDE6",
+    "top_detail": "#B5442E",
+    "pants": "#BB9861",
+    "headphones": "#D6D2CB",
+    "headphones_shadow": "#A8A39A",
+    "chain": "#C8CCD0",
+    "shoes": "#F2F2F2",
+    "shoe_soles": "#DADADA"
+  },
+  "outfit": {
+    "top": "white t-shirt with a small dark-red chest logo",
+    "accessory": "silver over-ear headphones worn around the neck (always on); thin silver chain necklace; dark braided leather bracelet",
+    "pants": "khaki shorts",
+    "shoes": "white sneakers",
+    "headwear": "none (cap power-ups show on his hair)"
+  },
+  "signature_traits": [
+    "big fluffy, messy, windswept medium-brown hair with wavy volume flaring out at the sides and a fringe over the forehead",
+    "thick, bold dark eyebrows (much darker than his hair)",
+    "dark brown eyes, slight confident smirk-smile",
+    "silver headphones around his neck"
+  ],
+  "notes": "Hold face art until Daniel's textures are approved."
+}

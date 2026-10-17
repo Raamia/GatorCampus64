@@ -1,0 +1,34 @@
+{
+  "name": "Anh",
+  "id": "anh",
+  "reference_photos": "reference/friends/anh/",
+  "reference_notes": "photo1 is a group shot: Anh is the person in the center wearing glasses and holding the microphone.",
+  "colors": {
+    "skin": "#E4AE8E",
+    "skin_shadow": "#CB9476",
+    "hair": "#1F1814",
+    "glasses": "#15161C",
+    "top": "#F4F4F0",
+    "top_stripes": "#7EC3E6",
+    "top_trim": "#151A2A",
+    "jersey_gold": "#C9A447",
+    "pants": "#1C1C20",
+    "socks": "#F4F4F0",
+    "shoes": "#F2F2F2",
+    "shoe_soles": "#DADADA"
+  },
+  "outfit": {
+    "top": "Argentina home soccer jersey: white with vertical sky-blue stripes, black collar and sleeve trim, big black number 10 on the back; logos simplified to small gold/black N64-style shapes",
+    "accessory": "thick black rectangular glasses (always on)",
+    "pants": "black soccer shorts",
+    "shoes": "white sneakers (white socks)",
+    "headwear": "none (cap power-ups show on his hair)"
+  },
+  "signature_traits": [
+    "thick black rectangular glasses, large relative to the face",
+    "straight black mushroom/bowl cut with side-swept bangs over the forehead, covering the ears",
+    "round youthful face",
+    "small closed-mouth expression, slight smile"
+  ],
+  "notes": "Hold face art until Daniel's textures are approved. Glasses can be drawn into the eye textures or built as thin geometry; decide during modeling."
+}

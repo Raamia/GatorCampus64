@@ -1,0 +1,33 @@
+{
+  "name": "Alfred",
+  "id": "alfred",
+  "reference_photos": "reference/friends/alfred/",
+  "reference_notes": "Only one photo (front, head and torso). Side and back of the hair are inferred.",
+  "colors": {
+    "skin": "#D29C80",
+    "skin_shadow": "#B98468",
+    "hair": "#1E1A1B",
+    "eyebrows": "#221817",
+    "top": "#1C1B1F",
+    "shirt": "#F4F2F6",
+    "tie": "#E0303A",
+    "tie_pattern": "#F4F2F6",
+    "pants": "#1C1B1F",
+    "shoes": "#141414",
+    "shoe_soles": "#2A2A2A"
+  },
+  "outfit": {
+    "top": "black suit jacket over a white collared shirt",
+    "accessory": "bright red tie with a thin diagonal white stripe pattern",
+    "pants": "black suit pants",
+    "shoes": "black dress shoes",
+    "headwear": "none (cap power-ups show on his hair)"
+  },
+  "signature_traits": [
+    "short tight black curls piled on top, with shorter faded sides",
+    "thick dark eyebrows",
+    "big friendly smile showing the upper teeth",
+    "always in a sharp black suit and red tie (very funny for a platformer)"
+  ],
+  "notes": "Hold face art until Daniel's textures are approved. Outfit defaults to the suit because it is the only outfit in the photo; ask the user if they want a casual alternative later."
+}

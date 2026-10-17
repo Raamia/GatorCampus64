@@ -1,0 +1,30 @@
+{
+  "name": "Corina",
+  "id": "corina",
+  "reference_photos": "reference/friends/corina/",
+  "colors": {
+    "skin": "#E0AA8C",
+    "skin_shadow": "#C99176",
+    "hair": "#2B1A13",
+    "hair_tips": "#5A321E",
+    "top": "#1F2A4A",
+    "top_detail": "#18213A",
+    "pants": "#4A5F80",
+    "shoes": "#F2F2F2",
+    "shoe_soles": "#DADADA"
+  },
+  "outfit": {
+    "top": "navy blue t-shirt",
+    "accessory": "thin silver chain necklace",
+    "pants": "blue jeans",
+    "shoes": "white sneakers",
+    "headwear": "none (cap power-ups show on her hair)"
+  },
+  "signature_traits": [
+    "big voluminous dark-brown curly hair, past the shoulders, with lighter caramel curl ends",
+    "curly bangs falling over the forehead to the eyebrows",
+    "big bright smile showing the upper teeth",
+    "dark eyes with defined lashes"
+  ],
+  "notes": "Hold face art until Daniel's textures are approved, so the style stays consistent."
+}
