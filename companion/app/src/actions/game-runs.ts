@@ -98,7 +98,10 @@ export const getGameLeaderboard: ActionHandler<Env> = async ({ userId, params, t
   let offset: number | undefined
   do {
     const result = await queryPage('solo_runs', {
-      where: { missionId, assisted: false },
+      // `assisted` is a boolean interpretation over numeric 0/1 storage. Query
+      // the mission first, then normalize/filter that column below so a stored
+      // zero is not lost if the action query compares the JSON boolean literally.
+      where: { missionId },
       orderBy: 'elapsedFrames',
       orderDir: 'asc',
       limit: 100,
@@ -110,12 +113,16 @@ export const getGameLeaderboard: ActionHandler<Env> = async ({ userId, params, t
   } while (offset !== undefined)
 
   const rows = records
+    .filter((record) => {
+      const assisted = record.data.assisted as unknown
+      return assisted === false || assisted === 0
+    })
     .map((record) => ({
       playerTag: record.data.playerTag,
       missionId: record.data.missionId,
       elapsedFrames: record.data.elapsedFrames,
       retries: record.data.retries,
-      assisted: record.data.assisted,
+      assisted: false,
       gameVersion: record.data.gameVersion,
       createdAt: record.createdAt,
     }))

@@ -100,7 +100,8 @@ describe('getGameLeaderboard', () => {
     const tools = fakeTools({ queryRows: [
       { recordId: 'c', createdAt: '2026-10-16T12:00:03.000Z', data: { ...validRun, playerTag: 'GATOR-C', elapsedFrames: 900, retries: 0 } },
       { recordId: 'b', createdAt: '2026-10-16T12:00:02.000Z', data: { ...validRun, playerTag: 'GATOR-B', elapsedFrames: 800, retries: 2 } },
-      { recordId: 'a', createdAt: '2026-10-16T12:00:01.000Z', data: { ...validRun, playerTag: 'GATOR-A', elapsedFrames: 800, retries: 1 } },
+      { recordId: 'a', createdAt: '2026-10-16T12:00:01.000Z', data: { ...validRun, assisted: 0, playerTag: 'GATOR-A', elapsedFrames: 800, retries: 1 } },
+      { recordId: 'assisted', data: { ...validRun, assisted: true, playerTag: 'GATOR-ASSISTED', elapsedFrames: 100, retries: 0 } },
     ] })
     const result = await getGameLeaderboard(ctx('player-1', { missionId: 'swamp_sprint', limit: 2 }, tools))
     expect(result).toMatchObject({
@@ -111,7 +112,7 @@ describe('getGameLeaderboard', () => {
       ] },
     })
     expect(tools.query).toHaveBeenCalledWith('solo_runs', {
-      where: { missionId: 'swamp_sprint', assisted: false },
+      where: { missionId: 'swamp_sprint' },
       orderBy: 'elapsedFrames',
       orderDir: 'asc',
       limit: 100,
