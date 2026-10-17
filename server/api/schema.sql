@@ -73,7 +73,7 @@
 CREATE TABLE IF NOT EXISTS users (
     sub         text PRIMARY KEY,                       -- Auth0 subject, e.g. "google-oauth2|123"
     nickname    text,
-    email_uf    boolean NOT NULL DEFAULT false,         -- claim https://chooseyourgator.select/uf
+    email_uf    boolean NOT NULL DEFAULT false,         -- claim https://gatorcamp.us/uf (AUTH0_CLAIM_NAMESPACE)
     created     timestamptz NOT NULL DEFAULT now(),
     last_seen   timestamptz NOT NULL DEFAULT now()
 );

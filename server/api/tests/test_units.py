@@ -77,3 +77,26 @@ def test_jwks_cache_refetches_unknown_kid_rate_limited(jwks):
     with pytest.raises(AuthError):
         c2.get("other")
     assert len(calls) == 3
+
+
+def test_config_defaults_follow_sgl_domain(monkeypatch):
+    from sgl_api import config
+    for k in ("SGL_DOMAIN", "AUTH0_ISSUER", "AUTH0_AUDIENCE", "AUTH0_CLAIM_NAMESPACE", "CORS_ORIGINS", "PLAY_ADDRESS"):
+        monkeypatch.delenv(k, raising=False)
+    s = config.load()
+    assert (s.auth0_issuer, s.auth0_audience, s.claim_namespace, s.play_address) == (
+        "https://login.gatorcamp.us/", "https://api.gatorcamp.us", "https://gatorcamp.us/", "play.gatorcamp.us:7777")
+    assert s.cors_origins == ["https://gatorcamp.us", "https://www.gatorcamp.us"]
+    monkeypatch.setenv("SGL_DOMAIN", "example.org")
+    monkeypatch.setenv("AUTH0_AUDIENCE", "https://aud.test")
+    s = config.load()
+    assert s.auth0_issuer == "https://login.example.org/" and s.auth0_audience == "https://aud.test"
+    assert s.claim_namespace == "https://example.org/" and s.play_address == "play.example.org:7777"
+
+
+def test_principal_claim_namespace():
+    from sgl_api.auth import Principal
+    p = Principal("a|b", set(), {"https://gatorcamp.us/uf": True, "https://gatorcamp.us/nickname": "Gat"})
+    assert p.email_uf is True and p.nickname == "Gat"
+    q = Principal("a|b", set(), {"https://gatorcamp.us/uf": True}, claim_ns="https://other.test/")
+    assert q.email_uf is False

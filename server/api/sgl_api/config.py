@@ -14,10 +14,13 @@ def _int(name: str, default: int) -> int:
     return int(_env(name, str(default)))
 
 
+DEFAULT_DOMAIN = "gatorcamp.us"
+
+
 @dataclass(frozen=True)
 class Settings:
     database_url: str
-    auth0_issuer: str               # e.g. https://login.chooseyourgator.select/ (trailing slash, as in tokens)
+    auth0_issuer: str               # e.g. https://login.gatorcamp.us/ (trailing slash, as in tokens)
     auth0_audience: str
     auth0_jwks_url: str
     s3_endpoint: str | None         # Vultr Object Storage, e.g. https://ewr1.vultrobjects.com
@@ -35,17 +38,26 @@ class Settings:
     limit_global_hour: int = 20
     link_code_ttl: int = 600
     status_stale_secs: int = 0      # > 0: report the server offline when no event arrived for this long
+    claim_namespace: str = f"https://{DEFAULT_DOMAIN}/"   # Auth0 Action custom claims: <ns>uf, <ns>nickname
+    play_address: str = f"play.{DEFAULT_DOMAIN}:7777"     # shown by /status
 
 
 def load() -> Settings:
-    issuer = _env("AUTH0_ISSUER", "https://login.chooseyourgator.select/")
+    """Every URL defaults from SGL_DOMAIN (default gatorcamp.us); each can be overridden on its own."""
+    domain = _env("SGL_DOMAIN", DEFAULT_DOMAIN)
+    issuer = _env("AUTH0_ISSUER", f"https://login.{domain}/")
     if not issuer.endswith("/"):
         issuer += "/"
-    origins = _env("CORS_ORIGINS", "https://chooseyourgator.select,https://www.chooseyourgator.select")
+    origins = _env("CORS_ORIGINS", f"https://{domain},https://www.{domain}")
+    ns = _env("AUTH0_CLAIM_NAMESPACE", f"https://{domain}/")
+    if not ns.endswith("/"):
+        ns += "/"
     return Settings(
         database_url=_env("DATABASE_URL", "postgresql://sgl:sgl@127.0.0.1:5432/sgl"),
         auth0_issuer=issuer,
-        auth0_audience=_env("AUTH0_AUDIENCE", "https://api.chooseyourgator.select"),
+        auth0_audience=_env("AUTH0_AUDIENCE", f"https://api.{domain}"),
+        claim_namespace=ns,
+        play_address=_env("PLAY_ADDRESS", f"play.{domain}:7777"),
         auth0_jwks_url=_env("AUTH0_JWKS_URL", issuer + ".well-known/jwks.json"),
         s3_endpoint=_env("S3_ENDPOINT"),
         s3_region=_env("S3_REGION", "us-east-1"),

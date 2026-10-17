@@ -34,15 +34,15 @@
 <body>
   <div class="tv">
     <div style="display:flex;flex-direction:column;min-height:0">
-      <h1 class="title">CHOOSE YOUR GATOR<span class="tld">.SELECT</span></h1>
-      <div class="stage" id="stage" style="flex:1"><div class="empty" id="empty">No gators yet.<br><br>Make yours at chooseyourgator.select</div></div>
+      <h1 class="title">CHOOSE YOUR GATOR<span class="tld">!</span></h1>
+      <div class="stage" id="stage" style="flex:1"><div class="empty" id="empty">No gators yet.<br><br>Make yours at <span class="site">gatorcamp.us</span></div></div>
     </div>
     <div class="side">
       <div class="card"><div id="srv"><span class="dotlive"></span>Server…</div>
         <div class="big" id="count">–</div><div>gators online</div>
         <div class="players" id="players"></div></div>
       <div class="card"><div>Play now (sm64coopdx · Direct Connect)</div><div class="url" id="addr"></div></div>
-      <div class="card"><div>Make your own gator</div><div class="url">chooseyourgator.select</div>
+      <div class="card"><div>Make your own gator</div><div class="url site">gatorcamp.us</div>
         <div class="players">Upload a photo → watch the GPU build it → play it here.</div></div>
       <div class="card"><div class="big" id="total">–</div><div>gators cooked</div><div class="players" id="queue"></div></div>
     </div>
@@ -93,6 +93,7 @@
 
     document.addEventListener("sgl:ready", () => {
       document.getElementById("addr").textContent = SGL.C.playAddress;
+      document.querySelectorAll(".site").forEach((el) => { el.textContent = SGL.C.domain || el.textContent; });
       status(); gallery();
       setInterval(status, 10000);
       setInterval(gallery, 5 * 60 * 1000);   // presigned URLs last 15 min

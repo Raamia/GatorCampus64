@@ -13,7 +13,7 @@ def test_no_token(client):
 
 
 def test_good_token_upserts_user(client, auth, conn):
-    r = client.get("/me", headers=auth(nickname="Ali", **{"https://chooseyourgator.select/uf": True}))
+    r = client.get("/me", headers=auth(nickname="Ali", **{"https://gatorcamp.us/uf": True}))
     assert r.status_code == 200, r.text
     assert r.json()["user"] == {"sub": "auth0|alice", "nickname": "Ali", "email_uf": True}
     row = conn.execute("SELECT * FROM users").fetchone()

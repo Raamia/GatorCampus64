@@ -11,8 +11,7 @@ import httpx
 import jwt
 from jwt.algorithms import RSAAlgorithm
 
-UF_CLAIM = "https://chooseyourgator.select/uf"
-NICK_CLAIMS = ("https://chooseyourgator.select/nickname", "nickname", "name")
+DEFAULT_CLAIM_NS = "https://gatorcamp.us/"  # Settings.claim_namespace (AUTH0_CLAIM_NAMESPACE / SGL_DOMAIN)
 
 
 class AuthError(Exception):
@@ -27,6 +26,7 @@ class Principal:
     sub: str
     scopes: set[str]
     claims: dict = field(default_factory=dict)
+    claim_ns: str = DEFAULT_CLAIM_NS   # namespace of the post-login Action's custom claims
 
     @property
     def is_m2m(self) -> bool:
@@ -35,7 +35,7 @@ class Principal:
 
     @property
     def nickname(self) -> str | None:
-        for c in NICK_CLAIMS:
+        for c in (self.claim_ns + "nickname", "nickname", "name"):
             v = self.claims.get(c)
             if isinstance(v, str) and v.strip():
                 return v.strip()[:64]
@@ -43,7 +43,7 @@ class Principal:
 
     @property
     def email_uf(self) -> bool:
-        return self.claims.get(UF_CLAIM) is True
+        return self.claims.get(self.claim_ns + "uf") is True
 
 
 def _http_fetch(url: str) -> dict:
@@ -87,8 +87,10 @@ class JWKSCache:
 
 
 class Verifier:
-    def __init__(self, issuer: str, audience: str, jwks: JWKSCache, leeway: int = 30):
+    def __init__(self, issuer: str, audience: str, jwks: JWKSCache, leeway: int = 30,
+                 claim_ns: str = DEFAULT_CLAIM_NS):
         self.issuer, self.audience, self.jwks, self.leeway = issuer, audience, jwks, leeway
+        self.claim_ns = claim_ns
 
     def verify(self, token: str) -> Principal:
         try:
@@ -110,7 +112,7 @@ class Verifier:
         perms = claims.get("permissions")
         if isinstance(perms, list):  # Auth0 RBAC puts granted permissions here
             scopes.update(p for p in perms if isinstance(p, str))
-        return Principal(sub=claims["sub"], scopes=scopes, claims=claims)
+        return Principal(sub=claims["sub"], scopes=scopes, claims=claims, claim_ns=self.claim_ns)
 
 
 def bearer(header_value: str | None) -> str:

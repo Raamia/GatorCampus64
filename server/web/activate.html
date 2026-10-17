@@ -6,13 +6,23 @@
   <title>Activate · Super Gatorlator 64</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/style.css">
+  <script src="/config.js"></script>
   <!-- Typed the in-game URL on the wrong host? Send the device code on to Auth0's activation page. -->
   <script>
     (function () {
       var code = new URLSearchParams(location.search).get("user_code");
-      location.replace("https://login.chooseyourgator.select/activate" + (code ? "?user_code=" + encodeURIComponent(code) : ""));
+      location.replace("https://" + window.SGL_CONFIG.auth0Domain + "/activate" +
+        (code ? "?user_code=" + encodeURIComponent(code) : ""));
     })();
   </script>
 </head>
-<body><main><p>Taking you to <a href="https://login.chooseyourgator.select/activate">login.chooseyourgator.select/activate</a>…</p></main></body>
+<body><main><p>Taking you to <a id="act" href="https://login.gatorcamp.us/activate">login.gatorcamp.us/activate</a>…</p></main>
+<script>
+  (function () {
+    var a = document.getElementById("act"), d = window.SGL_CONFIG.auth0Domain;
+    a.href = "https://" + d + "/activate";
+    a.textContent = d + "/activate";
+  })();
+</script>
+</body>
 </html>

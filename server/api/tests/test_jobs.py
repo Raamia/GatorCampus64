@@ -116,7 +116,7 @@ def test_failed_job(client, auth, conn, s3):
 
 
 def test_gallery_and_me(client, auth, conn, s3):
-    h = auth(nickname="Ali", **{"https://chooseyourgator.select/uf": True})
+    h = auth(nickname="Ali", **{"https://gatorcamp.us/uf": True})
     cid = upload(client, h, name="Ally").json()["character_id"]
     assert client.get("/characters").json()["characters"] == []  # only ready ones
     run_job(conn, s3)

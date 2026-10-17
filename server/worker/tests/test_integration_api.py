@@ -41,7 +41,7 @@ from sgl_api.auth import JWKSCache, Verifier  # noqa: E402
 from sgl_api.db import Database  # noqa: E402
 from sgl_api.storage import Storage  # noqa: E402
 
-ISSUER, AUDIENCE, BUCKET = "https://login.test.example/", "https://api.chooseyourgator.select", "sgl-integ"
+ISSUER, AUDIENCE, BUCKET = "https://login.test.example/", "https://api.gatorcamp.us", "sgl-integ"
 
 
 @pytest.fixture

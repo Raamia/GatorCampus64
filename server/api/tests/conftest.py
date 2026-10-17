@@ -31,7 +31,7 @@ from sgl_api.db import Database, apply_schema
 from sgl_api.storage import Storage
 
 ISSUER = "https://login.test.example/"
-AUDIENCE = "https://api.chooseyourgator.select"
+AUDIENCE = "https://api.gatorcamp.us"
 BUCKET = "sgl-test"
 TABLES = "deploys, events, link_codes, links, slots, jobs, characters, users"
 

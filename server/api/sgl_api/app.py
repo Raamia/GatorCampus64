@@ -84,7 +84,8 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             apply_schema(s.database_url)
         state["db"] = db or Database(s.database_url)
         state["storage"] = storage or Storage(s)
-        state["verifier"] = verifier or Verifier(s.auth0_issuer, s.auth0_audience, JWKSCache(s.auth0_jwks_url))
+        state["verifier"] = verifier or Verifier(s.auth0_issuer, s.auth0_audience, JWKSCache(s.auth0_jwks_url),
+                                                 claim_ns=s.claim_namespace)
         yield
         if db is None:
             state["db"].close()
@@ -217,7 +218,7 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
         return {"online": online, "players": players, "player_count": len(players),
                 "version": hp.get("version") or hp.get("v") or hp.get("mod_version"),
                 "since": hello["at"], "last_event_at": last, "slots": slots, "jobs_in_progress": queue,
-                "address": "play.chooseyourgator.select:7777"}
+                "address": s.play_address}
 
     # ── users ─────────────────────────────────────────────────────────────────────────────────
 

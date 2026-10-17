@@ -1,11 +1,12 @@
 # Caddy on the API VM: /etc/caddy/Caddyfile. Certificates from Let's Encrypt (CAA: letsencrypt.org, §4).
-#   chooseyourgator.select      static site (server/web/ → /srv/www/chooseyourgator)
-#   www.chooseyourgator.select  → apex (one Auth0 callback URL)
-#   api.chooseyourgator.select  → uvicorn on 127.0.0.1:8000 (sgl-api.service)
-#   chompwith.us/<code>         → chooseyourgator.select/join/<code> (short invite links)
+# The domain comes from SGL_DOMAIN in Caddy's environment (default gatorcamp.us), e.g. a systemd
+# drop-in for caddy.service with Environment=SGL_DOMAIN=gatorcamp.us.
+#   gatorcamp.us        static site (server/web/ → /srv/www/sgl64)
+#   www.gatorcamp.us    → apex (one Auth0 callback URL)
+#   api.gatorcamp.us    → uvicorn on 127.0.0.1:8000 (sgl-api.service)
 # login. is Auth0's custom domain (CNAME at the registrar), play. is the game host: neither is served here.
 {
-	email {$ACME_EMAIL:team@chooseyourgator.select}
+	email {$ACME_EMAIL:team@gatorcamp.us}
 }
 
 (security) {
@@ -18,13 +19,13 @@
 	}
 }
 
-chooseyourgator.select {
+{$SGL_DOMAIN:gatorcamp.us} {
 	import security
-	root * /srv/www/chooseyourgator
+	root * /srv/www/sgl64
 	encode zstd gzip
 	header {
 		X-Frame-Options DENY
-		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.auth0.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.vultrobjects.com; connect-src 'self' https://api.chooseyourgator.select https://login.chooseyourgator.select; frame-src https://login.chooseyourgator.select; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.auth0.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.vultrobjects.com; connect-src 'self' https://api.{$SGL_DOMAIN:gatorcamp.us} https://login.{$SGL_DOMAIN:gatorcamp.us}; frame-src https://login.{$SGL_DOMAIN:gatorcamp.us}; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
 	}
 	@static path *.css *.js *.svg *.png
 	header @static Cache-Control "public, max-age=300"
@@ -38,11 +39,11 @@ chooseyourgator.select {
 	}
 }
 
-www.chooseyourgator.select {
-	redir https://chooseyourgator.select{uri} permanent
+www.{$SGL_DOMAIN:gatorcamp.us} {
+	redir https://{$SGL_DOMAIN:gatorcamp.us}{uri} permanent
 }
 
-api.chooseyourgator.select {
+api.{$SGL_DOMAIN:gatorcamp.us} {
 	import security
 	encode zstd gzip
 	request_body {
@@ -53,8 +54,4 @@ api.chooseyourgator.select {
 			read_timeout 120s
 		}
 	}
-}
-
-chompwith.us, www.chompwith.us {
-	redir https://chooseyourgator.select/join{uri} 302
 }
