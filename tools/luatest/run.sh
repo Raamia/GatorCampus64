@@ -36,6 +36,8 @@
 #      sanity: walkable floor, columns, barriers on the doors, ladder decks, star humps, the arena, the coffee run's par),
 #      and the built levels/bbh collision once it exists, incl. a walk through every door anchor and a
 #      floor-crack scan (skipped when tools/.venv is missing)
+#  15. test_bridge.lua: sgl_bridge.lua (hosted server bridge): JSON encoder / decoder, SGLEVT events (host prints,
+#      client relay), inbox sequencing + routing, inert without a headless host
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
 # Fixtures (regenerate only for a new coopdx version): coopdx_constants_v151.lua,
 # coopdx_api_v151.lua, coopdx_structs_v151.lua (gen_coopdx_*.py, see their headers).
@@ -78,6 +80,9 @@ echo "== test_marston_missions (course 4: Marston Science Library)"
 
 echo "== test_libwest_missions (course 5: Library West After Dark)"
 "$LUA" "$HERE/test_libwest_missions.lua"
+
+echo "== test_bridge (sgl_bridge.lua: events, inbox)"
+"$LUA" "$HERE/test_bridge.lua"
 
 PY="$HERE/../.venv/bin/python"
 if [ -x "$PY" ]; then

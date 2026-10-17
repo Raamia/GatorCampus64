@@ -656,6 +656,12 @@ function World:build_env(c)
         raw(np).overrideLocation = text
     end
     S.network_is_server = function() return c.gi == 0 end
+    -- coopdx returns UNKNOWN_LOCAL_INDEX (255) for a player this client has not seen
+    S.network_local_index_from_global = function(gi)
+        assert(math.type(gi) == "integer", "network_local_index_from_global(int)")
+        if gi == c.gi then return 0 end
+        return c.liOf[gi] or 255
+    end
     S.network_is_moderator = function() return c.moderator == true end
 
     -- levels / save

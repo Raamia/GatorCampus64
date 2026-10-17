@@ -119,8 +119,16 @@ end
 test("load: every mod file in coopdx order, strict globals, no duplicate registrations", function()
     local names = table.concat(Sim.ALL_FILES, " ")
     check(#Sim.ALL_FILES >= 8, "found the mod files: " .. names)
-    check(names:find("characters.lua charselect.lua course.lua levels.lua main.lua sgl_hud.lua sgl_mission.lua swamp_missions.lua", 1, true) ~= nil,
-        "strcmp load order: " .. names)
+    -- relative order of the core files (other files, e.g. sgl_bridge.lua, may sit in between)
+    local pos, ordered = 0, true
+    for _, f in ipairs({ "characters.lua", "charselect.lua", "course.lua", "levels.lua", "main.lua", "sgl_hud.lua",
+        "sgl_mission.lua", "swamp_missions.lua" }) do
+        local at = nil
+        for i, g in ipairs(Sim.ALL_FILES) do if g == f then at = i end end
+        if at == nil or at <= pos then ordered = false break end
+        pos = at
+    end
+    check(ordered, "strcmp load order: " .. names)
     local w = full_world()
     local H = w:connect("Host")      -- loading errors (undefined global at load, duplicate command) throw here
     w:step(3)
