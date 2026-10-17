@@ -31,5 +31,14 @@
     "dark brown eyes, slight confident smirk-smile",
     "silver headphones around his neck"
   ],
-  "notes": "Hold face art until Daniel's textures are approved."
+  "notes": "Hold face art until Daniel's textures are approved.",
+  "build": {
+    "sleeves": "short",
+    "legwear": "shorts",
+    "hair_style": "fluffy_windswept_medium",
+    "accessories": [
+      "headphones_around_neck",
+      "thin_chain_necklace"
+    ]
+  }
 }

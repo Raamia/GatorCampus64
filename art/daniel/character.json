@@ -24,5 +24,14 @@
     "medium-length straight hair with volume on top, partly covering the ears",
     "big wide toothy grin showing the upper teeth",
     "narrow eyes that squint into crescents when smiling"
-  ]
+  ],
+  "build": {
+    "sleeves": "long",
+    "legwear": "long_pants",
+    "hair_style": "straight_fringe_medium",
+    "accessories": [
+      "hood_down",
+      "crossbody_strap"
+    ]
+  }
 }

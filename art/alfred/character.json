@@ -29,5 +29,14 @@
     "big friendly smile showing the upper teeth",
     "always in a sharp black suit and red tie (very funny for a platformer)"
   ],
-  "notes": "Hold face art until Daniel's textures are approved. Outfit defaults to the suit because it is the only outfit in the photo; ask the user if they want a casual alternative later."
+  "notes": "Hold face art until Daniel's textures are approved. Outfit defaults to the suit because it is the only outfit in the photo; ask the user if they want a casual alternative later.",
+  "build": {
+    "sleeves": "long",
+    "legwear": "long_pants",
+    "hair_style": "short_curly_top_faded_sides",
+    "accessories": [
+      "suit_lapels_white_shirt_v",
+      "red_tie"
+    ]
+  }
 }

@@ -1,0 +1,42 @@
+{
+  "name": "Vignesh",
+  "id": "vignesh",
+  "reference_photos": "reference/friends/vignesh/",
+  "reference_notes": "photo3 has two people: Vignesh is in front (blue glasses); ignore the person behind him. photo2 shows him in sunglasses; use photo1 and photo3 for the glasses.",
+  "colors": {
+    "skin": "#C58A68",
+    "skin_shadow": "#A97152",
+    "hair": "#1E1817",
+    "stubble": "#8C5E48",
+    "glasses_top": "#2F56A8",
+    "glasses_rim": "#8A8E96",
+    "top": "#B3172A",
+    "top_detail": "#F4F0F0",
+    "pants": "#3B4E6E",
+    "shoes": "#F2F2F2",
+    "shoe_soles": "#DADADA"
+  },
+  "outfit": {
+    "top": "bright red t-shirt with a white line-art graphic on the front",
+    "accessory": "browline glasses: blue top bar with thin silver lower rims (always on)",
+    "pants": "blue jeans",
+    "shoes": "white sneakers",
+    "headwear": "none (cap power-ups show on his hair)"
+  },
+  "signature_traits": [
+    "blue browline glasses",
+    "short, dark, wavy-curly hair with some volume on top",
+    "huge bright toothy smile",
+    "light stubble along the jaw and chin"
+  ],
+  "notes": "Hold face art until Daniel's textures are approved.",
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "glasses_browline_blue",
+      "stubble"
+    ]
+  }
+}

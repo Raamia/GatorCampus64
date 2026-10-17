@@ -1,0 +1,38 @@
+{
+  "name": "Cher",
+  "id": "cher",
+  "reference_photos": "reference/friends/cher/",
+  "reference_notes": "One front portrait (white collared shirt; the user wants her in a blue shirt instead). Photo file still needs to be saved into reference/friends/cher/.",
+  "colors": {
+    "skin": "#E8B596",
+    "skin_shadow": "#D09C7E",
+    "hair": "#1A1517",
+    "top": "#4F7FC4",
+    "top_detail": "#3F69A6",
+    "pants": "#3B4E6E",
+    "shoes": "#F2F2F2",
+    "shoe_soles": "#DADADA"
+  },
+  "outfit": {
+    "top": "blue collared button-up shirt, sleeves rolled to short length (same style as the white shirt in her photo, in blue)",
+    "accessory": "none",
+    "pants": "blue jeans",
+    "shoes": "white sneakers",
+    "headwear": "none (cap power-ups show on her hair)"
+  },
+  "signature_traits": [
+    "long, straight black hair well past the shoulders, parted slightly off-center, with wispy face-framing layers",
+    "soft round face",
+    "gentle smile showing the upper teeth",
+    "warm dark eyes that crinkle when she smiles"
+  ],
+  "notes": "Hold face art until Daniel's textures are approved. Long hair must be weighted to the Head bone (or split head/torso) so it doesn't clip badly during animations.",
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "long_straight_past_shoulders",
+    "accessories": [
+      "shirt_collar"
+    ]
+  }
+}

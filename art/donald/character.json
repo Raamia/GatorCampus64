@@ -1,0 +1,35 @@
+{
+  "name": "Donald",
+  "id": "donald",
+  "based_on": "josh",
+  "reference_photos": "reference/friends/anh/",
+  "reference_notes": "No photos of his own: per the user, Donald is Josh without glasses (Josh is Anh with browner skin and a black shirt). Use Anh's photos for the eye shape without the frames.",
+  "colors": {
+    "skin": "#B98262",
+    "skin_shadow": "#9E6B4D",
+    "hair": "#1F1814",
+    "top": "#1D1D21",
+    "top_detail": "#2A2A30",
+    "pants": "#3B4E6E",
+    "shoes": "#F2F2F2",
+    "shoe_soles": "#DADADA"
+  },
+  "outfit": {
+    "top": "plain black t-shirt, same as Josh",
+    "accessory": "none (no glasses)",
+    "pants": "dark blue jeans",
+    "shoes": "white sneakers",
+    "headwear": "none (cap power-ups show on his hair)"
+  },
+  "signature_traits": [
+    "same face, hair and colors as Josh",
+    "NO glasses: his eyes are fully visible"
+  ],
+  "notes": "Build after Josh: same model and colors, minus the glasses. If the glasses are drawn into Anh/Josh's eye textures, Donald needs his own glasses-free eye set (same eye shape); if the glasses are geometry, just omit that mesh.",
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "straight_mushroom_cut_side_swept_bangs",
+    "accessories": []
+  }
+}

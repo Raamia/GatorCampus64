@@ -30,5 +30,16 @@
     "round youthful face",
     "small closed-mouth expression, slight smile"
   ],
-  "notes": "Hold face art until Daniel's textures are approved. Glasses can be drawn into the eye textures or built as thin geometry; decide during modeling."
+  "notes": "Hold face art until Daniel's textures are approved. Glasses can be drawn into the eye textures or built as thin geometry; decide during modeling.",
+  "build": {
+    "sleeves": "short",
+    "legwear": "shorts",
+    "hair_style": "straight_mushroom_cut_side_swept_bangs",
+    "accessories": [
+      "glasses_thick_rectangular",
+      "white_socks",
+      "jersey_stripes",
+      "jersey_number_10_back"
+    ]
+  }
 }

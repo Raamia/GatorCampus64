@@ -1,0 +1,39 @@
+{
+  "name": "Josh",
+  "id": "josh",
+  "based_on": "anh",
+  "reference_photos": "reference/friends/anh/",
+  "reference_notes": "No photos of his own: per the user, Josh looks like Anh (same face, hair and glasses) but with a browner skin tone and a black shirt. Reuse Anh's mesh and face textures with Josh's colors.",
+  "colors": {
+    "skin": "#B98262",
+    "skin_shadow": "#9E6B4D",
+    "hair": "#1F1814",
+    "glasses": "#15161C",
+    "top": "#1D1D21",
+    "top_detail": "#2A2A30",
+    "pants": "#3B4E6E",
+    "shoes": "#F2F2F2",
+    "shoe_soles": "#DADADA"
+  },
+  "outfit": {
+    "top": "plain black t-shirt",
+    "accessory": "thick black rectangular glasses (always on), same as Anh",
+    "pants": "dark blue jeans",
+    "shoes": "white sneakers",
+    "headwear": "none (cap power-ups show on his hair)"
+  },
+  "signature_traits": [
+    "same as Anh: thick black rectangular glasses, straight black mushroom cut with side-swept bangs, round face",
+    "browner skin tone than Anh",
+    "black t-shirt instead of the Argentina jersey"
+  ],
+  "notes": "Build after Anh: same model and face textures, recolored. Face texture backgrounds must use Josh's skin color (#B98262), so regenerate Anh's face textures with this skin value.",
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "straight_mushroom_cut_side_swept_bangs",
+    "accessories": [
+      "glasses_thick_rectangular"
+    ]
+  }
+}

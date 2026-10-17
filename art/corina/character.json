@@ -26,5 +26,13 @@
     "big bright smile showing the upper teeth",
     "dark eyes with defined lashes"
   ],
-  "notes": "Hold face art until Daniel's textures are approved, so the style stays consistent."
+  "notes": "Hold face art until Daniel's textures are approved, so the style stays consistent.",
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "long_curly_voluminous_with_curly_bangs",
+    "accessories": [
+      "thin_chain_necklace"
+    ]
+  }
 }

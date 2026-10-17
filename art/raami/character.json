@@ -26,5 +26,11 @@
     "large dark brown eyes",
     "calm, slight closed-mouth smile; faint mustache shadow"
   ],
-  "notes": "This is the user's own character. Hold face art until Daniel's textures are approved."
+  "notes": "This is the user's own character. Hold face art until Daniel's textures are approved.",
+  "build": {
+    "sleeves": "long",
+    "legwear": "long_pants",
+    "hair_style": "tight_curls_voluminous_with_curly_fringe",
+    "accessories": []
+  }
 }
