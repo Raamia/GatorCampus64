@@ -58,21 +58,39 @@ local sLeaderboardArmed = false
 local sLeaderboardRepeat = 0
 local sLeaderboardDirection = 0
 local sLeaderboardBoard = nil
+local sLeaderboardHidPauseMenu = false
 
 local function leaderboard_is_paused()
+    -- The pause menu is deliberately hidden while this custom screen is open.
+    -- Its panel can remain allocated after game_unpause(), so ignore that stale
+    -- "created" state until we restore the native menu on close.
+    if sLeaderboardHidPauseMenu then return false end
     return (djui_hud_is_pause_menu_created ~= nil and djui_hud_is_pause_menu_created())
         or (is_game_paused ~= nil and is_game_paused())
 end
 
+local function close_leaderboard_menu()
+    sLeaderboardMenu = nil
+    if sLeaderboardHidPauseMenu then
+        if set_pause_menu_hidden ~= nil then set_pause_menu_hidden(false) end
+        sLeaderboardHidPauseMenu = false
+    end
+end
+
 local function open_leaderboard_menu()
+    if sLeaderboardMenu ~= nil then return end -- mouse clicks can fire more than once
     sLeaderboardMenu = "list"
     sLeaderboardCursor = 1
     sLeaderboardArmed = false
     sLeaderboardRepeat = 0
     sLeaderboardDirection = 0
     sLeaderboardBoard = nil
-    if leaderboard_is_paused() and game_unpause ~= nil then
-        game_unpause()
+    if djui_hud_is_pause_menu_created ~= nil and djui_hud_is_pause_menu_created() then
+        if set_pause_menu_hidden ~= nil then
+            set_pause_menu_hidden(true)
+            sLeaderboardHidPauseMenu = true
+        end
+        if game_unpause ~= nil then game_unpause() end
     end
     djui_popup_create("Campus leaderboard menu opened.", 2)
 end
@@ -152,10 +170,10 @@ local function leaderboard_input(c)
         if sLeaderboardMenu == "board" then
             sLeaderboardMenu = "list"
         else
-            sLeaderboardMenu = nil
+            close_leaderboard_menu()
         end
     elseif (pressed & START_BUTTON) ~= 0 then
-        sLeaderboardMenu = nil
+        close_leaderboard_menu()
     elseif (pressed & A_BUTTON) ~= 0 and sLeaderboardMenu == "list" then
         sLeaderboardMenu = "board"
         sLeaderboardBoard = load_cached_board(BOARD_LIST[sLeaderboardCursor])
