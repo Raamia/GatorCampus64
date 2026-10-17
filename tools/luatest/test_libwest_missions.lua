@@ -44,7 +44,7 @@ local BBH, HUB = C.LEVEL_BBH, C.LEVEL_CASTLE_GROUNDS
 local MS = { IDLE = 0, WAITING = 1, INTRO = 2, ACTIVE = 3, SUCCESS = 4, FAILED = 5, DONE = 6 }
 local PH = { SETUP = 0, HIDE = 1, SEEK = 2, OVER = 3, NEXT = 4 }
 local FILE = "uf_west_library_missions.lua"
-local FILES = { "course.lua", "sgl_hud.lua", "sgl_mission.lua", FILE }
+local FILES = { "course.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_mission.lua", FILE }
 local PTOP = 26
 
 for _, n in ipairs({ "hurt_and_set_mario_action", "collision_find_surface_on_ray", "le_add_light", "le_set_light_pos",

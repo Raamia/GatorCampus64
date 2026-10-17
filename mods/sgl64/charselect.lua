@@ -3,7 +3,10 @@
 -- Opens by itself on your first spawn while you have never picked a friend, and any time with
 -- /char (no name), L + START, or Pause > Mods > Super Gatorlator 64 > "Choose your friend".
 --   move:  D-pad, stick, C-buttons (arrow keys on keyboard) or the mouse
+--   page:  L / R, or D-pad / stick left-right past the first / last card of a page
 --   pick:  A or left click        close: B or START
+-- Pages hold 10 cards (5 x 2): page 1 is the team ("CHOOSE YOUR GATOR!"), page 2 the guest slots
+-- from guests.lua ("GUEST GATORS", characters made on the website).
 -- The pick goes through characters.lua (_G.sglSetFriend -> gPlayerSyncTable[0].friend, synced to
 -- everyone) and is remembered in mod storage (key "friend" = friend id, or "off") for next time.
 -- Cards show who else already plays as that friend (a name tag per player).
@@ -69,13 +72,32 @@ local PORTRAIT = 50
 -- current screen mapping, set every render (ox/oy/u in DJUI units)
 local V = { ox = 0, oy = 0, u = 1, fade = 1 }
 
+local PER_PAGE = 10        -- COLS x 2 rows fit between the title and the footer
+
+-- pages: friend index i is on page (i - 1) // PER_PAGE + 1
+local function page_count()
+    return math.max(1, (#friends() + PER_PAGE - 1) // PER_PAGE)
+end
+
+local function page_of(i)
+    return (i - 1) // PER_PAGE + 1
+end
+
+-- first friend index and number of cards on page p
+local function page_range(p)
+    local first = (p - 1) * PER_PAGE + 1
+    return first, math.max(0, math.min(PER_PAGE, #friends() - first + 1))
+end
+
 local function card_pos(i)
-    local k = i - 1
+    local k = (i - 1) % PER_PAGE
     return GRID_X + (k % COLS) * (CARD_W + GAP_X), GRID_Y + (k // COLS) * (CARD_H + GAP_Y)
 end
 
-local function card_at(vx, vy)
-    for i = 1, #friends() do
+-- card under a virtual-canvas point, on page p (0: none)
+local function card_at(vx, vy, p)
+    local first, n = page_range(p)
+    for i = first, first + n - 1 do
         local x, y = card_pos(i)
         if vx >= x and vx < x + CARD_W and vy >= y and vy < y + CARD_H then return i end
     end
@@ -89,6 +111,7 @@ end
 local sOpen = false
 local sCursor = 1
 local sOpenTimer = 0       -- frames since the menu opened (open animation)
+local sPageTimer = 0       -- frames since the page changed (cards drop in again)
 local sTimer = 0           -- frames, for the idle animations
 local sConfirmTimer = 0    -- > 0 while the "HERE WE GO" flash plays, closes at 0
 local sConfirmIndex = 0
@@ -168,6 +191,7 @@ local function open_menu()
     if sOpen then return end
     sOpen = true
     sOpenTimer = 0
+    sPageTimer = 0
     sConfirmTimer = 0
     sMoveDir = 0
     sMouseShow = 0
@@ -213,23 +237,42 @@ end
 -- input
 ---------------------------------------------------------------------------------------------
 
-local function move_cursor(dir)
-    local n = #friends()
-    local rows = math.ceil(n / COLS)
-    local i = sCursor - 1
-    local col, row = i % COLS, i // COLS
-    if dir == 1 then
-        i = (i - 1) % n
-    elseif dir == 2 then
-        i = (i + 1) % n
-    else
-        row = (row + (dir == 3 and -1 or 1)) % rows
-        i = math.min(row * COLS + col, n - 1)
-    end
-    if i + 1 ~= sCursor then
-        sCursor = i + 1
+local function set_cursor(i)
+    if i ~= sCursor then
+        if page_of(i) ~= page_of(sCursor) then sPageTimer = 0 end
+        sCursor = i
         sfx(SOUND_MENU_CHANGE_SELECT)
     end
+end
+
+-- the card on page p at (row, col), clamped to the cards that page has
+local function card_on_page(p, row, col)
+    local first, n = page_range(p)
+    local rows = (n + COLS - 1) // COLS
+    row = math.min(row, rows - 1)
+    return first + math.min(row * COLS + col, n - 1)
+end
+
+-- dir: 1 left, 2 right, 3 up, 4 down. Left / right step through the cards in reading order and wrap
+-- (past the first / last card of a page they turn the page); up / down stay on the page and wrap.
+local function move_cursor(dir)
+    local n = #friends()
+    if dir == 1 then set_cursor((sCursor - 2) % n + 1) return end
+    if dir == 2 then set_cursor(sCursor % n + 1) return end
+    local first, count = page_range(page_of(sCursor))
+    local k = sCursor - first
+    local rows = (count + COLS - 1) // COLS
+    local row = (k // COLS + (dir == 3 and -1 or 1)) % rows
+    set_cursor(first + math.min(row * COLS + k % COLS, count - 1))
+end
+
+-- L / R: previous / next page, same spot on the page
+local function turn_page(delta)
+    local pages = page_count()
+    if pages == 1 then return end
+    local p = page_of(sCursor)
+    local k = sCursor - page_range(p)
+    set_cursor(card_on_page((p - 1 + delta) % pages + 1, k // COLS, k % COLS))
 end
 
 -- Mouse: hover moves the cursor, left click picks. Returns true while a mouse button is in use
@@ -250,11 +293,10 @@ local function mouse_update()
         return false
     end
     sMouseShow = sMouseShow - 1
-    local hover = card_at((mx - V.ox) / V.u, (my - V.oy) / V.u)
+    local hover = card_at((mx - V.ox) / V.u, (my - V.oy) / V.u, page_of(sCursor))
     if sConfirmTimer == 0 then
         if hover ~= 0 and hover ~= sHover and hover ~= sCursor then
-            sCursor = hover
-            sfx(SOUND_MENU_CHANGE_SELECT)
+            set_cursor(hover)
         end
         if clicked and hover ~= 0 then
             sCursor = hover
@@ -279,6 +321,8 @@ local function menu_input(c)
         return
     end
 
+    if (pressed & L_TRIG) ~= 0 then turn_page(-1) return end
+    if (pressed & R_TRIG) ~= 0 then turn_page(1) return end
     if (pressed & (L_JPAD | L_CBUTTONS)) ~= 0 then move_cursor(1) return end
     if (pressed & (R_JPAD | R_CBUTTONS)) ~= 0 then move_cursor(2) return end
     if (pressed & (U_JPAD | U_CBUTTONS)) ~= 0 then move_cursor(3) return end
@@ -333,7 +377,7 @@ local function on_before_mario_update(m)
         end
         eat_input(c) -- Mario stands still and START does not pause while the menu is up
     elseif (c.buttonDown & L_TRIG) ~= 0 and (c.buttonPressed & START_BUTTON) ~= 0 then
-        c.buttonPressed = c.buttonPressed & ~START_BUTTON
+        c.buttonPressed = c.buttonPressed & ~(START_BUTTON | L_TRIG) -- the L of L + START must not also turn the page
         open_menu()
     end
 end
@@ -372,6 +416,7 @@ local function on_update()
     sTimer = sTimer + 1
     if sOpen then
         sOpenTimer = sOpenTimer + 1
+        sPageTimer = sPageTimer + 1
         -- Mario was not updated this frame (cutscene, time stop...): read the pad here instead
         if sInputFrame ~= sFrame and menu_visible() then
             menu_input(gMarioStates[0].controller)
@@ -471,6 +516,12 @@ local function shirt_color(np)
     return 90, 90, 110
 end
 
+-- Gator Pass (sgl_login.lua): a verified player's name tag gets a star mark
+local function verified(localIndex)
+    local f = _G.sglIsVerified
+    return f ~= nil and f(localIndex) == true
+end
+
 -- who else plays as which friend: index -> list of { name, r, g, b }
 local function collect_tags()
     local tags = {}
@@ -481,7 +532,7 @@ local function collect_tags()
             if type(k) == "number" and k >= 1 then
                 local r, g, b = shirt_color(np)
                 tags[k] = tags[k] or {}
-                table.insert(tags[k], { name = short_name(np.name), r = r, g = g, b = b })
+                table.insert(tags[k], { name = (verified(i) and "*" or "") .. short_name(np.name), r = r, g = g, b = b })
             end
         end
     end
@@ -613,7 +664,7 @@ local function draw_card(i, f, x, y, selected, tags)
     djui_hud_set_font(FONT_NORMAL)
     local tagY = py + 1
     if local_pick() == i then
-        tag_pill("YOU", px + 1, tagY, 60, 220, 90)
+        tag_pill(verified(0) and "*YOU" or "YOU", px + 1, tagY, 60, 220, 90)
         tagY = tagY + 9
     end
     local list = tags[i]
@@ -648,6 +699,23 @@ local function draw_mouse_cursor(vx, vy)
     end
 end
 
+-- page tabs at the right end of the footer row (the name under the cursor is centred): "L 1 2 R" (FONT_HUD has no arrows)
+local function draw_page_tabs(page, pages)
+    djui_hud_set_font(FONT_HUD)
+    local s = 0.5
+    local step = 10
+    local x = VW - 20 - (pages + 2) * step
+    shadow_text("L", x, 208, s, 200, 210, 235, 255)
+    for p = 1, pages do
+        if p == page then
+            shadow_text(tostring(p), x + p * step, 208, s, 255, 214, 40, 255)
+        else
+            shadow_text(tostring(p), x + p * step, 208, s, 120, 130, 170, 255)
+        end
+    end
+    shadow_text("R", x + (pages + 1) * step, 208, s, 200, 210, 235, 255)
+end
+
 local function on_hud_render()
     if not menu_visible() then return end
 
@@ -677,19 +745,24 @@ local function on_hud_render()
     rect(14, 35, VW - 28, 1)
     rect(14, 202, VW - 28, 1)
 
+    local page, pages = page_of(sCursor), page_count()
+    local first, n = page_range(page)
     if sConfirmTimer > 0 and list[sConfirmIndex] ~= nil then
         draw_title("HERE WE GO, " .. list[sConfirmIndex].name:upper() .. "!")
+    elseif list[first] ~= nil and list[first].guest then
+        draw_title("GUEST GATORS")
     else
         draw_title("CHOOSE YOUR GATOR!")
     end
 
-    for i, f in ipairs(list) do
+    for i = first, first + n - 1 do
         local x, y = card_pos(i)
-        local t = (sOpenTimer - (i - 1) * 1.2) / 8
+        local t = (math.min(sOpenTimer, sPageTimer) - (i - first) * 1.2) / 8
         V.fade = fade * ease_out(t * 1.3)
-        draw_card(i, f, x, y - (1 - ease_out(t)) * 24, i == sCursor, tags)
+        draw_card(i, list[i], x, y - (1 - ease_out(t)) * 24, i == sCursor, tags)
     end
     V.fade = fade
+    if pages > 1 then draw_page_tabs(page, pages) end
 
     -- footer: name under the cursor + controls
     local f = list[sCursor]
@@ -702,6 +775,7 @@ local function on_hud_render()
         local hint
         if friend_ok(f) then
             hint = "A / click: choose      B / START: close      L + START: reopen"
+            if pages > 1 then hint = "A / click: choose      L / R: page      B / START: close" end
         else
             hint = "\\#ff8080\\" .. f.name .. "'s model failed to load"
         end

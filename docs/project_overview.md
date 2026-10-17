@@ -6,6 +6,8 @@ Super Gatorlator 64 is a total-conversion mod for [sm64coopdx](https://github.co
 
 > **Status:** everything below is built, verified offline, and compiles in the game. It has not been fully play-tested yet.
 
+> **Solo scope correction:** only the Reitz Union and Marston Science Library are enterable. Library West, Century Tower, and the other campus buildings are exterior-only in the solo campaign. The Library West interior described below is a legacy prototype, not part of that campaign; see [the detailed solo gameplay spec](singleplayer_campaign.md).
+
 ---
 
 ## What's in the game
@@ -27,7 +29,7 @@ Each friend was built from 1–4 photos into an N64-style character that keeps e
 | **2. Reitz Union + Engineering** | The Hub | 2 ★ | The Reitz Union (enterable food court, climbable tower), Weil Hall, Malachowsky Hall, Gator Corner |
 | **3. Lake Alice** | Newell Hall | 5 ★ | The real lake basin with its islands, lily pads, cypress, the bat houses, the Baughman Center |
 | **4. Marston Science Library** | Marston | 8 ★ | A 5-floor interior from UF floor plans: stacks, glass study rooms, quiet and silent floors |
-| **5. Library West After Dark** | Library West | 11 ★ | A night-time 6-floor interior with Century Tower glowing through the windows |
+| **5. Library West After Dark** | Library West | 11 ★ | Exterior night course around the Library West facade, gardens, and nearby walks; no enterable interior in the solo campaign |
 
 Walk into a building's door to get SM64's real act select screen. Stars are shared by the whole group, save between sessions, and unlock the next doors.
 

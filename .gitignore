@@ -13,6 +13,7 @@ download/
 *.blend2
 
 .DS_Store
+**/.build/
 
 # Raw reference photos of friends and the school stay local (only game textures get committed)
 reference/
@@ -56,3 +57,15 @@ art/levels/*/compare/
 
 # Local hand-off bundles (third-party add-ons/templates): never commit
 dist/
+
+# Gemini API key for tools/npc_bridge (never commit it)
+tools/npc_bridge/.env
+tools/npc_bridge/unanswered.log
+
+# Server venvs, caches and local env files (server/*/.env.example are the templates)
+server/**/.venv
+.pytest_cache/
+server/**/.env
+
+# Claude Code agent worktrees
+.claude/worktrees/

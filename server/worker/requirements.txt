@@ -1,0 +1,8 @@
+numpy>=1.26
+pillow>=10
+jsonschema>=4.20
+httpx>=0.27
+psycopg[binary]>=3.2
+boto3>=1.34
+# optional: Haar face boxes for the colour sampling (a centre/upper heuristic crop without it)
+opencv-python-headless>=4.9,<5  # 5.x dropped CascadeClassifier from the main package

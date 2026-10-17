@@ -3,6 +3,8 @@
 Status: design v1 (co-op mission track). Target: sm64coopdx v1.5.1, built as a Lua + DynOS mod in `mods/sgl64/`.
 Every feature here uses APIs in the v1.5.1 Lua docs (`docs/lua/*.md` at tag `v1.5.1`) or patterns already used by the bundled mods (arena, hide-and-seek, star-road, sm74, day-night-cycle).
 
+**Scope note:** this is the original co-op and environment design. The current solo gameplay proposal supersedes its interior assumptions: only the Reitz Union and Marston Science Library are enterable. Library West, Century Tower, and all other campus buildings are exterior-only in the solo campaign. Use `docs/singleplayer_campaign.md` for gameplay planning; do not implement conflicting interior concepts from this older design.
+
 ---
 
 ## 0. TL;DR

@@ -39,7 +39,7 @@ end
 
 local CCM, HUB = C.LEVEL_CCM, C.LEVEL_CASTLE_GROUNDS
 local MS = { IDLE = 0, WAITING = 1, INTRO = 2, ACTIVE = 3, SUCCESS = 4, FAILED = 5, DONE = 6 }
-local FILES = { "course.lua", "sgl_hud.lua", "sgl_mission.lua", "uf_marston_missions.lua" }
+local FILES = { "course.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_mission.lua", "uf_marston_missions.lua" }
 local PTOP = 26
 
 for _, n in ipairs({ "obj_init_animation", "hurt_and_set_mario_action" }) do assert(API[n] ~= nil, n .. " is a v1.5.1 binding") end
@@ -1125,7 +1125,8 @@ test("whole mod: every file loads with the Marston missions; /campus marston 3 m
     for _, f in ipairs(Sim.ALL_FILES) do if f == "uf_marston_missions.lua" then has = true end end
     check(has, "uf_marston_missions.lua is a mod file")
     local order = table.concat(Sim.ALL_FILES, " ")
-    check(order:find("sgl_mission.lua swamp_missions.lua uf_lake_missions.lua uf_marston_missions.lua", 1, true) ~= nil,
+    local a, b, c2 = order:find("sgl_mission.lua", 1, true), order:find("uf_lake_missions.lua", 1, true), order:find("uf_marston_missions.lua", 1, true)
+    check(a ~= nil and b ~= nil and c2 ~= nil and a < b and b < c2,
         "it loads after sgl_mission.lua (strcmp order): " .. order)
     check(H.env.sgl_mission_get(CCM, 3) ~= nil and H.env.sgl_mission_get(C.LEVEL_JRB, 3) ~= nil, "Marston + Lake missions registered")
     local ok = pcall(Sim.cmd, H, "campus", "marston 3")
