@@ -9,7 +9,7 @@ Targets the SwampHacks XII sponsor tracks **Best Use of Vultr**, **Best Use of A
 Anyone can turn their photos into a playable N64-style gator and play it on our hosted
 Super Gatorlator 64 server, with their account linked inside the game:
 
-1. Open **chooseyourgator.select**, log in (Auth0).
+1. Open **gatorcamp.us**, log in (Auth0).
 2. Upload 1-4 photos. A Vultr GPU job turns them into a character: spec → face → Blender build →
    export → validate → preview render. The page shows live progress and the 3D preview render.
 3. The character goes into a guest slot on the hosted server, which reloads.
@@ -25,12 +25,12 @@ plays step 4 on the expo laptops.
 |---|---|---|
 | Vultr | GPU job pipeline that produces game assets, deployed live to a game server we host | Cloud GPU, Cloud Compute, Managed PostgreSQL, Object Storage, Firewall, (Serverless Inference if it has a vision model) |
 | Auth0 | Login from inside an N64 game (device flow), accounts that own characters, API scopes | Device Authorization Flow, Universal Login on a custom domain, social connections, a post-login Action, API access tokens, M2M |
-| GoDaddy | The TLD finishes the in-game menu title "CHOOSE YOUR GATOR!"; subdomains route the whole system | chooseyourgator.select + chompwith.us, DNS records |
+| GoDaddy | gatorcamp.us (.us, a GoDaddy Registry TLD); subdomains route the whole system (www, api, login, play) | gatorcamp.us, DNS records |
 
 ## 3. Architecture
 
 ```
-                 chooseyourgator.select (GoDaddy Registry, registered at Porkbun)
+                 gatorcamp.us (.us, GoDaddy Registry)
    www. ─────────┐ api. ─────┐ login. ──── Auth0 custom domain play. ─── A record, UDP 7777
                  ▼ ▼ ▼
   Browser ──► web (static) ─► api (FastAPI) ◄──► Postgres (Vultr Managed)
@@ -64,8 +64,8 @@ Mod changes live in `mods/sgl64/` as usual (§7).
 
 ## 4. Domain and DNS (GoDaddy)
 
-Claim through `mlh.link/GoDaddyRegistry` → Porkbun with the MLH code (free 1 year, premium names
-refuse the code). Primary: **chooseyourgator.select**. Second teammate claims **chompwith.us**.
+Registered: **gatorcamp.us**..us is a GoDaddy Registry TLD. A second short-link domain
+(e.g. chompwith.us) is optional and not claimed.
 Fallbacks if refused: gatorlator.courses, herewegators.club. **Not.co** (no longer GoDaddy Registry).
 
 | Record | Points to | Use |
@@ -73,10 +73,9 @@ Fallbacks if refused: gatorlator.courses, herewegators.club. **Not.co** (no long
 | `@`, `www` | API VM | Website |
 | `api` | API VM | REST API |
 | `login` | Auth0 CNAME | Universal Login on our domain (Auth0 custom domain, 1 free) |
-| `play` | game host A | `play.chooseyourgator.select:7777` in coopdx Direct Connect |
+| `play` | game host A | `play.gatorcamp.us:7777` in coopdx Direct Connect |
 | `_sm64coopdx._udp.play` | SRV 0 0 7777 play | Server advertisement (documented; coopdx itself takes host:port) |
 | `play` TXT | `sgl64=<mod version>; coopdx=v1.5.1` | Version check from `dig` |
-| `chompwith.us/<code>` | 302 → `chooseyourgator.select/join/<code>` | Short invite links |
 | CAA | `letsencrypt.org` | Caddy's certificates only |
 
 ## 5. Gatorize Me (Vultr)
@@ -201,10 +200,10 @@ journal.
 Auth0 application **"Gator Pass"**: type Native, token endpoint auth None, Device Code grant on.
 
 1. Player types `/login`. Client sends `login_req` to the host; host prints it.
-2. Bridge `POSThttps://login.chooseyourgator.select/oauth/device/code` (client_id, scope
-   `openid profile email`, audience `https://api.chooseyourgator.select`).
+2. Bridge `POSThttps://login.gatorcamp.us/oauth/device/code` (client_id, scope
+   `openid profile email`, audience `https://api.gatorcamp.us`).
 3. Inbox `login_code` → the player's HUD: QR of `verification_uri_complete`, plus
-   "login.chooseyourgator.select/activate  ABCD-EFGH". QR drawn with `djui_hud_render_rect` from a
+   "login.gatorcamp.us/activate  ABCD-EFGH". QR drawn with `djui_hud_render_rect` from a
    pure-Lua encoder (speedata/luaqrcode, MIT, vendored as `sgl_qr.lua`).
 4. Bridge polls `/oauth/token` at the returned interval (`authorization_pending`, `slow_down`,
    `expired_token`, `access_denied`).
@@ -223,10 +222,10 @@ login (`POST /link-codes`) and the player types `/link K7Q2XF`. Same result, no 
 
 ### 7.3 Web login and the API
 
-- The website uses Universal Login (Authorization Code + PKCE) on `login.chooseyourgator.select`.
-- API audience `https://api.chooseyourgator.select`, scopes `create:character`, `read:own`,
+- The website uses Universal Login (Authorization Code + PKCE) on `login.gatorcamp.us`.
+- API audience `https://api.gatorcamp.us`, scopes `create:character`, `read:own`,
   `admin:slots`, `bridge`. The bridge uses an M2M application with only `bridge`.
-- Post-login Action: adds `https://chooseyourgator.select/uf: true` when the verified email ends in
+- Post-login Action: adds `https://gatorcamp.us/uf: true` when the verified email ends in
   `@ufl.edu` (a "Gator" badge on the site and in game; nothing gated on it), and rate-limit
   metadata.
 - Roles: `admin` (team) gets `admin:slots`, which allows pinning slots, deleting characters and
@@ -303,7 +302,7 @@ hook for it if we come back.
 3. Game host + bridge (events out, inbox in), `sgl_bridge.lua`.
 4. Gator Pass: device flow, `sgl_login.lua`, QR, verified star.
 5. Worker + API + web upload/progress page; guest slots + deploy.
-6. Expo polish: `/tv`, QR codes on a printed star, `chompwith.us` redirects, README section.
+6. Expo polish: `/tv`, QR codes on a printed star, README section.
 7. Optional leaderboard (§10).
 
 ## 14. Risks

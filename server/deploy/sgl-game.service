@@ -1,4 +1,4 @@
-# Headless Super Gatorlator 64 server: play.chooseyourgator.select:7777 (UDP).
+# Headless Super Gatorlator 64 server: play.gatorcamp.us:7777 (UDP).
 # Logs (including the mod's SGLEVT lines): journalctl -u sgl-game -f
 # The bridge (server/bridge/) will take over launching the game as its child; until then this runs it directly.
 [Unit]
