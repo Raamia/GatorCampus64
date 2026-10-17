@@ -369,7 +369,11 @@ private func showLeaderboard(missionId: String) async throws {
 
 private func refreshLeaderboardCache() async throws {
     guard !gameIsRunning() else { throw CLIError.gameRunning }
-    let missions = ["reitz_rooftop", "marston_climb"]
+    let missions = [
+        (id: "reitz_rooftop", label: "Reitz"),
+        (id: "marston_climb", label: "Marston"),
+        (id: "swamp_sprint", label: "Stadium"),
+    ]
     let (origin, token, _) = try await authenticatedContext()
     var updates: [String: String] = [:]
     var rowCounts: [String: Int] = [:]
@@ -377,12 +381,12 @@ private func refreshLeaderboardCache() async throws {
 
     // Fetch and validate both boards before touching the game save, so a partial failure
     // never leaves one board fresher than the other.
-    for missionID in missions {
+    for mission in missions {
         let result = try await action(origin: origin, accessToken: token, name: "getGameLeaderboard",
-                                      body: ["missionId": missionID, "limit": 10])
+                                      body: ["missionId": mission.id, "limit": 10])
         guard let data = result["data"] as? [String: Any],
               let payloadRows = data["rows"] as? [[String: Any]] else {
-            throw CLIError.processFailed("Leaderboard response for \(missionID) was missing rows.")
+            throw CLIError.processFailed("Leaderboard response for \(mission.id) was missing rows.")
         }
         let rows = try payloadRows.map { item -> CachedLeaderboardRow in
             guard let playerTag = item["playerTag"] as? String,
@@ -392,8 +396,8 @@ private func refreshLeaderboardCache() async throws {
             }
             return CachedLeaderboardRow(playerTag: playerTag, elapsedFrames: elapsedFrames, retries: retries)
         }
-        updates.merge(try leaderboardStorageUpdates(missionID: missionID, rows: rows, updatedAt: updatedAt)) { _, new in new }
-        rowCounts[missionID] = rows.count
+        updates.merge(try leaderboardStorageUpdates(missionID: mission.id, rows: rows, updatedAt: updatedAt)) { _, new in new }
+        rowCounts[mission.id] = rows.count
     }
 
     guard !gameIsRunning() else { throw CLIError.gameRunning }
@@ -405,9 +409,11 @@ private func refreshLeaderboardCache() async throws {
     } else {
         original = "[storage]\n"
     }
-    let merged = mergeModStorage(original, updates: updates, clearingPrefixes: ["sgl_ds_lb_reitz_rooftop_", "sgl_ds_lb_marston_climb_"])
+    let clearingPrefixes = missions.map { "sgl_ds_lb_\($0.id)_" }
+    let merged = mergeModStorage(original, updates: updates, clearingPrefixes: clearingPrefixes)
     try Data(merged.utf8).write(to: saveURL, options: .atomic)
-    print("Refreshed in-game leaderboard cache: Reitz \(rowCounts["reitz_rooftop", default: 0]) row(s), Marston \(rowCounts["marston_climb", default: 0]) row(s).")
+    let counts = missions.map { "\($0.label) \(rowCounts[$0.id, default: 0])" }.joined(separator: ", ")
+    print("Refreshed in-game leaderboard cache (row counts): \(counts).")
     print("Launch SM64CoopDX, open the Mods menu, then choose the SGL64 leaderboard buttons.")
 }
 

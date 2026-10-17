@@ -54,7 +54,7 @@ The game outbox may grow over time; the bridge intentionally does not prune or r
 sgl64-bridge refresh-leaderboard
 ```
 
-Launch the game, open **Mods**, and choose **Reitz leaderboard** or **Marston leaderboard**. The popup shows up to five scores from the last refresh. Refresh again while the game is closed to update the snapshot. The command updates only leaderboard keys in `~/Library/Application Support/sm64coopdx/sav/sgl64.sav`; it preserves other mod-storage settings and local run data.
+Launch the game, open the SGL64 mod menu, and choose **Reitz leaderboard**, **Marston leaderboard**, or **Stadium leaderboard**. The popup shows up to five scores from the last refresh. Refresh again while the game is closed to update the snapshot. The command updates only leaderboard keys in `~/Library/Application Support/sm64coopdx/sav/sgl64.sav`; it preserves other mod-storage settings and local run data.
 
 You can still fetch a board directly in the terminal:
 

@@ -75,3 +75,8 @@ import Testing
         ], updatedAt: 1_800_000_000)
     }
 }
+
+@Test func stadiumLeaderboardMissionIsSupportedByCache() throws {
+    let updates = try leaderboardStorageUpdates(missionID: "swamp_sprint", rows: [], updatedAt: 1_800_000_000)
+    #expect(updates["sgl_ds_lb_swamp_sprint_count"] == "0")
+}
