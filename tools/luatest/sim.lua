@@ -274,6 +274,7 @@ function World:connect(name, opts)
     opts = opts or {}
     local c = {
         world = self, name = name, gi = opts.gi or self.nextGi, connected = true,
+        initialStorage = opts.storage,
         level = C.LEVEL_CASTLE_GROUNDS, area = 1, act = 0, synced = false, syncIn = 1,
         pos = { x = 0, y = 0, z = 0 }, face = { x = 0, y = 0, z = 0 }, health = 0x880, action = C.ACT_IDLE,
         hooks = {}, behaviors = {}, commands = {}, menu = {}, objects = {}, cur = nil, dedup = {},
@@ -780,7 +781,7 @@ function World:build_env(c)
         if w.missingTextures and w.missingTextures[name] then return nil end
         return { width = 64, height = 64, name = name }
     end
-    c.strStorage = {}
+    c.strStorage = c.initialStorage or {}
     S.mod_storage_load = function(k) assert(type(k) == "string"); return c.strStorage[k] end
     S.mod_storage_save = function(k, v)
         assert(type(k) == "string" and type(v) == "string", "mod_storage_save(string, string)")

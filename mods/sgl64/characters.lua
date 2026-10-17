@@ -20,6 +20,20 @@ for _, friend in ipairs(FRIENDS) do
     friend.model = smlua_model_util_get_id(friend.id .. "_geo")
 end
 
+-- Read the local saved character before the network sync-valid callback. That callback may arrive
+-- after the local player has already rendered a frame as Mario, so reapply the saved pick from the
+-- pre-update hook as soon as the local Mario state exists.
+local sSavedFriendIndex = nil
+local savedFriend = mod_storage_load("friend")
+if type(savedFriend) == "string" then
+    for i, friend in ipairs(FRIENDS) do
+        if friend.id == savedFriend and friend.model ~= E_MODEL_ERROR_MODEL then
+            sSavedFriendIndex = i
+            break
+        end
+    end
+end
+
 -- Shared with charselect.lua (the character select menu). sglSetFriend(index) picks a friend for
 -- the local player (0 = normal character), returns false when that friend's model failed to load,
 -- and calls sglOnFriendSet (charselect.lua) so the pick is remembered for the next session.
@@ -28,6 +42,8 @@ function _G.sglSetFriend(index)
     if index ~= 0 and (FRIENDS[index] == nil or FRIENDS[index].model == E_MODEL_ERROR_MODEL) then
         return false
     end
+    -- A deliberate in-session choice supersedes the one-time startup restore.
+    sSavedFriendIndex = nil
     gPlayerSyncTable[0].friend = index
     if _G.sglOnFriendSet ~= nil then _G.sglOnFriendSet(index) end
     return true
@@ -115,6 +131,15 @@ local function on_object_render(obj)
     if m ~= nil and m.marioObj == obj then apply_friend_model(m) end
 end
 
+local function restore_saved_local_model(m)
+    if m.playerIndex ~= 0 or sSavedFriendIndex == nil then return end
+    local player = gPlayerSyncTable[0]
+    if player ~= nil and player.friend ~= sSavedFriendIndex then
+        player.friend = sSavedFriendIndex
+    end
+    apply_friend_model(m)
+end
+
 local function on_sync_valid()
     if gPlayerSyncTable[0].friend == nil then
         gPlayerSyncTable[0].friend = 0
@@ -122,6 +147,7 @@ local function on_sync_valid()
 end
 
 hook_event(HOOK_MARIO_UPDATE, apply_friend_model)
+hook_event(HOOK_BEFORE_MARIO_UPDATE, restore_saved_local_model)
 hook_event(HOOK_ON_OBJECT_RENDER, on_object_render)
 hook_event(HOOK_ON_SYNC_VALID, on_sync_valid)
 hook_chat_command("char", "[name|off] Play as one of our friends (no name: open the menu)", on_char_command)

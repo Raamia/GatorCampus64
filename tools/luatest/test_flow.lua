@@ -1031,6 +1031,28 @@ test("with a friend: invite, D-pad Up joins the act, co-op act 3 with every file
     check(Sim.find(F.chat, "Only the host moves everyone") ~= nil, "and says so")
 end)
 
+test("remembered character is applied before the first synced render", function()
+    local w = full_world()
+    local H = w:connect("Returning player", { storage = { friend = "josh" } })
+    H.syncIn = 10 -- keep the sync-valid callback pending while the first local frame runs
+    w:warp(H, HUB, 1, 0)
+    w:step(1)
+    local env = H.env
+    check(not H.synced, "first player frame runs before sync-valid")
+    check(env.gPlayerSyncTable[0].friend == 5, "saved character restored in the pre-update hook")
+    check(raw(H.ms[0].marioObj)._model == env._G.sglFriends[5].model,
+        "saved character model is active on the first frame")
+    check(raw(H.ms[0].marioObj).hookRender == 1, "first-frame render guard is installed")
+    raw(H.ms[0].marioObj)._model = C.E_MODEL_MARIO -- simulate CoopDX resetting the base model before render
+    Sim.run_hooks(H, C.HOOK_ON_OBJECT_RENDER, H.ms[0].marioObj)
+    check(raw(H.ms[0].marioObj)._model == env._G.sglFriends[5].model,
+        "render hook restores the saved model before drawing")
+    env._G.sglSetFriend(4)
+    w:step(1)
+    check(env.gPlayerSyncTable[0].friend == 4 and raw(H.ms[0].marioObj)._model == env._G.sglFriends[4].model,
+        "a new character choice replaces the startup restore")
+end)
+
 test("character select: remembered pick, overlay hides the other HUDs", function()
     local w = full_world()
     local H = w:connect("Host")
