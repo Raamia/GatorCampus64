@@ -353,6 +353,35 @@ test("single player: hub -> character select -> door -> act 1 -> star -> back ou
     check(H.ms[0].numLives == 4, "hub tops lives back up to 4")
 end)
 
+test("campus boards: direct button and mouse open a later board without the mapped B click closing it", function()
+    local w = full_world()
+    local H = w:connect("Host")
+    w:step(3)
+    arrive_and_pick(w, H, 1)
+
+    H.mouseX, H.mouseY, H.mouseButtons = 213, 12, C.L_MOUSE_BUTTON
+    H.pressed = C.B_BUTTON -- CoopDX maps left click to B during gameplay.
+    w:step(1)
+    check(table.concat(H.hudText, " | "):find("CAMPUS LEADERBOARDS", 1, true) ~= nil,
+        "gameplay BOARDS button opens the list directly")
+
+    H.mouseButtons = 0
+    w:step(2)
+    H.mouseX, H.mouseY, H.mouseButtons = 213, 152, C.L_MOUSE_BUTTON -- fourth row
+    H.pressed = C.B_BUTTON
+    w:step(1)
+    check(table.concat(H.hudText, " | "):find("SKYBOX CLIMB", 1, true) ~= nil,
+        "clicking the fourth board opens it instead of closing the menu")
+
+    H.mouseButtons = 0
+    w:step(1)
+    H.mouseY, H.mouseButtons = 200, C.L_MOUSE_BUTTON -- Back to boards footer
+    H.pressed = C.B_BUTTON
+    w:step(1)
+    check(table.concat(H.hudText, " | "):find("Skybox Climb", 1, true) ~= nil,
+        "clicking the board footer returns to the four-board list")
+end)
+
 test("door 2: The Hub (2 stars) -> Reitz & Engineering act 1 -> star -> back outside The Hub door", function()
     if WF_SCRIPT == nil then
         print("  (levels/wf not built: skipped)")

@@ -802,9 +802,9 @@ function World:build_env(c)
         assert(which == C.HUD_DISPLAY_FLAGS and math.type(value) == "integer")
         c.hudFlags = value
     end
-    S.djui_hud_get_mouse_x = function() return 0 end
-    S.djui_hud_get_mouse_y = function() return 0 end
-    S.djui_hud_get_mouse_buttons_down = function() return 0 end
+    S.djui_hud_get_mouse_x = function() return c.mouseX or 0 end
+    S.djui_hud_get_mouse_y = function() return c.mouseY or 0 end
+    S.djui_hud_get_mouse_buttons_down = function() return c.mouseButtons or 0 end
     S.djui_hud_is_pause_menu_created = function() return false end
     S.is_transition_playing = function() return false end
     S.get_dialog_id = function() return -1 end
