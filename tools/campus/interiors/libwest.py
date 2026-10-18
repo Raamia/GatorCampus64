@@ -612,6 +612,16 @@ def build_partitions(M, fid, P):
     # locked doors: a closed door leaf on both faces of the partition (visual only)
     for d in M.locked[fid]:
         locked_door_decal(P, d)
+    M.stats.setdefault("partition_corners", {})[fid] = MH.join_partition_corners(P.visual)
+    if fid == "F1":
+        # Coffee-bar partition meets the ADA elevator east face beside the
+        # escalators. Only its south half-thickness is exposed; the north half
+        # is covered by the elevator box. Cap just the exposed strip to avoid
+        # coplanar faces/flicker on the elevator. Keep all collision unchanged.
+        x, y = ADA[2], ADA[1]
+        a, b = (x, y), (x, y - MH.PART_T / 2)
+        P.visual.wall(a, b, 0.0, 0.10, "int_plastic", ao=0.85)
+        P.visual.wall(a, b, 0.10, CLEAR, "int_drywall", ao=0.85)
     M.stats.setdefault("partitions", {})[fid] = {"glass": n_glass, "solid": n_solid}
 
 
