@@ -11,7 +11,7 @@ FPS = 30
 MISSIONS: dict[str, dict] = {
     'swamp_skybox': {"title": 'KICKOFF - CLIMB THE SKYBOX', "par": None, "gold": None, "floor_frames": 300, "floor_rule": 'default', "source": 'swamp_missions.lua'},
     'swamp_sprint': {"title": 'STADIUM STAIR SPRINT', "par": 70, "gold": 45, "floor_frames": 675, "floor_rule": 'gold/2', "source": 'swamp_missions.lua'},
-    'swamp_chorus': {"title": 'GATOR CHOMP CHORUS - 2P', "par": None, "gold": None, "floor_frames": 300, "floor_rule": 'default', "source": 'swamp_missions.lua'},
+    'swamp_chorus': {"title": 'GATOR CHOMP CHORUS', "par": None, "gold": None, "floor_frames": 300, "floor_rule": 'default', "source": 'swamp_missions.lua'},
     'lake_boardwalk': {"title": 'BOARDWALK WELCOME', "par": None, "gold": None, "floor_frames": 300, "floor_rule": 'default', "source": 'uf_lake_missions.lua'},
     'lake_gator_hop': {"title": 'GATOR HOP', "par": None, "gold": None, "floor_frames": 300, "floor_rule": 'default', "source": 'uf_lake_missions.lua'},
     'lake_bat_census': {"title": 'BAT CENSUS AT DUSK - 2P', "par": None, "gold": None, "floor_frames": 1800, "floor_rule": 'constant', "source": 'uf_lake_missions.lua'},

@@ -159,7 +159,7 @@ answer: It's a race. Press D-pad Down (End on a keyboard, or type /mission start
 ### How do I do Gator Chomp Chorus?
 id: swamp-act3
 ask: gator chomp chorus, chomp chorus, swamp act 3, swamp co op, chomp, buttons in the end zone, ground pound buttons
-answer: It needs 2 to 4 players. Stand on the lit end-zone corner buttons (one each, the flames turn blue), wait for the HUD to count GA... TOR... CHOMP!, then all jump and ground-pound (Z) together within about 1.3 s. Do 3 phrases and the star flies to midfield. Pounding late means "Off the beat!" and a retry.
+answer: Alone, it is a solo rhythm game: watch the 4 pads in the north end zone light up, then after GO! jump and ground-pound (Z) on them in the same order; finish the practice and 3 phrases for the star (B plays again). With 2 to 4 players it is the co-op chorus: stand on the lit end-zone corner buttons (one each, the flames turn blue), wait for the HUD to count GA... TOR... CHOMP!, then all jump and ground-pound (Z) together within about 1.3 s. Do 3 phrases and the star flies to midfield. Pounding late means "Off the beat!" and a retry.
 
 ### Where can I drown in The Swamp?
 id: swamp-pool

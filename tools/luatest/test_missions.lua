@@ -143,7 +143,7 @@ test("act 3: host absent, two players, leader = smallest gi; 3 phrases of GA TOR
     w:step(5)
     check(state(A) == MS.WAITING, "alone: waiting for a study buddy")
     check(Sim.find(H.popups, "started THE SWAMP act 3") ~= nil, "hub host got the Study Group invite")
-    check(Sim.hud_has(A, "Needs a study buddy"), "HUD prompt for more players")
+    check(Sim.hud_has(A, "a study buddy makes it the co%-op chorus"), "HUD prompt: solo game now, co-op with a study buddy")
     check(Sim.hud_has(A, "Join my study group"), "the prompt names the mod menu button (keyboard players)")
     enter(w, B, 3)
     w:step(5)
@@ -153,7 +153,7 @@ test("act 3: host absent, two players, leader = smallest gi; 3 phrases of GA TOR
     w:seconds(3.2)
     check(state(A) == MS.ACTIVE and state(B) == MS.ACTIVE, "active after the intro")
     check(ctx.a == 2 and lit(A) == 5, "two buttons lit for two players: NW + SE")
-    check(#Sim.objects_with(A, A.env.id_bhvSglButton) == 4, "four corner buttons spawned locally")
+    check(#Sim.objects_with(A, A.env.id_bhvSglButton) == 8, "four corner buttons (+ the 4 solo pads) spawned locally")
     at(A, P.button_nw, 60)
     at(B, P.button_sw, 60)        -- wrong corner: SW is not lit in phrase 1
     w:seconds(1.5)
@@ -187,6 +187,77 @@ test("act 3: host absent, two players, leader = smallest gi; 3 phrases of GA TOR
     local own = A.starSpawns[1].star or B.starSpawns[1].star
     check(own ~= nil and raw(own).oStarSpawnExtCutsceneFlags == 1, "players on the corners get the star cutscene (58 m < 80 m)")
     check(Sim.hud_has(A, "STAR!"), "STAR! on the HUD")
+end)
+
+-- act 3 ALONE: the solo rhythm game (swamp_chomp.lua) on the 4 end-zone pads, same star
+local function until_(w, f, max)
+    for _ = 1, max do
+        if f() then return true end
+        w:step(1)
+    end
+    return f()
+end
+
+local function solo_pound(w, c, pad)
+    at(c, pad, 0)
+    c.action = C.ACT_GROUND_POUND_LAND
+    w:step(2)
+    c.action = C.ACT_IDLE
+    w:step(2)
+end
+
+test("act 3 solo: alone, the rhythm game plays to GATOR GREAT! and the star; B plays again; 2 players = co-op", function()
+    local w, H, A = world_with({ "Host", "A" })
+    enter(w, A, 3)
+    w:step(5)
+    local ctx = Sim.ctx(A)
+    local CH = A.env.SGL_CHOMP
+    local pads = ctx.def.chompPads
+    check(state(A) == MS.WAITING and ctx.def.minPlayers == 2, "the co-op chorus still waits for 2 players")
+    local S = ctx.loc.solo
+    check(S ~= nil and S.ph == 1 and Sim.hud_has(A, "Watch the pads"), "solo intro line")
+    check(#Sim.objects_with(A, A.env.id_bhvSglButton) == 8, "4 corner buttons + 4 solo pads")
+    local P = A.env.SWAMP_POINTS
+    for _, p in ipairs(pads) do
+        local dx, dz = p.x - P.button_nw.x, p.z - P.button_nw.z
+        check(dx * dx + dz * dz > 1500 * 1500 and p.y == P.button_nw.y, "pad on the field, clear of the corners")
+    end
+    -- a wrong pad in the practice phrase: WRONG PAD, the same phrase again, no FAILED state
+    check(until_(w, function() return ctx.loc.solo.ph == 4 end, 400), "practice: playback, countdown, your turn")
+    S = ctx.loc.solo
+    local want = CH.phrases[1][1]
+    solo_pound(w, A, pads[want % 4 + 1])
+    check(S.msg == "WRONG PAD" and S.misses == 1 and S.k == 1 and Sim.hud_has(A, "WRONG PAD"), "wrong pad told, retry")
+    check(state(A) == MS.WAITING, "no FAILED state")
+    -- a pound during the countdown is TOO EARLY
+    check(until_(w, function() return S.ph == 3 end, 200), "countdown again")
+    solo_pound(w, A, pads[want])
+    check(S.msg == "TOO EARLY" and S.misses == 2, "too early")
+    for k = 1, #CH.phrases do
+        check(until_(w, function() return S.ph == 4 end, 400), "phrase " .. k .. ": your turn")
+        check(S.k == k, "phrase " .. k)
+        for _, p in ipairs(CH.phrases[k]) do solo_pound(w, A, pads[p]) end
+        check(S.msg == "NICE!", "phrase " .. k .. " NICE!")
+    end
+    check(until_(w, function() return S.ph == 6 end, 100), "GATOR GREAT!")
+    w:step(3)
+    check(Sim.hud_has(A, "GATOR GREAT!") and Sim.hud_has(A, "Grade B"), "grade by misses (2 = B)")
+    check(state(A) == MS.SUCCESS, "the act's mission succeeds")
+    w:step(5)
+    check(Sim.stars_of(A, 2) == 1, "exactly one star (id 2)")
+    A.pressed = A.env.B_BUTTON
+    w:step(2)
+    check(ctx.loc.solo ~= S and ctx.loc.solo.won and ctx.loc.solo.ph == 1, "B: play again")
+    w:seconds(2)
+    check(Sim.stars_of(A, 2) == 1 and state(A) == MS.SUCCESS, "no second star")
+    -- with a study buddy the co-op chorus runs (and the solo game stops)
+    local w2, H2, X, Y = world_with({ "Host", "X", "Y" })
+    enter(w2, X, 3); w2:step(5)
+    check(Sim.ctx(X).loc.solo ~= nil, "X alone: solo")
+    enter(w2, Y, 3); w2:step(5)
+    check(state(X) == MS.INTRO and Sim.ctx(X).loc.solo == nil, "2 players: co-op intro, solo off")
+    w2:seconds(3.2)
+    check(state(X) == MS.ACTIVE and Sim.ctx(X).a == 2, "co-op chorus: 2 corners lit")
 end)
 
 test("act 3: off the beat - no pound in the CHOMP! window, or a player leaves a button: the phrase starts over", function()
@@ -271,7 +342,7 @@ test("act 3 alone with nobody else online: the prompt says so and how to leave",
     enter(w, A, 3)
     w:step(5)
     check(state(A) == MS.WAITING, "waiting")
-    check(Sim.hud_has(A, "only one online") and Sim.hud_has(A, "EXIT COURSE"), "alone online: invite a friend or exit")
+    check(Sim.hud_has(A, "Solo Gator Chomp") and Sim.hud_has(A, "EXIT COURSE"), "alone online: the solo game, or exit")
     check(not Sim.hud_has(A, "Friends got an invite"), "no talk of invites nobody got")
 end)
 
@@ -629,7 +700,7 @@ end)
 
 test("integration: with levels.lua + main.lua loaded, /campus swamp 3 starts the co-op mission", function()
     local files = { "course.lua", "levels.lua", "main.lua", "sgl_deepspace.lua", "sgl_hud.lua",
-        "sgl_mission.lua", "swamp_missions.lua" }
+        "sgl_mission.lua", "swamp_chomp.lua", "swamp_missions.lua" }
     local w = Sim.new({ files = files })
     local H, A = w:connect("Host"), w:connect("A")
     w:step(3)
