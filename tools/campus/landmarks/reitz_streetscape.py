@@ -43,7 +43,7 @@ PALM_WAY = "w1205038960"                          # Reitz Union Drive (Museum Rd
 Z_PAINT = -0.005                                  # road ribbon -0.02, generator dashes -0.01
 PIECE_M = 8.0
 # generator materials the landmark palette lacks (they exist in stage_palette.GENERATOR_MATERIALS)
-EXTRA_TILE = {"road_paint": 2.0, "palm_trunk": 2.0, "palm_frond": 2.0}
+EXTRA_TILE = {"road_paint": 2.0, "palm_trunk": 2.0, "palm_frond": 2.0, "mulch": 2.0, "leaves_pine": 4.0, "leaves_oak2": 4.0}
 BLACK, WHITE, YELLOW = "dark_trim", "white_trim", "road_paint"
 
 
@@ -215,7 +215,7 @@ def _pieces(pts, piece=PIECE_M):
 # ------------------------------------------------------------------ placement (pure Python)
 def layout(site):
     """-> dict of placements (map metres): lines, zebras, bollards, lamps, shelters, palms."""
-    L = {"lines": [], "zebras": [], "bollards": [], "chains": [], "lamps": [], "shelters": [], "palms": []}
+    L = {"lines": [], "zebras": [], "bollards": [], "chains": [], "lamps": [], "shelters": [], "palms": [], "beds": []}
     # 1. road lines: (p0, p1, offset, half width, material)
     for _id, name, w, oneway, pts in site.roads:
         offs = []
@@ -268,6 +268,25 @@ def layout(site):
             if prev is not None and math.dist(prev, q) < 3.0:
                 L["chains"].append((prev, q))
             prev = q
+        # 2b. planting beds (user photos of Malachowsky Hall): a mulch bed with ornamental grass and low
+        # shrubs behind the bollard row, and beds on both sides of the walks from this sidewalk to the hall
+        for p, d, s_ in _walk(spts, 2.4, 1.0):
+            c = (p[0] + d[1] * (off + 1.9), p[1] - d[0] * (off + 1.9))
+            if any(math.dist(c, g) < 3.2 for g in gaps) or site.in_building(c, 1.5):
+                continue
+            L["beds"].append((c, d, 1.15, 1.5))
+        for pid, t, pts in site.paths:
+            if pid == SIDEWALK_ID or len(pts) < 2 or t.get("footway") == "crossing":
+                continue
+            if min(_poly_dist(pts[0], spts), _poly_dist(pts[-1], spts)) > 4.0:
+                continue
+            pw = _f(t.get("width"), 2.0) / 2 + 1.0
+            for p, d, s_ in _walk(pts, 2.4, 3.0):
+                for side in (1, -1):
+                    c = (p[0] + d[1] * pw * side, p[1] - d[0] * pw * side)
+                    if site.in_building(c, 1.5) or _poly_dist(c, spts) < 3.0 or not _in_box(c, REGION):
+                        continue
+                    L["beds"].append((c, d, 1.15, 0.7))
     # 3. lamp posts every ~30 m along the roads, sidewalk side(s)
     for _id, name, w, _o, pts in site.roads:
         sides = (1, -1) if name == "Museum Road" else (1,)
@@ -434,6 +453,28 @@ def build_geometry(site, L, h):
                   (x + ca * 2.8, y + sa * 2.8, top - 1.0), (mid[0] - px * 0.4, mid[1] - py * 0.4, top + 0.35)]
             vis.poly(fr, "palm_frond")
             vis.poly(list(reversed(fr)), "palm_frond")
+    # planting beds: mulch slab just under the collision floor, two ornamental-grass clumps and a shrub
+    for k, (c, d, hl, hw) in enumerate(L["beds"]):
+        nx, ny = -d[1], d[0]
+        q = []
+        for du, dv in ((-hl, -hw), (hl, -hw), (hl, hw), (-hl, hw)):
+            x, y = c[0] + d[0] * du + nx * dv, c[1] + d[1] * du + ny * dv
+            q.append((x, y, h(x, y) - 0.008))
+        vis.poly(q, "mulch", normal_hint=(0, 0, 1))
+        for j, (du, dv) in enumerate(((-0.55, 0.2 * (1 if k % 2 else -1)), (0.5, -0.15 * (1 if k % 2 else -1)))):
+            gx, gy = c[0] + d[0] * du + nx * dv, c[1] + d[1] * du + ny * dv
+            gz = h(gx, gy) - 0.01
+            ht = 0.75 + 0.15 * ((k + j) % 3)
+            for a in (0.0, math.pi / 2):
+                ca, sa = math.cos(a + 0.4 * j), math.sin(a + 0.4 * j)
+                blade = [(gx - ca * 0.45, gy - sa * 0.45, gz), (gx + ca * 0.45, gy + sa * 0.45, gz),
+                         (gx + ca * 0.6, gy + sa * 0.6, gz + ht), (gx - ca * 0.6, gy - sa * 0.6, gz + ht)]
+                vis.poly(blade, "leaves_pine")
+                vis.poly(list(reversed(blade)), "leaves_pine")
+        if k % 2 == 0:
+            sx, sy = c[0], c[1]
+            sz = h(sx, sy) - 0.01
+            vis.box(sx - 0.3, sy - 0.3, sz, sx + 0.3, sy + 0.3, sz + 0.45, "leaves_oak2")
     return vis, col
 
 
@@ -478,6 +519,6 @@ if __name__ == "__main__":
         assert not site.in_building(q), q
     for q in L["bollards"]:
         assert _poly_dist(q, site.by_id[SIDEWALK_ID][1]) < 2.0, q
-    assert vis.tri_count() < 6000 and col.tri_count() <= 150
+    assert vis.tri_count() < 9000 and col.tri_count() <= 150
     assert len(L["shelters"]) == 2
     print("SELFTEST OK")
