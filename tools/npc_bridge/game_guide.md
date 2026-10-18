@@ -193,6 +193,11 @@ id: reitz-interior
 ask: inside the reitz union, reitz interior, reitz union inside, elevators in the reitz, game room, bowling, food court, ballroom
 answer: Yes! Four real doors lead inside: the North Entrance, the South Terrace doors, the old FOOD COURT door and the Ground north door. Inside are eight real floors: the atrium with its giant UF letters, the Game Room with bowling and billiards, the Esports Center, the food court, ballrooms and hotel floors. In the Blue elevators, stand in the north-west car to go up and the north-east car to go down.
 
+### How do I ride a gator?
+id: ride-gator
+ask: ride a gator, ride the gator, gator ride, rideable gator, saddled gator, gator with a saddle, koopa shell, shell, surf, shell surf, get on the gator, get off the gator, how do i ride
+answer: Jump onto a gator with the orange saddle and you ride it! Steer with the stick, press A to hop and Z to get off (it swims off when you do). It's fast and it floats on water. Reitz & Engineering has three: by the spawn on the North Lawn, on the Engineering Plaza and on the Reitz Union Drive loop.
+
 ### Where are the secrets in Reitz & Engineering?
 id: reitz-secrets
 ask: reitz secrets, reitz 1up, 1 up in reitz, malachowsky, weil hall, secrets in reitz

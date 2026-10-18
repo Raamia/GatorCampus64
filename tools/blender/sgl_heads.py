@@ -197,6 +197,11 @@ def configure(style):
 
 
 def hair_style(spec):
+    if "appearance" in spec:
+        from sgl_appearance import validate
+        from sgl_likeness import head_style
+        profile = validate(spec["appearance"])
+        return f"appearance_v{profile['version']}:{profile['face']}/{profile['hair']}", head_style(profile)
     custom = sgl_characters.get(spec, "HAIR_STYLE")
     name = (custom or {}).get("base") or spec.get("build", {}).get("hair_style", DEFAULT_STYLE)
     if name not in HAIR_STYLES:
@@ -725,6 +730,9 @@ def build_full_head(spec, body_bvh=None):
     add_nose(g, style.get("nose"))
     if style.get("ears"):
         add_ears(g, style.get("ears"))
+    if "appearance" in spec:
+        from sgl_likeness import add_hair_parts
+        add_hair_parts(g, style, spec)
     head_parts = sgl_characters.get(spec, "head_parts")
     if head_parts:
         head_parts(g, style, spec)

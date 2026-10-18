@@ -37,11 +37,16 @@ def _material(source, images):
         images.append(texture)
         texture.name = "Browser " + image.name
         pixels = list(image.pixels[:])
+        # Image pixels are stored in the image's encoded sRGB space, while
+        # Principled's base colour is linear. Writing linear skin into an sRGB
+        # texture makes the browser decode it a second time, leaving a dark
+        # orange rectangle around eyes and mouth.
+        encoded_colour = tuple(sgl_preview._lin_to_srgb(c) for c in colour)
         for i in range(0, len(pixels), 4):
             alpha = pixels[i + 3]
             for channel in range(3):
-                pixels[i + channel] = (pixels[i + channel] * alpha + colour[channel] * (1 - alpha)
-                                       if texel_unlit else pixels[i + channel] * colour[channel])
+                pixels[i + channel] = (pixels[i + channel] * alpha + encoded_colour[channel] * (1 - alpha)
+                                       if texel_unlit else pixels[i + channel] * encoded_colour[channel])
             pixels[i + 3] = 1
         texture.pixels[:] = pixels
         texture.pack()

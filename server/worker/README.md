@@ -107,7 +107,7 @@ After the model finishes downloading, run the dependency-free readiness probe
 from the worker container (it makes no inference request):
 
 ```bash
-docker compose exec worker python /opt/sgl64/server/worker/vlm_probe.py
+docker compose exec worker /venv/bin/python /opt/sgl64/server/worker/vlm_probe.py
 ```
 
 It checks `/health` and `/v1/models`, and verifies that `VLM_MODEL` is
@@ -136,3 +136,23 @@ database and bucket: upload, claim, build, ready plus slot, then `GET /jobs/{id}
 `tests/fake_blender.py` stands in for `run_blender.sh`. It "exports" the real daniel actor renamed
 to `sglguest` and copies daniel's previews, so the real face generator, `validate_export`, the
 portrait and the storage code all run without Blender.
+
+## Approved likeness catalog
+
+Qwen now selects independent face, hair, body and outfit profiles from
+`tools/blender/sgl_appearance.py`. The worker stores `appearance.version = 1` and
+normalizes sleeve length and collar/hood accessories from the outfit. Unknown
+features receive logged defaults; colors still come from model output and photo
+sampling. Specs without `appearance` retain the legacy path. `VLM_REQUIRED=1`
+fails when no backend is configured as well as when inference fails.
+
+The structured response requests appearance before colors and prose; live Qwen
+checks found this improved selections with the three supplied reference views.
+Single-view and input-order sensitivity remain documented limitations. Skin/hair
+samples from heuristic-only crops no longer override valid model colors; they
+remain fallbacks when a model color is missing. Detected-face samples still
+support the usual color cross-check.
+
+See [the likeness contract](../../docs/gatorize_likeness.md) and
+[the local model workshop](../../tools/likeness/README.md) for profile IDs,
+validation scope and headless browser review instructions.

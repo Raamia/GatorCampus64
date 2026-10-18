@@ -310,6 +310,8 @@ def step_store(storage, job_id, work, spec, report, spec_info, previews, portrai
         "deploy": f"actor_rename.py <actors/{BUILD_ID}> <mod actors dir> guest_<n>; "
                   f"portrait.png -> textures/sgl_portrait_guest_<n>.png",
     }
+    if "appearance" in spec:
+        manifest["appearance"] = spec["appearance"]
     for key, path in uploads.items():
         storage.put_file(prefix + key, path)
     mpath = os.path.join(work, "manifest.json")

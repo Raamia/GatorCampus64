@@ -95,14 +95,16 @@ class ProtocolTest(unittest.TestCase):
         self.assertEqual(self.echo.calls[1][3], [("user", "first"), ("model", "albert heard first")])
         self.assertEqual(self.echo.calls[2][3], [])
 
-    def test_unknown_npc_and_failures_are_skipped(self):
+    def test_unknown_npc_is_skipped_but_a_failed_reply_gets_a_fallback(self):
         class Boom:
             def reply(self, *a):
                 raise RuntimeError("offline")
         self.b.replier = Boom()
         write_outbox(self.sav, "session\t1\n1\tnobody\tP\thi\n2\talbert\tP\thi\n")
-        self.assertEqual(self.b.poll(), 0)
+        self.assertEqual(self.b.poll(), 1)   # the unknown npc is skipped; the failed one gets a fallback, not silence
         self.assertEqual(self.b.done, 2)
+        text, _ = read_inbox(self.sav)
+        self.assertEqual(text, "session\t1\n2\talbert\tSorry, my connection is fuzzy right now, P. Ask me again in a moment!\n")
 
     def test_keeps_recent_replies_only(self):
         lines = "".join("%d\talbert\tP\tm%d\n" % (i, i) for i in range(1, 30))
