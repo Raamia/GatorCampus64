@@ -471,6 +471,36 @@ def tx_treeline(seed):
     return t
 
 
+def tx_spanish_moss(seed):
+    """Sparse gray-green hanging strands on transparent N64 cutout cards."""
+    t = Tex(32, 32, (0, 0, 0), seed)
+    for y in range(32):
+        for x in range(32):
+            t.set(x, y, (0, 0, 0), 0)
+    for x0, length in ((4, 18), (9, 13), (15, 22), (21, 15), (27, 19)):
+        width = 1 if x0 % 2 else 2
+        for y in range(3, min(31, 3 + length)):
+            x = x0 + round(math.sin((y + x0) * 0.45) * 1.2)
+            for dx in range(width):
+                t.set(x + dx, y, (112, 124, 102) if y % 3 else (78, 92, 76))
+    return t
+
+
+def tx_oak_shadow(seed):
+    """Transparent mottled shade card; broad transparent gaps keep the ground readable."""
+    t = Tex(32, 32, (0, 0, 0), seed)
+    for y in range(32):
+        for x in range(32):
+            t.set(x, y, (0, 0, 0), 0)
+    for cx, cy, rx, ry in ((7, 9, 6, 5), (17, 7, 7, 5), (25, 12, 5, 6),
+                            (11, 21, 7, 6), (22, 23, 7, 5)):
+        for y in range(32):
+            for x in range(32):
+                if ((x-cx)/rx)**2 + ((y-cy)/ry)**2 < 1 and (x * 7 + y * 11) % 5 != 0:
+                    t.set(x, y, (44, 59, 39) if (x + y) % 3 else (62, 74, 47), 255)
+    return t
+
+
 def tx_rock(seed):
     """Pale weathered stone (the Turlington rock 'The Potato' is a cream / light grey boulder)."""
     base = hexc("#C2B79F")
@@ -588,6 +618,8 @@ def build_all():
         "door_marker": tx_door_marker(49),
         "leaves_oak": tx_leaves("#3E6E2E", "#5E9440", "#2A4C20", 50),
         "leaves_oak2": tx_leaves("#46682C", "#6A8C3E", "#2E4A1E", 57),
+        "spanish_moss": tx_spanish_moss(60),
+        "oak_shadow": tx_oak_shadow(61),
         "leaves_pine": tx_leaves("#365C3A", "#4E7A4C", "#22402A", 51, blobs=34),
         "palm_frond": tx_palm_frond(52),
         "bark": tx_bark("#5A4632", 53),

@@ -1,6 +1,7 @@
 {
  "level": "castle_grounds",
  "stage": "hub",
+ "built_at": "2026-10-18T02:31Z",
  "center_m": [
   -45,
   98
@@ -18,14 +19,14 @@
   338.0
  ],
  "extent_half_m": 324.0,
- "collision_tris": 8829,
- "visual_tris": 59280,
+ "collision_tris": 8887,
+ "visual_tris": 59950,
  "collision_by_object": {
   "Ground collision": 1552,
   "Pond basins collision": 195,
   "Props collision": 188,
   "Buildings collision": 3232,
-  "Trees collision": 1038,
+  "Trees collision": 1096,
   "Boundary walls": 192,
   "Dressing collision": 234,
   "LM century_tower collision": 370,
@@ -48,7 +49,7 @@
   "Props visual": 252,
   "Buildings visual": 7685,
   "Backdrop buildings": 4376,
-  "Trees visual": 16331,
+  "Trees visual": 17001,
   "Tree line": 560,
   "Dressing visual": 5909,
   "LM century_tower visual": 1474,
@@ -1670,18 +1671,6 @@
   },
   {
    "kind": "tree",
-   "osm_id": "n5673717545",
-   "map_m": [
-    3.78,
-    149.66
-   ],
-   "floor_m": 0.0,
-   "clearance_m": 2.0,
-   "pole_m": 5.0,
-   "behavior": "bhvTree"
-  },
-  {
-   "kind": "tree",
    "osm_id": "n5673717557",
    "map_m": [
     2.85,
@@ -1712,18 +1701,6 @@
     182.6
    ],
    "floor_m": 0.0,
-   "clearance_m": 2.0,
-   "pole_m": 5.0,
-   "behavior": "bhvTree"
-  },
-  {
-   "kind": "tree",
-   "osm_id": "n5673717620",
-   "map_m": [
-    5.19,
-    158.49
-   ],
-   "floor_m": -0.0,
    "clearance_m": 2.0,
    "pole_m": 5.0,
    "behavior": "bhvTree"
@@ -1898,18 +1875,6 @@
   },
   {
    "kind": "tree",
-   "osm_id": "n5676735870",
-   "map_m": [
-    79.12,
-    158.82
-   ],
-   "floor_m": -0.0,
-   "clearance_m": 2.0,
-   "pole_m": 5.0,
-   "behavior": "bhvTree"
-  },
-  {
-   "kind": "tree",
    "osm_id": "n5676735874",
    "map_m": [
     52.87,
@@ -1928,18 +1893,6 @@
     135.45
    ],
    "floor_m": -0.0,
-   "clearance_m": 2.0,
-   "pole_m": 5.0,
-   "behavior": "bhvTree"
-  },
-  {
-   "kind": "tree",
-   "osm_id": "n5676735882",
-   "map_m": [
-    80.33,
-    127.74
-   ],
-   "floor_m": 0.0,
    "clearance_m": 2.0,
    "pole_m": 5.0,
    "behavior": "bhvTree"
@@ -3662,11 +3615,30 @@
    "Murphree statue"
   ],
   "trees": {
-   "oak": 116,
+   "oak": 111,
    "pine": 7,
    "palm": 167,
-   "colliders": 173,
-   "climbable": 28,
+   "colliders": 172,
+   "climbable": 24,
+   "hand_authored_oaks": 4,
+   "hand_authored_positions_m": [
+    [
+     12.0,
+     166.0
+    ],
+    [
+     1.0,
+     153.0
+    ],
+    [
+     86.0,
+     124.0
+    ],
+    [
+     76.0,
+     158.0
+    ]
+   ],
    "beyond_s16": 3,
    "in_ground_hole": 0
   },
@@ -3904,32 +3876,32 @@
  },
  "attribution": "Map data (c) OpenStreetMap contributors, ODbL 1.0",
  "export_hygiene": {
-  "geometry_mode_lines_sorted": 102,
+  "geometry_mode_lines_sorted": 106,
   "trailing_ws_lines": 4,
   "max_abs_vertex": 32639,
-  "geometry_modes_rewritten": 48,
+  "geometry_modes_rewritten": 50,
   "common0_jump_link": true
  },
  "collision_repair": {
   "area_1": {
    "vertices": [
-    6801,
-    6782
+    6859,
+    6840
    ],
    "welded_vertices": 19,
    "collapsed_tris": 28,
    "tjunction_splits": 240,
    "triangles": [
-    8823,
-    9035
+    8881,
+    9093
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [],
-  "collision_tris": 9035,
-  "render_tris": 59280,
+  "collision_tris": 9093,
+  "render_tris": 59950,
   "lua_names": [
    "SGL_HUB_SIGN_CENTURY_TOWER",
    "SGL_HUB_SIGN_FINAL_EXAM",
@@ -3943,9 +3915,9 @@
    "id_bhvSglDoor"
   ],
   "fog_patched": [
-   48,
-   48
+   50,
+   50
   ]
  },
- "level_dir": "mods/sgl64/levels/castle_grounds"
+ "level_dir": "/Users/nav/Desktop/super-gatorlator-64/mods/sgl64/levels/castle_grounds"
 }
