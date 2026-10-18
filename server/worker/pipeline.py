@@ -25,6 +25,7 @@ import time
 from dataclasses import dataclass, field
 
 import actor_rename
+import gpu_telemetry
 import portrait
 import spec_ai
 
@@ -82,9 +83,15 @@ class JobLog:
     check: object = None
     every: float = 5.0
     lines: list = field(default_factory=list)
+    gpu_samples: list = field(default_factory=list)
     state: str = "spec"
     step: str = "spec"
     _last: float = 0.0
+
+    def sample_gpu(self, point):
+        sample = gpu_telemetry.capture(point)
+        self.gpu_samples.append(sample)
+        self("GPU telemetry: " + json.dumps(sample))
 
     def text(self):
         return "\n".join(self.lines) + ("\n" if self.lines else "")
@@ -187,11 +194,14 @@ def step_photos(storage, job_id, work, log, keys=None):
 
 
 def step_spec(photos, name, backend, cfg, work, log):
+    log.sample_gpu("spec.before")
     try:
         spec, info = spec_ai.generate_spec(photos, BUILD_ID, name, backend, use_cv=cfg.use_cv,
                                            require_model=cfg.require_model, log=log)
     except spec_ai.VLMError as e:
         raise StepFailed("spec", str(e)) from e
+    finally:
+        log.sample_gpu("spec.after")
     char_dir = os.path.join(work, "art", BUILD_ID)
     os.makedirs(char_dir, exist_ok=True)
     with open(os.path.join(char_dir, "character.json"), "w") as f:
@@ -233,10 +243,13 @@ def step_build(cfg, work, jlog):
             seen.clear()
 
     jlog.set("build")
+    jlog.sample_gpu("build.before")
     try:
         rc = run_streaming(cmd, cfg.build_timeout, on_line, cwd=cfg.repo, env=env, check=jlog.check)
     except TimeoutError as e:
         raise StepFailed(jlog.step, str(e)) from e
+    finally:
+        jlog.sample_gpu("build.after")
     report = parse_build_report(jlog.lines)
     if report is None:
         raise StepFailed(jlog.step, f"Blender exited {rc} without a build report")
@@ -310,6 +323,7 @@ def step_store(storage, job_id, work, spec, report, spec_info, previews, portrai
         "tris": report.get("tris"),
         "hair_style": spec["build"]["hair_style"],
         "build_seconds": report.get("seconds"),
+        "gpu_telemetry": jlog.gpu_samples,
         "spec_notes": spec_info.get("notes", []),
         "photo_samples": spec_info.get("samples", {}),
         "deploy": f"actor_rename.py <actors/{BUILD_ID}> <mod actors dir> guest_<n>; "
