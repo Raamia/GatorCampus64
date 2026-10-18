@@ -63,6 +63,13 @@ const LevelScript level_bob_entry[] = {
 		TERRAIN_TYPE(TERRAIN_GRASS),
 		/* Fast64 begin persistent block [area commands] */
 		/* Fast64 end persistent block [area commands] */
+		OBJECT(MODEL_GOOMBA, 11677, 0, 3729, 0, 0, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 4886, 0, -4262, 0, 90, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 1467, 0, 3675, 0, 180, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 7436, 0, -8506, 0, -156, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 5836, 0, -8514, 0, 156, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 15540, 2000, 5999, 0, 180, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 11095, 2000, 14578, 0, 112, 0, 0x00000000, bhvGoomba),
 	END_AREA(),
 	FREE_LEVEL_POOL(),
 	MARIO_POS(0x01, 0, 6651, 100, -11298),

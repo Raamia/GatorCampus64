@@ -76,6 +76,14 @@ const LevelScript level_wf_entry[] = {
 		TERRAIN_TYPE(TERRAIN_GRASS),
 		/* Fast64 begin persistent block [area commands] */
 		/* Fast64 end persistent block [area commands] */
+		OBJECT(MODEL_GOOMBA, -11500, 0, -22500, 0, 90, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 3169, 0, 19861, 0, 0, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 11320, 0, -10810, 0, -63, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 19295, 0, -9630, 0, -143, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 17875, 0, -8125, 0, -100, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 3400, 1760, -1550, 0, -180, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, -10500, 0, 5200, 0, 135, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, -14000, 0, 10200, 0, -180, 0, 0x00000000, bhvGoomba),
 	END_AREA(),
 	AREA(2, wf_area_2),
 		WARP_NODE(0x0A, LEVEL_WF, 0x02, 0x0A, WARP_NO_CHECKPOINT),
