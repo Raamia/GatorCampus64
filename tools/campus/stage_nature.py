@@ -20,7 +20,7 @@ POLE_TREE_HITBOX_M = 5.0    # bhvTree: SET_HITBOX(80, 500); Mario climbs to 4 m 
 # supplement OSM points where the real oak canopy frames the plaza; path clearance is checked below.
 HUB_OAKS = [(12.0, 166.0), (1.0, 153.0), (86.0, 124.0),
             (-2.0, 105.0), (62.0, 108.0), (76.0, 158.0), (5.0, 100.0),
-            (60.0, 160.0), (20.0, 125.0)]
+            (60.0, 160.0), (20.0, 125.0), (57.0, 143.0)]
 
 
 def rnd(key, lo=0.0, hi=1.0):
@@ -273,7 +273,8 @@ def build(S, pole_avoid=()):
             if any(math.dist(pt, q) < 7.0 for q in curated):
                 continue
             x, y = S.T(pt)
-            live_oak(vis, col, x, y, f"hub_live_oak_{i}", 1.0 if i < 2 else 0.86)
+            scale = 1.22 if i == 9 else (1.0 if i < 2 else 0.86)
+            live_oak(vis, col, x, y, f"hub_live_oak_{i}", scale)
             curated.append(pt)
         S.hub_oak_pts = curated
         counts["hand_authored_oaks"] = len(curated)
