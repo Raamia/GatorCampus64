@@ -19,8 +19,8 @@ POLE_TREE_HITBOX_M = 5.0    # bhvTree: SET_HITBOX(80, 500); Mario climbs to 4 m 
 # Curated live oaks around the Auditorium approach (map metres, origin = Century Tower). These
 # supplement OSM points where the real oak canopy frames the plaza; path clearance is checked below.
 HUB_OAKS = [(12.0, 166.0), (1.0, 153.0), (86.0, 124.0),
-            (-2.0, 105.0), (62.0, 108.0), (76.0, 158.0), (5.0, 100.0),
-            (60.0, 160.0), (20.0, 125.0), (57.0, 143.0)]
+            (-2.0, 105.0), (62.0, 108.0), (5.0, 100.0), (60.0, 160.0),
+            (20.0, 125.0), (42.0, 137.0), (8.0, 83.0), (50.0, 78.0)]
 
 
 def rnd(key, lo=0.0, hi=1.0):
@@ -145,11 +145,16 @@ def live_oak(acc, col, x, y, key, scale=1.0):
                 p0, p1 = (xx, yy, cz + 0.35 * scale), (xx + 0.35 * math.cos(a), yy + 0.35 * math.sin(a), cz - 1.7 * scale)
                 acc.wall(p0[:2], p1[:2], p1[2], p0[2], "spanish_moss", [(0, 0), (1, 0), (1, 1), (0, 1)])
                 acc.wall(p1[:2], p0[:2], p1[2], p0[2], "spanish_moss", [(1, 0), (0, 0), (0, 1), (1, 1)])
-    # Low, broken leaf-shadow card. Texture alpha leaves plenty of grass visible between patches.
-    shadow_r = 10.5 * scale
-    q = [(x - shadow_r, y - shadow_r * 0.68, -0.055), (x + shadow_r, y - shadow_r * 0.68, -0.055),
-         (x + shadow_r, y + shadow_r * 0.68, -0.055), (x - shadow_r, y + shadow_r * 0.68, -0.055)]
-    acc.poly(q, "oak_shadow", [(0, 0), (1, 0), (1, 1), (0, 1)])
+    # Small transparent blotches (not one broad rectangle) make a readable dappled shadow.
+    shade_centres = ((-4.2, -3.4), (2.5, -4.1), (5.0, 0.8), (-3.8, 3.0), (2.0, 4.3))
+    for i, (ox, oy) in enumerate(shade_centres):
+        cx, cy = x + ox * scale, y + oy * scale
+        a = rnd(f"{key}:shade{i}", -0.45, 0.45)
+        hx, hy = 3.15 * scale, 2.2 * scale
+        c, s = math.cos(a), math.sin(a)
+        q = [(cx + c * u - s * v, cy + s * u + c * v, -0.055)
+             for u, v in ((-hx, -hy), (hx, -hy), (hx, hy), (-hx, hy))]
+        acc.poly(q, "oak_shadow", [(0, 0), (1, 0), (1, 1), (0, 1)])
     # Eight short wall faces form a conservative trunk collider; canopy/moss/shade stay non-colliding.
     if col is not None:
         pts = [(x + math.cos(rot + 2 * math.pi * i / 8) * trunk_r,
@@ -273,7 +278,7 @@ def build(S, pole_avoid=()):
             if any(math.dist(pt, q) < 7.0 for q in curated):
                 continue
             x, y = S.T(pt)
-            scale = 1.22 if i == 9 else (1.0 if i < 2 else 0.86)
+            scale = 1.28 if pt == (50.0, 78.0) else (1.0 if i < 2 else 0.92)
             live_oak(vis, col, x, y, f"hub_live_oak_{i}", scale)
             curated.append(pt)
         S.hub_oak_pts = curated

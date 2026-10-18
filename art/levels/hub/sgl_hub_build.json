@@ -1,7 +1,7 @@
 {
  "level": "castle_grounds",
  "stage": "hub",
- "built_at": "2026-10-18T02:43Z",
+ "built_at": "2026-10-18T02:55Z",
  "center_m": [
   -45,
   98
@@ -19,16 +19,16 @@
   338.0
  ],
  "extent_half_m": 324.0,
- "collision_tris": 9613,
- "visual_tris": 62492,
+ "collision_tris": 9709,
+ "visual_tris": 63218,
  "collision_by_object": {
   "Ground collision": 1552,
   "Pond basins collision": 195,
   "Props collision": 188,
   "Buildings collision": 3232,
-  "Trees collision": 1144,
+  "Trees collision": 1160,
   "Boundary walls": 192,
-  "Dressing collision": 912,
+  "Dressing collision": 992,
   "LM century_tower collision": 370,
   "LM university_auditorium collision": 298,
   "LM The Hub collision": 207,
@@ -49,9 +49,9 @@
   "Props visual": 252,
   "Buildings visual": 7685,
   "Backdrop buildings": 4376,
-  "Trees visual": 17629,
+  "Trees visual": 18203,
   "Tree line": 560,
-  "Dressing visual": 7823,
+  "Dressing visual": 7975,
   "LM century_tower visual": 1474,
   "LM university_auditorium visual": 1199,
   "LM The Hub visual": 704,
@@ -1839,6 +1839,18 @@
   },
   {
    "kind": "tree",
+   "osm_id": "n5676735833",
+   "map_m": [
+    61.81,
+    148.45
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
    "osm_id": "n5676735840",
    "map_m": [
     51.93,
@@ -1855,6 +1867,30 @@
    "map_m": [
     92.86,
     133.17
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735870",
+   "map_m": [
+    79.12,
+    158.82
+   ],
+   "floor_m": -0.0,
+   "clearance_m": 2.0,
+   "pole_m": 5.0,
+   "behavior": "bhvTree"
+  },
+  {
+   "kind": "tree",
+   "osm_id": "n5676735874",
+   "map_m": [
+    52.87,
+    147.19
    ],
    "floor_m": -0.0,
    "clearance_m": 2.0,
@@ -3602,12 +3638,12 @@
    "Murphree statue"
   ],
   "trees": {
-   "oak": 109,
+   "oak": 112,
    "pine": 7,
    "palm": 167,
    "colliders": 172,
-   "climbable": 22,
-   "hand_authored_oaks": 7,
+   "climbable": 25,
+   "hand_authored_oaks": 8,
    "hand_authored_positions_m": [
     [
      12.0,
@@ -3622,10 +3658,6 @@
      124.0
     ],
     [
-     76.0,
-     158.0
-    ],
-    [
      60.0,
      160.0
     ],
@@ -3634,8 +3666,16 @@
      125.0
     ],
     [
-     57.0,
-     143.0
+     42.0,
+     137.0
+    ],
+    [
+     8.0,
+     83.0
+    ],
+    [
+     50.0,
+     78.0
     ]
    ],
    "beyond_s16": 3,
@@ -3766,8 +3806,8 @@
      14.0
     ],
     [
-     8.0,
-     83.0
+     9.5,
+     84.5
     ],
     [
      68.0,
@@ -3808,11 +3848,6 @@
      2.65
     ],
     [
-     76.0,
-     158.0,
-     2.1
-    ],
-    [
      60.0,
      160.0,
      2.65
@@ -3823,9 +3858,19 @@
      2.65
     ],
     [
-     57.0,
-     143.0,
+     42.0,
+     137.0,
      2.65
+    ],
+    [
+     8.0,
+     83.0,
+     2.65
+    ],
+    [
+     50.0,
+     78.0,
+     1.97
     ]
    ],
    "raised_beds": [
@@ -3979,23 +4024,23 @@
  "collision_repair": {
   "area_1": {
    "vertices": [
-    7547,
-    7528
+    7642,
+    7623
    ],
    "welded_vertices": 19,
    "collapsed_tris": 28,
    "tjunction_splits": 256,
    "triangles": [
-    9607,
-    9835
+    9703,
+    9931
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [],
-  "collision_tris": 9835,
-  "render_tris": 62492,
+  "collision_tris": 9931,
+  "render_tris": 63218,
   "lua_names": [
    "SGL_HUB_SIGN_CENTURY_TOWER",
    "SGL_HUB_SIGN_FINAL_EXAM",

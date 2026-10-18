@@ -492,12 +492,12 @@ def tx_oak_shadow(seed):
     for y in range(32):
         for x in range(32):
             t.set(x, y, (0, 0, 0), 0)
-    for cx, cy, rx, ry in ((7, 9, 6, 5), (17, 7, 7, 5), (25, 12, 5, 6),
-                            (11, 21, 7, 6), (22, 23, 7, 5)):
+    for cx, cy, rx, ry in ((7, 9, 4, 3), (17, 7, 5, 3), (25, 12, 3, 4),
+                            (11, 21, 4, 4), (22, 23, 4, 3)):
         for y in range(32):
             for x in range(32):
-                if ((x-cx)/rx)**2 + ((y-cy)/ry)**2 < 1 and (x * 7 + y * 11) % 5 != 0:
-                    t.set(x, y, (44, 59, 39) if (x + y) % 3 else (62, 74, 47), 255)
+                if ((x-cx)/rx)**2 + ((y-cy)/ry)**2 < 1 and (x * 7 + y * 11) % 3 != 0:
+                    t.set(x, y, (66, 83, 50) if (x + y) % 3 else (82, 98, 58), 255)
     return t
 
 
