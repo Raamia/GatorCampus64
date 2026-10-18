@@ -136,10 +136,17 @@ class FakeApi:
         self.blobs = blobs
         self.reports = []
         self.downloads = []
+        self.current = None
 
     def pending_deploys(self):
         out, self.pending = self.pending, []
         return out
+
+    def reconcile_deploys(self, installed):
+        pass
+
+    def check_deploys(self, ids):
+        return set(ids) if self.current is None else set(self.current)
 
     def download(self, url):
         self.downloads.append(url)
@@ -156,6 +163,10 @@ class FakeGame:
     def __init__(self, mod_dir):
         self.mod_dir = mod_dir
         self.restarts = 0
+        self.stopped = False
+
+    def stop(self):
+        self.stopped = True
 
     def restart(self, during=None):
         self.restarts += 1
@@ -264,3 +275,61 @@ def test_download_outage_keeps_deploy_pending(tmp_path, clock, rename_tool):
     loop, game, _, _ = make_loop(tmp_path, clock, api, rename_tool)
     assert loop.tick() == []
     assert api.reports == [] and game.restarts == 0
+
+
+def test_deploy_invalidated_during_countdown_is_not_installed(tmp_path, clock, rename_tool):
+    d, blobs = file_deploy(1, 3, 'Deleted')
+    api = FakeApi([d], blobs)
+    loop, game, _, mod = make_loop(tmp_path, clock, api, rename_tool, players=2)
+    api.current = []
+    assert loop.tick() == []
+    assert 'sglguest_geo' not in (mod / 'actors/guest_3/geo.inc.c').read_text()
+    assert (mod / 'actors/guest_3/geo.inc.c').read_text() == '// placeholder'
+    assert not api.reports
+    assert loop.load_roster()[3]['owner'] == ''
+
+
+def test_ack_rejection_restores_placeholder_before_restart(tmp_path, clock, rename_tool):
+    from sglbridge.api import ApiError
+    d, blobs = file_deploy(1, 3, 'Deleted')
+    api = FakeApi([d], blobs)
+    loop, game, _, mod = make_loop(tmp_path, clock, api, rename_tool)
+    def reject(*args):
+        raise ApiError(409, 'superseded')
+    api.report_deploy = reject
+    assert loop.tick() == []
+    assert (mod / 'actors/guest_3/geo.inc.c').read_text() == '// placeholder'
+    assert not (mod / 'textures/sgl_portrait_guest_3.png').exists()
+    assert loop.load_roster()[3]['deploy_id'] is None
+
+
+def test_revalidation_outage_does_not_install_staged_build(tmp_path, clock, rename_tool):
+    d, blobs = file_deploy(1, 3, 'Al')
+    api = FakeApi([d], blobs)
+    loop, game, _, mod = make_loop(tmp_path, clock, api, rename_tool)
+    def unavailable(ids):
+        raise ApiUnavailable('503')
+    api.check_deploys = unavailable
+    assert loop.tick() == []
+    assert (mod / 'actors/guest_3/geo.inc.c').read_text() == '// placeholder'
+
+
+def test_failed_rollback_stops_game(tmp_path, clock, rename_tool, monkeypatch):
+    d, blobs = file_deploy(1, 3, 'Al')
+    api = FakeApi([d], blobs)
+    loop, game, _, _ = make_loop(tmp_path, clock, api, rename_tool)
+    def fail(staged):
+        raise OSError('disk failed')
+    monkeypatch.setattr(loop, '_install', fail)
+    assert loop.tick() == []
+    assert game.stopped
+
+
+def test_missing_fallback_prevents_swap(tmp_path, clock, rename_tool):
+    d, blobs = file_deploy(1, 2, 'Al')
+    api = FakeApi([d], blobs)
+    loop, game, _, mod = make_loop(tmp_path, clock, api, rename_tool)
+    with pytest.raises(DeployError, match='no pristine placeholder'):
+        loop.tick()
+    assert game.restarts == 0
+    assert not (mod / 'actors/guest_2').exists()

@@ -70,8 +70,8 @@ class StepFailed(Exception):
 
 
 class JobCancelled(Exception):
-    """Raised by the progress callback when the job's row is gone (the owner deleted the
-    character). run_job stops, deletes photos/<job>/ and builds/<job>/, and re-raises it."""
+    """Raised when the character was deleted or the worker lost its lease. run_job stops,
+    deletes photos/<job>/ and builds/<job>/, and re-raises it."""
 
 
 @dataclass
@@ -79,6 +79,7 @@ class JobLog:
     """Job log + progress reporting: progress(state, step, log_text) is called on every step
     change and at most every `every` seconds for plain log lines."""
     progress: object = None
+    check: object = None
     every: float = 5.0
     lines: list = field(default_factory=list)
     state: str = "spec"
@@ -89,6 +90,8 @@ class JobLog:
         return "\n".join(self.lines) + ("\n" if self.lines else "")
 
     def __call__(self, line):
+        if self.check:
+            self.check()
         self.lines.append(line.rstrip("\n"))
         if self.progress and time.monotonic() - self._last >= self.every:
             self._push()
@@ -104,7 +107,7 @@ class JobLog:
             self.progress(self.state, self.step, self.text())
 
 
-def run_streaming(cmd, timeout, on_line, cwd=None, env=None):
+def run_streaming(cmd, timeout, on_line, cwd=None, env=None, check=None):
     """Run cmd, feed each stdout/stderr line to on_line, kill the whole process group after
     timeout seconds. Returns the exit code; raises TimeoutError."""
     proc = subprocess.Popen(cmd, cwd=cwd, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
@@ -127,6 +130,8 @@ def run_streaming(cmd, timeout, on_line, cwd=None, env=None):
     deadline = time.monotonic() + timeout
     try:
         while True:
+            if check:
+                check()
             left = deadline - time.monotonic()
             if left <= 0:
                 kill()
@@ -201,7 +206,7 @@ def step_face(cfg, work, log):
     env = dict(os.environ, SGL_ART_DIR=art)
     try:
         rc = run_streaming([cfg.python, os.path.join(cfg.tools, "sgl_face_gen.py"), BUILD_ID, out],
-                           cfg.face_timeout, log, cwd=cfg.repo, env=env)
+                           cfg.face_timeout, log, cwd=cfg.repo, env=env, check=log.check)
     except TimeoutError as e:
         raise StepFailed("face", str(e)) from e
     if rc != 0:
@@ -229,7 +234,7 @@ def step_build(cfg, work, jlog):
 
     jlog.set("build")
     try:
-        rc = run_streaming(cmd, cfg.build_timeout, on_line, cwd=cfg.repo, env=env)
+        rc = run_streaming(cmd, cfg.build_timeout, on_line, cwd=cfg.repo, env=env, check=jlog.check)
     except TimeoutError as e:
         raise StepFailed(jlog.step, str(e)) from e
     report = parse_build_report(jlog.lines)
@@ -313,6 +318,8 @@ def step_store(storage, job_id, work, spec, report, spec_info, previews, portrai
     if "appearance" in spec:
         manifest["appearance"] = spec["appearance"]
     for key, path in uploads.items():
+        if jlog.check:
+            jlog.check()
         storage.put_file(prefix + key, path)
     mpath = os.path.join(work, "manifest.json")
     with open(mpath, "w") as f:
@@ -337,12 +344,12 @@ def artifacts_of(manifest):
 
 
 # ------------------------------------------------------------------ job
-def run_job(job_id, name, storage, backend, cfg, progress=None, photos=None):
+def run_job(job_id, name, storage, backend, cfg, progress=None, photos=None, check=None):
     """Run every step. Returns {"spec", "manifest", "artifacts", "log"}; raises StepFailed with
     .log (photos are deleted and the work dir removed either way). progress(state, step,
     log_text) reports as it goes; if it raises JobCancelled the job stops, builds/<job>/ is
     deleted too, and JobCancelled propagates. photos: the object keys from jobs.photos."""
-    jlog = JobLog(progress)
+    jlog = JobLog(progress, check=check)
     work = os.path.join(cfg.work_root, str(job_id))
     shutil.rmtree(work, ignore_errors=True)
     os.makedirs(work)
@@ -372,12 +379,14 @@ def run_job(job_id, name, storage, backend, cfg, progress=None, photos=None):
         jlog(f"build done in {time.monotonic() - t0:.0f} s")
         manifest = step_store(storage, job_id, work, spec, report, spec_info, previews, pinfo, jlog)
     except JobCancelled:
+        jlog.check = None
         jlog.progress = None  # the row is gone: nothing more to report
-        jlog(f"cancelled at {jlog.step}: the character was deleted")
+        jlog(f"cancelled at {jlog.step}: character deleted or worker lease lost")
         cleanup(False)
         discard_build(storage, job_id, jlog)
         raise
     except Exception as e:
+        jlog.check = None
         jlog.progress = None  # the caller writes the final state + log (finish_job)
         err = e if isinstance(e, StepFailed) else StepFailed(jlog.step, f"{type(e).__name__}: {e}")
         jlog(f"FAILED at {err.step}: {err}")
@@ -386,6 +395,7 @@ def run_job(job_id, name, storage, backend, cfg, progress=None, photos=None):
         if err is e:
             raise
         raise err from e
+    jlog.check = None
     jlog.progress = None
     cleanup(True)
     return {"spec": spec, "manifest": manifest, "artifacts": artifacts_of(manifest), "log": jlog.text()}

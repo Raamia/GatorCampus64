@@ -15,7 +15,7 @@ function fakeTools(options?: {
 }) {
   const query = vi.fn(async (_collection: string, queryOptions?: { offset?: number; limit?: number }) => options?.queryFails
     ? { success: false as const, error: 'storage unavailable' }
-    : {
+    : _collection === 'erased_solo_runs' ? { success: true as const, data: { records: [], count: 0 } } : {
         success: true as const,
         data: {
           records: (options?.pageRows?.[queryOptions?.offset ? 1 : 0] ?? options?.existing ?? options?.queryRows ?? []).map((row) => ({

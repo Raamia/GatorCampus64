@@ -13,8 +13,7 @@
 
 import type { Hono } from 'hono'
 import type { AppContext } from '../../worker.js'
-import { ingestVerifiedRun, MAX_BODY_BYTES } from '../actions/verified-runs.js'
-import { createActionTools } from './action-routes.js'
+import { MAX_BODY_BYTES } from '../actions/verified-runs.js'
 
 export const INGEST_PATH = '/api/actions/ingestVerifiedRun'
 
@@ -22,14 +21,9 @@ export function registerIngestRoutes(app: Hono<AppContext>): void {
   app.post(INGEST_PATH, async (c) => {
     const length = Number(c.req.header('content-length') ?? '0')
     if (length > MAX_BODY_BYTES) return c.json({ success: false, error: 'Body too large.' }, 413)
-    const rawBody = await c.req.text()
-    const result = await ingestVerifiedRun({
-      secret: c.env.DEEPSPACE_INGEST_SECRET,
-      rawBody,
-      headers: c.req.raw.headers,
-      tools: createActionTools(c.env, c.env.OWNER_USER_ID, ''),
-    })
-    console.info(`[ingest] status=${result.status}`)
-    return c.json(result.body, result.status)
+    if (!c.env.RUN_INGEST) return c.json({ success: false, error: 'Run coordinator unavailable.' }, 503)
+    const stub = c.env.RUN_INGEST.get(c.env.RUN_INGEST.idFromName(`app:${c.env.DEEPSPACE_APP_ID}`))
+    return stub.fetch(c.req.raw)
+
   })
 }

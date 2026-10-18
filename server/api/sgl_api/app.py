@@ -13,18 +13,19 @@ import uuid
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
-from typing import Annotated, Any, Callable
+from typing import Literal, Annotated, Any, Callable
 
 import httpx
 from fastapi import BackgroundTasks, Depends, FastAPI, File, Form, HTTPException, Request, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from psycopg.types.json import Jsonb
-from pydantic import BaseModel, Field, model_validator
+from pydantic import AwareDatetime, BaseModel, Field, model_validator
 
-from . import config, images, names, runs
+from . import accounts, config, images, names, runs
 from .auth import AuthError, JWKSCache, Principal, Verifier, bearer
 from .deepspace import Pusher
+from .cleanup import Cleaner
 from .missions import MISSIONS
 from .db import Database, apply_schema
 from .storage import Storage
@@ -72,9 +73,59 @@ def event_fields(e: dict) -> dict:
     return {**nested, **e} if isinstance(nested, dict) else e
 
 
+class IdentityProof(BaseModel):
+    action: Literal['link', 'unlink', 'status']
+    user_id: str = Field(min_length=1, max_length=256, pattern=r'^[A-Za-z0-9_:@.|-]+$')
+    token_hash: str = Field(pattern=r'^[0-9a-f]{64}$')
+
+
+class PresencePlayer(BaseModel):
+    gi: int = Field(ge=0, le=255)
+    name: str = Field(max_length=64)
+
+
+class PresenceIn(BaseModel):
+    session_id: uuid.UUID
+    observed_at: AwareDatetime
+    online: bool
+    since: AwareDatetime | None = None
+    version: str | None = Field(None, max_length=64)
+    players: list[PresencePlayer] = Field(default_factory=list, max_length=256)
+
+    @model_validator(mode="after")
+    def valid_snapshot(self):
+        if self.since and self.since > self.observed_at:
+            raise ValueError("since must not follow observed_at")
+        if len({p.gi for p in self.players}) != len(self.players):
+            raise ValueError("duplicate player index")
+        return self
+
+
 class DeployResult(BaseModel):
     state: str = Field(..., pattern="^(deployed|failed)$")
     error: str | None = Field(None, max_length=2000)
+
+
+class DeployCheck(BaseModel):
+    ids: list[int] = Field(max_length=8)
+
+
+class DeployInventory(BaseModel):
+    installed: dict[int, int | None] = Field(default_factory=dict, max_length=8)
+
+    @model_validator(mode="after")
+    def valid_slots(self):
+        if any(n < 1 or n > 8 for n in self.installed):
+            raise ValueError("slot must be between 1 and 8")
+        return self
+
+
+class LinkCheck(BaseModel):
+    ids: list[int] = Field(max_length=256)
+
+
+class AccountDelete(BaseModel):
+    confirm: str = Field(pattern="^DELETE$")
 
 
 class SlotPatch(BaseModel):
@@ -102,7 +153,11 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
         state["pusher"] = Pusher(s, lambda: state["db"], transport=deepspace_transport)
         state["pusher"].start()
         app.state.pusher = state["pusher"]
+        state["cleaner"] = Cleaner(state["db"], state["storage"])
+        app.state.cleaner = state["cleaner"]
+        state["cleaner"].start()
         yield
+        state["cleaner"].close()
         state["pusher"].close()
         if db is None:
             state["db"].close()
@@ -126,10 +181,16 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
     # ── auth dependencies ─────────────────────────────────────────────────────────────────────
 
     def principal(request: Request) -> Principal:
-        return state["verifier"].verify(bearer(request.headers.get("authorization")))
+        p = state["verifier"].verify(bearer(request.headers.get("authorization")))
+        if not p.is_m2m:
+            with DB().tx() as c:
+                accounts.require_active(c, p.sub, p.claims)
+        return p
 
     def upsert_user(p: Principal, nickname: str | None = None, uf: bool | None = None) -> None:
         with DB().tx() as c:
+            accounts.lock(c)
+            accounts.require_active(c, p.sub, p.claims)
             c.execute(
                 """INSERT INTO users (sub, nickname, email_uf) VALUES (%s, %s, %s)
                    ON CONFLICT (sub) DO UPDATE SET
@@ -204,37 +265,50 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                         "previews": presigned(keys), "portrait": ST().presign(portrait) if portrait else None})
         return {"characters": out}
 
+    @app.post("/presence")
+    def post_presence(body: PresenceIn, p: Annotated[Principal, Depends(scoped(SCOPE_BRIDGE))]):
+        if not p.is_m2m:
+            raise AuthError(403, "machine token required")
+        with DB().tx() as c:
+            # A heartbeat is a fresh snapshot, never durable/replayable. Limit network delay
+            # and clock skew; duplicates and reordered requests cannot extend its lifetime.
+            fresh = c.execute("SELECT %s BETWEEN clock_timestamp() - interval '30 seconds' "
+                              "AND clock_timestamp() + interval '5 seconds' AS fresh",
+                              (body.observed_at,)).fetchone()["fresh"]
+            if not fresh:
+                raise HTTPException(422, "heartbeat timestamp is not fresh; check bridge clock")
+            row = c.execute(
+                """INSERT INTO server_presence (bridge_sub, session_id, observed_at, online, since, version, players)
+                   VALUES (%s, %s, %s, %s, %s, %s, %s)
+                   ON CONFLICT (bridge_sub) DO UPDATE SET session_id = EXCLUDED.session_id,
+                     observed_at = EXCLUDED.observed_at, received_at = clock_timestamp(),
+                     online = EXCLUDED.online, since = EXCLUDED.since,
+                     version = EXCLUDED.version, players = EXCLUDED.players
+                   WHERE server_presence.observed_at < EXCLUDED.observed_at
+                   RETURNING bridge_sub""",
+                (p.sub, body.session_id, body.observed_at, body.online, body.since, body.version,
+                 Jsonb([player.model_dump() for player in body.players] if body.online else []))).fetchone()
+        return {"accepted": row is not None}
+
     @app.get("/status")
     def status():
         with DB().tx() as c:
-            hello = c.execute("SELECT id, at, payload FROM events WHERE t = 'hello' ORDER BY id DESC LIMIT 1").fetchone()
+            presence = c.execute(
+                """SELECT *, online AND observed_at > clock_timestamp() - make_interval(secs => %s)
+                          AS fresh FROM server_presence ORDER BY observed_at DESC LIMIT 1""",
+                (s.status_stale_secs if s.status_stale_secs > 0 else 90,)).fetchone()
             last = c.execute("SELECT max(at) AS at FROM events").fetchone()["at"]
             slots = c.execute(
                 """SELECT sl.n, sl.pinned, ch.name, ch.deployed_at IS NOT NULL AS deployed
                      FROM slots sl LEFT JOIN characters ch ON ch.id = sl.character_id ORDER BY sl.n""").fetchall()
             queue = c.execute(f"SELECT count(*) AS n FROM jobs WHERE state IN {IN_PROGRESS}").fetchone()["n"]
-            if not hello:
-                return {"online": False, "players": [], "player_count": 0, "version": None,
-                        "since": None, "last_event_at": last, "slots": slots, "jobs_in_progress": queue}
-            down = c.execute("SELECT 1 FROM events WHERE t IN ('exit','bye') AND id > %s LIMIT 1",
-                             (hello["id"],)).fetchone()
-            pres = c.execute(
-                """SELECT DISTINCT ON (COALESCE(payload->>'gi', payload->'payload'->>'gi')) t, payload FROM events
-                    WHERE t IN ('join','leave') AND id > %s
-                    ORDER BY COALESCE(payload->>'gi', payload->'payload'->>'gi'), id DESC""",
-                (hello["id"],)).fetchall()
-            if s.status_stale_secs > 0:
-                stale = c.execute("SELECT max(at) < now() - make_interval(secs => %s) AS stale FROM events",
-                                  (s.status_stale_secs,)).fetchone()["stale"]
-            else:
-                stale = False
-        online = not down and not stale
-        players = [{"gi": f.get("gi"), "name": f.get("name")}
-                   for p in pres if p["t"] == "join" for f in [event_fields(p["payload"])]] if online else []
-        hp = event_fields(hello["payload"])
+        online = bool(presence and presence["fresh"])
+        players = presence["players"] if online else []
         return {"online": online, "players": players, "player_count": len(players),
-                "version": hp.get("version") or hp.get("v") or hp.get("mod_version"),
-                "since": hello["at"], "last_event_at": last, "slots": slots, "jobs_in_progress": queue,
+                "version": presence["version"] if presence else None,
+                "since": presence["since"] if presence else None,
+                "last_heartbeat_at": presence["observed_at"] if presence else None,
+                "last_event_at": last, "slots": slots, "jobs_in_progress": queue,
                 "address": s.play_address}
 
     # ── leaderboards (§10.2, public) ──────────────────────────────────────────────────────────
@@ -319,10 +393,14 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             raws.append((f.filename, data))
         cid, jid = uuid.uuid4(), uuid.uuid4()
         keys = [f"photos/{jid}/{i}.jpg" for i in range(len(raws))]
-        uploaded: list[str] = []
+        # Commit the intent BEFORE any object write, including writes whose DB transaction fails.
+        with DB().tx() as c:
+            c.execute("SELECT sgl_enqueue_cleanup(%s)", (jid,))
+        writing_started = False
         try:
             with DB().tx() as c:
                 c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_create'))")
+                c.execute("SELECT pg_advisory_xact_lock(hashtextextended(%s, 0))", (f"sgl_storage:{jid}",))
                 active = c.execute(f"SELECT count(*) AS n FROM characters WHERE owner_sub = %s AND state IN {IN_PROGRESS}",
                                    (p.sub,)).fetchone()["n"]
                 if active >= s.limit_user_active:
@@ -346,18 +424,21 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                 except images.PhotoError as e:
                     raise HTTPException(422, str(e)) from e
                 for k, data in zip(keys, cleaned):
+                    writing_started = True  # even a failed response may have stored the object
                     ST().put(k, data, "image/jpeg")
-                    uploaded.append(k)
                 c.execute("INSERT INTO characters (id, owner_sub, name, state, step) VALUES (%s, %s, %s, 'queued', 'queued')",
                           (cid, p.sub, clean_name))
                 c.execute("INSERT INTO jobs (id, character_id, state, step, photos) VALUES (%s, %s, 'queued', 'queued', %s)",
                           (jid, cid, keys))
         except BaseException:
-            if uploaded:
-                try:
-                    ST().delete_keys(uploaded)
-                except Exception:  # noqa: BLE001
-                    log.exception("cleaning up photos for %s", jid)
+            try:
+                if writing_started:
+                    state["cleaner"].drain(max_items=2, job_id=jid)
+                else:
+                    with DB().tx() as c:
+                        c.execute("DELETE FROM storage_cleanup WHERE job_id = %s", (jid,))
+            except Exception:
+                log.exception("photo cleanup deferred for %s", jid)
             raise
         return {"character_id": cid, "job_id": jid, "state": "queued", "name": clean_name}
 
@@ -403,16 +484,77 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             jobs = [r["id"] for r in c.execute("SELECT id FROM jobs WHERE character_id = %s", (character_id,))]
             c.execute("DELETE FROM characters WHERE id = %s", (character_id,))
         for jid in jobs:
-            for prefix in (f"photos/{jid}/", f"builds/{jid}/"):
-                try:
-                    ST().delete_prefix(prefix)
-                except Exception:  # noqa: BLE001 - row is gone; storage lifecycle rules catch strays
-                    log.exception("deleting %s", prefix)
+            try:
+                state["cleaner"].drain(max_items=2, job_id=jid)
+            except Exception:
+                log.exception("object cleanup deferred for %s", jid)
         return {"deleted": character_id, "freed_slot": freed}
+
+    @app.post("/account/identity")
+    async def identity_account(body: IdentityProof, request: Request, p: Annotated[Principal, Depends(user())]):
+        from . import identities
+        if body.user_id.startswith('anon-'):
+            raise AuthError(401, 'Field Board sign-in required')
+        with DB().tx() as c:
+            accounts.lock(c)
+            accounts.require_active(c, p.sub, p.claims)
+            identities.verify(c, s.deepspace_ingest_secret, await request.body(), request.headers,
+                              bearer(request.headers.get('authorization')), body)
+            existing = c.execute('SELECT sub, deepspace_user FROM identity_links WHERE sub = %s OR deepspace_user = %s',
+                                 (p.sub, body.user_id)).fetchall()
+            matched = any(r['sub'] == p.sub and r['deepspace_user'] == body.user_id for r in existing)
+            if body.action == 'link':
+                if existing and not matched:
+                    raise HTTPException(409, 'One of these accounts is already linked. Unlink the existing pair first.')
+                c.execute('INSERT INTO identity_links (sub, deepspace_user) VALUES (%s, %s) ON CONFLICT DO NOTHING',
+                          (p.sub, body.user_id))
+                matched = True
+            elif body.action == 'unlink':
+                c.execute('DELETE FROM identity_links WHERE sub = %s AND deepspace_user = %s', (p.sub, body.user_id))
+                matched = False
+            return {'linked': matched, 'conflict': bool(existing) and not matched and body.action == 'status'}
+
+    @app.delete("/links")
+    def unlink_account(p: Annotated[Principal, Depends(user())]):
+        with DB().tx() as c:
+            accounts.lock(c)
+            accounts.require_active(c, p.sub, p.claims)
+            c.execute("UPDATE links SET revoked_at = now() WHERE sub = %s AND revoked_at IS NULL", (p.sub,))
+            c.execute("DELETE FROM link_codes WHERE sub = %s", (p.sub,))
+        return {"unlinked": True}
+
+    @app.delete("/account", status_code=202)
+    def delete_account(body: AccountDelete, p: Annotated[Principal, Depends(principal)]):
+        if p.is_m2m:
+            raise AuthError(403, "user token required")
+        if time.time() - accounts.issued_at(p.claims) > 300:
+            raise AuthError(401, "sign in again before deleting your Gator account")
+        with DB().tx() as c:
+            removed = accounts.delete_account(c, p.sub, event_fields, p.claims)
+        with board_lock:
+            board_cache.clear()
+        return {"deleted": True, "removed_runs": removed, "cleanup": "queued", "provider_accounts": "unchanged"}
+
+    @app.post("/account/register")
+    def register_again(request: Request):
+        p = state["verifier"].verify(bearer(request.headers.get("authorization")))
+        if p.is_m2m:
+            raise AuthError(403, "user token required")
+        with DB().tx() as c:
+            accounts.lock(c)
+            deleted = c.execute("SELECT deleted_before FROM deleted_accounts WHERE subject_hash = %s",
+                                (accounts.subject_hash(p.sub),)).fetchone()
+            if deleted and accounts.issued_at(p.claims) <= deleted["deleted_before"]:
+                raise AuthError(401, "sign in again before registering a new Gator account")
+            c.execute("UPDATE deleted_accounts SET reactivated = true WHERE subject_hash = %s", (accounts.subject_hash(p.sub),))
+        upsert_user(p)
+        return {"registered": True}
 
     @app.post("/link-codes", status_code=201)
     def link_code(p: Annotated[Principal, Depends(user())]):
         with DB().tx() as c:
+            accounts.lock(c)
+            accounts.require_active(c, p.sub, p.claims)
             c.execute("DELETE FROM link_codes WHERE (sub = %s AND used_at IS NULL) OR expires_at < now() - interval '1 day'",
                       (p.sub,))
             for _ in range(10):
@@ -428,9 +570,19 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
 
     # ── bridge (M2M, scope `bridge`) ──────────────────────────────────────────────────────────
 
+    @app.post("/links/check")
+    def check_links(body: LinkCheck, p: Annotated[Principal, Depends(scoped(SCOPE_BRIDGE))]):
+        with DB().tx() as c:
+            rows = c.execute("SELECT id FROM links WHERE id = ANY(%s) AND bridge_sub = %s AND revoked_at IS NULL",
+                             (body.ids, p.sub)).fetchall()
+        return {"active": [row["id"] for row in rows]}
+
     @app.post("/links")
     def create_link(body: LinkIn, _p: Annotated[Principal, Depends(scoped(SCOPE_BRIDGE))]):
         with DB().tx() as c:
+            accounts.lock(c)
+            if body.sub:
+                accounts.require_active(c, body.sub)
             if body.code:
                 code = re.sub(r"[\s-]", "", body.code).upper()
                 row = c.execute("SELECT code, sub, used_at, expires_at < now() AS expired FROM link_codes "
@@ -473,7 +625,9 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             raise HTTPException(422, 'expected an event {"t": ...} or a list of up to 500 of them')
         stored_runs = []
         with DB().tx() as c:
+            accounts.lock(c)
             for e in evs:
+                e = accounts.normalize_event(e)
                 fields = event_fields(e)
                 event_key = session_id = occurred_at = None
                 if fields.get("event_id") is not None:
@@ -486,6 +640,8 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                                 raise ValueError('timestamp needs timezone')
                     except (ValueError, KeyError, TypeError, AttributeError) as error:
                         raise HTTPException(422, 'invalid event identity or timestamp') from error
+                if accounts.erased_event(c, fields, _p.sub):
+                    continue  # acknowledge deletion tombstones without recreating private history
                 ev = c.execute(
                     """INSERT INTO events (t, payload, event_key, bridge_sub, session_id, occurred_at)
                        VALUES (%s, %s, %s, %s, %s, %s)
@@ -494,7 +650,7 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                 if ev is None:
                     prior = c.execute('SELECT id, payload FROM events WHERE bridge_sub = %s AND event_key = %s',
                                       (_p.sub, event_key)).fetchone()
-                    if prior['payload'] != e:
+                    if accounts.normalize_event(prior['payload']) != e:
                         raise HTTPException(409, 'event_id was already used for another payload')
                     if e['t'] == 'run':
                         stored_runs.extend(c.execute(
@@ -538,7 +694,7 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                           u.nickname AS owner, j.artifacts
                      FROM deploys d LEFT JOIN characters ch ON ch.id = d.character_id
                      LEFT JOIN users u ON u.sub = ch.owner_sub LEFT JOIN jobs j ON j.id = d.job_id
-                    WHERE d.state = 'pending' ORDER BY d.id""").fetchall()
+                    WHERE d.state = 'pending' AND sgl_deploy_current(d.id) ORDER BY d.id""").fetchall()
             ros = roster(c)
         out = []
         for r in rows:
@@ -572,16 +728,53 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
         rels = {k[len(prefix):] for k in keys if isinstance(k, str) and k.startswith(prefix)}
         return sorted(r for r in rels if r in DEPLOY_TOP_FILES or (r.startswith(actor) and "/" not in r[len(actor):]))
 
+    @app.post("/deploys/check")
+    def deploy_check(body: DeployCheck, _p: Annotated[Principal, Depends(scoped(SCOPE_BRIDGE))]):
+        with DB().tx() as c:
+            c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
+            ids = [r["id"] for r in c.execute(
+                "SELECT id FROM deploys WHERE id = ANY(%s) AND state = 'pending' AND sgl_deploy_current(id)",
+                (body.ids,))]
+        return {"current": ids}
+
+    @app.post("/deploys/reconcile")
+    def deploy_reconcile(body: DeployInventory, _p: Annotated[Principal, Depends(scoped(SCOPE_BRIDGE))]):
+        with DB().tx() as c:
+            c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
+            c.execute("UPDATE deploys SET state = 'superseded', finished = now() "
+                      "WHERE state = 'pending' AND NOT sgl_deploy_current(id)")
+            c.execute("SELECT sgl_sync_deploys()")
+            for row in c.execute("SELECT n, character_id FROM slots ORDER BY n").fetchall():
+                n = row["n"]
+                latest = c.execute("SELECT id, state FROM deploys WHERE slot = %s ORDER BY id DESC LIMIT 1", (n,)).fetchone()
+                if latest and latest["state"] == "pending":
+                    continue
+                installed = body.installed.get(n)
+                if latest and latest["state"] == "deployed" and installed == latest["id"]:
+                    continue
+                if row["character_id"] is not None or installed is not None:
+                    c.execute("UPDATE characters SET deployed_at = NULL WHERE id = %s", (row["character_id"],))
+                    c.execute("SELECT sgl_queue_deploy(%s::smallint, %s, %s)",
+                              (n, "character" if row["character_id"] else "placeholder", row["character_id"]))
+        return {"ok": True}
+
     @app.post("/deploys/{deploy_id}")
     def deploy_result(deploy_id: int, body: DeployResult, _p: Annotated[Principal, Depends(scoped(SCOPE_BRIDGE))]):
         with DB().tx() as c:
+            c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
             d = c.execute("SELECT * FROM deploys WHERE id = %s FOR UPDATE", (deploy_id,)).fetchone()
             if not d:
                 raise HTTPException(404, "no such deploy")
+            if not c.execute("SELECT sgl_deploy_current(%s) AS ok", (deploy_id,)).fetchone()["ok"]:
+                raise HTTPException(409, "deploy no longer matches the current slot")
+            if d["state"] == "deployed" and body.state == "deployed":
+                return {"id": deploy_id, "state": "deployed"}
             if d["state"] != "pending":
                 raise HTTPException(409, {"reason": d["state"], "message": f"deploy is {d['state']}, not pending"})
             c.execute("UPDATE deploys SET state = %s, error = %s, finished = now() WHERE id = %s",
                       (body.state, body.error, deploy_id))
+            if body.state == "failed" and d["character_id"]:
+                c.execute("UPDATE characters SET deployed_at = NULL WHERE id = %s", (d["character_id"],))
             if body.state == "deployed" and d["kind"] == "character" and d["character_id"]:
                 c.execute("UPDATE characters SET deployed_at = now() WHERE id = %s AND slot = %s",
                           (d["character_id"], d["slot"]))
