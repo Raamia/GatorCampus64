@@ -39,8 +39,6 @@ export default function HomePage() {
       <aside className="level-select run-board-summary" aria-label="Campus mission summary">
         <div className="level-select-top"><span><Gamepad2 size={14}/> CAMPUS MISSION BOARD</span><span>7 CAMPUS MISSIONS</span></div>
         <div className="run-summary-content">
-          <div><strong>02</strong><span>ENTERABLE<br/>INTERIORS</span></div>
-          <i aria-hidden="true"/>
           <div><strong>07</strong><span>CAMPUS<br/>MISSIONS</span></div>
         </div>
         <div className="level-select-bottom"><span><span className="status-lamp"/> IN-GAME RECORDS</span><span>GATOR PASS</span></div>
