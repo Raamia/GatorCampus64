@@ -881614,7 +881614,7 @@ Gfx wf_dl_reitz_LL_visual_mesh_layer_5_tri_0[] = {
 };
 
 Gfx mat_wf_dl_sgl_facade_brick_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_facade_brick_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -881637,7 +881637,7 @@ Gfx mat_wf_dl_sgl_facade_brick_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_facade_brick_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -881650,7 +881650,7 @@ Gfx mat_revert_wf_dl_sgl_facade_brick_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_brick_red_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_brick_red_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -881673,7 +881673,7 @@ Gfx mat_wf_dl_sgl_brick_red_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_brick_red_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -881686,7 +881686,7 @@ Gfx mat_revert_wf_dl_sgl_brick_red_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_limestone_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_limestone_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -881709,7 +881709,7 @@ Gfx mat_wf_dl_sgl_limestone_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_limestone_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -881722,7 +881722,7 @@ Gfx mat_revert_wf_dl_sgl_limestone_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_roof_gravel_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_roof_gravel_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -881745,7 +881745,7 @@ Gfx mat_wf_dl_sgl_roof_gravel_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_roof_gravel_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -881758,7 +881758,7 @@ Gfx mat_revert_wf_dl_sgl_roof_gravel_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_concrete_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_concrete_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -881781,7 +881781,7 @@ Gfx mat_wf_dl_sgl_concrete_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_concrete_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -881794,7 +881794,7 @@ Gfx mat_revert_wf_dl_sgl_concrete_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_facade_band_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_facade_band_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -881817,7 +881817,7 @@ Gfx mat_wf_dl_sgl_facade_band_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_facade_band_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -881830,7 +881830,7 @@ Gfx mat_revert_wf_dl_sgl_facade_band_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_facade_gothic_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_facade_gothic_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -881853,7 +881853,7 @@ Gfx mat_wf_dl_sgl_facade_gothic_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_facade_gothic_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -881866,7 +881866,7 @@ Gfx mat_revert_wf_dl_sgl_facade_gothic_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_roof_tile_red_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_roof_tile_red_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -881889,7 +881889,7 @@ Gfx mat_wf_dl_sgl_roof_tile_red_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_roof_tile_red_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -881902,7 +881902,7 @@ Gfx mat_revert_wf_dl_sgl_roof_tile_red_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_facade_service_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_facade_service_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -881925,7 +881925,7 @@ Gfx mat_wf_dl_sgl_facade_service_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_facade_service_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -881938,7 +881938,7 @@ Gfx mat_revert_wf_dl_sgl_facade_service_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_door_wood_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_door_wood_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -881961,7 +881961,7 @@ Gfx mat_wf_dl_sgl_door_wood_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_door_wood_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -881974,7 +881974,7 @@ Gfx mat_revert_wf_dl_sgl_door_wood_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_metal_gray_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_metal_gray_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -881997,7 +881997,7 @@ Gfx mat_wf_dl_sgl_metal_gray_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_metal_gray_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882010,7 +882010,7 @@ Gfx mat_revert_wf_dl_sgl_metal_gray_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_facade_glass_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_facade_glass_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882033,7 +882033,7 @@ Gfx mat_wf_dl_sgl_facade_glass_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_facade_glass_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882046,7 +882046,7 @@ Gfx mat_revert_wf_dl_sgl_facade_glass_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_banner_orange_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_banner_orange_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882069,7 +882069,7 @@ Gfx mat_wf_dl_sgl_banner_orange_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_banner_orange_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882082,7 +882082,7 @@ Gfx mat_revert_wf_dl_sgl_banner_orange_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_banner_blue_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_banner_blue_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882105,7 +882105,7 @@ Gfx mat_wf_dl_sgl_banner_blue_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_banner_blue_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882118,7 +882118,7 @@ Gfx mat_revert_wf_dl_sgl_banner_blue_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_dark_trim_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_dark_trim_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882141,7 +882141,7 @@ Gfx mat_wf_dl_sgl_dark_trim_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_dark_trim_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882154,7 +882154,7 @@ Gfx mat_revert_wf_dl_sgl_dark_trim_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_door_marker_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_door_marker_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882177,7 +882177,7 @@ Gfx mat_wf_dl_sgl_door_marker_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_door_marker_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882190,7 +882190,7 @@ Gfx mat_revert_wf_dl_sgl_door_marker_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_white_trim_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_white_trim_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882213,7 +882213,7 @@ Gfx mat_wf_dl_sgl_white_trim_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_white_trim_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882226,7 +882226,7 @@ Gfx mat_revert_wf_dl_sgl_white_trim_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_ground_grass_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_ground_grass_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882249,7 +882249,7 @@ Gfx mat_wf_dl_sgl_ground_grass_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_ground_grass_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882262,7 +882262,7 @@ Gfx mat_revert_wf_dl_sgl_ground_grass_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_forest_floor_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_forest_floor_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882285,7 +882285,7 @@ Gfx mat_wf_dl_sgl_forest_floor_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_forest_floor_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882298,7 +882298,7 @@ Gfx mat_revert_wf_dl_sgl_forest_floor_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_parking_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_parking_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882321,7 +882321,7 @@ Gfx mat_wf_dl_sgl_parking_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_parking_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882334,7 +882334,7 @@ Gfx mat_revert_wf_dl_sgl_parking_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_lawn_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_lawn_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882357,7 +882357,7 @@ Gfx mat_wf_dl_sgl_lawn_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_lawn_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882370,7 +882370,7 @@ Gfx mat_revert_wf_dl_sgl_lawn_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_plaza_brick_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_plaza_brick_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882393,7 +882393,7 @@ Gfx mat_wf_dl_sgl_plaza_brick_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_plaza_brick_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882406,7 +882406,7 @@ Gfx mat_revert_wf_dl_sgl_plaza_brick_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_mulch_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_mulch_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882429,7 +882429,7 @@ Gfx mat_wf_dl_sgl_mulch_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_mulch_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882442,7 +882442,7 @@ Gfx mat_revert_wf_dl_sgl_mulch_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_brick_dark_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_brick_dark_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882465,7 +882465,7 @@ Gfx mat_wf_dl_sgl_brick_dark_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_brick_dark_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882478,7 +882478,7 @@ Gfx mat_revert_wf_dl_sgl_brick_dark_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_window_glass_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_window_glass_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882501,7 +882501,7 @@ Gfx mat_wf_dl_sgl_window_glass_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_window_glass_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882514,7 +882514,7 @@ Gfx mat_revert_wf_dl_sgl_window_glass_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_copper_green_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_copper_green_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882537,7 +882537,7 @@ Gfx mat_wf_dl_sgl_copper_green_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_copper_green_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882550,7 +882550,7 @@ Gfx mat_revert_wf_dl_sgl_copper_green_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_window_dark_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_window_dark_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882573,7 +882573,7 @@ Gfx mat_wf_dl_sgl_window_dark_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_window_dark_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882586,7 +882586,7 @@ Gfx mat_revert_wf_dl_sgl_window_dark_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_bark_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_bark_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882609,7 +882609,7 @@ Gfx mat_wf_dl_sgl_bark_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_bark_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882622,7 +882622,7 @@ Gfx mat_revert_wf_dl_sgl_bark_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_leaves_oak_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_leaves_oak_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882645,7 +882645,7 @@ Gfx mat_wf_dl_sgl_leaves_oak_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_leaves_oak_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882658,7 +882658,7 @@ Gfx mat_revert_wf_dl_sgl_leaves_oak_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_leaves_oak2_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_leaves_oak2_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882681,7 +882681,7 @@ Gfx mat_wf_dl_sgl_leaves_oak2_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_leaves_oak2_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882694,7 +882694,7 @@ Gfx mat_revert_wf_dl_sgl_leaves_oak2_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_palm_trunk_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_palm_trunk_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882717,7 +882717,7 @@ Gfx mat_wf_dl_sgl_palm_trunk_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_palm_trunk_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882730,7 +882730,7 @@ Gfx mat_revert_wf_dl_sgl_palm_trunk_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_palm_frond_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_palm_frond_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882753,7 +882753,7 @@ Gfx mat_wf_dl_sgl_palm_frond_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_palm_frond_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882766,7 +882766,7 @@ Gfx mat_revert_wf_dl_sgl_palm_frond_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_path_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_path_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882789,7 +882789,7 @@ Gfx mat_wf_dl_sgl_path_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_path_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882802,7 +882802,7 @@ Gfx mat_revert_wf_dl_sgl_path_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_roof_dark_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_roof_dark_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882825,7 +882825,7 @@ Gfx mat_wf_dl_sgl_roof_dark_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_roof_dark_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882838,7 +882838,7 @@ Gfx mat_revert_wf_dl_sgl_roof_dark_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_grass_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_grass_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882861,7 +882861,7 @@ Gfx mat_wf_dl_sgl_grass_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_grass_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882874,7 +882874,7 @@ Gfx mat_revert_wf_dl_sgl_grass_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_rock_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_rock_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882897,7 +882897,7 @@ Gfx mat_wf_dl_sgl_rock_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_rock_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882910,7 +882910,7 @@ Gfx mat_revert_wf_dl_sgl_rock_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_bronze_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_bronze_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -882933,7 +882933,7 @@ Gfx mat_wf_dl_sgl_bronze_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_bronze_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882946,7 +882946,8 @@ Gfx mat_revert_wf_dl_sgl_bronze_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_water_layer5_area1[] = {
-	gsSPSetGeometryMode(G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK),
 	gsSPSetLights1(wf_dl_sgl_water_layer5_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
@@ -882970,7 +882971,8 @@ Gfx mat_wf_dl_sgl_water_layer5_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_water_layer5_area1[] = {
-	gsSPClearGeometryMode(G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -882983,7 +882985,7 @@ Gfx mat_revert_wf_dl_sgl_water_layer5_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_steps_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_steps_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -883006,7 +883008,7 @@ Gfx mat_wf_dl_sgl_steps_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_steps_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883019,7 +883021,7 @@ Gfx mat_revert_wf_dl_sgl_steps_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_pond_bed_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_pond_bed_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -883042,7 +883044,7 @@ Gfx mat_wf_dl_sgl_pond_bed_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_pond_bed_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883055,7 +883057,8 @@ Gfx mat_revert_wf_dl_sgl_pond_bed_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_pond_water_layer5_area1[] = {
-	gsSPSetGeometryMode(G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK),
 	gsSPSetLights1(wf_dl_sgl_pond_water_layer5_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
@@ -883079,7 +883082,8 @@ Gfx mat_wf_dl_sgl_pond_water_layer5_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_pond_water_layer5_area1[] = {
-	gsSPClearGeometryMode(G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883092,7 +883096,7 @@ Gfx mat_revert_wf_dl_sgl_pond_water_layer5_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_asphalt_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_asphalt_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -883115,7 +883119,7 @@ Gfx mat_wf_dl_sgl_asphalt_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_asphalt_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883128,7 +883132,7 @@ Gfx mat_revert_wf_dl_sgl_asphalt_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_road_paint_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_road_paint_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -883151,7 +883155,7 @@ Gfx mat_wf_dl_sgl_road_paint_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_road_paint_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883164,7 +883168,7 @@ Gfx mat_revert_wf_dl_sgl_road_paint_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_sidewalk_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_sidewalk_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -883187,7 +883191,7 @@ Gfx mat_wf_dl_sgl_sidewalk_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_sidewalk_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883200,7 +883204,7 @@ Gfx mat_revert_wf_dl_sgl_sidewalk_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_crosswalk_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_crosswalk_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -883223,7 +883227,7 @@ Gfx mat_wf_dl_sgl_crosswalk_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_crosswalk_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883236,7 +883240,8 @@ Gfx mat_revert_wf_dl_sgl_crosswalk_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_treeline_layer4_area1[] = {
-	gsSPSetGeometryMode(G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK),
 	gsSPSetLights1(wf_dl_sgl_treeline_layer4_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
@@ -883260,7 +883265,8 @@ Gfx mat_wf_dl_sgl_treeline_layer4_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_treeline_layer4_area1[] = {
-	gsSPClearGeometryMode(G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883273,7 +883279,7 @@ Gfx mat_revert_wf_dl_sgl_treeline_layer4_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_forest_wall_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_forest_wall_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -883296,7 +883302,7 @@ Gfx mat_wf_dl_sgl_forest_wall_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_forest_wall_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883309,7 +883315,7 @@ Gfx mat_revert_wf_dl_sgl_forest_wall_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_leaves_pine_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(wf_dl_sgl_leaves_pine_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -883332,7 +883338,7 @@ Gfx mat_wf_dl_sgl_leaves_pine_layer1_area1[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_leaves_pine_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883345,8 +883351,8 @@ Gfx mat_revert_wf_dl_sgl_leaves_pine_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_white_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883368,8 +883374,8 @@ Gfx mat_wf_dl_sgl_int_ru_white_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_white_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883382,8 +883388,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_white_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_led_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883405,8 +883411,8 @@ Gfx mat_wf_dl_sgl_int_ru_led_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_led_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883419,8 +883425,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_led_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_picket_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883443,8 +883449,8 @@ Gfx mat_wf_dl_sgl_int_ru_picket_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_picket_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883457,8 +883463,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_picket_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_steel_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883480,8 +883486,8 @@ Gfx mat_wf_dl_sgl_int_ru_steel_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_steel_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883494,8 +883500,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_steel_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_fabric_navy_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883517,8 +883523,8 @@ Gfx mat_wf_dl_sgl_int_ru_fabric_navy_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_fabric_navy_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883531,8 +883537,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_fabric_navy_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_carpet_meeting_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883554,8 +883560,8 @@ Gfx mat_wf_dl_sgl_int_ru_carpet_meeting_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_carpet_meeting_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883568,8 +883574,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_carpet_meeting_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_tile_ceiling_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883591,8 +883597,8 @@ Gfx mat_wf_dl_sgl_int_ru_tile_ceiling_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_tile_ceiling_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883605,8 +883611,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_tile_ceiling_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_carpet_grey_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883628,8 +883634,8 @@ Gfx mat_wf_dl_sgl_int_ru_carpet_grey_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_carpet_grey_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883642,8 +883648,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_carpet_grey_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_terrazzo_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883665,8 +883671,8 @@ Gfx mat_wf_dl_sgl_int_ru_terrazzo_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_terrazzo_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883679,8 +883685,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_terrazzo_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_inlay_reitz_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883702,8 +883708,8 @@ Gfx mat_wf_dl_sgl_int_ru_inlay_reitz_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_inlay_reitz_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883716,8 +883722,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_inlay_reitz_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_terrazzo_grey_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883739,8 +883745,8 @@ Gfx mat_wf_dl_sgl_int_ru_terrazzo_grey_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_terrazzo_grey_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883753,8 +883759,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_terrazzo_grey_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_terrazzo_orange_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883776,8 +883782,8 @@ Gfx mat_wf_dl_sgl_int_ru_terrazzo_orange_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_terrazzo_orange_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883790,8 +883796,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_terrazzo_orange_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_cedar_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883813,8 +883819,8 @@ Gfx mat_wf_dl_sgl_int_ru_cedar_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_cedar_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883827,8 +883833,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_cedar_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_carpet_chamber_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883850,8 +883856,8 @@ Gfx mat_wf_dl_sgl_int_ru_carpet_chamber_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_carpet_chamber_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883864,8 +883870,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_carpet_chamber_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_plank_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883887,8 +883893,8 @@ Gfx mat_wf_dl_sgl_int_ru_plank_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_plank_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883901,8 +883907,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_plank_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_black_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883924,8 +883930,8 @@ Gfx mat_wf_dl_sgl_int_ru_black_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_black_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883938,8 +883944,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_black_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_tile_ceiling_mid_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883961,8 +883967,8 @@ Gfx mat_wf_dl_sgl_int_ru_tile_ceiling_mid_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_tile_ceiling_mid_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -883975,8 +883981,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_tile_ceiling_mid_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_glass_blue_layer5_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -883999,8 +884005,8 @@ Gfx mat_wf_dl_sgl_int_ru_glass_blue_layer5_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_glass_blue_layer5_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884013,8 +884019,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_glass_blue_layer5_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_brick_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884036,8 +884042,8 @@ Gfx mat_wf_dl_sgl_int_ru_brick_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_brick_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884050,8 +884056,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_brick_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_cream_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884073,8 +884079,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_cream_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_cream_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884087,8 +884093,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_cream_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_glass_layer5_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884111,8 +884117,8 @@ Gfx mat_wf_dl_sgl_int_ru_glass_layer5_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_glass_layer5_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884125,8 +884131,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_glass_layer5_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wood_panel_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884148,8 +884154,8 @@ Gfx mat_wf_dl_sgl_int_ru_wood_panel_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wood_panel_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884162,8 +884168,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wood_panel_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884185,8 +884191,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884199,8 +884205,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_navy_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884222,8 +884228,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_navy_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_navy_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884236,8 +884242,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_navy_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_billiards_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884259,8 +884265,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_billiards_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_billiards_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884273,8 +884279,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_billiards_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_door_glass_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884296,8 +884302,8 @@ Gfx mat_wf_dl_sgl_int_ru_door_glass_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_door_glass_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884310,8 +884316,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_door_glass_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_door_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884333,8 +884339,8 @@ Gfx mat_wf_dl_sgl_int_ru_door_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_door_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884347,8 +884353,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_door_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_royal_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884370,8 +884376,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_royal_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_royal_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884384,8 +884390,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_royal_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_charcoal_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884407,8 +884413,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_charcoal_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_charcoal_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884421,8 +884427,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_charcoal_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_hex_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884444,8 +884450,8 @@ Gfx mat_wf_dl_sgl_int_ru_hex_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_hex_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884458,8 +884464,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_hex_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_glass_smoke_layer5_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884482,8 +884488,8 @@ Gfx mat_wf_dl_sgl_int_ru_glass_smoke_layer5_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_glass_smoke_layer5_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884496,8 +884502,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_glass_smoke_layer5_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_door_elev_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884519,8 +884525,8 @@ Gfx mat_wf_dl_sgl_int_ru_door_elev_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_door_elev_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884533,8 +884539,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_door_elev_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_call_button_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884556,8 +884562,8 @@ Gfx mat_wf_dl_sgl_int_ru_call_button_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_call_button_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884570,8 +884576,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_call_button_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_door_steel_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884593,8 +884599,8 @@ Gfx mat_wf_dl_sgl_int_ru_door_steel_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_door_steel_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884607,8 +884613,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_door_steel_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_royal_wash_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884630,8 +884636,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_royal_wash_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_royal_wash_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884644,8 +884650,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_royal_wash_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_paleblue_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884667,8 +884673,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_paleblue_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_paleblue_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884681,8 +884687,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_paleblue_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_glass_clear_layer5_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884705,8 +884711,8 @@ Gfx mat_wf_dl_sgl_int_ru_glass_clear_layer5_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_glass_clear_layer5_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884719,8 +884725,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_glass_clear_layer5_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_paving_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884742,8 +884748,8 @@ Gfx mat_wf_dl_sgl_int_ru_paving_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_paving_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884756,8 +884762,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_paving_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_floor_atlas_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884779,8 +884785,8 @@ Gfx mat_wf_dl_sgl_int_ru_floor_atlas_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_floor_atlas_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884793,8 +884799,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_floor_atlas_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_G_w_a_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884816,8 +884822,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_G_w_a_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_G_w_a_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884830,8 +884836,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_G_w_a_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_G_w_b_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884853,8 +884859,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_G_w_b_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_G_w_b_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884867,8 +884873,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_G_w_b_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_arrow_navy_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884890,8 +884896,8 @@ Gfx mat_wf_dl_sgl_int_ru_arrow_navy_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_arrow_navy_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884904,8 +884910,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_arrow_navy_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_G_w_c_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884927,8 +884933,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_G_w_c_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_G_w_c_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884941,8 +884947,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_G_w_c_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_picket2_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -884965,8 +884971,8 @@ Gfx mat_wf_dl_sgl_int_ru_picket2_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_picket2_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -884979,8 +884985,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_picket2_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_maple_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885002,8 +885008,8 @@ Gfx mat_wf_dl_sgl_int_ru_maple_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_maple_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885016,8 +885022,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_maple_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_tower_glass_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885039,8 +885045,8 @@ Gfx mat_wf_dl_sgl_int_ru_tower_glass_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_tower_glass_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885053,8 +885059,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_tower_glass_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_steel_bright_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885076,8 +885082,8 @@ Gfx mat_wf_dl_sgl_int_ru_steel_bright_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_steel_bright_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885090,8 +885096,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_steel_bright_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wood_tan_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885113,8 +885119,8 @@ Gfx mat_wf_dl_sgl_int_ru_wood_tan_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wood_tan_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885127,8 +885133,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wood_tan_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_leather_char_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885150,8 +885156,8 @@ Gfx mat_wf_dl_sgl_int_ru_leather_char_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_leather_char_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885164,8 +885170,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_leather_char_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_leather_grey_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885187,8 +885193,8 @@ Gfx mat_wf_dl_sgl_int_ru_leather_grey_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_leather_grey_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885201,8 +885207,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_leather_grey_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_fabric_orange_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885224,8 +885230,8 @@ Gfx mat_wf_dl_sgl_int_ru_fabric_orange_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_fabric_orange_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885238,8 +885244,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_fabric_orange_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_uf_blue_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885261,8 +885267,8 @@ Gfx mat_wf_dl_sgl_int_ru_uf_blue_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_uf_blue_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885275,8 +885281,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_uf_blue_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_seatrow_black_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885298,8 +885304,8 @@ Gfx mat_wf_dl_sgl_int_ru_seatrow_black_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_seatrow_black_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885312,8 +885318,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_seatrow_black_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_row_black_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885336,8 +885342,8 @@ Gfx mat_wf_dl_sgl_int_ru_row_black_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_row_black_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885350,8 +885356,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_row_black_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_orange_uf_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885373,8 +885379,8 @@ Gfx mat_wf_dl_sgl_int_ru_orange_uf_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_orange_uf_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885387,8 +885393,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_orange_uf_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_bronze_black_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885410,8 +885416,8 @@ Gfx mat_wf_dl_sgl_int_ru_bronze_black_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_bronze_black_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885424,8 +885430,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_bronze_black_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_books_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885447,8 +885453,8 @@ Gfx mat_wf_dl_sgl_int_ru_books_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_books_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885461,8 +885467,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_books_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_carpet_tri_dk_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885484,8 +885490,8 @@ Gfx mat_wf_dl_sgl_int_ru_carpet_tri_dk_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_carpet_tri_dk_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885498,8 +885504,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_carpet_tri_dk_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_gator_skin_grey_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885521,8 +885527,8 @@ Gfx mat_wf_dl_sgl_int_ru_gator_skin_grey_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_gator_skin_grey_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885535,8 +885541,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_gator_skin_grey_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_banner_welcome2_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885558,8 +885564,8 @@ Gfx mat_wf_dl_sgl_int_ru_banner_welcome2_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_banner_welcome2_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885572,8 +885578,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_banner_welcome2_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_banner_welcome3_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885595,8 +885601,8 @@ Gfx mat_wf_dl_sgl_int_ru_banner_welcome3_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_banner_welcome3_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885609,8 +885615,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_banner_welcome3_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_word_senate_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885633,8 +885639,8 @@ Gfx mat_wf_dl_sgl_int_ru_word_senate_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_word_senate_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885647,8 +885653,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_word_senate_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_gator_claw_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885671,8 +885677,8 @@ Gfx mat_wf_dl_sgl_int_ru_gator_claw_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_gator_claw_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885685,8 +885691,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_gator_claw_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_cafe_bay_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885708,8 +885714,8 @@ Gfx mat_wf_dl_sgl_int_ru_cafe_bay_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_cafe_bay_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885722,8 +885728,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_cafe_bay_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_slat_dark_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885745,8 +885751,8 @@ Gfx mat_wf_dl_sgl_int_ru_slat_dark_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_slat_dark_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885759,8 +885765,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_slat_dark_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_word_cabo_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885783,8 +885789,8 @@ Gfx mat_wf_dl_sgl_int_ru_word_cabo_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_word_cabo_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885797,8 +885803,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_word_cabo_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_word_mexgrill_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885821,8 +885827,8 @@ Gfx mat_wf_dl_sgl_int_ru_word_mexgrill_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_word_mexgrill_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885835,8 +885841,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_word_mexgrill_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_snake_plant_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885859,8 +885865,8 @@ Gfx mat_wf_dl_sgl_int_ru_snake_plant_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_snake_plant_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885873,8 +885879,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_snake_plant_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_leather_navy_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885896,8 +885902,8 @@ Gfx mat_wf_dl_sgl_int_ru_leather_navy_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_leather_navy_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885910,8 +885916,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_leather_navy_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_maple_panel_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885933,8 +885939,8 @@ Gfx mat_wf_dl_sgl_int_ru_maple_panel_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_maple_panel_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885947,8 +885953,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_maple_panel_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_leather_orange_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -885970,8 +885976,8 @@ Gfx mat_wf_dl_sgl_int_ru_leather_orange_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_leather_orange_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -885984,8 +885990,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_leather_orange_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_counter_navy_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886007,8 +886013,8 @@ Gfx mat_wf_dl_sgl_int_ru_counter_navy_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_counter_navy_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886021,8 +886027,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_counter_navy_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_menu_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886044,8 +886050,8 @@ Gfx mat_wf_dl_sgl_int_ru_menu_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_menu_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886058,8 +886064,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_menu_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_menu_blue_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886081,8 +886087,8 @@ Gfx mat_wf_dl_sgl_int_ru_menu_blue_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_menu_blue_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886095,8 +886101,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_menu_blue_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_score_tv_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886118,8 +886124,8 @@ Gfx mat_wf_dl_sgl_int_ru_score_tv_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_score_tv_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886132,8 +886138,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_score_tv_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_lane_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886155,8 +886161,8 @@ Gfx mat_wf_dl_sgl_int_ru_lane_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_lane_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886169,8 +886175,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_lane_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_lane_arrows_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886192,8 +886198,8 @@ Gfx mat_wf_dl_sgl_int_ru_lane_arrows_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_lane_arrows_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886206,8 +886212,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_lane_arrows_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_pins_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886229,8 +886235,8 @@ Gfx mat_wf_dl_sgl_int_ru_pins_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_pins_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886243,8 +886249,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_pins_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_masking_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886266,8 +886272,8 @@ Gfx mat_wf_dl_sgl_int_ru_masking_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_masking_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886280,8 +886286,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_masking_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_video_wall_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886303,8 +886309,8 @@ Gfx mat_wf_dl_sgl_int_ru_video_wall_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_video_wall_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886317,8 +886323,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_video_wall_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_red_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886340,8 +886346,8 @@ Gfx mat_wf_dl_sgl_int_ru_red_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_red_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886354,8 +886360,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_red_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_orange_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886377,8 +886383,8 @@ Gfx mat_wf_dl_sgl_int_ru_orange_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_orange_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886391,8 +886397,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_orange_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_gator_green_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886414,8 +886420,8 @@ Gfx mat_wf_dl_sgl_int_ru_gator_green_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_gator_green_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886428,8 +886434,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_gator_green_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_fabric_plum_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886451,8 +886457,8 @@ Gfx mat_wf_dl_sgl_int_ru_fabric_plum_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_fabric_plum_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886465,8 +886471,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_fabric_plum_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_felt_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886488,8 +886494,8 @@ Gfx mat_wf_dl_sgl_int_ru_felt_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_felt_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886502,8 +886508,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_felt_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_espresso_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886525,8 +886531,8 @@ Gfx mat_wf_dl_sgl_int_ru_espresso_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_espresso_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886539,8 +886545,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_espresso_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_wood_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886562,8 +886568,8 @@ Gfx mat_wf_dl_sgl_int_wood_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_wood_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886576,8 +886582,8 @@ Gfx mat_revert_wf_dl_sgl_int_wood_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_arcade_gamepod_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886599,8 +886605,8 @@ Gfx mat_wf_dl_sgl_int_ru_arcade_gamepod_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_arcade_gamepod_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886613,8 +886619,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_arcade_gamepod_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_game_screen_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886636,8 +886642,8 @@ Gfx mat_wf_dl_sgl_int_ru_game_screen_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_game_screen_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886650,8 +886656,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_game_screen_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_arcade_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886673,8 +886679,8 @@ Gfx mat_wf_dl_sgl_int_ru_arcade_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_arcade_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886687,8 +886693,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_arcade_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_carpet_billiards_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886710,8 +886716,8 @@ Gfx mat_wf_dl_sgl_int_ru_carpet_billiards_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_carpet_billiards_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886724,8 +886730,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_carpet_billiards_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_gameroom_uf_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886747,8 +886753,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_gameroom_uf_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_gameroom_uf_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886761,8 +886767,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_gameroom_uf_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_gameroom_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886784,8 +886790,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_gameroom_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_gameroom_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886798,8 +886804,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_gameroom_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_esports_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886822,8 +886828,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_esports_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_esports_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886836,8 +886842,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_esports_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_esports_b_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886860,8 +886866,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_esports_b_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_esports_b_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886874,8 +886880,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_esports_b_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_scale_led_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886897,8 +886903,8 @@ Gfx mat_wf_dl_sgl_int_ru_scale_led_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_scale_led_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886911,8 +886917,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_scale_led_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_hex_neon_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886935,8 +886941,8 @@ Gfx mat_wf_dl_sgl_int_ru_hex_neon_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_hex_neon_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886949,8 +886955,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_hex_neon_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_fabric_char_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -886972,8 +886978,8 @@ Gfx mat_wf_dl_sgl_int_ru_fabric_char_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_fabric_char_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -886986,8 +886992,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_fabric_char_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_exit_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887009,8 +887015,8 @@ Gfx mat_wf_dl_sgl_int_ru_exit_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_exit_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887023,8 +887029,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_exit_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_G_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887046,8 +887052,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_G_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_G_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887060,8 +887066,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_G_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_G_s_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887083,8 +887089,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_G_s_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_G_s_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887097,8 +887103,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_G_s_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_slate_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887120,8 +887126,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_slate_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_slate_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887134,8 +887140,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_slate_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_aed_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887157,8 +887163,8 @@ Gfx mat_wf_dl_sgl_int_ru_aed_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_aed_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887171,8 +887177,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_aed_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_gr_transom_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887195,8 +887201,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_gr_transom_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_gr_transom_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887209,8 +887215,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_gr_transom_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_hours_screen_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887232,8 +887238,8 @@ Gfx mat_wf_dl_sgl_int_ru_hours_screen_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_hours_screen_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887246,8 +887252,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_hours_screen_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_office_bay_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887269,8 +887275,8 @@ Gfx mat_wf_dl_sgl_int_ru_office_bay_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_office_bay_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887283,8 +887289,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_office_bay_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_barber_pole_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887306,8 +887312,8 @@ Gfx mat_wf_dl_sgl_int_ru_barber_pole_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_barber_pole_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887320,8 +887326,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_barber_pole_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_barber_blade_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887343,8 +887349,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_barber_blade_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_barber_blade_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887357,8 +887363,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_barber_blade_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_photo_bw_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887380,8 +887386,8 @@ Gfx mat_wf_dl_sgl_int_ru_photo_bw_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_photo_bw_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887394,8 +887400,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_photo_bw_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_dir_G_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887417,8 +887423,8 @@ Gfx mat_wf_dl_sgl_int_ru_dir_G_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_dir_G_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887431,8 +887437,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_dir_G_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_subway_green_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887454,8 +887460,8 @@ Gfx mat_wf_dl_sgl_int_ru_subway_green_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_subway_green_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887468,8 +887474,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_subway_green_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_subway_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887492,8 +887498,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_subway_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_subway_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887506,8 +887512,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_subway_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_nosh_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887530,8 +887536,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_nosh_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_nosh_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887544,8 +887550,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_nosh_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_market_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887568,8 +887574,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_market_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_market_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887582,8 +887588,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_market_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_arena_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887606,8 +887612,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_arena_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_arena_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887620,8 +887626,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_arena_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_cherry_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887643,8 +887649,8 @@ Gfx mat_wf_dl_sgl_int_ru_cherry_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_cherry_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887657,8 +887663,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_cherry_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_dais_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887680,8 +887686,8 @@ Gfx mat_wf_dl_sgl_int_ru_dais_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_dais_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887694,8 +887700,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_dais_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_stone_grey_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887717,8 +887723,8 @@ Gfx mat_wf_dl_sgl_int_ru_stone_grey_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_stone_grey_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887731,8 +887737,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_stone_grey_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_grey_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887754,8 +887760,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_grey_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_grey_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887768,8 +887774,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_grey_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_chevron_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887791,8 +887797,8 @@ Gfx mat_wf_dl_sgl_int_ru_chevron_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_chevron_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887805,8 +887811,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_chevron_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_flags_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887828,8 +887834,8 @@ Gfx mat_wf_dl_sgl_int_ru_flags_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_flags_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887842,8 +887848,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_flags_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_tablecloth_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887865,8 +887871,8 @@ Gfx mat_wf_dl_sgl_int_ru_tablecloth_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_tablecloth_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887879,8 +887885,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_tablecloth_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wainscot_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887902,8 +887908,8 @@ Gfx mat_wf_dl_sgl_int_ru_wainscot_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wainscot_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887916,8 +887922,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wainscot_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_prints_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887939,8 +887945,8 @@ Gfx mat_wf_dl_sgl_int_ru_prints_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_prints_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887953,8 +887959,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_prints_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_hotel_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -887976,8 +887982,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_hotel_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_hotel_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -887990,8 +887996,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_hotel_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_granite_black_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888013,8 +888019,8 @@ Gfx mat_wf_dl_sgl_int_ru_granite_black_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_granite_black_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888027,8 +888033,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_granite_black_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_brass_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888050,8 +888056,8 @@ Gfx mat_wf_dl_sgl_int_ru_brass_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_brass_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888064,8 +888070,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_brass_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_light_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888087,8 +888093,8 @@ Gfx mat_wf_dl_sgl_int_light_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_light_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888101,8 +888107,8 @@ Gfx mat_revert_wf_dl_sgl_int_light_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_slate_floor_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888124,8 +888130,8 @@ Gfx mat_wf_dl_sgl_int_ru_slate_floor_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_slate_floor_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888138,8 +888144,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_slate_floor_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_terrazzo_dark_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888161,8 +888167,8 @@ Gfx mat_wf_dl_sgl_int_ru_terrazzo_dark_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_terrazzo_dark_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888175,8 +888181,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_terrazzo_dark_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_carpet_lounge_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888198,8 +888204,8 @@ Gfx mat_wf_dl_sgl_int_ru_carpet_lounge_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_carpet_lounge_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888212,8 +888218,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_carpet_lounge_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_glass_door_layer5_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888236,8 +888242,8 @@ Gfx mat_wf_dl_sgl_int_ru_glass_door_layer5_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_glass_door_layer5_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888250,8 +888256,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_glass_door_layer5_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_glass_faint_layer5_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888274,8 +888280,8 @@ Gfx mat_wf_dl_sgl_int_ru_glass_faint_layer5_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_glass_faint_layer5_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888288,8 +888294,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_glass_faint_layer5_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_hang_blue_a_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888311,8 +888317,8 @@ Gfx mat_wf_dl_sgl_int_ru_hang_blue_a_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_hang_blue_a_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888325,8 +888331,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_hang_blue_a_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_hang_blue_b_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888348,8 +888354,8 @@ Gfx mat_wf_dl_sgl_int_ru_hang_blue_b_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_hang_blue_b_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888362,8 +888368,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_hang_blue_b_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_hang_blue_c_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888385,8 +888391,8 @@ Gfx mat_wf_dl_sgl_int_ru_hang_blue_c_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_hang_blue_c_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888399,8 +888405,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_hang_blue_c_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_hang_blue_d_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888422,8 +888428,8 @@ Gfx mat_wf_dl_sgl_int_ru_hang_blue_d_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_hang_blue_d_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888436,8 +888442,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_hang_blue_d_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_tower_car_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888459,8 +888465,8 @@ Gfx mat_wf_dl_sgl_int_ru_tower_car_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_tower_car_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888473,8 +888479,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_tower_car_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_info_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888496,8 +888502,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_info_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_info_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888510,8 +888516,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_info_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_union_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888534,8 +888540,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_union_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_union_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888548,8 +888554,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_union_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_paint_cranberry_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888571,8 +888577,8 @@ Gfx mat_wf_dl_sgl_int_ru_paint_cranberry_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_paint_cranberry_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888585,8 +888591,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_paint_cranberry_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_soffit_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888608,8 +888614,8 @@ Gfx mat_wf_dl_sgl_int_ru_soffit_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_soffit_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888622,8 +888628,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_soffit_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_counter_red_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888645,8 +888651,8 @@ Gfx mat_wf_dl_sgl_int_ru_counter_red_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_counter_red_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888659,8 +888665,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_counter_red_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_tile_lattice_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888682,8 +888688,8 @@ Gfx mat_wf_dl_sgl_int_ru_tile_lattice_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_tile_lattice_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888696,8 +888702,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_tile_lattice_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_menu_screen_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888719,8 +888725,8 @@ Gfx mat_wf_dl_sgl_int_ru_menu_screen_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_menu_screen_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888733,8 +888739,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_menu_screen_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_vletters_panda_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888757,8 +888763,8 @@ Gfx mat_wf_dl_sgl_int_ru_vletters_panda_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_vletters_panda_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888771,8 +888777,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_vletters_panda_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_badge_red_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888795,8 +888801,8 @@ Gfx mat_wf_dl_sgl_int_ru_badge_red_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_badge_red_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888809,8 +888815,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_badge_red_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_vletters_smart_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888833,8 +888839,8 @@ Gfx mat_wf_dl_sgl_int_ru_vletters_smart_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_vletters_smart_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888847,8 +888853,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_vletters_smart_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_paint_sky_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888870,8 +888876,8 @@ Gfx mat_wf_dl_sgl_int_ru_paint_sky_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_paint_sky_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888884,8 +888890,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_paint_sky_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_paint_lime_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888907,8 +888913,8 @@ Gfx mat_wf_dl_sgl_int_ru_paint_lime_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_paint_lime_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888921,8 +888927,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_paint_lime_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_counter_front_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888944,8 +888950,8 @@ Gfx mat_wf_dl_sgl_int_ru_counter_front_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_counter_front_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888958,8 +888964,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_counter_front_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_vletters_tacos_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -888982,8 +888988,8 @@ Gfx mat_wf_dl_sgl_int_ru_vletters_tacos_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_vletters_tacos_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -888996,8 +889002,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_vletters_tacos_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_vletters_mac_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889020,8 +889026,8 @@ Gfx mat_wf_dl_sgl_int_ru_vletters_mac_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_vletters_mac_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889034,8 +889040,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_vletters_mac_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_fc_tile_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889057,8 +889063,8 @@ Gfx mat_wf_dl_sgl_int_ru_fc_tile_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_fc_tile_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889071,8 +889077,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_fc_tile_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_neon_swirl_tall_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889095,8 +889101,8 @@ Gfx mat_wf_dl_sgl_int_ru_neon_swirl_tall_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_neon_swirl_tall_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889109,8 +889115,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_neon_swirl_tall_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_burger_glow_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889133,8 +889139,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_burger_glow_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_burger_glow_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889147,8 +889153,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_burger_glow_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_vletters_shakes_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889171,8 +889177,8 @@ Gfx mat_wf_dl_sgl_int_ru_vletters_shakes_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_vletters_shakes_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889185,8 +889191,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_vletters_shakes_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_cafe_shelves_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889208,8 +889214,8 @@ Gfx mat_wf_dl_sgl_int_ru_cafe_shelves_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_cafe_shelves_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889222,8 +889228,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_cafe_shelves_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_slat_walnut_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889245,8 +889251,8 @@ Gfx mat_wf_dl_sgl_int_ru_slat_walnut_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_slat_walnut_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889259,8 +889265,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_slat_walnut_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_chalkboard_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889282,8 +889288,8 @@ Gfx mat_wf_dl_sgl_int_ru_chalkboard_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_chalkboard_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889296,8 +889302,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_chalkboard_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_pastry_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889319,8 +889325,8 @@ Gfx mat_wf_dl_sgl_int_ru_pastry_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_pastry_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889333,8 +889339,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_pastry_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_vletters_sbux_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889357,8 +889363,8 @@ Gfx mat_wf_dl_sgl_int_ru_vletters_sbux_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_vletters_sbux_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889371,8 +889377,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_vletters_sbux_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_badge_green_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889395,8 +889401,8 @@ Gfx mat_wf_dl_sgl_int_ru_badge_green_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_badge_green_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889409,8 +889415,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_badge_green_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_brick_rustic_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889432,8 +889438,8 @@ Gfx mat_wf_dl_sgl_int_ru_brick_rustic_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_brick_rustic_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889446,8 +889452,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_brick_rustic_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_vletters_babas_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889470,8 +889476,8 @@ Gfx mat_wf_dl_sgl_int_ru_vletters_babas_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_vletters_babas_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889484,8 +889490,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_vletters_babas_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_badge_babas_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889508,8 +889514,8 @@ Gfx mat_wf_dl_sgl_int_ru_badge_babas_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_badge_babas_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889522,8 +889528,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_badge_babas_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_vletters_halal2_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889546,8 +889552,8 @@ Gfx mat_wf_dl_sgl_int_ru_vletters_halal2_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_vletters_halal2_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889560,8 +889566,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_vletters_halal2_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_badge_gold_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889584,8 +889590,8 @@ Gfx mat_wf_dl_sgl_int_ru_badge_gold_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_badge_gold_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889598,8 +889604,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_badge_gold_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_maple_light_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889621,8 +889627,8 @@ Gfx mat_wf_dl_sgl_int_ru_maple_light_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_maple_light_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889635,8 +889641,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_maple_light_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_laminate_mauve_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889658,8 +889664,8 @@ Gfx mat_wf_dl_sgl_int_ru_laminate_mauve_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_laminate_mauve_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889672,8 +889678,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_laminate_mauve_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_fc_queue_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889695,8 +889701,8 @@ Gfx mat_wf_dl_sgl_int_ru_fc_queue_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_fc_queue_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889709,8 +889715,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_fc_queue_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_troffer_sq_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889732,8 +889738,8 @@ Gfx mat_wf_dl_sgl_int_ru_troffer_sq_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_troffer_sq_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889746,8 +889752,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_troffer_sq_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_vent_sq_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889769,8 +889775,8 @@ Gfx mat_wf_dl_sgl_int_ru_vent_sq_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_vent_sq_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889783,8 +889789,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_vent_sq_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_foodcourt_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889806,8 +889812,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_foodcourt_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_foodcourt_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889820,8 +889826,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_foodcourt_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_fabric_taupe_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889843,8 +889849,8 @@ Gfx mat_wf_dl_sgl_int_ru_fabric_taupe_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_fabric_taupe_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889857,8 +889863,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_fabric_taupe_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_mural_coffea_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889880,8 +889886,8 @@ Gfx mat_wf_dl_sgl_int_ru_mural_coffea_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_mural_coffea_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889894,8 +889900,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_mural_coffea_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_badge_halal_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889918,8 +889924,8 @@ Gfx mat_wf_dl_sgl_int_ru_badge_halal_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_badge_halal_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889932,8 +889938,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_badge_halal_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_bk_gators_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889956,8 +889962,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_bk_gators_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_bk_gators_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -889970,8 +889976,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_bk_gators_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_badge_gator_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -889994,8 +890000,8 @@ Gfx mat_wf_dl_sgl_int_ru_badge_gator_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_badge_gator_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890008,8 +890014,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_badge_gator_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_bk_store_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890032,8 +890038,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_bk_store_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_bk_store_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890046,8 +890052,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_bk_store_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_grille_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890070,8 +890076,8 @@ Gfx mat_wf_dl_sgl_int_ru_grille_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_grille_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890084,8 +890090,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_grille_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_bulletin_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890107,8 +890113,8 @@ Gfx mat_wf_dl_sgl_int_ru_bulletin_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_bulletin_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890121,8 +890127,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_bulletin_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_jersey_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890144,8 +890150,8 @@ Gfx mat_wf_dl_sgl_int_ru_jersey_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_jersey_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890158,8 +890164,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_jersey_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_badge_black_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890182,8 +890188,8 @@ Gfx mat_wf_dl_sgl_int_ru_badge_black_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_badge_black_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890196,8 +890202,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_badge_black_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_L1_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890219,8 +890225,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_L1_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L1_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890233,8 +890239,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L1_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_vinyl_grey_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890256,8 +890262,8 @@ Gfx mat_wf_dl_sgl_int_ru_vinyl_grey_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_vinyl_grey_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890270,8 +890276,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_vinyl_grey_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_order_here_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890294,8 +890300,8 @@ Gfx mat_wf_dl_sgl_int_ru_order_here_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_order_here_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890308,8 +890314,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_order_here_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_ccc_screen_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890331,8 +890337,8 @@ Gfx mat_wf_dl_sgl_int_ru_ccc_screen_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_ccc_screen_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890345,8 +890351,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_ccc_screen_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_marble_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890368,8 +890374,8 @@ Gfx mat_wf_dl_sgl_int_ru_marble_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_marble_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890382,8 +890388,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_marble_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_slat_cloud_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890405,8 +890411,8 @@ Gfx mat_wf_dl_sgl_int_ru_slat_cloud_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_slat_cloud_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890419,8 +890425,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_slat_cloud_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_timeline_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890442,8 +890448,8 @@ Gfx mat_wf_dl_sgl_int_ru_timeline_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_timeline_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890456,8 +890462,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_timeline_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_timeline_head_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890479,8 +890485,8 @@ Gfx mat_wf_dl_sgl_int_ru_timeline_head_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_timeline_head_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890493,8 +890499,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_timeline_head_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_timeline_head2_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890516,8 +890522,8 @@ Gfx mat_wf_dl_sgl_int_ru_timeline_head2_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_timeline_head2_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890530,8 +890536,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_timeline_head2_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_hang_pass_a_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890553,8 +890559,8 @@ Gfx mat_wf_dl_sgl_int_ru_hang_pass_a_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_hang_pass_a_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890567,8 +890573,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_hang_pass_a_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_hang_pass_b_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890590,8 +890596,8 @@ Gfx mat_wf_dl_sgl_int_ru_hang_pass_b_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_hang_pass_b_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890604,8 +890610,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_hang_pass_b_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_hang_pass_c_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890627,8 +890633,8 @@ Gfx mat_wf_dl_sgl_int_ru_hang_pass_c_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_hang_pass_c_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890641,8 +890647,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_hang_pass_c_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_oils_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890664,8 +890670,8 @@ Gfx mat_wf_dl_sgl_int_ru_oils_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_oils_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890678,8 +890684,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_oils_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_gatorwell_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890702,8 +890708,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_gatorwell_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_gatorwell_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890716,8 +890722,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_gatorwell_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_fabric_teal_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890739,8 +890745,8 @@ Gfx mat_wf_dl_sgl_int_ru_fabric_teal_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_fabric_teal_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890753,8 +890759,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_fabric_teal_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_restroom_blade_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890776,8 +890782,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_restroom_blade_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_restroom_blade_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890790,8 +890796,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_restroom_blade_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_word_wall_dense_a_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890813,8 +890819,8 @@ Gfx mat_wf_dl_sgl_int_ru_word_wall_dense_a_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_word_wall_dense_a_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890827,8 +890833,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_word_wall_dense_a_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_word_wall_dense_b_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890850,8 +890856,8 @@ Gfx mat_wf_dl_sgl_int_ru_word_wall_dense_b_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_word_wall_dense_b_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890864,8 +890870,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_word_wall_dense_b_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_tv_hotel_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890887,8 +890893,8 @@ Gfx mat_wf_dl_sgl_int_ru_tv_hotel_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_tv_hotel_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890901,8 +890907,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_tv_hotel_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_lobby_navy_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890924,8 +890930,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_lobby_navy_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_lobby_navy_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890938,8 +890944,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_lobby_navy_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_door_meeting_honey_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890961,8 +890967,8 @@ Gfx mat_wf_dl_sgl_int_ru_door_meeting_honey_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_door_meeting_honey_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -890975,8 +890981,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_door_meeting_honey_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_concrete_dark_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -890998,8 +891004,8 @@ Gfx mat_wf_dl_sgl_int_ru_concrete_dark_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_concrete_dark_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891012,8 +891018,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_concrete_dark_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_carpet_aud_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891035,8 +891041,8 @@ Gfx mat_wf_dl_sgl_int_ru_carpet_aud_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_carpet_aud_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891049,8 +891055,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_carpet_aud_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_carpet_ballroom_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891072,8 +891078,8 @@ Gfx mat_wf_dl_sgl_int_ru_carpet_ballroom_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_carpet_ballroom_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891086,8 +891092,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_carpet_ballroom_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_aud_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891109,8 +891115,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_aud_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_aud_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891123,8 +891129,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_aud_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_slateblue_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891146,8 +891152,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_slateblue_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_slateblue_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891160,8 +891166,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_slateblue_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_L2_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891183,8 +891189,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_L2_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L2_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891197,8 +891203,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L2_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_L2_s_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891220,8 +891226,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_L2_s_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L2_s_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891234,8 +891240,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L2_s_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_row_navy_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891258,8 +891264,8 @@ Gfx mat_wf_dl_sgl_int_ru_row_navy_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_row_navy_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891272,8 +891278,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_row_navy_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_drape_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891295,8 +891301,8 @@ Gfx mat_wf_dl_sgl_int_ru_drape_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_drape_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891309,8 +891315,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_drape_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_proj_screen_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891332,8 +891338,8 @@ Gfx mat_wf_dl_sgl_int_ru_proj_screen_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_proj_screen_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891346,8 +891352,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_proj_screen_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_acoustic_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891369,8 +891375,8 @@ Gfx mat_wf_dl_sgl_int_ru_acoustic_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_acoustic_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891383,8 +891389,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_acoustic_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_window_view_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891406,8 +891412,8 @@ Gfx mat_wf_dl_sgl_int_ru_window_view_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_window_view_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891420,8 +891426,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_window_view_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_coffer_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891443,8 +891449,8 @@ Gfx mat_wf_dl_sgl_int_ru_coffer_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_coffer_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891457,8 +891463,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_coffer_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_row_wood_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891481,8 +891487,8 @@ Gfx mat_wf_dl_sgl_int_ru_row_wood_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_row_wood_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891495,8 +891501,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_row_wood_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_row_aud_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891519,8 +891525,8 @@ Gfx mat_wf_dl_sgl_int_ru_row_aud_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_row_aud_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891533,8 +891539,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_row_aud_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_art_gal_a_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891556,8 +891562,8 @@ Gfx mat_wf_dl_sgl_int_ru_art_gal_a_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_art_gal_a_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891570,8 +891576,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_art_gal_a_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_art_gal_b_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891593,8 +891599,8 @@ Gfx mat_wf_dl_sgl_int_ru_art_gal_b_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_art_gal_b_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891607,8 +891613,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_art_gal_b_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_canvas_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891630,8 +891636,8 @@ Gfx mat_wf_dl_sgl_int_ru_canvas_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_canvas_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891644,8 +891650,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_canvas_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_room_plaque_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891667,8 +891673,8 @@ Gfx mat_wf_dl_sgl_int_ru_room_plaque_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_room_plaque_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891681,8 +891687,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_room_plaque_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_carpet_atrium_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891704,8 +891710,8 @@ Gfx mat_wf_dl_sgl_int_ru_carpet_atrium_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_carpet_atrium_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891718,8 +891724,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_carpet_atrium_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_frit_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891742,8 +891748,8 @@ Gfx mat_wf_dl_sgl_int_ru_frit_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_frit_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891756,8 +891762,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_frit_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_hang_meet_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891779,8 +891785,8 @@ Gfx mat_wf_dl_sgl_int_ru_hang_meet_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_hang_meet_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891793,8 +891799,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_hang_meet_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_glass_tint_dk_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891816,8 +891822,8 @@ Gfx mat_wf_dl_sgl_int_ru_glass_tint_dk_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_glass_tint_dk_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891830,8 +891836,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_glass_tint_dk_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_maple_pale_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891853,8 +891859,8 @@ Gfx mat_wf_dl_sgl_int_ru_maple_pale_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_maple_pale_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891867,8 +891873,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_maple_pale_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_carpet_prefn_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891890,8 +891896,8 @@ Gfx mat_wf_dl_sgl_int_ru_carpet_prefn_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_carpet_prefn_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891904,8 +891910,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_carpet_prefn_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_warm_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891927,8 +891933,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_warm_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_warm_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891941,8 +891947,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_warm_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_L3_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -891964,8 +891970,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_L3_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L3_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -891978,8 +891984,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L3_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_L3_s_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892001,8 +892007,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_L3_s_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L3_s_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892015,8 +892021,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L3_s_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_band_blue_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892038,8 +892044,8 @@ Gfx mat_wf_dl_sgl_int_ru_band_blue_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_band_blue_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892052,8 +892058,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_band_blue_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_word_blue_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892076,8 +892082,8 @@ Gfx mat_wf_dl_sgl_int_ru_word_blue_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_word_blue_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892090,8 +892096,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_word_blue_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_metal_panel_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892113,8 +892119,8 @@ Gfx mat_wf_dl_sgl_int_ru_metal_panel_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_metal_panel_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892127,8 +892133,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_metal_panel_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_band_orange_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892150,8 +892156,8 @@ Gfx mat_wf_dl_sgl_int_ru_band_orange_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_band_orange_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892164,8 +892170,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_band_orange_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_word_orange_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892188,8 +892194,8 @@ Gfx mat_wf_dl_sgl_int_ru_word_orange_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_word_orange_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892202,8 +892208,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_word_orange_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_drum_panel_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892225,8 +892231,8 @@ Gfx mat_wf_dl_sgl_int_ru_drum_panel_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_drum_panel_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892239,8 +892245,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_drum_panel_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_gators_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892263,8 +892269,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_gators_layer4_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_gators_layer4_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892277,8 +892283,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_gators_layer4_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_photos_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892300,8 +892306,8 @@ Gfx mat_wf_dl_sgl_int_ru_photos_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_photos_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892314,8 +892320,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_photos_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_greige_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892337,8 +892343,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_greige_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_greige_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892351,8 +892357,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_greige_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_mahogany_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892374,8 +892380,8 @@ Gfx mat_wf_dl_sgl_int_ru_mahogany_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_mahogany_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892388,8 +892394,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_mahogany_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_rion_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892411,8 +892417,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_rion_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_rion_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892425,8 +892431,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_rion_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_rion_case_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892448,8 +892454,8 @@ Gfx mat_wf_dl_sgl_int_ru_rion_case_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_rion_case_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892462,8 +892468,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_rion_case_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_sign_rion_east_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892485,8 +892491,8 @@ Gfx mat_wf_dl_sgl_int_ru_sign_rion_east_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_sign_rion_east_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892499,8 +892505,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_sign_rion_east_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_carpet_olive_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892522,8 +892528,8 @@ Gfx mat_wf_dl_sgl_int_ru_carpet_olive_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_carpet_olive_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892536,8 +892542,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_carpet_olive_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wall_greyblue_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892559,8 +892565,8 @@ Gfx mat_wf_dl_sgl_int_ru_wall_greyblue_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wall_greyblue_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892573,8 +892579,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wall_greyblue_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_L4_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892596,8 +892602,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_L4_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L4_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892610,8 +892616,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L4_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_L4_s_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892633,8 +892639,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_L4_s_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L4_s_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892647,8 +892653,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L4_s_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_seat_tan_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892670,8 +892676,8 @@ Gfx mat_wf_dl_sgl_int_ru_seat_tan_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_seat_tan_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892684,8 +892690,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_seat_tan_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_stone_clad_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892707,8 +892713,8 @@ Gfx mat_wf_dl_sgl_int_ru_stone_clad_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_stone_clad_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892721,8 +892727,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_stone_clad_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_shade_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892744,8 +892750,8 @@ Gfx mat_wf_dl_sgl_int_ru_shade_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_shade_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892758,8 +892764,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_shade_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_bed_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892781,8 +892787,8 @@ Gfx mat_wf_dl_sgl_int_ru_bed_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_bed_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892795,8 +892801,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_bed_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_carpet_hotel_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892818,8 +892824,8 @@ Gfx mat_wf_dl_sgl_int_ru_carpet_hotel_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_carpet_hotel_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892832,8 +892838,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_carpet_hotel_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_carpet_hotelroom_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892855,8 +892861,8 @@ Gfx mat_wf_dl_sgl_int_ru_carpet_hotelroom_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_carpet_hotelroom_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892869,8 +892875,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_carpet_hotelroom_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_door_hotel_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892892,8 +892898,8 @@ Gfx mat_wf_dl_sgl_int_ru_door_hotel_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_door_hotel_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892906,8 +892912,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_door_hotel_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_L5_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892929,8 +892935,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_L5_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L5_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892943,8 +892949,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L5_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_leather_tan_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -892966,8 +892972,8 @@ Gfx mat_wf_dl_sgl_int_ru_leather_tan_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_leather_tan_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -892980,8 +892986,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_leather_tan_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_print_suite_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -893003,8 +893009,8 @@ Gfx mat_wf_dl_sgl_int_ru_print_suite_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_print_suite_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -893017,8 +893023,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_print_suite_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_valance_navy_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -893040,8 +893046,8 @@ Gfx mat_wf_dl_sgl_int_ru_valance_navy_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_valance_navy_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -893054,8 +893060,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_valance_navy_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_drape_gold_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -893077,8 +893083,8 @@ Gfx mat_wf_dl_sgl_int_ru_drape_gold_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_drape_gold_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -893091,8 +893097,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_drape_gold_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_L6_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -893114,8 +893120,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_L6_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L6_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -893128,8 +893134,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_L6_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_dance_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -893151,8 +893157,8 @@ Gfx mat_wf_dl_sgl_int_ru_dance_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_dance_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -893165,8 +893171,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_dance_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_LL_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -893188,8 +893194,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_LL_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_LL_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -893202,8 +893208,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_LL_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_wayfind_LL_s_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -893225,8 +893231,8 @@ Gfx mat_wf_dl_sgl_int_ru_wayfind_LL_s_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_LL_s_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -893239,8 +893245,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_wayfind_LL_s_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_fabric_mustard_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -893262,8 +893268,8 @@ Gfx mat_wf_dl_sgl_int_ru_fabric_mustard_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_fabric_mustard_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -893276,8 +893282,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_fabric_mustard_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_mirror_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -893299,8 +893305,8 @@ Gfx mat_wf_dl_sgl_int_ru_mirror_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_mirror_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -893313,8 +893319,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_mirror_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_clay_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -893336,8 +893342,8 @@ Gfx mat_wf_dl_sgl_int_ru_clay_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_clay_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -893350,8 +893356,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_clay_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_student_art_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -893373,8 +893379,8 @@ Gfx mat_wf_dl_sgl_int_ru_student_art_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_student_art_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -893387,8 +893393,8 @@ Gfx mat_revert_wf_dl_sgl_int_ru_student_art_layer1_area2[] = {
 };
 
 Gfx mat_wf_dl_sgl_int_ru_mural_acc_layer1_area2[] = {
+	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
 	gsDPSetFogColor(200, 206, 216, 255),
@@ -893410,8 +893416,8 @@ Gfx mat_wf_dl_sgl_int_ru_mural_acc_layer1_area2[] = {
 };
 
 Gfx mat_revert_wf_dl_sgl_int_ru_mural_acc_layer1_area2[] = {
-	gsSPClearGeometryMode(G_LIGHTING),
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),

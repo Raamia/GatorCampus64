@@ -206603,7 +206603,7 @@ Gfx castle_grounds_dl_Trees_visual_mesh_layer_1_tri_5[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_facade_brick_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_facade_brick_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -206626,7 +206626,7 @@ Gfx mat_castle_grounds_dl_sgl_facade_brick_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_facade_brick_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -206639,7 +206639,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_facade_brick_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_brick_red_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_brick_red_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -206662,7 +206662,7 @@ Gfx mat_castle_grounds_dl_sgl_brick_red_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_brick_red_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -206675,7 +206675,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_brick_red_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_limestone_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_limestone_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -206698,7 +206698,7 @@ Gfx mat_castle_grounds_dl_sgl_limestone_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_limestone_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -206711,7 +206711,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_limestone_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_roof_gravel_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_roof_gravel_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -206734,7 +206734,7 @@ Gfx mat_castle_grounds_dl_sgl_roof_gravel_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_roof_gravel_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -206747,7 +206747,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_roof_gravel_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_facade_gothic_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_facade_gothic_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -206770,7 +206770,7 @@ Gfx mat_castle_grounds_dl_sgl_facade_gothic_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_facade_gothic_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -206783,7 +206783,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_facade_gothic_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_roof_tile_red_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_roof_tile_red_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -206806,7 +206806,7 @@ Gfx mat_castle_grounds_dl_sgl_roof_tile_red_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_roof_tile_red_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -206819,7 +206819,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_roof_tile_red_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_facade_service_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_facade_service_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -206842,7 +206842,7 @@ Gfx mat_castle_grounds_dl_sgl_facade_service_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_facade_service_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -206855,7 +206855,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_facade_service_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_concrete_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_concrete_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -206878,7 +206878,7 @@ Gfx mat_castle_grounds_dl_sgl_concrete_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_concrete_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -206891,7 +206891,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_concrete_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_metal_gray_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_metal_gray_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -206914,7 +206914,7 @@ Gfx mat_castle_grounds_dl_sgl_metal_gray_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_metal_gray_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -206927,7 +206927,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_metal_gray_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_door_wood_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_door_wood_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -206950,7 +206950,7 @@ Gfx mat_castle_grounds_dl_sgl_door_wood_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_door_wood_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -206963,7 +206963,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_door_wood_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_facade_glass_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_facade_glass_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -206986,7 +206986,7 @@ Gfx mat_castle_grounds_dl_sgl_facade_glass_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_facade_glass_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -206999,7 +206999,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_facade_glass_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_facade_band_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_facade_band_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207022,7 +207022,7 @@ Gfx mat_castle_grounds_dl_sgl_facade_band_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_facade_band_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207035,7 +207035,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_facade_band_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_window_glass_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_window_glass_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207058,7 +207058,7 @@ Gfx mat_castle_grounds_dl_sgl_window_glass_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_window_glass_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207071,7 +207071,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_window_glass_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_mulch_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_mulch_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207094,7 +207094,7 @@ Gfx mat_castle_grounds_dl_sgl_mulch_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_mulch_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207107,7 +207107,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_mulch_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_bark_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_bark_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207130,7 +207130,7 @@ Gfx mat_castle_grounds_dl_sgl_bark_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_bark_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207143,7 +207143,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_bark_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_leaves_oak_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_leaves_oak_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207166,7 +207166,7 @@ Gfx mat_castle_grounds_dl_sgl_leaves_oak_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_leaves_oak_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207179,7 +207179,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_leaves_oak_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_leaves_oak2_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_leaves_oak2_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207202,7 +207202,7 @@ Gfx mat_castle_grounds_dl_sgl_leaves_oak2_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_leaves_oak2_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207215,7 +207215,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_leaves_oak2_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_banner_orange_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_banner_orange_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207238,7 +207238,7 @@ Gfx mat_castle_grounds_dl_sgl_banner_orange_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_banner_orange_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207251,7 +207251,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_banner_orange_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_white_trim_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_white_trim_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207274,7 +207274,7 @@ Gfx mat_castle_grounds_dl_sgl_white_trim_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_white_trim_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207287,7 +207287,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_white_trim_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_banner_blue_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_banner_blue_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207310,7 +207310,7 @@ Gfx mat_castle_grounds_dl_sgl_banner_blue_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_banner_blue_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207323,7 +207323,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_banner_blue_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_dark_trim_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_dark_trim_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207346,7 +207346,7 @@ Gfx mat_castle_grounds_dl_sgl_dark_trim_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_dark_trim_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207359,7 +207359,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_dark_trim_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_ground_grass_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_ground_grass_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207382,7 +207382,7 @@ Gfx mat_castle_grounds_dl_sgl_ground_grass_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_ground_grass_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207395,7 +207395,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_ground_grass_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_lawn_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_lawn_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207418,7 +207418,7 @@ Gfx mat_castle_grounds_dl_sgl_lawn_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_lawn_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207431,7 +207431,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_lawn_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_parking_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_parking_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207454,7 +207454,7 @@ Gfx mat_castle_grounds_dl_sgl_parking_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_parking_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207467,7 +207467,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_parking_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_plaza_brick_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_plaza_brick_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207490,7 +207490,7 @@ Gfx mat_castle_grounds_dl_sgl_plaza_brick_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_plaza_brick_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207503,7 +207503,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_plaza_brick_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_forest_floor_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_forest_floor_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207526,7 +207526,7 @@ Gfx mat_castle_grounds_dl_sgl_forest_floor_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_forest_floor_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207539,7 +207539,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_forest_floor_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_brick_dark_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_brick_dark_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207562,7 +207562,7 @@ Gfx mat_castle_grounds_dl_sgl_brick_dark_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_brick_dark_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207575,7 +207575,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_brick_dark_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_window_dark_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_window_dark_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207598,7 +207598,7 @@ Gfx mat_castle_grounds_dl_sgl_window_dark_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_window_dark_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207611,7 +207611,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_window_dark_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_roof_dark_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_roof_dark_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207634,7 +207634,7 @@ Gfx mat_castle_grounds_dl_sgl_roof_dark_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_roof_dark_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207647,7 +207647,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_roof_dark_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_copper_green_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_copper_green_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207670,7 +207670,7 @@ Gfx mat_castle_grounds_dl_sgl_copper_green_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_copper_green_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207683,7 +207683,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_copper_green_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_grass_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_grass_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207706,7 +207706,7 @@ Gfx mat_castle_grounds_dl_sgl_grass_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_grass_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207719,7 +207719,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_grass_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_bronze_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_bronze_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207742,7 +207742,7 @@ Gfx mat_castle_grounds_dl_sgl_bronze_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_bronze_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207755,7 +207755,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_bronze_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_path_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_path_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207778,7 +207778,7 @@ Gfx mat_castle_grounds_dl_sgl_path_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_path_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207791,7 +207791,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_path_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_sign_the_hub_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_sign_the_hub_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207814,7 +207814,7 @@ Gfx mat_castle_grounds_dl_sgl_sign_the_hub_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_sign_the_hub_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207827,7 +207827,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_sign_the_hub_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_rock_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_rock_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207850,7 +207850,7 @@ Gfx mat_castle_grounds_dl_sgl_rock_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_rock_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207863,7 +207863,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_rock_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_pond_bed_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_pond_bed_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207886,7 +207886,7 @@ Gfx mat_castle_grounds_dl_sgl_pond_bed_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_pond_bed_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207899,7 +207899,8 @@ Gfx mat_revert_castle_grounds_dl_sgl_pond_bed_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_pond_water_layer5_area1[] = {
-	gsSPSetGeometryMode(G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK),
 	gsSPSetLights1(castle_grounds_dl_sgl_pond_water_layer5_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
@@ -207923,7 +207924,8 @@ Gfx mat_castle_grounds_dl_sgl_pond_water_layer5_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_pond_water_layer5_area1[] = {
-	gsSPClearGeometryMode(G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207936,7 +207938,8 @@ Gfx mat_revert_castle_grounds_dl_sgl_pond_water_layer5_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_water_layer5_area1[] = {
-	gsSPSetGeometryMode(G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK),
 	gsSPSetLights1(castle_grounds_dl_sgl_water_layer5_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
@@ -207960,7 +207963,8 @@ Gfx mat_castle_grounds_dl_sgl_water_layer5_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_water_layer5_area1[] = {
-	gsSPClearGeometryMode(G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -207973,7 +207977,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_water_layer5_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_door_marker_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_door_marker_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -207996,7 +208000,7 @@ Gfx mat_castle_grounds_dl_sgl_door_marker_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_door_marker_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -208009,7 +208013,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_door_marker_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_asphalt_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_asphalt_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -208032,7 +208036,7 @@ Gfx mat_castle_grounds_dl_sgl_asphalt_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_asphalt_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -208045,7 +208049,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_asphalt_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_road_paint_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_road_paint_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -208068,7 +208072,7 @@ Gfx mat_castle_grounds_dl_sgl_road_paint_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_road_paint_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -208081,7 +208085,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_road_paint_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_sidewalk_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_sidewalk_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -208104,7 +208108,7 @@ Gfx mat_castle_grounds_dl_sgl_sidewalk_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_sidewalk_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -208117,7 +208121,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_sidewalk_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_crosswalk_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_crosswalk_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -208140,7 +208144,7 @@ Gfx mat_castle_grounds_dl_sgl_crosswalk_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_crosswalk_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -208153,7 +208157,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_crosswalk_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_steps_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_steps_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -208176,7 +208180,7 @@ Gfx mat_castle_grounds_dl_sgl_steps_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_steps_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -208189,7 +208193,8 @@ Gfx mat_revert_castle_grounds_dl_sgl_steps_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_treeline_layer4_area1[] = {
-	gsSPSetGeometryMode(G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
+	gsSPClearGeometryMode(G_CULL_BACK),
 	gsSPSetLights1(castle_grounds_dl_sgl_treeline_layer4_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, ENVIRONMENT, 0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED),
@@ -208213,7 +208218,8 @@ Gfx mat_castle_grounds_dl_sgl_treeline_layer4_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_treeline_layer4_area1[] = {
-	gsSPClearGeometryMode(G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
+	gsSPSetGeometryMode(G_CULL_BACK),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -208226,7 +208232,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_treeline_layer4_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_forest_wall_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_forest_wall_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -208249,7 +208255,7 @@ Gfx mat_castle_grounds_dl_sgl_forest_wall_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_forest_wall_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -208262,7 +208268,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_forest_wall_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_palm_trunk_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_palm_trunk_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -208285,7 +208291,7 @@ Gfx mat_castle_grounds_dl_sgl_palm_trunk_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_palm_trunk_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -208298,7 +208304,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_palm_trunk_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_palm_frond_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_palm_frond_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -208321,7 +208327,7 @@ Gfx mat_castle_grounds_dl_sgl_palm_frond_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_palm_frond_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -208334,7 +208340,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_palm_frond_layer1_area1[] = {
 };
 
 Gfx mat_castle_grounds_dl_sgl_leaves_pine_layer1_area1[] = {
-	gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPSetGeometryMode(G_FOG),
 	gsSPSetLights1(castle_grounds_dl_sgl_leaves_pine_layer1_area1_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -208357,7 +208363,7 @@ Gfx mat_castle_grounds_dl_sgl_leaves_pine_layer1_area1[] = {
 };
 
 Gfx mat_revert_castle_grounds_dl_sgl_leaves_pine_layer1_area1[] = {
-	gsSPClearGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADE | G_SHADING_SMOOTH | G_ZBUFFER),
+	gsSPClearGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),

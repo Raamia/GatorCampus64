@@ -249,6 +249,10 @@ def validate_level(level_dir):
             raw = open(path, encoding="utf-8", errors="replace").read()
             if "CUSTOM_CMD" in raw:
                 errors.append(f"{rel}: contains CUSTOM_CMD (an un-migrated Fast64 custom command)")
+            n_zclear = len(re.findall(r"gsSPClearGeometryMode\([^)]*\bG_ZBUFFER\b", raw))
+            if n_zclear:
+                errors.append(f"{rel}: {n_zclear} display list(s) clear G_ZBUFFER, so every object drawn after the "
+                              f"level shows through walls (run tools/blender/fix_geometry_modes.py on the level)")
             text = strip_comments(raw)
             for line in text.splitlines():
                 s = line.strip()

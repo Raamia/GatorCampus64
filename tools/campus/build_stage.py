@@ -1000,6 +1000,11 @@ def main():
                     if r["area"] == amod.AREA:
                         r["vertex_lit_material_lists"] = n_vl
         hyg = export_hygiene(level_dir)
+        # material geometry modes as differences from the engine state: without a Fast64 world every material
+        # exported in full form and its revert cleared G_ZBUFFER, so objects drawn after the level (Mario,
+        # NPCs, Goombas, signs) showed through trees and walls (tools/blender/fix_geometry_modes.py)
+        from fix_geometry_modes import fix_level as fix_geometry_modes
+        hyg["geometry_modes_rewritten"] = fix_geometry_modes(level_dir)
         if key in STAGE_COMMON0_MODELS:
             hyg["common0_jump_link"] = add_common0_models(level_dir)
         report["export_hygiene"] = hyg

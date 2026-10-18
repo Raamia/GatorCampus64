@@ -3562,7 +3562,6 @@ Gfx sgl_test_dl_Props_mesh_layer_1_tri_4[] = {
 };
 
 Gfx mat_sgl_test_dl_Grass__tex_[] = {
-	gsSPSetGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER | G_CULL_BACK | G_LIGHTING),
 	gsSPSetLights1(sgl_test_dl_Grass__tex__lights),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
@@ -3581,7 +3580,6 @@ Gfx mat_sgl_test_dl_Grass__tex_[] = {
 };
 
 Gfx mat_revert_sgl_test_dl_Grass__tex_[] = {
-	gsSPClearGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER | G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -3592,7 +3590,6 @@ Gfx mat_revert_sgl_test_dl_Grass__tex_[] = {
 };
 
 Gfx mat_sgl_test_dl_Pool_Tile[] = {
-	gsSPSetGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER | G_CULL_BACK | G_LIGHTING),
 	gsSPSetLights1(sgl_test_dl_Pool_Tile_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
@@ -3606,7 +3603,6 @@ Gfx mat_sgl_test_dl_Pool_Tile[] = {
 };
 
 Gfx mat_revert_sgl_test_dl_Pool_Tile[] = {
-	gsSPClearGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER | G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -3617,7 +3613,7 @@ Gfx mat_revert_sgl_test_dl_Pool_Tile[] = {
 };
 
 Gfx mat_sgl_test_dl_Water_Surface[] = {
-	gsSPSetGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_LIGHTING | G_ZBUFFER),
+	gsSPClearGeometryMode(G_CULL_BACK),
 	gsSPSetLights1(sgl_test_dl_Water_Surface_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(SHADE, 0, PRIMITIVE, 0, 0, 0, 0, PRIMITIVE, SHADE, 0, PRIMITIVE, 0, 0, 0, 0, PRIMITIVE),
@@ -3632,7 +3628,7 @@ Gfx mat_sgl_test_dl_Water_Surface[] = {
 };
 
 Gfx mat_revert_sgl_test_dl_Water_Surface[] = {
-	gsSPClearGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_LIGHTING | G_ZBUFFER),
+	gsSPSetGeometryMode(G_CULL_BACK),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -3643,7 +3639,6 @@ Gfx mat_revert_sgl_test_dl_Water_Surface[] = {
 };
 
 Gfx mat_sgl_test_dl_Gator_Blue[] = {
-	gsSPSetGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER | G_CULL_BACK | G_LIGHTING),
 	gsSPSetLights1(sgl_test_dl_Gator_Blue_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
@@ -3657,7 +3652,6 @@ Gfx mat_sgl_test_dl_Gator_Blue[] = {
 };
 
 Gfx mat_revert_sgl_test_dl_Gator_Blue[] = {
-	gsSPClearGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER | G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -3668,7 +3662,6 @@ Gfx mat_revert_sgl_test_dl_Gator_Blue[] = {
 };
 
 Gfx mat_sgl_test_dl_Concrete[] = {
-	gsSPSetGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER | G_CULL_BACK | G_LIGHTING),
 	gsSPSetLights1(sgl_test_dl_Concrete_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
@@ -3682,7 +3675,6 @@ Gfx mat_sgl_test_dl_Concrete[] = {
 };
 
 Gfx mat_revert_sgl_test_dl_Concrete[] = {
-	gsSPClearGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER | G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -3693,7 +3685,6 @@ Gfx mat_revert_sgl_test_dl_Concrete[] = {
 };
 
 Gfx mat_sgl_test_dl_Gator_Orange[] = {
-	gsSPSetGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER | G_CULL_BACK | G_LIGHTING),
 	gsSPSetLights1(sgl_test_dl_Gator_Orange_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
@@ -3707,7 +3698,6 @@ Gfx mat_sgl_test_dl_Gator_Orange[] = {
 };
 
 Gfx mat_revert_sgl_test_dl_Gator_Orange[] = {
-	gsSPClearGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER | G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -3718,7 +3708,6 @@ Gfx mat_revert_sgl_test_dl_Gator_Orange[] = {
 };
 
 Gfx mat_sgl_test_dl_Slide__very_slippery_[] = {
-	gsSPSetGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER | G_CULL_BACK | G_LIGHTING),
 	gsSPSetLights1(sgl_test_dl_Slide__very_slippery__lights),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
@@ -3732,7 +3721,6 @@ Gfx mat_sgl_test_dl_Slide__very_slippery_[] = {
 };
 
 Gfx mat_revert_sgl_test_dl_Slide__very_slippery_[] = {
-	gsSPClearGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER | G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
@@ -3743,7 +3731,6 @@ Gfx mat_revert_sgl_test_dl_Slide__very_slippery_[] = {
 };
 
 Gfx mat_sgl_test_dl_UF_Brick[] = {
-	gsSPSetGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER | G_CULL_BACK | G_LIGHTING),
 	gsSPSetLights1(sgl_test_dl_UF_Brick_lights),
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
@@ -3757,7 +3744,6 @@ Gfx mat_sgl_test_dl_UF_Brick[] = {
 };
 
 Gfx mat_revert_sgl_test_dl_UF_Brick[] = {
-	gsSPClearGeometryMode(G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER | G_CULL_BACK | G_LIGHTING),
 	gsDPPipeSync(),
 	gsDPSetAlphaDither(G_AD_DISABLE),
 	gsDPSetTextureConvert(G_TC_CONV),
