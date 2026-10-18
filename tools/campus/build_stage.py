@@ -151,7 +151,7 @@ STAGE_PICKUPS = {"swamp": lambda m: m.swamp_pickups, "reitz_eng": lambda m: m.re
                  "lake_alice": lambda m: __import__("stage_lake").lake_pickups}      # Course 3: stage_lake.py
 # stages whose level script loads the common0 model group (MODEL_HEART, MODEL_GOOMBA, ...):
 # JUMP_LINK(script_func_global_1) after MARIO(...), as every vanilla course does
-STAGE_COMMON0_MODELS = {"swamp", "reitz_eng", "lake_alice"}
+STAGE_COMMON0_MODELS = {"swamp", "reitz_eng", "lake_alice", "hub"}   # hub: the rival Goombas 
 # stage key -> anchor point exporter (stage_points.py), run after the build: data/uf/<key>_points.json
 STAGE_POINTS = {"swamp": lambda m: m.swamp_points, "reitz_eng": lambda m: m.reitz_points,
                 "lake_alice": lambda m: __import__("stage_lake").lake_points}        # data/uf/lake_points.json
