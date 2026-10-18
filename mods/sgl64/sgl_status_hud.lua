@@ -9,6 +9,11 @@ local sCoinTexture = nil
 local sPortraits = {}
 
 local function hide_vanilla_icons()
+    -- The game rebuilds parts of its HUD state during level updates, which can
+    -- re-enable the native coin counter after its display flags are cleared.
+    -- Hide the vanilla HUD at its render gate as well; the custom campus HUD
+    -- below is drawn by DJUI and remains visible.
+    hud_hide()
     local flags = hud_get_value(HUD_DISPLAY_FLAGS)
     local filtered = flags & ~HIDE_VANILLA
     if filtered ~= flags then hud_set_value(HUD_DISPLAY_FLAGS, filtered) end
@@ -31,7 +36,7 @@ local function life_texture()
 end
 
 local function draw_status_hud()
-    if hud_is_hidden() or sgl_hud_blocked() then return end
+    if sgl_hud_blocked() then return end
 
     djui_hud_set_resolution(RESOLUTION_N64)
     djui_hud_set_filter(FILTER_NEAREST)
