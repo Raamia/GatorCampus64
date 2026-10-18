@@ -561,10 +561,12 @@ local function players_online()
     return n
 end
 
--- the first built, open stage (door order) with a playable act whose star is missing. Acts the players
--- online can actually do come first: with The Swamp's co-op act 3 left and only you online, the hint
--- points at the next stage's solo acts instead (e.g. Reitz & Engineering once 2 stars open The Hub door);
--- with nothing solo left anywhere it falls back to the first missing act of any size.
+-- the first built, open stage (door order) whose next act is playable. The next act is the first one whose star
+-- is missing: vanilla act select offers it and the collected ones, nothing past it (Lake Alice's solo regatta,
+-- act 4, waits for the co-op act 3). Acts the players online can actually do come first: with The Swamp's co-op
+-- act 3 left and only you online, the hint points at the next stage's solo acts instead (e.g. Reitz &
+-- Engineering once 2 stars open The Hub door); with nothing solo left anywhere it falls back to the first stage
+-- whose next act needs more players.
 function sgl_next_stage()
     local stars = sgl_total_stars()
     local online = players_online()
@@ -573,11 +575,14 @@ function sgl_next_stage()
         if sgl_stage_ready(stage) and stars >= stage.stars and stage.acts ~= nil then
             local flags = sgl_stage_star_flags(stage)
             for k = 1, 6 do
-                if not sgl_act_is_soon(stage, k) and (flags & (1 << (k - 1))) == 0 then
-                    -- sgl_mission.lua loads after this file: only looked up at runtime
-                    local def = sgl_mission_get ~= nil and sgl_mission_get(stage.level, k) or nil
-                    if def == nil or (def.minPlayers or 1) <= online then return stage end
-                    fallback = fallback or stage
+                if (flags & (1 << (k - 1))) == 0 then
+                    if not sgl_act_is_soon(stage, k) then
+                        -- sgl_mission.lua loads after this file: only looked up at runtime
+                        local def = sgl_mission_get ~= nil and sgl_mission_get(stage.level, k) or nil
+                        if def == nil or (def.minPlayers or 1) <= online then return stage end
+                        fallback = fallback or stage
+                    end
+                    break
                 end
             end
         end

@@ -1661,7 +1661,8 @@ end
 --   cpRadius, cpBelow, cpAbove, par (s), timeout (s), lobbyWait (s), countdown (s), resultsSeconds,
 --   pbKey (mod_storage key), title (results board), gold (s, optional: a "gold time" on the board),
 --   finishGrace (s after the first finish before the results, default 45), music (SEQ_* while racing,
---   optional) }
+--   optional), mounted(m) (optional: a player in the start box only counts as a racer while this is true, e.g.
+--   riding a gator in Lake Alice's regatta), cpMarker (HUD marker prefix of the next checkpoint, default "CP ") }
 -- Phases (a): 0 lobby (start box), 1 countdown (players in the box are frozen), 2 racing,
 -- 3 results. f = race number, c = phase seconds, p = finishers, x = racers at the gun.
 -- The race ends when min(racers at the gun, players still here) have finished (a racer who leaves does
@@ -1727,10 +1728,16 @@ function sgl_mission_kind_race(spec)
         return best
     end
 
+    -- in the start box and ready to race (spec.mounted: e.g. on a gator)
+    local function racer_in_box(m)
+        return in_box(m.pos) and (spec.mounted == nil or spec.mounted(m))
+    end
+    K.racerInBox = racer_in_box
+
     local function count_in_box(ctx)
         local n = 0
         for _, li in ipairs(ctx.players) do
-            if in_box(gMarioStates[li].pos) then n = n + 1 end
+            if racer_in_box(gMarioStates[li]) then n = n + 1 end
         end
         return n
     end
@@ -1848,7 +1855,7 @@ function sgl_mission_kind_race(spec)
         local m = gMarioStates[0]
         local L = ctx.loc
         local phase = ctx.a
-        local inBox = in_box(m.pos)
+        local inBox = racer_in_box(m)
         if phase == SGL_RACE_COUNTDOWN then
             L.ready = inBox
             ctx.freeze = inBox and alive_player(m)
@@ -1955,7 +1962,8 @@ function sgl_mission_kind_race(spec)
         end
         if L.racing then
             local cp = cps[L.cp]
-            sgl_hud_marker({ x = cp.x, y = cp.y + 250, z = cp.z }, L.cp >= nCp and "FINISH" or ("CP " .. L.cp), SGL_HUD_BLUE, me)
+            sgl_hud_marker({ x = cp.x, y = cp.y + 250, z = cp.z }, L.cp >= nCp and "FINISH" or ((spec.cpMarker or "CP ") .. L.cp),
+                SGL_HUD_BLUE, me)
             if L.goAge ~= nil and L.goAge < 30 then sgl_hud_big("GO!", SGL_HUD_GREEN, 3) end
             local W = djui_hud_get_screen_width()
             sgl_hud_timer(L.frames, W - 92, 34, "TIME")

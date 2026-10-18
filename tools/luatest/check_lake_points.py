@@ -330,8 +330,9 @@ LIST_KEYS = {
     "big_gators": ("x", "z", "bed"),
     "lurk_gators": ("x", "z", "bed"),
 }
-AIR = {"deck_star", "deck_star_from", "nest_star", "census_star", "gator_bend", "bat_exit_2010", "bat_exit_2017"}
-STARS = ("deck_star", "nest_star", "census_star")
+AIR = {"deck_star", "deck_star_from", "nest_star", "census_star", "regatta_star", "gator_bend", "bat_exit_2010",
+       "bat_exit_2017"}
+STARS = ("deck_star", "nest_star", "census_star", "regatta_star")
 
 
 # ------------------------------------------------------------------------------------------- collision

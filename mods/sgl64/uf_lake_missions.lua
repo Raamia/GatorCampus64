@@ -26,20 +26,29 @@
 --                                    post alone can never make it. Each player's bat swarm streams over their
 --                                    own post. Swoopers dive at the counters (one at a time, every 11 s); a hit
 --                                    is a knock-back (no damage) that stops your count until you are back on.
---   acts 4-6 "COMING SOON - ..." in course.lua (design 7.4 acts 3, 5, 6): free roam, no star.
--- Act order (course.lua header): playable acts 1..3 with no gap, the solo ones first. Every star is spawned by
--- its mission (spawn_default_star from the controller loop, star id = act - 1): the level script must NOT
--- place a bhvStar for acts 1-3. Each mission checks the stage geometry first (probes on LAKE_POINTS): if
+--   act 4  GATOR REGATTA             race, solo or with friends (design 7.4 act 3 "Shell Surf Regatta"): a ride gator
+--                                    waits at the dock (the water off the Baughman lawn); ride it into the start box,
+--                                    and after the countdown round the 8 buoys in order (tall, wide checkpoints,
+--                                    flames over them, the next one blue). The timer stops at buoy 8; under par
+--                                    (1'15) the star lands at the dock. Lost your gator? A spare waits on the east
+--                                    shore, and the dock's comes back. Every player rides their own (local) gator;
+--                                    friends see a stand-in gator under each other.
+--   acts 5-6 "COMING SOON - ..." in course.lua (design 7.4 acts 5, 6): free roam, no star.
+-- Act order (course.lua header): playable acts 1..4 with no gap, the solo ones first up to the co-op act 3 (the
+-- regatta is act 4 like every stage's next act, so act select offers it after act 3's star). Every star is spawned
+-- by its mission (spawn_default_star from the controller loop, star id = act - 1): the level script must NOT
+-- place a bhvStar for acts 1-4. Each mission checks the stage geometry first (probes on LAKE_POINTS): if
 -- levels/jrb is not the real Lake Alice they stay offline (/mission force overrides).
 --
 -- File name: coopdx loads a mod's files in strcmp order of their names. This file registers missions at load,
 -- so it must sort AFTER sgl_mission.lua (docs/flow.md 7 step 9); it also sorts after swamp_missions.lua, which
 -- keeps the order the other suites check ("lake_missions.lua" or "jrb_..." would load before the framework).
 --
--- Networking: act 1 and the act 2 nest need nothing new (synced positions; reliable "hop" / "nest" events,
--- re-sent after 3 s while unapplied). The basking gators are local copies driven by get_network_area_timer()
--- (identical on every client of the area); the "two on one gator" sink is decided by each client from the
--- synced player positions. Big gators, Skeeters, the bat swarm and the diving Swoopers are local objects:
+-- Networking: act 1, the act 2 nest and the act 4 race need nothing new (synced positions and actions; reliable
+-- "hop" / "nest" / "fin" events, hop and nest re-sent after 3 s while unapplied). The basking gators are local
+-- copies driven by get_network_area_timer() (identical on every client of the area); the "two on one gator" sink
+-- is decided by each client from the synced player positions. The ride gators of act 4, big gators, Skeeters, the
+-- bat swarm and the diving Swoopers are local objects:
 -- each player is chased only by their own copies (design 7.4: "Swooper spawns are local and cosmetic"). The
 -- census count is the leader's: it samples who stands on which post at 2 Hz (the design's rule) and writes
 -- the count to the synced fields; a new leader carries on from the synced count.
@@ -58,7 +67,7 @@
 -- Derived values (rules in check_lake_points.py): gators = 4.4 x 1.6 m backs every 6.71 m along end pad ->
 -- GATOR_BEND map (-1716, -600) -> the small bog's south shore (2 m from the end pad's edge, 1.2 m from the
 -- bog), yaw along the line, bed = the HIGHEST lake bed under the back; nest_star / census_star = 1.2 / 1.5 m over
--- their spot. deck_star / deck_star_from, lurk_gators and big_gators: stage_lake.py's rules (STAR_*, act1_lurk_spots,
+-- their spot, regatta_star 1.2 m over the dock's water. deck_star / deck_star_from, lurk_gators and big_gators: stage_lake.py's rules (STAR_*, act1_lurk_spots,
 -- BIG_GATOR_SPOTS), measured into the JSON by the build.
 -- (The table is built by a local function so its ~250 numbers are that function's constants, not the main
 -- chunk's: with more than 256 main-chunk constants luac stops using SETTABUP for globals, which
@@ -141,12 +150,29 @@ local function lake_points() return {
     bat_exit_2010 = { x = -12257, y = 420, z = -14944 },        -- act4_bat_exit_0 (the 2010 barn's open bottom)
     bat_exit_2017 = { x = -14890, y = 420, z = -15729 },        -- act4_bat_exit_1 (the 2017 barn)
     census_star = { x = -13000, y = 150, z = -13200 },          -- act 3 star, 1.5 m over the barns' post
+
+    -- act 4 (design 3, Shell Surf Regatta): the dock, the 8 buoys, the spare gator on the safe shoreline
+    regatta_dock = { x = -18100, y = -50, z = 4050 },           -- act3_start_water_baughman (the water off the Baughman
+                                                                --   lawn, 0.4 m deep: the start box and the dock gator)
+    regatta_star = { x = -18100, y = 70, z = 4050 },            -- act 4 star, 1.2 m over the dock's water
+    regatta_spare = { x = 11746, y = 0, z = 5118 },             -- shoreline shore_cp_08 (east bank, 42 m off the
+                                                                --   buoy 4 -> 5 leg): the spare gator
+    buoys = {                                                   -- act3_buoy_1..8 (water surface; >= 27 m from every
+        { x = -14500, y = -50, z = 1200 },                      --   shore and bog, open water between them)
+        { x = -7600, y = -50, z = 9200 },
+        { x = -3000, y = -50, z = 4600 },
+        { x = 6000, y = -50, z = 1200 },
+        { x = 17200, y = -50, z = 600 },
+        { x = 12000, y = -50, z = -7500 },
+        { x = 4400, y = -50, z = -8500 },
+        { x = -6000, y = -50, z = -1000 },
+    },
 } end
 LAKE_POINTS = lake_points()
 
 -- which act each mission is (star id = act - 1). Keep in step with the act names in course.lua
 -- (tools/luatest/test_lake_missions.lua checks that every mission title equals its course.lua act name).
-LAKE_MISSION_ACTS = { boardwalk = 1, gators = 2, bats = 3 }
+LAKE_MISSION_ACTS = { boardwalk = 1, gators = 2, bats = 3, regatta = 4 }
 
 ---------------------------------------------------------------------------------------------
 if sgl_mission_register == nil then
@@ -1311,6 +1337,184 @@ local function kind_census(spec)
 end
 
 ---------------------------------------------------------------------------------------------
+-- REGATTA kind (act 4, design 7.4 act 3 "Shell Surf Regatta"): the framework's race (sgl_mission_kind_race: start
+-- box, lobby wait, countdown, ordered checkpoints, par, results board, personal best) ridden on the ride gators
+-- (bhvKoopaShell, drawn as a saddled gator: sgl_ride_gator.lua). spec = the race spec (start = the dock,
+-- checkpoints = the buoys) plus gators = { { x, y, z, face = {x, z}, name }, ... } (where a ride gator waits: the dock
+-- first, then the spare on the safe shoreline), buoyModel, buoyScale, flameUp, flameScale.
+-- * Racers: only a player who RIDES a gator in the start box counts for the start (spec.mounted), is held during
+--   the countdown and races. The buoys are tall, wide checkpoints in order (cpRadius, cpBelow, cpAbove); the timer
+--   stops at the 8th; the star waits at the dock (the race kind: the first finish under par).
+-- * Gators are local objects (spawn_non_sync_object of bhvKoopaShell: coopdx's shell skips sync_object_init on a
+--   non-sync object, and only the local player interacts with a shell), one waiting at every gator spot on every
+--   client, so each friend rides their own. Ridden away (GATOR_TAKEN from its spot) or gone (a ride ends with the
+--   vanilla shell vanishing in a puff), a fresh one waits there again GATOR_RESPAWN frames later.
+-- * A friend's gator is their own local object: each client draws a stand-in gator under every other player in
+--   the act who rides one (ACT_FLAG_RIDING_SHELL with no riddenObj on this client).
+-- * Buoys: a local prop on the water at every checkpoint with a flame over it: red, my next one blue, the ones I
+--   passed this race put out.
+-- * D-pad Down / /mission start (not while racing): off the gator (mario_stop_riding_object) and into the start
+--   box beside the dock gator.
+---------------------------------------------------------------------------------------------
+SGL_LAKE_REGATTA = {
+    GATOR_TAKEN = 600,        -- a gator ridden this far from its spot is taken: a fresh one waits there
+    GATOR_RESPAWN = 30,       -- frames before a gone gator's spot gets a fresh one
+}
+local R = SGL_LAKE_REGATTA
+
+function sgl_lake_riding_gator(m)
+    return m ~= nil and alive(m) and (m.action & ACT_FLAG_RIDING_SHELL) ~= 0
+end
+
+-- a gator spot needs a fresh gator: never spawned (o nil), gone, or taken (moved GATOR_TAKEN away: ridden off, or
+-- drifted) -> true. Pure apart from obj_ok (tools/luatest checks it)
+local function spot_needs_gator(o, spot)
+    if not obj_ok(o, id_bhvKoopaShell) then return true end
+    local dx, dz = o.oPosX - spot.x, o.oPosZ - spot.z
+    return dx * dx + dz * dz > R.GATOR_TAKEN * R.GATOR_TAKEN
+end
+
+local function kind_regatta(spec)
+    spec.mounted = sgl_lake_riding_gator
+    local K = sgl_mission_kind_race(spec)
+    local race = { localTick = K.localTick, panel = K.panel, hud = K.hud, toStart = K.toStart, spawnLocal = K.spawnLocal }
+    local cps = spec.checkpoints
+    local spots = spec.gators
+
+    local function spawn_gator(spot)
+        local yaw = atan2s(spot.face.z - spot.z, spot.face.x - spot.x)
+        return spawn_non_sync_object(id_bhvKoopaShell, E_MODEL_KOOPA_SHELL, spot.x, spot.y, spot.z, function(obj)
+            obj.oFaceAngleYaw, obj.oMoveAngleYaw = yaw, yaw
+        end)
+    end
+
+    K.spawnLocal = function(ctx)
+        race.spawnLocal(ctx)
+        local V = ctx.objs
+        V.gators, V.wait, V.buoys, V.ghosts = {}, {}, {}, {}
+        for i, b in ipairs(cps) do
+            local o = spawn_non_sync_object(id_bhvSglLakeProp, spec.buoyModel or E_MODEL_KOOPA_FLAG, b.x, b.y, b.z, function(obj)
+                obj_scale(obj, spec.buoyScale or 1)
+            end)
+            local fx = spawn_non_sync_object(id_bhvSglMissionFx, E_MODEL_RED_FLAME, b.x, b.y + (spec.flameUp or 500), b.z,
+                function(obj) obj_scale(obj, spec.flameScale or 4) end)
+            V.buoys[i] = { o = o, fx = fx, model = E_MODEL_RED_FLAME }
+        end
+    end
+
+    -- every gator spot keeps one waiting gator (on this client)
+    local function tend_gators(ctx)
+        local V = ctx.objs
+        for i, spot in ipairs(spots) do
+            local o = V.gators[i]
+            if spot_needs_gator(o, spot) then
+                if obj_ok(o, id_bhvKoopaShell) and o.oAction == 0 then obj_mark_for_deletion(o) end   -- a drifted one
+                V.wait[i] = (V.wait[i] or R.GATOR_RESPAWN) - 1
+                if V.wait[i] <= 0 or o == nil then
+                    V.gators[i] = spawn_gator(spot)
+                    V.wait[i] = nil
+                end
+            end
+        end
+    end
+
+    -- stand-in gators under the other riders of this act
+    local function tend_ghosts(ctx)
+        local V = ctx.objs
+        local here = {}
+        for _, li in ipairs(ctx.players) do here[li] = true end
+        for li = 1, MAX_PLAYERS - 1 do
+            local m = gMarioStates[li]
+            local show = here[li] == true and sgl_lake_riding_gator(m) and m.riddenObj == nil
+            local g = V.ghosts[li]
+            if show and not obj_ok(g, id_bhvSglLakeProp) then
+                g = spawn_non_sync_object(id_bhvSglLakeProp, E_MODEL_KOOPA_SHELL, m.pos.x, m.pos.y, m.pos.z, function(obj)
+                    obj.oGraphYOffset = 10      -- as bhvKoopaShell's
+                end)
+                V.ghosts[li] = g
+            end
+            if obj_ok(g, id_bhvSglLakeProp) then
+                if show then
+                    g.oPosX, g.oPosY, g.oPosZ = m.pos.x, m.pos.y, m.pos.z
+                    g.oFaceAngleYaw = m.faceAngle.y
+                end
+                set_hidden(g, not show)
+            end
+        end
+    end
+
+    -- buoy flames: red; while I race, my next buoy blue and the ones behind me out
+    local function tend_buoys(ctx)
+        local L = ctx.loc
+        for i, rec in ipairs(ctx.objs.buoys or {}) do
+            if obj_ok(rec.fx, id_bhvSglMissionFx) then
+                local want = (L.racing and i == L.cp) and E_MODEL_BLUE_FLAME or E_MODEL_RED_FLAME
+                if rec.model ~= want then
+                    obj_set_model_extended(rec.fx, want)
+                    rec.model = want
+                end
+                set_hidden(rec.fx, L.racing == true and i < L.cp)
+            end
+        end
+    end
+
+    K.localTick = function(ctx)
+        race.localTick(ctx)
+        tend_gators(ctx)
+        tend_ghosts(ctx)
+        tend_buoys(ctx)
+    end
+
+    -- the nearest spot with a waiting gator (for the "lost your gator" marker)
+    local function nearest_gator(ctx, p)
+        local best, bd = nil, nil
+        for i, spot in ipairs(spots) do
+            if not spot_needs_gator(ctx.objs.gators and ctx.objs.gators[i], spot) then
+                local d = dist2_xz(p, spot)
+                if bd == nil or d < bd then best, bd = spot, d end
+            end
+        end
+        return best
+    end
+
+    K.panel = function(ctx)
+        local lines = race.panel(ctx)
+        local m = gMarioStates[0]
+        local L = ctx.loc
+        if sgl_lake_riding_gator(m) or not alive(m) then return lines end
+        if ctx.a == SGL_RACE_LOBBY or ctx.a == SGL_RACE_COUNTDOWN then
+            table.insert(lines, 1, { "Jump on a gator at the dock to race!", SGL_HUD_ORANGE })
+        elseif L.racing then
+            local g = nearest_gator(ctx, m.pos)
+            table.insert(lines, 1, { "Lost your gator? " .. (g and ("Get one at " .. g.name) or "Swim back to the dock"), SGL_HUD_RED })
+        end
+        return lines
+    end
+
+    K.hud = function(ctx)
+        race.hud(ctx)
+        local live = ctx.s == SGL_MS_ACTIVE or ctx.s == SGL_MS_SUCCESS or ctx.s == SGL_MS_DONE
+        local m = gMarioStates[0]
+        if not live or sgl_lake_riding_gator(m) or not alive(m) then return end
+        local L = ctx.loc
+        if L.racing or ((ctx.a == SGL_RACE_LOBBY or ctx.a == SGL_RACE_COUNTDOWN) and K.inStartBox(m.pos)) then
+            local g = nearest_gator(ctx, m.pos)
+            if g ~= nil then sgl_hud_marker(up(g, 200), "GATOR", SGL_HUD_GREEN, m) end
+        end
+    end
+
+    -- D-pad Down: a rider waiting outside the box gets off the gator first (the race kind teleports nobody riding)
+    K.toStart = function(ctx, m)
+        if not ctx.loc.racing and m.riddenObj ~= nil and alive(m) and not K.inStartBox(m.pos) then
+            mario_stop_riding_object(m)
+        end
+        return race.toStart(ctx, m)
+    end
+    K.spotNeedsGator = spot_needs_gator
+    return K
+end
+
+---------------------------------------------------------------------------------------------
 -- dusk (act 3): while the local player is in the bat census act of the BUILT Lake Alice, the lighting is
 -- blended from the values it had on arrival (a snapshot: vanilla defaults, or another mod's) to DUSK, then
 -- toward NIGHT as the count runs (night once it is complete); leaving the act (warp, exit, another act)
@@ -1580,6 +1784,57 @@ sBatsDef = sgl_mission_register({
         swoopLeash = 1500,          -- ... or once it is 15 m from its post (after its pass), so the next one comes
         lake = P.deck,              -- D-pad Down: posts face the lake centre
         music = SEQ_LEVEL_SPOOKY,   -- while counting (Big Boo's Haunt)
+    }),
+})
+
+---------------------------------------------------------------------------------------------
+-- act 4: GATOR REGATTA (design 7.4 act 3 "Shell Surf Regatta")
+---------------------------------------------------------------------------------------------
+local BUOY_NAMES = { "west bay", "south-west bay", "south shore", "south of the deck", "east end", "north-east",
+    "north shore", "home stretch" }
+local REGATTA_BUOYS = {}
+for i, b in ipairs(P.buoys) do
+    REGATTA_BUOYS[i] = { x = b.x, y = b.y, z = b.z, name = "Buoy " .. i .. ", " .. BUOY_NAMES[i] }
+end
+
+sgl_mission_register({
+    id = "lake_regatta",
+    pointsFile = POINTS_FILE,
+    level = LEVEL_JRB,
+    act = LAKE_MISSION_ACTS.regatta,
+    title = "GATOR REGATTA",
+    objective = "Ride a gator round the 8 buoys. Par 1'15!",       -- <= ~50 chars: 4:3 windows
+    star = P.regatta_star,          -- the star waits at the dock (design)
+    starFrom = up(P.buoys[#P.buoys], 600),                           -- it flies in from the last buoy
+    starCutsceneRange = 14000,      -- the last buoy is ~130 m from the dock: a racer coming home sees it land
+    probes = { probe(P.regatta_dock, "the regatta dock (water off the Baughman lawn)"),
+               probe(P.regatta_spare, "the spare gator's shore (east bank)") },
+    kind = kind_regatta({
+        start = P.regatta_dock,
+        startRadius = 800,          -- the cove off the Baughman lawn
+        startLabel = "the dock",
+        checkpoints = REGATTA_BUOYS,
+        cpRadius = 900,             -- tall and forgiving (design): 9 m round each buoy (all >= 27 m from shore) ...
+        cpBelow = 500,              -- ... from 5 m under the surface (a swimmer counts too) ...
+        cpAbove = 1500,             -- ... to 15 m over it (a gator hop)
+        par = 75,                   -- design par; a ridden gator tops out near 19 m/s (~40 s flat out)
+        gold = 45,
+        timeout = 150,
+        lobbyWait = 10,
+        countdown = 3,
+        resultsSeconds = 4,
+        finishGrace = 45,
+        pbKey = "pb_lake_gator_regatta",
+        title = "GATOR REGATTA",
+        cpMarker = "BUOY ",
+        gators = {                  -- where a ride gator waits (one per client): the dock, the spare on the safe shoreline
+            { x = P.regatta_dock.x, y = P.regatta_dock.y, z = P.regatta_dock.z, face = P.buoys[1], name = "the dock" },
+            { x = P.regatta_spare.x, y = P.regatta_spare.y, z = P.regatta_spare.z, face = P.buoys[5], name = "the east shore" },
+        },
+        buoyModel = E_MODEL_KOOPA_FLAG,  -- Koopa the Quick's finish flag on the water
+        buoyScale = 2,
+        flameUp = 600,
+        flameScale = 4,
     }),
 })
 

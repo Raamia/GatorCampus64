@@ -797,8 +797,16 @@ test("door 4: Marston (8 stars) -> Marston Science Library act 1 -> star -> back
     check(Sim.find(H.popups, "Locked!.-MARSTON LIBRARY needs 8 stars %(you have 7%)") ~= nil, "locked popup")
     check(H.action ~= C.ACT_DISAPPEARED and H.level == HUB, "a locked door does not open")
 
-    -- 9 stars (every playable act of courses 1-3): open, and the hint points at the Marston door
+    -- 9 stars (courses 1-3 up to their co-op act 3): open, but Lake Alice's regatta (act 4) is next there
     w = full_world({ starFlags = { [C.COURSE_BOB] = 0x07, [C.COURSE_WF] = 0x07, [C.COURSE_JRB] = 0x07 } })
+    H = w:connect("Host")
+    w:step(3)
+    w:warp(H, HUB, 1, 0)
+    w:seconds(2)
+    check(H.env.sgl_total_stars() == 9 and H.env.sgl_next_stage() == H.env.sgl_stage_by_door(3),
+        "9 stars: the NEXT stage is still Lake Alice (its regatta, act 4)")
+    -- 10 stars (every playable act of courses 1-3): the hint points at the Marston door
+    w = full_world({ starFlags = { [C.COURSE_BOB] = 0x07, [C.COURSE_WF] = 0x07, [C.COURSE_JRB] = 0x0F } })
     H = w:connect("Host")
     H.strStorage.friend = "josh"
     marston_stubs(H)
@@ -806,7 +814,7 @@ test("door 4: Marston (8 stars) -> Marston Science Library act 1 -> star -> back
     w:warp(H, HUB, 1, 0)
     w:seconds(2)
     env = H.env
-    check(env.sgl_total_stars() == 9, "9 stars")
+    check(env.sgl_total_stars() == 10, "10 stars")
     check(Sim.find(H.popups, "Walk into the Marston Science Library door to enter MARSTON LIBRARY!") ~= nil,
         "first hub visit: door hint names the Marston Science Library door")
     check(Sim.hud_has(H, "NEXT: MARSTON LIBRARY") and Sim.hud_has(H, "MARSTON SCIENCE LIBRARY door"), "hub NEXT panel: Marston")
@@ -874,7 +882,7 @@ test("door 4: Marston (8 stars) -> Marston Science Library act 1 -> star -> back
     check(H.action ~= C.ACT_DISAPPEARED, "landing outside Marston does not re-enter the door")
     check(H.cam.zoomed_in_dist == 900 and H.cam.zoomed_out_height == 450 and H.cam.collisions == 0,
         "back in the hub: the player's own camera settings")
-    check(env.sgl_total_stars() == 10, "10 stars")
+    check(env.sgl_total_stars() == 11, "11 stars")
     acts = Sim.selectable_acts(w.starFlags[C.COURSE_CCM])
     check(acts[#acts] == 2 and env.sgl_mission_get(CCM, 2).id == "marston_quiet", "next visit: act 2 = SHHH! LOST TEXTBOOKS")
     check(env.sgl_next_stage().key == "marston", "the hint stays on Marston (act 2)")
