@@ -1077,6 +1077,8 @@ def main():
         top = next((p for p in paths if p.endswith("_topdown.png")), None)
         if top:
             run_venv(os.path.join(HERE, "compare_map.py"), key, top, os.path.join(pv, f"{key}_map_compare.png"))
+    if opts["export"] and not opts["report_dir"] and os.path.abspath(opts["levels_dir"]) == os.path.join(ROOT, "mods", "sgl64", "levels"):
+        run_venv(os.path.join(ROOT, "tools", "npcs", "rebuild.py"))
     print(f"SGL: done in {time.time() - t0:.1f}s")
 
 

@@ -20,44 +20,7 @@ SGL_NPC_FACE_DIST = 800      -- the fallback (Yoshi) model turns toward a player
 -- Where the mascots stand: flat, clear floor next to each mission's start (off its route), checked offline against
 -- the built levels by tools/luatest/check_npc_spots.py. radius = how far they stroll (0: they stay put).
 -- yaw: degrees, 0 = facing +Z; they face the mission. label: for "where is Albert?" answers.
-SGL_NPC_SPOTS = {
-    hub_albert = { level = SGL_HUB_LEVEL, area = 1, x = 8800, y = 0, z = -3750, yaw = -120, radius = 350,
-                   label = "on the Plaza of the Americas, right by the spawn" },
-    hub_alberta = { level = SGL_HUB_LEVEL, area = 1, x = 7896, y = 0, z = -4864, yaw = 45, radius = 450,
-                    label = "on the Plaza of the Americas, right by the spawn" },
-    swamp_kickoff = { level = LEVEL_BOB, area = 1, x = 6261, y = 0, z = -11523, yaw = 60, radius = 300,
-                      label = "The Swamp, by the arrival (Kickoff climb)" },
-    swamp_sprint = { level = LEVEL_BOB, area = 1, x = 6598, y = -1000, z = -498, yaw = 180, radius = 0,
-                     label = "The Swamp, behind the Stair Sprint start box" },
-    swamp_chorus = { level = LEVEL_BOB, area = 1, x = 4112, y = -1000, z = -1697, yaw = 90, radius = 0,
-                     label = "The Swamp, by the north-west end-zone button (Chomp Chorus)" },
-    reitz_rooftop = { level = LEVEL_WF, area = 1, x = -3069, y = 150, z = -950, yaw = 60, radius = 0,
-                      label = "Reitz, on the ravine terrace where the rooftop climb starts" },
-    reitz_lawn = { level = LEVEL_WF, area = 1, x = 6975, y = 0, z = -9690, yaw = 30, radius = 300,
-                   label = "Reitz, on the North Lawn (Meal Swipe Tokens)" },
-    reitz_lab = { level = LEVEL_WF, area = 1, x = 1830, y = 0, z = 22625, yaw = -60, radius = 0,
-                  label = "Reitz, in the Robotics Lab atrium by the consoles" },
-    alice_boardwalk = { level = LEVEL_JRB, area = 1, x = -8070, y = 50, z = -5271, yaw = -60, radius = 0,
-                        label = "Lake Alice, on the north boardwalk (Boardwalk Welcome)" },
-    alice_deck = { level = LEVEL_JRB, area = 1, x = 2731, y = 20, z = -611, yaw = -45, radius = 0,
-                   label = "Lake Alice, on the deck where the Gator Hop starts" },
-    alice_census = { level = LEVEL_JRB, area = 1, x = -12961, y = 0, z = -13345, yaw = -15, radius = 0,
-                     label = "Lake Alice, by the bat barns' census post" },
-    alice_field = { level = LEVEL_JRB, area = 1, x = -13750, y = 0, z = -11900, yaw = 90, radius = 300,
-                    label = "Lake Alice, on the bat-house field by the arrival" },
-    marston_lobby = { level = LEVEL_CCM, area = 1, x = -596, y = 0, z = -786, yaw = -165, radius = 150,
-                      label = "Marston, in the lobby by the grand stair" },
-    marston_quiet = { level = LEVEL_CCM, area = 1, x = 456, y = 1800, z = -2080, yaw = 120, radius = 0,
-                      label = "Marston, at the 5th-floor stairwell (Lost Textbooks)" },
-    marston_kiosk = { level = LEVEL_CCM, area = 1, x = 2085, y = -600, z = 1747, yaw = -150, radius = 0,
-                      label = "Marston, by the 1st-floor booking kiosk outside room L129" },
-    libwest_lobby = { level = LEVEL_BBH, area = 1, x = -325, y = 0, z = 2508, yaw = 120, radius = 0,
-                      label = "Library West, in the lobby by the entrance" },
-    libwest_desk = { level = LEVEL_BBH, area = 1, x = 116, y = 3000, z = 1909, yaw = -75, radius = 0,
-                     label = "Library West, by your 6th-floor desk (Coffee Run)" },
-    libwest_circ = { level = LEVEL_BBH, area = 1, x = 26, y = 600, z = 331, yaw = -105, radius = 0,
-                     label = "Library West, by the 2nd-floor circulation desk (Hide & Seek)" },
-}
+-- SGL_NPC_SPOTS is generated from named map anchors in sgl_ambient_data.lua.
 
 -- who stands where: on the hub always; in a stage for the listed acts (acts 4-6 are the free-roam acts)
 SGL_NPC_POSTS = {
@@ -245,8 +208,14 @@ local function mascot_loop(o, npc, target, targetD)
         -- step once they're roughly facing the way (no moonwalking)
         local diff = math.abs((faceYaw - o.oFaceAngleYaw + 32768) % 65536 - 32768)
         if diff < 0x2000 then
-            o.oPosX = o.oPosX + sins(o.oFaceAngleYaw) * ALBERT_WALK_SPEED
-            o.oPosZ = o.oPosZ + coss(o.oFaceAngleYaw) * ALBERT_WALK_SPEED
+            local tx = o.oPosX + sins(o.oFaceAngleYaw) * ALBERT_WALK_SPEED
+            local tz = o.oPosZ + coss(o.oFaceAngleYaw) * ALBERT_WALK_SPEED
+            local floor = sgl_npc_safe_step(o.oPosX, npc.floorY, o.oPosZ, tx, tz, 40, 260)
+            if floor ~= nil then
+                o.oPosX, o.oPosZ, npc.floorY = tx, tz, floor
+            else
+                anim = "idle"
+            end
         end
     end
     if npc.playing ~= anim then
@@ -261,6 +230,13 @@ local function npc_loop(o)
         obj_mark_for_deletion(o)
         return
     end
+    local floor = sgl_npc_safe_position(o.oPosX, npc.floorY, o.oPosZ, 40, 260)
+    if floor == nil then
+        obj_mark_for_deletion(o)
+        npc.obj = nil  -- retry at the map-derived post; remote chat stays available
+        return
+    end
+    npc.floorY = floor
     -- the nearest player in this level and area
     local me = gNetworkPlayers[0]
     local target, bestD = nil, math.huge
@@ -283,7 +259,7 @@ local function npc_loop(o)
         o.oMoveAngleYaw = o.oFaceAngleYaw
     end
     -- a little hop when a reply arrives
-    local y = npc.spot.y
+    local y = npc.floorY
     if npc.hop ~= nil and npc.hop < HOP_FRAMES then
         npc.hop = npc.hop + 1
         local t = npc.hop / HOP_FRAMES
@@ -306,8 +282,12 @@ local function place(npc)
     local spot = sgl_npc_spot(npc, np.currLevelNum, np.currAreaIndex, np.currActNum)
     npc.spot = spot
     if spot == nil then return end
-    npc.x, npc.y, npc.z = spot.x, spot.y, spot.z
-    local o = spawn_non_sync_object(id_bhvSglNpc, npc.model, spot.x, spot.y, spot.z, function(obj)
+    local floor = sgl_npc_safe_position(spot.x, spot.y, spot.z, 40, 260)
+    if floor == nil then return end
+    npc.floorY = floor
+    npc.playing, npc.wasNear, npc.hop = nil, false, nil
+    npc.x, npc.y, npc.z = spot.x, floor, spot.z
+    local o = spawn_non_sync_object(id_bhvSglNpc, npc.model, spot.x, floor, spot.z, function(obj)
         obj.oBehParams = npc.index
         obj_scale(obj, npc.scale)
         obj.oFaceAngleYaw = degrees_to_sm64(spot.yaw)
@@ -595,7 +575,14 @@ local function host_update()
     if changed then write_outbox() end
 end
 
+local sPlacementTick = 0
 local function on_update()
+    sPlacementTick = sPlacementTick + 1
+    if sPlacementTick % 30 == 0 then
+        for _, npc in ipairs(SGL_NPCS) do
+            if npc.obj == nil then place(npc) end
+        end
+    end
     host_update()
     for id, b in pairs(sBubbles) do
         b.age = b.age + 1
