@@ -25,6 +25,7 @@ export default function GatorizePage() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [pollTick, setPollTick] = useState(0)
+  const fileInput = useRef<HTMLInputElement | null>(null)
   const timer = useRef<number | undefined>(undefined)
 
   useEffect(() => {
@@ -121,7 +122,7 @@ export default function GatorizePage() {
         <form className="gator-card space-y-6" onSubmit={submit}>
           <h2 className="text-xl font-semibold">Make a new gator</h2>
           <label className="block"><span className="text-sm font-semibold">Gator name</span><input required maxLength={12} pattern="[ -\u007e]+" value={name} onChange={e => setName(e.target.value)} className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2" placeholder="Up to 12 characters" /></label>
-          <label className="block"><span className="text-sm font-semibold">Photos</span><input required accept="image/jpeg,image/png,image/webp" multiple type="file" onChange={e => setFiles(Array.from(e.target.files ?? []))} className="mt-2 block w-full text-sm" /><span className="mt-2 block text-xs text-muted-foreground">1–4 photos, up to 8 MB each. Include a clear face and your outfit. Photos are deleted when processing ends.</span></label>
+          <div className="block"><span className="text-sm font-semibold">Photos</span><input ref={fileInput} required={files.length === 0} accept="image/jpeg,image/png,image/webp" multiple type="file" onChange={e => setFiles(Array.from(e.target.files ?? []).slice(0, 4))} className="mt-2 block w-full text-sm" /><span className="mt-2 block text-xs text-muted-foreground">1–4 photos, up to 8 MB each. Include a clear face and your outfit. Photos are deleted when processing ends.</span>{files.length > 0 && <ul className="mt-3 space-y-2" aria-label="Selected photos">{files.map((file, index) => <li key={`${file.name}-${file.lastModified}-${index}`} className="flex items-center justify-between gap-3 rounded border border-border bg-background px-3 py-2 text-sm"><span className="min-w-0 truncate">{file.name} <span className="text-xs text-muted-foreground">({(file.size / 1024 / 1024).toFixed(1)} MB)</span></span><button type="button" className="shrink-0 text-xs text-destructive underline" onClick={() => { setFiles(current => current.filter((_, i) => i !== index)); if (fileInput.current) fileInput.current.value = '' }}>Remove</button></li>)}</ul>}</div>
           <label className="flex items-start gap-3 text-sm"><input required type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} className="mt-1" />I confirm these photos are of me or I have permission to submit them, and agree they may be processed into a game character.</label>
           <button disabled={busy} className={button} type="submit">{busy ? 'Submitting photos…' : 'Build my gator'}</button>
         </form>
