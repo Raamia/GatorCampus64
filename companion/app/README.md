@@ -1,6 +1,6 @@
-# Gator Field Board
+# Super Gatorlator 64 Companion
 
-A DeepSpace backend for Super Gatorlator 64. The game remains native and authoritative; DeepSpace shows the verified leaderboards pushed by the hosted game server's API, and stores signed-in players' self-reported (offline) solo run results separately. The Lua mod saves completed runs to a local ModFS outbox, and `companion/native-bridge/` provides a macOS OAuth/sync CLI that uploads them after the game closes. The game does not make network requests.
+The web companion for Super Gatorlator 64, a native SM64CoopDX campus game. It supports squad mission planning, player-reported offline run logs, and verified leaderboards populated by the hosted game server. Offline scores remain separate from ranked runs. The Lua mod saves completed runs to a local ModFS outbox, and `companion/native-bridge/` provides a macOS OAuth/sync CLI that uploads them after the game closes. The game does not make network requests.
 
 ## Local setup
 

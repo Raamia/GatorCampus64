@@ -56,7 +56,8 @@
 -- framework).
 --
 -- The BBH slot: nothing here uses vanilla Big Boo's Haunt behaviours. The Boos are this file's own Lua behaviour on the
--- vanilla Boo MODEL (E_MODEL_BOO: ghostly late-night stand-ins, on purpose), local to each client like Marston's
+-- UCF Knight ghost model (SGL_KNIGHT_GHOST_MODEL from sgl_rivals.lua, actors/knight_ghost: boo_geo's fading layout,
+-- E_MODEL_BOO if it failed to load), local to each client like Marston's
 -- flying books; no bhvBoo / bhvGhostHuntBoo / bhvMerryGoRound* object is spawned and no star position of
 -- gLevelValues.starPositions is used (the missions spawn their own stars). Music, rooms, the BBH camera and any other
 -- slot leak belong to the stage build and levels.lua.
@@ -574,7 +575,7 @@ local function spawn_boos(ctx, list, hurt, speed)
     for i, h in ipairs(list or {}) do
         local b = { hx = h.x, hy = h.y, hz = h.z, x = h.x, y = h.y + BOO.HOVER, z = h.z, alpha = 255, name = h.name,
             gone = 0, hurt = hurt or 4, i = i, speed = speed }
-        b.o = spawn_prop(E_MODEL_BOO, b.x, b.y, b.z, function(obj)
+        b.o = spawn_prop(rawget(_ENV, "SGL_KNIGHT_GHOST_MODEL") or E_MODEL_BOO, b.x, b.y, b.z, function(obj)
             obj_scale(obj, BOO.SCALE)
             obj.oOpacity = 255
         end)
@@ -605,7 +606,7 @@ local function boos_tick(ctx, m)
             local dy = m.pos.y + BOO.CHEST - b.y
             if punching(m) and dist2_xz(b, m.pos) + dy * dy <= BOO.PUNCH_R * BOO.PUNCH_R and b.alpha >= BOO.PUNCH_ALPHA then
                 play_sound(SOUND_OBJ_DEFAULT_DEATH, gGlobalSoundSource)
-                sgl_hud_toast("Boo! ...shooed back to sleep", 2, SGL_HUD_GREEN)
+                sgl_hud_toast("Clang! ...a Knight ghost shooed back to sleep", 2, SGL_HUD_GREEN)
                 if ok then poof(o) end
                 b.gone = BOO.RESPAWN
                 L.booShoos = (L.booShoos or 0) + 1
@@ -614,8 +615,8 @@ local function boos_tick(ctx, m)
                 local air = (m.action & ACT_GROUP_MASK) == ACT_GROUP_AIRBORNE
                 hurt_and_set_mario_action(m, air and ACT_BACKWARD_AIR_KB or ACT_BACKWARD_GROUND_KB, 0, b.hurt)
                 play_sound(SOUND_OBJ_BOO_LAUGH_LONG, gGlobalSoundSource)
-                sgl_hud_toast(b.hurt > 0 and "A sleepy Boo! (face it to freeze it, punch it to shoo it)"
-                    or "A Boo blocks the stairwell! (face it to freeze it)", 3, SGL_HUD_RED)
+                sgl_hud_toast(b.hurt > 0 and "A Knight ghost! (face it to freeze it, punch it to shoo it)"
+                    or "A Knight ghost blocks the stairwell! (face it to freeze it)", 3, SGL_HUD_RED)
                 b.backoff = BOO.BACKOFF
                 L.booHits = (L.booHits or 0) + 1
                 L.expandUntil = ctx.age + 150
@@ -733,7 +734,7 @@ local function kind_allnighter(spec)
         table.insert(lines, { "Stair halls closed for cleaning below 4F: take a NW / NE stair to the roof", SGL_HUD_GREY, 0.24 })
         table.insert(lines, { "Rolling ladders in the stacks step you onto the tall ranges", SGL_HUD_GREY, 0.24 })
         table.insert(lines, { "...or wall-kick up the out-of-order elevator shaft", SGL_HUD_GREY, 0.24 })
-        table.insert(lines, { "Sleepy Boos: face them to freeze them, punch to shoo them", SGL_HUD_ORANGE, 0.24 })
+        table.insert(lines, { "Knight ghosts: face them to freeze them, punch to shoo them", SGL_HUD_ORANGE, 0.24 })
         table.insert(lines, { "Stuck? D-pad Down twice: back to the lobby", SGL_HUD_GREY, 0.24 })
         return lines
     end
@@ -885,7 +886,7 @@ local function kind_coffee(spec)
             table.insert(lines, { "Down a stair hall to 2F, the escalator to the lobby, the cup, and back up", SGL_HUD_GREY, 0.24 })
         end
         table.insert(lines, { "Shortcut down: hop the 2F balcony rail into the lobby (6 m, no damage)", SGL_HUD_GREY, 0.24 })
-        table.insert(lines, { "Boos haunt the stairwell landings: face them to freeze them", SGL_HUD_ORANGE, 0.24 })
+        table.insert(lines, { "Knight ghosts haunt the stairwell landings: face them to freeze them", SGL_HUD_ORANGE, 0.24 })
         return lines
     end
 
@@ -1784,7 +1785,7 @@ sgl_mission_register({
     level = LEVEL_BBH,
     act = LIBWEST_MISSION_ACTS.allnighter,
     title = "ALL-NIGHTER",
-    objective = "Climb to the 6th floor's big window - mind the Boos!",
+    objective = "Climb to the 6th floor's big window - mind the Knights!",
     star = P.climb_star,            -- spawned at the big window over the Plaza (no level-script star)
     starFrom = at_y(P.climb_star, P.y_f6),   -- rising out of the floor below it (the 4 m hump stays under 5.4 m)
     starCutsceneRange = 3000,

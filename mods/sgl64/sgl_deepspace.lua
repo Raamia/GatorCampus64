@@ -178,7 +178,10 @@ local function leaderboard_mouse_point()
 end
 
 local function leaderboard_button_rect(sw)
-    return (sw - 72) / 2, 5, 72, 16
+    local w = 72
+    -- Keep the button clear of the centered mission banner while leaving a
+    -- deliberate gap after the player/lives HUD on the left.
+    return math.floor(sw * 0.32 - w / 2), 5, w, 16
 end
 
 local function leaderboard_panel_rect(sw, sh)
@@ -428,7 +431,7 @@ local function draw_leaderboard_menu()
         local x, y, w, h = leaderboard_button_rect(sw)
         sgl_hud_rect(x, y, w, h, 7, 17, 38, 210)
         sgl_hud_rect(x, y, w, 2, 250, 110, 30, 255)
-        sgl_hud_text_center("BOARDS", sw / 2, y + 4, 0.25, { 255, 224, 160 }, 1)
+        sgl_hud_text_center("BOARDS", x + w / 2, y + 4, 0.25, { 255, 224, 160 }, 1)
         return
     end
     if leaderboard_is_paused() then return end

@@ -144,24 +144,33 @@ test("load: every mod file in coopdx order, strict globals, no duplicate registr
     check(H.env._G.sglOpenCharSelect ~= nil and H.env._G.sglOnFriendSet ~= nil, "charselect.lua exports its hooks")
 end)
 
-test("campus maps: no ambient Mario coins or Goombas remain in level scripts", function()
+test("campus maps: no ambient Mario coins; the rival Goombas only on the hub and the outdoor stages", function()
     local w = full_world()
     local env = w:connect("Host").env
     local checked = 0
-    for _, stage in ipairs(env.SGL_STAGES) do
-        local ls = Sim.level_script(stage.slot)
+    -- Goombas are UF's rivals (sgl_rivals.lua dresses them as USF Bulls and FSU Seminoles): outdoors only, never in
+    -- the library interiors (the stealth and hide-and-seek missions)
+    local outdoor = { castle_grounds = true, bob = true, wf = true, jrb = true }
+    local slots = { "castle_grounds" }
+    for _, stage in ipairs(env.SGL_STAGES) do table.insert(slots, stage.slot) end
+    for _, slot in ipairs(slots) do
+        local ls = Sim.level_script(slot)
         if ls ~= nil then
-            local found = {}
+            local coins, goombas = 0, 0
             for _, o in ipairs(ls.objects) do
-                if o.bhv == "bhvYellowCoin" or o.bhv == "bhvCoinFormation" or o.bhv == "bhvGoomba" then
-                    found[#found + 1] = o.bhv
-                end
+                if o.bhv == "bhvYellowCoin" or o.bhv == "bhvCoinFormation" then coins = coins + 1 end
+                if o.bhv == "bhvGoomba" then goombas = goombas + 1 end
             end
-            check(#found == 0, stage.key .. ": no yellow coins, coin formations, or Goombas in any act")
+            check(coins == 0, slot .. ": no yellow coins or coin formations")
+            if outdoor[slot] then
+                check(goombas >= 5, slot .. ": rival Goombas around the map (" .. goombas .. ")")
+            else
+                check(goombas == 0, slot .. ": no Goombas indoors (" .. goombas .. ")")
+            end
             checked = checked + 1
         end
     end
-    check(checked >= 5, "checked all five campus course level scripts")
+    check(checked >= 6, "checked the hub and all five campus course level scripts")
 end)
 
 test("contract: hub doors, warp nodes and return spawns match course.lua (all six doors)", function()
@@ -287,8 +296,9 @@ test("single player: hub -> character select -> door -> act 1 -> star -> back ou
     check(raw(H.ms[0].marioObj)._model == env._G.sglFriends[4].model,
         "character model restored before the Mario frame is drawn")
     check(H.ms[0].numLives == 4, "4 lives")
-    check((H.hudFlags & (C.HUD_DISPLAY_FLAGS_LIVES | C.HUD_DISPLAY_FLAGS_STAR_COUNT)) == 0,
-        "vanilla Mario and star HUD icons hidden")
+    check((H.hudFlags & (C.HUD_DISPLAY_FLAGS_LIVES | C.HUD_DISPLAY_FLAGS_COIN_COUNT
+        | C.HUD_DISPLAY_FLAGS_STAR_COUNT)) == 0,
+        "vanilla lives, coin, and star HUD icons hidden")
     local portraitDrawn, coinDrawn = false, false
     for _, d in ipairs(H.draw) do
         if d.k == "tex" and d.name == "sgl_portrait_anh" then portraitDrawn = true end
@@ -388,7 +398,7 @@ test("campus boards: direct button and mouse open a later board without the mapp
     w:step(3)
     arrive_and_pick(w, H, 1)
 
-    H.mouseX, H.mouseY, H.mouseButtons = 213, 12, C.L_MOUSE_BUTTON
+    H.mouseX, H.mouseY, H.mouseButtons = 136, 12, C.L_MOUSE_BUTTON
     H.pressed = C.B_BUTTON -- CoopDX maps left click to B during gameplay.
     w:step(1)
     check(table.concat(H.hudText, " | "):find("CAMPUS LEADERBOARDS", 1, true) ~= nil,
@@ -973,7 +983,7 @@ test("door 5: Library West (11 stars) -> Library West After Dark act 1 -> star -
     check(H.level == BBH and H.act == 2, "/campus libwest 2 -> Library West act 2")
     w:step(3)
     check(#Sim.objects_with(H, env.id_bhvSglLibwestSolid) == #P.staff_doors, "act 2: only the staff-only doors, no stair barriers")
-    -- Goombas are disabled across the campus maps until the UF-rivalry character replacement is ready.
+    -- the rival Goombas stay out of the library interiors (hide and seek, the stealth acts)
     local function goombas(act)
         local n = 0
         for _, o in ipairs(BBH_SCRIPT.objects) do
@@ -982,7 +992,7 @@ test("door 5: Library West (11 stars) -> Library West After Dark act 1 -> star -
         return n
     end
     check(goombas(1) == 0 and goombas(2) == 0 and goombas(3) == 0, string.format(
-        "no Goombas until the rivalry replacement is ready (%d / %d / %d)", goombas(1), goombas(2), goombas(3)))
+        "no Goombas in Library West (%d / %d / %d)", goombas(1), goombas(2), goombas(3)))
 end)
 
 test("coming soon acts: free roam notice, no mission, no star, no invite; exit works", function()

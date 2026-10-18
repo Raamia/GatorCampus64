@@ -50,8 +50,8 @@ export default function HomePage() {
 
   if (!room) return <div className="board-wrap"><section className="welcome-card">
     <div className="eyebrow"><MapPin size={15}/> SUPER GATORLATOR 64 · UNIVERSITY OF FLORIDA</div>
-    <h1>Pick a mission.<br/><em>Make it a run.</em></h1>
-    <p>Super Gatorlator 64 is a free co-op Super Mario 64 mod set on UF's campus. This Field Board is where your squad picks a campus mission, gets a route note, and logs the runs you've played.</p>
+    <h1>Choose your next<br/><em>campus mission.</em></h1>
+    <p>Plan a campus run with your squad for the native SM64CoopDX game. Log player-reported results here; the hosted game server supplies verified leaderboard times.</p>
     <div className="welcome-actions">
       <button className="primary-action" onClick={startSquad}><Users size={17}/> Start a squad <ArrowUpRight size={16}/></button>
       <div className="join-row"><input aria-label="Squad code" placeholder="Enter squad code" maxLength={12} value={joinCode} onChange={(e) => setJoinCode(e.target.value.toUpperCase())}/><button onClick={enterSquad} disabled={joinCode.length !== 12}>Join squad <ArrowDownRight size={16}/></button></div>
@@ -91,7 +91,7 @@ function SquadBoard({ code, signedIn, selected, setSelected, hint, setHint, resu
     setCopied(true); window.setTimeout(() => setCopied(false), 1800)
   }
   return <div className="board-page">
-    <header className="board-topline"><div><div className="eyebrow"><Radio size={14}/> SQUAD LIVE · UF CAMPUS</div><h1>Field board</h1></div><button className="invite-button" onClick={share}><Copy size={15}/>{copied ? 'Copied' : 'Invite squad'}<span>{code}</span></button></header>
+    <header className="board-topline"><div><div className="eyebrow"><Radio size={14}/> SUPER GATORLATOR 64 · SQUAD LIVE</div><h1>Mission board</h1></div><button className="invite-button" onClick={share}><Copy size={15}/>{copied ? 'Copied' : 'Invite squad'}<span>{code}</span></button></header>
     <div className="field-layout"><main>
       <div className="section-heading"><div><span className="section-index">01 / PICK A RUN</span><h2>Choose your mission</h2></div><span className="tiny-caption">6 CAMPUS CHALLENGES</span></div>
       <div className="mission-grid">{catalogMissions.map((mission) => <button className={`mission-card ${selected?.id === mission.id ? 'is-selected' : ''}`} key={mission.id} onClick={() => void choose(mission)}>

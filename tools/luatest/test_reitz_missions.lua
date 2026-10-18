@@ -190,12 +190,10 @@ test("levels/wf/script.c (when built): warp contract for door 2, no level-script
                             out[#out + 1] = { x = o.x + l * math.sin(yaw), y = o.y, z = o.z + l * math.cos(yaw) }
                         end
                     end
-                elseif o.bhv == "bhvGoomba" then
-                    n = n + 1
                 end
             end
         end
-        return out, #out + n
+        return out, #out + n     -- (Goombas are back as the rival mascots: sgl_rivals.lua, test_flow.lua)
     end
     local P = A.env.REITZ_POINTS
     local tokAct = A.env.REITZ_MISSION_ACTS.tokens
@@ -212,7 +210,7 @@ test("levels/wf/script.c (when built): warp contract for door 2, no level-script
     check(onToken == 0, "act " .. tokAct .. ": no ambient level coin overlaps a meal-swipe token")
     for act = 1, 6 do
         local _, n = coins_in(act)
-        check(n == 0, string.format("act %d: no ambient coins or Goombas (%d found)", act, n))
+        check(n == 0, string.format("act %d: no ambient coins (%d found)", act, n))
     end
     local _, n1 = coins_in(1)
     local _, n2 = coins_in(tokAct)
@@ -1006,6 +1004,27 @@ test("act 3: a player leaving pauses it; the round's star needs the riders on th
     w:step(5)
     check(state(A) == MS.WAITING, "B left: waiting")
     check(not ctx_of(A).loc.operating, "no driving while waiting")
+end)
+
+test("act 3: crane operator camera follows the platform and restores the prior camera on exit", function()
+    local w, A, B = world_with({ "A", "B" })
+    local P = A.env.REITZ_POINTS
+    enter(w, A, 3); enter(w, B, 3)
+    w:seconds(4)
+    local cam = { yaw = 0, mode = C.CAMERA_MODE_ROM_HACK, defMode = C.CAMERA_MODE_ROM_HACK }
+    A.env.gMarioStates[0].area = { camera = cam }
+    local priorFocus = { marker = "prior camera focus" }
+    A.cameraFocus = priorFocus
+    at(A, P.console_1)
+    w:step(3)
+    local craneObj = ctx_of(A).objs.cranes[1].o
+    check(ctx_of(A).loc.operating, "console starts crane operation")
+    check(cam.mode == C.CAMERA_MODE_BOSS_FIGHT, "operator gets a pulled-back tracking camera")
+    check(A.cameraFocus == craneObj, "the moving crane is the camera's secondary focus")
+    w:warp(A, HUB, 1, 0)
+    w:step(1)
+    check(cam.mode == C.CAMERA_MODE_ROM_HACK, "leaving the mission restores the original camera mode")
+    check(A.cameraFocus == priorFocus, "leaving the mission restores the previous camera focus")
 end)
 
 test("act 3: D-pad Down into the lab (not while driving); the operator's crane marker sticks to the screen edge", function()

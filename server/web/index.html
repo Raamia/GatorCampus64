@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CHOOSE YOUR GATOR! · Super Gatorlator 64</title>
-  <meta name="description" content="Turn your photos into a playable N64 gator and play it on the Super Gatorlator 64 server.">
+  <title>Super Gatorlator 64 · Play the UF Campus</title>
+  <meta name="description" content="Play Super Gatorlator 64, a native 3D co-op campus game for SM64CoopDX. Explore Reitz and Marston, race the stadium, and bring your custom gator into the game.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -16,13 +16,13 @@
 <body>
   <header class="top">
     <a class="logo" href="/"><b>SUPER</b> GATORLATOR <i>64</i></a>
-    <nav><a href="/" class="on">Gatorize me</a><a href="/gallery">Gallery</a><a href="/link">Link game</a><a href="#play">Play</a></nav>
+    <nav><a href="/" class="on">Play the game</a><a href="/gallery">Gator roster</a><a href="/link">Link player</a><a href="#play">How to play</a></nav>
     <div id="session"></div>
   </header>
   <main>
-    <h1 class="title">CHOOSE YOUR GATOR<span class="tld">!</span></h1>
-    <p class="sub">Upload a few photos and our GPU kitchen cooks you into a playable N64-style gator.
-      Then run around campus in Super Gatorlator 64 with your friends.</p>
+    <h1 class="title">PLAY THE UF CAMPUS<span class="tld">!</span></h1>
+    <p class="sub"><b>Super Gatorlator 64 is a native 3D co-op game built for SM64CoopDX.</b>
+      Explore Reitz and Marston, race the stadium, and play campus missions with friends. Turn a few photos into your playable gator, then bring it into the game.</p>
 
     <div class="steps3">
       <div class="card"><div class="n">1</div><b>Snap</b><p class="hint">1 to 4 photos of yourself: face, and an outfit shot if you like.</p></div>
@@ -32,7 +32,7 @@
 
     <div class="two" style="margin-top:28px">
       <section class="card" id="make">
-        <h2 style="margin-top:0">GATORIZE ME</h2>
+        <h2 style="margin-top:0">MAKE YOUR PLAYER</h2>
         <div id="make-out"><span class="spin"></span></div>
       </section>
       <section class="card" id="play">
@@ -66,7 +66,7 @@
       const name = h("input", { type: "text", id: "name", maxlength: "12", placeholder: "e.g. ALBERT", autocomplete: "off" });
       const consent = h("input", { type: "checkbox", id: "consent" });
       const msg = h("div");
-      const go = h("button", { class: "btn", type: "submit" }, "GATORIZE ME!");
+      const go = h("button", { class: "btn", type: "submit" }, "BUILD MY PLAYER");
 
       function setFiles(list) {
         msg.replaceChildren();
@@ -112,7 +112,7 @@
         } catch (err) {
           msg.replaceChildren(h("p", { class: "err" }, err.message));
           go.disabled = false;
-          go.replaceChildren("GATORIZE ME!");
+          go.replaceChildren("BUILD MY PLAYER");
         }
       });
       return f;

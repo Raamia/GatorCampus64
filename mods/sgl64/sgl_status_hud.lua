@@ -1,7 +1,8 @@
--- Replace the two vanilla Mario-era HUD counters with campus art. Stars still
--- drive course progression; only their on-screen icon is renamed to gator coins.
+-- Replace vanilla Mario-era counters with campus art. Stars still drive course
+-- progression; only their on-screen icon is renamed to gator coins.
 
-local HIDE_VANILLA = HUD_DISPLAY_FLAGS_LIVES | HUD_DISPLAY_FLAGS_STAR_COUNT | HUD_DISPLAY_FLAGS_CAMERA
+local HIDE_VANILLA = HUD_DISPLAY_FLAGS_LIVES | HUD_DISPLAY_FLAGS_COIN_COUNT
+    | HUD_DISPLAY_FLAGS_STAR_COUNT | HUD_DISPLAY_FLAGS_CAMERA
 local sCoinTexture = nil
 local sPortraits = {}
 

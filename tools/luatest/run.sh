@@ -48,6 +48,16 @@
 #      "run" event (solo, co-op with a pause, races GO -> finish, retries, dedupe, lost reports, offline inert),
 #      the "leaderboard" inbox command and the leaderboard menu (live rows + age, scrolling, .sav fallback),
 #      the solo outbox never written on a headless host
+#  19. test_npc.lua: the roaming mascots (sgl_npc.lua): Albert and Alberta in the level of their spot, chat ->
+#      outbox with the asker's live stats, /albert and /alberta, the bridge's replies relayed to everyone, the host's
+#      synced moves (poofs, held while someone is near), their animations, timeouts
+#  20. check_npc_ids.py: the NPCs of sgl_npc.lua match the personas in tools/npc_bridge/npcs.json
+#  21. check_npc_spots.py: every mascot spot stands on flat, clear floor in the built level; routes keep exactly
+#      one mascot on the hub
+#  22. check_game_guide.py: tools/npc_bridge/game_guide.md covers every stage, door, star count and act of course.lua
+#  24. test_rivals.lua: sgl_rivals.lua dresses every Goomba as a rival school's mascot (same on every client)
+#  23. tools/npc_bridge/test_*.py: the NPC chat bridge and the game guide (modfs protocol, routing, Gemini requests;
+#      offline) and tools/actors/test_make_gators.py (the generated Albert and Alberta actors are valid and up to date)
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
 # Fixtures (regenerate only for a new coopdx version): coopdx_constants_v151.lua,
 # coopdx_api_v151.lua, coopdx_structs_v151.lua (gen_coopdx_*.py, see their headers).
@@ -121,4 +131,20 @@ if [ -x "$PY" ]; then
 else
     echo "== check_swamp_points / check_reitz_points / check_lake_points / check_marston_points / check_libwest_points skipped (no tools/.venv)"
 fi
+echo "== test_npc (roaming mascots Albert and Alberta)"
+"$LUA" "$HERE/test_npc.lua"
+echo "== test_rivals (rival mascots replace the Goombas)"
+"$LUA" "$HERE/test_rivals.lua"
+echo "== check_npc_ids"
+python3 -I "$HERE/check_npc_ids.py"
+echo "== check_npc_spots"
+python3 -I "$HERE/check_npc_spots.py"
+echo "== check_game_guide"
+python3 -I "$HERE/check_game_guide.py"
+echo "== npc_bridge tests"
+out="$(python3 -m unittest discover -s "$HERE/../npc_bridge" 2>&1)" || { echo "$out"; exit 1; }
+echo "$out" | tail -1
+echo "== generated mascot, pickup, and Gator Crest actor tests"
+out="$(python3 -m unittest discover -s "$HERE/../actors" 2>&1)" || { echo "$out"; exit 1; }
+echo "$out" | tail -1
 echo "== all luatest checks passed"

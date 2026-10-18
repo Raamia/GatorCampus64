@@ -1,8 +1,11 @@
 """Pickups, enemies and poles a stage build places in its level script (inside Blender, called by
 build_stage.py once the meshes exist, with the CollisionProbe of the real collision).
 
-Ambient Mario yellow coins, coin formations, and Goombas are disabled across the campus maps. Mission-specific
-red-token objectives remain separate. Recovery hearts, 1-ups, poles, and other mission props are still placed.
+Ambient Mario yellow coins and coin formations are disabled across the campus maps. Mission-specific red-token
+objectives remain separate. Recovery hearts, 1-ups, poles, and other mission props are still placed. Goombas are
+back on the outdoor stages as UF's rivals (mods/sgl64/sgl_rivals.lua dresses them as USF Bulls and FSU Seminoles);
+the interiors (build_interior.py: Placer(..., rivals=False)) stay free of them, for the stealth and hide-and-seek
+missions.
 
 The Swamp (swamp_pickups):
   * recovery hearts at the foot of the climb (west rim), on the Bull Gator Deck and half way up the
@@ -38,7 +41,7 @@ LINE_STEP_M = 1.6      # coin formation line spacing (160 units)
 RING_R_M = 3.0         # coin formation ring radius (300 units)
 FORMATION_SEARCH_M = 3.0
 MIN_ROOM_M = 0.5       # a formation coin needs this much room around it (not inside a wall)
-DISABLED_WORLD_PICKUPS = frozenset({"coin", "coin_line", "coin_ring", "goomba"})
+DISABLED_WORLD_PICKUPS = frozenset({"coin", "coin_line", "coin_ring"})
 
 
 def _module(name):
@@ -64,8 +67,9 @@ def lerp(a, b, t):
 
 
 class Placer:
-    def __init__(self, S, probe):
+    def __init__(self, S, probe, rivals=True):
         self.S, self.probe = S, probe
+        self.rivals = rivals    # place Goombas (the rival mascots); False in the interiors
         self.items = []
         self.skipped = []
 
@@ -79,7 +83,7 @@ class Placer:
     def _add(self, kind, name, x, y, z, behavior, model, bparams="0x00000000", facing=0.0, coins=0, acts=None):
         # Keep these out at the shared placement boundary so outdoor stages and every interior builder agree,
         # including direct Placer._add callers such as Lake Alice's cypress-knee breadcrumbs.
-        if kind in DISABLED_WORLD_PICKUPS:
+        if kind in DISABLED_WORLD_PICKUPS or (kind == "goomba" and not self.rivals):
             return
         S = self.S
         self.items.append({

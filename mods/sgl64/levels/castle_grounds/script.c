@@ -23,6 +23,7 @@ const LevelScript level_castle_grounds_entry[] = {
 	LOAD_MIO0(0x0A, _water_skybox_mio0SegmentRomStart, _water_skybox_mio0SegmentRomEnd),
 	ALLOC_LEVEL_POOL(),
 	MARIO(MODEL_MARIO, 0x00000001, bhvMario),
+	JUMP_LINK(script_func_global_1),
 	/* Fast64 begin persistent block [level commands] */
 	/* Fast64 end persistent block [level commands] */
 
@@ -127,6 +128,12 @@ const LevelScript level_castle_grounds_entry[] = {
 		TERRAIN_TYPE(TERRAIN_GRASS),
 		/* Fast64 begin persistent block [area commands] */
 		/* Fast64 end persistent block [area commands] */
+		OBJECT(MODEL_GOOMBA, 9920, 0, -1669, 0, 210, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 11520, 0, -4440, 0, 270, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 9920, 0, -7211, 0, 330, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 6720, 0, -7211, 0, 30, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 5120, 0, -4440, 0, 90, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 6720, 0, -1669, 0, 150, 0, 0x00000000, bhvGoomba),
 	END_AREA(),
 	FREE_LEVEL_POOL(),
 	MARIO_POS(0x01, -10, 8320, 100, -4440),

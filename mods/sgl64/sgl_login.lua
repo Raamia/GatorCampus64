@@ -428,7 +428,9 @@ local function on_hud_render()
     local W = math.max(qrW, 120 * u) + 2 * pad
     local textH = (st == "code") and 66 * u or 44 * u
     local H = 22 * u + qrW + textH
-    local x = math.floor(sw - W - 10 * u)
+    -- Keep the pass card between the corner HUD controls. Right-aligning it put
+    -- its title under the top-right gator counter and its footer under the UF badge.
+    local x = math.floor((sw - W) / 2)
     local y = math.floor((sh - H) / 2)
     local cx = x + W / 2
     local inner = W - 2 * pad
