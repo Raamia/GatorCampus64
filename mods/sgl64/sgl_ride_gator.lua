@@ -1,4 +1,4 @@
--- Super Gatorlator 64: the ride gator. Koopa shells are drawn as a saddled alligator (actors/koopa_shell replaces
+-- GatorCampus 64: the ride gator. Koopa shells are drawn as a saddled alligator (actors/koopa_shell replaces
 -- the vanilla koopa_shell_geo; tools/actors/make_ride_gator.py), and bhvKoopaShell keeps the ride: jump on to
 -- ride, A to hop, Z to get off, it floats on water. While nobody rides it, the vanilla shell spins in place; a
 -- spinning gator looks wrong, so this loop (it runs after the native one each frame) undoes the spin and points

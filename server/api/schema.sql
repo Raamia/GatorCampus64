@@ -1,4 +1,4 @@
--- Super Gatorlator 64 web platform: Postgres schema (docs/web_platform_spec.md §8).
+-- GatorCampus 64 web platform: Postgres schema (docs/web_platform_spec.md §8).
 --
 -- SINGLE SOURCE OF TRUTH for the api (server/api), the gpu worker (server/worker) and, through
 -- the api, the bridge (server/bridge). Idempotent: safe to run on every API start

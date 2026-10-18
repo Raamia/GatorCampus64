@@ -11,7 +11,7 @@ script. For the project pitch and sponsor-track summary, see [`../README.md`](..
    ```bash
    ./install-mods.sh
    ```
-4. Restart the game, choose **Host**, open **Mods**, enable **Super Gatorlator 64**, and start the game.
+4. Restart the game, choose **Host**, open **Mods**, enable **GatorCampus 64**, and start the game.
 
 ## Multiplayer (our server)
 
@@ -82,7 +82,7 @@ A shared budget of 24 students is divided equally across connected human players
 
 ## Testing
 
-Quick check: in game, type `/school` in chat. It should reply with "Super Gatorlator 64 is working!"
+Quick check: in game, type `/school` in chat. It should reply with "GatorCampus 64 is working!"
 
 The full script below is also in `docs/flow.md` §10, where each step names the part of the level-flow contract it proves.
 
@@ -99,11 +99,11 @@ tools/.venv/bin/python -I tools/blender/validate_level.py mods/sgl64/levels/bbh 
 ./install-mods.sh
 ```
 
-Then start sm64coopdx → **Host** → an **unused save slot** (0 stars) → Mods: enable only **Super Gatorlator 64** → keep **Stay in Level After Star: Leave Level** → Host. The first launch compiles the levels (a few seconds; `wf` holds two areas now and may take longer). To see the first-time character menu again, delete `~/Library/Application Support/sm64coopdx/sav/sgl64.sav` (it stores your pick and your race best).
+Then start sm64coopdx → **Host** → an **unused save slot** (0 stars) → Mods: enable only **GatorCampus 64** → keep **Stay in Level After Star: Leave Level** → Host. The first launch compiles the levels (a few seconds; `wf` holds two areas now and may take longer). To see the first-time character menu again, delete `~/Library/Application Support/sm64coopdx/sav/sgl64.sav` (it stores your pick and your race best).
 
 ### Single player
 
-1. **Spawn**: you land standing on the Plaza of the Americas facing south, with the University Auditorium ahead and no Peach intro (a fresh start has no spin-in; `/campus hub` and Pause → Exit to castle spin you in). The popup "Welcome to Super Gatorlator 64, <you>!" appears. The console shows no `[SGL]` errors.
+1. **Spawn**: you land standing on the Plaza of the Americas facing south, with the University Auditorium ahead and no Peach intro (a fresh start has no spin-in; `/campus hub` and Pause → Exit to castle spin you in). The popup "Welcome to GatorCampus 64, <you>!" appears. The console shows no `[SGL]` errors.
 2. **Character select** (first time only, about 1 s after landing): "CHOOSE YOUR GATOR!" with 10 cards, and nothing else drawn over it. Move with the D-pad, stick or arrow keys and pick with A (keyboard L). L / R (or D-pad right past Cher) turns to page 2, "GUEST GATORS": 8 guest slots (placeholder "?" gators until the hosted server deploys characters made on the website); the footer shows "L 1 2 R". The menu says "HERE WE GO, <NAME>!", closes, and your model changes. L + START (keyboard Left Shift + Space), `/char` or Pause → Mods → "Choose your friend" reopens it; B or START closes it.
 3. **Where to go**: about 1.5 s after the menu closes, the popup "Walk into the University Auditorium door to enter THE SWAMP!" and, for 20 s, a "NEXT: THE SWAMP" panel with a gold marker over the door (an arrow on the screen edge if the door is behind you).
 4. `/campus list` shows `hub(castle_grounds)=ours, swamp(bob, door 1, 0*)=ours, reitz(wf, door 2, 0*)=ours, alice(jrb, door 3, 0*)=ours, marston(ccm, door 4, 0*)=ours, libwest(bbh, door 5, 0*)=ours, tower(ttc, door 6, 0*)=vanilla` and `stars 0, lives 4`.

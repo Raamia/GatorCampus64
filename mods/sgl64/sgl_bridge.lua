@@ -1,4 +1,4 @@
--- Super Gatorlator 64: bridge between the hosted game and server/bridge (docs/web_platform_spec.md 6.2-6.4).
+-- GatorCampus 64: bridge between the hosted game and server/bridge (docs/web_platform_spec.md 6.2-6.4).
 --
 -- Only does anything on a HEADLESS dedicated host (sm64coopdx --headless --server ...), and on the
 -- clients connected to one (gServerSettings.headlessServer is sent to joiners in the join packet).

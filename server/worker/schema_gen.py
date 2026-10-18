@@ -20,7 +20,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 def repo_root():
-    """The Super Gatorlator 64 checkout with tools/blender/ (SGL_REPO, else this repo)."""
+    """The GatorCampus 64 checkout with tools/blender/ (SGL_REPO, else this repo)."""
     return os.path.abspath(os.environ.get("SGL_REPO") or os.path.join(HERE, "..", ".."))
 
 
@@ -162,7 +162,7 @@ def character_schema():
     """Schema of a character.json the worker hands to the builder (after repair)."""
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "title": "Super Gatorlator 64 character.json (generated subset)",
+        "title": "GatorCampus 64 character.json (generated subset)",
         "type": "object",
         "additionalProperties": False,
         "required": ["id", "name", "colors", "outfit", "signature_traits", "build"],

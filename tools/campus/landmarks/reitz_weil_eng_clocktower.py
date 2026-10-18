@@ -1,6 +1,6 @@
 """REITZ UNION + ENGINEERING QUAD stage landmarks: Joseph Weil Hall (the "Engineering Industries
 Building"), the Engineering Clock Tower and the Engineering Plaza / Weil courtyard, hand-modelled
-for Super Gatorlator 64.
+for GatorCampus 64.
 
 Landmark module (contract: tools/campus/landmarks/_common.py). Every LANDMARKS entry carries
 "stages": ["reitz_eng"], so only `build_stage.py reitz_eng` (slot wf) builds it; the Swamp window

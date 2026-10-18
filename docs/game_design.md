@@ -1,4 +1,4 @@
-# Super Gatorlator 64: Game Design
+# GatorCampus 64: Game Design
 
 Status: design v1 (co-op mission track). Target: sm64coopdx v1.5.1, built as a Lua + DynOS mod in `mods/sgl64/`.
 Every feature here uses APIs in the v1.5.1 Lua docs (`docs/lua/*.md` at tag `v1.5.1`) or patterns already used by the bundled mods (arena, hide-and-seek, star-road, sm74, day-night-cycle).
@@ -161,7 +161,7 @@ Doors check the shared total `gMarioStates[0].numStars`. coopdx refreshes it for
 ## 3. Session flow (the game flow, start to finish)
 
 ```
-Host launches coopdx ─► Host: picks save slot, enables ONLY "Super Gatorlator 64", opens lobby
+Host launches coopdx ─► Host: picks save slot, enables ONLY "GatorCampus 64", opens lobby
 Friends ─► Join (CoopNet lobby w/ password, or direct IP) ─► mod auto-downloads (<35 MB)
    │
    ▼
@@ -191,7 +191,7 @@ Post-game: 52★ "Summa Cum Laude" (nametag title + confetti), hub free play, ra
 
 - **Host:**
   1. Host → choose a save slot (this slot **is** the group's shared progress).
-  2. Mods: enable only Super Gatorlator 64. It is a romhack-class mod, and the gamemode mods (Arena, Hide and Seek) are incompatible.
+  2. Mods: enable only GatorCampus 64. It is a romhack-class mod, and the gamemode mods (Arena, Hide and Seek) are incompatible.
   3. Recommended settings: Player Interactions = Solid; Bubble on death = On (teammates pop you back); Stay in level after star = Stay.
 - **Friends:** Join → lobby → password. coopdx sends the mod files, then the host's save.
 - **Join presence:** when a friend joins, `HOOK_ON_PLAYER_CONNECTED` shows a popup ("Corina joined the study group!"). The Century Tower carillon chimes (`audio_sample_play`).

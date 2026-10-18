@@ -1,8 +1,8 @@
-# Super Gatorlator 64
+# GatorCampus 64
 
 **The University of Florida campus as a co-op Super Mario 64 game, with our friends as playable characters.**
 
-Super Gatorlator 64 is a total-conversion mod for [sm64coopdx](https://github.com/coop-deluxe/sm64coopdx), the open-source PC port of Super Mario 64 with online co-op. It keeps Mario's original movement, physics and animations, and replaces the world and the cast: real UF buildings rebuilt at true 1:1 scale from OpenStreetMap data, and 10 real friends turned into low-poly N64-style characters from their photos.
+GatorCampus 64 is a total-conversion mod for [sm64coopdx](https://github.com/coop-deluxe/sm64coopdx), the open-source PC port of Super Mario 64 with online co-op. It keeps Mario's original movement, physics and animations, and replaces the world and the cast: real UF buildings rebuilt at true 1:1 scale from OpenStreetMap data, and 10 real friends turned into low-poly N64-style characters from their photos.
 
 > **Status:** everything below is built, verified offline, and compiles in the game. It has not been fully play-tested yet.
 

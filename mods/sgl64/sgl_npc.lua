@@ -1,4 +1,4 @@
--- Super Gatorlator 64: Albert and Alberta, the UF mascots, are the game's talking guides.
+-- GatorCampus 64: Albert and Alberta, the UF mascots, are the game's talking guides.
 -- Walk up to one and type in chat (or use /albert <question>, /alberta <question> from anywhere): the host's
 -- tools/npc_bridge/bridge.py answers game questions from tools/npc_bridge/game_guide.md and everything else with
 -- Gemini; the reply shows as a speech bubble over the mascot and a chat line for everyone.

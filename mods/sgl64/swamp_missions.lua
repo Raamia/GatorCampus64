@@ -1,4 +1,4 @@
--- Super Gatorlator 64: The Swamp (course 1, LEVEL_BOB) missions, on the framework in sgl_mission.lua.
+-- GatorCampus 64: The Swamp (course 1, LEVEL_BOB) missions, on the framework in sgl_mission.lua.
 --
 --   act 1  KICKOFF - CLIMB THE SKYBOX   reach: climb the West Skybox Tower to the press box roof (66 m).
 --                                       Its star is the LEVEL-SCRIPT star (bhvStar id 0, ACT_1, placed by

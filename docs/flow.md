@@ -1,4 +1,4 @@
-# Super Gatorlator 64: game flow contract
+# GatorCampus 64: game flow contract
 
 ## Current entry policy
 
@@ -477,11 +477,11 @@ tools/.venv/bin/python -I tools/blender/validate_level.py mods/sgl64/levels/bbh 
 ./install-mods.sh # rsync --delete: stale compiled.lvl files of changed levels go away
 ```
 
-Start sm64coopdx → **Host** → an **unused save slot** (0 stars) → Mods: only **Super Gatorlator 64** (`incompatible: romhack`) → keep **Stay in Level After Star: Leave Level** → Host. The first launch compiles `castle_grounds`, `bob`, `wf`, `jrb`, `ccm`, `bbh` and `sgl_test` (a few seconds, maybe longer since `wf` is now by far the biggest, about 36 MB of model data for its two areas; `ccm` about 22 MB, `jrb` 19 MB, `bbh` 18 MB). To see the first-time character menu again, delete `~/Library/Application Support/sm64coopdx/sav/sgl64.sav` (it stores the pick and the race best).
+Start sm64coopdx → **Host** → an **unused save slot** (0 stars) → Mods: only **GatorCampus 64** (`incompatible: romhack`) → keep **Stay in Level After Star: Leave Level** → Host. The first launch compiles `castle_grounds`, `bob`, `wf`, `jrb`, `ccm`, `bbh` and `sgl_test` (a few seconds, maybe longer since `wf` is now by far the biggest, about 36 MB of model data for its two areas; `ccm` about 22 MB, `jrb` 19 MB, `bbh` 18 MB). To see the first-time character menu again, delete `~/Library/Application Support/sm64coopdx/sav/sgl64.sav` (it stores the pick and the race best).
 
 ### 10.1 Single player
 
-1. **Spawn** (`entryLevel`, hub `MARIO_POS`): you land **standing** on the Plaza of the Americas facing south, the University Auditorium ahead, no Peach intro. (A fresh start uses `MARIO_POS` with no warp, so there is no spin-in; the spin-in only plays for `/campus hub` and Pause → Exit to castle, which use node `0x0A`.) Popup "Welcome to Super Gatorlator 64, <you>!". No `[SGL]` errors in the console, and no "loaded" banner at the top of the screen (removed). If chat says "The campus hub did not load", DynOS did not compile `levels/castle_grounds`.
+1. **Spawn** (`entryLevel`, hub `MARIO_POS`): you land **standing** on the Plaza of the Americas facing south, the University Auditorium ahead, no Peach intro. (A fresh start uses `MARIO_POS` with no warp, so there is no spin-in; the spin-in only plays for `/campus hub` and Pause → Exit to castle, which use node `0x0A`.) Popup "Welcome to GatorCampus 64, <you>!". No `[SGL]` errors in the console, and no "loaded" banner at the top of the screen (removed). If chat says "The campus hub did not load", DynOS did not compile `levels/castle_grounds`.
 2. **Character select** (`charselect.lua`, first time only, about 1 s after landing): "CHOOSE YOUR GATOR!" with 10 portrait cards. The vanilla HUD, the door labels and the hub's NEXT panel are hidden under it (`sgl_hud_blocked`). Move with the D-pad, stick or arrow keys and pick with A (keyboard L). The title flashes "HERE WE GO, <NAME>!", the menu closes and your model changes. L + START (keyboard Left Shift + Space), `/char` or Pause → Mods → "Choose your friend" reopens it; B or START closes it.
 3. **Hub hint** (`levels.lua`): about 1.5 s after the menu closes, the popup "University of Florida / Walk into the University Auditorium door to enter THE SWAMP!" and, for 20 s, a left panel "NEXT: THE SWAMP / UNIVERSITY AUDITORIUM door - walk in!" with a gold marker over the door (an arrow on the screen edge when the door is behind you). Every later hub arrival shows the NEXT panel again (the next stage with an unstarred act).
 4. `/campus list` → `hub(castle_grounds)=ours, swamp(bob, door 1, 0*)=ours, reitz(wf, door 2, 0*)=ours, alice(jrb, door 3, 0*)=ours, marston(ccm, door 4, 0*)=ours, libwest(bbh, door 5, 0*)=ours, tower(ttc, door 6, 0*)=vanilla`, then `stars 0, lives 4`. (`reitz … =vanilla`, `alice … =vanilla`, `marston … =vanilla` or `libwest … =vanilla` means DynOS did not compile `levels/wf`, `levels/jrb`, `levels/ccm` or `levels/bbh`: that door then says "Coming soon".)
@@ -648,7 +648,7 @@ Shortcuts for retesting: `/campus swamp 1|2|3 [me]`, `/campus reitz 1|2|3 [me]`,
   - act 1: route markers, compact panel; every marker shows as an edge arrow when off screen;
   - `/campus` moves everyone only for the host or a moderator (§8);
   - the hub door hint waits until the character menu is closed, plus a NEXT panel and marker;
-  - the "Super Gatorlator 64 loaded" banner is gone;
+  - the "GatorCampus 64 loaded" banner is gone;
   - level content (coins, hearts, 1-ups, Goombas, poles, music, bowl colours, orange camera decks, helix seams) through the generator (§9); the hub's two pond water boxes are clipped to the play zone (they reached 41 m and 19 m past the boundary walls); both levels rebuilt.
 - **Not done in the fix round** (left for later, see the integration report): a live 3D preview in the character menu (needs in-game camera framing), crowd billboards / flags / crowd sound in the stands, hurdles or a shortcut on the race's rim run (2 Goombas stand in for them), the usher cannon shortcut of design §7.1, anything for a 5th+ player in act 3.
 - **Course 2 (Reitz & Engineering) integration**:

@@ -1,6 +1,6 @@
 """REITZ UNION + ENGINEERING stage (course 2, slot wf, stages.json key "reitz_eng") landmarks: the J. Wayne
 Reitz Union, plus its South Terrace, the Reitz Union Amphitheater and the Liberty Pond fountain,
-hand-modelled for Super Gatorlator 64.
+hand-modelled for GatorCampus 64.
 
 Landmark module (contract: tools/campus/landmarks/_common.py). Every LANDMARKS entry has
 "stages": ["reitz_eng"], so only `build_stage.py reitz_eng` builds it. Geometry is in MAP METRES, z up

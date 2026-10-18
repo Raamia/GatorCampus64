@@ -1173,7 +1173,7 @@ test("character select: remembered pick, overlay hides the other HUDs", function
     w:step(2)
     check(menu_open(H), "L + START opens the menu")
     check(not Sim.hud_has(H, "Walk in to explore") and not Sim.hud_has(H, "NEXT: THE SWAMP"), "door label and NEXT panel hidden under it")
-    check(not Sim.hud_has(H, "Super Gatorlator 64 loaded"), "no debug-looking 'loaded' banner any more")
+    check(not Sim.hud_has(H, "GatorCampus 64 loaded"), "no debug-looking 'loaded' banner any more")
     check(Sim.hud_has(H, "A / click: choose") and Sim.hud_has(H, "JOSH"), "menu drawn (footer, cursor on Josh)")
     H.pressed = C.START_BUTTON
     w:step(2)

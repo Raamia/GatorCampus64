@@ -18,7 +18,7 @@ export function SiteHeader({ items = publicItems, account }: { items?: NavItem[]
     <div className="app-nav-inner">
       <Link to="/" className="app-nav-brand" aria-label={`${APP_NAME} home`}>
         <span className="app-nav-crest" aria-hidden="true">G</span>
-        <span><strong>SUPER GATORLATOR 64</strong><small>UNIVERSITY OF FLORIDA · CO-OP ADVENTURE</small></span>
+        <span><strong>GATORCAMPUS 64</strong><small>UNIVERSITY OF FLORIDA · CO-OP ADVENTURE</small></span>
       </Link>
       <div className="app-nav-links" id="site-navigation-links">{items.map((item) => {
         const active = pathname === item.path || pathname.startsWith(`${item.path}/`)

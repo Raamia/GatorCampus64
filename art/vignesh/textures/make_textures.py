@@ -1,4 +1,4 @@
-"""Vignesh face textures (Super Gatorlator 64) - FINAL set.
+"""Vignesh face textures (GatorCampus 64) - FINAL set.
 
 Same conventions, sizes and file names as Daniel's approved set
 (art/daniel/textures): 64x32 eyes / 32x16 mouth, flat opaque skin background

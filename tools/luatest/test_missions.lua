@@ -716,7 +716,7 @@ test("integration: with levels.lua + main.lua loaded, /campus swamp 3 starts the
     check(H.level == LEVEL_BOB and H.act == 3 and A.level == LEVEL_BOB and A.act == 3, "everyone warped into act 3")
     w:seconds(4)
     check(state(H) == MS.ACTIVE and Sim.ctx(H).isLeader, "mission running, host leads")
-    check(Sim.find(H.popups, "Welcome to Super Gatorlator 64") ~= nil, "main.lua hooks still run")
+    check(Sim.find(H.popups, "Welcome to GatorCampus 64") ~= nil, "main.lua hooks still run")
     Sim.cmd(A, "campus", "hub me")
     w:step(5)
     check(A.level == HUB and state(H) == MS.WAITING, "A back in the hub: co-op mission waits")

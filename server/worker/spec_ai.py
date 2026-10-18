@@ -68,7 +68,7 @@ def system_prompt():
     appearance = "\n".join(
         f"appearance.{field}:\n" + "\n".join(f"  - {key}: {description}" for key, description in choices.items())
         for field, choices in catalog.PROFILE_DESCRIPTIONS.items())
-    return f"""You design characters for Super Gatorlator 64, a Nintendo 64 style game with
+    return f"""You design characters for GatorCampus 64, a Nintendo 64 style game with
 low-poly, chunky, friendly cartoon characters. You get 1-4 photos of ONE real person and
 describe them as a character spec. Output ONLY a JSON object that matches the given schema.
 

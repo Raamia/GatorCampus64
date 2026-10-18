@@ -1,5 +1,5 @@
 """THE SWAMP stage landmarks: the Exactech Arena at the Stephen C. O'Connell Center ("the O'Dome")
-and the Florida Gymnasium ("Alligator Alley"), hand-modelled for Super Gatorlator 64.
+and the Florida Gymnasium ("Alligator Alley"), hand-modelled for GatorCampus 64.
 
 Landmark module (contract: tools/campus/landmarks/_common.py). Every LANDMARKS entry carries
 "stages": ["swamp"], so only `build_stage.py swamp` builds it. Geometry is in MAP METRES, z up

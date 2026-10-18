@@ -169,7 +169,7 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
         if db is None:
             state["db"].close()
 
-    app = FastAPI(title="Super Gatorlator 64 API", version="1.0", lifespan=lifespan)
+    app = FastAPI(title="GatorCampus 64 API", version="1.0", lifespan=lifespan)
     app.add_middleware(CORSMiddleware, allow_origins=s.cors_origins, allow_credentials=False,
                        allow_methods=["GET", "POST", "DELETE", "PUT", "OPTIONS"],
                        allow_headers=["Authorization", "Content-Type"], max_age=600)

@@ -1,4 +1,4 @@
--- Super Gatorlator 64: the stage table, the hub <-> stage warp contract and the course / act names.
+-- GatorCampus 64: the stage table, the hub <-> stage warp contract and the course / act names.
 -- Full contract: docs/flow.md. Loaded before levels.lua (files load alphabetically into one shared
 -- environment), which builds the hub doors, the warps and /campus on top of these globals.
 --

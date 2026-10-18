@@ -1,4 +1,4 @@
--- Super Gatorlator 64: UF's rivals sneak around campus. USF Bulls and FSU Seminoles replace the Goombas, and UCF
+-- GatorCampus 64: UF's rivals sneak around campus. USF Bulls and FSU Seminoles replace the Goombas, and UCF
 -- Knight ghosts replace the Boos of Library West (SGL_KNIGHT_GHOST_MODEL, used by uf_west_library_missions.lua).
 -- Every Goomba already looks like a USF Bull (actors/goomba replaces the vanilla goomba_geo); this file swaps
 -- individual Goombas to the Seminole (actors/rival_fsu: a garnet rival with a gold spear-tip crest). Both are on the

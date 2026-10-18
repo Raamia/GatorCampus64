@@ -55,7 +55,7 @@ export default function Pipeline() {
   }, [])
 
   return <>
-    <Seo {...seo} title="Pipeline status · Super Gatorlator 64" path="/pipeline"
+    <Seo {...seo} title="Pipeline status · GatorCampus 64" path="/pipeline"
       description="Follow recent Gatorize Me jobs through the Vultr-hosted character pipeline. Public step timings without photos or account information." />
     <SiteHeader />
     <main className="pipeline-page">

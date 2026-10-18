@@ -3,7 +3,7 @@
 > **Historical snapshot:** the door thresholds and test instructions below describe that earlier build. Current built stages open with 0 stars; unbuilt stages remain coming soon. Follow `docs/development.md` for current testing instructions.
 
 Everything below is installed in the game, compiles in coopdx and is committed to
-[Raamia/gimmickfc](https://github.com/Raamia/gimmickfc).
+[Raamia/GatorCampus64](https://github.com/Raamia/GatorCampus64).
 Nothing has been played in the game yet. Your first session is the real test.
 
 ## Done overnight
@@ -21,7 +21,7 @@ Nothing has been played in the game yet. Your first session is the real test.
 
 The full step-by-step script is in **README.md, "Testing"**. The short version:
 
-1. Start sm64coopdx, **Host**, use an **unused save slot**, and enable only **Super Gatorlator 64**.
+1. Start sm64coopdx, **Host**, use an **unused save slot**, and enable only **GatorCampus 64**.
 2. You spawn on the Plaza and the character menu opens. Pick yourself.
 3. Walk ~80 m south to the **Auditorium** door (gold star above it) and walk in. You get the act select with **THE SWAMP**. Pick act 1 and climb to the press-box roof for the star.
 4. Back on campus, play act 2 (the race, D-pad Down to the start box).
