@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom'
 import { ArrowDown, ArrowUpRight, Building2, Gamepad2, Users } from 'lucide-react'
 import { Seo } from '../components/Seo'
 import { SiteHeader } from '../components/SiteHeader'
-import { Minigames } from '../components/Minigames'
 import { APP_NAME } from '../constants'
 import { seo } from '../seo'
 
@@ -16,7 +15,7 @@ function CampusScene() {
     <img className="scene-map" src="/campus-map-overview.jpg" alt="" />
     <div className="scene-map-wash" />
     <div className="scene-map-header"><span><Gamepad2 size={15}/> LEVEL SELECT · UF CAMPUS</span><b>02 PLAYABLE INTERIORS</b></div>
-    <div className="scene-map-footer"><strong>6 MISSIONS + 1 MINIGAME</strong><span>OUTDOOR EXTERIORS · CO-OP CHALLENGES</span></div>
+    <div className="scene-map-footer"><strong>7 CAMPUS MISSIONS</strong><span>OUTDOOR EXTERIORS · CO-OP CHALLENGES</span></div>
     <small className="scene-map-credit">MAP © OPENSTREETMAP CONTRIBUTORS</small>
   </div>
 }
@@ -40,15 +39,14 @@ export default function Landing() {
         </section>
 
         <section id="level-select" className="level-select-section" aria-labelledby="level-title">
-          <div className="section-heading game-section-heading"><div><p className="section-index"><span>CAMPUS LEVEL SELECT</span> · 02 ENTERABLE INTERIORS · 06 MISSIONS · 01 MINIGAME</p><h2 id="level-title">Choose your next mission</h2></div></div>
+          <div className="section-heading game-section-heading"><div><p className="section-index"><span>CAMPUS LEVEL SELECT</span> · 02 ENTERABLE INTERIORS · 07 MISSIONS</p><h2 id="level-title">Choose your next mission</h2></div></div>
           <div className="world-stop-grid">
             <article className="world-stop reitz-stop"><div className="stop-illustration stage-token"><span>WORLD 01</span><Building2 size={35}/><b>REITZ</b></div><div className="stop-copy"><span className="stop-kicker">REITZ UNION INTERIOR · ENGINEERING EXTERIOR</span><h3>Reitz & Engineering</h3><p>Climb the Union, collect meal-swipe tokens, or work the robotics crane together.</p><span className="mission-count">3 MISSIONS <span>·</span> 1 CO-OP</span></div></article>
             <article className="world-stop marston-stop"><div className="stop-illustration stage-token marston-token"><span>WORLD 02</span><Building2 size={35}/><b>MARSTON</b></div><div className="stop-copy"><span className="stop-kicker">MARSTON SCIENCE LIBRARY</span><h3>Marston Library</h3><p>Climb the atrium, find lost textbooks, or book a study room with a teammate.</p><span className="mission-count">3 MISSIONS <span>·</span> 1 CO-OP</span></div></article>
           </div>
-          <div className="level-select-footer"><span>2 ENTERABLE BUILDINGS</span><span>6 MISSIONS + 1 MINIGAME</span><Link to="/home">OPEN MISSION BOARD <ArrowUpRight size={14}/></Link></div>
+          <div className="level-select-footer"><span>2 ENTERABLE BUILDINGS</span><span>7 CAMPUS MISSIONS</span><Link to="/home">OPEN MISSION BOARD <ArrowUpRight size={14}/></Link></div>
         </section>
 
-        <Minigames />
 
         <section className="featured-coop" aria-label="Featured co-op mission"><div className="coop-emblem"><Users size={25}/><span>2P</span></div><div className="coop-copy"><span>FEATURED CO-OP MISSION</span><h2>Two players. One robotics lab.</h2><p>One teammate steers the crane. The other rides up and hits the sensor gates. Talk it out and make the climb.</p></div><Link to="/home" className="coop-link">VIEW MISSION BOARD <ArrowUpRight size={15}/></Link><div className="coop-dots" aria-hidden="true">··························</div></section>
       </main>

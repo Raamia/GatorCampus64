@@ -173,8 +173,7 @@ function sgl_hud_panel(lines, x, y)
         w = math.max(w, sgl_hud_text_width(l[1], sc))
         h = h + LINE * sc + 1
     end
-    -- Compact the whole panel consistently, keeping long briefings inside the
-    -- viewport and above the bottom prompts even in a narrow window.
+    -- Compact the panel to keep its text inside the viewport and above prompts.
     local k = math.min(0.85, (W - x - 8) / (w + 8), (H - 52 - y) / h)
     w, h = w * k, h * k
     sgl_hud_rect(x - 4, y - 3, w + 8, h, 0, 0, 0, 120)

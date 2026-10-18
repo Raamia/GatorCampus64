@@ -3,7 +3,7 @@ import catalog from '../data/mission-catalog.json'
 
 export function Minigames() {
   return <section className="campus-minigames" aria-labelledby="minigames-title">
-    <div className="minigames-heading"><div><span className="section-index">MORE WAYS TO PLAY</span><h2 id="minigames-title">Campus minigames</h2></div><span className="minigame-preview">RHYTHM · SOLO & CO-OP</span></div>
+    <div className="minigames-heading"><div><span className="section-index">MISSION GUIDE</span><h2 id="minigames-title">Gator Chomp instructions</h2></div><span className="minigame-preview">RHYTHM · SOLO & CO-OP</span></div>
     {catalog.minigames.map((game) => <article className="chomp-card" key={game.id}>
       <div className="chomp-intro">
         <span className="chomp-kicker"><Music2 size={17} aria-hidden/> WATCH · REMEMBER · CHOMP</span>
