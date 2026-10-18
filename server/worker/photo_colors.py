@@ -166,7 +166,12 @@ def sample_photos(images, use_cv=True):
         per.append(sample_photo(arr, use_cv))
     out = {"_faces": [p["_face"] for p in per]}
     for role in ("skin", "hair", "top"):
-        vals = [hex_to_rgb(p[role]) for p in per if role in p]
+        # Heuristic boxes often land on clothing/background for posed portraits.
+        # If OpenCV found at least one face, prefer only those samples; otherwise
+        # retain the heuristic values as a last-resort fallback.
+        reliable = [p for p in per if p.get("_face") == "haar" and role in p]
+        source = reliable or [p for p in per if role in p]
+        vals = [hex_to_rgb(p[role]) for p in source]
         if vals:
             out[role] = rgb_to_hex(np.median(np.array(vals), axis=0))
     return out

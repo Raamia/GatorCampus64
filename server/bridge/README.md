@@ -7,7 +7,7 @@ This is the game host's bridge (docs/web_platform_spec.md §5.3, §6.2-§6.4, §
 - **Login.** A `login_req` event starts the Auth0 device flow: `/oauth/device/code`, then polling `/oauth/token`, then ID token checks (RS256 via JWKS, `iss`, `aud` = the Gator Pass client id, `exp`), then `POST /links`, then an inbox `verified`. A `link_req` sends `POST /links {code}`. A `login_cancel` or a `leave` stops polling.
 - **Inbox (bridge to game).** The bridge writes `<savepath>/sav/sgl64.modfs` atomically (temp file, then rename). The mod reloads it every second.
 - **Deploys.** The bridge applies guest character deploys, with at most one game restart every 5 minutes.
-- **NPC chat.** The bridge answers Albert and Alberta's `npc_ask` events with `tools/npc_bridge`'s code (game guide, then Gemini). See NPC chat below.
+- **Leaderboards.** The bridge polls the public `GET /leaderboards` and sends changed boards to the game (see "Verified leaderboards" below).
 
 ```
 python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
@@ -20,10 +20,9 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
    - `server/bridge/`
    - `server/worker/actor_rename.py`
    - `mods/sgl64/` (fallback source for the guest placeholders)
-   - `tools/npc_bridge/` (NPC chat: `bridge.py`, `guide.py`, `game_guide.md`, `npcs.json`)
 
    Then `python3 -m venv /opt/sgl/server/bridge/.venv && /opt/sgl/server/bridge/.venv/bin/pip install -r /opt/sgl/server/bridge/requirements.txt`.
-2. Copy `server/deploy/bridge.env.example` to `/etc/sgl/bridge.env` (mode 600) and fill in the Auth0, M2M and API values, plus `GEMINI_API_KEY` for NPC chat.
+2. Copy `server/deploy/bridge.env.example` to `/etc/sgl/bridge.env` (mode 600) and fill in the Auth0, M2M and API values.
 3. Copy `server/deploy/sgl-bridge.service` to `/etc/systemd/system/`, then run `systemctl daemon-reload && systemctl disable --now sgl-game && systemctl enable --now sgl-bridge`.
    **Once the bridge takes over, sgl-game stays disabled.** The bridge launches the game itself, and both units would bind UDP 7777; the unit also declares `Conflicts=sgl-game.service`.
    Logs for both the bridge and the game: `journalctl -u sgl-bridge -f`.
@@ -41,7 +40,7 @@ Each event is one line, `SGLEVT {"t":"<type>",...}`. `t` comes first, the other 
 | login_req | gi, name |
 | link_req | gi, name, code |
 | login_cancel | gi, name (optional; sent by sgl_login.lua if it wants) |
-| npc_ask | session, seq, npc (albert, alberta), player, text, stats ("k=v;k=v", see sgl_npc.lua my_stats). Answered here, not sent to the API |
+| run | mission, round, frames, client_frames (optional), retries, level, act, players, gi1, name1, gi2, name2, ... (a mission round succeeded; timed by the host, see below) |
 | exit | code (added by the bridge when the game process ends, not printed by the game) |
 
 `POST /events` body: `{t, payload, at}` plus a copy of the payload's fields at the top level, because server/api reads `friend` from the top level.
@@ -65,11 +64,38 @@ Each event is one line, `SGLEVT {"t":"<type>",...}`. `t` comes first, the other 
 | verified | gi, name, nickname, guest_slot?, uf?, resend? | broadcast (+ host); re-broadcast for every linked player with resend=true when someone joins |
 | login_failed | gi, reason (expired, denied, invalid_token, bad_code, unavailable, error) | to player gi |
 | announce | text, secs | broadcast; built-in popup + chat line |
+| leaderboard | mission, n, name1, frames1, ... name5, frames5, at, gi? | broadcast without gi; to player gi when re-sent to a joiner; `sgl_deepspace.lua` stores the rows for its menu |
 
 Mod API (`sgl_bridge.lua`):
 
 - `sglBridgeEmit(t, fields)` works on the host or on any client. It returns false offline or when there is no headless host.
 - `sglBridgeOnCommand(name, fn)` registers `fn(fields)` on the clients a command is routed to.
+
+## Verified leaderboards (spec §10)
+
+**The `run` event.** The headless host prints it once per mission and round, when the round succeeds. The host is in no act, but every mission's synced state reaches it anyway: sync-table writes and mod packets from a client go to the server first, which processes them and then rebroadcasts (`packet.c`, `PLMT_NONE`). So `sgl_bridge.lua` reads the state and round (`sglm_<level>_<area>_<act>_s` / `_r`) of every registered mission each frame and timestamps the changes with the host's own monotonic clock, `clock_elapsed_ticks()` (30 ticks per second of wall time, independent of the game's frame rate).
+
+- `frames` is the sum of the round's ACTIVE stretches, up to ACTIVE → SUCCESS (or ACTIVE → DONE, when a level star is grabbed first). Co-op pauses (WAITING) are not counted. Races (`sgl_mission_kind_race`) are timed instead from the host seeing GO (phase RACING) to the arrival of the winning `fin` event.
+- `client_frames` comes from the players. Every client in the act sends its own count of the round (game frames) to the host in a reliable packet, and the host waits up to 3 s for them. It uses the longest count among the clients that saw the whole round; in solo that is the leader's own count. For races it is the winning finish time. The field is left out when no such count arrived.
+- `retries` counts the rounds of that instance that failed since its last success, or since the instance was last empty. `players` lists the connected players in the act when the round succeeded, with the host's view of their names (`gi1`, `name1`, ...).
+- No `run` is printed when the host did not see the round go active (for example, it was already active when the mod loaded), or when nobody is left in the act.
+
+**Precision.** Both edges of a non-race round come from the same leader, so the leader's network delay cancels out. What remains:
+
+- the jitter between the two packets' delays;
+- a resend of a lost reliable packet, which adds that delay to one edge;
+- up to one host frame (33 ms) per edge.
+
+Races carry roughly the finisher's round trip on top of the race time: the finisher hears GO one downlink late, and the `fin` takes one uplink to arrive. On a normal connection this stays well under the API's 2 s tolerance. Client counts are game frames, so a client that runs below 30 fps reports fewer frames than the host measures, and a long run at a low frame rate can exceed the tolerance.
+
+**The `leaderboard` command.** `sglbridge/leaderboard.py` polls `GET /leaderboards` (public, no token) at start, every `SGL_LEADERBOARD_POLL` seconds (60 by default, `0` turns it off; only `API_URL` is needed), and 2 s after each `run` event and after each `run` the API accepted.
+
+- **Broadcasts.** The bridge broadcasts one `leaderboard` command per mission whose rows changed. A board that loses all its rows is sent once with `n = 0`; empty boards are never sent otherwise.
+- **Fields.** `nameK` is a run's names joined with " + ", trimmed to 28 characters. `at` is the Unix time of the fetch that saw the change.
+- **Joins and restarts.** A joining player gets every non-empty board again, addressed to their `gi`. After a game restart, the next poll broadcasts every board again.
+- **Outages.** A failed fetch keeps the last boards.
+
+**The DeepSpace outbox.** The game writes `pending_runs.txt` (companion/native-bridge) only on players' machines, never on a headless host. A mod has a single ModFS archive, and `mod_fs_save()` rewrites all of it. On the host, the bridge replaces that archive with its inbox, so a write from the game there would race the bridge's write. Clients' archives are never touched by the bridge, so the outbox keeps its file name.
 
 ## ModFS format: what was verified and what was assumed
 
@@ -87,16 +113,6 @@ I verified these points against the v1.5.1 source (`src/pc/mods/mod_fs.cpp`, `mo
 - **Test coverage.** `tests/test_modfs_miniz.py` compiles coopdx's own miniz and reads the bridge's archive with the same calls as `mod_fs_read`. It is skipped unless `/tmp/sm64coopdx` (or `SM64COOPDX_SRC`) and a C compiler are present.
 
 Checked on the live server (sgl-host): the game starts under the bridge with the inbox in place, the bridge (user `sgl`) writes it with mode 644, and the game's `hello` event reaches the bridge. Still to confirm with a client connected: a replaced inbox is picked up on the next reload and its popup appears.
-
-## NPC chat (Albert and Alberta)
-
-On a player's machine, `tools/npc_bridge/bridge.py` reads the mod's questions from `sav/sgl64.modfs` (`npc_out.txt`). On this server that file is the bridge's inbox. The bridge rewrites the whole file, and the mod reloads it every second, so a second writer would lose questions and could put back a stale `inbox.json` with login codes in it. So on a headless host, `sgl_npc.lua` writes nothing there. It prints each question as an `npc_ask` event instead, and `sglbridge/npc.py` answers it:
-
-1. **Queue.** The event goes on a queue (32 at most, the newest dropped when full). `npc_ask` events are not forwarded to `POST /events`, because player chat does not belong in the API.
-2. **Answer.** One `npc` thread answers questions one at a time with `tools/npc_bridge/bridge.py`'s `Bridge.handle()`, the same code as the local helper. Game questions are answered from `game_guide.md` with the asker's live stats, and everything else goes to Gemini (`GEMINI_API_KEY`, `SGL_NPC_MODEL`). Without a key, non-guide questions get a canned line from `npcs.json`.
-3. **Reply.** The reply goes to `<savepath>/sav/sgl64_npc.modfs` (`replies.txt`, a public modfs), the file the mod already polls. The host relays it to every player. A game restart (new session) drops the queue, and the mod ignores replies from an old session.
-
-Setup: copy `tools/npc_bridge/` to `/opt/sgl` (install step 1), put `GEMINI_API_KEY=<key>` in `/etc/sgl/bridge.env`, then run `systemctl restart sgl-bridge`. The key stays in that root-owned mode-600 file and is never committed. At start the journal shows `NPC chat on (Gemini gemini-3.8-flash; game guide: N entries; ...)`, and then one line per question with its route (`[guide: my-stars 1.00]`, `[ai]`). Game questions the guide couldn't answer well are appended to `$SGL_BRIDGE_STATE/npc_unanswered.log` (`/srv/sgl/bridge/`, since `/opt` is read-only under `ProtectSystem=strict`). If the mascots answer "ask me again in a bit", check the journal for `NPC chat off`, Gemini HTTP errors or a full queue. They also give that answer if the game runs as plain `sgl-game.service` without the bridge.
 
 ## Deploys (spec §5.3)
 

@@ -1,4 +1,4 @@
-name = "gator-field-board"
+name = "gator-field-board-mlh"
 compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat", "assets_navigation_has_no_effect"]
 main = "worker.ts"
@@ -27,7 +27,7 @@ run_worker_first = ["/api/*", "/ws/*", "/internal/*", "/v1/*", "/_deepspace/*", 
 # subdomain label the next deploy claims; this id never changes — data,
 # secrets, and collaborators all key to it. Renames are safe.
 [vars]
-DEEPSPACE_APP_ID = "app_01M53MENR3QPDRDRBP2JKRP884"
+DEEPSPACE_APP_ID = "app_01M551H8MCM2QVMGN2AFB18H9M"
 APP_NAME = "Super Gatorlator 64"
 # Exact callback URI for the macOS game bridge. PKCE and state are required by
 # the native auth routes; the bridge binds this loopback address only.

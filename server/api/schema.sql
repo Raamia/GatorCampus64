@@ -134,6 +134,7 @@ CREATE TABLE IF NOT EXISTS links (
     linked_at   timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS links_sub_idx ON links (sub, linked_at DESC);
+CREATE INDEX IF NOT EXISTS links_player_idx ON links (gi, coopdx_name, linked_at DESC);   -- run → sub (§10.2)
 
 CREATE TABLE IF NOT EXISTS link_codes (
     code        text PRIMARY KEY CHECK (code ~ '^[A-Z0-9]{6}$'),   -- §7.2, alphabet without 0/O/1/I
@@ -145,7 +146,7 @@ CREATE TABLE IF NOT EXISTS link_codes (
 
 CREATE TABLE IF NOT EXISTS events (
     id          bigserial PRIMARY KEY,
-    t           text NOT NULL,                          -- hello, join, leave, login_req, link_req, char, fin, exit
+    t           text NOT NULL,                          -- hello, join, leave, login_req, link_req, char, fin, run, exit
     payload     jsonb NOT NULL,                         -- the full SGLEVT object
     at          timestamptz NOT NULL DEFAULT now()
 );
@@ -164,6 +165,53 @@ CREATE TABLE IF NOT EXISTS deploys (
     finished     timestamptz
 );
 CREATE INDEX IF NOT EXISTS deploys_pending_idx ON deploys (created) WHERE state = 'pending';
+
+-- ── Verified leaderboards (§10) ────────────────────────────────────────────────────────────────
+-- One row per `run` event (POST /events). Every run is stored; only ranked runs reach a board.
+--   ranked = the run passed validation AND every player resolved to a Gator Pass link (§7) made in
+--            the current server session (after the latest `hello` event, not followed by a `leave`
+--            of that gi). reason is NULL exactly when ranked.
+--   reason (not ranked): unknown_mission, bad_fields, out_of_range, below_floor (faster than the
+--            mission's floor, sgl_api/missions.py), clock_mismatch (|frames - client_frames| > 60),
+--            player_count (players != number of gi/name pairs), duplicate_player (one account twice),
+--            unlinked (valid, but someone was not logged in: shown nowhere, kept for the record).
+--   player_key = the sorted subs joined by ' ' (ranked runs): boards keep the best run per key.
+-- run_pushes is the outbox to the DeepSpace app (§10.4): one row per ranked run, drained by the API
+-- (sgl_api/deepspace.py) with exponential backoff; 'failed' after DEEPSPACE_PUSH_MAX_ATTEMPTS. To
+-- retry those: UPDATE run_pushes SET state='pending', attempts=0, next_at=now() WHERE state='failed'.
+CREATE TABLE IF NOT EXISTS runs (
+    id            bigserial PRIMARY KEY,
+    uid           uuid NOT NULL UNIQUE DEFAULT gen_random_uuid(),  -- runId sent to DeepSpace (idempotency key)
+    mission       text NOT NULL,                        -- sgl_mission_register id, e.g. swamp_sprint
+    frames        integer,                              -- host-measured, 30 fps (NULL only when unparsable)
+    client_frames integer,                              -- the leader's own count (sanity check)
+    retries       integer NOT NULL DEFAULT 0,
+    players       smallint NOT NULL DEFAULT 0,
+    gis           smallint[] NOT NULL DEFAULT '{}',      -- per player, in event order
+    names         text[] NOT NULL DEFAULT '{}',          -- per player: coopdx name from the event
+    subs          text[] NOT NULL DEFAULT '{}',          -- per player: linked Auth0 sub, or NULL
+    coop          boolean NOT NULL DEFAULT false,       -- players > 1
+    level         integer,
+    act           integer,
+    ranked        boolean NOT NULL DEFAULT false,
+    reason        text CHECK ((reason IS NULL) = ranked),
+    player_key    text CHECK (NOT ranked OR player_key IS NOT NULL),
+    event_id      bigint REFERENCES events(id) ON DELETE SET NULL,
+    created       timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS runs_board_idx ON runs (mission, player_key, frames, created) WHERE ranked;
+CREATE INDEX IF NOT EXISTS runs_created_idx ON runs (created DESC);
+
+CREATE TABLE IF NOT EXISTS run_pushes (
+    run_id      bigint PRIMARY KEY REFERENCES runs(id) ON DELETE CASCADE,
+    state       text NOT NULL DEFAULT 'pending' CHECK (state IN ('pending','sent','failed')),
+    attempts    integer NOT NULL DEFAULT 0,
+    next_at     timestamptz NOT NULL DEFAULT now(),     -- also the claim lease while a push is in flight
+    last_error  text,
+    created     timestamptz NOT NULL DEFAULT now(),
+    sent_at     timestamptz
+);
+CREATE INDEX IF NOT EXISTS run_pushes_due_idx ON run_pushes (next_at) WHERE state = 'pending';
 
 -- ── Slot assignment (§5.2) ─────────────────────────────────────────────────────────────────────
 -- All slot changes serialize on one transaction-scoped advisory lock, so the api and any number

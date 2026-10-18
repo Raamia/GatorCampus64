@@ -44,15 +44,10 @@
 #      deploy.py (needs python3, or $PYTHON) loaded into characters.lua
 #  17. test_bridge.lua: sgl_bridge.lua (hosted server bridge): JSON encoder / decoder, SGLEVT events (host prints,
 #      client relay), inbox sequencing + routing, inert without a headless host
-#  18. test_npc.lua: the roaming mascots (sgl_npc.lua): Albert and Alberta in the level of their spot, chat ->
-#      outbox with the asker's live stats, /albert and /alberta, the bridge's replies relayed to everyone, the host's
-#      synced moves (poofs, held while someone is near), their animations, timeouts
-#  19. check_npc_ids.py: the NPCs of sgl_npc.lua match the personas in tools/npc_bridge/npcs.json
-#  20. check_npc_spots.py: every mascot spot stands on flat, clear floor in the built level; routes keep exactly
-#      one mascot on the hub
-#  21. check_game_guide.py: tools/npc_bridge/game_guide.md covers every stage, door, star count and act of course.lua
-#  22. tools/npc_bridge/test_*.py: the NPC chat bridge and the game guide (modfs protocol, routing, Gemini requests;
-#      offline) and tools/actors/test_make_gators.py (the generated Albert and Alberta actors are valid and up to date)
+#  18. test_runs.lua: verified leaderboards (spec 10): the headless host's own timing of mission rounds and its
+#      "run" event (solo, co-op with a pause, races GO -> finish, retries, dedupe, lost reports, offline inert),
+#      the "leaderboard" inbox command and the leaderboard menu (live rows + age, scrolling, .sav fallback),
+#      the solo outbox never written on a headless host
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
 # Fixtures (regenerate only for a new coopdx version): coopdx_constants_v151.lua,
 # coopdx_api_v151.lua, coopdx_structs_v151.lua (gen_coopdx_*.py, see their headers).
@@ -103,6 +98,8 @@ echo "== test_login (guest slots, character select pages, Gator Pass login)"
 "$LUA" "$HERE/test_login.lua"
 echo "== test_bridge (sgl_bridge.lua: events, inbox)"
 "$LUA" "$HERE/test_bridge.lua"
+echo "== test_runs (verified runs, leaderboard command + menu)"
+"$LUA" "$HERE/test_runs.lua"
 
 PY="$HERE/../.venv/bin/python"
 if [ -x "$PY" ]; then

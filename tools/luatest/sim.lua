@@ -604,6 +604,8 @@ function World:build_env(c)
     S.play_race_fanfare = function() c.fanfares = c.fanfares + 1 end
     S.is_game_paused = function() return false end
     S.get_global_timer = function() return w.frame end
+    -- wall clock in 30 Hz ticks (misc.c: monotonic ns * 3 / 1e8); c.clockSkew shifts this client's clock
+    S.clock_elapsed_ticks = function() return w.frame + (c.clockSkew or 0) end
     -- coopdx's per-area network timer (the same on every client of the area; c.areaTimerOffset skews one)
     S.get_network_area_timer = function() return w.frame + (c.areaTimerOffset or 0) end
 
@@ -939,25 +941,31 @@ function World:build_env(c)
     end
 
     -- coopdx's real _G is shared by every mod: `_G.name = v` (characters.lua / charselect.lua exports)
-    -- lands there and bare reads fall through to it; `_G.missing` is nil there, not an error. One per
-    -- simulated client (each client is its own game process).
+    -- lands there and bare reads fall through to it; `_G.missing` is nil there, not an error. A mod's
+    -- own globals (`function foo()`, `FOO = 1`) live in its per-mod _ENV table (smlua.c: __index = _G,
+    -- no __newindex), so `_G.foo` does NOT see them: use rawget(_ENV, "foo"). One per simulated client
+    -- (each client is its own game process).
+    local G = {}
+    c.realG = G
     S._G = setmetatable({}, {
         __index = function(_, k)
-            local v = rawget(c.env, k)
+            local v = G[k]
             if v ~= nil then return v end
             v = S[k]
             if v ~= nil then return v end
             return C[k]
         end,
-        __newindex = function(_, k, v) rawset(c.env, k, v) end,
+        __newindex = function(_, k, v) G[k] = v end,
     })
 
-    -- environment: stubs, then the constants prelude (+ Lua std lib); anything else is an error
+    -- environment: stubs, then the constants prelude (+ Lua std lib), then _G; anything else is an error
     c.env = setmetatable({}, {
         __index = function(_, k)
             local v = S[k]
             if v ~= nil then return v end
             v = C[k]
+            if v ~= nil then return v end
+            v = G[k]
             if v ~= nil then return v end
             error("undefined global: " .. tostring(k), 2)
         end,

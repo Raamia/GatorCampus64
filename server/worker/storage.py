@@ -36,6 +36,8 @@ class S3Storage:
         ctype = mimetypes.guess_type(path)[0] or "application/octet-stream"
         if path.endswith((".c", ".h")):
             ctype = "text/plain"
+        elif path.endswith(".glb"):
+            ctype = "model/gltf-binary"
         self.s3.upload_file(path, self.bucket, key, ExtraArgs={"ContentType": ctype})
 
     def delete_prefix(self, prefix):

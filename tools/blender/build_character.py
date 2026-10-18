@@ -189,6 +189,16 @@ def main():
         print("SGL validation", "OK" if vrep["ok"] else "FAILED", vrep["errors"])
         bpy.ops.wm.save_as_mainfile(filepath=blend_path, compress=True, copy=False)
 
+    # Browser export uses temporary copies before raster previews alter materials.
+    # This optional artifact must never prevent a valid game actor from shipping.
+    if do_preview:
+        try:
+            from sgl_browser_model import export_browser_model
+            report["browser_model"] = export_browser_model(os.path.join(out_build, "preview.glb"))
+        except Exception as exc:
+            report["browser_model_error"] = str(exc)
+            print("SGL browser model warning:", exc)
+
     # 6. previews (never saved)
     if do_preview:
         import sgl_preview
