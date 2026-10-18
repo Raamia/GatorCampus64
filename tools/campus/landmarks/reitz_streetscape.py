@@ -270,21 +270,29 @@ def layout(site):
             prev = q
         # 2b. planting beds (user photos of Malachowsky Hall): a mulch bed with ornamental grass and low
         # shrubs behind the bollard row, and beds on both sides of the walks from this sidewalk to the hall
+        # keep every bed (and its plants) off every walk and road: centre-line distance must exceed the
+        # walk's half width + the bed's reach + a margin (the drawn walks run a little wider than OSM's)
+        near = [(pts, _f(t.get("width"), 2.0) / 2) for _pid, t, pts in site.paths if len(pts) >= 2]
+        near += [(pts, w / 2) for _i, _n, w, _o, pts in site.roads]
+
+        def clear(c, reach):
+            return all(_poly_dist(c, pts) >= hw_ + reach + 0.45 for pts, hw_ in near)
+
         for p, d, s_ in _walk(spts, 2.4, 1.0):
             c = (p[0] + d[1] * (off + 1.9), p[1] - d[0] * (off + 1.9))
-            if any(math.dist(c, g) < 3.2 for g in gaps) or site.in_building(c, 1.5):
+            if any(math.dist(c, g) < 3.2 for g in gaps) or site.in_building(c, 1.5) or not clear(c, 1.5):
                 continue
-            L["beds"].append((c, d, 1.15, 1.5))
+            L["beds"].append((c, d, 1.15, 1.2))
         for pid, t, pts in site.paths:
             if pid == SIDEWALK_ID or len(pts) < 2 or t.get("footway") == "crossing":
                 continue
             if min(_poly_dist(pts[0], spts), _poly_dist(pts[-1], spts)) > 4.0:
                 continue
-            pw = _f(t.get("width"), 2.0) / 2 + 1.0
+            pw = _f(t.get("width"), 2.0) / 2 + 0.45 + 0.7
             for p, d, s_ in _walk(pts, 2.4, 3.0):
                 for side in (1, -1):
                     c = (p[0] + d[1] * pw * side, p[1] - d[0] * pw * side)
-                    if site.in_building(c, 1.5) or _poly_dist(c, spts) < 3.0 or not _in_box(c, REGION):
+                    if site.in_building(c, 1.5) or not _in_box(c, REGION) or not clear(c, 0.69):
                         continue
                     L["beds"].append((c, d, 1.15, 0.7))
     # 3. lamp posts every ~30 m along the roads, sidewalk side(s)
@@ -461,14 +469,14 @@ def build_geometry(site, L, h):
             x, y = c[0] + d[0] * du + nx * dv, c[1] + d[1] * du + ny * dv
             q.append((x, y, h(x, y) - 0.008))
         vis.poly(q, "mulch", normal_hint=(0, 0, 1))
-        for j, (du, dv) in enumerate(((-0.55, 0.2 * (1 if k % 2 else -1)), (0.5, -0.15 * (1 if k % 2 else -1)))):
+        for j, (du, dv) in enumerate(((-0.55, 0.1 * (1 if k % 2 else -1)), (0.5, -0.1 * (1 if k % 2 else -1)))):
             gx, gy = c[0] + d[0] * du + nx * dv, c[1] + d[1] * du + ny * dv
             gz = h(gx, gy) - 0.01
             ht = 0.75 + 0.15 * ((k + j) % 3)
             for a in (0.0, math.pi / 2):
                 ca, sa = math.cos(a + 0.4 * j), math.sin(a + 0.4 * j)
-                blade = [(gx - ca * 0.45, gy - sa * 0.45, gz), (gx + ca * 0.45, gy + sa * 0.45, gz),
-                         (gx + ca * 0.6, gy + sa * 0.6, gz + ht), (gx - ca * 0.6, gy - sa * 0.6, gz + ht)]
+                blade = [(gx - ca * 0.3, gy - sa * 0.3, gz), (gx + ca * 0.3, gy + sa * 0.3, gz),
+                         (gx + ca * 0.45, gy + sa * 0.45, gz + ht), (gx - ca * 0.45, gy - sa * 0.45, gz + ht)]
                 vis.poly(blade, "leaves_pine")
                 vis.poly(list(reversed(blade)), "leaves_pine")
         if k % 2 == 0:
