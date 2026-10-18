@@ -4308,8 +4308,12 @@ def rail_plugs(RZ):
         K.col_box(P.collision, x - h, y - h, z - 0.05, x + h, y + h, z + RAIL_H + 0.06, K.COL_NOCAM)
         # fix round 5 (technical improvement 0): every plug that stays is a rendered newel post (it stood as an
         # invisible post on walkable floor); 1 cm inside its collision on every side
-        P.visual.box(x - h + 0.01, y - h + 0.01, z, x + h - 0.01, y + h - 0.01, z + RAIL_H + 0.05, "int_ru_white",
-                     faces="+x-x+y-y+z")
+        # stairs_fast pass (game_stairs_28: squat white blocks mid-landing): drawn as a short railing section -
+        # grey picket sides under a honey-wood cap, like the rails it joins (same footprint as the collision)
+        P.visual.box(x - h + 0.01, y - h + 0.01, z, x + h - 0.01, y + h - 0.01, z + RAIL_H, "int_ru_picket2",
+                     faces="+x-x+y-y")
+        P.visual.box(x - h + 0.01, y - h + 0.01, z + RAIL_H, x + h - 0.01, y + h - 0.01, z + RAIL_H + 0.05,
+                     "int_ru_maple", faces="+x-x+y-y+z")
     RZ.kit_add(P, "L1", tag="rail_plugs")
 
 
