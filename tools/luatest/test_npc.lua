@@ -1,9 +1,8 @@
--- Offline test of mods/sgl64/sgl_npc.lua (Albert and Alberta, the roaming mascots) in the multi-client simulator:
--- they appear only in the level of their current spot, a line near one becomes a request in the host's modfs
+-- Offline test of mods/sgl64/sgl_npc.lua (Albert and Alberta, the mascot guides) in the multi-client simulator:
+-- both stand on the hub and one waits at the start of the mission of each stage act, a line near one becomes a request in the host's modfs
 -- outbox (npc_out.txt, with the asker's own live stats, sent by the asker's client), /albert and /alberta ask from
 -- anywhere, the bridge's reply file (sgl64_npc.modfs replies.txt) reaches every client as a chat line + bubble,
--- the host moves them along their routes (synced step, poofs) but never mid-conversation, their animations follow
--- what they're doing, with no bridge a request times out, and on a headless host (play.gatorcamp.us) requests go
+-- their animations follow what they're doing, with no bridge a request times out, and on a headless host (play.gatorcamp.us) requests go
 -- out as npc_ask events for server/bridge instead. Run: lua tools/luatest/test_npc.lua (run.sh).
 local HERE = debug.getinfo(1, "S").source:match("^@(.*/)") or "./"
 local Sim = dofile(HERE .. "sim.lua")
@@ -118,7 +117,10 @@ local function setup()
 end
 
 local function npc(c, id) return c.env.sgl_npc_by_id(id) end
-local function spot_of(c, id) return c.env.sgl_npc_spot(npc(c, id)) end
+local function spot_of(c, id)
+    local np = c.nps[0]
+    return c.env.sgl_npc_spot(npc(c, id), np.currLevelNum, np.currAreaIndex, np.currActNum)
+end
 local function objects(c) return Sim.objects_with(c, c.env.id_bhvSglNpc) end
 local function anim_of(o) return o ~= nil and Sim.raw(o)._customAnim or nil end
 
@@ -143,7 +145,7 @@ local function reply(w, disk, seq, id, text)
     w:step(20)
 end
 
-test("two mascots with rigged models; at the start Albert is on the hub and Alberta in Marston", function()
+test("two mascots with rigged models, both on the hub by the spawn", function()
     local w, H, F = setup()
     local ids = {}
     for _, n in ipairs(H.env.SGL_NPCS) do
@@ -157,10 +159,32 @@ test("two mascots with rigged models; at the start Albert is on the hub and Albe
         check(#a.index == 2 * (3 + 3 * #H.env.ALBERT_JOINTS), name .. ": one index entry per channel")
     end
     check(count == 6, "six shared animations registered: " .. count)
-    check(spot_of(H, "albert").level == HUB and spot_of(H, "alberta").level == C.LEVEL_CCM, "step 0 spots")
-    local objs = objects(H)
-    check(#objs == 1 and Sim.raw(objs[1])._model == npc(H, "albert").model, "only Albert stands on the hub")
+    check(spot_of(H, "albert").level == HUB and spot_of(H, "alberta").level == HUB, "both on the hub")
+    check(#objects(H) == 2, "two mascots stand on the hub (" .. #objects(H) .. ")")
     check(H.commands.albert ~= nil and H.commands.alberta ~= nil, "/albert and /alberta registered")
+end)
+
+test("in a stage one mascot waits at the start of the act's mission", function()
+    local w, H, F = setup()
+    local want = {
+        [1] = { "albert", "swamp_kickoff" }, [2] = { "alberta", "swamp_sprint" }, [3] = { "albert", "swamp_chorus" },
+        [4] = { "albert", "swamp_kickoff" },
+    }
+    for act, wid in pairs(want) do
+        w:warp(H, C.LEVEL_BOB, 1, act)
+        w:step(3)
+        local objs = objects(H)
+        local spot = H.env.SGL_NPC_SPOTS[wid[2]]
+        check(#objs == 1 and Sim.raw(objs[1])._model == npc(H, wid[1]).model,
+            "The Swamp act " .. act .. ": " .. wid[1] .. " (" .. #objs .. " mascots)")
+        check(objs[1] ~= nil and math.abs(objs[1].oPosX - spot.x) < 400 and math.abs(objs[1].oPosZ - spot.z) < 400,
+            "act " .. act .. ": at " .. wid[2])
+    end
+    w:warp(H, C.LEVEL_JRB, 1, 2)
+    w:step(3)
+    check(#objects(H) == 1 and Sim.raw(objects(H)[1])._model == npc(H, "albert").model, "Lake Alice act 2: Albert on the deck")
+    Sim.cmd(H, "alberta", "")
+    check(Sim.find(H.chat, "Alberta.* is on the Plaza.*Marston") ~= nil, "/alberta: the Plaza and her missions")
 end)
 
 test("the host's own line near Albert -> outbox request with live stats and where both mascots are", function()
@@ -176,7 +200,7 @@ test("the host's own line near Albert -> outbox request with live stats and wher
     stats = stats or ""
     for _, key in ipairs({ "stars=", "lives=", "coins=", "players=2", "here=central campus", "s_swamp=2",
                            "go=THE SWAMP|UNIVERSITY AUDITORIUM", "lock=REITZ & ENGINEERING|THE HUB|2",
-                           "albert_at=on the Plaza", "alberta_at=in Marston" }) do
+                           "albert_at=on the Plaza", "alberta_at=on the Plaza", "The Swamp, behind the Stair Sprint" }) do
         check(stats:find(key, 1, true) ~= nil, "stats has " .. key .. ": " .. stats)
     end
 end)
@@ -235,39 +259,6 @@ test("/alberta asks from anywhere; /albert alone says where he is", function()
     check(Sim.find(H.chat, "Albert.* is on the Plaza") ~= nil, "/albert: where Albert is")
 end)
 
-test("every 4 minutes the host moves them along their routes: synced, with a poof, one always on the hub", function()
-    local w, H, F, disk, clock = setup()
-    H.pos.x, F.pos.x = H.pos.x + 5000, F.pos.x + 5000   -- nobody near: free to move
-    w:step(5)
-    clock.t = clock.t + H.env.SGL_NPC_ROTATE + 1
-    w:step(5)
-    check(H.env.sgl_npc_step() == 1 and F.env.sgl_npc_step() == 1, "step 1 on both clients")
-    check(spot_of(F, "albert").level == C.LEVEL_BOB and spot_of(F, "alberta").level == HUB,
-        "Albert went to The Swamp, Alberta came to the hub")
-    local objs = objects(F)
-    check(#objs == 1 and Sim.raw(objs[1])._model == npc(F, "alberta").model, "the friend now sees Alberta on the hub")
-    check(#Sim.objects_with(F, C.id_bhvMistParticleSpawner) >= 1, "with a puff of mist")
-    w:warp(F, C.LEVEL_BOB, 1, 1)
-    w:step(5)
-    objs = objects(F)
-    check(#objs == 1 and Sim.raw(objs[1])._model == npc(F, "albert").model, "and Albert is in The Swamp")
-end)
-
-test("they don't move while someone is near (a friend's report holds the host)", function()
-    local w, H, F, disk, clock = setup()
-    H.pos.x = H.pos.x + 5000
-    next_to(F, "albert")
-    clock.t = clock.t + H.env.SGL_NPC_ROTATE - 1
-    w:step(70)      -- the friend's client reports "near a mascot" every 2 s
-    clock.t = clock.t + 2
-    w:step(30)
-    check(H.env.sgl_npc_step() == 0, "held while the friend stands next to Albert")
-    F.pos.x = F.pos.x + 5000
-    clock.t = clock.t + H.env.SGL_NPC_BUSY_HOLD + 1
-    w:step(70)
-    check(H.env.sgl_npc_step() == 1, "moves once the friend walks away")
-end)
-
 test("waves at newcomers, then faces them", function()
     local w, H, F = setup()
     local albert = objects(H)[1]
@@ -296,7 +287,6 @@ test("nobody around: Albert strolls to the same spots on every client and stays 
     local a, b = objects(H)[1], objects(F)[1]
     w:step(100)   -- (a Gator Chomp may finish first)
     w:seconds(5)
-    check(H.env.sgl_npc_step() == 0, "(still step 0)")
     local d = math.sqrt((a.oPosX - tx) ^ 2 + (a.oPosZ - tz) ^ 2)
     check(d < 40, "he walked to the slot's spot (" .. math.floor(d) .. " away)")
     check(math.abs(a.oPosX - b.oPosX) + math.abs(a.oPosZ - b.oPosZ) < 1, "the same spot on both clients")

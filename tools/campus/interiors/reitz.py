@@ -2964,8 +2964,8 @@ def _arm_goomba_placer():
     class _ReitzAreaPlacer(base):
         _sgl_base = base
 
-        def __init__(self, S, probe):
-            super().__init__(S, probe)
+        def __init__(self, S, probe, **kw):
+            super().__init__(S, probe, **kw)
             if getattr(S, "key", None) == KEY:
                 SP.Placer = base
                 for it in GOOMBA_SPOTS:

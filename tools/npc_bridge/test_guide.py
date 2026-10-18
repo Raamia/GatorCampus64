@@ -58,6 +58,9 @@ ROUTES = [
     ("who else can i talk to", "npcs"),
     ("how do i beat the bulls", "mini-bulls"),
     ("what are those little bulls", "mini-bulls"),
+    ("who are the enemies", "mini-bulls"),
+    ("how do i beat the knights", "mini-bulls"),
+    ("what are the ghosts", "mini-bulls"),
 ]
 
 STATS = {"albert_at": "in The Swamp, near where you arrive", "alberta_at": "on the Plaza of the Americas, right by the spawn",

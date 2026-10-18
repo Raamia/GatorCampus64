@@ -1,8 +1,9 @@
-"""Check the mascots' spots and routes in mods/sgl64/sgl_npc.lua (SGL_NPC_SPOTS, SGL_NPCS[].route).
+"""Check the mascots' spots and posts in mods/sgl64/sgl_npc.lua (SGL_NPC_SPOTS, SGL_NPC_POSTS).
 
 Every spot must stand on the built level's floor at its y, with flat floor and no static geometry from the floor
 up to 2.6 m within its stroll radius (+ a margin), and no level-script object (coins, signs, trees, Goombas) within
-the radius + 1.2 m. Routes: every step has exactly one mascot on the hub and never both mascots in the same level.
+the radius + 1.2 m. Posts: both mascots stand on the hub, and every stage has exactly one mascot for each of its
+acts 1-6 (at the mission's start).
 Usage (from anywhere): python3 -I tools/luatest/check_npc_spots.py   (exit 1 on a problem)
 """
 import math
@@ -17,7 +18,7 @@ SLOTS = {"SGL_HUB_LEVEL": "castle_grounds", "LEVEL_BOB": "bob", "LEVEL_WF": "wf"
          "LEVEL_CCM": "ccm", "LEVEL_BBH": "bbh"}
 MARGIN = 60          # clear ground beyond the stroll radius (Albert is ~0.5 m wide)
 OBJ_GAP = 120        # level-script objects stay this far beyond the stroll radius
-MIN_CLEAR = 140      # a standing-only spot (radius 0) still needs this much room
+MIN_CLEAR = 70       # a standing-only spot (radius 0) still needs this much room (boardwalks, decks, libraries)
 
 
 class Collision:
@@ -74,11 +75,13 @@ def lua_spots():
                          r"yaw = (-?\d+), radius = (\d+),\s*label = \"([^\"]+)\" \}", body):
         spots[m.group(1)] = {"level": m.group(2), "area": int(m.group(3)), "x": int(m.group(4)), "y": int(m.group(5)),
                              "z": int(m.group(6)), "radius": int(m.group(8)), "label": m.group(9)}
-    npcs = text[text.index("SGL_NPCS = {"):]
-    npcs = npcs[:npcs.index("\n}\n")]
-    routes = {m.group(1): re.findall(r'"(\w+)"', m.group(2))
-              for m in re.finditer(r'id = "(\w+)".*?route = \{([^}]*)\}', npcs, re.S)}
-    return spots, routes
+    posts = text[text.index("SGL_NPC_POSTS = {"):]
+    posts = posts[:posts.index("\n}\n")]
+    plist = []
+    for m in re.finditer(r'\{ npc = "(\w+)", spot = "(\w+)"(?:, acts = \{([^}]*)\})? \}', posts):
+        acts = [int(a) for a in re.findall(r"\d+", m.group(3))] if m.group(3) else None
+        plist.append((m.group(1), m.group(2), acts))
+    return spots, plist
 
 
 def script_objects(slot, area):
@@ -90,10 +93,10 @@ def script_objects(slot, area):
 
 
 def main():
-    spots, routes = lua_spots()
+    spots, posts = lua_spots()
     bad = []
-    if len(spots) < 7:
-        bad.append("expected at least 7 spots in SGL_NPC_SPOTS, parsed %d" % len(spots))
+    if len(spots) < 18:
+        bad.append("expected at least 18 spots in SGL_NPC_SPOTS, parsed %d" % len(spots))
     cols = {}
     for name, sp in sorted(spots.items()):
         slot = SLOTS.get(sp["level"])
@@ -128,31 +131,34 @@ def main():
         near = [math.hypot(ox - x, oz - z) for ox, oz in script_objects(slot, sp["area"])]
         if near and min(near) < r + OBJ_GAP:
             bad.append("%s: a level object only %d units away (radius %d)" % (name, min(near), r))
-    # routes
-    if set(routes) != {"albert", "alberta"}:
-        bad.append("routes for albert and alberta expected, got %s" % sorted(routes))
-    else:
-        n = len(routes["albert"])
-        if len(routes["alberta"]) != n:
-            bad.append("both routes must have the same length")
-        for step in range(n):
-            a, b = spots.get(routes["albert"][step]), spots.get(routes["alberta"][step])
-            if a is None or b is None:
-                bad.append("step %d: unknown spot" % step)
-                continue
-            on_hub = [s for s in (a, b) if s["level"] == "SGL_HUB_LEVEL"]
-            if len(on_hub) != 1:
-                bad.append("step %d: %d mascots on the hub (want exactly 1)" % (step, len(on_hub)))
-            if a["level"] == b["level"] and a["level"] != "SGL_HUB_LEVEL":
-                bad.append("step %d: both mascots in %s" % (step, a["level"]))
-            if a is b:
-                bad.append("step %d: both mascots on spot %s" % (step, routes["albert"][step]))
+    # posts: both on the hub; one mascot per act 1-6 in every stage that has posts
+    hub = {npc for npc, sp, acts in posts if spots.get(sp, {}).get("level") == "SGL_HUB_LEVEL" and acts is None}
+    if hub != {"albert", "alberta"}:
+        bad.append("both mascots must stand on the hub (got %s)" % sorted(hub))
+    stages = {}
+    for npc, sp, acts in posts:
+        spot = spots.get(sp)
+        if spot is None:
+            bad.append("post %s/%s: unknown spot" % (npc, sp))
+            continue
+        if spot["level"] == "SGL_HUB_LEVEL":
+            continue
+        if not acts:
+            bad.append("post %s/%s: a stage post needs its acts" % (npc, sp))
+            continue
+        for a in acts:
+            stages.setdefault(spot["level"], {}).setdefault(a, []).append(npc)
+    for level in ("LEVEL_BOB", "LEVEL_WF", "LEVEL_JRB", "LEVEL_CCM", "LEVEL_BBH"):
+        for act in range(1, 7):
+            who = stages.get(level, {}).get(act, [])
+            if len(who) != 1:
+                bad.append("%s act %d: %d mascot posts (want exactly 1)" % (level, act, len(who)))
     for b in bad:
         print("check_npc_spots: " + b)
     if bad:
         return 1
-    print("check_npc_spots: OK (%d spots on flat, clear ground; %d-step routes keep one mascot on the hub)" % (
-        len(spots), len(routes.get("albert", []))))
+    print("check_npc_spots: OK (%d spots on flat, clear ground; both mascots on the hub and one at every act's "
+          "mission in all 5 stages)" % len(spots))
     return 0
 
 

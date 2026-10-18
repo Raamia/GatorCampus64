@@ -190,12 +190,10 @@ test("levels/wf/script.c (when built): warp contract for door 2, no level-script
                             out[#out + 1] = { x = o.x + l * math.sin(yaw), y = o.y, z = o.z + l * math.cos(yaw) }
                         end
                     end
-                elseif o.bhv == "bhvGoomba" then
-                    n = n + 1
                 end
             end
         end
-        return out, #out + n
+        return out, #out + n     -- (Goombas are back as the rival mascots: sgl_rivals.lua, test_flow.lua)
     end
     local P = A.env.REITZ_POINTS
     local tokAct = A.env.REITZ_MISSION_ACTS.tokens
@@ -212,7 +210,7 @@ test("levels/wf/script.c (when built): warp contract for door 2, no level-script
     check(onToken == 0, "act " .. tokAct .. ": no ambient level coin overlaps a meal-swipe token")
     for act = 1, 6 do
         local _, n = coins_in(act)
-        check(n == 0, string.format("act %d: no ambient coins or Goombas (%d found)", act, n))
+        check(n == 0, string.format("act %d: no ambient coins (%d found)", act, n))
     end
     local _, n1 = coins_in(1)
     local _, n2 = coins_in(tokAct)
