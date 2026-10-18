@@ -74,6 +74,11 @@ LUA="${LUA:-lua}"
 LUAC="${LUAC:-luac}"
 export LUAC
 
+echo "== material lighting regression tests"
+python3 -m unittest discover -s "$HERE/../blender" -p test_material_lighting.py
+echo "== exported material lighting"
+python3 "$HERE/../blender/fix_material_lighting.py" --check "$MOD"/levels/*/
+
 echo "== luac -p"
 for f in "$MOD"/*.lua; do
     "$LUAC" -p "$f"
@@ -91,6 +96,9 @@ echo "== check_globals (cross-file, load order)"
 
 echo "== test_missions"
 "$LUA" "$HERE/test_missions.lua"
+
+echo "== test_free_roam"
+"$LUA" "$HERE/test_free_roam.lua"
 
 echo "== test_flow (whole mod + level scripts)"
 "$LUA" "$HERE/test_flow.lua"

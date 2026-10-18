@@ -19,7 +19,7 @@
 -- Act order = what is actually playable. Vanilla act select only offers the acts you already have
 -- stars for plus the NEXT one, so the built missions must be acts 1, 2, 3 (in that order, solo-able
 -- ones first) or progression would stop at the first act without a star. Acts with no mission yet are
--- named "COMING SOON - ..." (sgl_act_is_soon): they load the stage as free roam (no star), the HUD says
+-- named "" (sgl_act_is_soon): they load the stage as free roam (no star), the HUD says
 -- so (sgl_mission.lua) and Pause > EXIT COURSE returns to the hub, so nothing can soft-lock.
 -- The Swamp: 1 Kickoff (design 7.1 act 1), 2 Stair Sprint (design act 5), 3 Chomp Chorus (design act 3,
 -- co-op); design acts 2 (Visiting Mascot), 4 (Tailgate Tokens) and 6 (Flyover!) come later as 4/5/6.
@@ -65,9 +65,9 @@ SGL_STAGES = {
           "KICKOFF - CLIMB THE SKYBOX",   -- swamp_missions.lua swamp_skybox (+ level-script star id 0)
           "STADIUM STAIR SPRINT",         -- swamp_missions.lua swamp_sprint (race, par 1'10)
           "GATOR CHOMP CHORUS",           -- swamp_missions.lua swamp_chorus (solo rhythm game alone, co-op 2-4)
-          "COMING SOON - MASCOT",         -- design 7.1 "The Visiting Mascot" (no mission yet)
-          "COMING SOON - TAILGATE",       -- design 7.1 "Tailgate Tokens" (no mission yet)
-          "COMING SOON - FLYOVER!",       -- design 7.1 "Flyover!" (no mission yet)
+          "",         -- design 7.1 "The Visiting Mascot" (no mission yet)
+          "",       -- design 7.1 "Tailgate Tokens" (no mission yet)
+          "",       -- design 7.1 "Flyover!" (no mission yet)
       } },
     { door = 2, key = "reitz", slot = "wf", level = LEVEL_WF, course = COURSE_WF, stars = 0,
       name = "REITZ & ENGINEERING", building = "THE HUB",
@@ -75,9 +75,9 @@ SGL_STAGES = {
           "ROOFTOP OF THE REITZ",         -- wf_reitz_missions.lua reitz_rooftop (spawns star id 0; no level-script star)
           "MEAL SWIPE TOKENS",            -- wf_reitz_missions.lua reitz_tokens (8 tokens, shared)
           "REMOTE ROBOTICS LAB - 2P",     -- wf_reitz_missions.lua reitz_robotics (co-op cranes, 2-4 players)
-          "COMING SOON - WIND TUNNEL",    -- design 7.2 "Weil Wind Tunnel" (no mission yet)
-          "COMING SOON - ROBOT ROUNDUP",  -- design 7.2 "Rogue Robot Roundup" (no mission yet)
-          "COMING SOON - DATA RELAY",     -- design 7.2 "Data Packet Relay" (no mission yet)
+          "",    -- design 7.2 "Weil Wind Tunnel" (no mission yet)
+          "",  -- design 7.2 "Rogue Robot Roundup" (no mission yet)
+          "",     -- design 7.2 "Data Packet Relay" (no mission yet)
       } },
     { door = 3, key = "alice", slot = "jrb", level = LEVEL_JRB, course = COURSE_JRB, stars = 0,
       name = "LAKE ALICE", building = "NEWELL HALL",
@@ -86,8 +86,8 @@ SGL_STAGES = {
           "GATOR HOP",                    -- uf_lake_missions.lua lake_gator_hop (sinking gators to the nest)
           "BAT CENSUS AT DUSK - 2P",      -- uf_lake_missions.lua lake_bat_census (co-op, 2-4 players, dusk lighting)
           "GATOR REGATTA",                -- uf_lake_missions.lua lake_regatta (race on ride gators round 8 buoys, par 1'15)
-          "COMING SOON - HATCHLING",      -- design 7.4 act 5 "Lost Hatchling" (no mission yet)
-          "COMING SOON - RED COINS",      -- design 7.4 act 6 "Lily Pad Red Coins" (no mission yet)
+          "",      -- design 7.4 act 5 "Lost Hatchling" (no mission yet)
+          "",      -- design 7.4 act 6 "Lily Pad Red Coins" (no mission yet)
       } },
     { door = 4, key = "marston", slot = "ccm", level = LEVEL_CCM, course = COURSE_CCM, stars = 0,
       name = "MARSTON LIBRARY", building = "MARSTON SCIENCE LIBRARY",
@@ -95,9 +95,9 @@ SGL_STAGES = {
           "OUT-OF-ORDER ELEVATOR",        -- uf_marston_missions.lua marston_climb (atrium lifts to the 5th floor; spawns star id 0)
           "SHHH! LOST TEXTBOOKS",         -- uf_marston_missions.lua marston_quiet (8 books on the silent floor, Shusher patrols)
           "STUDY ROOM BOOKING - 2P",      -- uf_marston_missions.lua marston_booking (co-op kiosks, 2-4 players)
-          "COMING SOON - NOTEBOOK PAGES", -- design 7.3 act 4 "Lost Lab Notebook Pages" (no mission yet)
-          "COMING SOON - PRINTER JAM",    -- design 7.3 act 5 "Printer Jam" (no mission yet)
-          "COMING SOON - BOOK EXPRESS",   -- design 7.3 act 6 "Overdue Book Express" (no mission yet)
+          "", -- design 7.3 act 4 "Lost Lab Notebook Pages" (no mission yet)
+          "",    -- design 7.3 act 5 "Printer Jam" (no mission yet)
+          "",   -- design 7.3 act 6 "Overdue Book Express" (no mission yet)
       } },
     { door = 5, key = "libwest", slot = "bbh", level = LEVEL_BBH, course = COURSE_BBH, stars = 0,
       name = "LIBRARY WEST AFTER DARK", building = "LIBRARY WEST",
@@ -105,9 +105,9 @@ SGL_STAGES = {
           "ALL-NIGHTER",                  -- uf_west_library_missions.lua libwest_allnighter (lobby to the 6F big window; spawns star id 0)
           "COFFEE RUN",                   -- uf_west_library_missions.lua libwest_coffee (race: 6F desk -> lobby cup -> back, par 1'00)
           "QUIET HOURS HIDE & SEEK - 2P", -- uf_west_library_missions.lua libwest_hideseek (2+ players, night librarian vs hiders)
-          "COMING SOON - GHOST HUNT",     -- design 7.5 act 3 "The Ghost of Finals Past" (no mission yet)
-          "COMING SOON - LIGHTS OUT",     -- design 7.5 act 4 "Lights Out" (no mission yet)
-          "COMING SOON - GLOWING BOOKS",  -- design 7.5 act 6 "Re-shelve the Glowing Books" (no mission yet)
+          "",     -- design 7.5 act 3 "The Ghost of Finals Past" (no mission yet)
+          "",     -- design 7.5 act 4 "Lights Out" (no mission yet)
+          "",  -- design 7.5 act 6 "Re-shelve the Glowing Books" (no mission yet)
       } },
     { door = 6, key = "tower", slot = "ttc", level = LEVEL_TTC, course = COURSE_TTC, stars = 0,
       name = "CENTURY TOWER", building = "CENTURY TOWER" },
@@ -148,17 +148,16 @@ function sgl_total_stars()
 end
 
 -- act select name of act k (nil for a stage without act names)
-SGL_ACT_SOON_PREFIX = "COMING SOON"
+SGL_FREE_ROAM_ACT = 0
 function sgl_act_name(stage, act)
     if stage == nil or stage.acts == nil then return nil end
     return stage.acts[act]
 end
 
--- true when act k of the stage has no mission yet (its name starts with "COMING SOON", or the stage
--- has no act names at all): free roam, no star, no Study Group invite
+-- true when act k of the stage has no mission yet (blank name or no act names): no mission or invite
 function sgl_act_is_soon(stage, act)
     local name = sgl_act_name(stage, act)
-    return name == nil or name:sub(1, #SGL_ACT_SOON_PREFIX) == SGL_ACT_SOON_PREFIX
+    return name == nil or name == ""
 end
 
 -- stars of one stage's course (bit k-1 = act k's mission star, bit 6 = 100 coins)

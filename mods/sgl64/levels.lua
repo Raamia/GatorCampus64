@@ -18,10 +18,8 @@
 --
 -- Flow (all vanilla machinery, nothing warps "around" the engine):
 --   start / game over      gLevelValues.entryLevel = the hub: MARIO_POS on the Plaza of the Americas
---   hub stage door i       id_bhvSglDoor (below, placed by the generator): walk into the doorway ->
---                          star lock check -> Mario "enters" it like a vanilla warp object, and
---                          level_trigger_warp(WARP_OP_WARP_OBJECT) uses the hub's WARP_NODE(0x10 + i)
---                          -> stage level, node 0x0A. The level change shows the vanilla ACT SELECT.
+--   hub stage door i       walk into the doorway -> destination area 1, act 0 (free roam).
+--                          All built stages are open; choose a mission explicitly from travel.
 --   star in a stage        star dance -> stage WARP_NODE 0xF0 -> hub 0x20 + i (outside door i,
 --                          course-complete screen)
 --   death / "Exit course"  stage WARP_NODE 0xF1 -> hub 0x30 + i (outside door i)
@@ -92,10 +90,9 @@ University Auditorium is\
 straight ahead (south):\
 walk into its door to\
 enter THE SWAMP.\
-Every built stage is\
-open from the start.\
-No stars are needed\
-to enter its door.\
+All built stage doors\
+are open to everyone.\
+Walk in to explore.\
 Century Tower is behind\
 the Auditorium.\
 Go Gators!")
@@ -112,16 +109,13 @@ end
 
 local function door_sign_text(sign)
     local stage = sign.door and sgl_stage_by_door(sign.door)
-    -- a stage door's lock comes from course.lua (SGL_STAGES[].stars), so the sign can never disagree with the door
-    local need = stage ~= nil and stage.stars or sign.stars
-    local stars = need == 0 and "Open to everyone!" or
-        ("Opens at " .. need .. " star" .. (need == 1 and "" or "s") .. ".")
+    local stars = "Open to everyone!"
     local status
     if stage ~= nil and sgl_stage_ready(stage) then
         status = "Walk into the door\
 to enter."
     else
-        status = "Coming soon!"
+        status = "Not open yet."
     end
     return sign.building .. "\
 Stage door: " .. sign.stage .. "\
@@ -184,7 +178,7 @@ id_bhvSglTestGoal = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_sgl_test_goal_i
 --   vanilla warp reads it from m.usedObj), bparam3 = trigger half width in 10 cm units, bparam4 =
 --   emblem height above the sill in 10 cm units (the generator lowers it under porch roofs); 0 = default.
 -- Every client runs its own copy (no sync): only the local player is checked.
--- Looks: a spinning star above the doorway (gold = open, see-through = locked / coming soon), two
+-- Looks: a spinning star above the doorway (gold = open, see-through = unavailable), two
 -- red flames beside a door that will not open, and a floating label within DOOR_LABEL_RANGE.
 ---------------------------------------------------------------------------------------------
 
@@ -192,7 +186,7 @@ local DOOR_REACH_OUT = 150      -- trigger reaches this far in front of the door
 local DOOR_REACH_IN = -300      -- ... and this far behind it (recessed bays, porches)
 local DOOR_HALF_WIDTH = 160     -- default trigger half width
 local DOOR_DY_MIN, DOOR_DY_MAX = -150, 350
-local DOOR_REARM = 450          -- step this far away to see the "locked" message again
+local DOOR_REARM = 450          -- step this far away to see the unavailable message again
 local DOOR_FACING = 0x3800      -- Mario must face into the door (within ~79 degrees)
 local DOOR_EMBLEM_OUT, DOOR_EMBLEM_UP = 120, 420   -- build_stage.py DOOR_EMBLEM_OUT_M / DOOR_EMBLEM_UP_M
 local DOOR_FLAME_OUT, DOOR_FLAME_UP, DOOR_FLAME_SIDE, DOOR_FLAME_SCALE = 90, 40, 40, 5.0
@@ -200,7 +194,7 @@ local DOOR_LABEL_RANGE = 2500   -- 25 m
 local DOOR_LABEL_UP = 330
 local DOOR_DRAW_DISTANCE = 12000 -- emblem + flames stay visible from 120 m (the object default is 40 m)
 
-local DOOR_OPEN, DOOR_LOCKED, DOOR_SOON = 0, 1, 2
+local DOOR_OPEN, DOOR_SOON = 0, 2
 
 -- door index -> { x, y, z (door sill on the facade plane), yaw (facing out), halfWidth, state,
 --                 inside, told, fx = {flame objects}, seen = global timer of the last update }
@@ -208,7 +202,6 @@ local sDoors = {}
 
 local function door_state(stage)
     if stage == nil or not sgl_stage_ready(stage) then return DOOR_SOON end
-    if sgl_total_stars() < stage.stars then return DOOR_LOCKED end
     return DOOR_OPEN
 end
 
@@ -229,27 +222,19 @@ local function door_can_trigger(m)
 end
 
 local function door_message(d, stage, state)
-    local stars = sgl_total_stars()
-    if state == DOOR_LOCKED then
-        djui_popup_create(string.format("\\#ff8080\\Locked!\\#dcdcdc\\ %s needs %d star%s (you have %d).",
-            stage.name, stage.stars, stage.stars == 1 and "" or "s", stars), 2)
-    else
-        local name = stage and stage.name or "This stage"
-        local need = stage and stage.stars or 0
-        djui_popup_create(string.format("\\#ffd700\\%s\\#dcdcdc\\ is coming soon%s.", name,
-            need > 0 and string.format(" (opens at %d stars)", need) or ""), 2)
-    end
+    local name = stage and stage.name or "This stage"
+    djui_popup_create("\\#ffd700\\" .. name .. "\\#dcdcdc\\ is not open yet.", 2)
     play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
 end
 
--- the vanilla warp-object entry (interact_warp): Mario vanishes into the door and, 2 frames later,
--- level_trigger_warp(m, WARP_OP_WARP_OBJECT) reads warp node bparam2 = 0x10 + door from m.usedObj
+-- Physical doors enter a separate free-roam instance. Missions are opt-in via travel.
 local function door_enter(m, o)
-    m.interactObj = o
-    m.usedObj = o
-    play_sound(SOUND_MENU_ENTER_HOLE, m.marioObj.header.gfx.cameraToObject)
+    local stage = sgl_stage_by_door((o.oBehParams >> 24) & 0xFF)
+    if stage == nil then return end
     mario_stop_riding_object(m)
-    set_mario_action(m, ACT_DISAPPEARED, (WARP_OP_WARP_OBJECT << 16) + 2)
+    if warp_to_level(stage.level, 1, SGL_FREE_ROAM_ACT) then
+        play_sound(SOUND_MENU_ENTER_HOLE, m.marioObj.header.gfx.cameraToObject)
+    end
 end
 
 local function door_fx_init(o)
@@ -306,7 +291,7 @@ local function door_loop(o)
     d.seen = get_global_timer()
     if d.fx == nil then d.fx = door_spawn_fx(d) end
 
-    -- looks (lock state is re-evaluated every frame: stars can arrive while you stand there)
+    -- Re-evaluate whether the destination is available.
     local state = door_state(stage)
     if state ~= d.state then
         d.state = state
@@ -353,14 +338,13 @@ end
 
 id_bhvSglDoor = hook_behavior(nil, OBJ_LIST_LEVEL, true, door_init, door_loop, "bhvSglDoor")
 
--- floating label over each door (within 25 m): stage name + open / locked / coming soon
+-- floating label over each door (within 25 m): stage name + open / unavailable
 local function door_hud()
     if gNetworkPlayers[0].currLevelNum ~= SGL_HUB_LEVEL or sgl_hud_blocked() then return end
     local now = get_global_timer()
     local m = gMarioStates[0]
     djui_hud_set_resolution(RESOLUTION_N64)
     djui_hud_set_font(FONT_NORMAL)
-    local stars = sgl_total_stars()
     for i, d in pairs(sDoors) do
         if d.state ~= nil and now - d.seen <= 2 then
             local dx, dy, dz = m.pos.x - d.x, m.pos.y - d.y, m.pos.z - d.z
@@ -374,11 +358,9 @@ local function door_hud()
                     local title = stage and stage.name or "?"
                     local line, r, g, b
                     if d.state == DOOR_OPEN then
-                        line, r, g, b = "Walk in!", 140, 255, 140
-                    elseif d.state == DOOR_LOCKED then
-                        line, r, g, b = string.format("LOCKED - %d stars (you have %d)", stage.stars, stars), 255, 120, 120
+                        line, r, g, b = "Walk in to explore", 140, 255, 140
                     else
-                        line, r, g, b = "Coming soon", 200, 200, 200
+                        line, r, g, b = "Not open yet", 200, 200, 200
                     end
                     local alpha = math.floor(255 * math.min(1, (DOOR_LABEL_RANGE - dist) / 600))
                     local scale = math.max(0.25, math.min(0.6, 900 / math.max(dist, 1)))
@@ -568,11 +550,10 @@ end
 -- Engineering, which is open from the start); with nothing solo left anywhere it falls back to the first stage
 -- whose next act needs more players.
 function sgl_next_stage()
-    local stars = sgl_total_stars()
     local online = players_online()
     local fallback = nil
     for _, stage in ipairs(SGL_STAGES) do
-        if sgl_stage_ready(stage) and stars >= stage.stars and stage.acts ~= nil then
+        if sgl_stage_ready(stage) and stage.acts ~= nil then
             local flags = sgl_stage_star_flags(stage)
             for k = 1, 6 do
                 if (flags & (1 << (k - 1))) == 0 then
@@ -700,7 +681,7 @@ local function warp_key(key, act)
         djui_chat_message_create("\\#ffa0a0\\[SGL] " .. stage.name .. " is not built yet (levels/" .. stage.slot .. ").")
         return false
     end
-    return warp_to_level(stage.level, 1, act or 1)
+    return warp_to_level(stage.level, 1, act or SGL_FREE_ROAM_ACT)
 end
 
 -- Only the host (or a moderator) can move the whole party.

@@ -100,8 +100,8 @@ test("registry: three Swamp missions on acts 1/2/3 with star ids act-1, acts 4-6
     end
     for act = 4, 6 do
         check(env.sgl_mission_get(LEVEL_BOB, act) == nil, "act " .. act .. " has no mission yet")
-        check(env.sgl_act_is_soon(stage, act) and stage.acts[act]:find("^COMING SOON") ~= nil,
-            "act " .. act .. " is named COMING SOON: " .. tostring(stage.acts[act]))
+        check(env.sgl_act_is_soon(stage, act) and stage.acts[act] == "",
+            "act " .. act .. " is blank for free roam: " .. tostring(stage.acts[act]))
     end
     -- act names use the act-select menu font only (A-Z 0-9 space ' . , - & ! ?)
     for act = 1, 6 do
@@ -415,6 +415,9 @@ test("act 1 without a level-script star: the mission falls back to spawning it",
     at(A, P.climb_goal)
     w:step(5)
     check(state(A) == MS.SUCCESS and #A.starSpawns == 1 and Sim.stars_of(A, 0) == 1, "one spawned star (id 0)")
+    local medal = A.starSpawns[1].star
+    check(medal ~= nil and raw(medal)._model == C.E_MODEL_1UP
+        and raw(medal).header.gfx.scale.x == 3, "mission reward uses the scaled Gator medallion model")
 end)
 
 test("stage without the stadium floor (old placeholder): missions stay offline, no writes, no star", function()

@@ -1052,7 +1052,7 @@ local function kind_cranes(spec)
         restore_operator_camera(ctx)
     end
 
-    -- what crane k needs next -> text for the panel / diagram
+    -- what crane k needs next -> text for the mission panel
     local function task_text(ctx, k, rider)
         local cr = ctx.loc.cranes and ctx.loc.cranes[k]
         if cr == nil then return "" end
@@ -1107,64 +1107,6 @@ local function kind_cranes(spec)
         return lines
     end
 
-    -- side view of crane k's lane (operator and riders), complementing the tracking camera once it
-    -- climbs, so this is their view of it. Bars grey, a locked gap red, "!" boxes yellow, the crane blue,
-    -- riders green (you white), Amps red, the star ledge gold.
-    local function draw_lab(ctx, k)
-        local L = ctx.loc
-        local cr = L.cranes and L.cranes[k]
-        if cr == nil then return end
-        local lane = lanes[k]
-        local lay = layouts(ctx)[k]
-        local W, H = sgl_hud_setup(FONT_NORMAL)
-        local top = ledge.y + 250
-        local sc = math.min(130 / top, 80 / (lane.x1 - lane.x0))      -- about 64 x 130 (clear of the camera icon)
-        local w, h = (lane.x1 - lane.x0) * sc, top * sc
-        local ox, oy = W - w - 12, 46
-        local function px(x) return ox + (x - lane.x0) * sc end
-        local function py(y) return oy + (top - y) * sc end
-        sgl_hud_reserve_right()
-        sgl_hud_rect(ox - 4, oy - 14, w + 8, h + 30, 10, 22, 70, 170)
-        sgl_hud_text("CRANE " .. k, ox, oy - 12, 0.26, SGL_HUD_BLUE, 1)
-        sgl_hud_rect(ox, py(0), w, 1, 160, 160, 170, 220)                                   -- atrium floor
-        sgl_hud_rect(ox, py(ledge.y), w, 2, 255, 215, 0, 230)                               -- star ledge
-        for _, b in ipairs(lay.bars) do
-            local bw = (b.x1 - b.x0) * sc
-            if b.shutter then
-                if not gate_open(ctx, k, b.gate) then
-                    sgl_hud_rect(px(b.x0), py(b.y1), bw, math.max(2, (b.y1 - b.y0) * sc), 255, 70, 50, 220)
-                end
-            else
-                sgl_hud_rect(px(b.x0), py(b.y1), bw, math.max(2, (b.y1 - b.y0) * sc), 190, 190, 200, 230)
-            end
-        end
-        for g = 1, nGates do
-            if not gate_open(ctx, k, g) then
-                local s = sensor_of(lay, g)
-                local bs = math.max(3, BOX * sc)
-                sgl_hud_rect(px(s.x) - bs / 2, py(s.y + BOX), bs, bs, 255, 215, 0, 255)
-            end
-        end
-        for _, a in ipairs(ctx.objs.amps or {}) do
-            if obj_ok(a, id_bhvCirclingAmp) and a.oPosX >= lane.x0 and a.oPosX <= lane.x1 then
-                sgl_hud_rect(px(a.oPosX) - 1.5, py(a.oPosY) - 1.5, 3, 3, 255, 90, 90, 255)
-            end
-        end
-        sgl_hud_rect(px(cr.x - PHX), py(cr.y + PTOP), 2 * PHX * sc, math.max(2, (PTOP + PBOT) * sc), 90, 150, 255, 255)
-        for _, li in ipairs(ctx.players) do
-            local mm = gMarioStates[li]
-            if alive(mm) and mm.pos.x >= lane.x0 and mm.pos.x <= lane.x1 and math.abs(mm.pos.z - spec.planeZ) <= 600
-                and mm.pos.y > spec.yMin then
-                local col = li == 0 and SGL_HUD_WHITE or SGL_HUD_GREEN
-                sgl_hud_rect(px(mm.pos.x) - 1.5, py(mm.pos.y + MARIO_H), 3, math.max(3, MARIO_H * sc), col[1], col[2], col[3], 255)
-            end
-        end
-        local cap = cap_now(ctx)
-        local n = riders_on(ctx, cr)
-        sgl_hud_text(string.format("riders %d/%d", n, cap), ox, oy + h + 3, 0.24, n > cap and SGL_HUD_RED or SGL_HUD_GREY, 1)
-    end
-    K.drawLab = draw_lab
-
     K.hud = function(ctx)
         if ctx.s ~= SGL_MS_ACTIVE then return end
         local L = ctx.loc
@@ -1189,7 +1131,6 @@ local function kind_cranes(spec)
             if L.operating then
                 sgl_hud_marker({ x = cr.x, y = cr.y + PTOP + 40, z = spec.planeZ }, "CRANE " .. k, SGL_HUD_BLUE, nil)
             end
-            draw_lab(ctx, k)
             return
         end
         if on_ledge(m.pos) then return end

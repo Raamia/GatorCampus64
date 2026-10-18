@@ -95,11 +95,11 @@ def validate_npc_data(commit):
     selected = [p for p in paths if p.startswith('tools/npcs/')
                 or (p.startswith('data/uf/') and p.endswith('.json'))
                 or p in {'tools/luatest/check_npc_spots.py', 'tools/luatest/check_minimap_textures.py',
-                         'tools/luatest/check_hub_materials.py'}
+                         'tools/luatest/check_hub_materials.py', 'tools/blender/fix_material_lighting.py'}
                 or p == 'mods/sgl64/levels/castle_grounds/model.inc.c'
                 or p.startswith('mods/sgl64/textures/sgl_minimap_')
                 or (p.startswith('mods/sgl64/') and (p.endswith('.lua') or
-                    p.endswith('/script.c') or p.endswith('/collision.inc.c')))]
+                    p.endswith('/script.c') or p.endswith('/collision.inc.c') or p.endswith('/model.inc.c')))]
     raw = subprocess.check_output(['git', 'archive', commit, '--', *selected], cwd=ROOT)
     with tempfile.TemporaryDirectory(prefix='sgl-navigation-check-') as folder:
         with tarfile.open(fileobj=io.BytesIO(raw)) as source:
@@ -112,13 +112,17 @@ def validate_npc_data(commit):
                 dest = Path(folder) / member.name
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 dest.write_bytes(source.extractfile(member).read())
+        run(['python3', '-I', str(Path(folder) / entry), '--check'])
         texture_check = Path(folder) / 'tools/luatest/check_minimap_textures.py'
         if texture_check.exists():
             run(['python3', '-I', str(texture_check)])
         material_check = Path(folder) / 'tools/luatest/check_hub_materials.py'
         if material_check.exists():
             run(['python3', '-I', str(material_check)])
-        run(['python3', '-I', str(Path(folder) / entry), '--check'])
+        lighting = Path(folder) / 'tools/blender/fix_material_lighting.py'
+        if lighting.exists():
+            levels = sorted((Path(folder) / 'mods/sgl64/levels').glob('*/model.inc.c'))
+            run(['python3', '-I', str(lighting), '--check', *[str(p.parent) for p in levels]])
 
 
 REMOTE = r'''

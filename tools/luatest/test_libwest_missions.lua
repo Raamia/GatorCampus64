@@ -202,8 +202,8 @@ test("registry: three Library West missions on acts 1/2/3, star ids act-1, title
     end
     for act = 4, 6 do
         check(env.sgl_mission_get(BBH, act) == nil, "act " .. act .. " has no mission yet")
-        check(env.sgl_act_is_soon(stage, act) and stage.acts[act]:find("^COMING SOON") ~= nil,
-            "act " .. act .. " is named COMING SOON: " .. tostring(stage.acts[act]))
+        check(env.sgl_act_is_soon(stage, act) and stage.acts[act] == "",
+            "act " .. act .. " is blank for free roam: " .. tostring(stage.acts[act]))
     end
     for act = 1, 6 do
         check(not stage.acts[act]:find("[^A-Z0-9 '%.,%-&!%?]") and #stage.acts[act] <= 28,
@@ -546,7 +546,7 @@ test("act 1: nothing of it in the other acts; a stage that does not match keeps 
     check(#ctx_of(A).objs.boos == 4, "act 2: its 4 stairwell Boos")
     enter(w, A, 4)
     w:step(5)
-    check(Sim.hud_has(A, "COMING SOON %- GHOST HUNT") and #Sim.objects_with(A, env.id_bhvSglLibwestSolid) == 0
+    check(not Sim.hud_has(A, "COMING SOON") and #Sim.objects_with(A, env.id_bhvSglLibwestSolid) == 0
         and #props_with_model(A, C.E_MODEL_BOO) == 0, "act 4: coming soon, free roam, no objects of ours")
     local w2, B = world_with({ "B" }, { floor = Sim.NO_FLOOR })
     for act = 1, 3 do
@@ -1323,7 +1323,7 @@ test("whole mod: every file loads with the Library West missions; /campus libwes
     end
     w:warp(H, BBH, 1, 4)
     w:step(5)
-    check(Sim.hud_has(H, "COMING SOON %- GHOST HUNT"), "act 4: coming soon notice")
+    check(not Sim.hud_has(H, "COMING SOON"), "act 4: coming soon notice")
 end)
 
 print(string.format("\n%d checks passed, %d failed", passed, failed))

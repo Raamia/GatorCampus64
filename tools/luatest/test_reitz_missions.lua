@@ -110,8 +110,8 @@ test("registry: three Reitz missions on acts 1/2/3, star ids act-1, titles = cou
     end
     for act = 4, 6 do
         check(env.sgl_mission_get(WF, act) == nil, "act " .. act .. " has no mission yet")
-        check(env.sgl_act_is_soon(stage, act) and stage.acts[act]:find("^COMING SOON") ~= nil,
-            "act " .. act .. " is named COMING SOON: " .. tostring(stage.acts[act]))
+        check(env.sgl_act_is_soon(stage, act) and stage.acts[act] == "",
+            "act " .. act .. " is blank for free roam: " .. tostring(stage.acts[act]))
     end
     for act = 1, 6 do
         check(not stage.acts[act]:find("[^A-Z0-9 '%.,%-&!%?]") and #stage.acts[act] <= 28,
@@ -766,8 +766,9 @@ test("act 3: locked gates open when the rider jumps into the ! box; narrow gaps;
     w:step(1)
     check(Sim.hud_has(A, "Gate 1 is locked: rider, jump into the ! box"), "bump toast")
     check(cb.loc.riding == 1 and Sim.hud_has(B, "Riding crane 1") and Sim.hud_has(B, "jump into the ! box above"), "B: riding + task")
-    -- the side view for the operator and the rider
-    check(Sim.hud_has(A, "CRANE 1") and Sim.hud_has(A, "riders 1/1"), "A's side view of lane 1 (riders 1/1)")
+    -- the 3D camera and mission panel replace the old 2D lane diagram
+    check(Sim.hud_has(A, "You drive crane 1") and not Sim.hud_has(A, "riders 1/1"),
+        "operator guidance stays visible without the 2D lane diagram")
     -- standing under the box does not open it; blind sideways at the locked gate does not help
     local s = d3(A).sensorOf(L1, 1)
     steer_x(w, A, 1, math.max(d3(A).lanes[1].xMin, math.min(d3(A).lanes[1].xMax, s.x)), { B }, P)
@@ -894,7 +895,7 @@ test("act 3: 3 players = one crane, 2 riders; 4 players = two cranes, a crane li
     hold(w, A, 0, 64, 15, { Cc, D }, 1, P)
     check(cranes(A)[1].y == y0, "2 riders on crane 1 with 4 players: too heavy")
     check(Sim.hud_has(A, "Too heavy! Crane 1 lifts 1 rider"), "toast: too heavy")
-    check(Sim.hud_has(A, "riders 2/1"), "the side view counts the riders")
+    check(not Sim.hud_has(A, "riders 2/1"), "rider count is no longer drawn in the 2D diagram")
     -- D gets off: it rises
     at(D, { x = 2600, y = 0, z = 23000 })
     hold(w, A, 0, 64, 10, { Cc }, 1, P)
@@ -1063,9 +1064,7 @@ test("act 3: D-pad Down into the lab (not while driving); the operator's crane m
     end
     A.project = nil
     check(edge, "CRANE 1 edge label drawn while the crane is off screen")
-    local rects = 0
-    for _, d in ipairs(A.draw) do if d.k == "rect" then rects = rects + 1 end end
-    check(rects >= 15, "the side view draws the lane (" .. rects .. " rects)")
+    check(not Sim.hud_has(A, "riders"), "no crane lane diagram is drawn while operating")
 end)
 
 ---------------------------------------------------------------------------------------------
@@ -1103,7 +1102,7 @@ test("whole mod: /campus reitz 3 starts the co-op lab; invite for act 1; coming-
     -- a coming-soon act
     Sim.cmd(H, "campus", "reitz 4 me")
     w:step(5)
-    check(Sim.hud_has(H, "COMING SOON %- WIND TUNNEL") and ctx_of(H) == nil, "act 4: coming soon, no mission")
+    check(not Sim.hud_has(H, "COMING SOON") and ctx_of(H) == nil, "act 4: coming soon, no mission")
     -- every act renders in every state without errors
     for _, act in ipairs({ 1, 2, 3 }) do
         w:warp(H, WF, 1, act); w:warp(F, WF, 1, act)

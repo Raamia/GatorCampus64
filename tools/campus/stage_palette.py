@@ -42,6 +42,7 @@ GENERATOR_MATERIALS = {
     "facade_service": {"tex": "facade_service.png", "tile_m": 4.0, "color": "#A0583E"},
     "roof_gravel":    {"tex": "roof_gravel.png",    "tile_m": 4.0, "color": "#7C7A76"},
     "door_marker":    {"tex": "door_marker.png",    "tile_m": 1.0, "color": "#FA4616"},
+    "sculpture_yellow": {"tex": "sculpture_yellow.png", "tile_m": 1.0, "color": "#F5C400"},
     # set dressing: UF orange / blue lamp-post banners and tabling-table cloths
     "banner_orange":  {"tex": "banner_orange.png",  "tile_m": 1.0, "color": "#F05A28"},
     "banner_blue":    {"tex": "banner_blue.png",    "tile_m": 1.0, "color": "#1E3A9C"},

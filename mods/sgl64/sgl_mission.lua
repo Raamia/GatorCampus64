@@ -559,6 +559,10 @@ local function star_tick(ctx, o)
     o.oPosX, o.oPosY, o.oPosZ = from.x, from.y, from.z
     local star = spawn_default_star(pos.x, pos.y, pos.z)
     if star ~= nil then
+        -- Keep the native star behavior and reward flags, but show the existing UF gator
+        -- medallion actor in the world instead of the vanilla spinning Mario star.
+        obj_set_model_extended(star, E_MODEL_1UP)
+        obj_scale(star, 3)
         ctx.loc.star = true
         local m = gMarioStates[0]
         local dx, dy, dz = m.pos.x - pos.x, m.pos.y - pos.y, m.pos.z - pos.z
@@ -822,51 +826,7 @@ local function mission_hud()
 end
 
 ---------------------------------------------------------------------------------------------
--- "COMING SOON" acts (course.lua act names, sgl_act_is_soon): a built stage entered in an act that has
--- no mission yet is free roam without a star. Say so on arrival, so nobody waits for a mission that
--- is not there: Pause > EXIT COURSE (or /campus hub) goes back to the hub, no life lost.
----------------------------------------------------------------------------------------------
-SGL_SOON_BANNER_FRAMES = 150     -- 5 s
-SGL_SOON_PANEL_FRAMES = 600      -- 20 s
-local sSoon = nil                 -- { key, age, stage, act } of the current coming-soon visit
-
-function sgl_soon_act()
-    local np = gNetworkPlayers[0]
-    if np.currActNum < 1 or sgl_mission_get(np.currLevelNum, np.currActNum) ~= nil then return nil end
-    local stage = sgl_stage_by_level(np.currLevelNum)
-    if stage == nil or not sgl_stage_ready(stage) or not sgl_act_is_soon(stage, np.currActNum) then return nil end
-    return stage, np.currActNum
-end
-
-local function soon_update()
-    local np = gNetworkPlayers[0]
-    local stage, act = sgl_soon_act()
-    if stage == nil or not np.currAreaSyncValid then
-        sSoon = nil   -- (re)starts once the area has synced, so a new act never shows the old notice
-        return
-    end
-    local key = sgl_instance_key(np)
-    if sSoon == nil or sSoon.key ~= key then
-        sSoon = { key = key, age = 0, stage = stage, act = act }
-        log_to_console("[SGL] " .. stage.name .. " act " .. act .. " has no mission yet (coming soon): free roam")
-    end
-    sSoon.age = sSoon.age + 1
-end
-
-local function soon_hud()
-    local v = sSoon
-    if v == nil or sgl_hud_blocked() then return end
-    if v.age < SGL_SOON_BANNER_FRAMES then
-        sgl_hud_banner(v.stage.name .. " - ACT " .. v.act, sgl_act_name(v.stage, v.act) or "COMING SOON",
-            "No mission here yet - explore! Pause > EXIT COURSE goes back.", v.age, SGL_SOON_BANNER_FRAMES)
-    end
-    if v.age < SGL_SOON_PANEL_FRAMES then
-        sgl_hud_panel({ { "ACT " .. v.act .. ": COMING SOON", SGL_HUD_GOLD, 0.34 },
-            { "Free roam - no star in this act yet", SGL_HUD_GREY, 0.28 },
-            { "Pause > EXIT COURSE: back to campus", SGL_HUD_GREY, 0.28 } })
-    end
-end
-
+-- Free roam has no mission controller or unfinished-act notices.
 ---------------------------------------------------------------------------------------------
 -- leave together: with the host's default "Leave level", only the player who grabs the star leaves.
 -- Everyone else in the act gets 10 s to follow with D-pad Up, which takes the same exit as
@@ -973,12 +933,6 @@ function sgl_party_join(level, act, who)
     end
     if not sgl_stage_ready(stage) then
         chat("\\#ffa0a0\\[SGL] " .. stage.name .. " is not built yet.")
-        return false
-    end
-    local stars = sgl_total_stars()
-    if stars < stage.stars then
-        chat(string.format("\\#ffa0a0\\[SGL] %s is locked: it needs %d stars (you have %d).", stage.name, stage.stars, stars))
-        play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         return false
     end
     local me = gNetworkPlayers[0]
@@ -2025,7 +1979,6 @@ end
 
 ---------------------------------------------------------------------------------------------
 hook_event(HOOK_UPDATE, spawner_update)
-hook_event(HOOK_UPDATE, soon_update)
 hook_event(HOOK_UPDATE, party_update)
 hook_event(HOOK_UPDATE, exit_update)
 hook_event(HOOK_UPDATE, party_locations)
@@ -2035,7 +1988,6 @@ hook_event(HOOK_MARIO_UPDATE, party_mario_update)
 hook_event(HOOK_ON_SYNC_VALID, party_sync_valid)
 hook_event(HOOK_ON_PACKET_RECEIVE, on_packet_receive)
 hook_event(HOOK_ON_HUD_RENDER, mission_hud)
-hook_event(HOOK_ON_HUD_RENDER, soon_hud)
 hook_event(HOOK_ON_HUD_RENDER, party_hud)
 hook_event(HOOK_ON_HUD_RENDER, exit_hud)
 hook_chat_command("mission", "[status|reset|start|list|force] Super Gatorlator 64 mission of this act", on_mission_command)

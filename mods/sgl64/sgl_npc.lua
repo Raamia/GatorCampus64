@@ -460,7 +460,7 @@ local function my_stats()
     if np.currLevelNum == SGL_HUB_LEVEL then
         kv.here = "central campus"
     elseif stage ~= nil then
-        kv.here = stage.name .. " act " .. np.currActNum
+        kv.here = stage.name .. (np.currActNum == SGL_FREE_ROAM_ACT and " (exploring)" or " act " .. np.currActNum)
     end
     local friends = _G.sglFriends
     local pick = gPlayerSyncTable[0].friend
@@ -469,7 +469,6 @@ local function my_stats()
     if go ~= nil then kv.go = go.name .. "|" .. go.building end
     local file = get_current_save_file_num() - 1
     for _, s in ipairs(SGL_STAGES) do
-        if kv.lock == nil and s.stars > stars then kv.lock = s.name .. "|" .. s.building .. "|" .. s.stars end
         if s.acts ~= nil and file >= 0 then kv["s_" .. s.key] = save_file_get_course_star_count(file, s.course - 1) end
     end
     local parts = {}

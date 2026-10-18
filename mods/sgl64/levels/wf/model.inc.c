@@ -1,3 +1,195 @@
+Lights1 wf_dl_sgl_facade_brick_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_brick_red_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_limestone_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_roof_gravel_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_concrete_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_facade_band_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_facade_gothic_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_roof_tile_red_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_facade_service_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_door_wood_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_metal_gray_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_facade_glass_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_banner_orange_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_banner_blue_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_dark_trim_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_door_marker_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_white_trim_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_mulch_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_leaves_oak_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_leaves_oak2_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_parking_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_forest_floor_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_lawn_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_ground_grass_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_brick_dark_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_window_glass_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_copper_green_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_window_dark_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_plaza_brick_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_bark_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_palm_trunk_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_palm_frond_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_path_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_roof_dark_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_grass_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_rock_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_bronze_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_water_layer5_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_road_paint_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_leaves_pine_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_steps_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_pond_bed_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_pond_water_layer5_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_sidewalk_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_crosswalk_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_asphalt_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_treeline_layer4_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
+Lights1 wf_dl_sgl_forest_wall_layer1_area1_lights = gdSPDefLights1(
+	0x8C, 0x8C, 0x8C,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
 Gfx wf_dl_facade_brick_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 wf_dl_facade_brick_rgba16[] = {
 	0xaa, 0x4d, 0xa2, 0x4d, 0xa2, 0x4d, 0x82, 0x8f, 
@@ -993554,6 +993746,7 @@ Gfx wf_dl_reitz_LL_visual_mesh_layer_5_tri_0[] = {
 };
 
 Gfx mat_wf_dl_sgl_facade_brick_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_facade_brick_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -993589,6 +993782,7 @@ Gfx mat_revert_wf_dl_sgl_facade_brick_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_brick_red_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_brick_red_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -993624,6 +993818,7 @@ Gfx mat_revert_wf_dl_sgl_brick_red_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_limestone_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_limestone_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -993659,6 +993854,7 @@ Gfx mat_revert_wf_dl_sgl_limestone_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_roof_gravel_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_roof_gravel_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -993694,6 +993890,7 @@ Gfx mat_revert_wf_dl_sgl_roof_gravel_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_concrete_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_concrete_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -993729,6 +993926,7 @@ Gfx mat_revert_wf_dl_sgl_concrete_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_facade_band_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_facade_band_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -993764,6 +993962,7 @@ Gfx mat_revert_wf_dl_sgl_facade_band_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_facade_gothic_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_facade_gothic_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -993799,6 +993998,7 @@ Gfx mat_revert_wf_dl_sgl_facade_gothic_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_roof_tile_red_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_roof_tile_red_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -993834,6 +994034,7 @@ Gfx mat_revert_wf_dl_sgl_roof_tile_red_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_facade_service_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_facade_service_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -993869,6 +994070,7 @@ Gfx mat_revert_wf_dl_sgl_facade_service_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_door_wood_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_door_wood_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -993904,6 +994106,7 @@ Gfx mat_revert_wf_dl_sgl_door_wood_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_metal_gray_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_metal_gray_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -993939,6 +994142,7 @@ Gfx mat_revert_wf_dl_sgl_metal_gray_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_facade_glass_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_facade_glass_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -993974,6 +994178,7 @@ Gfx mat_revert_wf_dl_sgl_facade_glass_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_banner_orange_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_banner_orange_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994009,6 +994214,7 @@ Gfx mat_revert_wf_dl_sgl_banner_orange_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_banner_blue_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_banner_blue_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994044,6 +994250,7 @@ Gfx mat_revert_wf_dl_sgl_banner_blue_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_dark_trim_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_dark_trim_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994079,6 +994286,7 @@ Gfx mat_revert_wf_dl_sgl_dark_trim_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_door_marker_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_door_marker_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994114,6 +994322,7 @@ Gfx mat_revert_wf_dl_sgl_door_marker_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_white_trim_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_white_trim_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994149,6 +994358,7 @@ Gfx mat_revert_wf_dl_sgl_white_trim_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_mulch_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_mulch_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994184,6 +994394,7 @@ Gfx mat_revert_wf_dl_sgl_mulch_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_leaves_oak_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_leaves_oak_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994219,6 +994430,7 @@ Gfx mat_revert_wf_dl_sgl_leaves_oak_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_leaves_oak2_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_leaves_oak2_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994254,6 +994466,7 @@ Gfx mat_revert_wf_dl_sgl_leaves_oak2_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_parking_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_parking_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994289,6 +994502,7 @@ Gfx mat_revert_wf_dl_sgl_parking_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_forest_floor_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_forest_floor_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994324,6 +994538,7 @@ Gfx mat_revert_wf_dl_sgl_forest_floor_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_lawn_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_lawn_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994359,6 +994574,7 @@ Gfx mat_revert_wf_dl_sgl_lawn_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_ground_grass_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_ground_grass_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994394,6 +994610,7 @@ Gfx mat_revert_wf_dl_sgl_ground_grass_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_brick_dark_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_brick_dark_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994429,6 +994646,7 @@ Gfx mat_revert_wf_dl_sgl_brick_dark_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_window_glass_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_window_glass_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994464,6 +994682,7 @@ Gfx mat_revert_wf_dl_sgl_window_glass_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_copper_green_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_copper_green_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994499,6 +994718,7 @@ Gfx mat_revert_wf_dl_sgl_copper_green_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_window_dark_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_window_dark_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994534,6 +994754,7 @@ Gfx mat_revert_wf_dl_sgl_window_dark_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_plaza_brick_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_plaza_brick_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994569,6 +994790,7 @@ Gfx mat_revert_wf_dl_sgl_plaza_brick_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_bark_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_bark_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994604,6 +994826,7 @@ Gfx mat_revert_wf_dl_sgl_bark_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_palm_trunk_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_palm_trunk_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994639,6 +994862,7 @@ Gfx mat_revert_wf_dl_sgl_palm_trunk_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_palm_frond_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_palm_frond_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994674,6 +994898,7 @@ Gfx mat_revert_wf_dl_sgl_palm_frond_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_path_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_path_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994709,6 +994934,7 @@ Gfx mat_revert_wf_dl_sgl_path_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_roof_dark_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_roof_dark_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994744,6 +994970,7 @@ Gfx mat_revert_wf_dl_sgl_roof_dark_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_grass_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_grass_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994779,6 +995006,7 @@ Gfx mat_revert_wf_dl_sgl_grass_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_rock_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_rock_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994814,6 +995042,7 @@ Gfx mat_revert_wf_dl_sgl_rock_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_bronze_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_bronze_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994849,6 +995078,7 @@ Gfx mat_revert_wf_dl_sgl_bronze_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_water_layer5_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_water_layer5_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_CULL_BACK),
 	gsDPPipeSync(),
@@ -994887,6 +995117,7 @@ Gfx mat_revert_wf_dl_sgl_water_layer5_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_road_paint_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_road_paint_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994922,6 +995153,7 @@ Gfx mat_revert_wf_dl_sgl_road_paint_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_leaves_pine_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_leaves_pine_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994957,6 +995189,7 @@ Gfx mat_revert_wf_dl_sgl_leaves_pine_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_steps_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_steps_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -994992,6 +995225,7 @@ Gfx mat_revert_wf_dl_sgl_steps_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_pond_bed_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_pond_bed_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -995027,6 +995261,7 @@ Gfx mat_revert_wf_dl_sgl_pond_bed_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_pond_water_layer5_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_pond_water_layer5_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_CULL_BACK),
 	gsDPPipeSync(),
@@ -995065,6 +995300,7 @@ Gfx mat_revert_wf_dl_sgl_pond_water_layer5_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_sidewalk_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_sidewalk_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -995100,6 +995336,7 @@ Gfx mat_revert_wf_dl_sgl_sidewalk_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_crosswalk_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_crosswalk_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -995135,6 +995372,7 @@ Gfx mat_revert_wf_dl_sgl_crosswalk_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_asphalt_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_asphalt_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
@@ -995170,6 +995408,7 @@ Gfx mat_revert_wf_dl_sgl_asphalt_layer1_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_treeline_layer4_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_treeline_layer4_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsSPClearGeometryMode(G_CULL_BACK),
 	gsDPPipeSync(),
@@ -995208,6 +995447,7 @@ Gfx mat_revert_wf_dl_sgl_treeline_layer4_area1[] = {
 };
 
 Gfx mat_wf_dl_sgl_forest_wall_layer1_area1[] = {
+	gsSPSetLights1(wf_dl_sgl_forest_wall_layer1_area1_lights),
 	gsSPSetGeometryMode(G_FOG),
 	gsDPPipeSync(),
 	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
