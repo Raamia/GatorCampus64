@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "exclusions": [],
+  "outdoor_regions": {
+    "castle_grounds": {
+      "height_range": [
+        -200,
+        300
+      ],
+      "minimum_links": 100
+    },
+    "bob": {
+      "height_range": [
+        -1100,
+        200
+      ],
+      "minimum_links": 100
+    },
+    "wf": {
+      "height_range": [
+        -200,
+        350
+      ],
+      "minimum_links": 100
+    },
+    "jrb": {
+      "height_range": [
+        -100,
+        200
+      ],
+      "minimum_links": 100
+    }
+  },
+  "coverage_regions": [
+    {
+      "name": "Plaza of the Americas",
+      "slot": "castle_grounds",
+      "area": 1,
+      "bounds": [
+        6000,
+        -13000,
+        15000,
+        -2500
+      ],
+      "minimum_nodes": 4
+    },
+    {
+      "name": "Turlington",
+      "slot": "castle_grounds",
+      "area": 1,
+      "bounds": [
+        2000,
+        7000,
+        14000,
+        17000
+      ],
+      "minimum_nodes": 4
+    },
+    {
+      "name": "Malachowsky Campus Green",
+      "slot": "wf",
+      "area": 1,
+      "bounds": [
+        -1000,
+        19000,
+        11000,
+        23000
+      ],
+      "minimum_nodes": 4
+    }
+  ]
+}

@@ -1,0 +1,331 @@
+{
+  "schema": 1,
+  "spots": {
+    "hub_albert": {
+      "level": "SGL_HUB_LEVEL",
+      "area": 1,
+      "anchor": {
+        "file": "mods/sgl64/levels/castle_grounds/script.c",
+        "spawn": true,
+        "floor_offset": -100
+      },
+      "offset": [
+        480,
+        0,
+        690
+      ],
+      "yaw": -120,
+      "radius": 350,
+      "label": "on the Plaza of the Americas, right by the spawn",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "hub_alberta": {
+      "level": "SGL_HUB_LEVEL",
+      "area": 1,
+      "anchor": {
+        "file": "mods/sgl64/levels/castle_grounds/script.c",
+        "spawn": true,
+        "floor_offset": -100
+      },
+      "offset": [
+        -424,
+        0,
+        -424
+      ],
+      "yaw": 45,
+      "radius": 450,
+      "label": "on the Plaza of the Americas, right by the spawn",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "swamp_kickoff": {
+      "level": "LEVEL_BOB",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/swamp_points.json",
+        "point": "spawn_0x0A"
+      },
+      "offset": [
+        -390,
+        0,
+        -225
+      ],
+      "yaw": 60,
+      "radius": 300,
+      "label": "The Swamp, by the arrival (Kickoff climb)",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "swamp_sprint": {
+      "level": "LEVEL_BOB",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/swamp_points.json",
+        "point": "stair_sprint_00"
+      },
+      "offset": [
+        0,
+        0,
+        800
+      ],
+      "yaw": 180,
+      "radius": 0,
+      "label": "The Swamp, behind the Stair Sprint start box",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "swamp_chorus": {
+      "level": "LEVEL_BOB",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/swamp_points.json",
+        "point": "endzone_corner_NW"
+      },
+      "offset": [
+        -150,
+        0,
+        0
+      ],
+      "yaw": 90,
+      "radius": 0,
+      "label": "The Swamp, by the north-west end-zone button (Chomp Chorus)",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "reitz_rooftop": {
+      "level": "LEVEL_WF",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/reitz_points.json",
+        "point": "rooftop_start_ravine_terrace"
+      },
+      "offset": [
+        -130,
+        0,
+        -75
+      ],
+      "yaw": 60,
+      "radius": 0,
+      "label": "Reitz, on the ravine terrace where the rooftop climb starts",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "reitz_lawn": {
+      "level": "LEVEL_WF",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/reitz_points.json",
+        "point": "spawn_0x0A"
+      },
+      "offset": [
+        -225,
+        0,
+        -390
+      ],
+      "yaw": 30,
+      "radius": 300,
+      "label": "Reitz, on the North Lawn (Meal Swipe Tokens)",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "reitz_lab": {
+      "level": "LEVEL_WF",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/reitz_points.json",
+        "point": "robotics_atrium_entry"
+      },
+      "offset": [
+        63,
+        0,
+        75
+      ],
+      "yaw": -60,
+      "radius": 0,
+      "label": "Reitz, in the Robotics Lab atrium by the consoles",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "alice_boardwalk": {
+      "level": "LEVEL_JRB",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/lake_points.json",
+        "point": "north_boardwalk_mid"
+      },
+      "offset": [
+        260,
+        0,
+        -150
+      ],
+      "yaw": -60,
+      "radius": 0,
+      "label": "Lake Alice, on the north boardwalk (Boardwalk Welcome)",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "alice_deck": {
+      "level": "LEVEL_JRB",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/lake_points.json",
+        "point": "act1_deck_center"
+      },
+      "offset": [
+        141,
+        0,
+        -141
+      ],
+      "yaw": -45,
+      "radius": 0,
+      "label": "Lake Alice, on the deck where the Gator Hop starts",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "alice_census": {
+      "level": "LEVEL_JRB",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/lake_points.json",
+        "point": "census_houses"
+      },
+      "offset": [
+        39,
+        0,
+        -145
+      ],
+      "yaw": -15,
+      "radius": 0,
+      "label": "Lake Alice, by the bat barns' census post",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "alice_field": {
+      "level": "LEVEL_JRB",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/lake_points.json",
+        "point": "spawn_0x0A"
+      },
+      "offset": [
+        -450,
+        0,
+        0
+      ],
+      "yaw": 90,
+      "radius": 300,
+      "label": "Lake Alice, on the bat-house field by the arrival",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "marston_lobby": {
+      "level": "LEVEL_CCM",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/marston_points.json",
+        "point": "grand_stair_bottom"
+      },
+      "offset": [
+        -231,
+        0,
+        -262
+      ],
+      "yaw": -165,
+      "radius": 150,
+      "label": "Marston, in the lobby by the grand stair",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "marston_quiet": {
+      "level": "LEVEL_CCM",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/marston_points.json",
+        "point": "act2_start"
+      },
+      "offset": [
+        -104,
+        0,
+        60
+      ],
+      "yaw": 120,
+      "radius": 0,
+      "label": "Marston, at the 5th-floor stairwell (Lost Textbooks)",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "marston_kiosk": {
+      "level": "LEVEL_CCM",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/marston_points.json",
+        "point": "act3_kiosk_K1"
+      },
+      "offset": [
+        125,
+        0,
+        217
+      ],
+      "yaw": -150,
+      "radius": 0,
+      "label": "Marston, by the 1st-floor booking kiosk outside room L129",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "libwest_lobby": {
+      "level": "LEVEL_BBH",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/libwest_points.json",
+        "point": "spawn_0x0A"
+      },
+      "offset": [
+        -325,
+        0,
+        188
+      ],
+      "yaw": 120,
+      "radius": 0,
+      "label": "Library West, in the lobby by the entrance",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "libwest_desk": {
+      "level": "LEVEL_BBH",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/libwest_points.json",
+        "point": "F6 reading room"
+      },
+      "offset": [
+        116,
+        0,
+        -91
+      ],
+      "yaw": -75,
+      "radius": 0,
+      "label": "Library West, by your 6th-floor desk (Coffee Run)",
+      "search_radius": 300,
+      "height_tolerance": 25
+    },
+    "libwest_circ": {
+      "level": "LEVEL_BBH",
+      "area": 1,
+      "anchor": {
+        "file": "data/uf/libwest_points.json",
+        "point": "act2_seeker_start"
+      },
+      "offset": [
+        116,
+        0,
+        31
+      ],
+      "yaw": -105,
+      "radius": 0,
+      "label": "Library West, by the 2nd-floor circulation desk (Hide & Seek)",
+      "search_radius": 300,
+      "height_tolerance": 25
+    }
+  }
+}

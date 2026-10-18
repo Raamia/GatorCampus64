@@ -345,18 +345,23 @@ local function crowd_loop(o)
             end
         end
     end
-    -- Static paths are validated offline. Recheck a short look-ahead indoors so
-    -- a moving mission prop or closed door can stop a walker between updates.
-    if sRoute.indoor and (o.oTimer + s.index) % 6 == 0 then
-        local a, b = sNodes[s.a], sNodes[s.b]
-        local t = math.min(s.len, s.pos + 80) / s.len
-        local tx, tz = a[1] + (b[1] - a[1]) * t, a[3] + (b[3] - a[3]) * t
-        local hit = collision_find_surface_on_ray(o.oPosX, o.oPosY + 100, o.oPosZ,
-            tx - o.oPosX, 0, tz - o.oPosZ)
-        if hit ~= nil and hit.surface ~= nil then s.pause = math.max(s.pause, 15) end
-    end
+    local previous = { a = s.a, b = s.b, pos = s.pos, len = s.len, side = s.side }
     advance(s, 1)
     local x, y, z, yaw = place_of(s)
+    local floor = sgl_npc_safe_step(o.oPosX, o.oPosY, o.oPosZ, x, z, 35, 190)
+    if floor == nil then
+        for key, value in pairs(previous) do s[key] = value end
+        s.blocked = (s.blocked or 0) + 1
+        if s.blocked >= 10 or sgl_npc_safe_position(o.oPosX, o.oPosY, o.oPosZ, 35, 190) == nil then
+            despawn(s)
+            return
+        end
+        s.pause = math.max(s.pause, 15)
+        x, y, z = o.oPosX, o.oPosY, o.oPosZ
+    else
+        if s.pause == 0 then s.blocked = 0 end
+        y = floor
+    end
     o.oPosX, o.oPosY, o.oPosZ = x, y, z
     if s.pause > 0 then
         -- stopped: look at a player close by, else keep facing the way
@@ -412,11 +417,15 @@ local function reconcile(quota, spawn)
             if not placed and sArrivalFrames > 0 then placed = place_ambient(s, A.near, A.far, false) end
             if placed then
                 local x, y, z, yaw = place_of(s)
-                s.obj = spawn_non_sync_object(id_bhvSglCrowd, s.model, x, y, z, function(obj)
-                    obj.oBehParams = k
-                    obj.oFaceAngleYaw = yaw
-                    obj.oMoveAngleYaw = yaw
-                end)
+                local floor = sgl_npc_safe_position(x, y, z, 35, 190)
+                if floor ~= nil then
+                    s.blocked = 0
+                    s.obj = spawn_non_sync_object(id_bhvSglCrowd, s.model, x, floor, z, function(obj)
+                        obj.oBehParams = k
+                        obj.oFaceAngleYaw = yaw
+                        obj.oMoveAngleYaw = yaw
+                    end)
+                end
             end
         end
     end
