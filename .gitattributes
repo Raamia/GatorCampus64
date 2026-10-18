@@ -10,3 +10,4 @@ mods/sgl64/actors/** linguist-generated=true
 
 # Campus crowd walking routes (tools/npcs/campus_routes.py)
 mods/sgl64/sgl_campus_npc_routes.lua linguist-generated=true
+mods/sgl64/sgl_campus_npc_areas.lua linguist-generated=true
