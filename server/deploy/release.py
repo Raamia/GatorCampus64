@@ -94,7 +94,10 @@ def validate_npc_data(commit):
         return  # Legacy releases predate generated placement data; rollback is separate.
     selected = [p for p in paths if p.startswith('tools/npcs/')
                 or (p.startswith('data/uf/') and p.endswith('.json'))
-                or p == 'tools/luatest/check_npc_spots.py'
+                or p in {'tools/luatest/check_npc_spots.py', 'tools/luatest/check_minimap_textures.py',
+                         'tools/luatest/check_hub_materials.py'}
+                or p == 'mods/sgl64/levels/castle_grounds/model.inc.c'
+                or p.startswith('mods/sgl64/textures/sgl_minimap_')
                 or (p.startswith('mods/sgl64/') and (p.endswith('.lua') or
                     p.endswith('/script.c') or p.endswith('/collision.inc.c')))]
     raw = subprocess.check_output(['git', 'archive', commit, '--', *selected], cwd=ROOT)
@@ -109,6 +112,12 @@ def validate_npc_data(commit):
                 dest = Path(folder) / member.name
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 dest.write_bytes(source.extractfile(member).read())
+        texture_check = Path(folder) / 'tools/luatest/check_minimap_textures.py'
+        if texture_check.exists():
+            run(['python3', '-I', str(texture_check)])
+        material_check = Path(folder) / 'tools/luatest/check_hub_materials.py'
+        if material_check.exists():
+            run(['python3', '-I', str(material_check)])
         run(['python3', '-I', str(Path(folder) / entry), '--check'])
 
 

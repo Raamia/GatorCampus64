@@ -2,8 +2,9 @@
 
 The NPCs answer game questions from the guide without asking an AI, so a stale guide gives wrong answers.
 For every stage: its door entry (<key>-door, Century Tower: century-tower) names the door's building and its star
-requirement ("N stars", or "open from the start" for 0), the "stages" overview lists it with the same count, and
-every playable act (not COMING SOON) is covered by some entry. Also: the guide parses and its placeholders are known.
+requirement ("N stars", or "open from the start" / "no star requirement" for 0). The "stages" overview lists
+it with the same count, and every playable act (not COMING SOON) is covered by some entry. Also: the guide
+parses and its placeholders are known.
 Usage (from anywhere): python3 -I tools/luatest/check_game_guide.py   (exit 1 on a mismatch)
 """
 import os
@@ -57,9 +58,9 @@ def main():
         text = norm(" ".join([e.title, " ".join(e.asks), e.answer]))
         if norm(st["building"]) not in text and norm(st["building"].replace("SCIENCE LIBRARY", "")) not in text:
             bad.append("%s: entry %s does not name the %s door" % (st["name"], eid, st["building"]))
-        need = "open from the start" if st["stars"] == 0 else "%d stars" % st["stars"]
-        if need not in e.answer.lower():
-            bad.append("%s: entry %s should say %r (course.lua)" % (st["name"], eid, need))
+        needs = ("open from the start", "no star requirement") if st["stars"] == 0 else ("%d stars" % st["stars"],)
+        if not any(need in e.answer.lower() for need in needs):
+            bad.append("%s: entry %s should say %s (course.lua)" % (st["name"], eid, " or ".join(map(repr, needs))))
         if overview is not None:
             ov = norm(overview.answer)
             if norm(st["name"]) not in ov:

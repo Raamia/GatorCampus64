@@ -7,6 +7,8 @@ Every feature here uses APIs in the v1.5.1 Lua docs (`docs/lua/*.md` at tag `v1.
 
 ---
 
+> **Historical entry thresholds:** the star-gate tables and walkthroughs in this original design are superseded. Every currently built stage is open with 0 stars; unbuilt stages remain coming soon. Use `docs/flow.md` for the current entry contract. Act and mission progression are separate.
+
 ## 0. TL;DR
 
 - **The pitch:** You and up to 15 friends (realistically 2-6) play as each other on the real University of Florida campus, built at true 1:1 scale. The center of campus is the "castle". Building doors lead into stages instead of paintings. Stars are shared by everyone. "The Final Exam" waits on top of Century Tower.
@@ -222,7 +224,7 @@ Spawn at the center of the Plaza of the Americas, facing south toward Century To
 - **Star collected:** the shared count goes up, and every client shows "Daniel got a star! (13★)". Bells chime in the hub.
 - **Default "Stay in level":** the group keeps playing the same act or opens the pause menu. Leaving through the door returns you to that stage's door in the hub (`0x2n`).
 
-### 3.6 Unlock thresholds
+### 3.6 Unlock thresholds (historical, superseded)
 
 | Stars | Unlocks |
 |---|---|

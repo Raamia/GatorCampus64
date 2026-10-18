@@ -158,8 +158,8 @@ test("registry: four Lake Alice missions on acts 1-4, star ids act-1, titles = c
     check(d3 and d3.id == "lake_bat_census" and d3.starId == 2 and d3.minPlayers == 2, "act 3 bat census, star 2, 2+ players")
     check(d4 and d4.id == "lake_regatta" and d4.starId == 3 and d4.minPlayers == 1, "act 4 gator regatta, star 3, solo")
     local stage = env.sgl_stage_by_level(JRB)
-    check(stage ~= nil and stage.key == "alice" and stage.door == 3 and stage.stars == 5 and stage.course == C.COURSE_JRB
-        and stage.acts ~= nil, "course.lua: door 3 = LAKE ALICE (5 stars, COURSE_JRB) with act names")
+    check(stage ~= nil and stage.key == "alice" and stage.door == 3 and stage.stars == 0 and stage.course == C.COURSE_JRB
+        and stage.acts ~= nil, "course.lua: door 3 = LAKE ALICE (zero stars, COURSE_JRB) with act names")
     for _, d in ipairs({ d1, d2, d3, d4 }) do
         check((d.bparams >> 24) == d.starId, d.id .. " bparams carry the star id")
         check(stage.acts[d.act] == d.title, d.id .. " title matches course.lua act " .. d.act .. " (" .. tostring(stage.acts[d.act]) .. ")")

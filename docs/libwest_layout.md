@@ -1,6 +1,6 @@
 # Library West After Dark: interior layout (Course 5)
 
-Status: layout research. Input for the Course 5 stage build (slot `bbh`, `LEVEL_BBH`, door 5, 11 stars since the star curve, docs/flow.md §11) and for the Course 5 mission author. `levels/bbh` is built from it (`tools/campus/interiors/libwest.py`, docs/flow.md §9.5).
+Status: layout research. Input for the Course 5 stage build (slot `bbh`, `LEVEL_BBH`, door 5, open from the start with 0 stars, docs/flow.md §2) and for the Course 5 mission author. `levels/bbh` is built from it (`tools/campus/interiors/libwest.py`, docs/flow.md §9.5).
 
 Files:
 

@@ -17,8 +17,7 @@ Every entry is a `###` heading (a sample question) followed by these lines:
 
 Live values, filled in from the game when the player asks:
 `{player}` name, `{stars}` team stars, `{lives}`, `{coins}` (this visit), `{here}` where they are,
-`{character}` their friend character, `{players}` players online, `{next_hint}` which door opens next and how
-many more stars it needs, `{stage_stars}` stars per stage, `{stage_stars:KEY}` one stage
+`{character}` their friend character, `{players}` players online, `{next_hint}` the suggested next stage, `{stage_stars}` stars per stage, `{stage_stars:KEY}` one stage
 (KEY = swamp, reitz, alice, marston, libwest), `{albert_at}` / `{alberta_at}` where each mascot is right now.
 
 Questions nobody could answer well land in tools/npc_bridge/unanswered.log: turn them into new entries here.
@@ -28,7 +27,7 @@ Questions nobody could answer well land in tools/npc_bridge/unanswered.log: turn
 ### What is Super Gatorlator 64?
 id: about
 ask: what is this game, what is super gatorlator, tell me about the game, what game is this, about this game, what is this, explain the game, whats the point of the game
-answer: Super Gatorlator 64 is the real University of Florida campus, at true scale, inside Super Mario 64, with online co-op and your friends as playable characters. Explore campus, walk into building doors to enter stages, and collect stars to open more of them. Go Gators!
+answer: Super Gatorlator 64 is the real University of Florida campus, at true scale, inside Super Mario 64, with online co-op and your friends as playable characters. Explore campus, enter any built stage with 0 stars, and collect stars to progress through its acts. Go Gators!
 
 ### What does the game have to offer?
 id: offer
@@ -38,7 +37,7 @@ answer: Five stages behind real campus doors (The Swamp, Reitz Union & Engineeri
 ### Which stages are there?
 id: stages
 ask: list the stages, what stages are there, how many levels, which levels, what courses, all the stages, levels list, worlds in the game
-answer: Five stages so far: 1 THE SWAMP (University Auditorium door, open from the start), 2 REITZ & ENGINEERING (The Hub, 2 stars), 3 LAKE ALICE (Newell Hall, 5 stars), 4 MARSTON LIBRARY (Marston Science Library, 8 stars) and 5 LIBRARY WEST AFTER DARK (Library West, 11 stars). CENTURY TOWER (14 stars) is coming soon.
+answer: Five stages are open from the start with 0 stars: THE SWAMP (University Auditorium door), REITZ & ENGINEERING (The Hub), LAKE ALICE (Newell Hall), MARSTON LIBRARY (Marston Science Library) and LIBRARY WEST AFTER DARK (Library West). CENTURY TOWER has no star requirement but is still coming soon until its stage is built.
 
 ### Where should I go next?
 id: next
@@ -48,7 +47,7 @@ answer: {next_hint} Your stars: {stars}. In the hub, a NEXT panel and a gold mar
 ### What are stars and how do I get them?
 id: stars-what
 ask: what are stars, how do i get stars, how to earn stars, collect stars, what do stars do, why stars, star count
-answer: Stars open the stage doors around campus. You earn one by finishing a mission (each stage has acts 1 to 3) or by collecting 100 coins in one visit to a stage. After the star dance you land back outside that stage's door with the star counted for everyone.
+answer: Stars record mission progress and advance act selection within each stage; stage doors have no star requirement. You earn one by finishing a mission or collecting 100 coins in one visit to a stage. After the star dance you land back outside that stage's door with the star counted for everyone.
 
 ## Your stats
 
@@ -97,27 +96,27 @@ answer: {player}: {stars} stars, {lives} lives, {coins} coins, playing as {chara
 ### What is the hub?
 id: hub
 ask: what is the hub, central campus, the campus, plaza of the americas, where do i spawn, spawn, castle, starting area, home base
-answer: The hub is UF's central campus, built from real map data at full size. You spawn on the Plaza of the Americas facing south toward the University Auditorium. Every stage is behind a real building door, and signposts by each door say how many stars it needs.
+answer: The hub is UF's central campus, built from real map data at full size. You spawn on the Plaza of the Americas facing south toward the University Auditorium. Every built stage is open from the start with 0 stars; signposts identify each destination and whether it is coming soon.
 
 ### Where are the stage doors?
 id: doors
 ask: where are the doors, door locations, which doors, how do i enter a stage, how to get into a level, building doors, entrances, find the doors
-answer: University Auditorium (THE SWAMP, about 80 m south of the spawn, open from the start); The Hub's south entrance (REITZ & ENGINEERING, about 325 m south-west, 2 stars); Newell Hall's east entry (LAKE ALICE, about 225 m west-south-west, 5 stars); Marston's north wing door (MARSTON, about 230 m south-south-west, 8 stars); Library West's revolving door (about 115 m north, 11 stars).
+answer: University Auditorium (THE SWAMP, about 80 m south of the spawn); The Hub's south entrance (REITZ & ENGINEERING, about 325 m south-west); Newell Hall's east entry (LAKE ALICE, about 225 m west-south-west); Marston's north wing door (MARSTON, about 230 m south-south-west); Library West's revolving door (about 115 m north). All five are open from the start with 0 stars.
 
 ### Why is this door locked?
 id: locked-door
 ask: door is locked, locked door, why cant i go in, cant enter, door wont open, red flames, see through star, it says locked, how to unlock a door, unlock
-answer: A locked door shows a see-through star, red flames and "LOCKED - N stars". Walk in and it buzzes and says how many it needs. Collect more stars and it opens with a gold star and "Walk in!". {next_hint}
+answer: Built stage doors are open from the start with 0 stars: look for a gold star and "Walk in!". A see-through star, red flames and "Coming soon" mean that stage is not built or did not load. More stars will not open it. Try another built stage or ask the host to check the installation.
 
 ### What is Century Tower?
 id: century-tower
-ask: century tower, the tower, bell tower, tower door, 14 stars, carillon
-answer: Century Tower is campus's famous bell tower, about 145 m south-south-west of the spawn, behind the Auditorium. Its stage is coming soon (it opens at 14 stars). For now its door shows "CENTURY TOWER / Coming soon" and buzzes.
+ask: century tower, the tower, bell tower, tower door, carillon
+answer: Century Tower is campus's famous bell tower, about 145 m south-south-west of the spawn, behind the Auditorium. It has no star requirement, but its stage is still coming soon. For now its door shows "CENTURY TOWER / Coming soon" and buzzes; collecting stars will not open an unbuilt stage.
 
 ### What are the Smathers and Final Exam doors?
 id: future-doors
-ask: smathers library, smathers stacks slide, final exam door, finals week ascent, 30 stars, secret door, other doors, bonus
-answer: Two more signposts tease future content: the SMATHERS STACKS SLIDE at Smathers Library (3 stars) and the FINALS WEEK ASCENT behind the Final Exam Door (30 stars). Both are coming soon.
+ask: smathers library, smathers stacks slide, final exam door, finals week ascent, secret door, other doors, bonus
+answer: Two more signposts tease future content: the SMATHERS STACKS SLIDE at Smathers Library and the FINALS WEEK ASCENT behind the Final Exam Door. Both are coming soon, with no star requirement; they stay unavailable until built.
 
 ### What happens when I die?
 id: death
@@ -166,12 +165,12 @@ id: swamp-pool
 ask: florida pool, swimming pool, drown in the swamp, water in the swamp, pool
 answer: The Florida Pool is east of the stadium. Drowning there throws you out of the Auditorium door with one life fewer.
 
-## Reitz Union & Engineering (course 2, The Hub door, 2 stars)
+## Reitz Union & Engineering (course 2, The Hub door, open from the start with 0 stars)
 
 ### How do I get into Reitz & Engineering?
 id: reitz-door
-ask: reitz door, get into reitz, the hub door, reitz union, engineering, course 2, second stage, where is reitz, how to unlock reitz, 2 stars
-answer: Walk about 325 m south-west of the Plaza to The Hub's south entrance. It opens at 2 stars (finish The Swamp's acts 1 and 2). You arrive on the Reitz Union's North Lawn.
+ask: reitz door, get into reitz, the hub door, reitz union, engineering, course 2, second stage, where is reitz, how to unlock reitz
+answer: Walk about 325 m south-west of the Plaza to The Hub's south entrance. It is open from the start with 0 stars, with no need to finish The Swamp first. You arrive on the Reitz Union's North Lawn.
 
 ### How do I do Rooftop of the Reitz?
 id: reitz-act1
@@ -203,12 +202,12 @@ id: reitz-secrets
 ask: reitz secrets, reitz 1up, 1 up in reitz, malachowsky, weil hall, secrets in reitz
 answer: Climb Malachowsky Hall's glass stair to its penthouse (a 1-up), run Weil Hall's roof to the tower deck (another 1-up), and inside the Reitz Union check the top of the UF letters, the Swamp Boss gator head under the stair, the pool tables and the arcade cabinets.
 
-## Lake Alice (course 3, Newell Hall door, 5 stars)
+## Lake Alice (course 3, Newell Hall door, open from the start with 0 stars)
 
 ### How do I get into Lake Alice?
 id: alice-door
-ask: lake alice door, get into lake alice, newell hall, course 3, third stage, where is lake alice, how to unlock lake alice, 5 stars
-answer: Walk about 225 m west-south-west of the Plaza to Newell Hall's east entry, at the top of a short stoop. It opens at 5 stars. You arrive on the bat-house field above the lake.
+ask: lake alice door, get into lake alice, newell hall, course 3, third stage, where is lake alice, how to unlock lake alice
+answer: Walk about 225 m west-south-west of the Plaza to Newell Hall's east entry, at the top of a short stoop. It is open from the start with 0 stars. You arrive on the bat-house field above the lake.
 
 ### How do I do Boardwalk Welcome?
 id: alice-act1
@@ -235,12 +234,12 @@ id: alice-secrets
 ask: lake alice secrets, basking alligators, alligator statues, bat barn, 1 up at lake alice, deep hole, baughman center, footbridge
 answer: Spot the six basking alligator statues (you can stand on their backs), dive into the deep holes (coin rings, and a 1-up at the bottom of the deepest, south of the small bog), climb a bat-cam pole onto a barn roof (a 1-up in the brown barn's side box) and walk the Baughman Center's footbridge.
 
-## Marston Science Library (course 4, Marston door, 8 stars)
+## Marston Science Library (course 4, Marston door, open from the start with 0 stars)
 
 ### How do I get into Marston?
 id: marston-door
-ask: marston door, get into marston, marston science library, course 4, fourth stage, where is marston, how to unlock marston, 8 stars, library
-answer: Walk about 230 m south-south-west of the Plaza to Marston's north wing door. It opens at 8 stars. Inside is the real five-floor library; you start in the lobby by the HELP DESK.
+ask: marston door, get into marston, marston science library, course 4, fourth stage, where is marston, how to unlock marston, library
+answer: Walk about 230 m south-south-west of the Plaza to Marston's north wing door. It is open from the start with 0 stars. Inside is the real five-floor library; you start in the lobby by the HELP DESK.
 
 ### How do I do Out-of-Order Elevator?
 id: marston-act1
@@ -262,12 +261,12 @@ id: marston-secrets
 ask: marston secrets, book chute, chandelier, marston roof, 1 up in marston, basement, fish tank
 answer: Ride the book chute down to the basement and jump into the vent duct (a 1-up), climb the north-east stair hall to the roof and the tower top (a 1-up), drop from the 5th floor onto the atrium chandelier ring (another 1-up), and climb the bookshelf ranges across the book-cart bridges.
 
-## Library West After Dark (course 5, Library West door, 11 stars)
+## Library West After Dark (course 5, Library West door, open from the start with 0 stars)
 
 ### How do I get into Library West?
 id: libwest-door
-ask: library west door, get into library west, library west after dark, course 5, fifth stage, where is library west, how to unlock library west, 11 stars, revolving door
-answer: Walk about 115 m north of the Plaza to Library West's revolving door. It opens at 11 stars. Inside it's night: six floors of stacks, desk lamps and sleepy UCF Knight ghosts.
+ask: library west door, get into library west, library west after dark, course 5, fifth stage, where is library west, how to unlock library west, revolving door
+answer: Walk about 115 m north of the Plaza to Library West's revolving door. It is open from the start with 0 stars. Inside it's night: six floors of stacks, desk lamps and sleepy UCF Knight ghosts.
 
 ### How do I do the All-Nighter?
 id: libwest-act1

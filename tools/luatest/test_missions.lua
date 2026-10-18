@@ -536,7 +536,7 @@ end)
 ---------------------------------------------------------------------------------------------
 -- Study Group
 ---------------------------------------------------------------------------------------------
-test("study group: invite popup, D-pad Up joins, /join <name>, no spam, lock check", function()
+test("study group: invite popup, D-pad Up joins, /join <name>, no spam, zero-star join, unbuilt-stage refusal", function()
     local w, H, A, B = world_with({ "Host", "A", "B" })
     enter(w, A, 3)
     w:step(4)
@@ -562,8 +562,7 @@ test("study group: invite popup, D-pad Up joins, /join <name>, no spam, lock che
     w:warp(A, HUB, 1, 0); w:step(3)
     enter(w, A, 3); w:step(4)
     check(invites(H) == hPopups, "A re-entering within a minute: no invite spam (cooldown)")
-    -- lock: a built stage needing more stars than the save has (with a real act 1: "coming soon"
-    -- acts send no invites)
+    -- A built stage can be joined on a fresh save (with a real act 1: "coming soon" acts send no invites).
     w.built[C.LEVEL_WF] = true
     for _, c in ipairs({ H, A, B }) do c.env.sgl_stage_by_level(C.LEVEL_WF).acts = { "REITZ TEST ACT" } end
     w:warp(A, C.LEVEL_WF, 1, 1)
@@ -573,11 +572,15 @@ test("study group: invite popup, D-pad Up joins, /join <name>, no spam, lock che
     w:seconds(10.5)
     check(not Sim.hud_has(B, "D%-pad Up: join A"), "prompt gone after 10 s")
     Sim.cmd(B, "join", "")
-    check(B.level == HUB, "locked stage refused")
-    check(Sim.find(B.chat, "locked: it needs 2 stars") ~= nil, "lock message")
-    w.stars = 2
+    check(w.stars == 0, "save still has zero stars")
+    check(B.level == C.LEVEL_WF and B.act == 1, "joins a built stage with zero stars")
+    check(Sim.find(B.chat, "locked: it needs") == nil, "join has no star-lock message")
+    w:warp(B, HUB, 1, 0)
+    w.built[C.LEVEL_WF] = false
+    w:step(3)
     Sim.cmd(B, "join", "")
-    check(B.level == C.LEVEL_WF and B.act == 1, "joins once the save has the stars")
+    check(B.level == HUB, "unbuilt stage refused")
+    check(Sim.find(B.chat, "REITZ & ENGINEERING is not built yet") ~= nil, "unbuilt-stage message")
     -- an unknown name
     Sim.cmd(H, "join", "zed")
     check(Sim.find(H.chat, "No player named 'zed'") ~= nil, "unknown name")

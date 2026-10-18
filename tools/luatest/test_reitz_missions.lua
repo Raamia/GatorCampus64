@@ -98,8 +98,8 @@ test("registry: three Reitz missions on acts 1/2/3, star ids act-1, titles = cou
     check(d2 and d2.id == "reitz_tokens" and d2.starId == 1 and d2.minPlayers == 1, "act 2 tokens, star 1, solo")
     check(d3 and d3.id == "reitz_robotics" and d3.starId == 2 and d3.minPlayers == 2, "act 3 robotics, star 2, 2+ players")
     local stage = env.sgl_stage_by_level(WF)
-    check(stage ~= nil and stage.key == "reitz" and stage.door == 2 and stage.stars == 2 and stage.acts ~= nil,
-        "course.lua: door 2 = REITZ & ENGINEERING (2 stars) with act names")
+    check(stage ~= nil and stage.key == "reitz" and stage.door == 2 and stage.stars == 0 and stage.acts ~= nil,
+        "course.lua: door 2 = REITZ & ENGINEERING (zero stars) with act names")
     for _, d in ipairs({ d1, d2, d3 }) do
         check((d.bparams >> 24) == d.starId, d.id .. " bparams carry the star id")
         check(stage.acts[d.act] == d.title, d.id .. " title matches course.lua act " .. d.act .. " (" .. tostring(stage.acts[d.act]) .. ")")
@@ -1072,13 +1072,13 @@ end)
 -- whole mod: /campus, Study Group invite, coming soon, HUD
 ---------------------------------------------------------------------------------------------
 test("whole mod: /campus reitz 3 starts the co-op lab; invite for act 1; coming-soon act 4; every HUD state renders", function()
-    local w = Sim.new({ files = Sim.ALL_FILES, built = { [HUB] = true, [C.LEVEL_BOB] = true, [WF] = true }, stars = 2 })
+    local w = Sim.new({ files = Sim.ALL_FILES, built = { [HUB] = true, [C.LEVEL_BOB] = true, [WF] = true }, stars = 0 })
     local H, F = install_stick(w:connect("Host")), install_stick(w:connect("Friend"))
     H.strStorage.friend = "josh"; F.strStorage.friend = "anh"
     w:step(3)
     w:warp(H, HUB, 1, 0); w:warp(F, HUB, 1, 0)
     w:step(40)
-    -- door 2 is open with 2 stars
+    -- a fresh save can join Reitz without a star requirement
     w:warp(H, WF, 1, 1)
     w:step(5)
     check(Sim.find(F.popups, "Host.-started REITZ & ENGINEERING act 1: ROOFTOP OF THE REITZ") ~= nil, "Study Group invite")
@@ -1119,7 +1119,7 @@ end)
 -- whole mod: the interior rom-hack camera in wf area 2 only (levels.lua SGL_STAGE_CAMERA[LEVEL_WF].area)
 ---------------------------------------------------------------------------------------------
 test("whole mod: the Reitz Union interior (wf area 2) gets the interior camera; area 1 keeps the player's own", function()
-    local w = Sim.new({ files = Sim.ALL_FILES, built = { [HUB] = true, [C.LEVEL_BOB] = true, [WF] = true }, stars = 2 })
+    local w = Sim.new({ files = Sim.ALL_FILES, built = { [HUB] = true, [C.LEVEL_BOB] = true, [WF] = true }, stars = 0 })
     local H = install_stick(w:connect("Host"))
     local FIELDS = { { "zoomed_in_dist", "inDist" }, { "zoomed_out_dist", "outDist" }, { "zoomed_in_height", "inHeight" },
         { "zoomed_out_height", "outHeight" }, { "collisions", "collisions" } }

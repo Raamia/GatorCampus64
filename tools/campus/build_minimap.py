@@ -6,6 +6,8 @@ individual data/uf/*_layout.json files. These maps show plans, not navigation me
 """
 import json
 import re
+import subprocess
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw
@@ -130,3 +132,9 @@ print(f'Generated {len(records)} minimap textures and {len(doors)} campus destin
 arrow = Image.new('RGBA', (32, 32), (0, 0, 0, 0))
 ImageDraw.Draw(arrow).polygon([(16, 2), (28, 28), (16, 23), (4, 28)], fill=(214, 240, 255, 255), outline=(5, 12, 21, 255), width=3)
 arrow.save(OUT / 'textures/sgl_minimap_player.png')
+
+# coopdx sends .tex containers to clients, not source PNGs. Ship these explicitly:
+# production may skip automatic PNG conversion when other compiled textures exist.
+for name in [row['texture'] for row in records] + ['sgl_minimap_player']:
+    subprocess.run([sys.executable, str(ROOT / 'tools/texture_to_tex.py'),
+                    str(OUT / 'textures' / (name + '.png'))], check=True)

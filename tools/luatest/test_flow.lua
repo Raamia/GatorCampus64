@@ -53,11 +53,11 @@ local BBH_SCRIPT = Sim.level_script("bbh")    -- nil until course 5 is built
 -- the contract table of docs/flow.md section 2 (door -> slot, level, stars to open)
 local CONTRACT = {
     { door = 1, slot = "bob", level = "LEVEL_BOB", stars = 0 },
-    { door = 2, slot = "wf", level = "LEVEL_WF", stars = 2 },
-    { door = 3, slot = "jrb", level = "LEVEL_JRB", stars = 5 },
-    { door = 4, slot = "ccm", level = "LEVEL_CCM", stars = 8 },
-    { door = 5, slot = "bbh", level = "LEVEL_BBH", stars = 11 },
-    { door = 6, slot = "ttc", level = "LEVEL_TTC", stars = 14 },
+    { door = 2, slot = "wf", level = "LEVEL_WF", stars = 0 },
+    { door = 3, slot = "jrb", level = "LEVEL_JRB", stars = 0 },
+    { door = 4, slot = "ccm", level = "LEVEL_CCM", stars = 0 },
+    { door = 5, slot = "bbh", level = "LEVEL_BBH", stars = 0 },
+    { door = 6, slot = "ttc", level = "LEVEL_TTC", stars = 0 },
 }
 
 local function full_world(opts)
@@ -306,33 +306,30 @@ test("single player: hub -> character select -> door -> act 1 -> star -> back ou
     end
     check(portraitDrawn and coinDrawn, "chosen friend portrait and gator coin replace the HUD icons")
 
-    -- doors: 6 objects from the hub script; with 0 stars only The Swamp's opens (Reitz is built but locked)
+    -- doors: every built stage opens with 0 stars; unbuilt stages still stay closed
     local doors = Sim.objects_with(H, env.id_bhvSglDoor)
     check(#doors == 6, "six hub doors")
     local models = {}
     for _, o in ipairs(doors) do models[(raw(o).oBehParams >> 24) & 0xFF] = raw(o)._model end
-    check(models[1] == C.E_MODEL_STAR, "Auditorium door: gold star (open)")
-    check(models[5] == C.E_MODEL_TRANSPARENT_STAR and models[2] == C.E_MODEL_TRANSPARENT_STAR, "locked / unbuilt stages: see-through star")
+    local closedDoors = 0
+    for _, stage in ipairs(env.SGL_STAGES) do
+        local built = env.sgl_stage_ready(stage)
+        check(models[stage.door] == (built and C.E_MODEL_STAR or C.E_MODEL_TRANSPARENT_STAR),
+            stage.name .. ": open at zero stars only when built")
+        if not built then closedDoors = closedDoors + 1 end
+    end
     local flames = Sim.objects_with(H, env.id_bhvSglDoorFx)
     local shown = 0
     for _, f in ipairs(flames) do
         if (raw(f).header.gfx.node.flags & C.GRAPH_RENDER_INVISIBLE) == 0 then shown = shown + 1 end
     end
-    check(#flames == 12 and shown == 10, "two flames per door, hidden only at the open door (" .. shown .. " shown)")
-
-    -- Library West: built (Course 5) and LOCKED at 0 stars (coming soon while levels/bbh is not built)
-    at_door(H, 5, 50)
-    w:step(3)
-    if BBH_SCRIPT ~= nil then
-        check(Sim.find(H.popups, "Locked!.-LIBRARY WEST AFTER DARK needs 11 stars %(you have 0%)") ~= nil, "Library West: locked popup (11 stars)")
-    else
-        check(Sim.find(H.popups, "LIBRARY WEST AFTER DARK.-coming soon %(opens at 11 stars%)") ~= nil, "Library West: coming soon popup")
-    end
-    check(H.action ~= C.ACT_DISAPPEARED and H.level == HUB, "stays in the hub")
+    check(#flames == 12 and shown == closedDoors * 2,
+        "two flames per door, visible only at unbuilt doors (" .. shown .. " shown)")
     -- Century Tower: not built yet, coming soon
     at_door(H, 6, 50)
     w:step(3)
-    check(Sim.find(H.popups, "CENTURY TOWER.-coming soon %(opens at 14 stars%)") ~= nil, "Century Tower: coming soon popup (14 stars)")
+    check(Sim.find(H.popups, "CENTURY TOWER.-coming soon") ~= nil, "Century Tower: coming soon popup")
+    check(Sim.find(H.popups, "opens at %d+ stars") == nil, "unbuilt door does not advertise a star requirement")
     check(H.action ~= C.ACT_DISAPPEARED and H.level == HUB, "stays in the hub")
 
     -- the Auditorium door label, then walk in
@@ -436,6 +433,14 @@ test("campus map button: hosted travel picker lists locations and mission warps 
     w:step(3)
     arrive_and_pick(w, H, 1)
     arrive_and_pick(w, G, 1)
+    check(H.env.sgl_total_stars() == 0, "travel is available on a fresh save")
+    local towerListed = false
+    for _, destination in ipairs(H.env.sgl_campus_travel_destinations()) do
+        if destination.key == "tower" then towerListed = true end
+    end
+    check(not towerListed, "unbuilt Century Tower is absent from the travel picker")
+    check(not H.env.sgl_campus_warp("tower", 1, true) and H.level == HUB,
+        "direct travel refuses an unbuilt stage even without a star requirement")
 
     H.mouseX, H.mouseY, H.mouseButtons = 290, 12, C.L_MOUSE_BUTTON
     H.pressed = C.B_BUTTON
@@ -522,13 +527,13 @@ test("mouse chat command: /mouse toggles mouse look and accepts explicit on/off"
     check(H.mouseLookEnabled == true, "invalid /mouse option leaves mouse look unchanged")
 end)
 
-test("door 2: The Hub (2 stars) -> Reitz & Engineering act 1 -> star -> back outside The Hub door", function()
+test("door 2: The Hub (zero stars) -> Reitz & Engineering act 1 -> star -> back outside The Hub door", function()
     if WF_SCRIPT == nil then
         print("  (levels/wf not built: skipped)")
         return
     end
-    -- 1 star: built but LOCKED
-    local w = full_world({ starFlags = { [C.COURSE_BOB] = 0x01 } })
+    -- A fresh save can enter Reitz before earning any stars.
+    local w = full_world()
     local H = w:connect("Host")
     H.strStorage.friend = "josh"
     w:step(3)
@@ -536,14 +541,15 @@ test("door 2: The Hub (2 stars) -> Reitz & Engineering act 1 -> star -> back out
     w:seconds(2)
     local env = H.env
     check(env.sgl_stage_ready(env.sgl_stage_by_door(2)), "levels/wf is ours: course 2 is built")
-    check(Sim.hud_has(H, "NEXT: THE SWAMP"), "1 star: the hint still points at The Swamp (act 2)")
+    check(env.sgl_total_stars() == 0, "fresh save has zero stars")
+    check(Sim.hud_has(H, "NEXT: THE SWAMP"), "zero stars: the hint recommends the first unfinished stage")
     at_door(H, 2, 600)
     w:step(2)
-    check(Sim.hud_has(H, "REITZ & ENGINEERING") and Sim.hud_has(H, "LOCKED %- 2 stars %(you have 1%)"), "door 2 label: LOCKED")
+    check(Sim.hud_has(H, "REITZ & ENGINEERING") and Sim.hud_has(H, "Walk in!"), "door 2 label: open with zero stars")
     at_door(H, 2, 50)
     w:step(3)
-    check(Sim.find(H.popups, "Locked!.-REITZ & ENGINEERING needs 2 stars %(you have 1%)") ~= nil, "locked popup")
-    check(H.action ~= C.ACT_DISAPPEARED and H.level == HUB, "a locked door does not open")
+    check(H.action == C.ACT_DISAPPEARED, "Reitz door starts its warp with zero stars")
+    check(Sim.find(H.popups, "Locked!") == nil, "no star-lock popup")
 
     -- 2 stars (Swamp acts 1 + 2), alone: open, and the hint skips The Swamp's co-op act 3
     w = full_world({ starFlags = { [C.COURSE_BOB] = 0x03 } })
@@ -631,13 +637,13 @@ test("door 2: The Hub (2 stars) -> Reitz & Engineering act 1 -> star -> back out
     check(env.sgl_next_stage().key == "swamp", "2 players online: next = The Swamp (its co-op act 3)")
 end)
 
-test("door 3: Newell Hall (5 stars) -> Lake Alice act 1 -> star -> back outside the Newell Hall door", function()
+test("door 3: Newell Hall (zero stars) -> Lake Alice act 1 -> star -> back outside the Newell Hall door", function()
     if JRB_SCRIPT == nil then
         print("  (levels/jrb not built: skipped)")
         return
     end
-    -- 4 stars (Swamp acts 1-3, Reitz act 1): built but LOCKED
-    local w = full_world({ starFlags = { [C.COURSE_BOB] = 0x07, [C.COURSE_WF] = 0x01 } })
+    -- A fresh save can enter Lake Alice before earning any stars.
+    local w = full_world()
     local H = w:connect("Host")
     H.strStorage.friend = "josh"
     w:step(3)
@@ -645,15 +651,15 @@ test("door 3: Newell Hall (5 stars) -> Lake Alice act 1 -> star -> back outside 
     w:seconds(2)
     local env = H.env
     check(env.sgl_stage_ready(env.sgl_stage_by_door(3)), "levels/jrb is ours: course 3 is built")
-    check(env.sgl_total_stars() == 4, "4 stars")
-    check(env.sgl_next_stage() ~= env.sgl_stage_by_door(3), "Lake Alice locked: the NEXT stage is not Lake Alice")
+    check(env.sgl_total_stars() == 0, "fresh save has zero stars")
+    check(env.sgl_next_stage() == env.sgl_stage_by_door(1), "NEXT recommends the first unfinished stage without locking other doors")
     at_door(H, 3, 600)
     w:step(2)
-    check(Sim.hud_has(H, "LAKE ALICE") and Sim.hud_has(H, "LOCKED %- 5 stars %(you have 4%)"), "door 3 label: LOCKED")
+    check(Sim.hud_has(H, "LAKE ALICE") and Sim.hud_has(H, "Walk in!"), "door 3 label: open with zero stars")
     at_door(H, 3, 50)
     w:step(3)
-    check(Sim.find(H.popups, "Locked!.-LAKE ALICE needs 5 stars %(you have 4%)") ~= nil, "locked popup")
-    check(H.action ~= C.ACT_DISAPPEARED and H.level == HUB, "a locked door does not open")
+    check(H.action == C.ACT_DISAPPEARED, "Lake Alice door starts its warp with zero stars")
+    check(Sim.find(H.popups, "Locked!") == nil, "no star-lock popup")
 
     -- 6 stars (every playable act of courses 1-2): open, and the hint points at Newell Hall
     w = full_world({ starFlags = { [C.COURSE_BOB] = 0x07, [C.COURSE_WF] = 0x07 } })
@@ -739,13 +745,13 @@ test("door 3: Newell Hall (5 stars) -> Lake Alice act 1 -> star -> back outside 
     local lv3, _, n3 = follow_node(JRB_SCRIPT, 0xF1)
     check(lv3 == HUB and n3 == 0x33 and H.levelSpawns[0x33].bhv == "bhvPaintingDeathWarp"
         and H.levelSpawns[0x33].x == sp.x and H.levelSpawns[0x33].z == sp.z, "JRB 0xF1 -> hub 0x33 (same spot)")
-    -- /campus alice 2 from the host: straight into act 2 (the door lock and act select skipped, as for the other stages)
+    -- /campus alice 2 from the host: straight into act 2 (act select skipped, as for the other stages)
     Sim.cmd(H, "campus", "alice 2")
     w:step(3)
     check(H.level == JRB and H.act == 2, "/campus alice 2 -> Lake Alice act 2")
 end)
 
-test("door 4: Marston (8 stars) -> Marston Science Library act 1 -> star -> back outside the Marston door", function()
+test("door 4: Marston (zero stars) -> Marston Science Library act 1 -> star -> back outside the Marston door", function()
     if CCM_SCRIPT == nil then
         print("  (levels/ccm not built: skipped)")
         return
@@ -764,8 +770,8 @@ test("door 4: Marston (8 stars) -> Marston Science Library act 1 -> star -> back
             c.stubs["camera_romhack_set_" .. f] = function(v) assert(math.type(v) == "integer"); c.cam[f] = v end
         end
     end
-    -- 7 stars (every playable act of courses 1-2, Lake Alice act 1): built but LOCKED
-    local w = full_world({ starFlags = { [C.COURSE_BOB] = 0x07, [C.COURSE_WF] = 0x07, [C.COURSE_JRB] = 0x01 } })
+    -- A fresh save can enter Marston; signs agree that no stars are needed.
+    local w = full_world()
     local H = w:connect("Host")
     H.strStorage.friend = "josh"
     marston_stubs(H)
@@ -782,20 +788,19 @@ test("door 4: Marston (8 stars) -> Marston Science Library act 1 -> star -> back
         end
         return false
     end
-    check(sign_says("MARSTON SCIENCE LIBRARY", "Opens at 8 stars.") and sign_says("MARSTON SCIENCE LIBRARY", "Walk into the door"),
-        "Marston's signpost: opens at 8 stars, walk in (built)")
-    check(sign_says("NEWELL HALL", "Opens at 5 stars.") and sign_says("THE HUB", "Opens at 2 stars."),
-        "Newell Hall's and The Hub's signposts match their doors (5 and 2 stars)")
+    check(sign_says("MARSTON SCIENCE LIBRARY", "Open to everyone!") and sign_says("MARSTON SCIENCE LIBRARY", "Walk into the door"),
+        "Marston's signpost: open to everyone, walk in (built)")
+    check(sign_says("NEWELL HALL", "Open to everyone!") and sign_says("THE HUB", "Open to everyone!"),
+        "Newell Hall's and The Hub's signposts have no star requirement")
     check(env.sgl_stage_ready(env.sgl_stage_by_door(4)), "levels/ccm is ours: course 4 is built")
-    check(env.sgl_total_stars() == 7, "7 stars")
-    check(env.sgl_next_stage() ~= env.sgl_stage_by_door(4), "Marston locked: the NEXT stage is not Marston")
+    check(env.sgl_total_stars() == 0, "fresh save has zero stars")
     at_door(H, 4, 600)
     w:step(2)
-    check(Sim.hud_has(H, "MARSTON LIBRARY") and Sim.hud_has(H, "LOCKED %- 8 stars %(you have 7%)"), "door 4 label: LOCKED")
+    check(Sim.hud_has(H, "MARSTON LIBRARY") and Sim.hud_has(H, "Walk in!"), "door 4 label: open with zero stars")
     at_door(H, 4, 50)
     w:step(3)
-    check(Sim.find(H.popups, "Locked!.-MARSTON LIBRARY needs 8 stars %(you have 7%)") ~= nil, "locked popup")
-    check(H.action ~= C.ACT_DISAPPEARED and H.level == HUB, "a locked door does not open")
+    check(H.action == C.ACT_DISAPPEARED, "Marston door starts its warp with zero stars")
+    check(Sim.find(H.popups, "Locked!") == nil, "no star-lock popup")
 
     -- 9 stars (courses 1-3 up to their co-op act 3): open, but Lake Alice's regatta (act 4) is next there
     w = full_world({ starFlags = { [C.COURSE_BOB] = 0x07, [C.COURSE_WF] = 0x07, [C.COURSE_JRB] = 0x07 } })
@@ -890,14 +895,14 @@ test("door 4: Marston (8 stars) -> Marston Science Library act 1 -> star -> back
     local lv3, _, n3 = follow_node(CCM_SCRIPT, 0xF1)
     check(lv3 == HUB and n3 == 0x34 and H.levelSpawns[0x34].bhv == "bhvPaintingDeathWarp"
         and H.levelSpawns[0x34].x == sp.x and H.levelSpawns[0x34].z == sp.z, "CCM 0xF1 -> hub 0x34 (same spot)")
-    -- /campus marston 2 from the host: straight into act 2 (the door lock and act select skipped, as for the other stages)
+    -- /campus marston 2 from the host: straight into act 2 (act select skipped, as for the other stages)
     Sim.cmd(H, "campus", "marston 2")
     w:step(3)
     check(H.level == CCM and H.act == 2, "/campus marston 2 -> Marston act 2")
     check(#Sim.objects_with(H, env.id_bhvSglMarstonSolid) == 0, "act 2: no stair barriers")
 end)
 
-test("door 5: Library West (11 stars) -> Library West After Dark act 1 -> star -> back outside the Library West door", function()
+test("door 5: Library West (zero stars) -> Library West After Dark act 1 -> star -> back outside the Library West door", function()
     if BBH_SCRIPT == nil then
         print("  (levels/bbh not built: skipped)")
         return
@@ -921,10 +926,9 @@ test("door 5: Library West (11 stars) -> Library West After Dark act 1 -> star -
         local m = raw(c.ms[0])
         m.invincTimer, m.hurtCounter, m.flags = 0, 0, 0
     end
-    -- 10 stars, alone (acts 1-2 + the 100-coin star of courses 1-3, Marston act 1): built but LOCKED
+    -- A fresh save can enter Library West; unbuilt and bonus stages still say coming soon.
     local SOLO = 0x43
-    local w = full_world({ starFlags = { [C.COURSE_BOB] = SOLO, [C.COURSE_WF] = SOLO, [C.COURSE_JRB] = SOLO,
-        [C.COURSE_CCM] = 0x01 } })
+    local w = full_world()
     local H = w:connect("Host")
     H.strStorage.friend = "josh"
     libwest_stubs(H)
@@ -940,20 +944,21 @@ test("door 5: Library West (11 stars) -> Library West After Dark act 1 -> star -
         end
         return false
     end
-    check(sign_says("LIBRARY WEST", "Opens at 11 stars.") and sign_says("LIBRARY WEST", "Walk into the door"),
-        "Library West's signpost: opens at 11 stars, walk in (built)")
-    check(sign_says("CENTURY TOWER", "Opens at 14 stars.") and sign_says("CENTURY TOWER", "Coming soon!"),
-        "Century Tower's signpost: opens at 14 stars, coming soon (the star curve 0 / 2 / 5 / 8 / 11 / 14)")
+    check(sign_says("LIBRARY WEST", "Open to everyone!") and sign_says("LIBRARY WEST", "Walk into the door"),
+        "Library West's signpost: open to everyone, walk in (built)")
+    for _, building in ipairs({ "CENTURY TOWER", "SMATHERS LIBRARY", "FINAL EXAM DOOR" }) do
+        check(sign_says(building, "Coming soon!") and not sign_says(building, "Opens at"),
+            building .. ": coming soon without a star threshold")
+    end
     check(env.sgl_stage_ready(env.sgl_stage_by_door(5)), "levels/bbh is ours: course 5 is built")
-    check(env.sgl_total_stars() == 10, "10 stars")
-    check(env.sgl_next_stage() ~= env.sgl_stage_by_door(5), "Library West locked: the NEXT stage is not Library West")
+    check(env.sgl_total_stars() == 0, "fresh save has zero stars")
     at_door(H, 5, 600)
     w:step(2)
-    check(Sim.hud_has(H, "LIBRARY WEST AFTER DARK") and Sim.hud_has(H, "LOCKED %- 11 stars %(you have 10%)"), "door 5 label: LOCKED")
+    check(Sim.hud_has(H, "LIBRARY WEST AFTER DARK") and Sim.hud_has(H, "Walk in!"), "door 5 label: open with zero stars")
     at_door(H, 5, 50)
     w:step(3)
-    check(Sim.find(H.popups, "Locked!.-LIBRARY WEST AFTER DARK needs 11 stars %(you have 10%)") ~= nil, "locked popup")
-    check(H.action ~= C.ACT_DISAPPEARED and H.level == HUB, "a locked door does not open")
+    check(H.action == C.ACT_DISAPPEARED, "Library West door starts its warp with zero stars")
+    check(Sim.find(H.popups, "Locked!") == nil, "no star-lock popup")
 
     -- 12 stars, alone (acts 1-2 + the 100-coin star of courses 1-4: what a solo player can earn): open, the hint skips
     -- the four co-op act 3s and points at the Library West door
@@ -1051,7 +1056,7 @@ test("door 5: Library West (11 stars) -> Library West After Dark act 1 -> star -
     local lv3, _, n3 = follow_node(BBH_SCRIPT, 0xF1)
     check(lv3 == HUB and n3 == 0x35 and H.levelSpawns[0x35].bhv == "bhvPaintingDeathWarp"
         and H.levelSpawns[0x35].x == sp.x and H.levelSpawns[0x35].z == sp.z, "BBH 0xF1 -> hub 0x35 (same spot)")
-    -- /campus libwest 2 from the host: straight into act 2 (the door lock and act select skipped, as for the other stages)
+    -- /campus libwest 2 from the host: straight into act 2 (act select skipped, as for the other stages)
     Sim.cmd(H, "campus", "libwest 2")
     w:step(3)
     check(H.level == BBH and H.act == 2, "/campus libwest 2 -> Library West act 2")

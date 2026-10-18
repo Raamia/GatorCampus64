@@ -11,7 +11,7 @@ Play as a UF friend in a Super Mario 64 style campus adventure. Explore recogniz
 - **Movement is the toy:** running, triple jumps, wall kicks, backflips, swimming, shell surfing, and Wing Cap flight solve most problems.
 - **Each course fits the accessible space:** only the Reitz Union and Marston Science Library have enterable interiors. The stadium, Lake Alice, Library West, and Century Tower are exterior-only stages; nearby buildings are scenery and traversal surfaces, never doors into interiors.
 - **Teach, then test:** every act shows its mechanic safely before combining it with a more demanding route.
-- **Failure costs time, not progress:** retries are unlimited; collected stars and unlocked doors stay saved.
+- **Failure costs time, not progress:** retries are unlimited; collected stars and act progress stay saved.
 - **No online dependency:** local save data is authoritative for the campaign. Account sync and leaderboard results are optional.
 
 ## 2. The gameplay loops
@@ -62,13 +62,13 @@ The board compares a player only with runs of the same act. It does not award re
 3. A short movement route teaches a triple jump, a wall kick, and a safe return to the plaza. It does not demand precision or award a mandatory star.
 4. The University Auditorium door points to The Swamp, the first open course.
 5. The first act, **Kickoff – Climb the Skybox**, teaches the main promise: read the stadium, find a route, climb, collect a star.
-6. The hub signpost points out the next star threshold and names the next campus building.
+6. The hub signpost recommends the next campus building; every built stage is already open with 0 stars.
 
 ### Door order
 
-Use the star gates already represented by the current hub: The Swamp opens at 0; Reitz at 2; Lake Alice at 5; Marston at 8; Library West at 11; Century Tower at 14. Finals Week Ascent opens at 30 stars. Keep these numbers visible at the locked door and on the hub map.
+Use the campus course order as a suggested route, with no star requirement for level entry. The Swamp, Reitz, Lake Alice, Marston and Library West are open from the start with 0 stars when built. Century Tower, Finals Week Ascent and other unbuilt destinations remain coming soon until implemented.
 
-The current tree allows players to skip optional acts. Each course has enough stars to move forward without perfect race times or hidden collectibles. Confirm the actual collectible count in a fresh save before tuning any gate.
+Players may choose any built course without finishing earlier courses. Within each course, keep the existing act order and mission prerequisites: stars still record progress and advance act selection.
 
 ### Star budget target
 

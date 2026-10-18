@@ -8,9 +8,11 @@ Explore a campus at real-world scale, race through libraries, ride gators, and t
 
 ## Jump in
 
-1. **Download [sm64coopdx v1.5.1](https://github.com/coop-deluxe/sm64coopdx/releases/tag/v1.5.1)** for your OS. Unzip, launch, and import a **[US Super Mario 64 ROM](https://www.romsgames.net/nintendo-64-rom-super-mario-64/) (`.z64`)** when prompted.
+All five built stages are open from the start with **0 stars**. Unbuilt stages such as Century Tower remain coming soon; act selection and mission progression still apply.
+
+1. **Download [sm64coopdx v1.5.1](https://github.com/coop-deluxe/sm64coopdx/releases/tag/v1.5.1)** for your OS. Unzip, launch, and import **your own US Super Mario 64 ROM (`.z64`)** when prompted.
 2. **Join → Direct Connect:** enter **`play.gatorcamp.us`**, port **`7777`**. If DNS fails, use `64.177.55.205`. The server downloads the mod for you.
-3. **Pick a character and explore.** Press **Enter** for chat; `/char` changes your character, `/campus marston` takes you straight to the library, and `/albert what can I do here?` gets you started.
+3. **Pick a character and explore.** Press **Enter** for chat; `/char` changes your character, and `/albert what can I do here?` gets you started. Walk into the campus building doors to enter the stages.
 
 **Keyboard:** WASD moves · L jumps · K crouches · arrow keys turn the camera · Space pauses. Controllers work too.
 
@@ -30,8 +32,10 @@ Explore a campus at real-world scale, race through libraries, ride gators, and t
 | **The running system · Vultr** | Cloud Compute hosts the game/API; a Cloud GPU runs Qwen and Blender. Managed PostgreSQL, Object Storage, a private VPC, and Firewall complete the deployment. [Infrastructure](server/deploy/vultr.py) |
 | **One address · GoDaddy Registry** | `gatorcamp.us` brings the website, API, and game together on the Registry's `.us` domain, registered through Porkbun. [Domain routing](docs/web_platform_spec.md#4-domain-and-dns-godaddy) |
 
+Development used **Claude Code's multi-agent workflows**; see the [build process and AI assistance disclosure](docs/project_overview.md).
+
 ## Build locally
 
 [Game setup & controls](docs/development.md) · [API](server/api/README.md) · [GPU worker](server/worker/README.md) · [Architecture](docs/web_platform_spec.md)
 
-Built on [sm64coopdx](https://github.com/coop-deluxe/sm64coopdx), [Fast64](https://github.com/Fast-64/fast64), and the [coopdx character template](https://github.com/coop-deluxe/character-template). Map data © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), ODbL. ROMs are not included in this repository.
+Built on [sm64coopdx](https://github.com/coop-deluxe/sm64coopdx), [Fast64](https://github.com/Fast-64/fast64), [Fast64-Gart](https://github.com/ManIsCat2/Fast64-Gart), and the [coopdx character template](https://github.com/coop-deluxe/character-template). Map data © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), ODbL. ROMs are not included in this repository.
