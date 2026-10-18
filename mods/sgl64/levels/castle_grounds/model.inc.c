@@ -382024,41 +382024,7 @@ Gfx mat_revert_castle_grounds_dl_sgl_banner_blue_layer1_area1[] = {
 	gsSPEndDisplayList(),
 };
 
-Gfx mat_castle_grounds_dl_sgl_leaves_oak2_layer1_area1[] = {
-	gsSPSetLights1(castle_grounds_dl_sgl_leaves_oak2_layer1_area1_lights),
-	gsSPSetGeometryMode(G_FOG),
-	gsDPPipeSync(),
-	gsDPSetCombineMode(G_CC_MODULATEI, G_CC_PASS2),
-	gsDPSetFogColor(195, 207, 205, 255),
-	gsSPFogFactor(11502, -11216),
-	gsDPSetAlphaDither(G_AD_NOISE),
-	gsDPSetTextureConvert(G_TC_FILT),
-	gsDPSetTextureFilter(G_TF_BILERP),
-	gsDPSetTexturePersp(G_TP_PERSP),
-	gsDPSetCycleType(G_CYC_2CYCLE),
-	gsDPPipelineMode(G_PM_1PRIMITIVE),
-	gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
-	gsSPTexture(65535, 65535, 0, 0, 1),
-	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, castle_grounds_dl_leaves_oak2_rgba16),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
-	gsDPLoadBlock(7, 0, 0, 1023, 256),
-	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0),
-	gsDPSetTileSize(0, 0, 0, 124, 124),
-	gsSPEndDisplayList(),
-};
 
-Gfx mat_revert_castle_grounds_dl_sgl_leaves_oak2_layer1_area1[] = {
-	gsSPClearGeometryMode(G_FOG),
-	gsDPPipeSync(),
-	gsDPSetAlphaDither(G_AD_DISABLE),
-	gsDPSetTextureConvert(G_TC_CONV),
-	gsDPSetTextureFilter(G_TF_POINT),
-	gsDPSetTexturePersp(G_TP_NONE),
-	gsDPSetCycleType(G_CYC_1CYCLE),
-	gsDPPipelineMode(G_PM_NPRIMITIVE),
-	gsDPSetRenderMode(G_RM_AA_ZB_OPA_SURF, G_RM_AA_ZB_OPA_SURF2),
-	gsSPEndDisplayList(),
-};
 
 Gfx mat_castle_grounds_dl_sgl_palm_frond_layer1_area1[] = {
 	gsSPSetLights1(castle_grounds_dl_sgl_palm_frond_layer1_area1_lights),
