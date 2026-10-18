@@ -9,6 +9,8 @@ import type { AppContext, Env } from '../../worker.js'
 import { parseIngestBody, signIngest, verifyIngestSignature } from '../actions/verified-runs.js'
 import { bestVerifiedRows, formatFrames, type VerifiedRun } from '../lib/leaderboard.js'
 import { registerActionRoutes } from './action-routes.js'
+import { submitGameRun } from '../actions/game-runs.js'
+import { createActionTools } from './action-routes.js'
 import { RunIngestRoom } from './run-ingest-room.js'
 import { INGEST_PATH, registerIngestRoutes } from './ingest-routes.js'
 
@@ -31,7 +33,7 @@ function fakeRecordRoom() {
       if (params.orderBy) {
         const key = String(params.orderBy)
         const dir = params.orderDir === 'desc' ? -1 : 1
-        found = [...found].sort((a, b) => (Number(a.data[key]) - Number(b.data[key])) * dir)
+        found = [...found].sort((a, b) => (key === 'createdAt' ? Date.parse(a.createdAt) - Date.parse(b.createdAt) : Number(a.data[key]) - Number(b.data[key])) * dir)
       }
       const limit = Number(params.limit ?? 50)
       return { success: true, data: { records: found.slice(0, limit), count: Math.min(found.length, limit) } }
@@ -261,4 +263,26 @@ describe('account deletion propagation', () => {
     delete (ctx.env as Partial<Env>).RUN_INGEST
     expect((await ctx.app.fetch(await signedRequest(body()), ctx.env)).status).toBe(503)
   })
+})
+
+
+it('drains linked offline runs in bounded pages, preserves other users and newer data, and rejects replay', async () => {
+  const ctx = makeApp()
+  const row = (i: number, userId: string, createdAt = '2026-10-01T00:00:00Z'): Stored => ({
+    recordId: `offline-${i}`, createdBy: userId, createdAt,
+    data: { userId, runId: `offline-run-${i}`, missionId: 'swamp_sprint' },
+  })
+  ctx.room.tables.set('solo_runs', [row(999, 'other'), ...Array.from({ length: 101 }, (_, i) => row(i, 'deleted')),
+    row(200, 'deleted', '2026-10-03T00:00:00Z')])
+  const deletion = JSON.stringify({ v: 1, deleteUserRuns: { userId: 'deleted', beforeMs: Date.parse('2026-10-02T00:00:00Z') } })
+  expect((await ctx.app.fetch(await signedRequest(deletion), ctx.env)).status).toBe(503)
+  expect((await ctx.app.fetch(await signedRequest(deletion), ctx.env)).status).toBe(200)
+  expect(ctx.room.tables.get('solo_runs')?.map(r => r.recordId)).toEqual(['offline-999', 'offline-200'])
+  expect(ctx.room.tables.get('erased_solo_runs')).toHaveLength(101)
+  const result = await submitGameRun({ userId: 'deleted', callerJwt: 'unused', env: ctx.env,
+    tools: createActionTools(ctx.env, 'deleted', 'unused'),
+    params: { runId: 'offline-run-0', missionId: 'swamp_sprint', elapsedFrames: 1200, retries: 0, assisted: false, gameVersion: 'v1' },
+  })
+  expect(result).toEqual({ success: false, error: 'This run was deleted.' })
+  expect(ctx.room.tables.get('solo_runs')).toHaveLength(2)
 })

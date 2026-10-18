@@ -122,5 +122,7 @@ def delete_account(c, sub, event_fields, claims):
     c.execute('DELETE FROM events WHERE id = ANY(%s)', (list(event_ids),))
     for char in c.execute('SELECT id FROM characters WHERE owner_sub = %s ORDER BY id FOR UPDATE', (sub,)).fetchall():
         c.execute('SELECT sgl_release_slot(%s)', (char['id'],))
+    c.execute('INSERT INTO account_erases (deepspace_user, before_ms) '
+              'SELECT deepspace_user, %s FROM identity_links WHERE sub = %s', (int(time.time() * 1000), sub))
     c.execute('DELETE FROM users WHERE sub = %s', (sub,))  # cascades enqueue durable object cleanup
     return len(affected)

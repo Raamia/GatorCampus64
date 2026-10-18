@@ -26,6 +26,7 @@ import { tasks as cronTasks, runTask as runCronTask } from './src/cron.js'
 import { runJob } from './src/jobs.js'
 import { schemas } from './src/schemas.js'
 import { registerActionRoutes } from './src/server/action-routes.js'
+import { registerIdentityRoutes } from './src/server/identity-routes.js'
 import { registerIngestRoutes } from './src/server/ingest-routes.js'
 import {
   registerAuthAndIntegrationRoutes,
@@ -154,6 +155,7 @@ registerRealtimeRoutes(app)
 registerStudyRoutes(app)
 // Before the user action route: the game API's HMAC-signed verified-run ingest (spec §10.4).
 registerIngestRoutes(app)
+registerIdentityRoutes(app)
 registerActionRoutes(app, resolveAuth)
 // The in-app assistant stores chat history in `ai-chats` / `ai-messages`,
 // which only the copilot overlay declares. When present, registerAgent enables

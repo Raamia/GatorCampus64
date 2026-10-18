@@ -22,9 +22,9 @@ export default function SettingsPage() {
     <div className="min-h-full text-foreground">
       <div className="settings-page">
         <header className="settings-header">
-          <p>SETTINGS · GATOR PASS ACCOUNT</p>
+          <p>SETTINGS · FIELD BOARD ACCOUNT</p>
           <h1>Your account.</h1>
-          <p className="settings-sub">The Gator Pass identity you use across the field board, Gatorize Me and the hosted server.</p>
+          <p className="settings-sub">Your Field Board account. Manage its connection to Gator Pass in Gatorize Me.</p>
         </header>
 
         <section className="settings-card">

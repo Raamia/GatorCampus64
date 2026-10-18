@@ -12,6 +12,7 @@
  * runId: a repeated push answers { duplicate: true } and writes nothing.
  */
 
+import { eraseOfflineRuns } from './account-erasure.js'
 import type { ActionTools } from 'deepspace/worker'
 import { parsePlayers, playerKey, type VerifiedPlayer, type VerifiedRun } from '../lib/leaderboard.js'
 
@@ -151,7 +152,12 @@ export async function ingestVerifiedRun(input: {
     'v' in parsed && parsed.v === 1 && 'deleteRunId' in parsed &&
     typeof parsed.deleteRunId === 'string' && RUN_ID_PATTERN.test(parsed.deleteRunId)
     ? parsed.deleteRunId : null
-  if (!run && !deleteRunId) return { status: 400, body: { success: false, error: 'Run fields are invalid.' } }
+  const account = typeof parsed === 'object' && parsed !== null && 'v' in parsed && parsed.v === 1 &&
+    'deleteUserRuns' in parsed ? parsed.deleteUserRuns as { userId?: unknown; beforeMs?: unknown } : null
+  const deleteAccount = account && typeof account.userId === 'string' && account.userId.length > 0 &&
+    account.userId.length <= 256 && Number.isSafeInteger(account.beforeMs) && Number(account.beforeMs) > 0
+    ? { userId: account.userId, beforeMs: Number(account.beforeMs) } : null
+  if (!run && !deleteRunId && !deleteAccount) return { status: 400, body: { success: false, error: 'Run fields are invalid.' } }
 
   // Replay protection: a nonce is accepted once.
   const seen = await tools.query('ingest_nonces', { where: { nonce }, limit: 1 })
@@ -159,6 +165,12 @@ export async function ingestVerifiedRun(input: {
   if (seen.data.records.length > 0) return { status: 409, body: { success: false, error: 'Replayed request.' } }
   const marked = await tools.create('ingest_nonces', { nonce: nonce as string, seenAt: nowMs })
   if (!marked.success) return { status: 409, body: { success: false, error: 'Replayed request.' } }
+
+  if (deleteAccount) {
+    const done = await eraseOfflineRuns(tools, deleteAccount.userId, deleteAccount.beforeMs)
+    return done ? { status: 200, body: { success: true, data: { deleted: true } } }
+      : { status: 503, body: { success: false, error: 'Account cleanup pending; retry.' } }
+  }
 
   if (deleteRunId) {
     const prior = await tools.query('erased_runs', { where: { runId: deleteRunId }, limit: 1 })

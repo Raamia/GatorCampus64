@@ -13,7 +13,7 @@ import uuid
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
-from typing import Annotated, Any, Callable
+from typing import Literal, Annotated, Any, Callable
 
 import httpx
 from fastapi import BackgroundTasks, Depends, FastAPI, File, Form, HTTPException, Request, Response, UploadFile
@@ -71,6 +71,12 @@ def event_fields(e: dict) -> dict:
     the top level; top-level wins, the nested payload fills in anything missing."""
     nested = e.get("payload")
     return {**nested, **e} if isinstance(nested, dict) else e
+
+
+class IdentityProof(BaseModel):
+    action: Literal['link', 'unlink', 'status']
+    user_id: str = Field(min_length=1, max_length=256, pattern=r'^[A-Za-z0-9_:@.|-]+$')
+    token_hash: str = Field(pattern=r'^[0-9a-f]{64}$')
 
 
 class PresencePlayer(BaseModel):
@@ -483,6 +489,30 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             except Exception:
                 log.exception("object cleanup deferred for %s", jid)
         return {"deleted": character_id, "freed_slot": freed}
+
+    @app.post("/account/identity")
+    async def identity_account(body: IdentityProof, request: Request, p: Annotated[Principal, Depends(user())]):
+        from . import identities
+        if body.user_id.startswith('anon-'):
+            raise AuthError(401, 'Field Board sign-in required')
+        with DB().tx() as c:
+            accounts.lock(c)
+            accounts.require_active(c, p.sub, p.claims)
+            identities.verify(c, s.deepspace_ingest_secret, await request.body(), request.headers,
+                              bearer(request.headers.get('authorization')), body)
+            existing = c.execute('SELECT sub, deepspace_user FROM identity_links WHERE sub = %s OR deepspace_user = %s',
+                                 (p.sub, body.user_id)).fetchall()
+            matched = any(r['sub'] == p.sub and r['deepspace_user'] == body.user_id for r in existing)
+            if body.action == 'link':
+                if existing and not matched:
+                    raise HTTPException(409, 'One of these accounts is already linked. Unlink the existing pair first.')
+                c.execute('INSERT INTO identity_links (sub, deepspace_user) VALUES (%s, %s) ON CONFLICT DO NOTHING',
+                          (p.sub, body.user_id))
+                matched = True
+            elif body.action == 'unlink':
+                c.execute('DELETE FROM identity_links WHERE sub = %s AND deepspace_user = %s', (p.sub, body.user_id))
+                matched = False
+            return {'linked': matched, 'conflict': bool(existing) and not matched and body.action == 'status'}
 
     @app.delete("/links")
     def unlink_account(p: Annotated[Principal, Depends(user())]):

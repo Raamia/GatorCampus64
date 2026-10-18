@@ -11,7 +11,7 @@ import type { CollectionSchema } from 'deepspace/schema'
 import { usersSchema } from './schemas/users-schema'
 import { settingsSchema } from './schemas/admin-schema'
 import { missionEventsSchema } from './schemas/mission-events-schema'
-import { soloRunsSchema } from './schemas/solo-runs-schema'
+import { soloRunsSchema, erasedSoloRunsSchema } from './schemas/solo-runs-schema'
 import { erasedRunsSchema, ingestNoncesSchema, verifiedRunsSchema } from './schemas/verified-runs-schema'
 
 export const schemas: CollectionSchema[] = [
@@ -19,6 +19,7 @@ export const schemas: CollectionSchema[] = [
   settingsSchema,
   missionEventsSchema,
   soloRunsSchema,
+  erasedSoloRunsSchema,
   verifiedRunsSchema,
   ingestNoncesSchema,
   erasedRunsSchema,

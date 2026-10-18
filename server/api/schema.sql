@@ -473,3 +473,23 @@ CREATE TABLE IF NOT EXISTS run_erases (
     sent_at timestamptz
 );
 CREATE INDEX IF NOT EXISTS run_erases_due_idx ON run_erases (next_at) WHERE sent_at IS NULL;
+
+-- One-to-one mappings require independent proof of both provider identities.
+CREATE TABLE IF NOT EXISTS identity_links (
+    sub text PRIMARY KEY REFERENCES users(sub) ON DELETE CASCADE,
+    deepspace_user text NOT NULL UNIQUE,
+    created timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS identity_nonces (
+    nonce text PRIMARY KEY,
+    created timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS account_erases (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    deepspace_user text NOT NULL,
+    before_ms bigint NOT NULL,
+    attempts integer NOT NULL DEFAULT 0,
+    next_at timestamptz NOT NULL DEFAULT now(),
+    last_error text,
+    sent_at timestamptz
+);
