@@ -1,8 +1,11 @@
 -- Replace vanilla Mario-era counters with campus art. Stars still drive course
 -- progression; only their on-screen icon is renamed to gator coins.
+-- Health still works normally; its power meter and the vanilla coin counter stay hidden.
 
 local HIDE_VANILLA = HUD_DISPLAY_FLAGS_LIVES | HUD_DISPLAY_FLAGS_COIN_COUNT
     | HUD_DISPLAY_FLAGS_STAR_COUNT | HUD_DISPLAY_FLAGS_CAMERA
+    | HUD_DISPLAY_FLAGS_CAMERA_AND_POWER | HUD_DISPLAY_FLAGS_POWER
+    | HUD_DISPLAY_FLAGS_EMPHASIZE_POWER
 local sCoinTexture = nil
 local sPortraits = {}
 
@@ -59,5 +62,8 @@ local function draw_status_hud()
     sgl_hud_text_center("UF", sw - 38, 207, 0.34, { 255, 140, 35 }, 1)
 end
 
+-- Course HUD updates restore the coin flag after HOOK_UPDATE. Filter again
+-- immediately before the engine draws its HUD, so that counter cannot reappear.
 hook_event(HOOK_UPDATE, hide_vanilla_icons)
+hook_event(HOOK_ON_HUD_RENDER_BEHIND, hide_vanilla_icons)
 hook_event(HOOK_ON_HUD_RENDER, draw_status_hud)

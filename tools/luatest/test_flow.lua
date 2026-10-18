@@ -297,8 +297,16 @@ test("single player: hub -> character select -> door -> act 1 -> star -> back ou
         "character model restored before the Mario frame is drawn")
     check(H.ms[0].numLives == 4, "4 lives")
     check((H.hudFlags & (C.HUD_DISPLAY_FLAGS_LIVES | C.HUD_DISPLAY_FLAGS_COIN_COUNT
-        | C.HUD_DISPLAY_FLAGS_STAR_COUNT)) == 0,
-        "vanilla lives, coin, and star HUD icons hidden")
+        | C.HUD_DISPLAY_FLAGS_STAR_COUNT | C.HUD_DISPLAY_FLAGS_CAMERA_AND_POWER
+        | C.HUD_DISPLAY_FLAGS_POWER | C.HUD_DISPLAY_FLAGS_EMPHASIZE_POWER)) == 0,
+        "vanilla counters and power meter hidden, including combined camera/power flag")
+    -- The engine restores course coin visibility after the update hooks.
+    H.hudFlags = H.hudFlags | C.HUD_DISPLAY_FLAGS_COIN_COUNT
+        | C.HUD_DISPLAY_FLAGS_CAMERA_AND_POWER | C.HUD_DISPLAY_FLAGS_POWER
+    Sim.run_hooks(H, C.HOOK_ON_HUD_RENDER_BEHIND)
+    check((H.hudFlags & (C.HUD_DISPLAY_FLAGS_COIN_COUNT
+        | C.HUD_DISPLAY_FLAGS_CAMERA_AND_POWER | C.HUD_DISPLAY_FLAGS_POWER)) == 0,
+        "pre-render hook hides counters restored by engine after update")
     local portraitDrawn, coinDrawn = false, false
     for _, d in ipairs(H.draw) do
         if d.k == "tex" and d.name == "sgl_portrait_anh" then portraitDrawn = true end

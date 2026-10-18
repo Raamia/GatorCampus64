@@ -4,7 +4,7 @@
 -- Everything is drawn from HOOK_ON_HUD_RENDER at RESOLUTION_N64: 240 units tall, the width grows with
 -- the window's aspect ratio (djui_hud_get_screen_width()). The vanilla HUD sits along the top edge
 -- (lives top-left, coins, stars top-right), so mission UI uses:
---   left panel      x 8, y 34 ..             (mission name, state, counters)
+--   left panel      x 8, y 66 ..             (mission name, state, counters)
 --   right column    x W-92, y 34 (race timer, Reitz crane side view x W-84, y 32 .. 192);
 --                   results board x W-166, y 84 ..
 --   toasts          y 34 / 49 / 64, centred in the space between the panel and the right column
@@ -165,22 +165,26 @@ end
 -- left panel: lines = { { text, col, scale }, ... } (col / scale optional). Returns the bottom y.
 function sgl_hud_panel(lines, x, y)
     if lines == nil or #lines == 0 then return y end
-    sgl_hud_setup(FONT_NORMAL)
-    x, y = x or 8, y or 34
+    local W, H = sgl_hud_setup(FONT_NORMAL)
+    x, y = x or 8, y or 66
     local w, h = 0, 6
     for _, l in ipairs(lines) do
         local sc = l[3] or 0.34
         w = math.max(w, sgl_hud_text_width(l[1], sc))
         h = h + LINE * sc + 1
     end
+    -- Compact the whole panel consistently, keeping long briefings inside the
+    -- viewport and above the bottom prompts even in a narrow window.
+    local k = math.min(0.85, (W - x - 8) / (w + 8), (H - 52 - y) / h)
+    w, h = w * k, h * k
     sgl_hud_rect(x - 4, y - 3, w + 8, h, 0, 0, 0, 120)
     sgl_hud_rect(x - 4, y - 3, 2, h, 250, 110, 30, 220)
     sZone.panelRight = x + w + 4
     sZone.panelFrame = get_global_timer()
     for _, l in ipairs(lines) do
-        local sc = l[3] or 0.34
+        local sc = (l[3] or 0.34) * k
         sgl_hud_text(l[1], x, y, sc, l[2] or SGL_HUD_WHITE, 1)
-        y = y + LINE * sc + 1
+        y = y + LINE * sc + k
     end
     return y + 3
 end
