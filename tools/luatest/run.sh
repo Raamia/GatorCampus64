@@ -59,8 +59,8 @@
 #  24. test_rivals.lua: sgl_rivals.lua dresses every Goomba as a rival school's mascot (same on every client)
 #  25. test_hud_sight.lua: sgl_hud_in_sight hides HUD labels drawn over the world (door labels, NPC name tags)
 #      when a wall stands between the camera and the label
-#  26. test_campus_npcs.lua: the campus crowd (sgl_campus_npcs.lua): 24 students on the hub's sidewalks, the same on every
-#      client (also for a late arrival), walking, only on the hub, /crowd off|on
+#  26. test_campus_npcs.lua: player-local campus crowd: shared budget, equal allocations, joins/leaves, twelve
+#      players, headless exclusion, safe sidewalk movement, hard leash, camera-aware spawn and /crowd controls
 #  27. tools/npcs/campus_routes.py --check: sgl_campus_npc_routes.lua matches the OSM footways + the built hub
 #  23. tools/npc_bridge/test_*.py: the NPC chat bridge and the game guide (modfs protocol, routing, Gemini requests;
 #      offline) and tools/actors/test_make_gators.py (the generated Albert and Alberta actors are valid and up to date)
