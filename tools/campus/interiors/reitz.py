@@ -2284,14 +2284,28 @@ def _balcony_edge(V, C, a, b, z, F):
         # and 0.2 m narrower than the flight's own rails, so the balcony rail's collision overlaps their ends
         if R.seg_point_dist(gp, a, b) > 1.5:
             continue
-        if abs((gp[0] - a[0]) * uy - (gp[1] - a[1]) * ux) > 0.3:
+        full = _head_full(F.id, gd)
+        if not full and abs((gp[0] - a[0]) * uy - (gp[1] - a[1]) * ux) > 0.3:
             continue
         c0 = gd[0] * (a[1] - gp[1]) - gd[1] * (a[0] - gp[0])
         c1 = gd[0] * uy - gd[1] * ux
         if abs(c1) < 1e-6:
             continue
         w = STAIR_W / 2 - 0.25
+        if full:
+            # stairs_fast3 (game_stairs_28: the gap between rail ends at the L2 NE head): the opening is exactly the
+            # flight's rail lines, measured on the balcony rail's own line (0.12 m inboard), on EVERY edge segment the
+            # flight band crosses near its head (the curved L2 edge splits the head over two segments; the 0.3 m
+            # line test above dropped the second one), so the balcony rail ends meet the flight rails
+            w = STAIR_W / 2 - 0.05
+            c0 -= (gd[0] * ny - gd[1] * nx) * 0.12
         s0, s1 = sorted(((-w - c0) / c1, (w - c0) / c1))
+        if full:
+            q0_, q1_ = max(s0, 0.0), min(s1, L)
+            if q1_ <= q0_:
+                continue
+            if min(abs(gd[0] * (a[0] + ux * q - gp[0]) + gd[1] * (a[1] + uy * q - gp[1])) for q in (q0_, q1_)) > 1.5:
+                continue
         nr = []
         for r0, r1 in runs:
             if s1 <= r0 or s0 >= r1:
@@ -2409,6 +2423,14 @@ def _balcony_edge(V, C, a, b, z, F):
 
 STAIR_GAPS = {}     # floor id -> [(point on the slab edge, flight direction)] (scissor-stair ends; _stair_ends)
 FASCIA_NUMS = set()     # (floor, stair-end point) that already carry a floor number on the fascia (_balcony_edge)
+HEAD_FULL = {"L2"}  # floors whose NE (scissor-flight head) balcony opening is cut to the flight's full rail width
+
+
+def _head_full(fid, gd):
+    """stairs_fast3: the L2 NE flight head gets the full-width opening + head fill (atrium_stairs, _balcony_edge)."""
+    return fid in HEAD_FULL and gd[0] > 0 and gd[1] > 0
+
+
 FLOOR_CELL = {"LL": 0, "G": 1, "L1": 2, "L2": 3, "L3": 4, "L4": 5, "L5": 6, "L6": 7}   # int_ru_floor_atlas cells
 
 
@@ -3351,6 +3373,41 @@ def _unit2(a, b):
     return ((b[0] - a[0]) / L, (b[1] - a[1]) / L)
 
 
+def _head_fill(V, C, m0, d, n, t_ne, z1, void):
+    """stairs_fast3 (game_stairs_28): the NE flight's square top end meets the slab edge at ~45 deg, so its SE half
+    ended over the void (a triangle of void between the top tread, the SE rail end and the balcony rail end, held
+    shut by a collision plug standing in the head). A terrazzo fill at the head floor's level closes the triangle
+    (flight top -> slab edge) and the SE rail runs on along its line until it meets the balcony rail."""
+    w2 = STAIR_W / 2
+    tb = t_ne + 0.05
+
+    def P(t, o):
+        return (m0[0] + d[0] * t + n[0] * o, m0[1] + d[1] * t + n[1] * o)
+
+    def te(o):                           # where the line at lateral offset o meets the slab edge (from 2 m back)
+        t_ = R.seg_intersect(P(t_ne - 2.0, o), d, void)
+        return None if t_ is None else t_ne - 2.0 + t_
+    t9, t4 = te(w2), te(w2 / 2)
+    if t9 is None or t4 is None or t9 <= tb + 0.05:
+        return
+    poly = R.ccw([P(tb, 0.0), P(tb, w2), P(t9, w2), P(t4, w2 / 2), P(t_ne, 0.0)])
+    R.floor_poly(V, poly, z1, "int_ru_terrazzo", step=99.0)
+    R.floor_poly(V, poly, z1 - 0.3, "int_ru_white", step=99.0, down=True)
+    R.quad_wall(V, P(tb, w2), P(t9, w2), z1 - 0.3, z1, "int_ru_white", ao=0.9)
+    R.quad_wall(V, P(t9, w2), P(tb, w2), z1 - 0.3, z1, "int_ru_white", ao=0.9)
+    R.col_floor(C, R.offset_poly(poly, 0.08), z1)
+    # SE rail on along its line to the balcony rail (the balcony segment there sits ~0.1 m off the void outline: 0.04 m on)
+    o_r = w2 - 0.05
+    ra, rb = P(tb - 0.02, o_r), P(te(o_r) + 0.04, o_r)
+    Lr = math.dist(ra, rb)
+    V.poly([(ra[0], ra[1], z1), (rb[0], rb[1], z1), (rb[0], rb[1], z1 + RAIL_H), (ra[0], ra[1], z1 + RAIL_H)],
+           "int_ru_picket2", uvs=[(0, 0), (Lr / 1.1, 0), (Lr / 1.1, 1), (0, 1)], ao=1.0)
+    R.seg_box(V, ra, rb, 0.035, z1 + RAIL_H, z1 + RAIL_H + 0.06, "int_ru_maple", faces="sidetop")
+    # collision: the flight rail's inner face line (o_r - 0.07) carried on, 0.24 m thick outboard
+    ca, cb = P(tb - 0.1, o_r + 0.05), P(te(o_r) + 0.04, o_r + 0.05)
+    R.col_seg(C, ca, cb, 0.12, z1 - 0.3, z1 + RAIL_H + 0.06, K.COL_NOCAM)
+
+
 def atrium_stairs(RZ):
     """The scissor stairs crossing the west void (ru_atrium_hdr_flickr, ru_atrium_enr_vertical, ru_atrium_construction):
     per storey a flight up the south-east arm to a landing at the chevron tip, a flight up the north-east arm to the
@@ -3442,6 +3499,8 @@ def atrium_stairs(RZ):
             q1 = (tip[0] + d_[0] * (s_land + 0.1) + n_[0] * 1.75, tip[1] + d_[1] * (s_land + 0.1) + n_[1] * 1.75)
             C.poly([(q0[0], q0[1], zl - 0.3), (q1[0], q1[1], zl - 0.3), (q1[0], q1[1], zl + RAIL_H + 0.06),
                     (q0[0], q0[1], zl + RAIL_H + 0.06)], K.COL_NOCAM, normal_hint=(-n_[0], -n_[1], 0))
+        if hi in HEAD_FULL:
+            _head_fill(V, C, mne0, dne, nne, t_ne, z1, void_hi)
         RZ.kit_add(P, lo, tag=f"atrium_stair_{lo}")
         info.append({"storey": f"{lo}-{hi}", "se": f1, "ne": f2, "landing_z": zl})
         RZ.points.setdefault("atrium", {})[f"stair_landing_{lo}"] = {
@@ -4296,7 +4355,7 @@ def level1_extras(RZ):
 # L3 kink: the wedge between the kink rail's east face and the main rail's west face, at the main rail's end cap
 # (game x 7807..7812, z -1847: the opposing pushes cancelled and Mario slid down it into the void)
 RAIL_PLUGS = [("L1", -398.2, -276.3, 0.24), ("L1", -397.0, -276.6, 0.2),
-              ("L2", -393.8, -265.4, 0.24),
+              ("L2", -393.8, -265.4, 0.24),     # stairs_fast3: kept - without it spotfall_r L2 head 1 -> 14
               ("L3", -394.25, -266.95, 0.24), ("L3", -393.4, -266.8, 0.2),
               ("L3", -391.90, -274.48, 0.12)]
 
