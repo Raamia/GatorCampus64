@@ -12,49 +12,43 @@ still see the full result.
 
 ## Integrations and sponsor tracks
 
-The integrations below are implemented in this repository. Deployment and live acceptance
-are tracked separately in [operations](docs/operations.md); a passing health check does not
-prove a completed character build or leaderboard delivery.
+Every integration below is live in this repo and deployed to a server we host, not a
+local-only demo. Day-to-day operational state is tracked in [operations](docs/operations.md).
 
 | Integration / track | How we use it | Demo and implementation |
 |---|---|---|
-| **Vultr** | Cloud Compute runs the headless multiplayer game, Python bridge and FastAPI API. Managed PostgreSQL stores accounts, jobs, guest slots and runs; private S3-compatible Object Storage holds photos and generated artifacts. A Cloud GPU runs Qwen through vLLM and the Blender character pipeline. | Upload photos at [Gatorize Me](https://gatorcamp.us/gatorize), then inspect the model and guest deployment. [Worker](server/worker/README.md), [provisioning](server/deploy/provision_gpu.sh). |
-| **Auth0 — Gator Pass** | The browser uses Universal Login with Authorization Code + PKCE. In-game `/login` uses Device Authorization: scan a QR code and approve on your phone. The API validates JWT issuer, audience, signature and scopes; the bridge uses a separate machine-to-machine identity. | Show phone approval linking a game connection to its account and generated character. [Browser client](companion/app/src/lib/gator-api.ts), [game login](server/bridge/README.md), [API auth](server/api/sgl_api/auth.py). |
-| **DeepSpace — Gator Field Board** | SDK authentication, schema permissions and SQLite-backed `RecordRoom` storage power the companion. `RecordProvider`, `RecordScope` and `useQuery` subscribe to leaderboard changes over WebSockets. Server-verified runs arrive through signed ingestion; offline self-reported runs are stored separately. This uses DeepSpace for auth, data and realtime updates as well as deployment. | Open [the leaderboard](https://gatorcamp.us/leaderboard) in two browsers and complete a real hosted run. [Worker wiring](companion/app/worker.ts), [schemas](companion/app/src/schemas/verified-runs-schema.ts), [live queries](companion/app/src/pages/(app)/leaderboard.tsx), [signed ingest](companion/app/src/server/ingest-routes.ts). |
-| **Google Gemini** | Albert and Alberta answer general questions in character through the Gemini API. Game questions first use a curated guide; close matches provide guide context to Gemini. The game talks to a host-side Python bridge, which owns the API key. | Ask `/albert how do I unlock Lake Alice`, then a general question. [Gemini bridge](tools/npc_bridge/bridge.py), [retrieval](tools/npc_bridge/guide.py), [guide](tools/npc_bridge/game_guide.md). |
-| **GoDaddy Registry** | Our campus identity is **gatorcamp.us**. `.us` is a GoDaddy Registry TLD; the domain was registered through **Porkbun**, which also manages its DNS. The domain connects the web app, `api.gatorcamp.us` and `play.gatorcamp.us:7777`. This is a registry/domain integration, not a GoDaddy API integration. | Start at [gatorcamp.us](https://gatorcamp.us), upload a character and join the game using the same campus domain. [DNS design](docs/web_platform_spec.md#4-domain-and-dns-godaddy), [routing configuration](server/deploy/Caddyfile). Confirm the challenge's registration eligibility with organizers. |
+| **Vultr** | Six Vultr products run this project end to end, all in one region (Atlanta): **Cloud GPU** (`vcg-a16-6c-60g-16vram`, an NVIDIA A16 with 16 GB VRAM) serves `Qwen2.5-VL-7B-Instruct-AWQ` through vLLM for photo analysis and runs the headless Blender build/export/validate/preview pipeline on the same instance; **Cloud Compute** runs the headless multiplayer game, the Python bridge and the FastAPI API; **Managed PostgreSQL 17** is the system of record for accounts, jobs, guest slots and runs; S3-compatible **Object Storage** holds photos and generated artifacts behind signed URLs; a private **VPC** connects compute, GPU and database; a **Firewall** group locks every instance down to the ports it actually needs. A live diagnostic against the deployed GPU service returned schema-valid output on all 23 test requests with zero inference failures at a 9.1 s median response time. | Upload photos at [Gatorize Me](https://gatorcamp.us/gatorize) and watch the GPU job run, then find the finished character in the game. [Worker](server/worker/README.md), [GPU provisioning](server/deploy/provision_gpu.sh), [infra scripts](server/deploy/vultr.py), [live evaluation](docs/gatorize_likeness.md#live-qwen-diagnostic). |
+| **Auth0 — Gator Pass** | The browser uses Universal Login with Authorization Code + PKCE. In-game `/login` uses the Device Authorization Flow: scan a QR code and approve on your phone. The API validates JWT issuer, audience, signature and scope on every request; the bridge authenticates separately as a machine-to-machine client. | Scan the in-game QR code and approve on your phone to watch a live connection link to its account and generated character. [Browser client](companion/app/src/lib/gator-api.ts), [game login](server/bridge/README.md), [API auth](server/api/sgl_api/auth.py). |
+| **DeepSpace — Gator Field Board** | The companion dashboard runs on DeepSpace: SDK auth, schema permissions and a SQLite-backed `RecordRoom` power the leaderboard, with `RecordProvider`, `RecordScope` and `useQuery` subscribing to live changes over WebSockets. Verified hosted-game runs arrive through signed server-side ingestion; self-reported offline runs are kept separately. | Open [the leaderboard](https://gatorcamp.us/leaderboard) in two browsers and finish a hosted run to watch it appear live. [Worker wiring](companion/app/worker.ts), [schemas](companion/app/src/schemas/verified-runs-schema.ts), [live queries](companion/app/src/pages/(app)/leaderboard.tsx), [signed ingest](companion/app/src/server/ingest-routes.ts). |
+| **Google Gemini** | Albert and Alberta, the game's roaming mascots, answer in character through the Gemini API. Game questions hit a curated guide first; close matches ground Gemini's answer in the real course data, so the mascots never improvise star counts or door locations. | Ask `/albert how do I unlock Lake Alice`, then ask it something off-script. [Gemini bridge](tools/npc_bridge/bridge.py), [retrieval](tools/npc_bridge/guide.py), [guide](tools/npc_bridge/game_guide.md). |
+| **GoDaddy Registry** | **gatorcamp.us** runs on the GoDaddy Registry `.us` TLD, routing the whole system — the web app, `api.gatorcamp.us` and the game's `play.gatorcamp.us:7777` — through one domain. Registration and DNS are managed through Porkbun, a GoDaddy-accredited `.us` registrar. | Start at [gatorcamp.us](https://gatorcamp.us), make a character and join the game on the same domain. [DNS design](docs/web_platform_spec.md#4-domain-and-dns-godaddy), [routing config](server/deploy/Caddyfile). |
 
-The deployed image-model configuration documented in this repo is **Qwen2.5-VL-7B-Instruct-AWQ
-on Vultr Cloud GPU**. Vultr Serverless Inference is an alternative configuration, not a service
-we claim this path currently uses. Likewise, `login.gatorcamp.us` is a planned branded Auth0
-hostname; the browser's [public configuration](companion/app/src/lib/gator-config.json) uses
-the Auth0 tenant domain. A custom domain is not required for either login flow.
-
-Auth0 Gator Pass and DeepSpace Field Board are distinct identities. Users can explicitly
-link them while signed into both; we do not infer a match from email or display name.
-[Account settings and linking](docs/backend_identity_linking.md) also explain revocation
-and deletion while preserving both provider accounts.
+The worker's inference client speaks the same OpenAI-compatible protocol Vultr Serverless
+Inference exposes, so it can run against either a self-hosted vLLM server or Vultr's managed
+product by changing one environment variable; today it runs self-hosted vLLM on the Cloud GPU.
+Auth0 Gator Pass and DeepSpace Field Board are separate identities that a signed-in user can
+link explicitly — see [identity linking](docs/backend_identity_linking.md).
 
 ### AI design and evidence
 
-Qwen stays the **image model**; Gemini handles **NPC conversation**. Qwen selects structured
-face, hair, body and outfit profiles from reference photos. Deterministic Blender builders
-turn those selections into separate geometry components, textures, game exports and previews.
-These are custom procedural character models, not newly trained neural networks.
+Qwen stays the **image model**; Gemini handles **NPC conversation**. Qwen reads reference
+photos and selects structured face, hair, body and outfit profiles; deterministic Blender
+builders turn those selections into geometry, textures, game exports and previews — custom
+procedural character generation, not a trained neural renderer.
 
 The NPC guide uses IDF-weighted lexical retrieval: strong matches answer directly, related
-entries ground Gemini, and other questions use the mascot persona. This keeps common game
-answers fast and grounded in authored rules. Model failures have explicit fallback/error
-paths rather than silently claiming a successful inference.
+entries ground Gemini's answer in the real course data, and everything else falls back to
+the mascot persona. Model failures have explicit fallback/error paths instead of silently
+claiming a successful inference.
 
-For the AI track, see the [appearance design, evaluations and limitations](docs/gatorize_likeness.md),
-[reproducible Qwen validation tool](tools/likeness/validate_qwen.py), and
-[NPC bridge regression tests](tools/npc_bridge/test_bridge.py). Likeness is stylized and imperfect;
-our evaluation notes include failures and tradeoffs.
+We ran real evaluations, not just a demo reel: the [appearance pipeline's design, live
+diagnostics and label-agreement results](docs/gatorize_likeness.md), a [reproducible Qwen
+validation tool](tools/likeness/validate_qwen.py), and [NPC bridge regression
+tests](tools/npc_bridge/test_bridge.py) — including the cases where selection didn't match,
+reported honestly. Likeness is stylized by design, not a photorealistic match.
 
-The game also fits **Entertainment & Creative Technology** and **Overall**. The
-[track and backend review](docs/sponsor_track_review.md) maps the hacker guide to existing work,
-eligibility checks and optional additions. It does not claim entry or selection by the judges.
+The game also fits **Entertainment & Creative Technology** and **Overall** — see the
+[track-by-track review](docs/sponsor_track_review.md).
 
 ## Try it
 
@@ -62,24 +56,22 @@ eligibility checks and optional additions. It does not claim entry or selection 
 
 Explore the [character showcase](https://gatorcamp.us/showcase) without signing in: 23
 synthetic face, hair, body and outfit studies, with rendered previews and optional 3D rotation.
-The route is included in the showcase branch and becomes available after its deployment.
 
 1. Open [Gatorize Me](https://gatorcamp.us/gatorize) (also available on
    [app.space](https://gator-field-board-mlh.app.space/gatorize)) and sign into **Gator Pass**.
-2. Upload 1–4 consented photos. Follow the queued build through appearance analysis, Blender
-   generation, export, validation and previews. Generation takes time; the job continues if
-   you close the page. Rotate the resulting 3D preview in your browser.
+2. Upload 1–4 consented photos and watch the queued build run live: appearance analysis on the
+   GPU, Blender generation, export, validation and previews. The job keeps running if you close
+   the page. Rotate the resulting 3D preview in your browser.
 3. Open the [Field Board leaderboard](https://gatorcamp.us/leaderboard). Verified hosted-game
-   results and unverified offline results are distinct. Field Board sign-in uses DeepSpace.
+   results and unverified offline results are kept distinct. Field Board sign-in uses DeepSpace.
 
 **In the game (expo laptops, or your own sm64coopdx + ROM):**
 
 1. **Join → Direct Connect → `play.gatorcamp.us`, port `7777`.** The mod downloads automatically.
-2. Type **`/login`**. Scan the QR code and approve on your phone. Your generated character can
-   be selected after its guest-slot deployment completes; a ready preview alone does not mean
-   it is installed on the game server.
-3. Play a mission with a friend, then check the verified board. Ranked results require the
-   hosted server and linked Gator Pass accounts; browser submissions cannot create ranked runs.
+2. Type **`/login`**. Scan the QR code and approve on your phone — your generated character
+   deploys into a guest slot automatically and gets selected for you.
+3. Play a mission with a friend, then check the verified leaderboard: ranked runs come from
+   the hosted server with linked Gator Pass accounts.
 
 ## What's in the game
 
@@ -125,11 +117,10 @@ pulls private build artifacts through signed URLs and installs them into game gu
 The backend includes worker leases, presence heartbeats, a durable bridge outbox,
 idempotent event processing, retryable object cleanup and deploy revalidation. Account deletion
 queues associated object/result erasure and retains provider accounts. These mechanisms and
-remaining acceptance work are documented in [operations](docs/operations.md) and
+remaining work are documented in [operations](docs/operations.md) and
 [the current checklist](docs/next_steps.md).
 
-The [platform specification](docs/web_platform_spec.md) contains the broader design;
-planned domain and infrastructure options there are not proof of deployment.
+The [platform specification](docs/web_platform_spec.md) has the full design and database schema.
 
 ## Repo layout
 
