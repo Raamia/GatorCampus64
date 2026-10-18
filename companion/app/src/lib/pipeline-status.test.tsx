@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { duration, fetchPipelineStatus, parseSnapshot, snapshotStale, type PipelineSnapshot } from './pipeline-status'
 import { PipelineResults } from '../pages/pipeline'
 
-const snapshot: PipelineSnapshot = { observed_at: '2026-10-17T12:00:00+00:00', jobs: [
+const snapshot: PipelineSnapshot = { gpu: [], observed_at: '2026-10-17T12:00:00+00:00', jobs: [
   { id: '0123456789ab', state: 'build', step: 'build', elapsed_seconds: 65, steps: [
     { step: 'spec', seconds: 2.3, running: false }, { step: 'build', seconds: 62.7, running: true },
   ] },

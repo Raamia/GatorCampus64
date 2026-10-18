@@ -100,3 +100,34 @@ def test_principal_claim_namespace():
     assert p.email_uf is True and p.nickname == "Gat"
     q = Principal("a|b", set(), {"https://gatorcamp.us/uf": True}, claim_ns="https://other.test/")
     assert q.email_uf is False
+
+
+def test_iphone_mpo_jpeg_primary_frame_orientation_and_metadata():
+    from .conftest import mpo
+    raw = mpo()
+    with Image.open(io.BytesIO(raw)) as source:
+        assert source.format == 'MPO' and source.n_frames == 2
+    clean = images.process(raw)
+    with Image.open(io.BytesIO(clean)) as image:
+        assert image.format == 'JPEG' and image.size == (512, 1024)
+        assert not image.getexif() and 'mp' not in image.info
+        red, green, blue = image.getpixel((200, 200))
+        assert red > 200 and green < 40 and blue < 40
+    assert b'MPF' not in clean and b'SecretCam' not in clean
+    assert clean.count(b'\xff\xd8') == 1
+
+
+def test_corrupt_mpo_primary_is_rejected():
+    from .conftest import mpo
+    raw = mpo()
+    start_of_scan = raw.index(b'\xff\xda')
+    with pytest.raises(images.PhotoError):
+        images.process(raw[:start_of_scan + 20])
+
+
+def test_mpo_pixel_limit_is_preserved(monkeypatch):
+    from .conftest import mpo
+    raw = mpo()
+    monkeypatch.setattr(Image, 'MAX_IMAGE_PIXELS', 1000)
+    with pytest.raises(images.PhotoError, match='too large'):
+        images.process(raw)

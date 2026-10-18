@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { SiteHeader } from '../components/SiteHeader'
+import { PipelineGpu } from '../components/PipelineGpu'
 import { Seo } from '../components/Seo'
 import { seo } from '../seo'
 import { duration, fetchPipelineStatus, snapshotStale, type PipelineSnapshot } from '../lib/pipeline-status'
@@ -60,9 +61,9 @@ export default function Pipeline() {
     <main className="pipeline-page">
       <header className="pipeline-intro"><p className="eyebrow">GATORIZE / LIVE PIPELINE</p><h1>From photo<br /><em>to player.</em></h1>
         <p>Follow the latest 12 character jobs through our Vultr-hosted pipeline: Qwen appearance analysis, Blender modeling, export, validation and previews.</p></header>
-      <aside className="pipeline-note"><strong>Public operations view</strong><p>Only anonymous job labels, states and timings are shown. No photos, names or account details.</p></aside>
+      <aside className="pipeline-note"><strong>Public operations view</strong><p>Only anonymous job labels, timings and worker GPU measurements are shown. No photos, names or account details.</p></aside>
+      <PipelineGpu snapshot={snapshot} failed={failed} now={now} />
       <section aria-label="Recent pipeline jobs"><PipelineResults snapshot={snapshot} failed={failed} stale={snapshot !== null && snapshotStale(snapshot, now)} /></section>
-      <aside className="pipeline-note"><strong>GPU measurements</strong><p>Utilization and VRAM readings are not available in this view yet. Step progress shows job activity; it does not measure GPU usage.</p></aside>
       <footer className="pipeline-footer"><Link to="/showcase">Explore the character showcase</Link><span>Built for SwampHacks XII · University of Florida</span></footer>
     </main>
   </>

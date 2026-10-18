@@ -188,3 +188,16 @@ def expire_jobs(conn, limit=100):
             conn.execute("SELECT sgl_release_slot(%s)", (job["character_id"],))
             expired.append(job)
         return expired
+
+
+def record_gpu(conn, worker, sample):
+    """Store only numeric device metrics, retaining one observation per worker."""
+    keys = ('utilization_gpu_pct', 'memory_used_mib', 'memory_total_mib')
+    gpus = [{key: gpu.get(key) for key in keys} for gpu in sample['gpus'][:16]] if sample['available'] else []
+    with conn.transaction():
+        conn.execute("""INSERT INTO worker_gpu_status (worker, observed_at, available, gpus)
+                       VALUES (%s, clock_timestamp(), %s, %s)
+                       ON CONFLICT (worker) DO UPDATE SET observed_at=EXCLUDED.observed_at,
+                           available=EXCLUDED.available, gpus=EXCLUDED.gpus""",
+                     (worker, sample['available'], Jsonb(gpus)))
+        conn.execute("DELETE FROM worker_gpu_status WHERE observed_at < clock_timestamp() - interval '24 hours'")

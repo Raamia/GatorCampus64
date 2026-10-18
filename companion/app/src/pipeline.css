@@ -23,3 +23,23 @@
 .pipeline-page a:focus-visible { outline:3px solid #b44e19; outline-offset:4px; }
 @media(max-width:800px) { .pipeline-page { padding:36px 20px 24px; }.pipeline-jobs { grid-template-columns:1fr; }.pipeline-footer { flex-direction:column; } }
 @media(max-width:400px) { .pipeline-job { padding:18px; }.pipeline-job header { align-items:flex-start; flex-direction:column; } }
+
+.pipeline-gpu { background:#fffaf0; border:1px solid #b7cbe3; padding:24px; margin:28px 0; }
+.pipeline-gpu-heading,.pipeline-gpu-observed { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.pipeline-gpu h2 { font:30px/1.2 Georgia,serif; margin:10px 0; }
+.pipeline-gpu-worker { border-top:1px solid #b7cbe3; padding-top:16px; margin-top:20px; }
+.pipeline-gpu-observed .pipeline-caption { margin:0; }
+.pipeline-gpu-devices { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr)); gap:24px; }
+.pipeline-gpu-device { min-width:0; }
+.pipeline-gpu-device h3 { font-size:13px; margin:20px 0 12px; }
+.pipeline-gpu-metric { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-top:16px; font-size:13px; }
+.pipeline-gpu-metric strong { font-size:24px; font-variant-numeric:tabular-nums; text-align:right; }
+.pipeline-gpu-metric small { font-size:12px; font-weight:normal; }
+.pipeline-gpu meter { display:block; width:100%; height:12px; margin:10px 0; appearance:none; border:0; border-radius:0; background:#e5eef9; }
+.pipeline-gpu meter::-webkit-meter-bar { background:#e5eef9; border:0; border-radius:0; }
+.pipeline-gpu meter::-webkit-meter-optimum-value { background:#b44e19; }
+.pipeline-gpu meter::-moz-meter-bar { background:#b44e19; }
+.pipeline-gpu .is-stale meter::-webkit-meter-optimum-value { background:#8091a8; }
+.pipeline-gpu .is-stale meter::-moz-meter-bar { background:#8091a8; }
+.pipeline-gpu-empty { font-size:14px; line-height:1.6; }
+@media(max-width:400px) { .pipeline-gpu { padding:18px; }.pipeline-gpu-metric { flex-wrap:wrap; }.pipeline-gpu-metric strong { font-size:22px; } }

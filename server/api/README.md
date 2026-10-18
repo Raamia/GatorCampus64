@@ -3,8 +3,8 @@
 `GET /pipeline/status` is unauthenticated and read-only. It returns at most the
 12 newest jobs, ordered by creation time, with only a 12-character opaque job
 label, allowlisted state/current step, total elapsed seconds (including queue),
-and step intervals `{step, seconds, running}`. `observed_at` is the UTC snapshot
-time; running durations are measured at that time. The SQL transaction is read-only.
+step intervals `{step, seconds, running}`, and allowlisted GPU readings.
+`observed_at` is the UTC snapshot time; running durations are measured at that time. The SQL transaction is read-only.
 A five-second per-process cache with a refresh lock bounds database polling;
 responses also use `Cache-Control: public, max-age=5`, like the public leaderboards.
 There is no user-selected limit, account lookup, storage request, photo, raw log,
@@ -22,10 +22,29 @@ snapshot until their next successful refresh.
 The companion's `/pipeline` page is public, prerenders a loading shell, polls
 without credentials every ten seconds, and retains a clearly marked frozen
 snapshot on outages. It does not claim that job activity measures GPU utilization.
-GPU numbers can be added later by explicitly projecting allowlisted telemetry;
-this release does not read manifests or depend on `feat/gpu-telemetry-evidence`.
+The `gpu` array contains up to eight workers seen in the last 24 hours, each with
+an opaque `id`, `observed_at`, `available`, and up to 16 `gpus`. Devices expose only
+`index`, `utilization_gpu_pct`, `memory_used_mib`, and `memory_total_mib`. Unknown
+metrics are null; zero is a measured value. Hardware names, hostnames, raw logs,
+driver errors and process data never appear. Readings older than 30 seconds are
+marked stale in the UI, independently of the API's own polling timestamp.
+
+The worker reports every ten seconds while idle or building, using bounded local
+`nvidia-smi` queries on an independent thread/DB connection. These are device-wide
+samples, not per-job attribution or peak values. No remote model endpoint is queried.
+No historical readings are invented for old jobs.
 Apply the normal API schema migration before serving the new endpoint. Existing
 workers automatically produce timings through their existing state writes.
+GPU rollout order: apply the idempotent `worker_gpu_status` table addition, deploy
+the API, restart the GPU worker after its current job, then deploy the website.
+The website accepts older API responses without GPU fields during rollout.
+Sampler failures do not fail character jobs; old readings become stale. Existing
+job/upload formats and worker model settings are unchanged.
+
+JPEG intake also accepts MPO containers, used by some iPhone HDR JPEGs. Only the
+primary frame is decoded, oriented, resized and re-encoded as plain RGB JPEG;
+auxiliary images and EXIF/GPS/MPF metadata are discarded. The existing upload and
+pixel-size limits still apply. This does not add HEIC decoding.
 
 
 # Anonymous Gatorize drafts

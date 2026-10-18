@@ -6,7 +6,9 @@ import io
 from PIL import Image, ImageOps
 
 Image.MAX_IMAGE_PIXELS = 40_000_000  # decompression-bomb guard (a 8 MB PNG can't legitimately exceed this)
-ALLOWED = {"JPEG", "PNG"}
+# iPhone HDR JPEGs may contain an MPF gain map and be identified as MPO.
+# Decode only the primary JPEG; auxiliary images never enter the pipeline.
+ALLOWED = {"JPEG", "PNG", "MPO"}
 
 
 class PhotoError(ValueError):
@@ -21,8 +23,10 @@ def process(data: bytes, max_side: int = 1024) -> bytes:
             probe.verify()
         if fmt not in ALLOWED:
             raise PhotoError(f"only JPEG or PNG photos are accepted (got {fmt or 'unknown'})")
-        img = Image.open(io.BytesIO(data))
-        img.load()
+        with Image.open(io.BytesIO(data)) as source:
+            source.seek(0)
+            source.load()
+            img = ImageOps.exif_transpose(source)
     except PhotoError:
         raise
     except (Image.DecompressionBombError, Image.DecompressionBombWarning) as e:
@@ -30,7 +34,6 @@ def process(data: bytes, max_side: int = 1024) -> bytes:
     except Exception as e:  # noqa: BLE001 - PIL raises many types for corrupt files
         raise PhotoError("not a readable JPEG or PNG") from e
 
-    img = ImageOps.exif_transpose(img)
     if img.mode in ("RGBA", "LA", "P"):
         img = img.convert("RGBA")
         bg = Image.new("RGB", img.size, (255, 255, 255))
