@@ -657,8 +657,15 @@ function World:build_env(c)
     end
 
     -- network
+    local function check_packet_strings(t)
+        for k, v in pairs(t) do
+            assert(type(k) ~= "string" or (#k > 0 and #k <= 256), "coopdx packet string key must contain 1..256 bytes")
+            assert(type(v) ~= "string" or (#v > 0 and #v <= 256), "coopdx packet string value must contain 1..256 bytes: " .. tostring(k))
+        end
+    end
     S.network_send = function(reliable, t)
         assert(type(reliable) == "boolean" and type(t) == "table", "network_send(bool, table)")
+        check_packet_strings(t)
         local n = 0
         for k, v in pairs(t) do
             n = n + 1
@@ -669,6 +676,7 @@ function World:build_env(c)
         table.insert(w.queue, { kind = "packet", from = c, data = deepcopy(t) })
     end
     S.network_send_to = function(li, reliable, t)
+        check_packet_strings(t)
         assert(math.type(li) == "integer" and li > 0 and li < C.MAX_PLAYERS, "network_send_to local index")
         table.insert(w.queue, { kind = "packet", from = c, to = c.giAt[li], data = deepcopy(t) })
     end

@@ -343,5 +343,19 @@ test("hosted server (headless host): questions go out as npc_ask events, never i
     check(Sim.find(H.chat, "npc_bridge/bridge.py") == nil, "no 'run bridge.py' hint on the hosted server")
 end)
 
+test("long questions, stats and replies stay within coopdx's 256-byte packet string limit", function()
+    local w, H, F, disk = setup()
+    next_to(F, "albert")
+    say(w, F, string.rep("é", 200))   -- 400 raw bytes; coopdx packet strings top out at 256
+    w:step(2)
+    local text = outbox(disk)
+    check(text ~= "", "the question reached the host's outbox despite exceeding the transport's byte limit")
+    local question = text:match("\n%d+\t[^\t]+\t[^\t]+\t([^\t]+)\t")
+    check(question ~= nil and utf8.len(question) ~= nil, "the truncated question is still valid UTF-8 (no split byte)")
+    check(text:find("albert_at=", 1, true) ~= nil, "the asker's own stats (including NPC locations) made it across")
+    reply(w, disk, 1, "albert", string.rep("Long answer. ", 46))   -- 598 bytes, under the 600-byte reply cap
+    check(Sim.find(F.chat, "Long answer") ~= nil, "a long reply still arrives, split across packet fields")
+end)
+
 print(string.format("%d checks passed, %d failed", passed, failed))
 if failed > 0 then os.exit(1) end
