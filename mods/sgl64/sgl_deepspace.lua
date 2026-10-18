@@ -635,7 +635,9 @@ local function draw_leaderboard_menu()
             local cached = load_cached_board(board)
             local live = sLiveBoards[board.missionId] ~= nil
             local tileFill = selected and { 255, 217, 111 } or { 250, 244, 224 }
-            local tileInk = { 23, 39, 69 }
+            -- Lift the near-black ink so the chunky menu face stays readable
+            -- against the cream and gold tiles while retaining the navy palette.
+            local tileInk = { 58, 78, 112 }
             sgl_hud_rect(tileX + 2, tileY + 2, tileW, tileH, 3, 12, 29, 150)
             sgl_hud_rect(tileX, tileY, tileW, tileH, tileFill[1], tileFill[2], tileFill[3], 255)
             sgl_hud_rect(tileX, tileY, tileW, 2, selected and 238 or 112, selected and 123 or 155,
@@ -680,9 +682,9 @@ local function draw_leaderboard_menu()
             sgl_hud_rect(tileX + 6, tileY + 6, 18, 18, 21, 43, 79, 255)
             menu_text_center(string.format("%02d", i), tileX + 15, tileY + 9, 0.16, { 255, 221, 113 }, 1)
             local titleScale = math.min(0.21, (tileW - 32) / djui_hud_measure_text(entry.name or entry.label))
-            menu_text(entry.name or entry.label, tileX + 29, tileY + 7, titleScale, { 23, 39, 69 }, 1)
+            menu_text(entry.name or entry.label, tileX + 29, tileY + 7, titleScale, { 58, 78, 112 }, 1)
             local detailScale = math.min(0.17, (tileW - 14) / djui_hud_measure_text(entry.detail))
-            menu_text(entry.detail, tileX + 7, tileY + 26, detailScale, { 64, 83, 110 }, 1)
+            menu_text(entry.detail, tileX + 7, tileY + 26, detailScale, { 83, 101, 130 }, 1)
         end
         sgl_hud_rect(x + 12, y + panelH - 29, panelW - 24, 1, 183, 190, 192, 230)
         if sLeaderboardMouseHover == -1 then
@@ -690,7 +692,7 @@ local function draw_leaderboard_menu()
         end
         local footer = inStage and "A / CLICK: GO    B: MAP    START: CLOSE"
             or "A / CLICK: SELECT    B: CLOSE    START: CLOSE"
-        menu_text_center(footer, sw / 2, y + panelH - 20, 0.17, { 23, 39, 69 }, 1)
+        menu_text_center(footer, sw / 2, y + panelH - 20, 0.17, { 58, 78, 112 }, 1)
     else
         local board = sLeaderboardBoard and sgl_deepspace_board_view(sLeaderboardBoard)
             or { label = "GLOBAL BOARD", entries = {}, status = "" }
