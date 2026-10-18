@@ -126,18 +126,23 @@ def ground_class(tags):
 
 
 def plaza_material(tags):
-    surf = tags.get("surface", "")
-    if surf in ("paving_stones", "brick", "sett"):
-        return "plaza_brick"
+    # OSM's surface tags describe many campus walkways and courtyards as
+    # paving_stones/brick, but do not distinguish red brick from concrete
+    # pavers. Using the brick atlas made mapped ground polygons look like stray
+    # red strips where those polygons meet roads. Keep the generic campus
+    # paving neutral; hand-built landmarks can still use plaza_brick explicitly.
     return "concrete"
 
 
 def path_material(tags):
     surf = tags.get("surface", "")
-    if surf in ("paving_stones", "brick", "sett"):
-        return "plaza_brick"
-    if surf == "asphalt":
-        return "parking"
+    # Way-level surface tags are inconsistent on the campus map: sidewalks and
+    # cycleways tagged paving_stones/brick were rendered as broad red brick
+    # ribbons, including across asphalt roads. Reserve plaza_brick for mapped
+    # area polygons (real plazas); linear paths use the campus concrete paving.
+    # surface=asphalt footways are mostly short curb links between a crosswalk and the sidewalk;
+    # drawn as dark "parking" they overlapped the sidewalk ribbons at the same height and z-fought
+    # (a sawtooth of asphalt at the crosswalk ends), so they use the sidewalk paving too.
     if surf in ("ground", "dirt", "woodchips", "unpaved", "grass", "mulch", "compacted", "gravel"):
         return "mulch"
     return "sidewalk"
