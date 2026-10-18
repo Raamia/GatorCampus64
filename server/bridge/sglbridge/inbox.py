@@ -147,6 +147,13 @@ class Inbox:
             self._write_locked()
             return self.seq
 
+    def discard_player(self, gi: int) -> None:
+        """Do not replay a previous connection's auth commands to a reused slot."""
+        with self._lock:
+            self._cmds = [(at, c) for at, c in self._cmds
+                          if c.get("gi") != gi or c.get("t") not in ("verified", "login_code", "login_failed")]
+            self._write_locked()
+
     def reset(self) -> None:
         """Drop pending commands (the game just (re)started); seq keeps counting."""
         with self._lock:

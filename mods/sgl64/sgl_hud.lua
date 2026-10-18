@@ -55,6 +55,8 @@ end
 -- and would otherwise be painted over.
 function sgl_hud_blocked()
     if is_game_paused() then return true end
+    local campusMenu = rawget(_ENV, "sgl_campus_menu_is_open")
+    if campusMenu ~= nil and campusMenu() then return true end
     local open = _G.sglCharSelectIsOpen   -- nil when charselect.lua is not loaded
     return open ~= nil and open() == true
 end

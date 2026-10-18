@@ -27,13 +27,15 @@
 -- a build that might fail. The bridge renames sglguest → guest_<slot> when it deploys.
 --   Claim (one transaction):
 --     SELECT j.id, j.character_id, j.photos, c.name FROM jobs j JOIN characters c ON c.id = j.character_id
---      WHERE j.state = 'queued' ORDER BY j.created LIMIT 1 FOR UPDATE OF j, c SKIP LOCKED;
+--      WHERE j.state = 'queued' ORDER BY j.created LIMIT 1 FOR UPDATE OF c SKIP LOCKED;
 --     UPDATE jobs SET state='spec', step='spec', started=now(), finished=NULL, worker=<host>,
 --            log='', error=NULL, attempts=attempts+1 WHERE id=<job_id>;
 --     UPDATE characters SET state='spec', step='spec' WHERE id=<character_id>;
 --   Photos: download exactly the keys in jobs.photos (photos/<job_id>/<i>.jpg).
---   Each step: UPDATE jobs SET state=<s>, step=<step>, log=<tail>  and  characters SET state=<s>, step=<step>.
---   Ready (one transaction; take pg_advisory_xact_lock(hashtext('sgl_slots')) first):
+--   Each step: lock character FOR UPDATE, then UPDATE jobs and characters together.
+--   Ready/failed: take pg_advisory_xact_lock(hashtext('sgl_slots')), then lock character,
+--     then update job/character. Deletion uses the same advisory -> character -> job order.
+--   Ready (one transaction):
 --     UPDATE jobs SET state='ready', step='ready', log=<tail>, error=NULL, finished=now(), artifacts=<below>;
 --     UPDATE characters SET state='ready', step='ready', spec=<character.json>;
 --     SELECT sgl_assign_slot(<character_id>);    -- slot + pending deploy, or NULL when every slot is
@@ -116,6 +118,16 @@ CREATE INDEX IF NOT EXISTS jobs_queued_idx ON jobs (created) WHERE state = 'queu
 CREATE INDEX IF NOT EXISTS jobs_character_idx ON jobs (character_id);
 CREATE INDEX IF NOT EXISTS jobs_created_idx ON jobs (created);
 
+-- Admission history is independent of deletable jobs. No user/photo data or FK.
+CREATE TABLE IF NOT EXISTS generation_admissions (
+    job_id uuid PRIMARY KEY,
+    created timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS generation_admissions_created_idx ON generation_admissions (created);
+INSERT INTO generation_admissions (job_id, created)
+    SELECT id, created FROM jobs WHERE created > now() - interval '1 day'
+    ON CONFLICT DO NOTHING;
+
 CREATE TABLE IF NOT EXISTS slots (
     n            smallint PRIMARY KEY CHECK (n BETWEEN 1 AND 8),   -- guest_<n>
     character_id uuid UNIQUE REFERENCES characters(id) ON DELETE SET NULL,
@@ -168,9 +180,10 @@ CREATE INDEX IF NOT EXISTS deploys_pending_idx ON deploys (created) WHERE state 
 
 -- ── Verified leaderboards (§10) ────────────────────────────────────────────────────────────────
 -- One row per `run` event (POST /events). Every run is stored; only ranked runs reach a board.
---   ranked = the run passed validation AND every player resolved to a Gator Pass link (§7) made in
---            the current server session (after the latest `hello` event, not followed by a `leave`
---            of that gi). reason is NULL exactly when ranked.
+--   ranked = validation passes AND every player has an exact bridge-captured link bound to
+--            its session/connection and authenticated bridge subject. Legacy events without
+--            these references are unranked. Receipt order is not an identity boundary.
+--            reason is NULL exactly when ranked.
 --   reason (not ranked): unknown_mission, bad_fields, out_of_range, below_floor (faster than the
 --            mission's floor, sgl_api/missions.py), clock_mismatch (|frames - client_frames| > 60),
 --            player_count (players != number of gi/name pairs), duplicate_player (one account twice),
@@ -296,6 +309,7 @@ DECLARE
     d bigint;
     jid uuid;
 BEGIN
+    PERFORM pg_advisory_xact_lock(hashtext('sgl_slots'));
     UPDATE deploys SET state = 'superseded', finished = now() WHERE slot = s AND state = 'pending';
     IF cid IS NOT NULL THEN
         SELECT id INTO jid FROM jobs WHERE character_id = cid AND state = 'ready'
@@ -334,6 +348,16 @@ BEGIN
 END $$;
 
 -- ── Migrations for databases created before a change above (idempotent) ───────────────────────
+-- Session-bound login references, assigned by the bridge rather than game clients.
+ALTER TABLE links ADD COLUMN IF NOT EXISTS session_id uuid;
+ALTER TABLE links ADD COLUMN IF NOT EXISTS connection_id uuid;
+ALTER TABLE links ADD COLUMN IF NOT EXISTS bridge_sub text;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS event_key uuid;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS bridge_sub text;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS session_id uuid;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS occurred_at timestamptz;
+CREATE UNIQUE INDEX IF NOT EXISTS events_delivery_idx ON events (bridge_sub, event_key);
+
 -- step check constraints: NOT VALID, so rows written by older builds don't block the upgrade.
 DO $$
 BEGIN

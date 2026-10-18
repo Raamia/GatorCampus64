@@ -239,9 +239,10 @@ def test_link_code_expired_and_resend_verified(http, clock, tmp_path, keys):
     svc.on_link_req(6, "Cy", "AAAAAA")
     svc.on_link_req(6, "Cy", "BBBBBB")
     assert svc.resend_verified() == 1
+    cmds = inbox_cmds(inbox.path)
     svc.forget(6)
     assert svc.resend_verified() == 0
-    cmds = inbox_cmds(inbox.path)
+    assert inbox_cmds(inbox.path) == []
     assert cmds[0] == {"seq": 1, "t": "login_failed", "gi": 6, "reason": "expired"}
     assert cmds[1] == {"seq": 2, "t": "verified", "gi": 6, "name": "Cy", "nickname": "Cy", "guest_slot": 2, "uf": True}
     assert cmds[2] == dict(cmds[1], seq=3, resend=True)
@@ -274,6 +275,54 @@ def test_cancel_on_leave_is_silent(tmp_path):
 
 
 # --- M2M token + API auth --------------------------------------------------------------------------
+@pytest.mark.parametrize("lifecycle", ["cancel", "forget", "reset", "replace"])
+def test_late_link_response_cannot_publish(tmp_path, lifecycle):
+    inbox = Inbox(tmp_path / "sgl64.modfs")
+    pending = []
+
+    class Api:
+        def redeem_link_code(self, code, name, gi):
+            if lifecycle == "replace":
+                svc.on_link_req(gi, "New player", "NEW123")
+            elif lifecycle == "reset":
+                svc.reset()
+            else:
+                getattr(svc, lifecycle)(gi)
+            return {"nickname": "Old player", "guest_slot": 3}
+
+    svc = LoginService(None, None, Api(), inbox, spawn=pending.append)
+    svc.on_link_req(1, "Old player", "OLD123")
+    pending.pop(0)()
+    assert not svc.linked()
+    assert not inbox.document()["cmds"]
+
+
+def test_forget_removes_queued_verification(tmp_path):
+    inbox = Inbox(tmp_path / "sgl64.modfs")
+    inbox.push("verified", gi=1, name="Old player")
+    inbox.push("verified", gi=2, name="Still here")
+    svc = LoginService(None, None, None, inbox)
+    svc.forget(1)
+    assert [c["gi"] for c in inbox.document()["cmds"]] == [2]
+
+
+def test_device_flow_cancelled_during_link_write_cannot_publish(tmp_path):
+    inbox = Inbox(tmp_path / 'sgl64.modfs')
+    class Flow:
+        def request_code(self): return dc()
+        def poll(self, *_): return {'id_token': 'checked-by-test-validator'}
+    class Validator:
+        def validate(self, _): return {'sub': 'auth0|alice'}
+    class Api:
+        def post_link(self, *args, **kwargs):
+            svc.forget(1)  # disconnect occurs while the HTTP response is in flight
+            return {'link_id': 1, 'nickname': 'Alice'}
+    svc = LoginService(Flow(), Validator(), Api(), inbox, spawn=lambda fn: fn())
+    svc.on_login_req(1, 'Alice', {'session_id': 'session', 'connection_id': 'connection'})
+    assert not svc.linked() and not svc.identities()
+    assert not inbox.document()['cmds']
+
+
 def test_m2m_token_cached_until_expiry(http, clock):
     url = "https://tenant.example.test/oauth/token"
     http.add("POST", url, resp(200, {"access_token": "t1", "expires_in": 3600}),

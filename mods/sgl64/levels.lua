@@ -698,10 +698,54 @@ local function warp_key(key, act)
     return warp_to_level(stage.level, 1, act or 1)
 end
 
--- moving EVERYONE is for the host (or a moderator): a friend's stray "/campus swamp 3" would otherwise
--- drag the whole group into another act, past the door locks and the act select
+-- Only the host (or a moderator) can move the whole party.
 local function can_move_everyone()
     return network_is_server() or network_is_moderator()
+end
+
+-- A UI-safe destination list for the in-game travel picker. Keep locations tied to levels that are
+-- actually installed on this client, so the hosted server never offers a dead warp.
+function sgl_campus_travel_destinations()
+    local destinations = {}
+    if sgl_hub_ready() then
+        destinations[#destinations + 1] = { key = "hub", name = "CENTRAL CAMPUS", detail = "CAMPUS HUB" }
+    end
+    for _, stage in ipairs(SGL_STAGES) do
+        if sgl_stage_ready(stage) then
+            local mapName = stage.key == "swamp" and "BEN HILL GRIFFIN STADIUM"
+                or stage.key == "reitz" and "REITZ UNION & ENGINEERING"
+                or stage.key == "alice" and "LAKE ALICE"
+                or stage.key == "marston" and "MARSTON LIBRARY"
+                or stage.key == "libwest" and "LIBRARY WEST"
+                or stage.building or stage.name
+            destinations[#destinations + 1] = {
+                key = stage.key,
+                name = stage.name,
+                detail = mapName,
+            }
+        end
+    end
+    return destinations
+end
+
+-- Use the same trusted warp packet and host/client rules as /campus. A host's choice travels to the
+-- party; a guest's choice only moves that guest, which works on the hosted game server too.
+function sgl_campus_warp(key, act, onlyMe)
+    if key ~= "hub" and sgl_stage_by_key(key) == nil then return false end
+    local stage = sgl_stage_by_key(key)
+    if stage ~= nil and not sgl_stage_ready(stage) then
+        djui_chat_message_create("\\#ffa0a0\\[SGL] " .. stage.name .. " is not built yet (levels/" .. stage.slot .. ").")
+        return false
+    end
+    if onlyMe ~= true and not can_move_everyone() then onlyMe = true end
+    if onlyMe ~= true then
+        network_send(true, { sgl = "warp", key = key, act = act, gi = gNetworkPlayers[0].globalIndex,
+                             mod = network_is_moderator() and not network_is_server() })
+    end
+    if not warp_key(key, act) then return false end
+    djui_chat_message_create("[SGL] warping " .. (onlyMe and "you" or "everyone") .. " to " .. key
+        .. (act and (" act " .. act) or ""))
+    return true
 end
 
 local function sender_is_host(gi)
@@ -777,14 +821,7 @@ local function on_campus_command(msg)
             onlyMe = true
             djui_chat_message_create("[SGL] Only the host moves everyone; warping just you.")
         end
-        if not onlyMe then
-            network_send(true, { sgl = "warp", key = key, act = act, gi = gNetworkPlayers[0].globalIndex,
-                                 mod = network_is_moderator() and not network_is_server() })
-        end
-        if warp_key(key, act) then
-            djui_chat_message_create("[SGL] warping " .. (onlyMe and "you" or "everyone") .. " to " .. key
-                .. (act and (" act " .. act) or ""))
-        end
+        sgl_campus_warp(key, act, onlyMe)
         return true
     end
     campus_usage()

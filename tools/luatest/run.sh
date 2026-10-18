@@ -6,7 +6,8 @@
 #   3. check_globals.lua: cross-file globals from the bytecode, in coopdx's load order (strcmp of the
 #      file names): every read resolves, load-time reads only use earlier files, no shadowed coopdx
 #      names, no global assigned by two files
-#   4. test_missions.lua: multi-client simulation of the mission framework + Swamp missions
+#   4. test_missions.lua: multi-client simulation of the mission framework + Swamp missions (incl. the solo
+#      Gator Chomp Chorus of swamp_chomp.lua played to its star, and the co-op path with 2 players)
 #   5. test_flow.lua: the whole mod (every file) + the real level scripts of every built stage
 #      (castle_grounds, bob, wf, jrb, ccm, bbh): doors, warp nodes, return spawns, act select, stars,
 #      character select, Study Group

@@ -1174,7 +1174,7 @@ test("act 3: quiet-hours music while hiding and seeking; the level music after t
     check(#S.music == 0, "left the act mid-round: stopped")
 end)
 
-test("act 3: a hider outside the stacks while hiding is warned (no count yet); after the star the next round counts in", function()
+test("act 3: out-of-bounds warnings while hiding; collecting the team crest returns everyone to campus", function()
     local w, cs, P = hns_world({ "A", "B" })
     local S, hs = seeker_of(cs)
     local H = hs[1]
@@ -1196,7 +1196,7 @@ test("act 3: a hider outside the stacks while hiding is warned (no count yet); a
     H.pressed = C.D_JPAD
     w:step(3)
     check(ctx_of(S).r == r0 and Sim.hud_has(H, "Grab the star"), "D-pad Down with the star still out: grab it first")
-    check(Sim.hud_has(S, "then the next round"), "the panel says so")
+    check(Sim.hud_has(S, "return to campus"), "the panel explains the team exit")
     -- the star collected -> DONE -> NEXT: 20 s, then the next round with the other librarian
     -- collected: the "got" event, and coopdx deletes every copy (packet_collect_star)
     local function collect(c, o)
@@ -1210,36 +1210,14 @@ test("act 3: a hider outside the stacks while hiding is warned (no count yet); a
     collect(who, Sim.objects_with(who, C.id_bhvStarSpawnCoordinates)[1])
     w:step(3)
     ctx = ctx_of(S)
-    check(state(S) == MS.DONE and ctx.a == PH.NEXT and ctx.c >= 19 and ctx.c <= 20, "DONE: the next round in 20 s")
-    check(Sim.hud_has(S, "Next round in"), "the panel counts it")
-    w:seconds(19)
-    check(state(S) == MS.DONE and ctx_of(S).a == PH.NEXT, "still counting at 19 s")
-    w:seconds(2)
-    check(ctx_of(S).r == r0 + 1, "then a new round by itself")
-    w:seconds(4.5)
-    local S2 = seeker_of(cs)
-    check(ctx_of(S).a == PH.HIDE and S2 ~= nil and S2 ~= S, "hiding again, the librarian rotated")
-    -- D-pad Down in DONE: now
-    to_seek(w, cs)
-    local S3, hs3 = seeker_of(cs)
-    at(hs3[1], { x = -2000, y = P.y_f2, z = -2000 })
-    at(S3, { x = -1900, y = P.y_f2, z = -2000 })
-    w:step(4)
-    local c2 = nil
+    check(state(S) == MS.DONE, "the completed round is DONE")
+    check(Sim.hud_has(S, "Team Gator Crest earned!"), "team completion prompt replaces automatic rematch")
+    w:seconds(3)
     for _, c in ipairs(cs) do
-        for _, o in ipairs(Sim.objects_with(c, C.id_bhvStarSpawnCoordinates)) do
-            if ((raw(o).oBehParams >> 24) & 0xFF) == 2 and (raw(o).oBehParams & 0xFFFF) == ((r0 + 1) & 0xFFFF) then c2 = c2 or { c, o } end
-        end
+        check(c.level == HUB, "each participant returns to campus after collecting")
     end
-    check(c2 ~= nil, "round 2's own star")
-    if c2 ~= nil then
-        collect(c2[1], c2[2])
-        w:step(3)
-        local r1 = ctx_of(S).r
-        H.pressed = C.D_JPAD
-        w:step(3)
-        check(ctx_of(S).r == r1 + 1, "D-pad Down after the star: the next round at once")
-    end
+    check(((w.starFlags[C.COURSE_BBH] or 0) & 4) ~= 0, "hide-and-seek crest remains saved")
+
 end)
 
 test("act 1: D-pad Down twice gets you back to the lobby (once only asks); act 1 Boos chase at 12, act 2's at the default 7", function()

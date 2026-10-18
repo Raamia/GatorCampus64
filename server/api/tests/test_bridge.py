@@ -212,7 +212,7 @@ def test_link_code_flow(client, auth, conn, s3, bridge):
     assert len(code) == 6 and set(code) <= set("23456789ABCDEFGHJKLMNPQRSTUVWXYZ") and r.json()["expires_in"] == 600
     link = client.post("/links", json={"code": code.lower(), "coopdx_name": "AliG", "gi": 3}, headers=bridge)
     assert link.status_code == 200, link.text
-    assert link.json() == {"sub": "auth0|alice", "via": "code", "nickname": "Ali", "uf": False, "gi": 3,
+    assert link.json() == {"link_id": 1, "sub": "auth0|alice", "via": "code", "nickname": "Ali", "uf": False, "gi": 3,
                            "coopdx_name": "AliG", "guest_slot": 1, "character_name": "Ally"}
     again = client.post("/links", json={"code": code, "coopdx_name": "AliG", "gi": 3}, headers=bridge)
     assert again.status_code == 410 and again.json()["detail"]["reason"] == "used"

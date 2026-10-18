@@ -2,6 +2,8 @@
 import hashlib
 import hmac
 import json
+import uuid
+import copy
 
 import httpx
 import pytest
@@ -24,12 +26,27 @@ def run_ev(mission="swamp_sprint", frames=1200, client_frames=None, players=(("1
 
 
 def link(client, bridge, sub, gi, name, nickname=None):
-    r = client.post("/links", json={"sub": sub, "coopdx_name": name, "gi": gi, "nickname": nickname}, headers=bridge)
+    context = {"session_id": client.game_session, "connection_id": str(uuid.uuid4())}
+    r = client.post("/links", json={"sub": sub, "coopdx_name": name, "gi": gi, "nickname": nickname,
+                                  **context}, headers=bridge)
     assert r.status_code == 200, r.text
+    client.game_links[str(gi)] = {**context, "link_id": r.json()["link_id"], "name": name}
 
 
 def post(client, bridge, *evs):
-    r = client.post("/events", json=list(evs), headers=bridge)
+    prepared = []
+    for event in evs:
+        e = copy.deepcopy(event)
+        if e["t"] == "hello":
+            client.game_session = str(uuid.uuid4())
+            client.game_links = {}
+        if e["t"] == "leave":
+            client.game_links.pop(str(e.get("gi")), None)
+        e.setdefault("session_id", client.game_session)
+        e.setdefault("identities", copy.deepcopy(client.game_links))
+        e.setdefault("event_id", str(uuid.uuid4()))
+        prepared.append(e)
+    r = client.post("/events", json=prepared, headers=bridge)
     assert r.status_code == 202, r.text
     return r.json()
 
@@ -238,8 +255,8 @@ def test_push_outage_retries_then_fails(ds, bridge, conn):
     fake.fail = True
     post(client, bridge, {"t": "hello"})
     link(client, bridge, "auth0|ali", 1, "Ali")
-    r = client.post("/events", json=run_ev(), headers=bridge)
-    assert r.status_code == 202 and r.json()["runs"][0]["ranked"] is True     # the bridge never sees the outage
+    r = post(client, bridge, run_ev())
+    assert r["runs"][0]["ranked"] is True     # the bridge never sees the outage
     p = conn.execute("SELECT state, attempts, last_error, next_at > now() AS later FROM run_pushes").fetchone()
     assert p["state"] == "pending" and p["attempts"] == 1 and "deepspace down" in p["last_error"] and p["later"]
     pusher = client.app.state.pusher
@@ -288,3 +305,56 @@ def test_sign_vector():
     h = deepspace.sign("s3cret", b'{"runId":"r1"}', timestamp="1760000000", nonce="0" * 32)
     assert h["X-SGL-Signature"] == "v1=3d19ad467ef59d58cb86868105871536d42b5edbbe0e2c62ef9a8ccacaa1b9d0"
     assert deepspace.backoff(1) == 30 and deepspace.backoff(2) == 60 and deepspace.backoff(30) == 3600
+
+
+def test_delayed_run_keeps_captured_account_and_session(client, bridge, conn):
+    post(client, bridge, {"t": "hello"})
+    link(client, bridge, "auth0|alice", 1, "Ali")
+    captured = run_ev(session_id=client.game_session, identities=copy.deepcopy(client.game_links))
+    link(client, bridge, "auth0|bob", 1, "Ali")
+    # Even a whole game restart before delivery cannot change the original owner.
+    post(client, bridge, {"t": "hello"})
+    result = post(client, bridge, captured)
+    assert result["runs"][0]["ranked"]
+    assert conn.execute("SELECT subs FROM runs").fetchone()["subs"] == ["auth0|alice"]
+
+
+def test_login_overtaking_hello_remains_rankable(client, bridge):
+    client.game_session, client.game_links = str(uuid.uuid4()), {}
+    link(client, bridge, "auth0|alice", 1, "Ali")
+    captured = run_ev(session_id=client.game_session, identities=copy.deepcopy(client.game_links))
+    client.post("/events", headers=bridge, json={"t": "hello", "session_id": client.game_session})
+    assert post(client, bridge, captured)["runs"][0]["ranked"]
+
+
+def test_legacy_or_wrong_connection_cannot_rank(session, bridge):
+    legacy = session.post("/events", headers=bridge, json=run_ev()).json()
+    assert legacy["runs"][0]["reason"] == "unlinked"
+    identities = copy.deepcopy(session.game_links)
+    identities["1"]["connection_id"] = str(uuid.uuid4())
+    assert post(session, bridge, run_ev(identities=identities))["runs"][0]["reason"] == "unlinked"
+
+
+def test_retry_deduplicates_runs_and_rejects_changed_payload(session, bridge, conn):
+    event = run_ev(event_id=str(uuid.uuid4()), session_id=session.game_session,
+                   identities=copy.deepcopy(session.game_links))
+    first = post(session, bridge, event)
+    assert post(session, bridge, event)['runs'] == first['runs']
+    assert conn.execute('SELECT count(*) AS n FROM runs').fetchone()['n'] == 1
+    assert conn.execute('SELECT count(*) AS n FROM run_pushes').fetchone()['n'] == 1
+    changed = {**event, 'frames': 1800}
+    assert session.post('/events', headers=bridge, json=changed).status_code == 409
+    assert conn.execute('SELECT count(*) AS n FROM runs').fetchone()['n'] == 1
+    row = conn.execute("SELECT occurred_at FROM events WHERE t = 'run'").fetchone()
+    assert row['occurred_at'].isoformat().startswith('2026-10-17T12:00:00')
+
+
+def test_concurrent_retries_create_one_run(session, bridge, conn):
+    from concurrent.futures import ThreadPoolExecutor
+    event = run_ev(event_id=str(uuid.uuid4()), session_id=session.game_session,
+                   identities=copy.deepcopy(session.game_links))
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        replies = list(executor.map(lambda _: session.post('/events', headers=bridge, json=event), range(4)))
+    assert all(r.status_code == 202 for r in replies)
+    assert len({r.json()['runs'][0]['id'] for r in replies}) == 1
+    assert conn.execute('SELECT count(*) AS n FROM run_pushes').fetchone()['n'] == 1

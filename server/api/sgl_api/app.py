@@ -10,6 +10,7 @@ import secrets
 import threading
 import time
 import uuid
+from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 from typing import Annotated, Any, Callable
@@ -46,6 +47,8 @@ IMG_RE = re.compile(r"\.(png|jpe?g|webp)$", re.I)
 # ── request bodies ────────────────────────────────────────────────────────────────────────────
 
 class LinkIn(BaseModel):
+    session_id: uuid.UUID | None = None
+    connection_id: uuid.UUID | None = None
     sub: str | None = Field(None, max_length=200)       # device flow: from the validated ID token
     code: str | None = Field(None, max_length=16)       # §7.2: typed with /link <code>
     coopdx_name: str = Field(..., min_length=1, max_length=64)
@@ -55,6 +58,8 @@ class LinkIn(BaseModel):
 
     @model_validator(mode="after")
     def one_of(self):
+        if (self.session_id is None) != (self.connection_id is None):
+            raise ValueError("session_id and connection_id must be supplied together")
         if bool(self.sub) == bool(self.code):
             raise ValueError("give exactly one of sub (device flow) or code (link code)")
         return self
@@ -312,14 +317,8 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             if len(data) > s.max_photo_bytes:
                 raise HTTPException(413, f"{f.filename}: photos must be at most {s.max_photo_bytes // (1024 * 1024)} MB")
             raws.append((f.filename, data))
-        try:
-            with ThreadPoolExecutor(max_workers=len(raws)) as ex:
-                cleaned = list(ex.map(lambda r: images.process(r[1], s.photo_max_side), raws))
-        except images.PhotoError as e:
-            raise HTTPException(422, str(e)) from e
-
         cid, jid = uuid.uuid4(), uuid.uuid4()
-        keys = [f"photos/{jid}/{i}.jpg" for i in range(len(cleaned))]
+        keys = [f"photos/{jid}/{i}.jpg" for i in range(len(raws))]
         uploaded: list[str] = []
         try:
             with DB().tx() as c:
@@ -332,11 +331,20 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                                   (p.sub,)).fetchone()["n"]
                 if total >= s.limit_user_total:
                     raise HTTPException(429, f"you already have {total} gators: delete one to make another")
-                hour = c.execute("SELECT count(*) AS n, min(created) AS oldest FROM jobs "
+                hour = c.execute("SELECT count(*) AS n FROM generation_admissions "
                                  "WHERE created > now() - interval '1 hour'").fetchone()
                 if hour["n"] >= s.limit_global_hour:
                     raise HTTPException(429, "the gator kitchen is at capacity this hour: try again soon",
                                         headers={"Retry-After": "600"})
+                c.execute("DELETE FROM generation_admissions WHERE created < now() - interval '1 day'")
+                c.execute("INSERT INTO generation_admissions (job_id) VALUES (%s)", (jid,))
+                # Admission and quotas precede CPU-heavy decompression. The lock
+                # also prevents concurrent requests from oversubscribing limits.
+                try:
+                    with ThreadPoolExecutor(max_workers=len(raws)) as ex:
+                        cleaned = list(ex.map(lambda r: images.process(r[1], s.photo_max_side), raws))
+                except images.PhotoError as e:
+                    raise HTTPException(422, str(e)) from e
                 for k, data in zip(keys, cleaned):
                     ST().put(k, data, "image/jpeg")
                     uploaded.append(k)
@@ -387,6 +395,7 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             raise AuthError(403, "user token required")
         is_admin = SCOPE_ADMIN in p.scopes
         with DB().tx() as c:
+            c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
             ch = c.execute("SELECT id, owner_sub FROM characters WHERE id = %s FOR UPDATE", (character_id,)).fetchone()
             if not ch or (ch["owner_sub"] != p.sub and not is_admin):
                 raise HTTPException(404, "no such character")
@@ -440,13 +449,15 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                              ON CONFLICT (sub) DO UPDATE SET nickname = COALESCE(EXCLUDED.nickname, users.nickname),
                                email_uf = EXCLUDED.email_uf OR users.email_uf, last_seen = now()""",
                           (sub, body.nickname, bool(body.uf)))
-            c.execute("INSERT INTO links (sub, coopdx_name, gi, via) VALUES (%s, %s, %s, %s)",
-                      (sub, body.coopdx_name, body.gi, via))
+            link_id = c.execute(
+                """INSERT INTO links (sub, coopdx_name, gi, via, session_id, connection_id, bridge_sub)
+                   VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id""",
+                (sub, body.coopdx_name, body.gi, via, body.session_id, body.connection_id, _p.sub)).fetchone()["id"]
             u = c.execute("SELECT nickname, email_uf FROM users WHERE sub = %s", (sub,)).fetchone()
             g = c.execute(
                 """SELECT slot, name FROM characters WHERE owner_sub = %s AND slot IS NOT NULL AND state = 'ready'
                    AND deployed_at IS NOT NULL ORDER BY deployed_at DESC LIMIT 1""", (sub,)).fetchone()
-        return {"sub": sub, "via": via, "nickname": (u and u["nickname"]) or body.coopdx_name,
+        return {"link_id": link_id, "sub": sub, "via": via, "nickname": (u and u["nickname"]) or body.coopdx_name,
                 "uf": bool(u and u["email_uf"]), "gi": body.gi, "coopdx_name": body.coopdx_name,
                 "guest_slot": g["slot"] if g else None, "character_name": g["name"] if g else None}
 
@@ -463,10 +474,34 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
         stored_runs = []
         with DB().tx() as c:
             for e in evs:
-                ev = c.execute("INSERT INTO events (t, payload) VALUES (%s, %s) RETURNING id",
-                               (e["t"][:32], Jsonb(e))).fetchone()
+                fields = event_fields(e)
+                event_key = session_id = occurred_at = None
+                if fields.get("event_id") is not None:
+                    try:
+                        event_key = uuid.UUID(str(fields["event_id"]))
+                        session_id = uuid.UUID(str(fields["session_id"]))
+                        if fields.get("at"):
+                            occurred_at = datetime.fromisoformat(fields["at"].replace('Z', '+00:00'))
+                            if occurred_at.tzinfo is None:
+                                raise ValueError('timestamp needs timezone')
+                    except (ValueError, KeyError, TypeError, AttributeError) as error:
+                        raise HTTPException(422, 'invalid event identity or timestamp') from error
+                ev = c.execute(
+                    """INSERT INTO events (t, payload, event_key, bridge_sub, session_id, occurred_at)
+                       VALUES (%s, %s, %s, %s, %s, %s)
+                       ON CONFLICT (bridge_sub, event_key) DO NOTHING RETURNING id""",
+                    (e["t"][:32], Jsonb(e), event_key, _p.sub, session_id, occurred_at)).fetchone()
+                if ev is None:
+                    prior = c.execute('SELECT id, payload FROM events WHERE bridge_sub = %s AND event_key = %s',
+                                      (_p.sub, event_key)).fetchone()
+                    if prior['payload'] != e:
+                        raise HTTPException(409, 'event_id was already used for another payload')
+                    if e['t'] == 'run':
+                        stored_runs.extend(c.execute(
+                            'SELECT id, mission, ranked, reason FROM runs WHERE event_id = %s', (prior['id'],)).fetchall())
+                    continue
                 if e["t"] == "run":   # §10.1: always stored, ranked only when valid and fully linked
-                    stored_runs.append(runs.store(c, event_fields(e), ev["id"]))
+                    stored_runs.append(runs.store(c, event_fields(e), ev["id"], bridge_sub=_p.sub))
                 elif e["t"] == "char":
                     f = event_fields(e)
                     fid = str(f.get("friend") or f.get("friend_id") or f.get("id") or "")
@@ -559,12 +594,14 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
         if not 1 <= n <= 8:
             raise HTTPException(404, "no such slot")
         with DB().tx() as c:
+            c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
             c.execute("UPDATE slots SET pinned = %s WHERE n = %s", (body.pinned, n))
         return {"slot": n, "pinned": body.pinned}
 
     @app.post("/slots/{n}/redeploy", status_code=201)
     def force_deploy(n: int, _p: Annotated[Principal, Depends(scoped(SCOPE_ADMIN))]):
         with DB().tx() as c:
+            c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
             sl = c.execute("SELECT sl.character_id, ch.state FROM slots sl LEFT JOIN characters ch ON ch.id = sl.character_id "
                            "WHERE sl.n = %s", (n,)).fetchone()
             if not sl:

@@ -45,7 +45,12 @@ bindings = [
   { name = "PRESENCE_ROOMS", class_name = "AppPresenceRoom" },
   { name = "CRON_ROOMS", class_name = "AppCronRoom" },
   { name = "JOB_ROOMS", class_name = "AppJobRoom" },
+  { name = "STUDY_BUDGETS", class_name = "StudyBudgetRoom" },
 ]
+
+[[migrations]]
+tag = "v2-study-budget"
+new_sqlite_classes = ["StudyBudgetRoom"]
 
 # For per-app resources (D1, KV, Vectorize, R2, Queues, AI Search), set the id
 # field to "auto" — DeepSpace provisions and tears down with the deploy.
