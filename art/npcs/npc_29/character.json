@@ -1,0 +1,42 @@
+{
+  "id": "npc_29",
+  "name": "Imani",
+  "colors": {
+    "skin": "#F0C8A8",
+    "hair": "#6B4A30",
+    "eyes": "#6B4A2A",
+    "top": "#7FB3E0",
+    "pants": "#3B4E6E",
+    "shoes": "#22304F",
+    "skin_shadow": "#D8B497",
+    "top_detail": "#668FB3",
+    "shoe_soles": "#1E2A46"
+  },
+  "outfit": {
+    "top": "sky blue T-shirt",
+    "pants": "denim shorts",
+    "shoes": "navy canvas shoes",
+    "accessory": "a backpack strap across the chest",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has short straight hair swept to one side",
+    "she has a friendly smile showing teeth"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "shorts",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "crossbody_strap"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "square",
+    "hair": "sidepart",
+    "body": "neutral",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

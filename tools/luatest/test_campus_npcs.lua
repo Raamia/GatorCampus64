@@ -1,7 +1,8 @@
 -- Offline test of mods/sgl64/sgl_campus_npcs.lua (the students walking the hub's sidewalks) in the multi-client
--- simulator: every client in the hub spawns the same 24 students in the same places, they walk along the generated
--- sidewalk links (sgl_campus_npc_routes.lua) and keep moving, a player arriving later sees them exactly where the
--- others do (each client fast-forwards from the epoch's start), they only exist in the hub, and /crowd off|on hides
+-- simulator: every client in the hub spawns 40 students, the 24 synced ones in the same places on every client, they
+-- walk along the generated sidewalk links (sgl_campus_npc_routes.lua) and keep moving, a player arriving later sees
+-- the synced ones exactly where the others do (each client fast-forwards from the epoch's start), the 16 ambient ones
+-- start around the local player and follow them across campus, they only exist in the hub, and /crowd off|on hides
 -- and restores them. Run: lua tools/luatest/test_campus_npcs.lua (run.sh).
 local HERE = debug.getinfo(1, "S").source:match("^@(.*/)") or "./"
 local Sim = dofile(HERE .. "sim.lua")
@@ -51,13 +52,27 @@ end
 
 local function students(c) return Sim.objects_with(c, c.env.id_bhvSglCrowd) end
 
-local function positions(c)
+-- [index into SGL_CROWD] = { x, y, z }; synced = true: only the 24 synced students, false: only the ambient ones
+local function positions(c, synced)
     local out = {}
     for _, o in ipairs(students(c)) do
         local s = Sim.raw(o)
-        out[s.oBehParams] = { s.oPosX, s.oPosY, s.oPosZ }
+        local isSynced = s.oBehParams <= c.env.SGL_CROWD_SYNCED
+        if synced == nil or synced == isSynced then out[s.oBehParams] = { s.oPosX, s.oPosY, s.oPosZ } end
     end
     return out
+end
+
+local function count(t)
+    local n = 0
+    for _ in pairs(t) do n = n + 1 end
+    return n
+end
+
+local function farthest_from(c, x, z)
+    local worst = 0
+    for _, p in pairs(positions(c, false)) do worst = math.max(worst, math.sqrt((p[1] - x) ^ 2 + (p[3] - z) ^ 2)) end
+    return worst
 end
 
 -- distance from (x, z) to the nearest sidewalk link
@@ -75,22 +90,23 @@ local function off_route(c, x, z)
     return best
 end
 
-test("every client in the hub sees the same 24 students on the sidewalks", function()
+test("every client in the hub sees 40 students, the 24 synced ones in the same places", function()
     local w, H, F, _, tick = setup()
     w:warp(H, HUB, 1, 0)
     w:warp(F, HUB, 1, 0)
     tick(2)
-    check(#H.env.SGL_CROWD == 24, "24 students load (got " .. #H.env.SGL_CROWD .. ")")
-    check(#students(H) == 24 and #students(F) == 24, "24 student objects on each client")
-    local ph, pf = positions(H), positions(F)
+    check(#H.env.SGL_CROWD == 40, "40 students load (got " .. #H.env.SGL_CROWD .. ")")
+    check(H.env.SGL_CROWD_SYNCED == 24, "24 of them synced")
+    check(#students(H) == 40 and #students(F) == 40, "40 student objects on each client")
+    local ph, pf = positions(H, true), positions(F, true)
     local same = true
     for k, p in pairs(ph) do
         local q = pf[k]
         if q == nil or math.abs(p[1] - q[1]) > 0.01 or math.abs(p[3] - q[3]) > 0.01 then same = false end
     end
-    check(same, "host and friend place every student identically")
+    check(same and count(ph) == 24, "host and friend place every synced student identically")
     local worst = 0
-    for _, p in pairs(ph) do worst = math.max(worst, off_route(H, p[1], p[3])) end
+    for _, p in pairs(positions(H)) do worst = math.max(worst, off_route(H, p[1], p[3])) end
     check(worst <= 36, string.format("every student is on a sidewalk link (worst %.0f units off)", worst))
     for _, o in ipairs(students(H)) do
         local info = Sim.raw(o).header.gfx.animInfo
@@ -111,7 +127,7 @@ test("they keep walking, and stay on the sidewalks", function()
         if math.abs(p[1] - q[1]) + math.abs(p[3] - q[3]) > 200 then moved = moved + 1 end
         worst = math.max(worst, off_route(H, p[1], p[3]))
     end
-    check(moved >= 18, "most students walked somewhere in 20 s (" .. moved .. " of 24)")
+    check(moved >= 30, "most students walked somewhere in 20 s (" .. moved .. " of 40)")
     check(worst <= 36, string.format("still on the sidewalks (worst %.0f units off)", worst))
 end)
 
@@ -124,13 +140,34 @@ test("a player arriving later sees them where everyone else does", function()
     tick(95)
     w:warp(F, HUB, 1, 0)
     w:step(1)   -- both spawned / stepped this frame
-    local ph, pf = positions(H), positions(F)
+    local ph, pf = positions(H, true), positions(F, true)
     local worst = 0
     for k, p in pairs(ph) do
         local q = pf[k]
         worst = math.max(worst, q and math.abs(p[1] - q[1]) + math.abs(p[3] - q[3]) or math.huge)
     end
     check(worst < 20, string.format("late arrival matches the host (worst %.1f units apart)", worst))
+end)
+
+test("the ambient students stay around the player wherever they go", function()
+    local w, H, _, _, tick = setup()
+    w:warp(H, HUB, 1, 0)
+    tick(1)
+    local A = H.env.SGL_CROWD_AROUND
+    check(count(positions(H, false)) == 16, "16 ambient students")
+    local m = Sim.raw(H.ms[0]).pos
+    check(farthest_from(H, m.x, m.z) <= A.far + 200, "they start around the player")
+    -- walk (well, teleport) across campus to Library West: they catch up, out of view
+    m.x, m.z = 8391, -16043
+    tick(3)
+    local far = farthest_from(H, m.x, m.z)
+    check(far <= A.recycle, string.format("all 16 are around the player at Library West (farthest %.0f)", far))
+    tick(30)
+    far = farthest_from(H, m.x, m.z)
+    check(far <= A.recycle + 200, string.format("and stay around while the player waits (farthest %.0f)", far))
+    local worst = 0
+    for _, p in pairs(positions(H, false)) do worst = math.max(worst, off_route(H, p[1], p[3])) end
+    check(worst <= 36, string.format("still on the sidewalks (worst %.0f units off)", worst))
 end)
 
 test("/crowd off hides them and /crowd on brings them back", function()
@@ -141,10 +178,10 @@ test("/crowd off hides them and /crowd on brings them back", function()
     check(Sim.cmd(H, "crowd", "off") == true, "/crowd off accepted")
     w:step(1)
     check(#students(H) == 0, "no students after /crowd off")
-    check(#students(F) == 24, "only the local client hides them")
+    check(#students(F) == 40, "only the local client hides them")
     check(Sim.cmd(H, "crowd", "on") == true, "/crowd on accepted")
     w:step(1)
-    check(#students(H) == 24, "24 students after /crowd on")
+    check(#students(H) == 40, "40 students after /crowd on")
     check(Sim.cmd(H, "crowd", "sideways") == false, "unknown argument shows the usage")
 end)
 

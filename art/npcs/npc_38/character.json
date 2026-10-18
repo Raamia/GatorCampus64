@@ -1,0 +1,42 @@
+{
+  "id": "npc_38",
+  "name": "Layla",
+  "colors": {
+    "skin": "#EBC0A1",
+    "hair": "#8A6440",
+    "eyes": "#3E6E8C",
+    "top": "#6E1F2B",
+    "pants": "#1F2A3D",
+    "shoes": "#1C1C1E",
+    "skin_shadow": "#D4AD91",
+    "top_detail": "#581922",
+    "shoe_soles": "#19191A"
+  },
+  "outfit": {
+    "top": "maroon overshirt",
+    "pants": "dark denim",
+    "shoes": "black sneakers",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has short wavy hair with loose raised waves",
+    "she has a wide toothy grin"
+  ],
+  "build": {
+    "sleeves": "long",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "shirt_collar"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "long",
+    "hair": "waves",
+    "body": "neutral",
+    "outfit": "overshirt"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

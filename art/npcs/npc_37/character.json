@@ -1,0 +1,44 @@
+{
+  "id": "npc_37",
+  "name": "Hana",
+  "colors": {
+    "skin": "#EBC0A1",
+    "hair": "#B48A58",
+    "eyes": "#2A1A12",
+    "top": "#5B3F8C",
+    "pants": "#B9A27A",
+    "shoes": "#22304F",
+    "skin_shadow": "#D4AD91",
+    "top_detail": "#493270",
+    "shoe_soles": "#1E2A46"
+  },
+  "outfit": {
+    "top": "purple overshirt",
+    "pants": "khaki",
+    "shoes": "navy canvas shoes",
+    "accessory": "a backpack strap across the chest",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has short curly top with closely cropped sides",
+    "she has a calm closed smile",
+    "closed lips"
+  ],
+  "build": {
+    "sleeves": "long",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "crossbody_strap",
+      "shirt_collar"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "oval",
+    "hair": "curls",
+    "body": "neutral",
+    "outfit": "overshirt"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

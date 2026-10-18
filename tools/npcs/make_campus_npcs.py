@@ -16,7 +16,7 @@ build reads those, so editing one and rebuilding it works), and art/npcs/<id>/fr
 sgl_campus_npcs.lua walks them around the hub.
 
 Usage (from the repo root; needs Blender 4.5.3, Fast64 and the coopdx template, see tools/likeness/README.md):
-  tools/.venv/bin/python -I tools/npcs/make_campus_npcs.py specs            # (re)write the 24 specs
+  tools/.venv/bin/python -I tools/npcs/make_campus_npcs.py specs            # (re)write the 40 specs
   tools/.venv/bin/python -I tools/npcs/make_campus_npcs.py build [--jobs 4] [--only npc_03 npc_07]
 Env: BLENDER (default tools/vendor/blender/Blender.app/Contents/MacOS/Blender).
 """
@@ -40,7 +40,8 @@ import schema_gen  # noqa: E402
 import spec_ai  # noqa: E402
 
 SEED = 64_2026
-COUNT = 24
+COUNT = 40
+SYNCED = 24   # npc_01..24 walk the same routes on every client; npc_25..40 are the local crowd around the player
 ART = os.path.join(ROOT, "art", "npcs")
 ACTORS = os.path.join(ROOT, "mods", "sgl64", "actors")
 DEFAULT_BLENDER = os.path.join(ROOT, "tools", "vendor", "blender", "Blender.app", "Contents", "MacOS", "Blender")
@@ -73,6 +74,9 @@ NAMES = {"she": ["Maya", "Priya", "Sofia", "Aaliyah", "Hannah", "Grace", "Isabel
                  "Zoe", "Amara", "Jasmine", "Mei", "Paige", "Elena", "Tara", "Imani"],
          "he": ["Jordan", "Marcus", "Ethan", "Diego", "Kevin", "Malik", "Tyler", "Omar", "Andre", "Ryan",
                 "Victor", "Caleb", "Leo", "Darius", "Sam", "Hiro", "Mateo", "Noah"]}
+# more names once a pool runs out (its own generator, so the main sequence and npc_01..24 stay as they were)
+MORE_NAMES = {"she": ["Ava", "Layla", "Keisha", "Rosa", "Hana", "Leah", "Brianna", "Fatima", "Olivia", "Yuna"],
+              "he": ["Jamal", "Lucas", "Arjun", "Carlos", "Ben", "Kenji", "Isaiah", "Owen", "Rafael", "Tariq"]}
 HAIR_BY_LOOK = {"she": ["long", "long", "bob", "bob", "waves", "curls", "coils", "fringe", "sidepart"],
                 "he": ["buzz", "buzz", "sidepart", "sidepart", "fringe", "waves", "curls", "coils"]}
 OUTFIT_WORDS = {"tee": "T-shirt", "polo": "polo shirt", "hoodie": "hoodie, hood down", "overshirt": "overshirt"}
@@ -120,10 +124,12 @@ def raw_answer(rng):
 def write_specs():
     rng = random.Random(SEED)
     names = {look: rng.sample(pool, len(pool)) for look, pool in NAMES.items()}
+    more_rng = random.Random(SEED + 1)
+    more = {look: more_rng.sample(pool, len(pool)) for look, pool in MORE_NAMES.items()}
     for i in range(1, COUNT + 1):
         cid = npc_id(i)
         look, raw = raw_answer(rng)
-        spec, notes = spec_ai.repair(raw, cid, names[look].pop())  # the worker's no-photo repair path
+        spec, notes = spec_ai.repair(raw, cid, (names[look] or more[look]).pop())  # the worker's no-photo repair path
         spec["notes"] = "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
         d = os.path.join(ART, cid)
         os.makedirs(d, exist_ok=True)

@@ -1,0 +1,42 @@
+{
+  "id": "npc_26",
+  "name": "Omar",
+  "colors": {
+    "skin": "#E0AC88",
+    "hair": "#2A1F1A",
+    "eyes": "#6E7F8C",
+    "top": "#F2F2F2",
+    "pants": "#4E5634",
+    "shoes": "#8C9096",
+    "skin_shadow": "#CA9B7A",
+    "top_detail": "#C2C2C2",
+    "shoe_soles": "#7B7F84"
+  },
+  "outfit": {
+    "top": "white hoodie, hood down",
+    "pants": "olive",
+    "shoes": "gray running shoes",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "he has short wavy hair with loose raised waves",
+    "he has a wide toothy grin"
+  ],
+  "build": {
+    "sleeves": "long",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "hood_down"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "square",
+    "hair": "waves",
+    "body": "stocky",
+    "outfit": "hoodie"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

@@ -1,0 +1,43 @@
+{
+  "id": "npc_25",
+  "name": "Isabel",
+  "colors": {
+    "skin": "#9C6244",
+    "hair": "#D2B27A",
+    "eyes": "#3E6E8C",
+    "top": "#2F5D3A",
+    "pants": "#4E5634",
+    "shoes": "#B03030",
+    "skin_shadow": "#8C583D",
+    "top_detail": "#264A2E",
+    "shoe_soles": "#9B2A2A"
+  },
+  "outfit": {
+    "top": "forest green hoodie, hood down",
+    "pants": "olive",
+    "shoes": "red sneakers",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has straight hair ending around the jaw",
+    "she has a wide toothy grin",
+    "eyes that crinkle when smiling"
+  ],
+  "build": {
+    "sleeves": "long",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "hood_down"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "broad",
+    "hair": "bob",
+    "body": "slender",
+    "outfit": "hoodie"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

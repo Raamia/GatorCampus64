@@ -1,0 +1,42 @@
+{
+  "id": "npc_35",
+  "name": "Andre",
+  "colors": {
+    "skin": "#C99A7A",
+    "hair": "#6B4A30",
+    "eyes": "#4A2C1A",
+    "top": "#C8B28C",
+    "pants": "#4E5634",
+    "shoes": "#B03030",
+    "skin_shadow": "#B58B6E",
+    "top_detail": "#A08E70",
+    "shoe_soles": "#9B2A2A"
+  },
+  "outfit": {
+    "top": "tan T-shirt",
+    "pants": "olive",
+    "shoes": "red sneakers",
+    "accessory": "a backpack strap across the chest",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "he has rounded, fuller tight curls around the top and sides",
+    "he has a wide toothy grin"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "crossbody_strap"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "square",
+    "hair": "coils",
+    "body": "neutral",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

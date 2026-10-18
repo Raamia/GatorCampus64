@@ -1,0 +1,42 @@
+{
+  "id": "npc_39",
+  "name": "Olivia",
+  "colors": {
+    "skin": "#F3D3BD",
+    "hair": "#16110F",
+    "eyes": "#2A1A12",
+    "top": "#5B3F8C",
+    "pants": "#1C1C1E",
+    "shoes": "#1C1C1E",
+    "skin_shadow": "#DBBEAA",
+    "top_detail": "#493270",
+    "shoe_soles": "#19191A"
+  },
+  "outfit": {
+    "top": "purple polo shirt",
+    "pants": "black",
+    "shoes": "black sneakers",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has short curly top with closely cropped sides",
+    "she has a wide toothy grin"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "shirt_collar"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "round",
+    "hair": "curls",
+    "body": "broad",
+    "outfit": "polo"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}
