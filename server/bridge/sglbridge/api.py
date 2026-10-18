@@ -57,6 +57,12 @@ class ApiClient:
         body.update({"t": t, "payload": payload, "at": at})
         self._call("POST", "/events", body)
 
+    def active_links(self, ids: list[int]) -> set[int]:
+        result = self._call("POST", "/links/check", {"ids": ids})
+        if not isinstance(result, dict) or not isinstance(result.get("active"), list):
+            raise ApiUnavailable("invalid active links response")
+        return set(result["active"])
+
     def post_presence(self, snapshot: dict[str, Any]) -> Any:
         return self._call("POST", "/presence", snapshot)
 

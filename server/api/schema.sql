@@ -447,3 +447,29 @@ LANGUAGE sql STABLE AS $$
                 AND c.state = 'ready' AND j.state = 'ready' AND j.character_id = c.id))
     );
 $$;
+
+-- Account lifecycle: revocation metadata survives removal of application data.
+ALTER TABLE links ADD COLUMN IF NOT EXISTS revoked_at timestamptz;
+CREATE TABLE IF NOT EXISTS deleted_accounts (
+    subject_hash text PRIMARY KEY,
+    deleted_before bigint NOT NULL,
+    reactivated boolean NOT NULL DEFAULT false
+);
+CREATE TABLE IF NOT EXISTS erased_links (
+    link_id bigint PRIMARY KEY,
+    session_id uuid,
+    connection_id uuid
+);
+CREATE TABLE IF NOT EXISTS erased_events (
+    bridge_sub text NOT NULL,
+    event_key uuid NOT NULL,
+    PRIMARY KEY (bridge_sub, event_key)
+);
+CREATE TABLE IF NOT EXISTS run_erases (
+    uid uuid PRIMARY KEY,
+    attempts integer NOT NULL DEFAULT 0,
+    next_at timestamptz NOT NULL DEFAULT now(),
+    last_error text,
+    sent_at timestamptz
+);
+CREATE INDEX IF NOT EXISTS run_erases_due_idx ON run_erases (next_at) WHERE sent_at IS NULL;

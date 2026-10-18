@@ -33,7 +33,7 @@ from sgl_api.storage import Storage
 ISSUER = "https://login.test.example/"
 AUDIENCE = "https://api.gatorcamp.us"
 BUCKET = "sgl-test"
-TABLES = "storage_cleanup, server_presence, generation_admissions, run_pushes, runs, deploys, events, link_codes, links, slots, jobs, characters, users"
+TABLES = "run_erases, erased_events, erased_links, deleted_accounts, storage_cleanup, server_presence, generation_admissions, run_pushes, runs, deploys, events, link_codes, links, slots, jobs, characters, users"
 
 
 # ── Postgres ──────────────────────────────────────────────────────────────────────────────────

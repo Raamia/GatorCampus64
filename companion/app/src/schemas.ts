@@ -12,7 +12,7 @@ import { usersSchema } from './schemas/users-schema'
 import { settingsSchema } from './schemas/admin-schema'
 import { missionEventsSchema } from './schemas/mission-events-schema'
 import { soloRunsSchema } from './schemas/solo-runs-schema'
-import { ingestNoncesSchema, verifiedRunsSchema } from './schemas/verified-runs-schema'
+import { erasedRunsSchema, ingestNoncesSchema, verifiedRunsSchema } from './schemas/verified-runs-schema'
 
 export const schemas: CollectionSchema[] = [
   usersSchema,
@@ -21,4 +21,5 @@ export const schemas: CollectionSchema[] = [
   soloRunsSchema,
   verifiedRunsSchema,
   ingestNoncesSchema,
+  erasedRunsSchema,
 ]

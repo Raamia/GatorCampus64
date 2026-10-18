@@ -147,7 +147,11 @@ export async function ingestVerifiedRun(input: {
   let parsed: unknown
   try { parsed = JSON.parse(rawBody) } catch { parsed = null }
   const run = parseIngestBody(parsed)
-  if (!run) return { status: 400, body: { success: false, error: 'Run fields are invalid.' } }
+  const deleteRunId = typeof parsed === 'object' && parsed !== null &&
+    'v' in parsed && parsed.v === 1 && 'deleteRunId' in parsed &&
+    typeof parsed.deleteRunId === 'string' && RUN_ID_PATTERN.test(parsed.deleteRunId)
+    ? parsed.deleteRunId : null
+  if (!run && !deleteRunId) return { status: 400, body: { success: false, error: 'Run fields are invalid.' } }
 
   // Replay protection: a nonce is accepted once.
   const seen = await tools.query('ingest_nonces', { where: { nonce }, limit: 1 })
@@ -155,6 +159,35 @@ export async function ingestVerifiedRun(input: {
   if (seen.data.records.length > 0) return { status: 409, body: { success: false, error: 'Replayed request.' } }
   const marked = await tools.create('ingest_nonces', { nonce: nonce as string, seenAt: nowMs })
   if (!marked.success) return { status: 409, body: { success: false, error: 'Replayed request.' } }
+
+  if (deleteRunId) {
+    const prior = await tools.query('erased_runs', { where: { runId: deleteRunId }, limit: 1 })
+    if (!prior.success) return { status: 503, body: { success: false, error: prior.error } }
+    if (!prior.data.records.length) {
+      const tombstone = await tools.create('erased_runs', { runId: deleteRunId })
+      if (!tombstone.success) return { status: 503, body: { success: false, error: tombstone.error } }
+    }
+    const matches = await tools.query('verified_runs', { where: { runId: deleteRunId }, limit: 100 })
+    if (!matches.success) return { status: 503, body: { success: false, error: matches.error } }
+    for (const record of matches.data.records) {
+      const removed = await tools.remove('verified_runs', record.recordId)
+      if (!removed.success) return { status: 503, body: { success: false, error: removed.error } }
+    }
+    await pruneNonces(tools, nowMs).catch(() => undefined)
+    return { status: 200, body: { success: true, data: { deleted: true } } }
+  }
+  if (!run) return { status: 400, body: { success: false, error: 'Invalid run.' } }
+  const erased = await tools.query('erased_runs', { where: { runId: run.runId }, limit: 1 })
+  if (!erased.success) return { status: 503, body: { success: false, error: erased.error } }
+  if (erased.data.records.length) {
+    const leftovers = await tools.query('verified_runs', { where: { runId: run.runId }, limit: 100 })
+    if (!leftovers.success) return { status: 503, body: { success: false, error: leftovers.error } }
+    for (const record of leftovers.data.records) {
+      const removed = await tools.remove('verified_runs', record.recordId)
+      if (!removed.success) return { status: 503, body: { success: false, error: removed.error } }
+    }
+    return { status: 200, body: { success: true, data: { deleted: true } } }
+  }
 
   const existing = await tools.query<VerifiedRun>('verified_runs', { where: { runId: run.runId }, limit: 1 })
   if (!existing.success) return { status: 503, body: { success: false, error: existing.error } }
@@ -176,6 +209,15 @@ export async function ingestVerifiedRun(input: {
       ranAt: run.createdAt,
     })
     if (!created.success) return { status: 503, body: { success: false, error: created.error } }
+    // Delete can race the earlier check. Checking again after create closes that window:
+    // either deletion sees this row, or this check sees its durable tombstone.
+    const after = await tools.query('erased_runs', { where: { runId: run.runId }, limit: 1 })
+    if (!after.success) return { status: 503, body: { success: false, error: after.error } }
+    if (after.data.records.length) {
+      const removed = await tools.remove('verified_runs', created.data.recordId)
+      if (!removed.success) return { status: 503, body: { success: false, error: removed.error } }
+      return { status: 200, body: { success: true, data: { deleted: true } } }
+    }
     result = { status: 200, body: { success: true, data: { duplicate: false, recordId: created.data.recordId } } }
   }
   await pruneNonces(tools, nowMs).catch(() => undefined)

@@ -22,7 +22,7 @@ from fastapi.responses import JSONResponse
 from psycopg.types.json import Jsonb
 from pydantic import AwareDatetime, BaseModel, Field, model_validator
 
-from . import config, images, names, runs
+from . import accounts, config, images, names, runs
 from .auth import AuthError, JWKSCache, Principal, Verifier, bearer
 from .deepspace import Pusher
 from .cleanup import Cleaner
@@ -114,6 +114,14 @@ class DeployInventory(BaseModel):
         return self
 
 
+class LinkCheck(BaseModel):
+    ids: list[int] = Field(max_length=256)
+
+
+class AccountDelete(BaseModel):
+    confirm: str = Field(pattern="^DELETE$")
+
+
 class SlotPatch(BaseModel):
     pinned: bool
 
@@ -167,10 +175,16 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
     # ── auth dependencies ─────────────────────────────────────────────────────────────────────
 
     def principal(request: Request) -> Principal:
-        return state["verifier"].verify(bearer(request.headers.get("authorization")))
+        p = state["verifier"].verify(bearer(request.headers.get("authorization")))
+        if not p.is_m2m:
+            with DB().tx() as c:
+                accounts.require_active(c, p.sub, p.claims)
+        return p
 
     def upsert_user(p: Principal, nickname: str | None = None, uf: bool | None = None) -> None:
         with DB().tx() as c:
+            accounts.lock(c)
+            accounts.require_active(c, p.sub, p.claims)
             c.execute(
                 """INSERT INTO users (sub, nickname, email_uf) VALUES (%s, %s, %s)
                    ON CONFLICT (sub) DO UPDATE SET
@@ -470,9 +484,47 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                 log.exception("object cleanup deferred for %s", jid)
         return {"deleted": character_id, "freed_slot": freed}
 
+    @app.delete("/links")
+    def unlink_account(p: Annotated[Principal, Depends(user())]):
+        with DB().tx() as c:
+            accounts.lock(c)
+            accounts.require_active(c, p.sub, p.claims)
+            c.execute("UPDATE links SET revoked_at = now() WHERE sub = %s AND revoked_at IS NULL", (p.sub,))
+            c.execute("DELETE FROM link_codes WHERE sub = %s", (p.sub,))
+        return {"unlinked": True}
+
+    @app.delete("/account", status_code=202)
+    def delete_account(body: AccountDelete, p: Annotated[Principal, Depends(principal)]):
+        if p.is_m2m:
+            raise AuthError(403, "user token required")
+        if time.time() - accounts.issued_at(p.claims) > 300:
+            raise AuthError(401, "sign in again before deleting your Gator account")
+        with DB().tx() as c:
+            removed = accounts.delete_account(c, p.sub, event_fields, p.claims)
+        with board_lock:
+            board_cache.clear()
+        return {"deleted": True, "removed_runs": removed, "cleanup": "queued", "provider_accounts": "unchanged"}
+
+    @app.post("/account/register")
+    def register_again(request: Request):
+        p = state["verifier"].verify(bearer(request.headers.get("authorization")))
+        if p.is_m2m:
+            raise AuthError(403, "user token required")
+        with DB().tx() as c:
+            accounts.lock(c)
+            deleted = c.execute("SELECT deleted_before FROM deleted_accounts WHERE subject_hash = %s",
+                                (accounts.subject_hash(p.sub),)).fetchone()
+            if deleted and accounts.issued_at(p.claims) <= deleted["deleted_before"]:
+                raise AuthError(401, "sign in again before registering a new Gator account")
+            c.execute("UPDATE deleted_accounts SET reactivated = true WHERE subject_hash = %s", (accounts.subject_hash(p.sub),))
+        upsert_user(p)
+        return {"registered": True}
+
     @app.post("/link-codes", status_code=201)
     def link_code(p: Annotated[Principal, Depends(user())]):
         with DB().tx() as c:
+            accounts.lock(c)
+            accounts.require_active(c, p.sub, p.claims)
             c.execute("DELETE FROM link_codes WHERE (sub = %s AND used_at IS NULL) OR expires_at < now() - interval '1 day'",
                       (p.sub,))
             for _ in range(10):
@@ -488,9 +540,19 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
 
     # ── bridge (M2M, scope `bridge`) ──────────────────────────────────────────────────────────
 
+    @app.post("/links/check")
+    def check_links(body: LinkCheck, p: Annotated[Principal, Depends(scoped(SCOPE_BRIDGE))]):
+        with DB().tx() as c:
+            rows = c.execute("SELECT id FROM links WHERE id = ANY(%s) AND bridge_sub = %s AND revoked_at IS NULL",
+                             (body.ids, p.sub)).fetchall()
+        return {"active": [row["id"] for row in rows]}
+
     @app.post("/links")
     def create_link(body: LinkIn, _p: Annotated[Principal, Depends(scoped(SCOPE_BRIDGE))]):
         with DB().tx() as c:
+            accounts.lock(c)
+            if body.sub:
+                accounts.require_active(c, body.sub)
             if body.code:
                 code = re.sub(r"[\s-]", "", body.code).upper()
                 row = c.execute("SELECT code, sub, used_at, expires_at < now() AS expired FROM link_codes "
@@ -533,7 +595,9 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             raise HTTPException(422, 'expected an event {"t": ...} or a list of up to 500 of them')
         stored_runs = []
         with DB().tx() as c:
+            accounts.lock(c)
             for e in evs:
+                e = accounts.normalize_event(e)
                 fields = event_fields(e)
                 event_key = session_id = occurred_at = None
                 if fields.get("event_id") is not None:
@@ -546,6 +610,8 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                                 raise ValueError('timestamp needs timezone')
                     except (ValueError, KeyError, TypeError, AttributeError) as error:
                         raise HTTPException(422, 'invalid event identity or timestamp') from error
+                if accounts.erased_event(c, fields, _p.sub):
+                    continue  # acknowledge deletion tombstones without recreating private history
                 ev = c.execute(
                     """INSERT INTO events (t, payload, event_key, bridge_sub, session_id, occurred_at)
                        VALUES (%s, %s, %s, %s, %s, %s)
@@ -554,7 +620,7 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                 if ev is None:
                     prior = c.execute('SELECT id, payload FROM events WHERE bridge_sub = %s AND event_key = %s',
                                       (_p.sub, event_key)).fetchone()
-                    if prior['payload'] != e:
+                    if accounts.normalize_event(prior['payload']) != e:
                         raise HTTPException(409, 'event_id was already used for another payload')
                     if e['t'] == 'run':
                         stored_runs.extend(c.execute(

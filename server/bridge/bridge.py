@@ -62,6 +62,18 @@ class Bridge:
         self.since = None
         self._lock = threading.Lock()
 
+    def reconcile_links(self, api):
+        identities = self.login.identities()
+        if not identities:
+            return
+        try:
+            active = api.active_links([identity["link_id"] for identity in identities.values()])
+            for gi, identity in identities.items():
+                if identity["link_id"] not in active:
+                    self.login.forget(int(gi), expected_link_id=identity["link_id"])
+        except Exception as e:
+            log.warning("link revocation check failed: %s", type(e).__name__)
+
     def presence(self, running: bool) -> dict:
         with self._lock:
             online = running and self.ready
@@ -100,7 +112,7 @@ class Bridge:
         self.inbox.reset()
         self._forward({"t": "exit", "code": rc})
 
-    def _forward(self, ev: dict[str, Any]) -> None:
+    def _forward(self, ev: dict[str, Any], *, connection_id=None, identity=None) -> None:
         if self.queue is not None:
             at = dt.datetime.now(dt.timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
             self.sequence += 1
@@ -108,6 +120,12 @@ class Bridge:
             payload = event_payload(ev)
             if ev["t"] == "link_req":
                 payload.pop("code", None)  # one-time credential belongs only in /links
+            payload.pop("identity", None)
+            payload.pop("connection_id", None)
+            gi = ev.get("gi")
+            if isinstance(gi, int):
+                payload.update(connection_id=connection_id or self.connections.get(gi),
+                               identity=identity or self.login.identities().get(str(gi)))
             payload.update(session_id=self.session_id, event_id=str(uuid.uuid4()), sequence=self.sequence,
                            identities=self.login.identities() if ev["t"] == "run" else {})
             self.queue.put({"t": ev["t"], "payload": payload, "at": at})
@@ -128,6 +146,7 @@ class Bridge:
         t = ev["t"]
         gi = ev.get("gi")
         name = str(ev.get("name") or "")
+        departed_connection = departed_identity = None
         logged = event_payload(ev)
         if t == "link_req":
             logged.pop("code", None)
@@ -146,6 +165,8 @@ class Bridge:
             if self.leaderboards is not None:
                 self.leaderboards.on_join(gi)     # ... and every board
         elif t == "leave" and isinstance(gi, int):
+            departed_connection = self.connections.get(gi)
+            departed_identity = self.login.identities().get(str(gi))
             with self._lock:
                 self.players.pop(gi, None)
                 self.connections.pop(gi, None)
@@ -172,7 +193,7 @@ class Bridge:
                     self.login.on_link_req(gi, name, code, context)
             else:
                 self.inbox.push("login_failed", gi=gi, reason="bad_code")
-        self._forward(ev)
+        self._forward(ev, connection_id=departed_connection, identity=departed_identity)
 
 
 def main() -> int:
@@ -231,7 +252,10 @@ def main() -> int:
     game = GameSupervisor(cmd, cfg.game_cwd, bridge.on_line, bridge.on_game_start, on_exit=bridge.on_game_exit)
 
     if api is not None:
-        presence = PresenceLoop(api.post_presence, lambda: bridge.presence(game.running))
+        def snapshot():
+            bridge.reconcile_links(api)
+            return bridge.presence(game.running)
+        presence = PresenceLoop(api.post_presence, snapshot)
         presence_thread = threading.Thread(target=presence.run, args=(stop,), daemon=True, name="presence")
         threads.append(presence_thread)
 

@@ -129,12 +129,43 @@ class Pusher:
                      permanent=r.status_code in PERMANENT)
         return ok
 
+    def erase_one(self):
+        """Deletion delivery retries indefinitely and cannot be lost when the original run is gone."""
+        with self.db.tx() as c:
+            row = c.execute("SELECT * FROM run_erases WHERE next_at <= now() "
+                            "ORDER BY next_at LIMIT 1 FOR UPDATE SKIP LOCKED").fetchone()
+            if row is None:
+                return None
+            body = encode({"v": 1, "deleteRunId": str(row["uid"])})
+            ok = False
+            error = None
+            try:
+                response = self._client.post(self.s.deepspace_app_url.rstrip("/") + INGEST_PATH,
+                                             content=body, headers=sign(self.s.deepspace_ingest_secret, body))
+                ok = response.is_success and response.json().get("success") is True
+                error = None if ok else f"HTTP {response.status_code}"
+            except (httpx.HTTPError, ValueError) as e:
+                error = type(e).__name__
+            if ok:
+                c.execute("UPDATE run_erases SET sent_at = now(), attempts = attempts + 1, last_error = NULL, next_at = now() + interval '1 day' "
+                          "WHERE uid = %s", (row["uid"],))
+            else:
+                c.execute("UPDATE run_erases SET attempts = attempts + 1, last_error = %s, "
+                          "next_at = now() + make_interval(secs => %s) WHERE uid = %s",
+                          (error, backoff(min(row["attempts"] + 1, 10)), row["uid"]))
+            return ok
+
     def drain(self, max_items: int = 50) -> int:
         """Push due rows until none is left (or max_items). Returns how many were sent."""
         if not self.enabled or not self._lock.acquire(blocking=False):
             return 0
         sent = 0
         try:
+            for _ in range(max_items):
+                erased = self.erase_one()
+                if erased is None:
+                    break
+                sent += bool(erased)
             for _ in range(max_items):
                 r = self.send_one()
                 if r is None:

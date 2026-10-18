@@ -45,6 +45,7 @@ bindings = [
   { name = "PRESENCE_ROOMS", class_name = "AppPresenceRoom" },
   { name = "CRON_ROOMS", class_name = "AppCronRoom" },
   { name = "JOB_ROOMS", class_name = "AppJobRoom" },
+  { name = "RUN_INGEST", class_name = "RunIngestRoom" },
   { name = "STUDY_BUDGETS", class_name = "StudyBudgetRoom" },
 ]
 
@@ -79,3 +80,7 @@ new_sqlite_classes = ["StudyBudgetRoom"]
 [dev]
 port = 8780
 inspector_port = 9237
+
+[[migrations]]
+tag = "v3-run-ingest"
+new_sqlite_classes = ["RunIngestRoom"]

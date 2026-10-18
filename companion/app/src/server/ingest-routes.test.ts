@@ -9,6 +9,7 @@ import type { AppContext, Env } from '../../worker.js'
 import { parseIngestBody, signIngest, verifyIngestSignature } from '../actions/verified-runs.js'
 import { bestVerifiedRows, formatFrames, type VerifiedRun } from '../lib/leaderboard.js'
 import { registerActionRoutes } from './action-routes.js'
+import { RunIngestRoom } from './run-ingest-room.js'
 import { INGEST_PATH, registerIngestRoutes } from './ingest-routes.js'
 
 const SECRET = 'test-ingest-secret-0123456789abcdef'
@@ -70,6 +71,15 @@ function makeApp(secret: string | undefined = SECRET) {
     OWNER_USER_ID: 'owner-1',
     DEEPSPACE_INGEST_SECRET: secret,
   } as unknown as Env
+  let gate = Promise.resolve()
+  const coordinator = new RunIngestRoom({
+    blockConcurrencyWhile: <T>(fn: () => Promise<T>) => {
+      const task = gate.then(fn)
+      gate = task.then(() => undefined, () => undefined)
+      return task
+    },
+  } as DurableObjectState, env)
+  env.RUN_INGEST = { idFromName: (name: string) => name, get: () => coordinator } as unknown as DurableObjectNamespace
   const app = new Hono<AppContext>()
   registerIngestRoutes(app)
   // The user action route sits behind it: a request without a session must never reach it.
@@ -215,5 +225,40 @@ describe('verified board', () => {
     expect(rows.map((r) => [r.names.join(','), r.elapsedFrames])).toEqual([['N-B,N-A', 1100], ['N-B', 1200], ['N-A', 1200]])
     expect(formatFrames(1250)).toBe('0:41.67')
     expect(formatFrames(30 * 75)).toBe('1:15.00')
+  })
+})
+
+describe('account deletion propagation', () => {
+  it('removes a verified run and ignores late re-ingestion', async () => {
+    const ctx = makeApp()
+    const runId = JSON.parse(body()).runId
+    expect((await ctx.app.fetch(await signedRequest(body()), ctx.env)).status).toBe(200)
+    const deletion = JSON.stringify({ v: 1, deleteRunId: runId })
+    expect((await ctx.app.fetch(await signedRequest(deletion), ctx.env)).status).toBe(200)
+    expect(ctx.room.tables.get('verified_runs')).toHaveLength(0)
+    expect(ctx.room.tables.get('erased_runs')).toHaveLength(1)
+    expect((await ctx.app.fetch(await signedRequest(body()), ctx.env)).status).toBe(200)
+    expect(ctx.room.tables.get('verified_runs')).toHaveLength(0)
+    expect((await ctx.app.fetch(await signedRequest(deletion), ctx.env)).status).toBe(200)
+  })
+
+  it('serializes concurrent deletion and ingestion across the coordinator', async () => {
+    const ctx = makeApp()
+    const runId = JSON.parse(body()).runId
+    const requests = await Promise.all([
+      signedRequest(JSON.stringify({ v: 1, deleteRunId: runId })), signedRequest(body()), signedRequest(body()),
+    ])
+    const results = await Promise.all(requests.map((r) => ctx.app.fetch(r, ctx.env)))
+    expect(results.every((r) => r.status === 200)).toBe(true)
+    expect(ctx.room.tables.get('verified_runs') ?? []).toHaveLength(0)
+  })
+
+  it('requires a signed deletion and fails closed without its coordinator', async () => {
+    const ctx = makeApp()
+    const request = await signedRequest(JSON.stringify({ v: 1, deleteRunId: JSON.parse(body()).runId }), { secret: 'wrong' })
+    expect((await ctx.app.fetch(request, ctx.env)).status).toBe(401)
+    expect(ctx.room.tables.get('erased_runs') ?? []).toHaveLength(0)
+    delete (ctx.env as Partial<Env>).RUN_INGEST
+    expect((await ctx.app.fetch(await signedRequest(body()), ctx.env)).status).toBe(503)
   })
 })
