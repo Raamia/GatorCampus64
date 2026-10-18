@@ -98,7 +98,7 @@ Then start sm64coopdx → **Host** → an **unused save slot** (0 stars) → Mod
    - Under 1'10: the star drops onto the terrace; grab it for **2 stars**. Under 0'45: "GOLD TIME!". Over 1'10: TRY AGAIN; D-pad Down takes you back to the box. Note whether par and gold feel fair.
 10. **Act 3 alone**: the act select offers "GATOR CHOMP CHORUS - 2P". Alone online, the prompt says "This act needs 2 players - you are the only one online". Pause → EXIT COURSE puts you outside the Auditorium with no life lost.
 11. **A coming-soon act**: `/campus swamp 4 me`. The banner reads "COMING SOON - MASCOT / No mission here yet - explore! …" and the panel stays up for 20 s. There is no star. Pause → EXIT COURSE returns you to the Auditorium.
-12. **Ambient pickups**: Mario yellow coins, coin trails, coin rings, and Goombas have been removed from campus maps. Mission-specific red-token objectives remain; the vanilla 100-coin star is unavailable.
+12. **Ambient pickups**: Mario yellow coins, coin trails, coin rings, and Goombas have been removed from campus maps. 1-Up mushrooms use the Gator Life medallion and still grant an extra life. Mission-specific red-token objectives remain; the vanilla 100-coin star is unavailable.
 13. **Exits and lives**: Pause → EXIT TO CASTLE takes you to the Plaza. Drowning in the Florida Pool (east of the stadium) throws you out of the Auditorium door with −1 life, and the hub refills lives to 4.
 14. **Remembered pick**: quit and host again. No menu opens, a "Playing as <X>" popup appears, and you have your friend's model.
 

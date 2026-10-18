@@ -54,7 +54,7 @@ new game / game over ──► hub (LEVEL_CASTLE_GROUNDS), MARIO_POS on the Plaz
 
 Nothing warps "around" the engine: every step is a vanilla level-script warp node, so act select, the course-complete screen, life loss, coopdx instancing and star sharing all behave like Super Mario 64.
 
-**Current pickup policy:** Ambient yellow coins, coin formations, and Goombas have been removed from all campus level scripts and shared pickup builders. Red-token objects used by the Reitz Meal Swipe minigame remain. The vanilla 100-coin star is therefore unavailable; later course doors rely on shared co-op mission stars.
+**Current pickup policy:** Ambient yellow coins, coin formations, and Goombas have been removed from all campus level scripts and shared pickup builders. The vanilla 1-Up model is replaced by a Gator Life medallion; the existing pickup still awards one extra life. Red-token objects used by the Reitz Meal Swipe minigame remain. The vanilla 100-coin star is therefore unavailable; later course doors rely on shared co-op mission stars.
 
 ---
 
