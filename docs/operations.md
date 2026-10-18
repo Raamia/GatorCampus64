@@ -7,7 +7,7 @@ GitHub `main` is the source of truth. Production deployment runs from the operat
 - Game host: `sgl-host`, bridge in `/opt/sgl/server/bridge`, game data in `/srv/sgl`, API in `/opt/sgl-api`.
 - GPU host: `sgl-gpu`, source in `/opt/sgl64`, worker Compose project in `/opt/sgl64/server/worker`.
 - DeepSpace: `companion/app`, owned app `gator-field-board-mlh`, https://gator-field-board-mlh.app.space. Deploy with the DeepSpace CLI from this directory; do not use DeepSpace source push.
-- API binds only to `127.0.0.1:8000`. Bridge uses this local endpoint. Public HTTPS routing is not yet configured.
+- API binds only to `127.0.0.1:8000`; the bridge uses this local endpoint. Public HTTPS at `https://api.gatorcamp.us` was verified.
 
 ## Before deploying
 
@@ -36,7 +36,9 @@ For rollback, stop the affected service, restore the previous source and matchin
 
 ## Remaining acceptance work
 
-Public API TLS/routing; website upload/generation UI integration; Auth0 browser login; interactive in-game login; a consented photo generation through preview and guest deployment; verified run ingestion into DeepSpace. Teammates will perform interactive play tests. DeepSpace login and Auth0/Gator Pass are currently separate identity systems; account linking is not yet implemented.
+Interactive Auth0/browser and in-game login, a consented generation through guest deployment, two-account link/delete acceptance, and a real production-backup recovery drill remain deployment acceptance work. The local backend branch stack implements explicit account linking and durable deletion; the live hosts observed were still at audit release the reviewed revision.
+
+See [operational validation and recovery](backend_operations_validation.md) for executed read-only checks, the isolated synthetic restore drill, and the post-deploy checklist. Follow the [account lifecycle](backend_account_lifecycle.md) and [identity-linking](backend_identity_linking.md) rollout notes after the lease and cleanup branches.
 
 ## Local release command
 
@@ -54,7 +56,7 @@ python3 server/deploy/release.py verify gpu
 # and arrange a quiet game/job window. First adoption requires the extra flag.
 python3 server/deploy/release.py deploy host --ref origin/main --adopt-current --allow-restart
 python3 server/deploy/release.py deploy gpu --ref origin/main --adopt-current --allow-restart
-# Later deployments omit --adopt-current. Recover one source release per host:
+# Later deployments omit --adopt-current. Recover one source release per host
 python3 server/deploy/release.py rollback host --allow-restart
 python3 server/deploy/release.py rollback gpu --allow-restart
 ```
