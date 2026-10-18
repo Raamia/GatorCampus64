@@ -599,6 +599,8 @@ def build_all():
         "banner_blue": tx_banner("#0021A5", "#FA4616", 59),
         "ground_grass": tx_grass("#5A8C3C", 31, blades=("#6E9E48", "#4A7430")),
         "lawn": tx_grass("#6AA346", 32, blades=("#86C060", "#56883A")),
+        "hub_ground_grass": tx_grass("#607847", 62, blades=("#728754", "#506B3C")),
+        "hub_lawn": tx_grass("#70884F", 63, blades=("#82945D", "#617744")),
         "forest_floor": tx_noise("#4E6E34", 33, 12, ["#6A5434", "#3E5A2A", "#5E7E3E"], 120),
         "mulch": tx_noise("#6E4A30", 34, 14, ["#8A6040", "#4E3220", "#7A5038"], 150),
         "asphalt": tx_asphalt("#4C4C50", 35),

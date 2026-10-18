@@ -109,9 +109,12 @@ SPAWN = {"hub": {"pos": (38.2, 142.4), "facing": 190.0,
          # fence and Museum Road down the arrival vista (stage_lake.SPAWN_VISTA) to the north boardwalk inlet,
          # the west bog (the island nest) and the lily-pad line to the observation deck
          "lake_alice": {"pos": (-1893.0, -541.0), "facing": 150.0}}
-# per-stage look (keys override FOG_COLOR_SRGB / BACKGROUND / MUSIC / terrain); the fog distances and
-# the far plane are shared (levels.lua SGL_FAR_UNITS)
+# per-stage look (keys override fog, lighting, background, music and terrain); projection far plane
+# remains shared (levels.lua SGL_FAR_UNITS).
 STAGE_LOOK = {
+    # humid Florida afternoon around the Auditorium: pale warm haze closes distant sightlines gently.
+    "hub": {"fog_color": (195, 207, 205), "fog_start_m": 72.0, "fog_end_m": 360.0,
+            "background": "OCEAN_SKY", "light_hex": "#FFF0D9", "ambient_k": 0.62},
     # game-day afternoon: same blue sky, a touch warmer haze over the stands
     # its own music (fun review: the hub and the Swamp both played SEQ_LEVEL_GRASS); the act 2 race
     # switches to SEQ_LEVEL_SLIDE while racing (sgl_mission.lua)
@@ -152,7 +155,7 @@ STAGE_PICKUPS = {"swamp": lambda m: m.swamp_pickups, "reitz_eng": lambda m: m.re
                  "hub": lambda m: m.hub_pickups}                                     # the rival Goombas
 # stages whose level script loads the common0 model group (MODEL_HEART, MODEL_GOOMBA, ...):
 # JUMP_LINK(script_func_global_1) after MARIO(...), as every vanilla course does
-STAGE_COMMON0_MODELS = {"swamp", "reitz_eng", "lake_alice", "hub"}   # hub: the rival Goombas 
+STAGE_COMMON0_MODELS = {"swamp", "reitz_eng", "lake_alice", "hub"}   # hub: the rival Goombas (368e21f)
 # stage key -> anchor point exporter (stage_points.py), run after the build: data/uf/<key>_points.json
 STAGE_POINTS = {"swamp": lambda m: m.swamp_points, "reitz_eng": lambda m: m.reitz_points,
                 "lake_alice": lambda m: __import__("stage_lake").lake_points}        # data/uf/lake_points.json
@@ -646,14 +649,17 @@ def main():
     lin = tuple(stage_materials._srgb_to_linear(c / 255.0) for c in fog_rgb)
     area.area_fog_color = (*lin, 1.0)
     area.area_fog_position = (990, 1000)  # placeholder, replaced by gsSPFogFactor after export
-    fm, fo, _ = coop_fog_factor(FOG_START_M, FOG_END_M)
+    fog_start_m = float(look.get("fog_start_m", FOG_START_M))
+    fog_end_m = float(look.get("fog_end_m", FOG_END_M))
+    fm, fo, _ = coop_fog_factor(fog_start_m, fog_end_m)
 
     # warp nodes (flow contract, docs/flow.md): vanilla-slot levels name LEVEL_CASTLE_GROUNDS / the
     # stage levels directly; a --custom level's exits name vanilla Castle Inside nodes (custom level
     # numbers only exist at runtime) and mods/sgl64/levels.lua redirects them to the hub.
     warp_nodes = add_flow_warps(L, area, slot)
 
-    mats = stage_materials.make_materials()
+    mats = stage_materials.make_materials(light_hex=look.get("light_hex", "#FFFFFF"),
+                                          ambient_k=look.get("ambient_k", 0.55))
     # extra interior areas (STAGE_INTERIOR_AREAS): their modules + the instant-warp floor materials the landmark's door
     # hookups use, and area 1's INSTANT_WARPs into them
     area_mods = []
@@ -945,7 +951,7 @@ def main():
         "doors": door_out, "lua_globals_needed": lua_names,
         "landmark_extras": landmark_extras(S),
         "pole_objects": pole_out, "climb_routes": climb, "stars": stars_out,
-        "fog": {"start_m": FOG_START_M, "end_m": FOG_END_M, "gsSPFogFactor": [fm, fo], "color_srgb": fog_rgb,
+        "fog": {"start_m": fog_start_m, "end_m": fog_end_m, "gsSPFogFactor": [fm, fo], "color_srgb": fog_rgb,
                 "far_clip_units": FAR_CLIP, "override_far_units": int(OVERRIDE_FAR_M * 100),
                 "lua_far_units": lua_far_units()},
         "water_boxes": water_out,
@@ -1071,7 +1077,7 @@ def main():
                 ob.hide_set(True)
         import stage_preview
         pv = opts["previews_dir"] or os.path.join(art_dir, "previews")
-        paths = stage_preview.render_all(S, pv, fog=(FOG_START_M, FOG_END_M, fog_rgb),
+        paths = stage_preview.render_all(S, pv, fog=(fog_start_m, fog_end_m, fog_rgb),
                                          fog_params=coop_fog_factor(FOG_START_M, FOG_END_M),
                                          far_m=OVERRIDE_FAR_M)
         top = next((p for p in paths if p.endswith("_topdown.png")), None)

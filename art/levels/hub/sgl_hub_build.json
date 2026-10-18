@@ -1,7 +1,7 @@
 {
  "level": "castle_grounds",
  "stage": "hub",
- "built_at": "2026-10-18T02:31Z",
+ "built_at": "2026-10-18T02:35Z",
  "center_m": [
   -45,
   98
@@ -19,14 +19,14 @@
   338.0
  ],
  "extent_half_m": 324.0,
- "collision_tris": 8887,
- "visual_tris": 59950,
+ "collision_tris": 8919,
+ "visual_tris": 60478,
  "collision_by_object": {
   "Ground collision": 1552,
   "Pond basins collision": 195,
   "Props collision": 188,
   "Buildings collision": 3232,
-  "Trees collision": 1096,
+  "Trees collision": 1128,
   "Boundary walls": 192,
   "Dressing collision": 234,
   "LM century_tower collision": 370,
@@ -49,7 +49,7 @@
   "Props visual": 252,
   "Buildings visual": 7685,
   "Backdrop buildings": 4376,
-  "Trees visual": 17001,
+  "Trees visual": 17529,
   "Tree line": 560,
   "Dressing visual": 5909,
   "LM century_tower visual": 1474,
@@ -2195,16 +2195,16 @@
  },
  "stars": [],
  "fog": {
-  "start_m": 200.0,
-  "end_m": 1000.0,
+  "start_m": 72.0,
+  "end_m": 360.0,
   "gsSPFogFactor": [
-   31949,
-   -31725
+   11502,
+   -11216
   ],
   "color_srgb": [
-   176,
-   200,
-   226
+   195,
+   207,
+   205
   ],
   "far_clip_units": 32767,
   "override_far_units": 100000,
@@ -3620,7 +3620,7 @@
    "palm": 167,
    "colliders": 172,
    "climbable": 24,
-   "hand_authored_oaks": 4,
+   "hand_authored_oaks": 6,
    "hand_authored_positions_m": [
     [
      12.0,
@@ -3637,6 +3637,14 @@
     [
      76.0,
      158.0
+    ],
+    [
+     60.0,
+     160.0
+    ],
+    [
+     20.0,
+     125.0
     ]
    ],
    "beyond_s16": 3,
@@ -3876,32 +3884,32 @@
  },
  "attribution": "Map data (c) OpenStreetMap contributors, ODbL 1.0",
  "export_hygiene": {
-  "geometry_mode_lines_sorted": 106,
+  "geometry_mode_lines_sorted": 104,
   "trailing_ws_lines": 4,
   "max_abs_vertex": 32639,
-  "geometry_modes_rewritten": 50,
+  "geometry_modes_rewritten": 49,
   "common0_jump_link": true
  },
  "collision_repair": {
   "area_1": {
    "vertices": [
-    6859,
-    6840
+    6891,
+    6872
    ],
    "welded_vertices": 19,
    "collapsed_tris": 28,
    "tjunction_splits": 240,
    "triangles": [
-    8881,
-    9093
+    8913,
+    9125
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [],
-  "collision_tris": 9093,
-  "render_tris": 59950,
+  "collision_tris": 9125,
+  "render_tris": 60478,
   "lua_names": [
    "SGL_HUB_SIGN_CENTURY_TOWER",
    "SGL_HUB_SIGN_FINAL_EXAM",
@@ -3915,8 +3923,8 @@
    "id_bhvSglDoor"
   ],
   "fog_patched": [
-   50,
-   50
+   49,
+   49
   ]
  },
  "level_dir": "/Users/nav/Desktop/super-gatorlator-64/mods/sgl64/levels/castle_grounds"

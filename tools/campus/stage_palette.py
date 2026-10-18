@@ -22,6 +22,8 @@ GENERATOR_MATERIALS = {
     # ground
     "ground_grass":   {"tex": "ground_grass.png",   "tile_m": 4.0, "color": "#5A8C3C"},
     "lawn":           {"tex": "lawn.png",           "tile_m": 4.0, "color": "#6AA346"},
+    "hub_ground_grass": {"tex": "hub_ground_grass.png", "tile_m": 4.0, "color": "#607847"},
+    "hub_lawn":         {"tex": "hub_lawn.png",         "tile_m": 4.0, "color": "#70884F"},
     "forest_floor":   {"tex": "forest_floor.png",   "tile_m": 4.0, "color": "#4E6E34"},
     "mulch":          {"tex": "mulch.png",          "tile_m": 2.0, "color": "#6E4A30"},
     "asphalt":        {"tex": "asphalt.png",        "tile_m": 4.0, "color": "#4C4C50"},

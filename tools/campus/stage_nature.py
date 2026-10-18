@@ -19,7 +19,8 @@ POLE_TREE_HITBOX_M = 5.0    # bhvTree: SET_HITBOX(80, 500); Mario climbs to 4 m 
 # Curated live oaks around the Auditorium approach (map metres, origin = Century Tower). These
 # supplement OSM points where the real oak canopy frames the plaza; path clearance is checked below.
 HUB_OAKS = [(12.0, 166.0), (1.0, 153.0), (86.0, 124.0),
-            (-2.0, 105.0), (62.0, 108.0), (76.0, 158.0)]
+            (-2.0, 105.0), (62.0, 108.0), (76.0, 158.0), (5.0, 100.0),
+            (60.0, 160.0), (20.0, 125.0)]
 
 
 def rnd(key, lo=0.0, hi=1.0):
