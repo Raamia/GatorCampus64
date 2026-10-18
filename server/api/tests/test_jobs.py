@@ -66,7 +66,46 @@ def test_global_hourly_limit(make_client, auth, conn):
     r = upload(client, auth(sub="a|3"))
     assert r.status_code == 429 and r.headers["retry-after"]
     conn.execute("UPDATE jobs SET created = now() - interval '2 hours'")
+    conn.execute("UPDATE generation_admissions SET created = now() - interval '2 hours'")
     assert upload(client, auth(sub="a|3")).status_code == 201
+
+
+def test_character_deletion_does_not_erase_admission(make_client, auth, conn, monkeypatch):
+    client = make_client(limit_global_hour=1)
+    first = upload(client, auth()).json()
+    assert client.delete('/characters/' + first['character_id'], headers=auth()).status_code == 200
+    assert conn.execute('SELECT count(*) AS n FROM jobs').fetchone()['n'] == 0
+    assert conn.execute('SELECT count(*) AS n FROM generation_admissions').fetchone()['n'] == 1
+    # The rejection must happen before image decoding, not after spending CPU.
+    from sgl_api import images
+    monkeypatch.setattr(images, 'process', lambda *_: pytest.fail('decoded before quota check'))
+    assert upload(client, auth()).status_code == 429
+
+
+def test_delete_waits_for_slot_lock_before_locking_character(client, auth, conn, pg):
+    import time
+    import psycopg
+    from concurrent.futures import ThreadPoolExecutor
+
+    cid = upload(client, auth()).json()['character_id']
+    # Slot allocator holds the global lock; a concurrent delete must wait before
+    # taking a character lock, so the allocator can still lock that character.
+    with psycopg.connect(pg) as allocator, ThreadPoolExecutor(max_workers=1) as executor:
+        allocator.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
+        deletion = executor.submit(client.delete, '/characters/' + cid, headers=auth())
+        try:
+            deadline = time.monotonic() + 3
+            while time.monotonic() < deadline:
+                waiting = conn.execute("SELECT 1 FROM pg_stat_activity WHERE datname = current_database() "
+                                       "AND wait_event = 'advisory'").fetchone()
+                if waiting:
+                    break
+                time.sleep(.01)
+            assert waiting, 'delete did not reach advisory lock'
+            allocator.execute('SELECT id FROM characters WHERE id = %s FOR UPDATE NOWAIT', (cid,))
+        finally:
+            allocator.rollback()
+        assert deletion.result(timeout=3).status_code == 200
 
 
 def test_rejected_upload_leaves_no_photos(make_client, auth, s3):
