@@ -46,7 +46,7 @@ export default function LeaderboardPage() {
   }, [records])
 
   return <div className="board-page leaderboard-page">
-    <header className="board-topline leaderboard-topline"><div className="leaderboard-title-row"><span className="leaderboard-emblem"><Trophy size={22}/></span><div><div className="eyebrow"><Trophy size={14}/> CAMPUS RECORD BOARD · GATOR PASS</div><h1>Leaderboards</h1><p>Compare server-timed runs across the six Reitz and Marston missions.</p></div></div><span className="leaderboard-live"><i/> LIVE BOARD</span></header>
+    <header className="board-topline leaderboard-topline"><div className="leaderboard-title-row"><span className="leaderboard-emblem"><Trophy size={22}/></span><div><div className="eyebrow"><Trophy size={14}/> CAMPUS RECORD BOARD · GATOR PASS</div><h1>Leaderboards</h1><p>Compare server-timed runs across campus missions.</p></div></div><span className="leaderboard-live"><i/> LIVE BOARD</span></header>
     <div className="lb-layout">
       <nav className="lb-missions" aria-label="Missions">
         {missions.map((m) => <button key={m.id} className={`lb-mission ${m.id === mission?.id ? 'is-selected' : ''}`} onClick={() => setSelected(m.id)} aria-pressed={m.id === mission?.id}>
@@ -56,7 +56,7 @@ export default function LeaderboardPage() {
       <main>
         <section className="lb-card" aria-labelledby="verified-title">
           <div className="section-heading"><div><span className="section-index"><BadgeCheck size={13}/> VERIFIED</span><h2 id="verified-title">{mission?.title}</h2></div><span className="tiny-caption">BEST RUN PER TEAM</span></div>
-          <p className="lb-note">Timed by the hosted game server; every player was logged in with Gator Pass.</p>
+          <p className="lb-note">{mission?.id === 'swamp_chorus' ? 'Co-op runs are timed by the hosted server. Solo rhythm mode awards a grade rather than a verified time.' : 'Timed by the hosted game server; every player was logged in with Gator Pass.'}</p>
           {status === 'loading' ? <div className="lb-empty">Loading the board…</div>
             : rows.length === 0 ? <div className="lb-empty">No verified runs yet. Play this mission on the hosted server, log in with <code>/login</code>, and finish a round.</div>
             : <ol className="lb-rows">{rows.map((row, i) => <li key={`${row.names.join('|')}-${row.elapsedFrames}`} className="lb-row">

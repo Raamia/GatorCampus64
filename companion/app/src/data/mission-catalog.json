@@ -82,6 +82,21 @@
         "coordination",
         "timing"
       ]
+    },
+    {
+      "id": "swamp_chorus",
+      "stage": "The Swamp",
+      "act": 3,
+      "title": "Gator Chomp Chorus",
+      "objective": "Watch four pads light up, then repeat the sequence with ground-pounds. Build from one practice note to a four-note phrase.",
+      "minimumPlayers": 1,
+      "hint": "You have 2.5 seconds to land each ground-pound. A wrong or late hit repeats the phrase without costing a life.",
+      "hintTags": [
+        "rhythm",
+        "memory",
+        "solo",
+        "co-op"
+      ]
     }
   ],
   "minigames": [
