@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Footprints, Gamepad2, House, Menu, Settings, Trophy, X } from 'lucide-react'
+import { Activity, Footprints, Gamepad2, House, Menu, Settings, Trophy, X } from 'lucide-react'
 import { APP_NAME } from '../constants'
 import { nav, type NavItem } from '../nav'
 
@@ -22,7 +22,7 @@ export function SiteHeader({ items = publicItems, account }: { items?: NavItem[]
       <div className="app-nav-links" id="site-navigation-links">{items.map((item) => {
         const active = pathname === item.path || pathname.startsWith(`${item.path}/`)
         const Icon = item.path === '/leaderboard' ? Trophy : item.path === '/gatorize' ? Footprints
-          : item.path === '/play' ? Gamepad2 : item.path === '/settings' ? Settings : House
+          : item.path === '/pipeline' ? Activity : item.path === '/play' ? Gamepad2 : item.path === '/settings' ? Settings : House
         return <Link key={item.path} to={item.path} aria-current={active ? 'page' : undefined} className={`app-nav-link${active ? ' is-active' : ''}`}>
           <Icon size={15} aria-hidden/>{item.label}
         </Link>
