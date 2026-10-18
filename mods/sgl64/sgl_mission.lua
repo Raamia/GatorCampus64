@@ -794,11 +794,13 @@ local function mission_hud()
     sgl_hud_panel(lines)
 
     if ctx.s == SGL_MS_WAITING then
+        -- def.waitingText(ctx): a solo mode while the co-op waits (Swamp act 3, swamp_chomp.lua)
+        local solo = def.waitingText ~= nil and def.waitingText(ctx) or nil
         if others_online() == 0 then
-            sgl_hud_prompt(string.format("This act needs %d players - you are the only one online", ctx.need),
-                "Invite a friend to the game, or Pause > EXIT COURSE to go back")
+            sgl_hud_prompt(solo or string.format("This act needs %d players - you are the only one online", ctx.need),
+                solo and "Pause > EXIT COURSE to go back" or "Invite a friend to the game, or Pause > EXIT COURSE to go back")
         else
-            sgl_hud_prompt(string.format("Needs a study buddy: %d/%d here", ctx.n, ctx.need),
+            sgl_hud_prompt(solo or string.format("Needs a study buddy: %d/%d here", ctx.n, ctx.need),
                 "Friends got an invite: D-pad Up, /join or Pause > Mods > Join my study group")
         end
     elseif ctx.s == SGL_MS_SUCCESS and ctx.loc.got == nil then
@@ -975,7 +977,7 @@ local function party_sync_valid()
     end
 end
 
--- player list: "THE SWAMP - Act 3: GATOR CHOMP CHORUS - 2P" instead of the vanilla level name.
+-- player list: "THE SWAMP - Act 3: GATOR CHOMP CHORUS" instead of the vanilla level name.
 -- The override is local to each client, so every client labels every player (twice a second).
 local function party_locations()
     if get_global_timer() % 15 ~= 0 then return end

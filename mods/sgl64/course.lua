@@ -63,7 +63,7 @@ SGL_STAGES = {
       acts = {
           "KICKOFF - CLIMB THE SKYBOX",   -- swamp_missions.lua swamp_skybox (+ level-script star id 0)
           "STADIUM STAIR SPRINT",         -- swamp_missions.lua swamp_sprint (race, par 1'10)
-          "GATOR CHOMP CHORUS - 2P",      -- swamp_missions.lua swamp_chorus (co-op, 2-4 players)
+          "GATOR CHOMP CHORUS",           -- swamp_missions.lua swamp_chorus (solo rhythm game alone, co-op 2-4)
           "COMING SOON - MASCOT",         -- design 7.1 "The Visiting Mascot" (no mission yet)
           "COMING SOON - TAILGATE",       -- design 7.1 "Tailgate Tokens" (no mission yet)
           "COMING SOON - FLYOVER!",       -- design 7.1 "Flyover!" (no mission yet)

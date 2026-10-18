@@ -32,7 +32,7 @@ local function test(name, fn)
     print((failed == before and "PASS " or "FAIL ") .. name)
 end
 
-local FILES = { "course.lua", "sgl_bridge.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_mission.lua", "swamp_missions.lua" }
+local FILES = { "course.lua", "sgl_bridge.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_mission.lua", "swamp_chomp.lua", "swamp_missions.lua" }
 local LEVEL_BOB, HUB = C.LEVEL_BOB, C.LEVEL_CASTLE_GROUNDS
 local MS = { IDLE = 0, WAITING = 1, INTRO = 2, ACTIVE = 3, SUCCESS = 4, FAILED = 5, DONE = 6 }
 
@@ -343,16 +343,16 @@ test("leaderboard menu: live rows with age, every mission with rows listed, .sav
     check(hud_find(A, "1/6") ~= nil, "6 boards (the offline 4 incl. the live sprint, + chorus + an unknown id; "
         .. "empty live boards not added): the list scrolls")
     local list = A.env.sgl_deepspace_board_list()
-    check(#list == 6 and list[5].missionId == "swamp_chorus" and list[5].label == "Gator Chomp Chorus - 2P"
+    check(#list == 6 and list[5].missionId == "swamp_chorus" and list[5].label == "Gator Chomp Chorus"
         and list[6].missionId == "zz_unknown" and list[6].label == "zz_unknown",
         "extra boards after the offline four: registered missions (title), then unknown ids")
     -- down to the live chorus board (row 5: the list scrolls), open it
     for _ = 1, 4 do press(w, A, C.D_JPAD) end
-    check(hud_find(A, "5/6") ~= nil and hud_find(A, "Gator Chomp Chorus - 2P") ~= nil
+    check(hud_find(A, "5/6") ~= nil and hud_find(A, "Gator Chomp Chorus") ~= nil
         and hud_find(A, "Reitz rooftop") == nil, "scrolled: row 5 visible, row 1 not")
     press(w, A, C.A_BUTTON)
     w:step(1)
-    check(hud_find(A, "GATOR CHOMP CHORUS - 2P") and hud_find(A, "LIVE  UPDATED JUST NOW"), "live board + age")
+    check(hud_find(A, "GATOR CHOMP CHORUS") and hud_find(A, "LIVE  UPDATED JUST NOW"), "live board + age")
     check(hud_find(A, "#1  Eve + Finn    1M20.0S") ~= nil, "live row (no retries)")
     press(w, A, C.B_BUTTON)
     for _ = 1, 2 do press(w, A, C.U_JPAD) end   -- back to the sprint (row 3, live: its .sav snapshot is not used)

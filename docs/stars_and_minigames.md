@@ -29,7 +29,7 @@ Ben Hill Griffin Stadium at true scale, plus the O'Connell Center and Florida Gy
 |---|---|---|---|
 | 1 | Kickoff - Climb the Skybox | Solo climb | 1+ |
 | 2 | Stadium Stair Sprint | Race | 1+ |
-| 3 | Gator Chomp Chorus - 2P | Co-op rhythm | 2–4 |
+| 3 | Gator Chomp Chorus | Solo rhythm game alone, co-op rhythm with 2–4 | 1–4 |
 
 ### Act 1: Kickoff - Climb the Skybox
 - **Goal:** climb the West Skybox Tower to the press-box roof, **66 m** up.
@@ -47,7 +47,7 @@ Ben Hill Griffin Stadium at true scale, plus the O'Connell Center and Florida Gy
 - **Times:** **par 1'10** earns the star. **Gold** is **0'45**.
 - **Extras:** race music plays, and D-pad Down takes you back to the start box.
 
-### Act 3: Gator Chomp Chorus - 2P
+### Act 3: Gator Chomp Chorus
 - **Players:** needs at least 2. One corner lights up per player (2–4).
 - **Rounds:** 3 phrases. In each one:
   1. Stand on a lit end-zone corner button.

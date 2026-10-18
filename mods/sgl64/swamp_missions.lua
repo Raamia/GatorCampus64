@@ -10,10 +10,11 @@
 --   act 2  STADIUM STAIR SPRINT         race: north end zone -> up the east stands -> around the rim
 --                                       -> South Ramp terrace, 9 checkpoints, par 1'10, gold 0'45 (solo or
 --                                       more); race music; D-pad Down = back to the start box
---   act 3  GATOR CHOMP CHORUS - 2P      buttons (co-op, POUND mode): 3 phrases; in each, hold the lit
+--   act 3  GATOR CHOMP CHORUS           buttons (co-op, POUND mode): 3 phrases; in each, hold the lit
 --                                       end-zone corners while the crowd counts GA... TOR..., then
 --                                       ground-pound on CHOMP!; the next phrase lights other corners.
---                                       Lit buttons = players here, 2..4 (needs at least 2 players)
+--                                       Lit buttons = players here, 2..4. ALONE: the solo rhythm game of
+--                                       swamp_chomp.lua (4 pads in the north end zone), same star.
 --   acts 4-6 "COMING SOON - ..." in course.lua: free roam, no star (sgl_mission.lua shows a notice).
 -- Act order: vanilla act select offers the acts you have stars for plus the next one, so the playable
 -- missions are acts 1-3, the solo ones first (course.lua header). Stars of acts 2 and 3 are spawned by
@@ -157,13 +158,13 @@ sgl_mission_register({
     id = "swamp_chorus",
     level = LEVEL_BOB,
     act = SWAMP_MISSION_ACTS.chorus,
-    title = "GATOR CHOMP CHORUS - 2P",
+    title = "GATOR CHOMP CHORUS",
     objective = "Hold the lit corners, then ground-pound on CHOMP!",
     star = up(P.field_center, 150),
     starFrom = P.scoreboard_top,
     starCutsceneRange = 8000,       -- the corner buttons are ~58 m from midfield: everyone sees it
     probes = { probe(P.field_center, "the field"), probe(P.button_nw, "the NW end-zone corner") },
-    kind = sgl_mission_kind_buttons({
+    kind = sgl_swamp_chomp_kind(sgl_mission_kind_buttons({
         buttons = {
             { x = P.button_nw.x, y = P.button_nw.y, z = P.button_nw.z, name = "North-west corner" },
             { x = P.button_ne.x, y = P.button_ne.y, z = P.button_ne.z, name = "North-east corner" },
@@ -184,5 +185,11 @@ sgl_mission_register({
         minPlayers = 2,
         radius = 300,               -- stand on the switch (vanilla purple switch at scale 1.5)
         height = 400,               -- ... or be in the air above it (the jump of a ground pound)
+    }), {
+        -- solo pads: a row of 4, 3.5 m apart, mid north end zone (well clear of the corner buttons)
+        { x = (P.button_nw.x + P.button_ne.x) // 2 - 525, y = P.button_nw.y, z = (P.button_nw.z + P.button_ne.z) // 2 + 450 },
+        { x = (P.button_nw.x + P.button_ne.x) // 2 - 175, y = P.button_nw.y, z = (P.button_nw.z + P.button_ne.z) // 2 + 450 },
+        { x = (P.button_nw.x + P.button_ne.x) // 2 + 175, y = P.button_nw.y, z = (P.button_nw.z + P.button_ne.z) // 2 + 450 },
+        { x = (P.button_nw.x + P.button_ne.x) // 2 + 525, y = P.button_nw.y, z = (P.button_nw.z + P.button_ne.z) // 2 + 450 },
     }),
 })
