@@ -14,6 +14,7 @@ const GeoLayout wf_area_1_geo[] = {
 		GEO_DISPLAY_LIST(LAYER_OPAQUE, wf_dl_LM_malachowsky_hall_visual_mesh_layer_1),
 		GEO_DISPLAY_LIST(LAYER_OPAQUE, wf_dl_LM_reitz_amphitheater_visual_mesh_layer_1),
 		GEO_DISPLAY_LIST(LAYER_TRANSPARENT, wf_dl_LM_reitz_amphitheater_visual_mesh_layer_5),
+		GEO_DISPLAY_LIST(LAYER_OPAQUE, wf_dl_LM_reitz_streetscape_visual_mesh_layer_1),
 		GEO_DISPLAY_LIST(LAYER_OPAQUE, wf_dl_LM_reitz_union_visual_mesh_layer_1),
 		GEO_DISPLAY_LIST(LAYER_OPAQUE, wf_dl_LM_weil_hall_courtyard_paving_mesh_layer_1),
 		GEO_DISPLAY_LIST(LAYER_OPAQUE, wf_dl_LM_weil_hall_visual_mesh_layer_1),

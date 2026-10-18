@@ -18,8 +18,8 @@
     },
     "wf": {
       "height_range": [
-        -200,
-        350
+        -350,
+        450
       ],
       "minimum_links": 100
     },
