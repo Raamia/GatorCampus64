@@ -57,9 +57,9 @@ Use Impact/Arial Black/Trebuchet fallbacks for short, bold stage headings and co
 
 ## Layout
 
-The companion home leads with a hero naming the game and summarizing the mission board, then lists all six missions under the two enterable buildings, then the minigame section, then a record-chase panel linking to the leaderboard. Keep the native-game handoff clear and make launch instructions one click away. Stack sections single-column on mobile. Keep the main action visible without a dense top navigation.
+The companion home leads with a hero naming the game and summarizing the mission board, then lists the campus missions grouped by location, then a record-chase panel linking to the leaderboard. Keep the native-game handoff clear and make launch instructions one click away. Stack sections single-column on mobile. Keep the main action visible without a dense top navigation.
 
-Use the repository's true-scale UF campus map as the backdrop, with pins on Reitz & Engineering and Marston Library. These are the only enterable mission buildings; nearby buildings remain exterior scenery. Keep each building's mission list in a separate card so labels on the real map remain legible. Do not draw an invented route or imply these are adjacent sequential stages.
+Use the repository's true-scale UF campus map as the backdrop, with pins on Reitz & Engineering and Marston Library. Featured mission locations do not represent every enterable building on the map. Do not display a total count of enterable interiors or buildings. Keep each building's mission list in a separate card so labels on the real map remain legible. Do not draw an invented route or imply these are adjacent sequential stages.
 
 ## Elevation & Depth
 
