@@ -175,7 +175,7 @@ RU_MATERIALS = {
     "int_ru_wood_lvt":     {"size": (32, 32), "tile_m": 1.6, "color": "#6E5440"},
     # ---- fidelity pass 4 (ballrooms, upstairs meeting rooms, hotel, elevators, Level 4)
     "int_ru_wall_slateblue": {"size": (32, 32), "tile_m": 2.0, "color": "#8E95A8"},   # fidelity-4 r2: +15 % value
-    "int_ru_door_elev":    {"size": (32, 64), "tile_m": 2.2, "color": "#B4B8BC", "map": "once"},
+    "int_ru_door_elev":    {"size": (32, 64), "tile_m": 2.2, "color": "#70757A", "map": "once"},
     "int_ru_door_hotel":   {"size": (32, 64), "tile_m": 2.2, "color": "#7A4A2C", "map": "once"},
     "int_ru_call_button":  {"size": (16, 32), "tile_m": 0.4, "color": "#B4B8BC", "map": "once"},
     "int_ru_stone_clad":   {"size": (32, 32), "tile_m": 1.2, "color": "#B8AE9C"},
@@ -379,13 +379,24 @@ RU_MATERIALS = {
     "int_ru_partition":    {"size": (32, 32), "tile_m": 1.2, "color": "#8C9095"},
     "int_ru_door_meeting_honey": {"size": (32, 64), "tile_m": 2.4, "color": "#B8823E", "map": "once"},
     "int_ru_maple_pale":   {"size": (64, 32), "tile_m": 1.6, "color": "#D8BC90"},
-    "int_ru_word_wall_a":  {"size": (64, 32), "tile_m": 2.9, "color": "#5E5048", "map": "once"},
-    "int_ru_word_wall_b":  {"size": (64, 32), "tile_m": 2.9, "color": "#5E5048", "map": "once"},
+    "int_ru_word_wall_a":  {"size": (64, 32), "tile_m": 2.9, "color": "#8A5C34", "map": "once"},
+    "int_ru_word_wall_b":  {"size": (64, 32), "tile_m": 2.9, "color": "#8A5C34", "map": "once"},
     "int_ru_hang_meet":    {"size": (64, 32), "tile_m": 2.0, "color": "#E2E4E6", "map": "once"},
     "int_ru_frit":         {"size": (64, 8), "tile_m": 1.2, "color": "#F4F6F8", "kind": "cutout"},
     "int_ru_rion_case":    {"size": (32, 64), "tile_m": 2.0, "color": "#1E2A44", "map": "once"},
     # design + leftovers pass (user_06, C04, B05): the dark grey terrazzo inlay band of the L1-L3 corridors
     "int_ru_terrazzo_dark": {"size": (32, 32), "tile_m": 1.5, "color": "#5E6062"},
+    # photo pass round 2 (C14 Rion walls, user_11 Blue elevator lobby)
+    "int_ru_wall_greige":  {"size": (32, 32), "tile_m": 2.0, "color": "#D4C4B0"},
+    "int_ru_wall_lobby_navy": {"size": (32, 32), "tile_m": 2.0, "color": "#2E3A72"},
+    "int_ru_glass_tint_dk": {"size": (32, 32), "tile_m": 1.2, "color": "#22262C"},
+    # photo pass round 2, atrium / food court / Ground leftovers (user_04, B08-B10, B14, B16, B20)
+    "int_ru_tile_ceiling_mid": {"size": (32, 32), "tile_m": 1.2, "color": "#A0A6B2"},
+    "int_ru_carpet_tri_dk": {"size": (64, 32), "tile_m": 3.0, "color": "#1E2F70"},
+    "int_ru_hours_screen": {"size": (32, 64), "tile_m": 1.0, "color": "#16224E", "map": "once"},
+    "int_ru_sign_barber_blade": {"size": (64, 32), "tile_m": 0.9, "color": "#F6F6F4", "map": "once"},
+    "int_ru_badge_babas":  {"size": (32, 32), "tile_m": 1.0, "color": "#141414", "kind": "cutout", "map": "once"},
+    "int_ru_badge_halal":  {"size": (32, 32), "tile_m": 0.9, "color": "#D4A23A", "kind": "cutout", "map": "once"},
 }
 for _m in RU_MATERIALS.values():
     _m["tex"] = None
@@ -2073,12 +2084,12 @@ def tx_prints(seed):
 def tx_door_elev(seed):
     """Brushed-steel elevator doors (no public photo: the house finishes): two sliding leaves meeting at a centre
     seam, fine vertical brushing, a darker sill line; once-mapped across the whole opening."""
-    t = Tex(32, 64, hexc("#B4B8BC"), seed)
+    t = Tex(32, 64, hexc("#70757A"), seed)          # photo pass r2 (user_11): mid-grey stainless (was #B4B8BC)
     for x in range(32):
         k = 1.0 + 0.05 * math.sin(x * 2.3) + t.r.uniform(-0.03, 0.03)
         for y in range(64):
-            t.set(x, y, shade(hexc("#B4B8BC"), k + t.r.uniform(-0.015, 0.015)))
-    t.rect(15, 0, 16, 63, hexc("#5A5E62"))
+            t.set(x, y, shade(hexc("#70757A"), k + t.r.uniform(-0.015, 0.015)))
+    t.rect(15, 0, 16, 63, hexc("#4A4E52"))
     t.frame(hexc("#7A7E82"), 0, 0, 31, 63)
     t.rect(1, 61, 30, 62, hexc("#4A4E52"))
     return t
@@ -2634,14 +2645,108 @@ TEXTURES = {
     "int_ru_slate_floor": lambda s: tx_slate_floor(s),                                       # user_14-16
     "int_ru_partition": lambda s: tx_partition(s),                                           # C08
     "int_ru_door_meeting_honey": lambda s: tx_door_meeting_honey(s),                         # C03, C08, C12
-    "int_ru_maple_pale": lambda s: _retone(tx_maple(s), (1.06, 1.21, 1.41)),                # Rion floor (C14-C16)
+    "int_ru_maple_pale": lambda s: _retone(tx_maple(s), (1.10, 1.26, 1.50)),                # Rion floor (C14-C16; r2: blonder)
     "int_ru_word_wall_a": lambda s: tx_word_wall(0, s),                                      # CCC word wall (user_16)
     "int_ru_word_wall_b": lambda s: tx_word_wall(1, s),
     "int_ru_hang_meet": lambda s: tx_hang("meet", 0),                                       # C08
     "int_ru_frit": lambda s: tx_frit(s),                                                     # C04 dotted frit band
     "int_ru_rion_case": lambda s: tx_rion_case(s),                                           # C12, C13
     "int_ru_terrazzo_dark": lambda s: tx_speckle_floor("#5E6062", ("#4E5052", "#707274", "#46484A"), s, 60),  # user_06
+    "int_ru_wall_greige": lambda s: _flat("#D4C4B0", s, 2),                                # Rion wall panels (C14)
+    "int_ru_wall_lobby_navy": lambda s: _flat("#2E3A72", s, 3),                            # Blue lobby (user_11)
+    "int_ru_glass_tint_dk": lambda s: tx_glass_tint_dk(s),                                   # C08 meeting fronts
+    "int_ru_tile_ceiling_mid": lambda s: tx_ceiling_mid(s),                                 # Game Room (user_04, B20)
+    "int_ru_carpet_tri_dk": lambda s: tx_carpet_tri_dk(s),                                   # Ground lounge (B08-B10)
+    "int_ru_hours_screen": lambda s: tx_hours_screen(s),                                     # Game Room door (B16)
+    "int_ru_sign_barber_blade": lambda s: tx_sign_barber_blade(s),                           # barbershop blade (B14)
+    "int_ru_badge_babas": lambda s: tx_badge_text("#141414", "#F2F2F2", ("BABA'S", "PIZZA"), "#F2F2F2", s),  # B01
+    "int_ru_badge_halal": lambda s: tx_badge_text("#D4A23A", "#4A2A14", ("HALAL", "SHACK"), "#4A2A14", s),   # B01, u20
 }
+
+
+def tx_badge_text(hx, ring_hx, lines, text_hx, seed):
+    """Photo pass round 2 (fidelity-foodcourt 1 / 5): a round blade sign with the vendor's plain name in two FONT3
+    lines (the generic text bars of tx_badge_round read as an icon); the apostrophe is drawn by hand."""
+    t = Tex(32, 32, (0, 0, 0), seed, alpha=0)
+    t.disc(16, 16, 15.5, hexc(ring_hx))
+    t.disc(16, 16, 13.0, hexc(hx))
+    c = hexc(text_hx)
+    for i, ln in enumerate(lines):
+        y = 10 + i * 7
+        if "'" in ln:
+            a_, b_ = ln.split("'")
+            wa, wb = font_width(a_, font=FONT3), font_width(b_, font=FONT3)
+            x = 16 - (wa + 3 + wb) // 2
+            font_text(t, a_, x, y, c, font=FONT3)
+            t.rect(x + wa + 1, y, x + wa + 1, y + 1, c)
+            font_text(t, b_, x + wa + 3, y, c, font=FONT3)
+        else:
+            font_center(t, ln, y, c, font=FONT3)
+    return t
+
+
+def tx_ceiling_mid(seed):
+    """Game Room lay-in ceiling, photo pass round 2 (user_04 mid blue-grey, B15 / B20 light grey): a mid grey-blue
+    2 x 2 field with a darker (low-contrast, 2-step) grid; the dark slate one baked near-black in every view."""
+    t = Tex(32, 32, hexc("#A2A8B4"), seed)
+    t.noise(2)
+    t.speckle(40, [hexc("#9AA0AC"), hexc("#A8AEBA")])
+    for i in range(32):
+        for (x, y) in ((i, 0), (i, 16), (0, i), (16, i)):
+            t.set(x, y, hexc("#868C9A"))
+        for (x, y) in ((i, 1), (i, 17), (1, i), (17, i)):
+            t.set(x, y, hexc("#949AA6"))
+    return t
+
+
+def tx_carpet_tri_dk(seed):
+    """Ground lounge carpet, photo pass round 2 (B08-B10, C01): navy / medium blue triangles with grey ones (the
+    saturated royal int_ru_carpet_tri, ~25 % darker), same 8 px triangle grid."""
+    navy, mid, grey = hexc("#1C2C68"), hexc("#28408E"), hexc("#5C6476")
+    pal = [mid, navy, grey, mid, mix(navy, mid, 0.5)]
+    t = Tex(64, 32, mid, seed)
+    for y in range(32):
+        for x in range(64):
+            cx, cy, fx, fy = x // 8, y // 8, x % 8, y % 8
+            up = 1 if fx > fy else 0
+            h = (cx * 7 + cy * 13 + up * 2 + (cx * cy) % 3) % len(pal)
+            t.set(x, y, pal[h])
+    t.noise(2)
+    return t
+
+
+def tx_hours_screen(seed):
+    """Game Room hours screen beside the entrance (B16): a portrait navy screen with a red GAME ROOM header, white
+    HOURS, two groups of white schedule lines and an orange rule; a 2-texel dark bezel (32 x 64)."""
+    t = Tex(32, 64, hexc("#16224E"), seed)
+    t.noise(1)
+    t.rect(0, 0, 31, 1, hexc("#202226"))
+    t.rect(0, 62, 31, 63, hexc("#202226"))
+    t.rect(0, 0, 1, 63, hexc("#202226"))
+    t.rect(30, 0, 31, 63, hexc("#202226"))
+    font_center(t, "GAME ROOM", 4, hexc("#E8404A"), font=FONT3, spacing=0, x0=2, x1=29)
+    font_center(t, "HOURS", 11, hexc("#FFFFFF"), x0=2, x1=29)
+    t.rect(4, 20, 27, 20, hexc("#F06A1E"))
+    for g_, y0 in enumerate((24, 42)):
+        for i in range(4):
+            y = y0 + i * 4
+            t.rect(4, y, 4 + 8, y + 1, hexc("#E6EAF4"))
+            t.rect(16, y, 16 + 6 + (i * 5 + g_ * 3) % 6, y + 1, hexc("#C8D2EA"))
+    return t
+
+
+def tx_sign_barber_blade(seed):
+    """BARBERSHOP projecting blade (B14): navy BARBER / SHOP on white inside the 2-texel red / white / blue
+    diagonal-stripe border (64 x 32, both faces)."""
+    t = Tex(64, 32, hexc("#F6F6F4"), seed)
+    cols = ("#D0202A", "#F6F6F4", "#1E3C9E", "#F6F6F4")
+    for y in range(32):
+        for x in range(64):
+            if y < 3 or y > 28 or x < 3 or x > 60:
+                t.set(x, y, hexc(cols[((x + y) // 2) % 4]))
+    font_center(t, "BARBER", 6, hexc("#1E2A5C"), spacing=2)
+    font_center(t, "SHOP", 18, hexc("#1E2A5C"), spacing=2)
+    return t
 
 
 # ==== user-photo pass: food court recipes (user_18-20, B01-B03). No reproduced logo art: plain names
@@ -3488,27 +3593,23 @@ def tx_marble(seed):
 
 
 def tx_timeline(seed):
-    """UF Student Union history timeline field (user_07, user_08): vertical panels in orange / royal / white / navy,
-    each with a photo block and 2-texel text lines (2.4 m repeat)."""
+    """UF Student Union history timeline field (user_07, user_08). Photo pass r2: a WHITE field with narrow orange
+    and royal vertical panels, text columns with greyscale photo blocks and soft 2-texel caption lines (the earlier
+    orange / royal / navy blocks dominated the wall), 2.4 m repeat."""
     t = Tex(64, 32, hexc("#F2F1EC"), seed)
-    cols = ("#E3672B", "#1F4DA5", "#F2F1EC", "#1B2A4E")
-    ink = ("#F7CDB2", "#B9C8EA", "#8C8E94", "#AEB6CC")
     r = t.r
-    for k in range(4):
-        x0 = k * 16
-        t.rect(x0, 0, x0 + 15, 31, hexc(cols[k]))
-        # a photo block (greyscale print) and caption lines
-        py = 3 if k % 2 == 0 else 15
-        t.rect(x0 + 2, py, x0 + 13, py + 9, hexc("#6E6E6C"))
-        t.rect(x0 + 3, py + 1, x0 + 12, py + 8, hexc("#A8A8A4"))
-        t.rect(x0 + 3, py + 1, x0 + 12, py + 3, hexc("#C4C4C0"))
-        t.rect(x0 + 5, py + 4, x0 + 7, py + 8, hexc("#858583"))
-        ty = 16 if k % 2 == 0 else 3
+    t.rect(0, 0, 4, 31, hexc("#E3672B"))
+    t.rect(32, 0, 35, 31, hexc("#1F4DA5"))
+    for i, x0 in enumerate((8, 20, 40, 52)):
+        py = 3 if i % 2 == 0 else 17
+        t.rect(x0, py, x0 + 9, py + 9, hexc("#8A8A88"))
+        t.rect(x0 + 1, py + 1, x0 + 8, py + 8, hexc("#B0B0AC"))
+        t.rect(x0 + 1, py + 1, x0 + 8, py + 3, hexc("#C8C8C4"))
+        ty = 17 if i % 2 == 0 else 3
         for j in range(3):
-            ln = r.randrange(7, 12)
-            t.rect(x0 + 2, ty + j * 4, x0 + 2 + ln, ty + j * 4 + 1, hexc(ink[k]))
-        # year numerals block (2 texels)
-        t.rect(x0 + 2, 28, x0 + 8, 29, hexc(ink[k]))
+            ln = r.randrange(6, 10)
+            t.rect(x0, ty + j * 4, x0 + ln, ty + j * 4 + 1, hexc("#BCBEC4"))
+        t.rect(x0, 29, x0 + 5, 30, hexc("#E3672B" if i < 2 else "#1F4DA5"))
     return t
 
 
@@ -3619,11 +3720,22 @@ def tx_slate_floor(seed):
 
 def tx_word_wall(k, seed):
     """CCC cut-out word wall (user_16): blocky light-grey words on a dark warm-grey field, three lines per panel."""
-    t = Tex(64, 32, hexc("#5E5048"), seed)
+    t = Tex(64, 32, hexc("#8A5C34"), seed)        # photo pass r2: honey-brown wood (was a dark warm grey)
     t.noise(2)
     lines = (("DESIGN", "YOUR LIFE", "BRIDGE"), ("NEVER TOO", "LATE", "CREATE"))[k]
     for i, w_ in enumerate(lines):
-        _bold_letters(t, w_, hexc("#CACCCE"), 2, 62, 2 + i * 10, 8, gap=1)
+        _bold_letters(t, w_, hexc("#F0C47E"), 2, 62, 2 + i * 10, 8, gap=1)     # cut-outs lit warm from behind
+    return t
+
+
+def tx_glass_tint_dk(seed):
+    """photo pass r2 (C08): near-black tinted glass (opaque), a faint diagonal sheen band (32 x 32 over 1.2 m)."""
+    t = Tex(32, 32, hexc("#22262C"), seed)
+    t.noise(1)
+    for y in range(32):
+        for x in range(32):
+            if 10 <= (x + y) % 32 <= 15:
+                t.set(x, y, hexc("#2C3138"))
     return t
 
 
@@ -4557,14 +4669,14 @@ def billiard_table(L=2.84, W=1.57, h=0.79, base="int_ru_espresso"):
     return P
 
 
-def led_frame(w, d, z, t=0.08):
+def led_frame(w, d, z, t=0.08, h=0.06, strength=0.30):
     """Square LED ring light frame over a billiards table (ru_gr_billiards_room): white glowing bar."""
     P = _p("led_frame")
     V = P.visual
     for (x0, y0, x1, y1) in ((-w / 2, -d / 2, w / 2, -d / 2 + t), (-w / 2, d / 2 - t, w / 2, d / 2),
                              (-w / 2, -d / 2, -w / 2 + t, d / 2), (w / 2 - t, -d / 2, w / 2, d / 2)):
-        V.box(x0, y0, z - 0.06, x1, y1, z, "int_ru_led", faces="-z+x-x+y-y", glow=True)
-    P.lights.append(K.Light((0.0, 0.0, z - 0.3), radius=4.0, strength=0.30, color=(0.96, 0.98, 1.0)))
+        V.box(x0, y0, z - h, x1, y1, z, "int_ru_led", faces="-z+x-x+y-y", glow=True)
+    P.lights.append(K.Light((0.0, 0.0, z - 0.3), radius=4.0, strength=strength, color=(0.96, 0.98, 1.0)))
     return P
 
 
@@ -4696,8 +4808,11 @@ def esports_row(n=6, seat_w=0.95, depth=0.75, h=0.75, double=True):
                   faces="+x-x+y-y+z")
             # fidelity-3 (round 2; ru_es_overview, ru_es_oelrich_9352): all-black gaming chairs (the red back panel
             # is gone); a dark-grey headrest band keeps the back readable against the black desks
-            V.box(x - 0.2, by + (0.081 * s if s > 0 else -0.001), 1.08, x + 0.2,
-                  by + (0.082 * s if s > 0 else 0.0), 1.2, "int_ru_fabric_char", faces="+y" if s > 0 else "-y")
+            # photo pass round 2: the band sits 1.5 cm proud of the back's OUTER face on both sides of a double row
+            # (it was 2 mm off it, a coplanar z-fight; on the -y side it was buried inside the back)
+            yf = by + s * 0.095
+            V.box(x - 0.2, min(yf, yf - s * 0.005), 1.08, x + 0.2, max(yf, yf - s * 0.005), 1.2, "int_ru_fabric_char",
+                  faces="+y" if s > 0 else "-y")
             V.box(x - 0.03, cy - 0.03, 0.0, x + 0.03, cy + 0.03, 0.42, "int_ru_steel", faces="+x-x+y-y")
     if double:
         V.box(-L / 2, -0.05, 0.0, L / 2, 0.05, h + 0.6, "int_ru_black", faces="+x-x+y-y+z")

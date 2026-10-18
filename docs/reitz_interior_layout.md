@@ -1016,6 +1016,74 @@ Sources: user_03, user_06, user_11, B05, B09, B10, C04, C08 (and the not-done li
 - Budget: area 2 visual 145,990 tris (was 145,776: the band cuts and inlays); Reitz collision 12,539 (was 12,549: the plinth step is gone); the validator counts 12,919 in area 2 (was 12,929). No new collision anywhere else.
 - Not done in this pass (still open from the fix rounds above): the CABO styling of the plan wall west of x -408.4, legible words on the values panels, the West lounge re-measure, the food-court dining 4-tops and the orange curved soffit band, the royal-blue / orange L3 accent walls, and the tower's royal cladding on its corridor faces.
 
+### Photo pass round 2: L1-L3 corridors, offices and the Rion
+
+Sources: user_06, user_07, user_09, user_11-user_17, C07, C08, C12-C16, and the round-1 fidelity-upper review (3 blocking issues).
+
+- **Rion Ballroom ceiling (C07, C14-C16; blocking).** The light coves now run EAST-WEST, parallel to the screen wall. They read horizontal across C14, converge sideways in C07 and run along the view in C15. Before, 8 coves ran north-south. There are 6 coves across the 27.5 m depth, each about 3.1 m wide and 1.5 m in from the end walls. Between them are 1.45 m dark cherry slat bands (`int_ru_cherry`, 4 cm under the ceiling). The cove undersides are an unlit glow in warm cream (`int_ru_wall_cream`, tint 0.86/0.79/0.72; they used to bake to charcoal). Each cove has lit LED edges and two rows of downlights, plus 3 warm lights. The wall panels are a new light warm greige (`int_ru_wall_greige`, #D4C4B0), with cream reveals as before. The taupe fabric panel is smaller (y -308..-318, z +0.9..+3.9). The dark clerestory band moved to the long north wall (C15). The maple floor is a little blonder (`int_ru_maple_pale` retone 1.10/1.26/1.50). The same 42 SwampHacks tables are grouped as hack clusters: three rows of two tables back to back, with chairs on both sides, plus one single row at the back. They have 8 NO_CAM blocks, down from 14.
+- **L1 west lounge (user_12, user_13, user_17; blocking).** It is the open floor between the CCC word wall (x -463.25) and the Blue elevator block (x -450.4), south of the north corridor. user_13 looks SOUTH: the prints are on the restroom block's north wall and the walkway glass doors are on the right. The previous gap list looked north and fell outside the corridor.
+  - A blue triangle-geometric carpet (`int_ru_carpet_tri`) covers the east half, x -457.2..-450.6, y -281.0..-268.3. It is a `FLOOR_INLAYS` cut, not a decal. The walk to the walkway doors and the south passage stays terrazzo.
+  - Two white square columns stand on the carpet's west edge, with full-height collision.
+  - Two charcoal lounge groups (`_char_group`: a sofa, a low table and two club chairs; one NO_CAM block each) leave the east-west walk to the Blue lobby clear (y -273.4..-278.3).
+  - A white/silver low-poly gator sits on a low navy base at the corridor edge, with a NO_CAM base.
+  - A lit honey-wood glass display case stands on the elevator block's west face.
+  - Three black-framed prints (`int_ru_prints`) hang on the restroom block's north wall.
+- **Blue elevator lobby (user_11; blocking).** Both elevator walls get navy upper walls (`int_ru_wall_lobby_navy`, new) from the 2.66 m door head to the ceiling. Between the openings a band runs down to 2.42 m. The elevator doors are now mid-grey stainless (`tx_door_elev` #70757A, was #B4B8BC, so they no longer vanish on the white wall). Honey double doors with an EXIT sign stand on the servery wall at the lobby's far end (visual only: no plan door there). There is one lobby light.
+- **Rion pre-function (C12, C13).** The carpet is now the medium-blue geometric `int_ru_carpet_tri`; the navy wavy one read as water. It is also carried over the west pre-function (x -458.9..-450.05). The west part gets the dark-wood beam strip down the middle of the ceiling, linear lights on both sides, and the grey RION BALLROOM letters over the west doors (line y -296.9; the wall faces north at about -296.75).
+- **L2 meeting corridor (C08).** The 2315-2330 fronts are near-black tinted glass (`int_ru_glass_tint_dk`, new, opaque) with black mullions and transom. A stainless bi-level fountain stands on the south wall's straight face west of the 2340 door, with a NO_CAM block.
+- **CCC (user_14-16).** The slat cloud is medium walnut (`int_ru_slat_walnut`). The word wall is honey-brown wood with warm, backlit-looking cut-out letters (`tx_word_wall`). A round royal/white logo disc sits on the honey wall left of the video wall.
+- **North corridor (user_06, C11).** The Admin recess (x -431.6..-429.6) is royal blue, floor to ceiling, on its back and side walls. The Admin door opening stays clear, with a head strip above the 2.6 m door.
+- **Timeline wall (user_07, user_08).** `tx_timeline` is now a white field with narrow orange and royal panels, text columns and greyscale photo blocks.
+- **Restroom niche (user_09).** It has white side lips, so the royal panel reads as a niche. The bowls are slimmer, on narrow aprons.
+- New textures, appended last: `int_ru_wall_greige`, `int_ru_wall_lobby_navy`, `int_ru_glass_tint_dk`. Retoned: `int_ru_door_elev`, `int_ru_maple_pale`, `int_ru_word_wall_a/_b`, `int_ru_timeline`.
+- Budget: area 2 visual 146,674 tris (was 145,990); Reitz collision 12,569 (was 12,539). The validator counts 12,949 in area 2, was 12,919. The new collision is the two lounge columns, two lounge NO_CAM blocks, the gator base, the display case and the L2 fountain; the Rion clusters need 6 fewer NO_CAM blocks. 1,949 lights (was 1,934).
+- QA against the pre-pass install. Apart from the zone reach, every number matches the baseline:
+  - Door sweep (dx151): 783 doors, 518 side passes, 0 vanilla-only, 0 threshold failures, 130 swath hits.
+  - The 4 entrance warps and the exits behave the same.
+  - Walks: walk-off drops 0, spot falls the same, rail sims 0/732 and 131/1188.
+  - Sky below the floor 0. Visible with no collision: 1389 tris. Invisible walls: 19 tris.
+  - Coplanar overlap 9.3 m2 over 128 faces, with 0 new pairs. The west pre-function carpet edge on the Rion maple overlapped in an intermediate build; it was fixed by pulling the inlay's south edge to y -296.55.
+  - Decor in doorways: 0.
+  - Zone reach (vanilla / coopdx) went from 18,776 / 18,234 m2 to 18,769 / 18,198 m2. The loss is the new lounge furniture footprints in l1_corridor_08 (its NO_CAM blocks match the furniture outlines).
+- Not done in this pass:
+  - CCC: the teal tub chairs and the lounge alcove (they would block the lane to the walkway doors), the lime door reveals, wider honey panels, and the curved desk on a wood base.
+  - The north corridor's transverse terrazzo bands (C04 still shows the longitudinal band) and the LED coves.
+  - The restroom pictogram blade sign, the wider orange runner, the C04 curved orange wall, and the GatorWell honey door.
+  - The honey leaves held open at RION BALLROOM EAST, the L2 recycling bins and partition stacks, and the floor-number panels and LED cove in the Blue lobby.
+
+### Photo pass round 2: atrium, food court and Ground leftovers
+
+Sources: user_01, user_04, user_05, B01, B03, B08-B10, B13, B14, B16, B18-B20, C02, C06, C09, C10, and the round-1 reviews (fidelity-atrium, fidelity-foodcourt, fidelity-ground, design) plus their fix-pass leftovers.
+
+- **Gators tower corridor faces (C02, C06, user_05).** The tower block's north and south faces on the L1-L3 corridors (the plan walls of `l1_room_07`, `l2_room_02`, `l3_room_108`, x -418.5..-413.4) are now royal blue (`int_ru_wall_royal`), the same cladding as its void face. This is a wall-material rule in `_wall_run`, so no new faces. The prints and navy wainscot stay on them.
+- **BLUE / ORANGE word walls (C09, C10, user_05).** The white wall now spans the whole clerestory face on both long sides: plain white either side of the graphic band, up to z 25.0 (was 24.85, and only the band was solid). The band and the glowing letters are 1.2x wider (BLUE 8.4 m, ORANGE 11.7 m) and the letters about 1.45 m tall (were 1.25 m). The glazing runs as one continuous strip above them.
+- **Ground lounge carpet (B08-B10, C01).** The rugs use a new `int_ru_carpet_tri_dk`: navy / medium blue triangles with grey ones, about 25 % darker than the saturated royal `int_ru_carpet_tri`. The L1 west lounge and the Rion pre-function keep the medium-blue one.
+- **Game Room ceiling (user_04, B15, B20).** The billiards / arcade / lanes ceiling is a mid grey-blue 2 x 2 lay-in (`int_ru_tile_ceiling_mid`, field #A2A8B4 with a 2-step darker grid). The slate `int_ru_tile_ceiling_dark` baked near-black in every view. The Esports Center keeps its black ceiling.
+- **Game Room LED ring frames (user_04, B20).** The frames over the 9 pool tables and the snooker table have 0.2 m bars, 0.1 m deep (were 0.1 m by 6 cm), with a stronger light (`led_frame` gained `h` and `strength` arguments; the defaults are unchanged).
+- **Game Room hours screen (B16).** A portrait GAME ROOM HOURS screen (`int_ru_hours_screen`, new) hangs on the cream corridor wall right (west) of the entrance: a black bezel 1.5 cm proud of the face, the screen 2 cm in front of it.
+- **Orange-elevator corridor (B13).** The grey terrazzo band is now on the EAST side, beside the elevators (x -419.25..-418.85), and the orange field is about two thirds of the width (x -420.95..-419.25). The royal G directory moved to the east wall, just north of the elevator bank (x -418.2, y -267.05..-267.95); the TV stays on the west wall.
+- **Barbershop (B14).** The lit barber pole stands at the storefront's east end (x -431.95). The striped BARBERSHOP sign is a double-faced blade (`int_ru_sign_barber_blade`, new: BARBER / SHOP in a red / white / blue stripe frame) projecting 0.9 m into the corridor just west of the storefront (x -437.7, z 2.45..2.92). Both are visual only and overhead or against the wall.
+- **Esports lounge (B18, B19).** A second 6-seat station row on the west wall north of the first (centre y -288.6, on the skewed plan wall), under a long black band with the white GATOR ESPORTS CENTER letters (`_esports_sign`, z 3.03..3.51, 0.2 m off the plan line, in front of the hex neon). Two orange point lights warm the arena end.
+- **Baba's Pizza and Halal Shack (B01, user_20).** Both openings show a lit white kitchen (the styles' `kitchen` line; back wall `int_ru_white`). Brick and honey wood stay on the counters, knee wall, piers and sides. Baba's counter carries a lit glass pizza case (visual only). The round blade signs now read BABA'S / PIZZA (`int_ru_badge_babas`) and HALAL / SHACK (`int_ru_badge_halal`); they showed a generic icon.
+- **Starbucks seating (B03).** The table pairs west of x -438 in the rows y -323.0 and -326.5 are round mauve laminate tables (same positions and merged NO_CAM blocks).
+- New textures, appended last: `int_ru_tile_ceiling_mid`, `int_ru_carpet_tri_dk`, `int_ru_hours_screen`, `int_ru_sign_barber_blade`, `int_ru_badge_babas`, `int_ru_badge_halal`.
+- **Esports chairs (z-fight fix).** The dark-grey headrest band on every `esports_row` chair now sits 1.5 cm proud of the back's outer face, on both sides of a double row. It was 2 mm off the back (a coplanar pair per chair) and, on the -y side of the island, buried inside the back. This removes 72 old coplanar pairs.
+- Budget: area 2 visual 147,236 tris (was 146,674); Reitz collision 12,579 (was 12,569: the new 6-seat station row's NO_CAM block). The validator counts 12,959 in area 2 (was 12,949), with the same >12k warning as before.
+- QA against the pre-pass install. Collision-based numbers match the baseline:
+  - Door sweep (dx151): 783 doors, 518 side passes, 0 vanilla-only, 0 threshold failures, 130 swath hits.
+  - The 4 entrance warps and the exits behave the same.
+  - Walks: walk-off drops 0, spot falls the same, rail sims 0/732 and 131/1188.
+  - Sky below the floor 0. Invisible walls: 19 tris (same).
+  - Coplanar overlap 7.6 m2 over 74 faces (was 9.3 m2 over 128; the visible part 1.8 m2, was 2.9), 105 pairs (was 177), 0 new pairs.
+  - Decor in doorways: 0.
+  - Visible with no collision: 1,424 tris (was 1,389): the two lit kitchens behind the Baba's / Halal openings (behind the corridor face's collision, as at the servery) and the new Esports row and band.
+  - Zone reach (vanilla / coopdx) went from 18,769 / 18,198 m2 to 18,766 / 18,188 m2: the new Esports station row's footprint.
+- Not done in this pass:
+  - The grey vinyl in the east dining hall (x > -429.5) with its aluminium strip, and the square troffers over the south hall and the vinyl passage (the hall polygon has to be clipped round the servery queue band and the soffits; not verified in the time box).
+  - The B02 four-TV wall with the royal wainscot (the l1_room_02 east face sits under the curved Baba's soffit), the N-S communal table rows, slimmer chair legs, the Starbucks frieze proportions, the Panda sign size.
+  - Swamp Boss proportions (the 1-up and its collision box sit on the head), the Gators wordmark script, the tower's blue side returns into the void, the CABO storefront, the values-panel words, the L1 dining strip over CABO, the rocking-chair level question (B05 / B06).
+  - Esports: the video-wall column and the ottomans into the arena (the console stations hold the east wall there). Racing-bay rigs, the arcade's hex LED panel and high-tops, the hotel-lobby wire pendant, the GAME ROOM transom lettering.
+
 ## 10. Open questions (`open_questions`)
 
 - Real floor elevations, and the ceiling heights of the Grand Ballroom and Rion Ballroom.
