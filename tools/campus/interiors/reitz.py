@@ -3387,6 +3387,13 @@ def _head_fill(V, C, m0, d, n, t_ne, z1, void):
     def te(o):                           # where the line at lateral offset o meets the slab edge (from 2 m back)
         t_ = R.seg_intersect(P(t_ne - 2.0, o), d, void)
         return None if t_ is None else t_ne - 2.0 + t_
+    # stairs_l2b (game_stairs_31 follow-up): with the head plug gone, a 2 x 2 cm sliver at the flight's top end on its
+    # axis (where the ramp end, the fill's corner and the slab edge meet) had no floor (spotfall_r L2 head 21 falls,
+    # falls_fast 3): a small terrazzo patch at the head floor's level over the top tread + head closes it
+    q_ = R.ccw([P(t_ne - 0.10, -0.18), P(t_ne - 0.10, 0.22), P(tb + 0.25, 0.22), P(tb + 0.25, -0.18)])
+    R.floor_poly(V, q_, z1, "int_ru_terrazzo", step=99.0)
+    R.floor_poly(V, q_, z1 - 0.3, "int_ru_white", step=99.0, down=True)
+    R.col_floor(C, q_, z1)
     t9, t4 = te(w2), te(w2 / 2)
     if t9 is None or t4 is None or t9 <= tb + 0.05:
         return
@@ -3452,7 +3459,17 @@ def atrium_stairs(RZ):
         roh_ = {"G": (None, None), "L1": 0.4, "L2": (0.4, None)}[lo]
         f1 = R.stair_flight(V, C, a_se, b_se, z0, zl, STAIR_W, stringer=STAIR_STRINGER, rail_outer_head=roh_,
                             rail_cap_foot=(lo in ("G", "L2")), rail_skirt=(1.9 if lo == "G" else None))
-        f2 = R.stair_flight(V, C, a_ne, b_ne, zl, z1, STAIR_W, stringer=STAIR_STRINGER)
+        re_ = None
+        if hi in HEAD_FULL:
+            # stairs_30m (game_stairs_31): the NE flight's outer (-nne, stair +n) rail stops exactly where it meets
+            # the balcony rail line (0.12 m inboard of the void edge) instead of running ~0.7 m on into the walkway
+            vb_ = R.offset_poly(void_hi, 0.12)
+            o_ = -(w2 - 0.05)
+            t_ = R.seg_intersect((mne0[0] + dne[0] * (t_ne - 2.0) + nne[0] * o_, mne0[1] + dne[1] * (t_ne - 2.0) + nne[1] * o_),
+                                 dne, vb_)
+            if t_ is not None:
+                re_ = (None, t_ne - 2.0 + t_ - s_land)
+        f2 = R.stair_flight(V, C, a_ne, b_ne, zl, z1, STAIR_W, stringer=STAIR_STRINGER, rail_end=re_)
         # a coin trail up both flights (design pass: landing to landing; the landing coins are in PICKUPS)
         for nm, pa_, pb_, za, zb_ in (("se", a_se, b_se, z0, zl), ("ne", a_ne, b_ne, zl, z1)):
             for t_ in (0.3, 0.7):
@@ -4355,7 +4372,8 @@ def level1_extras(RZ):
 # L3 kink: the wedge between the kink rail's east face and the main rail's west face, at the main rail's end cap
 # (game x 7807..7812, z -1847: the opposing pushes cancelled and Mario slid down it into the void)
 RAIL_PLUGS = [("L1", -398.2, -276.3, 0.24), ("L1", -397.0, -276.6, 0.2),
-              ("L2", -393.8, -265.4, 0.24),     # stairs_fast3: kept - without it spotfall_r L2 head 1 -> 14
+              # stairs_30m (game_stairs_31): the L2 NE head plug (a picket box standing in the head walkway) is gone;
+              # the flight's outer rail now ends on the balcony rail line (atrium_stairs rail_end)
               ("L3", -394.25, -266.95, 0.24), ("L3", -393.4, -266.8, 0.2),
               ("L3", -391.90, -274.48, 0.12)]
 
