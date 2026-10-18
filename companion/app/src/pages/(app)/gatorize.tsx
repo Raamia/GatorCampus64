@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { api, finishLogin, login, logout } from '../../lib/gator-api'
 import GatorAccount from '../../components/GatorAccount'
 import CharacterViewer from '../../components/CharacterViewer'
+import { PHOTO_ACCEPT, photoSelectionError } from '../../lib/gatorize-photos'
+import { pollJob } from '../../lib/job-polling'
 
 type Job = {
   id: string; character_id: string; name: string; state: string; step: string
@@ -44,9 +46,7 @@ export default function GatorizePage() {
   const [characters, setCharacters] = useState<Character[]>([])
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [pollTick, setPollTick] = useState(0)
   const fileInput = useRef<HTMLInputElement | null>(null)
-  const timer = useRef<number | undefined>(undefined)
 
   useEffect(() => {
     let active = true
@@ -72,21 +72,18 @@ export default function GatorizePage() {
   }, [])
 
   useEffect(() => {
-    if (!job || job.state === 'failed') return
-    let active = true
-    timer.current = window.setTimeout(async () => {
-      try {
-        const next = await api<Job>(`/jobs/${encodeURIComponent(job.id)}`)
-        if (active) {
-          setJob(next); setError('')
-          setCharacters(cs => cs.map(c => c.job_id === next.id ? { ...c, state: next.state } : c))
-        }
-      } catch (e) {
-        if (active) { setError((e as Error).message); setPollTick(t => t + 1) }
-      }
-    }, job.state === 'ready' ? 30000 : Math.min(30000, 3000 * (pollTick + 1)))
-    return () => { active = false; window.clearTimeout(timer.current) }
-  }, [job, pollTick])
+    if (!job) return
+    return pollJob({
+      initial: job,
+      request: signal => api<Job>(`/jobs/${encodeURIComponent(job.id)}`, { signal }),
+      onJob: next => {
+        setJob(next); setError('')
+        setCharacters(cs => cs.map(c => c.job_id === next.id ? { ...c, state: next.state } : c))
+      },
+      onError: error => setError(error.message),
+    })
+    // The loop owns state transitions; only changing the selected job restarts it.
+  }, [job?.id])
 
   async function openJob(id: string) {
     setError(''); setBusy(true)
@@ -108,14 +105,17 @@ export default function GatorizePage() {
 
   async function submit(e: FormEvent) {
     e.preventDefault(); setError('')
-    if (!consent || files.length < 1 || files.length > 4) return setError('Choose 1–4 photos and confirm you have permission to process them.')
-    if (files.some(f => f.size > 8 * 1024 * 1024)) return setError('Each photo must be 8 MB or smaller.')
+    const invalid = photoSelectionError(files)
+    if (invalid) return setError(invalid)
+    if (!consent) return setError('Confirm you have permission to process these photos.')
     const body = new FormData()
     body.set('name', name.trim()); body.set('consent', 'true')
     files.forEach(f => body.append('photos', f))
     setBusy(true)
     try {
       const created = await api<{ job_id: string; character_id: string; name: string }>('/characters', { method: 'POST', body })
+      setFiles([]); setConsent(false)
+      if (fileInput.current) fileInput.current.value = ''
       window.localStorage.setItem(savedJob, created.job_id)
       setJob({ id: created.job_id, character_id: created.character_id, name: created.name, state: 'queued', step: 'queued', pipeline: [], step_index: 0, previews: [] })
       setCharacters(cs => [{ id: created.character_id, name: created.name, state: 'queued', job_id: created.job_id }, ...cs])
@@ -138,7 +138,7 @@ export default function GatorizePage() {
           </div>
           {job.state === 'failed' ? <div><p>{job.error ?? 'The build could not finish. Try clear photos in good light.'}</p>{job.log && <details className="mt-3 text-sm"><summary>Build details</summary><pre className="mt-2 max-h-48 overflow-auto whitespace-pre-wrap">{job.log}</pre></details>}</div> : job.state === 'ready' ? <div className="rounded-lg bg-success/10 p-4"><strong>{job.deployed ? `Live in guest slot ${job.slot}` : job.slot ? `Waiting for the server to load guest slot ${job.slot}` : 'Your gator is ready; waiting for a free guest slot.'}</strong><p className="mt-2 text-sm">{job.deployed ? 'Join the game and type /login with this Gator Pass account to select your character.' : 'Your model is built. Deployment can take a few minutes and may require a server restart.'}</p>{job.deploy_state === 'failed' && <p className="mt-2 text-sm">Server deployment failed. Your model is saved; the operator needs to check its deployment.</p>}</div> : <div><p className="text-muted-foreground">{job.state === 'queued' ? 'Waiting for the GPU. Your build continues if you close this page.' : 'Your gator is taking shape. This usually takes a few minutes; you can come back later.'}</p><HowItWorks /></div>}
         </section>
-        {job.browser_model && <CharacterViewer src={job.browser_model} name={job.name} />}
+        {job.browser_model && <CharacterViewer src={job.browser_model} name={job.name} poster={(job.previews.find(p => p.name === 'front.png') ?? job.previews[0])?.url} />}
         {job.previews.length > 0 && <ReferenceRenders previews={job.previews} name={job.name} defaultOpen={!job.browser_model} />}
         <section className="gator-card gatorize-actions">
           <div className="flex flex-wrap gap-4"><Link to="/play" className={button}>How to play</Link><button onClick={() => { setJob(null); setError(''); window.localStorage.removeItem(savedJob) }} className="underline">Back to my gators</button></div>
@@ -156,7 +156,7 @@ export default function GatorizePage() {
         <form className="gator-card gatorize-form space-y-5" onSubmit={submit}>
           <div className="gatorize-form-head"><p className="section-index">NEW GATOR</p><h2 className="mt-1 text-xl font-semibold">Make a new gator</h2></div>
           <label className="block"><span className="text-sm font-semibold">Gator name</span><input required maxLength={12} pattern="[ -\u007e]+" value={name} onChange={e => setName(e.target.value)} className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2" placeholder="Up to 12 characters" /></label>
-          <div className="gatorize-dropzone"><span className="text-sm font-semibold">Photos</span><input ref={fileInput} required={files.length === 0} accept="image/jpeg,image/png,image/webp" multiple type="file" onChange={e => setFiles(Array.from(e.target.files ?? []).slice(0, 4))} className="mt-2 block w-full text-sm" /><span className="mt-2 block text-xs text-muted-foreground">1–4 photos, up to 8 MB each. Include a clear face and your outfit. Photos are deleted when processing ends.</span>{files.length > 0 && <ul className="mt-3 space-y-2" aria-label="Selected photos">{files.map((file, index) => <li key={`${file.name}-${file.lastModified}-${index}`} className="flex items-center justify-between gap-3 rounded border border-border bg-background px-3 py-2 text-sm"><span className="min-w-0 truncate">{file.name} <span className="text-xs text-muted-foreground">({(file.size / 1024 / 1024).toFixed(1)} MB)</span></span><button type="button" className="shrink-0 text-xs text-destructive underline" onClick={() => { setFiles(current => current.filter((_, i) => i !== index)); if (fileInput.current) fileInput.current.value = '' }}>Remove</button></li>)}</ul>}</div>
+          <div className="gatorize-dropzone"><span className="text-sm font-semibold">Photos</span><input ref={fileInput} required={files.length === 0} accept={PHOTO_ACCEPT} aria-label="Photos" multiple type="file" onChange={e => { const selected = Array.from(e.target.files ?? []); setFiles(selected); setError(photoSelectionError(selected)) }} className="mt-2 block w-full text-sm" /><span className="mt-2 block text-xs text-muted-foreground">1–4 JPEG or PNG photos, up to 8 MB each. Include a clear face and your outfit. Photos are deleted when processing ends.</span>{files.length > 0 && <ul className="mt-3 space-y-2" aria-label="Selected photos">{files.map((file, index) => <li key={`${file.name}-${file.lastModified}-${index}`} className="flex items-center justify-between gap-3 rounded border border-border bg-background px-3 py-2 text-sm"><span className="min-w-0 truncate">{file.name} <span className="text-xs text-muted-foreground">({(file.size / 1024 / 1024).toFixed(1)} MB)</span></span><button type="button" className="shrink-0 text-xs text-destructive underline" onClick={() => { const remaining = files.filter((_, i) => i !== index); setFiles(remaining); setError(remaining.length ? photoSelectionError(remaining) : ''); if (fileInput.current) fileInput.current.value = '' }}>Remove</button></li>)}</ul>}</div>
           <label className="flex items-start gap-3 text-sm"><input required type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} className="mt-1" />I confirm these photos are of me or I have permission to submit them, and agree they may be processed into a game character.</label>
           <button disabled={busy} className={button} type="submit">{busy ? 'Submitting photos…' : 'Build my gator'}</button>
         </form>
