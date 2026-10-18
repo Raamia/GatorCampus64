@@ -2,8 +2,8 @@
 walkways, crossings, steps, pond basins with water, low walls and fences, and the flat collision
 ground (20.48 m tiles offset half a collision cell, with holes for the ponds).
 
-Visual ground layers sit just BELOW the collision floor (z = 0) so Mario's shadow and feet are
-never hidden by a decal layer; each layer is 1-2 cm above the one under it:
+Visual ground sits just BELOW the collision floor (z = 0) so Mario's shadow and feet remain
+visible. Source layers are partitioned by purpose into disjoint faces before meshing.
 
 Ground holes (landmark contract key "ground_holes_m", e.g. the Swamp stadium's sunken bowl): cut out
 of the collision ground (HOLE_OVERLAP_M smaller: see there) and the base grass like the ponds (one
@@ -464,6 +464,10 @@ def build(S):
                 bc.wall(a, c, 0.0, h, "COL default")
             bv.flat(quad, h, top)
             bc.flat(quad, h, "COL default")
+
+    # One visible ground surface at each point, including landmark walk ribbons.
+    from ground_surfaces import apply as partition_ground
+    partition_ground(S)
 
 
 def _center_dashes(acc, pts, near_junction, dash=3.0, gap=6.0, hw=0.12):
