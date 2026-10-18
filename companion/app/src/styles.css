@@ -312,10 +312,43 @@ button { cursor: pointer; }
 .gator-card .text-muted-foreground { color:#6d756c; }
 .gator-card button[type=submit] { background:#ed6b37; color:#fffaf1; border-radius:3px; }
 .gator-viewer { position:relative; background:radial-gradient(ellipse at 50% 40%,#fffcf1 0%,#e9e5d9 75%); border:1px solid #d8d6ca; }
+.gator-hero { border-top:3px solid #ed6b37; }
 .gator-viewer-caption { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; padding:16px 18px; color:#6d756c; font-size:10px; letter-spacing:.06em; border-bottom:1px solid #d8d6ca; }
 .gator-viewer-caption span:first-child { font-weight:700; color:#173e32; }
-.gator-viewer-note { text-align:center; padding:16px; color:#6d756c; font-size:13px; }
-@media(max-width:640px) { .gator-page { padding:28px 16px 50px; }.gator-card { padding:20px; }.gator-header h1 { font-size:42px; } }
+.gator-viewer-stage { position:relative; }
+.gator-viewer-stage model-viewer { display:block; width:100%; height:min(70vh, 560px); }
+.gator-viewer-note { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:16px; color:#6d756c; font-size:13px; pointer-events:none; }
+
+/* Gatorize page: status strip, hero handoff, collapsible stills, roster + form life */
+.gatorize-status { border-top-color:#ed6b37; }
+.gatorize-status-top { display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:18px; }
+.gatorize-pipeline { display:flex; flex-wrap:wrap; align-items:center; gap:0; list-style:none; margin:4px 0 0; padding:0; }
+.gatorize-pipeline li { display:flex; align-items:center; gap:7px; font-size:9px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#9a9d90; white-space:nowrap; }
+.gatorize-pipeline li + li { margin-left:10px; padding-left:10px; border-left:1px solid #d9d6c9; }
+.gatorize-pipeline .dot { width:7px; height:7px; border-radius:50%; background:#d9d6c9; flex-shrink:0; }
+.gatorize-pipeline li.done { color:#4f7a62; }
+.gatorize-pipeline li.done .dot { background:#63a07a; }
+.gatorize-pipeline li.now { color:#173e32; }
+.gatorize-pipeline li.now .dot { background:#ed6b37; box-shadow:0 0 0 3px #ed6b3726; }
+.gatorize-pipeline li.fail .dot { background:#c0472e; }
+@media(max-width:760px) { .gatorize-pipeline { display:none; } }
+.gatorize-actions { padding-top:22px; padding-bottom:22px; }
+.gatorize-renders { margin:0; }
+.gatorize-renders summary { cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 20px; background:#fffdf7; border:1px solid #dedbd0; color:#173e32; font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.gatorize-renders summary::-webkit-details-marker { display:none; }
+.gatorize-renders summary::after { content:"+"; color:#ed6b37; font-size:14px; font-weight:800; }
+.gatorize-renders[open] summary::after { content:"\2212"; }
+.gatorize-renders-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:8px; padding:16px 20px 20px; background:#fffdf7; border:1px solid #dedbd0; border-top:0; }
+.gatorize-renders-grid img { border-radius:2px; border:1px solid #e4e1d5; }
+.gatorize-roster-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; }
+.gatorize-roster-card { display:flex; align-items:center; justify-content:space-between; gap:10px; text-align:left; background:#f7f4ea; border:1px solid #e0ddd2; padding:14px 16px; color:#173e32; transition:border .15s,transform .15s; }
+.gatorize-roster-card:hover { border-color:#ed6b37; transform:translateY(-2px); }
+.gatorize-roster-card:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+.gatorize-roster-name { font:18px Georgia,serif; }
+.gatorize-roster-status { font-size:9px; font-weight:800; letter-spacing:.1em; color:#7d806f; text-transform:uppercase; }
+.gatorize-form-head { margin-bottom:2px; }
+.gatorize-dropzone { border:1px dashed #d8d6ca; padding:16px; background:#f7f4ea; }
+@media(max-width:640px) { .gator-page { padding:28px 16px 50px; }.gator-card { padding:20px; }.gator-header h1 { font-size:42px; }.gatorize-status-top { flex-direction:column; } }
 
 .judge-section { display:grid; grid-template-columns:minmax(260px,.8fr) 1.2fr; gap:clamp(32px,8vw,120px); border-top:1px solid #d8d6ca; border-bottom:1px solid #d8d6ca; padding:58px 0; margin:30px 0 40px; }
 .judge-section h2 { font:500 clamp(34px,4vw,58px)/1 Georgia,serif; letter-spacing:-.04em; margin:16px 0 0; }
@@ -332,3 +365,48 @@ button { cursor: pointer; }
 .gator-how p { margin:0; max-width:680px; }
 .gator-how-pipeline { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:14px; color:#173e32; font-size:9px; font-weight:800; letter-spacing:.1em; }
 .gator-how-pipeline i { color:#ed6b37; font-size:16px; font-style:normal; }
+
+/* Play: connect steps + a standout hosted-server address panel. */
+.play-page { max-width:1100px; margin:0 auto; padding:42px 32px 70px; color:#173e32; }
+.play-hero { max-width:640px; margin-bottom:36px; }
+.play-kicker { color:#7d806f; font-size:10px; font-weight:700; letter-spacing:.14em; margin:0 0 14px; }
+.play-hero h1 { color:#173e32; font:500 clamp(38px,5vw,60px)/1.05 Georgia,serif; letter-spacing:-.045em; margin:0 0 16px; }
+.play-hero h1 em { color:#ed6b37; font-style:normal; font-weight:400; }
+.play-sub { color:#6d756c; font-size:15px; line-height:1.7; margin:0; }
+.play-layout { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; align-items:start; }
+.play-steps { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; }
+.play-step { display:grid; grid-template-columns:34px 22px 1fr; align-items:start; gap:14px; padding:20px 0; border-top:1px solid #e0ddd2; }
+.play-step:first-child { border-top:0; padding-top:0; }
+.play-step-n { font:500 22px Georgia,serif; color:#ed6b37; letter-spacing:-.02em; }
+.play-step-icon { color:#173e32; margin-top:3px; }
+.play-step h3 { margin:0 0 5px; font:500 17px Georgia,serif; letter-spacing:-.01em; }
+.play-step p { margin:0; color:#6d756c; font-size:13px; line-height:1.6; }
+.play-step code { font-family:ui-monospace,monospace; background:#f4f1e8; border:1px solid #e0ddd2; border-radius:3px; padding:1px 5px; font-size:12px; }
+.play-server { position:sticky; top:20px; background:#173e32; color:#f7f2e7; padding:28px 24px; display:flex; flex-direction:column; gap:14px; }
+.play-server-label { font-size:9px; font-weight:800; letter-spacing:.14em; color:#b7c6ad; }
+.play-server-address { font-family:ui-monospace,monospace; font-size:clamp(17px,2.4vw,20px); letter-spacing:.02em; color:#fff; word-break:break-all; }
+.play-copy { display:inline-flex; align-items:center; gap:8px; justify-content:center; background:#ed6b37; color:#fffaf1; border:0; border-radius:3px; padding:12px 16px; font-size:12px; font-weight:700; cursor:pointer; }
+.play-copy:hover { background:#d95d2e; }
+.play-guide { display:inline-flex; align-items:center; gap:6px; color:#d0d8c9; font-size:12px; text-decoration:underline; }
+@media (max-width:760px) { .play-layout { grid-template-columns:1fr; } .play-server { position:static; } }
+@media (max-width:640px) { .play-page { padding:28px 16px 50px; } .play-hero { margin-bottom:26px; } }
+
+/* Settings: account identity on the same field-board paper as Gatorize/Home. */
+.settings-page { max-width:720px; margin:0 auto; padding:42px 32px 70px; color:#173e32; }
+.settings-header { margin-bottom:30px; max-width:560px; }
+.settings-header h1 { color:#173e32; font:500 clamp(34px,5vw,54px)/1.05 Georgia,serif; letter-spacing:-.04em; margin:14px 0 10px; }
+.settings-header p:first-child { color:#7d806f; font-size:10px; font-weight:700; letter-spacing:.14em; }
+.settings-sub { color:#6d756c; line-height:1.7; margin:0; }
+.settings-card { background:#fffdf7; border:1px solid #dedbd0; border-top:3px solid #173e32; padding:28px; margin-bottom:22px; }
+.settings-card h2 { font:500 22px Georgia,serif; font-weight:500; margin:0 0 20px; color:#173e32; }
+.settings-identity { display:flex; align-items:center; gap:16px; margin-bottom:22px; }
+.settings-identity strong { display:block; font-size:16px; color:#173e32; }
+.settings-identity span { display:block; font-size:12px; color:#6d756c; margin-top:2px; }
+.settings-rows { list-style:none; margin:0 0 22px; padding:0; }
+.settings-rows li { display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:12px 0; border-top:1px solid #eeece4; }
+.settings-rows li:first-child { border-top:0; }
+.settings-label { font-size:9px; letter-spacing:.12em; text-transform:uppercase; font-weight:800; color:#8b8d82; }
+.settings-value { font-size:13px; color:#173e32; font-variant-numeric:tabular-nums; }
+.settings-squad-note { display:flex; align-items:center; gap:9px; margin:0; color:#878a80; font-size:10px; line-height:1.5; }
+.settings-squad-note span { width:5px; height:5px; border-radius:50%; background:#e97541; flex-shrink:0; }
+@media(max-width:640px) { .settings-page { padding:28px 16px 50px; } .settings-card { padding:20px; } .settings-header h1 { font-size:32px; } }

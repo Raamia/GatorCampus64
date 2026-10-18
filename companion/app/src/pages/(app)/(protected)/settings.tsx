@@ -1,40 +1,62 @@
 /**
- * Example gated page. Reached at /settings — no auth logic lives here
- * because (protected)/_layout.tsx already wraps the subtree in <AuthGate>.
+ * Reached at /settings — no auth logic lives here because
+ * (protected)/_layout.tsx already wraps the subtree in <AuthGate>.
  */
 
+import { useEffect, useState } from 'react'
 import { signOut, useUser } from 'deepspace'
-import { Button } from '@/components/ui'
+import { Avatar, AvatarFallback, AvatarImage, Button } from '@/components/ui'
 
 export default function SettingsPage() {
   const { user } = useUser()
+  const [squadCode, setSquadCode] = useState<string | null>(null)
+
+  useEffect(() => {
+    setSquadCode(window.localStorage.getItem('gator-squad-code'))
+  }, [])
 
   return (
     // No background on page wrappers — pages render into whatever the app's
     // (app)/_layout provides (a plain background, or a raised panel), so they
     // stay transparent and inherit it.
     <div className="min-h-full text-foreground">
-      <div className="mx-auto max-w-2xl px-6 py-20">
-        <h1 className="mb-12 text-4xl font-bold tracking-tight">Settings</h1>
+      <div className="settings-page">
+        <header className="settings-header">
+          <p>SETTINGS · GATOR PASS ACCOUNT</p>
+          <h1>Your account.</h1>
+          <p className="settings-sub">The Gator Pass identity you use across the field board, Gatorize Me and the hosted server.</p>
+        </header>
 
-        <section className="rounded-lg border border-border bg-card p-6">
-          <h2 className="mb-4 text-lg font-semibold">Your account</h2>
-
-          <dl className="space-y-3 text-sm">
+        <section className="settings-card">
+          <h2>Identity</h2>
+          <div className="settings-identity">
+            <Avatar className="h-12 w-12 ring-1 ring-inset ring-border">
+              <AvatarImage src={user?.imageUrl ?? undefined} referrerPolicy="no-referrer" />
+              <AvatarFallback className="text-sm">{(user?.name?.[0] ?? user?.email?.[0] ?? '?').toUpperCase()}</AvatarFallback>
+            </Avatar>
             <div>
-              <dt className="text-muted-foreground">Name</dt>
-              <dd className="text-foreground">{user?.name ?? '—'}</dd>
+              <strong>{user?.name ?? 'Signed in'}</strong>
+              <span>{user?.email ?? '—'}</span>
             </div>
-            <div>
-              <dt className="text-muted-foreground">Email</dt>
-              <dd className="text-foreground">{user?.email ?? '—'}</dd>
-            </div>
-          </dl>
-
-          <Button variant="secondary" className="mt-6" onClick={() => signOut()}>
+          </div>
+          <ul className="settings-rows">
+            <li><span className="settings-label">Name</span><span className="settings-value">{user?.name ?? '—'}</span></li>
+            <li><span className="settings-label">Email</span><span className="settings-value">{user?.email ?? '—'}</span></li>
+          </ul>
+          <Button variant="secondary" className="settings-signout" onClick={() => signOut()}>
             Sign out
           </Button>
         </section>
+
+        {squadCode && (
+          <section className="settings-card">
+            <h2>Current squad</h2>
+            <ul className="settings-rows">
+              <li><span className="settings-label">Squad code</span><span className="settings-value">{squadCode}</span></li>
+            </ul>
+            <p className="settings-squad-note"><span />Stored on this device only — it is not part of your account. Leave the squad from the field board.</p>
+          </section>
+        )}
       </div>
     </div>
   )
