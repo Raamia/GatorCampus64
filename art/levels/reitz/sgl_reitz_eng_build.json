@@ -1,6 +1,7 @@
 {
  "level": "wf",
  "stage": "reitz_eng",
+ "built_at": "2026-10-18T04:16Z",
  "center_m": [
   -470,
   -293
@@ -18,44 +19,46 @@
   -23.0
  ],
  "extent_half_m": 324.0,
- "collision_tris": 9427,
- "visual_tris": 77943,
+ "collision_tris": 10279,
+ "visual_tris": 120290,
  "collision_by_object": {
-  "Ground collision": 1781,
+  "Ground collision": 2559,
   "Pond basins collision": 259,
   "Props collision": 330,
   "Buildings collision": 2181,
-  "Trees collision": 3216,
+  "Trees collision": 3198,
   "Boundary walls": 216,
   "Dressing collision": 214,
   "LM malachowsky_hall collision": 204,
   "LM reitz_union collision": 502,
   "LM reitz_amphitheater collision": 123,
   "LM reitz_union door warps": 8,
+  "LM reitz_streetscape collision": 92,
   "LM weil_hall collision": 297,
   "LM engineering_clock_tower collision": 20,
   "LM engineering_plaza collision": 76
  },
  "visual_by_object": {
-  "Ground visual": 9779,
-  "Roads and paths visual": 5958,
+  "Ground visual": 22965,
+  "Roads and paths visual": 26902,
   "Pond basins visual": 263,
   "Pond water": 157,
   "Props visual": 350,
   "Buildings visual": 8141,
   "Backdrop buildings": 2305,
-  "Trees visual": 43487,
+  "Trees visual": 43241,
   "Tree line": 560,
-  "Dressing visual": 2072,
+  "Dressing visual": 2464,
   "LM malachowsky_hall visual": 1086,
   "LM malachowsky_hall paving": 24,
-  "LM reitz_union visual": 1803,
+  "LM reitz_union visual": 1802,
   "LM reitz_amphitheater visual": 397,
+  "LM reitz_streetscape visual": 7038,
   "LM weil_hall visual": 923,
   "LM weil_hall courtyard paving": 4,
   "LM engineering_clock_tower visual": 210,
-  "LM engineering_plaza paving": 32,
-  "LM engineering_plaza visual": 392
+  "LM engineering_plaza paving": 42,
+  "LM engineering_plaza visual": 1416
  },
  "landmark_modules": [
   {
@@ -154,6 +157,26 @@
    }
   },
   {
+   "module": "reitz_streetscape",
+   "ok": true,
+   "slugs": [
+    "reitz_streetscape"
+   ],
+   "parts": 2,
+   "collision_tris": 92,
+   "visual_tris": 7038,
+   "budget_collision": null,
+   "budget_visual": null,
+   "per_landmark": {
+    "reitz_streetscape": {
+     "collision_tris": 92,
+     "visual_tris": 7038,
+     "budget_collision": null,
+     "budget_visual": null
+    }
+   }
+  },
+  {
    "module": "reitz_weil_eng_clocktower",
    "ok": true,
    "slugs": [
@@ -163,7 +186,7 @@
    ],
    "parts": 8,
    "collision_tris": 393,
-   "visual_tris": 1561,
+   "visual_tris": 2585,
    "budget_collision": 360,
    "budget_visual": 1300,
    "per_landmark": {
@@ -181,7 +204,7 @@
     },
     "engineering_plaza": {
      "collision_tris": 76,
-     "visual_tris": 424,
+     "visual_tris": 1448,
      "budget_collision": null,
      "budget_visual": null
     }
@@ -222,6 +245,9 @@
   "w863456041"
  ],
  "removed_points": [
+  "n13503053966",
+  "n13503053967",
+  "n13503053968",
   "w150928196#250",
   "w150928196#26",
   "w150928196#30",
@@ -2135,7 +2161,7 @@
     "map_m": [
      -438.31,
      -491.61,
-     -0.0
+     0.0
     ],
     "game": [
      3169,
@@ -2255,7 +2281,7 @@
     "map_m": [
      -291.25,
      -211.75,
-     -0.0
+     0.0
     ],
     "game": [
      17875,
@@ -2375,7 +2401,7 @@
     "map_m": [
      -598.0,
      -82.0,
-     -0.0
+     0.0
     ],
     "game": [
      -12800,
@@ -2611,13 +2637,58 @@
  },
  "stats": {
   "landmark_conflicts": {
-   "trees_removed": [],
-   "trees_shrunk": 3,
+   "trees_removed": [
+    "n13503053966",
+    "n13503053967",
+    "n13503053968"
+   ],
+   "trees_shrunk": 4,
    "pois_removed": [],
    "barriers_removed": [],
    "fountains_removed": [],
    "buildings_overlapped": [],
-   "shadow_hiding_faces": {}
+   "shadow_hiding_faces": {
+    "LM reitz_streetscape visual": 6,
+    "LM engineering_plaza visual": 16
+   }
+  },
+  "ground_surface_partition": {
+   "input_triangles": 11522,
+   "output_faces": 15500,
+   "overlap_removed_m2": 230823.29,
+   "meshes": [
+    "Ground visual",
+    "LM engineering_plaza paving",
+    "LM malachowsky_hall paving",
+    "LM reitz_union visual",
+    "LM weil_hall courtyard paving",
+    "Roads and paths visual"
+   ],
+   "surface_z_m": -0.03,
+   "priority": {
+    "ground_grass": 0,
+    "hub_ground_grass": 0,
+    "grass": 5,
+    "lawn": 10,
+    "hub_lawn": 10,
+    "forest_floor": 11,
+    "mulch": 12,
+    "parking": 20,
+    "plaza_brick": 30,
+    "concrete": 31,
+    "path": 31,
+    "sidewalk": 31,
+    "steps": 32,
+    "asphalt": 40,
+    "road_paint": 50,
+    "crosswalk": 60
+   }
+  },
+  "sunk_roads": {
+   "road_z_m": -0.15,
+   "road_faces": 2710,
+   "curb_faces": 1982,
+   "landmark_road_faces": 0
   },
   "buildings": [
    {
@@ -3437,10 +3508,10 @@
    "w150928196#381"
   ],
   "trees": {
-   "oak": 406,
+   "oak": 403,
    "pine": 245,
    "palm": 83,
-   "colliders": 536,
+   "colliders": 533,
    "climbable": 0,
    "beyond_s16": 29,
    "in_ground_hole": 0
@@ -3569,7 +3640,38 @@
      "deck_m": 0.45
     }
    ],
-   "skipped": [],
+   "shrubs": [
+    [
+     -325.0,
+     -248.0
+    ],
+    [
+     -292.0,
+     -220.0
+    ]
+   ],
+   "skipped": [
+    [
+     "lawn shrub bed",
+     -455.0,
+     -258.0
+    ],
+    [
+     "lawn shrub bed",
+     -425.0,
+     -280.0
+    ],
+    [
+     "lawn shrub bed",
+     -370.0,
+     -265.0
+    ],
+    [
+     "lawn shrub bed",
+     -445.0,
+     -185.0
+    ]
+   ],
    "fans": [
     {
      "map_m": [
@@ -3586,6 +3688,25 @@
      "top_m": 11.4
     }
    ]
+  },
+  "terrain": {
+   "draped_objects": [
+    "Ground visual",
+    "Roads and paths visual",
+    "Ground collision",
+    "Pond basins visual",
+    "Pond basins collision",
+    "Pond water"
+   ],
+   "draped_vertices": 90529,
+   "components_lifted": 15816,
+   "landmarks": {
+    "reitz_malachowsky": 0.0,
+    "reitz_weil_eng_clocktower": 0.0
+   },
+   "max_m": 3.99,
+   "min_m": -2.83,
+   "diagonal_cuts": 5696
   }
  },
  "attribution": "Map data (c) OpenStreetMap contributors, ODbL 1.0",
@@ -3637,7 +3758,7 @@
    "module": "tools/campus/interiors/reitz.py",
    "kit_tris": {
     "visual": 148296,
-    "collision": 12718
+    "collision": 12723
    },
    "warp_nodes": [
     {
@@ -4541,7 +4662,7 @@
     "atrium": "Ground to a cedar ceiling at 25.6 m over the voids (L3 ceiling + a 2.2 m clerestory band).",
     "sealed": "Offices, restrooms, kitchens, back-of-house rooms, the stair shafts and most hotel rooms are closed doors (no photos; not public). Open: corridors, the atrium, vestibules, every meeting room, the ballrooms, the Auditorium, the Gallery, the Senate Chamber, the Game Room, the Gator Esports Center, Orange & Brew, the Arts & Crafts Center and the dance studios, the Level 4 event rooms, hotel rooms 516 and 501/502 and a balcony.",
     "elevators": "The Blue elevators (the only bank that reaches the hotel) are vanilla teleport pads: two open cars per floor (north-west UP, north-east DOWN). The Orange and service elevators are closed.",
-    "brands": "Food court storefronts: the vendors' plain names in the colours of the user's photos (STARBUCKS, PANDA, BABA'S PIZZA, HALAL SHACK, HOME OF THE GATORS / BOOKSTORE) with simple generic round badges; no reproduced logo artwork (no siren, swoosh or panda mark). Older slots keep generic signs.",
+    "brands": "Food court storefronts: the vendors' plain names in the colours of the user's 2026-10-16 photos (STARBUCKS, PANDA, BABA'S PIZZA, HALAL SHACK, HOME OF THE GATORS / BOOKSTORE) with simple generic round badges; no reproduced logo artwork (no siren, swoosh or panda mark). Older slots keep generic signs.",
     "inferred": "No public photo of: the hotel reception, the Info Desk, Orange & Brew, Subway / The Market, the stairwells, restrooms, hotel corridors. Those are drawn plainly (the plan + the house finishes)."
    },
    "objects": {
@@ -4567,12 +4688,12 @@
     },
     "reitz L1 visual": {
      "group": "L1",
-     "tris": 17001,
+     "tris": 17005,
      "collision": false
     },
     "reitz L1 collision": {
      "group": "L1",
-     "tris": 1323,
+     "tris": 1328,
      "collision": true
     },
     "reitz L2 visual": {
@@ -4649,43 +4770,43 @@
  "collision_repair": {
   "area_1": {
    "vertices": [
-    7889,
-    7883
+    11092,
+    10303
    ],
-   "welded_vertices": 6,
+   "welded_vertices": 789,
    "collapsed_tris": 0,
-   "tjunction_splits": 118,
+   "tjunction_splits": 117,
    "triangles": [
-    9427,
-    9545
+    10279,
+    10396
    ]
   },
   "area_2": {
    "vertices": [
-    14575,
-    14427
+    14584,
+    14436
    ],
    "welded_vertices": 147,
    "collapsed_tris": 24,
-   "tjunction_splits": 419,
+   "tjunction_splits": 421,
    "triangles": [
-    12698,
-    13093
+    12703,
+    13100
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [
-   "13093 static collision triangles in the largest area (22638 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
+   "13100 static collision triangles in the largest area (23496 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
   ],
-  "collision_tris": 22638,
-  "render_tris": 226239,
+  "collision_tris": 23496,
+  "render_tris": 268586,
   "lua_names": [],
   "fog_patched": [
    319,
    319
   ]
  },
- "level_dir": "mods/sgl64/levels/wf"
+ "level_dir": "/home/mdracc/super-gatorlator-64/.worktrees/pr35-release/mods/sgl64/levels/wf"
 }

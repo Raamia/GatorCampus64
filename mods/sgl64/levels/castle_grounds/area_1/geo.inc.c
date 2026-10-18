@@ -24,9 +24,10 @@ const GeoLayout castle_grounds_area_1_geo[] = {
 		GEO_DISPLAY_LIST(LAYER_OPAQUE, castle_grounds_dl_Props_visual_mesh_layer_1),
 		GEO_DISPLAY_LIST(LAYER_TRANSPARENT, castle_grounds_dl_Props_visual_mesh_layer_5_with_revert),
 		GEO_DISPLAY_LIST(LAYER_OPAQUE, castle_grounds_dl_Roads_and_paths_visual_mesh_layer_1),
-		GEO_DISPLAY_LIST(LAYER_ALPHA, castle_grounds_dl_Tree_line_mesh_layer_4_with_revert),
+		GEO_DISPLAY_LIST(LAYER_ALPHA, castle_grounds_dl_Tree_line_mesh_layer_4),
 		GEO_DISPLAY_LIST(LAYER_OPAQUE, castle_grounds_dl_Tree_line_mesh_layer_1),
 		GEO_DISPLAY_LIST(LAYER_OPAQUE, castle_grounds_dl_Trees_visual_mesh_layer_1_with_revert),
+		GEO_DISPLAY_LIST(LAYER_ALPHA, castle_grounds_dl_Trees_visual_mesh_layer_4_with_revert),
 	GEO_CLOSE_NODE(),
 	GEO_RETURN(),
 };

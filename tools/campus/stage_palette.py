@@ -22,6 +22,8 @@ GENERATOR_MATERIALS = {
     # ground
     "ground_grass":   {"tex": "ground_grass.png",   "tile_m": 4.0, "color": "#5A8C3C"},
     "lawn":           {"tex": "lawn.png",           "tile_m": 4.0, "color": "#6AA346"},
+    "hub_ground_grass": {"tex": "hub_ground_grass.png", "tile_m": 4.0, "color": "#607847"},
+    "hub_lawn":         {"tex": "hub_lawn.png",         "tile_m": 4.0, "color": "#70884F"},
     "forest_floor":   {"tex": "forest_floor.png",   "tile_m": 4.0, "color": "#4E6E34"},
     "mulch":          {"tex": "mulch.png",          "tile_m": 2.0, "color": "#6E4A30"},
     "asphalt":        {"tex": "asphalt.png",        "tile_m": 4.0, "color": "#4C4C50"},
@@ -46,6 +48,8 @@ GENERATOR_MATERIALS = {
     # vegetation
     "leaves_oak":     {"tex": "leaves_oak.png",     "tile_m": 4.0, "color": "#3E6E2E"},
     "leaves_oak2":    {"tex": "leaves_oak2.png",    "tile_m": 4.0, "color": "#4A6A2C"},
+    "spanish_moss":   {"tex": "spanish_moss.png",   "tile_m": 1.0, "color": "#77816A", "kind": "cutout"},
+    "oak_shadow":     {"tex": "oak_shadow.png",     "tile_m": 4.0, "color": "#33452D", "kind": "cutout"},
     "leaves_pine":    {"tex": "leaves_pine.png",    "tile_m": 4.0, "color": "#365C3A"},
     "palm_frond":     {"tex": "palm_frond.png",     "tile_m": 2.0, "color": "#5A9440"},
     "bark":           {"tex": "bark.png",           "tile_m": 2.0, "color": "#5A4632"},

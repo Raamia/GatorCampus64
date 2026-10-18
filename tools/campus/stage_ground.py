@@ -226,7 +226,8 @@ def build(S):
     hole_bbs = [G.bbox(h) for h in holes]
 
     # ---- base grass + collision ground
-    ground_sheet(vis, ext, Z["base"], "ground_grass", ponds + holes)
+    base_grass = "hub_ground_grass" if getattr(S, "key", "hub") == "hub" else "ground_grass"
+    ground_sheet(vis, ext, Z["base"], base_grass, ponds + holes)
     col_holes = [G.inset(h, HOLE_OVERLAP_M) or h for h in holes]
     ground_sheet(col, col_bounds, 0.0, "COL default", ponds + col_holes)
     if holes:
@@ -262,7 +263,8 @@ def build(S):
         holes = [[T(p) for p in h] for h in a.get("holes", [])]
         if in_pond(G.bbox(ring)[:2]) and in_pond(G.bbox(ring)[2:]):
             continue
-        z = Z["lawn"] if a["cls"] in ("lawn", "forest") else Z["area"]
+        is_lawn = a["cls"] in ("lawn", "forest")
+        z = Z["lawn"] if is_lawn else Z["area"]
         # ponds (and landmark ground holes) inside a park polygon become holes, or the lawn would
         # cover the water / the sunken bowl (a landmark hole the area already has is not added twice)
         own_holes = list(holes)
@@ -274,7 +276,8 @@ def build(S):
         tris = G.triangulate([ring] + holes)
         if S.ground_holes:   # partial overlaps: drop the triangles whose centre is in a ground hole
             tris = [t for t in tris if not piece_in_hole(t)]
-        vis.flat_tris(tris, z, a["mat"], cell=TILE, ox=TILE_OFF, oy=TILE_OFF)
+        area_mat = "hub_lawn" if is_lawn and getattr(S, "key", "hub") == "hub" else a["mat"]
+        vis.flat_tris(tris, z, area_mat, cell=TILE, ox=TILE_OFF, oy=TILE_OFF)
 
     # ---- roads
     node_roads, node_points = {}, {}
@@ -378,6 +381,13 @@ def build(S):
         if sum(1 for q in pts if in_pond(q)) > len(pts) / 2:
             continue
         w = p["width"]
+        # The Auditorium approach is a generous pedestrian plaza; widen only mapped sidewalks in
+        # this local Hub pocket, leaving narrow connectors and all other stages untouched.
+        if getattr(S, "key", "hub") == "hub" and p["mat"] == "sidewalk":
+            mx = sum(q[0] for q in raw) / len(raw) + S.cx
+            my = sum(q[1] for q in raw) / len(raw) + S.cy
+            if -5.0 <= mx <= 100.0 and 60.0 <= my <= 175.0:
+                w *= 1.14
         if p["kind"] == "crossing":
             # crosswalk stripes only where a road is: a crossing tag over a footpath or a lawn draws nothing
             quads = [q for q, _s0, _s1 in G.ribbon(pts, w)]
@@ -471,6 +481,120 @@ def build(S):
     # One visible ground surface at each point, including landmark walk ribbons.
     from ground_surfaces import apply as partition_ground
     partition_ground(S)
+    _sink_roads(S, lambda pt: any(G.point_in_poly(pt, h) for h in S.ground_holes), ext)
+
+
+ROAD_SINK_M = 0.12    # visual-only: the asphalt sits this far below the partitioned ground (collision unchanged)
+
+
+def _seg_in_convex(a, b, poly):
+    """Parameter interval [t0, t1] of segment a->b inside the convex CCW poly, or None."""
+    t0, t1 = 0.0, 1.0
+    for c, d in zip(poly, poly[1:] + poly[:1]):
+        ex, ey = d[0] - c[0], d[1] - c[1]
+        f0 = ex * (a[1] - c[1]) - ey * (a[0] - c[0])
+        f1 = ex * (b[1] - c[1]) - ey * (b[0] - c[0])
+        tol = 1e-9 * (abs(ex) + abs(ey))
+        if f0 < -tol and f1 < -tol:
+            return None
+        if f0 >= -tol and f1 >= -tol:
+            continue
+        t = f0 / (f0 - f1)
+        if f0 < -tol:
+            t0 = max(t0, t)
+        else:
+            t1 = min(t1, t)
+        if t0 >= t1:
+            return None
+    return t0, t1
+
+
+def _sink_roads(S, in_hole, ext):
+    """Lower the partitioned asphalt / centre lines / crosswalks ROAD_SINK_M and close the step with
+    light concrete curb faces on every road boundary edge not shared with another road face."""
+    from ground_surfaces import GROUND_Z
+    acc = S.accs["Roads and paths visual"][0]
+    zr = GROUND_Z - ROAD_SINK_M
+    road, polys = [], []
+    for pts, mat, uvs in acc.polys:
+        zs = [p[2] for p in pts]
+        if mat in ("asphalt", "road_paint") and max(abs(z - GROUND_Z) for z in zs) < 1e-5:
+            pts = [(p[0], p[1], zr) for p in pts]
+            road.append(G.ccw([p[:2] for p in pts]))
+        elif max(abs(z - Z["crossing"]) for z in zs) < 1e-5:
+            pts = [(p[0], p[1], zr + 0.01) for p in pts]
+        polys.append((pts, mat, uvs))
+    acc.polys = polys
+    # landmark paving (streetscape asphalt) stays at GROUND_Z: only a step face (no lip) where a road meets it
+    lm = []
+    for obj in getattr(S, "landmark_objects", []):
+        if getattr(obj, "type", None) != "MESH" or obj.ignore_render:
+            continue
+        me = obj.data
+        for f in me.polygons:
+            if f.normal.z > 0.99 and abs(f.center.z - GROUND_Z) < 1e-3 and me.materials and \
+                    me.materials[f.material_index].get("sgl_name") in ("asphalt", "road_paint", "crosswalk"):
+                lm.append(G.ccw([tuple(me.vertices[i].co)[:2] for i in f.vertices]))
+
+    def index(ps):
+        grid = {}
+        for k, rp in enumerate(ps):
+            x0, y0, x1, y1 = G.bbox(rp)
+            for gx in range(int(x0 // 20), int(x1 // 20) + 1):
+                for gy in range(int(y0 // 20), int(y1 // 20) + 1):
+                    grid.setdefault((gx, gy), []).append(k)
+        return grid
+
+    rgrid, lgrid = index(road), index(lm)
+
+    def near(grid, a, b):
+        x0, x1 = sorted((a[0], b[0]))
+        y0, y1 = sorted((a[1], b[1]))
+        return sorted({k for gx in range(int(x0 // 20), int(x1 // 20) + 1)
+                       for gy in range(int(y0 // 20), int(y1 // 20) + 1) for k in grid.get((gx, gy), ())})
+
+    def covered(a, b, ps, grid, skip=-1):
+        iv = []
+        for k in near(grid, a, b):
+            if k != skip:
+                r = _seg_in_convex(a, b, ps[k])
+                if r:
+                    iv.append(r)
+        return sorted(iv)
+
+    curb = 0
+    X0, Y0, X1, Y1 = ext
+    for k, rp in enumerate(road):
+        for a, b in zip(rp, rp[1:] + rp[:1]):
+            L = math.dist(a, b)
+            if L < 0.05:
+                continue
+            nx, ny = (b[1] - a[1]) / L * 0.02, -(b[0] - a[0]) / L * 0.02    # outward (right of a->b, CCW)
+            a2, b2 = (a[0] + nx, a[1] + ny), (b[0] + nx, b[1] + ny)
+            free, t = [], 0.0
+            for t0, t1 in covered(a2, b2, road, rgrid, k):
+                if t0 > t:
+                    free.append((t, t0))
+                t = max(t, t1)
+            if t < 1.0:
+                free.append((t, 1.0))
+            for t0, t1 in free:
+                if (t1 - t0) * L < 0.05:
+                    continue
+                p = (a[0] + (b[0] - a[0]) * t0, a[1] + (b[1] - a[1]) * t0)
+                q = (a[0] + (b[0] - a[0]) * t1, a[1] + (b[1] - a[1]) * t1)
+                m = ((p[0] + q[0]) / 2, (p[1] + q[1]) / 2)
+                if in_hole(m) or min(m[0] - X0, X1 - m[0], m[1] - Y0, Y1 - m[1]) < 0.05:
+                    continue
+                mo = (m[0] + nx, m[1] + ny)
+                top = Z["path"]
+                if lm and any(G.point_in_poly(mo, lm[j]) for j in near(lgrid, mo, mo)):
+                    top = GROUND_Z
+                acc.wall(q, p, zr, top, "sidewalk")    # q->p: faces into the road
+                curb += 1
+    S.stats["sunk_roads"] = {"road_z_m": round(zr, 3), "road_faces": len(road), "curb_faces": curb,
+                             "landmark_road_faces": len(lm)}
+    print("SGL: sunk roads:", S.stats["sunk_roads"])
 
 
 def _center_dashes(acc, pts, near_junction, dash=3.0, gap=6.0, hw=0.12):

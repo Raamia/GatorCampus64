@@ -471,6 +471,36 @@ def tx_treeline(seed):
     return t
 
 
+def tx_spanish_moss(seed):
+    """Sparse gray-green hanging strands on transparent N64 cutout cards."""
+    t = Tex(32, 32, (0, 0, 0), seed)
+    for y in range(32):
+        for x in range(32):
+            t.set(x, y, (0, 0, 0), 0)
+    for x0, length in ((4, 18), (9, 13), (15, 22), (21, 15), (27, 19)):
+        width = 1 if x0 % 2 else 2
+        for y in range(3, min(31, 3 + length)):
+            x = x0 + round(math.sin((y + x0) * 0.45) * 1.2)
+            for dx in range(width):
+                t.set(x + dx, y, (112, 124, 102) if y % 3 else (78, 92, 76))
+    return t
+
+
+def tx_oak_shadow(seed):
+    """Transparent mottled shade card; broad transparent gaps keep the ground readable."""
+    t = Tex(32, 32, (0, 0, 0), seed)
+    for y in range(32):
+        for x in range(32):
+            t.set(x, y, (0, 0, 0), 0)
+    for cx, cy, rx, ry in ((7, 9, 4, 3), (17, 7, 5, 3), (25, 12, 3, 4),
+                            (11, 21, 4, 4), (22, 23, 4, 3)):
+        for y in range(32):
+            for x in range(32):
+                if ((x-cx)/rx)**2 + ((y-cy)/ry)**2 < 1 and (x * 7 + y * 11) % 3 != 0:
+                    t.set(x, y, (66, 83, 50) if (x + y) % 3 else (82, 98, 58), 255)
+    return t
+
+
 def tx_rock(seed):
     """Pale weathered stone (the Turlington rock 'The Potato' is a cream / light grey boulder)."""
     base = hexc("#C2B79F")
@@ -569,6 +599,8 @@ def build_all():
         "banner_blue": tx_banner("#0021A5", "#FA4616", 59),
         "ground_grass": tx_grass("#5A8C3C", 31, blades=("#6E9E48", "#4A7430")),
         "lawn": tx_grass("#6AA346", 32, blades=("#86C060", "#56883A")),
+        "hub_ground_grass": tx_grass("#607847", 62, blades=("#728754", "#506B3C")),
+        "hub_lawn": tx_grass("#70884F", 63, blades=("#82945D", "#617744")),
         "forest_floor": tx_noise("#4E6E34", 33, 12, ["#6A5434", "#3E5A2A", "#5E7E3E"], 120),
         "mulch": tx_noise("#6E4A30", 34, 14, ["#8A6040", "#4E3220", "#7A5038"], 150),
         "asphalt": tx_asphalt("#4C4C50", 35),
@@ -588,6 +620,8 @@ def build_all():
         "door_marker": tx_door_marker(49),
         "leaves_oak": tx_leaves("#3E6E2E", "#5E9440", "#2A4C20", 50),
         "leaves_oak2": tx_leaves("#46682C", "#6A8C3E", "#2E4A1E", 57),
+        "spanish_moss": tx_spanish_moss(60),
+        "oak_shadow": tx_oak_shadow(61),
         "leaves_pine": tx_leaves("#365C3A", "#4E7A4C", "#22402A", 51, blobs=34),
         "palm_frond": tx_palm_frond(52),
         "bark": tx_bark("#5A4632", 53),
