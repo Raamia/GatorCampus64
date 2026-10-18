@@ -10,6 +10,7 @@ Coordinates in the tables are MAP metres (x = east, y = north, origin Century To
 import math
 
 import stage_geom as G
+import stage_nature as nature
 from stage_nature import blob, oak, ring, trunk
 
 # (x, y): Auditorium lawn walks (first view from the spawn), the porch approach, Turlington Plaza
@@ -44,6 +45,10 @@ HUB_LAWN_SHRUBS = [
 # They sit in broad grass pockets and are placed with clearance for their full footprint.
 HUB_LAWN_MASSES = [(6.0, 58.0), (72.0, 58.0), (0.0, 98.0), (74.0, 54.0),
                    (24.0, 76.0), (56.0, 62.0)]
+HUB_GLOBE_LAMPS = [(14.5, 132.0)]  # prominent lamp beside the Auditorium approach walk
+HUB_RAISED_BEDS = [(81.0, 179.0, 0.0), (5.0, 171.0, 90.0), (9.0, 123.0, 0.0), (85.0, 103.0, 90.0)]
+HUB_CAMPUS_SIGN = (58.0, 119.0)
+HUB_TRASH_CANS = [(76.0, 176.0), (0.0, 129.0), (69.0, 99.0)]
 NUDGES = [(0.0, 0.0), (1.5, 0.0), (-1.5, 0.0), (0.0, 1.5), (0.0, -1.5), (1.5, 1.5), (-1.5, -1.5),
           (1.5, -1.5), (-1.5, 1.5), (3.0, 0.0), (-3.0, 0.0), (0.0, 3.0), (0.0, -3.0)]
 
@@ -111,17 +116,25 @@ def _obox(acc, cx, cy, ang, hx, hy, z0, z1, side, top, bottom=None):
     return q
 
 
-def lamp(vis, x, y, key, yaw):
-    """Black lamp post, white lantern, one orange and one blue banner (visual only)."""
+def lamp(vis, x, y, key, yaw, globe=False, banners=True):
+    """Black lamp post; Hub variant has a white globe and no banners."""
     _obox(vis, x, y, yaw, 0.2, 0.2, -0.1, 0.45, "dark_trim", "dark_trim")
     trunk(vis, x, y, 0.08, 0.45, LAMP_POLE_M, 5, "dark_trim", key)
-    _obox(vis, x, y, yaw, 0.22, 0.22, LAMP_POLE_M, LAMP_POLE_M + 0.5, "white_trim", None, "dark_trim")
-    cap = [(x + 0.3 * math.cos(yaw + k * math.pi / 2 + math.pi / 4) * 1.414,
-            y + 0.3 * math.sin(yaw + k * math.pi / 2 + math.pi / 4) * 1.414, LAMP_POLE_M + 0.5) for k in range(4)]
-    for a, b in zip(cap, cap[1:] + cap[:1]):
-        vis.poly([a, b, (x, y, LAMP_POLE_M + 0.85)], "dark_trim")
-    vis.poly(cap[::-1], "dark_trim")
-    for side, mat in ((1, "banner_orange"), (-1, "banner_blue")):
+    if globe:
+        gz = LAMP_POLE_M + 0.58
+        rings = [ring(x, y, r, gz + dz, 8, yaw, f"{key}:globe:{i}", jitter=0.02)
+                 for i, (r, dz) in enumerate(((0.19, -0.13), (0.31, 0.0), (0.21, 0.22)))]
+        blob(vis, rings, (x, y, gz + 0.34), (x, y, gz - 0.2), "white_trim")
+        # short dark cap under the globe keeps the cast-iron silhouette readable
+        _obox(vis, x, y, yaw, 0.12, 0.12, LAMP_POLE_M + 0.35, gz - 0.12, "dark_trim", "dark_trim")
+    else:
+        _obox(vis, x, y, yaw, 0.22, 0.22, LAMP_POLE_M, LAMP_POLE_M + 0.5, "white_trim", None, "dark_trim")
+        cap = [(x + 0.3 * math.cos(yaw + k * math.pi / 2 + math.pi / 4) * 1.414,
+                y + 0.3 * math.sin(yaw + k * math.pi / 2 + math.pi / 4) * 1.414, LAMP_POLE_M + 0.5) for k in range(4)]
+        for a, b in zip(cap, cap[1:] + cap[:1]):
+            vis.poly([a, b, (x, y, LAMP_POLE_M + 0.85)], "dark_trim")
+        vis.poly(cap[::-1], "dark_trim")
+    for side, mat in (((1, "banner_orange"), (-1, "banner_blue")) if banners else ()):
         ux, uy = math.cos(yaw) * side, math.sin(yaw) * side
         a = (x + ux * 0.12, y + uy * 0.12)
         b = (x + ux * 0.72, y + uy * 0.72)
@@ -223,6 +236,88 @@ def dense_planting(vis, col, x, y, key):
     if col is not None:
         # Low planter-like collision keeps players from walking through the fuller shrubs; camera may pass.
         _obox(col, x, y, 0.0, 3.12, 1.30, 0.0, 1.36, "COL nocam", None)
+
+
+def raised_bed(vis, col, x, y, yaw, key):
+    """Low rectangular brick planter with dense non-colliding shrubs and a palmetto accent."""
+    angle = math.radians(yaw)
+    hx, hy, wall, h = 3.6, 1.55, 0.34, 0.72
+    c, s = math.cos(angle), math.sin(angle)
+    def point(u, v): return x + c * u - s * v, y + s * u + c * v
+    for sign in (-1, 1):
+        px, py = point(0, sign * (hy - wall / 2))
+        _obox(vis, px, py, angle, hx, wall / 2, -0.08, h, "brick_red", "limestone")
+        _obox(col, px, py, angle, hx, wall / 2, 0.0, h, "COL default", "COL default")
+        px, py = point(sign * (hx - wall / 2), 0)
+        _obox(vis, px, py, angle, wall / 2, hy, -0.08, h, "brick_red", "limestone")
+        _obox(col, px, py, angle, wall / 2, hy, 0.0, h, "COL default", "COL default")
+    inner = [point(-hx + wall, -hy + wall), point(hx - wall, -hy + wall),
+             point(hx - wall, hy - wall), point(-hx + wall, hy - wall)]
+    vis.flat(inner, 0.57, "mulch")
+    for i, (u, v, r, ht) in enumerate(((-2.5, 0.0, 0.8, 1.35), (-1.3, 0.1, 1.0, 1.65),
+                                       (0.0, -0.05, 1.12, 1.8), (1.35, 0.05, 1.0, 1.55),
+                                       (2.48, -0.05, 0.8, 1.3))):
+        sx, sy = point(u, v)
+        rot = rnd_key(f"{key}:shrub{i}") * math.pi
+        shrub_rings = [ring(sx, sy, r * 0.62, 0.58, 7, rot, f"{key}:s{i}a", ry=r * 0.6),
+                       ring(sx, sy, r, ht * 0.68, 7, rot + 0.2, f"{key}:s{i}b", ry=r * 0.72)]
+        blob(vis, shrub_rings, (sx, sy, ht), (sx, sy, 0.58), "leaves_oak" if i % 2 else "leaves_oak2")
+    # Two fan-like palmetto clusters at the bed ends; no collision on foliage.
+    for u in (-2.85, 2.85):
+        px, py = point(u, 0.0)
+        pz = 0.62
+        for k in range(6):
+            a = k * math.pi / 3 + angle
+            tip = (px + math.cos(a) * 1.0, py + math.sin(a) * 0.7, pz + 0.32 + 0.18 * (k % 2))
+            side = (math.cos(a + math.pi / 2) * 0.34, math.sin(a + math.pi / 2) * 0.28)
+            mid = (px + math.cos(a) * 0.48, py + math.sin(a) * 0.36, pz + 0.45)
+            vis.poly([(px, py, pz), (mid[0] + side[0], mid[1] + side[1], mid[2]), tip,
+                      (mid[0] - side[0], mid[1] - side[1], mid[2])], "palm_frond")
+
+
+def tree_bed(vis, col, x, y, radius, key):
+    """Curved brick-edged mulch/ground-cover ring around a trunk, with low collision only on edging."""
+    outer = ring(x, y, radius, 0.22, 10, rnd_key(key) * math.pi, key + ":edge", jitter=0.04,
+                 ry=radius * 0.78)
+    inner = ring(x, y, max(0.85, radius - 0.35), 0.22, 10, rnd_key(key) * math.pi, key + ":inner",
+                 jitter=0.04, ry=max(0.85, radius - 0.35) * 0.78)
+    for i in range(10):
+        j = (i + 1) % 10
+        vis.poly([inner[i], outer[i], outer[j], inner[j]], "mulch")
+        vis.wall(outer[j][:2], outer[i][:2], -0.06, 0.22, "brick_red")
+        _obox(col, (outer[i][0] + outer[j][0]) / 2, (outer[i][1] + outer[j][1]) / 2,
+              math.atan2(outer[j][1] - outer[i][1], outer[j][0] - outer[i][0]),
+              math.dist(outer[i][:2], outer[j][:2]) / 2, 0.10, 0.0, 0.22, "COL default", None)
+    for i in range(4):
+        a = i * math.pi / 2 + rnd_key(key + ":shrubs")
+        sx, sy = x + math.cos(a) * (radius - 0.8), y + math.sin(a) * (radius * 0.78 - 0.7)
+        r = 0.7 + 0.1 * (i % 2)
+        blob(vis, [ring(sx, sy, r * 0.7, 0.08, 7, a, f"{key}:ground{i}a", ry=r * 0.62),
+                   ring(sx, sy, r, 0.55, 7, a + 0.2, f"{key}:ground{i}b", ry=r * 0.7)],
+             (sx, sy, 0.86), (sx, sy, 0.04), "leaves_oak2")
+
+
+def trash_can(vis, col, x, y, key):
+    """Compact campus waste bin with a collision-only metal footprint."""
+    _obox(vis, x, y, 0.0, 0.38, 0.34, -0.04, 0.95, "metal_gray", "dark_trim")
+    _obox(vis, x, y, 0.0, 0.43, 0.39, 0.95, 1.04, "dark_trim", "dark_trim")
+    _obox(vis, x, y, 0.0, 0.29, 0.25, 0.2, 0.78, "dark_trim", None)
+    if col is not None:
+        _obox(col, x, y, 0.0, 0.43, 0.39, 0.0, 1.04, "COL default", "COL default")
+
+
+def campus_sign(vis, col, x, y, yaw=0.0):
+    """Small blue campus wayfinding sign, on a dark post and simple collider."""
+    _obox(vis, x, y, 0.0, 0.09, 0.09, 0.0, 1.5, "dark_trim", "dark_trim")
+    angle = math.radians(yaw)
+    cx, cy = x + math.cos(angle) * 0.06, y + math.sin(angle) * 0.06
+    _obox(vis, cx, cy, angle, 0.55, 0.06, 1.25, 2.08, "banner_blue", "banner_blue")
+    _obox(vis, cx, cy, angle, 0.55, 0.03, 2.08, 2.17, "banner_orange", "banner_orange")
+    # Two pale inlaid bars suggest campus lettering at the distance this sign is seen.
+    for dz, half in ((1.55, 0.36), (1.76, 0.25)):
+        _obox(vis, cx, cy, angle, half, 0.065, dz, dz + 0.055, "white_trim", "white_trim")
+    if col is not None:
+        _obox(col, x, y, 0.0, 0.12, 0.12, 0.0, 2.2, "COL default", None)
 
 
 def table(vis, col, x, y, mat):
@@ -340,6 +435,65 @@ def build(S, probe, avoid=()):
         taken.append((p[0], p[1], 1.1))
         rep["benches"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
     if getattr(S, "key", "hub") == "hub":
+        # Curved brick edging and planted rings soften the authored grove bases without enclosing trunks.
+        rep["tree_beds"] = []
+        for i, (mx, my) in enumerate(getattr(S, "hub_oak_pts", [])):
+            x, y = S.T((mx, my))
+            clear = nature._path_clearance(S, (mx, my))
+            radius = min(2.65, clear - 1.0)
+            if radius >= 1.55:
+                tree_bed(vis, col, x, y, radius, f"hub_tree_bed{i}")
+                rep["tree_beds"].append([round(mx, 1), round(my, 1), round(radius, 2)])
+
+        rep["raised_beds"] = []
+        for i, (mx, my, yaw) in enumerate(HUB_RAISED_BEDS):
+            p = _place(S, probe, taken, mx, my, 4.25, walk_pad=1.4, road_pad=1.4)
+            if p is None:
+                rep["skipped"].append(("raised brick bed", mx, my))
+                continue
+            raised_bed(vis, col, p[0], p[1], yaw, f"hub_raised_bed{i}")
+            taken.append((p[0], p[1], 4.25))
+            rep["raised_beds"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+
+        rep["globe_lamps"] = []
+        for i, (mx, my) in enumerate(HUB_GLOBE_LAMPS):
+            p = _place(S, probe, taken, mx, my, 1.2, walk_pad=0.35)
+            if p is None:
+                rep["skipped"].append(("globe lamp", mx, my))
+                continue
+            lamp(vis, p[0], p[1], f"hub_globe_lamp{i}", math.pi / 2, globe=True, banners=False)
+            taken.append((p[0], p[1], 1.2))
+            poles.append({"name": f"Hub globe lamp {i + 1}", "stage": p, "z": 0.0, "height_m": LAMP_POLE_M})
+            rep["globe_lamps"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+
+        p = _place(S, probe, taken, *HUB_CAMPUS_SIGN, 0.9, walk_pad=0.25)
+        if p is None:
+            rep["skipped"].append(("campus sign", *HUB_CAMPUS_SIGN))
+        else:
+            campus_sign(vis, col, p[0], p[1], 180.0)
+            taken.append((p[0], p[1], 0.9))
+            rep["campus_sign"] = [round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)]
+
+        rep["trash_cans"] = []
+        for i, (mx, my) in enumerate(HUB_TRASH_CANS):
+            p = _place(S, probe, taken, mx, my, 0.65, walk_pad=0.15)
+            if p is None:
+                rep["skipped"].append(("trash can", mx, my))
+                continue
+            trash_can(vis, col, p[0], p[1], f"hub_trash{i}")
+            taken.append((p[0], p[1], 0.65))
+            rep["trash_cans"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+
+        # Three brick paver accents are flush in the mapped sidewalk network; decoration only.
+        rep["brick_insets"] = []
+        paver_sites = [(21.0, 113.5, 0.0), (46.0, 88.5, math.pi / 2), (10.0, 69.2, 0.0)]
+        for i, (mx, my, yaw) in enumerate(paver_sites):
+            x, y = S.T((mx, my))
+            if not _on_walk(S, x, y, 0.1) or _on_road(S, x, y, 0.1):
+                continue
+            _obox(vis, x, y, yaw, 0.72, 0.26, 0.036, 0.045, "brick_red", "brick_red")
+            rep["brick_insets"].append([mx, my])
+
         mx, my, facing, name = HUB_LAWN_GATOR
         p = _place(S, probe, taken, mx, my, 3.2, walk_pad=0.6)
         if p is None:
@@ -390,7 +544,8 @@ def build(S, probe, avoid=()):
             rep["skipped"].append(("lamp", mx, my))
             continue
         yaw = 0.0 if i % 2 == 0 else math.pi / 2
-        lamp(vis, p[0], p[1], f"lamp{i}", yaw)
+        lamp(vis, p[0], p[1], f"lamp{i}", yaw, globe=getattr(S, "key", "hub") == "hub",
+             banners=getattr(S, "key", "hub") != "hub")
         taken.append((p[0], p[1], 1.4))
         poles.append({"name": f"Lamp post {i:02d}", "stage": p, "z": 0.0, "height_m": LAMP_POLE_M})
         rep["lamps"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])

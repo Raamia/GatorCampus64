@@ -56,6 +56,7 @@ const LevelScript level_castle_grounds_entry[] = {
 		OBJECT(MODEL_NONE, -1350, 0, 16700, 0, -180, 0, 0x0414122A, id_bhvSglDoor),
 		OBJECT(MODEL_NONE, 8391, 0, -16043, 0, 0, 0, 0x05151227, id_bhvSglDoor),
 		OBJECT(MODEL_NONE, 4407, 0, 9469, 0, -180, 0, 0x0616101E, id_bhvSglDoor),
+		OBJECT(MODEL_NONE, 5950, 0, -3400, 0, 0, 0, 0x002B0000, bhvPoleGrabbing),
 		OBJECT(MODEL_NONE, 7180, 0, 150, 0, 0, 0, 0x002B0000, bhvPoleGrabbing),
 		OBJECT(MODEL_NONE, 9460, 0, 150, 0, 0, 0, 0x002B0000, bhvPoleGrabbing),
 		OBJECT(MODEL_NONE, 5900, 0, 940, 0, 0, 0, 0x002B0000, bhvPoleGrabbing),

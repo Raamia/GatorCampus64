@@ -1,7 +1,7 @@
 {
  "level": "castle_grounds",
  "stage": "hub",
- "built_at": "2026-10-18T02:35Z",
+ "built_at": "2026-10-18T02:38Z",
  "center_m": [
   -45,
   98
@@ -19,8 +19,8 @@
   338.0
  ],
  "extent_half_m": 324.0,
- "collision_tris": 8919,
- "visual_tris": 60478,
+ "collision_tris": 9517,
+ "visual_tris": 62240,
  "collision_by_object": {
   "Ground collision": 1552,
   "Pond basins collision": 195,
@@ -28,7 +28,7 @@
   "Buildings collision": 3232,
   "Trees collision": 1128,
   "Boundary walls": 192,
-  "Dressing collision": 234,
+  "Dressing collision": 832,
   "LM century_tower collision": 370,
   "LM university_auditorium collision": 298,
   "LM The Hub collision": 207,
@@ -51,7 +51,7 @@
   "Backdrop buildings": 4376,
   "Trees visual": 17529,
   "Tree line": 560,
-  "Dressing visual": 5909,
+  "Dressing visual": 7671,
   "LM century_tower visual": 1474,
   "LM university_auditorium visual": 1199,
   "LM The Hub visual": 704,
@@ -1948,6 +1948,17 @@
   {
    "kind": "lamp",
    "map_m": [
+    14.5,
+    132.0
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
     26.8,
     96.5
    ],
@@ -3785,9 +3796,99 @@
    ],
    "skipped": [
     [
+     "raised brick bed",
+     5.0,
+     171.0
+    ],
+    [
+     "raised brick bed",
+     85.0,
+     103.0
+    ],
+    [
      "lawn landscape mass",
      74.0,
      54.0
+    ]
+   ],
+   "tree_beds": [
+    [
+     12.0,
+     166.0,
+     2.65
+    ],
+    [
+     1.0,
+     153.0,
+     2.65
+    ],
+    [
+     86.0,
+     124.0,
+     2.65
+    ],
+    [
+     76.0,
+     158.0,
+     2.1
+    ],
+    [
+     60.0,
+     160.0,
+     2.65
+    ],
+    [
+     20.0,
+     125.0,
+     2.65
+    ]
+   ],
+   "raised_beds": [
+    [
+     81.0,
+     179.0
+    ],
+    [
+     10.5,
+     123.0
+    ]
+   ],
+   "globe_lamps": [
+    [
+     14.5,
+     132.0
+    ]
+   ],
+   "campus_sign": [
+    56.5,
+    119.0
+   ],
+   "trash_cans": [
+    [
+     76.0,
+     176.0
+    ],
+    [
+     0.0,
+     129.0
+    ],
+    [
+     69.0,
+     99.0
+    ]
+   ],
+   "brick_insets": [
+    [
+     21.0,
+     113.5
+    ],
+    [
+     46.0,
+     88.5
+    ],
+    [
+     10.0,
+     69.2
     ]
    ],
    "statues": [
@@ -3893,23 +3994,23 @@
  "collision_repair": {
   "area_1": {
    "vertices": [
-    6891,
-    6872
+    7451,
+    7432
    ],
    "welded_vertices": 19,
    "collapsed_tris": 28,
-   "tjunction_splits": 240,
+   "tjunction_splits": 256,
    "triangles": [
-    8913,
-    9125
+    9511,
+    9739
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [],
-  "collision_tris": 9125,
-  "render_tris": 60478,
+  "collision_tris": 9739,
+  "render_tris": 62240,
   "lua_names": [
    "SGL_HUB_SIGN_CENTURY_TOWER",
    "SGL_HUB_SIGN_FINAL_EXAM",
