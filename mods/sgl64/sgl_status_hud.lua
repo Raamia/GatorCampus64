@@ -28,6 +28,32 @@ local function life_texture()
     return sPortraits[id] or gator_coin_texture()
 end
 
+-- Replacing the normal HUD alone misses the course-complete/save menu, which
+-- draws its own coin and star glyphs. Override those engine textures as well.
+local sResultIconsReady = false
+local sResultPortrait = nil
+local function update_uf_icons()
+    if not sResultIconsReady then
+        local coin = get_texture_info("sgl_gator_coin")
+        local crest = get_texture_info("sgl_gator_crest")
+        if coin ~= nil and crest ~= nil then
+            texture_override_set("texture_hud_char_coin", coin)
+            texture_override_set("texture_hud_char_star", crest)
+            for _, locale in ipairs({ "us", "eu", "jp" }) do
+                texture_override_set("texture_font_char_" .. locale .. "_coin", coin)
+                texture_override_set("texture_font_char_" .. locale .. "_star_filled", crest)
+                texture_override_set("texture_font_char_" .. locale .. "_star_hollow", crest)
+            end
+            sResultIconsReady = true
+        end
+    end
+    local portrait = life_texture()
+    if portrait ~= nil and portrait ~= sResultPortrait then
+        texture_override_set("texture_hud_char_mario_head", portrait)
+        sResultPortrait = portrait
+    end
+end
+
 local function draw_status_hud()
     if hud_is_hidden() or sgl_hud_blocked() then return end
 
@@ -60,4 +86,5 @@ local function draw_status_hud()
 end
 
 hook_event(HOOK_UPDATE, hide_vanilla_icons)
+hook_event(HOOK_UPDATE, update_uf_icons)
 hook_event(HOOK_ON_HUD_RENDER, draw_status_hud)

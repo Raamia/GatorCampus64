@@ -1013,18 +1013,28 @@ test("act 3: crane operator camera follows the platform and restores the prior c
     w:seconds(4)
     local cam = { yaw = 0, mode = C.CAMERA_MODE_ROM_HACK, defMode = C.CAMERA_MODE_ROM_HACK }
     A.env.gMarioStates[0].area = { camera = cam }
-    local priorFocus = { marker = "prior camera focus" }
-    A.cameraFocus = priorFocus
+    A.env.gLakituState = {}
+    for _, key in ipairs({ "pos", "focus", "curPos", "curFocus", "goalPos", "goalFocus" }) do
+        A.env.gLakituState[key] = { x = 10, y = 20, z = 30 }
+    end
+    local view = A.env.gLakituState
     at(A, P.console_1)
     w:step(3)
     local craneObj = ctx_of(A).objs.cranes[1].o
     check(ctx_of(A).loc.operating, "console starts crane operation")
-    check(cam.mode == C.CAMERA_MODE_BOSS_FIGHT, "operator gets a pulled-back tracking camera")
-    check(A.cameraFocus == craneObj, "the moving crane is the camera's secondary focus")
+    check(A.cameraFrozen == true, "operator view bypasses the ROM-hack override")
+    check(view.pos.z > P.atrium.z0 and view.pos.z < P.crane_z, "wide camera stays inside the atrium walls")
+    check(A.overrideFov == 75, "operator gets a wide-angle course view")
+    local initialY = view.focus.y
+    ctx_of(A).loc.cranes[1].y = 1400
+    w:step(1)
+    check(view.focus.y > initialY, "view tracks the platform upward")
+    check(craneObj.header.gfx.shadowInvisible == true, "crane casts no broken scaled shadow")
     w:warp(A, HUB, 1, 0)
     w:step(1)
     check(cam.mode == C.CAMERA_MODE_ROM_HACK, "leaving the mission restores the original camera mode")
-    check(A.cameraFocus == priorFocus, "leaving the mission restores the previous camera focus")
+    check(not A.cameraFrozen and A.overrideFov == 0, "leaving the mission releases the camera and zoom override")
+    check(view.pos.x == 10 and view.pos.y == 20 and view.pos.z == 30, "original view restored on exit")
 end)
 
 test("act 3: D-pad Down into the lab (not while driving); the operator's crane marker sticks to the screen edge", function()
@@ -1137,6 +1147,36 @@ test("whole mod: the Reitz Union interior (wf area 2) gets the interior camera; 
     H.area = 2; w:refresh_views(); w:step(3)
     w:warp(H, HUB, 1, 0); w:step(3)
     check(H.cam.inDist == 900 and H.cam.collisions == 0, "leaving the stage from inside: restored")
+end)
+
+test("co-op collection: participants earn one crest and exit; late arrivals and other acts stay", function()
+    local w, A, B, Other, Late = world_with({ "A", "B", "Other", "Late" })
+    enter(w, A, 3); enter(w, B, 3)
+    w:seconds(4)
+    local ctx = ctx_of(A)
+    check(ctx.loc.participated and ctx_of(B).loc.participated, "both teammates participated")
+    ctx:succeed()
+    w:step(5)
+    enter(w, Late, 3)
+    w:step(5)
+    check(not ctx_of(Late).loc.participated, "arrival after success is not a participant")
+    local star = Sim.objects_with(B, C.id_bhvStarSpawnCoordinates)[1]
+    check(star ~= nil, "team reward spawned")
+    Sim.run_hooks(B, C.HOOK_ON_INTERACT, B.ms[0], star, C.INTERACT_STAR_OR_KEY, false)
+    w:step(2)
+    check(not ctx_of(B).loc.rewardedRound, "failed interactions cannot claim the team reward")
+    Sim.run_hooks(B, C.HOOK_ON_INTERACT, B.ms[0], star, C.INTERACT_STAR_OR_KEY, true)
+    w:step(5)
+    local writes = (A.rewardWrites or 0) + (B.rewardWrites or 0)
+    Sim.run_hooks(B, C.HOOK_ON_INTERACT, B.ms[0], star, C.INTERACT_STAR_OR_KEY, true)
+    w:step(3)
+    check(((w.starFlags[C.COURSE_WF] or 0) & 4) ~= 0, "shared course reward bit saved")
+    check((A.rewardWrites or 0) + (B.rewardWrites or 0) == writes, "duplicate collect events cannot award twice")
+    w:seconds(3)
+    check(A.level == HUB and B.level == HUB, "operator and rider return automatically")
+    check(A.arrivalNode == 0x32 and B.arrivalNode == 0x32, "both exit outside their stage door")
+    check(Late.level == WF and #Late.warpOps == 0, "post-finish arrival stays in the stage")
+    check(Other.level == HUB and #Other.warpOps == 0, "players in other instances are untouched")
 end)
 
 print(string.format("\n%d checks passed, %d failed", passed, failed))

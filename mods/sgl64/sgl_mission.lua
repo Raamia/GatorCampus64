@@ -341,13 +341,18 @@ end
 function sgl_mission_dispatch(ctx, data)
     local ev = data.ev
     if ev == "got" then
+        if data.r ~= ctx.r then return end -- ignore a delayed reward from an older replay
         -- someone collected this act's star: DONE from any live state (a levelStar star can be grabbed
         -- before the leader has seen anyone reach the goal: the round must not stay ACTIVE / SUCCESS with
         -- a marker over a star that is gone), no respawn for late joiners, and everyone else may leave
         -- together (sgl_exit_offer)
         if ctx.loc.got == nil then ctx.loc.got = data.nm or "?" end
         if ctx.isLeader and ctx.s ~= SGL_MS_DONE and ctx.s ~= SGL_MS_IDLE then ctx:setState(SGL_MS_DONE) end
-        if data.gi ~= gNetworkPlayers[0].globalIndex then sgl_exit_offer(data.nm) end
+        if ctx.def.minPlayers > 1 and ctx.loc.participated then
+            sgl_coop_complete(ctx, data.nm)
+        elseif data.gi ~= gNetworkPlayers[0].globalIndex then
+            sgl_exit_offer(data.nm)
+        end
     elseif ev == "reset" then
         if ctx.run ~= nil and (ctx.run.activeStartedFrame ~= nil or ctx.run.elapsedFrames > 0) then
             ctx.run.failedPending = true
@@ -486,6 +491,7 @@ local function local_tick(ctx)
         on_state_change(ctx, ctx.lastState, ctx.s)
         ctx.lastState = ctx.s
     end
+    if ctx.s == SGL_MS_ACTIVE then ctx.loc.participated = true end
     if ctx.s ~= SGL_MS_SUCCESS and ctx.s ~= SGL_MS_DONE and ctx.s ~= SGL_MS_IDLE then
         ctx.loc.witnessed = true   -- I saw this round before its star: I get the star cutscene
     end
@@ -695,7 +701,7 @@ id_bhvSglMissionFx = hook_behavior(nil, OBJ_LIST_DEFAULT, true, fx_init, fx_loop
 -- hooks: star collected, packets, input freeze, HUD
 ---------------------------------------------------------------------------------------------
 local function on_interact(m, o, interactType, interactValue)
-    if m.playerIndex ~= 0 or interactType ~= INTERACT_STAR_OR_KEY or o == nil then return end
+    if m.playerIndex ~= 0 or interactType ~= INTERACT_STAR_OR_KEY or o == nil or interactValue ~= true then return end
     local ctx = sCtx
     if ctx == nil or ctx.dormant or not ctrl_alive() then return end
     if ((o.oBehParams >> 24) & 0xFF) ~= ctx.def.starId then return end
@@ -874,13 +880,41 @@ function sgl_exit_offer(name)
     play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource)
 end
 
+-- Save the same course bit once before a participant exits. CoopDX's native
+-- collect-star packet also sets it; using a bit flag keeps either packet order idempotent.
+function sgl_coop_complete(ctx, name)
+    if ctx.loc.rewardedRound == ctx.r then return end
+    ctx.loc.rewardedRound = ctx.r
+    local stage = sgl_stage_by_level(ctx.level)
+    if stage == nil then return end
+    local file, course = get_current_save_file_num() - 1, stage.course - 1
+    if file >= 0 then
+        local flags = save_file_get_star_flags(file, course)
+        local bit = 1 << ctx.def.starId
+        if (flags & bit) == 0 then
+            save_file_set_star_flags(file, course, flags | bit)
+            save_file_do_save(file, 1)
+        end
+        gMarioStates[0].numStars = sgl_total_stars()
+    end
+    sgl_exit_offer(name)
+    if sExit ~= nil then sExit.auto, sExit.round = true, ctx.r end
+end
+
 function sgl_exit_offer_active() return sExit ~= nil end
 
 local function exit_update()
     local e = sExit
     if e == nil then return end
     e.age = e.age + 1
-    if e.age >= SGL_EXIT_PROMPT_FRAMES or e.key ~= sgl_instance_key(gNetworkPlayers[0]) then sExit = nil end
+    if e.key ~= sgl_instance_key(gNetworkPlayers[0]) then sExit = nil; return end
+    if e.auto then
+        if sCtx == nil or sCtx.r ~= e.round then sExit = nil; return end
+        -- Let finish reports arrive and let any active collection animation finish.
+        if e.age >= 60 then sgl_exit_course(gMarioStates[0]) end
+    elseif e.age >= SGL_EXIT_PROMPT_FRAMES then
+        sExit = nil
+    end
 end
 
 -- the pause menu's EXIT COURSE, from Lua. -> true when the exit started
@@ -894,7 +928,8 @@ end
 local function exit_hud()
     local e = sExit
     if e == nil or sgl_hud_blocked() then return end
-    sgl_hud_prompt(e.name .. " got the star!", "D-pad Up: back to campus together (or Pause > EXIT COURSE)",
+    sgl_hud_prompt(e.auto and "Team Gator Crest earned!" or e.name .. " got the star!",
+        e.auto and "Returning to campus together..." or "D-pad Up: back to campus together (or Pause > EXIT COURSE)",
         sgl_hud_fade(e.age, SGL_EXIT_PROMPT_FRAMES, 6, 30))
 end
 
