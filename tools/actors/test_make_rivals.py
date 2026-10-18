@@ -56,7 +56,7 @@ class RivalTest(unittest.TestCase):
                 for tri, _ in tris:
                     ys += [make_rivals.apply(p, W[owner[part]])[1] for p in tri]
         self.assertTrue(-3 < min(ys) < 8, min(ys))       # hooves on the ground
-        self.assertTrue(45 < max(ys) < 70, max(ys))      # horn tips: about a Goomba's height (x1.5 in game)
+        self.assertTrue(45 < max(ys) < 85, max(ys))      # horn / spear tips: about a Goomba's height (x1.5 in game)
 
 
 def _rival_case(rid):
@@ -66,6 +66,19 @@ def _rival_case(rid):
 for _rid in make_rivals.RIVALS:
     if _rid != "usf":
         globals()["Rival_%s_Test" % _rid] = _rival_case(_rid)
+
+
+class KnightGhostTest(unittest.TestCase):
+    def test_boo_layout_and_up_to_date(self):
+        model, geo, header, ntris = make_rivals.build_ghost()
+        for name, text in (("model.inc.c", model), ("geo.inc.c", geo), ("geo_header.h", header)):
+            with open(os.path.join(make_rivals.OUT, make_rivals.GHOST["folder"], name)) as f:
+                self.assertEqual(f.read(), text, "knight_ghost/%s is stale: run python3 -I tools/actors/make_rivals.py" % name)
+        self.assertIn("const GeoLayout knight_ghost_geo[]", geo)
+        self.assertIn("GEO_ASM(0, geo_update_layer_transparency)", geo)       # fades with oOpacity like a Boo
+        self.assertIn("GEO_SWITCH_CASE(2, geo_switch_anim_state)", geo)
+        self.assertIn("LAYER_TRANSPARENT", geo)
+        self.assertTrue(300 < ntris < 3000)
 
 
 class RosterTest(unittest.TestCase):

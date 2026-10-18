@@ -1,9 +1,10 @@
 """Generate the rival-school mascots that replace the Goombas, as coopdx DynOS actors, without Blender.
 
-UF's rivals sneak around campus as joke enemies: the USF Bull, the UCF Knight, the Georgia Bulldog, the Tennessee
-hound, the Miami ibis, the LSU tiger and FSU's horse Renegade. The bull is named goomba_geo, so DynOS swaps it in
-for every Goomba by default; the others (rival_<id>_geo) are swapped onto individual Goombas by
-mods/sgl64/sgl_rivals.lua. The vanilla Goomba behaviour stays for all of them: they wander, charge Mario, get
+UF's rivals sneak around campus as joke enemies: USF Bulls and FSU Seminoles replace the Goombas, and UCF Knight
+ghosts replace the Boos of Library West. The bull is named goomba_geo, so DynOS swaps it in for every Goomba by
+default; the Seminole (rival_fsu_geo) is swapped onto individual Goombas by mods/sgl64/sgl_rivals.lua, and the
+Knight ghost (knight_ghost_geo, no skeleton: the Boo's geo with geo_update_layer_transparency, so it fades like a
+Boo) is used by the Library West missions in place of the Boo model. The vanilla Goomba behaviour stays for all of them: they wander, charge Mario, get
 squashed flat when you stomp them (or knocked out by a punch or kick) and drop a coin. To keep the Goomba's own
 walk animation working, every geo copies the vanilla Goomba skeleton exactly (actors/goomba/geo.inc.c in sm64coopdx: GEO_SCALE 0.25, then 7 animated parts: root, body, the
 eyes switch (open / blinking, geo_switch_anim_state), and the two feet with their pivots).
@@ -15,7 +16,8 @@ eyes switch (open / blinking, geo_switch_anim_state), and the two feet with thei
 
 Every rival shares the round Goomba-sized body, angry eyes (with a blink) and feet on the Goomba feet; RIVALS gives
 each its colours, feet and head features (build_<id>).
-Writes mods/sgl64/actors/goomba/ (the bull) and mods/sgl64/actors/rival_<id>/ ({model.inc.c, geo.inc.c, geo_header.h}).
+Writes mods/sgl64/actors/goomba/ (the bull), mods/sgl64/actors/rival_fsu/ and mods/sgl64/actors/knight_ghost/
+({model.inc.c, geo.inc.c, geo_header.h}).
 Usage: python3 -I tools/actors/make_rivals.py [--out DIR]
 """
 import argparse
@@ -41,17 +43,8 @@ G.COLORS.update({
     "pupil": (15, 15, 20),
     # UCF Knights
     "steel": (178, 182, 190), "steel_dark": (90, 94, 102), "ucf_black": (28, 28, 30), "ucf_gold": (255, 201, 4),
-    # Georgia Bulldogs
-    "dog_white": (238, 236, 230), "uga_red": (186, 12, 47), "uga_black": (20, 20, 20), "nose": (25, 22, 22),
-    # Tennessee (Smokey, the bluetick hound)
-    "ut_orange": (255, 130, 0), "hound_white": (245, 243, 236), "hound_tan": (196, 150, 104),
-    # Miami (Sebastian the ibis)
-    "ibis_white": (246, 246, 240), "um_orange": (244, 115, 33), "um_green": (0, 80, 48),
-    # LSU tiger
-    "tiger": (232, 132, 38), "stripe": (30, 22, 20), "lsu_purple": (70, 29, 124), "lsu_gold": (253, 208, 35),
-    "tiger_white": (245, 240, 230),
-    # FSU (Renegade, the Appaloosa horse)
-    "horse": (122, 74, 52), "fsu_garnet": (120, 47, 64), "fsu_gold": (206, 184, 136), "mane": (40, 28, 22),
+    # FSU Seminoles: garnet and gold
+    "fsu_garnet": (120, 47, 64), "fsu_gold": (206, 184, 136), "fsu_dark": (70, 26, 36),
 })
 
 # The vanilla Goomba skeleton: (name, parent, translation) in the order of the animation channels, and the walk's
@@ -161,99 +154,48 @@ def build_bull(m):
     m.ball("bull_dark", (0, 19, -28), (3, 4, 3), seg=6, rings=4)
 
 
-def build_knight(m):
-    """UCF Knights: black armour, a steel helmet with a visor slit round the eyes, a gold plume and gold trim."""
-    blob(m, "ucf_black")
-    # the helmet: a steel dome over the top half and a face plate under the eyes
-    m.ball("steel", (0, 36, 0), (26, 17, 24), seg=10, rings=6)
-    m.taper("steel", 14, 29, (-18, 18, 12, 22), (-21, 21, 14, 23))
-    m.box("steel_dark", -20, 20, 27.5, 29, 20, 24)          # the visor's lower rim
-    for k in range(-2, 3):                                   # breathing holes
-        m.box("ucf_black", 4 * k - 0.8, 4 * k + 0.8, 18, 25, 22.6, 23.6)
-    m.box("ucf_gold", -1.5, 1.5, 38, 52, 20, 24)             # the helmet's centre ridge
-    # gold plume sweeping back from the crest
-    for i in range(5):
-        z, y = 2 - 7 * i, 52 + 3 * i - 0.8 * i * i
-        m.ball("ucf_gold", (0, y, z), (4 - 0.4 * i, 5, 5), seg=6, rings=4)
-    brows(m, "steel_dark")
-
-
-def build_bulldog(m):
-    """Georgia Bulldogs: a white bulldog with droopy jowls, an underbite, a red-and-black sweater, spiked collar."""
-    blob(m, "dog_white")
+def build_seminole(m):
+    """FSU Seminoles: a garnet rival crowned with a big gold spear-tip crest (after the spear logo), a garnet-and-gold
+    headband and gold eyebrows. (On purpose no Native American imagery: the spear and the colours carry it.)"""
+    blob(m, "fsu_garnet")
+    headband(m, "fsu_gold", "fsu_dark", y=38)
+    # the spear tip: a tall flattened diamond on top of the head, with two barbs and a garnet centre line
+    tip = [(-9, 47, -3), (0, 47, -6), (9, 47, -3), (0, 47, 3)]
+    m.pyramid("fsu_gold", tip, (0, 78, -1.5))
+    m.pyramid("fsu_gold", [(-9, 47, -3), (0, 47, 3), (9, 47, -3), (0, 47, -6)], (0, 41, -1.5))
     for s in (-1, 1):
-        m.ball("dog_white", (8 * s, 22, 18), (10, 8, 8), seg=8, rings=5)       # jowls
-        m.ball("hound_tan", (22 * s, 42, -2), (6, 5, 3), seg=6, rings=4)     # ears
-        m.pyramid("dog_white", [(2 * s, 19, 22), (4 * s, 19, 22), (4 * s, 19, 24), (2 * s, 19, 24)], (3 * s, 25, 24))  # fangs
-    m.ball("nose", (0, 28, 25), (5, 3.5, 3), seg=8, rings=4)
-    scarf(m, "uga_red", "uga_black")
-    m.taper("uga_black", 22.5, 25, (-23.8, 23.8, -21.8, 19.8), (-24, 24, -21.5, 20.5))  # collar
-    for k in range(-3, 4):                                                # silver studs
-        m.pyramid("steel", [(6 * k - 1.5, 23, 20), (6 * k + 1.5, 23, 20), (6 * k + 1.5, 24.5, 20),
-                            (6 * k - 1.5, 24.5, 20)], (6 * k, 23.7, 23.5))
-    brows(m, "uga_black")
+        m.pyramid("fsu_gold", [(4 * s, 52, -4), (4 * s, 52, 1), (4 * s, 57, 1), (4 * s, 57, -4)], (15 * s, 47, -1.5))
+    m.box("fsu_dark", -1, 1, 50, 72, 1.6, 2.6)
+    # a short gold spear shaft through the headband at the back
+    m.box("fsu_gold", -2, 2, 30, 48, -16, -12)
+    # a gold grin
+    m.box("fsu_gold", -7, 7, 21, 23, 21.5, 23.5)
+    for k in (-1, 1):
+        m.box("fsu_gold", 7 * k - 1, 7 * k + 1, 22, 26, 21.2, 23.2)
+    brows(m, "fsu_gold")
 
 
-def build_hound(m):
-    """Tennessee: Smokey the bluetick hound, white with orange ears, a tan muzzle and an orange-and-white collar."""
-    blob(m, "hound_white")
-    m.ball("hound_tan", (0, 24, 18), (13, 9, 9), seg=10, rings=6)
-    m.ball("nose", (0, 28, 26), (4.5, 3.5, 2.5), seg=8, rings=4)
+def build_knight_ghost(m):
+    """UCF Knights, as a ghost (the Boos' stand-in): a floating steel helmet with a visor, glowing eyes in the slit,
+    a gold plume and a wispy black tail, centred like the Boo (origin in the middle, facing +Z, ~1.6 m wide)."""
+    m.ball("steel", (0, 8, 0), (62, 54, 58), seg=12, rings=8)
+    m.taper("steel", -46, -6, (-46, 46, 30, 52), (-54, 54, 34, 58))           # face plate
+    m.box("ucf_black", -48, 48, 4, 20, 50, 60)                               # the visor slit
     for s in (-1, 1):
-        # long floppy ears hanging down the sides
-        m.ball("ut_orange", (25 * s, 30, 0), (4, 13, 8), seg=6, rings=5)
-        for k in range(3):   # bluetick spots
-            m.ball("ucf_black", ((10 + 6 * k) * s, 40 - 3 * k, -10 + 5 * k), (2.5, 2.5, 1.5), seg=6, rings=3)
-    scarf(m, "ut_orange", "hound_white")
-    brows(m, "hound_tan")
-
-
-def build_ibis(m):
-    """Miami: Sebastian the ibis, white with a long curved orange beak, a green crest and an orange-and-green scarf."""
-    blob(m, "ibis_white")
-    # the beak: two tapered segments curving down
-    m.zbar("um_orange", 18, 34, (-5, 5, 24, 31), (-3.5, 3.5, 22, 28))
-    m.zbar("um_orange", 34, 46, (-3.5, 3.5, 22, 28), (-1.5, 1.5, 15, 19))
-    # a spiky green crest of feathers
-    for k, (x, z) in enumerate(((0, -2), (-6, -6), (6, -6), (0, -10))):
-        m.pyramid("um_green", [(x - 3, 47, z - 3), (x + 3, 47, z - 3), (x + 3, 47, z + 3), (x - 3, 47, z + 3)],
-                  (x * 1.4, 60 - 2 * k, z - 6))
-    scarf(m, "um_green", "um_orange")
-    brows(m, "um_green")
-
-
-def build_tiger(m):
-    """LSU: an orange tiger with black stripes, a white muzzle, round ears and a purple-and-gold headband."""
-    blob(m, "tiger")
-    m.ball("tiger_white", (0, 23, 17), (14, 9, 9), seg=10, rings=6)
-    m.ball("nose", (0, 27, 25), (4, 3, 2.5), seg=8, rings=4)
+        m.ball("eye_white", (20 * s, 12, 61), (11, 6, 2), seg=8, rings=4)      # glowing eyes in the slit
+        m.ball("pupil", (18 * s, 11.5, 62.8), (4, 4.5, 1), seg=6, rings=4)
+    for k in range(-3, 4):                                                   # breathing holes
+        m.box("ucf_black", 10 * k - 2, 10 * k + 2, -36, -14, 54, 58)
+    m.box("ucf_gold", -4, 4, 20, 64, 46, 56)                                 # centre ridge
+    m.taper("ucf_gold", -50, -44, (-50, 50, -46, 40), (-48, 48, -44, 38))    # gold rim
+    for i in range(6):                                                       # plume sweeping back
+        z, y = 6 - 18 * i, 66 + 10 * i - 2.4 * i * i
+        m.ball("ucf_gold", (0, y, z), (10 - i, 13, 13), seg=8, rings=4)
+    # the ghostly tail curling down and back, and two little wisp arms
+    m.zbar("ucf_black", -30, -70, (-34, 34, -60, -20), (-14, 14, -96, -70))
+    m.zbar("ucf_black", -70, -100, (-14, 14, -96, -70), (-3, 3, -112, -102))
     for s in (-1, 1):
-        m.ball("tiger", (18 * s, 46, -2), (6, 6, 3), seg=8, rings=4)
-        m.ball("tiger_white", (18 * s, 46, -0.5), (3.5, 3.5, 2), seg=6, rings=4)
-        for k in range(3):   # stripes on the cheeks and sides
-            y = 34 - 6 * k
-            m.box("stripe", 22 * s - 2, 25 * s + 2 if s > 0 else 22 * s + 2, y, y + 2, -6, 8, G.rot_z(-14 * s, (23 * s, y, 0)))
-    for k in range(3):       # stripes on top of the head
-        m.box("stripe", -1.5 + 0 * k, 1.5, 49, 51.5, -12 + 8 * k, -8 + 8 * k)
-    headband(m, "lsu_purple", "lsu_gold", y=36)
-    brows(m, "stripe")
-
-
-def build_horse(m):
-    """FSU: Renegade, the Appaloosa horse, with a long muzzle, pointed ears, a dark mane and a garnet-and-gold band."""
-    blob(m, "horse")
-    m.zbar("horse", 10, 40, (-12, 12, 13, 31), (-8, 8, 14, 25))
-    m.ball("hound_tan", (0, 19.5, 40), (8.5, 6, 3.5), seg=8, rings=5)
-    m.box("mane", -6, 6, 13.5, 15, 22, 40)                  # the mouth line
-    for s in (-1, 1):
-        m.ball("nostril", (4 * s, 21, 43.2), (1.8, 2.2, 1.0), seg=6, rings=4)
-        m.pyramid("horse", [(10 * s, 46, -4), (16 * s, 46, -4), (16 * s, 46, 3), (10 * s, 46, 3)], (14 * s, 60, -1))
-        for k in range(3):   # appaloosa spots on the back
-            m.ball("hound_white", ((8 + 7 * k) * s, 26 + 4 * k, -18 + 2 * k), (3, 3, 2), seg=6, rings=3)
-    for k in range(6):       # the mane down the back of the head
-        m.box("mane", -2.5, 2.5, 50 - 4 * k, 55 - 4 * k, -6 - 4 * k, -1 - 4 * k)
-    headband(m, "fsu_garnet", "fsu_gold", y=38)
-    brows(m, "mane")
+        m.zbar("ucf_black", 0, 26, (40 * s - 10, 40 * s + 10, -40, -24), (54 * s - 4, 54 * s + 4, -34, -28))
 
 
 def eyes(m, lid, blink):
@@ -272,18 +214,10 @@ def foot(m, style, col):
     y -17..14, z -37..51)."""
     if style == "hoof":
         m.ball(col, (22, -4, 7), (34, 13, 26), seg=8, rings=5)
-        m.box("usf_gold" if col == "hoof" else "fsu_gold", 44, 54, -10, 6, -14, 28)
-    elif style == "bird":
-        m.box(col, -30, -6, -5, 5, 2, 12)                     # the shin
-        for z in (-14, 7, 28):                                # three toes
-            m.box(col, -6, 60, -10, -2, z - 4, z + 4)
-    elif style == "boot":
+        m.box("usf_gold", 44, 54, -10, 6, -14, 28)
+    else:   # boot
         m.ball(col, (20, -4, 7), (36, 14, 27), seg=8, rings=5)
-        m.box("ucf_gold", 46, 56, -10, 8, -16, 30)
-    else:   # paw
-        m.ball(col, (18, -4, 7), (32, 13, 26), seg=8, rings=5)
-        for z in (-8, 7, 22):
-            m.ball("nose", (48, -6, z), (4, 5, 5), seg=6, rings=3)
+        m.box("fsu_gold", 46, 56, -10, 8, -16, 30)
     m.box(col, -30, -6, -7, 7, -4, 18)                        # a stubby leg into the body
 
 
@@ -291,12 +225,8 @@ def foot(m, style, col):
 RIVALS = {
     "usf": {"geo": "goomba_geo", "folder": "goomba", "school": "USF Bulls", "lid": "bull", "foot": ("hoof", "hoof"),
             "build": build_bull},
-    "ucf": {"school": "UCF Knights", "lid": "steel", "foot": ("boot", "steel"), "build": build_knight},
-    "uga": {"school": "Georgia Bulldogs", "lid": "dog_white", "foot": ("paw", "dog_white"), "build": build_bulldog},
-    "tenn": {"school": "Tennessee Volunteers", "lid": "hound_white", "foot": ("paw", "hound_white"), "build": build_hound},
-    "miami": {"school": "Miami Hurricanes", "lid": "ibis_white", "foot": ("bird", "um_orange"), "build": build_ibis},
-    "lsu": {"school": "LSU Tigers", "lid": "tiger", "foot": ("paw", "tiger"), "build": build_tiger},
-    "fsu": {"school": "Florida State Seminoles", "lid": "horse", "foot": ("hoof", "mane"), "build": build_horse},
+    "fsu": {"school": "Florida State Seminoles", "lid": "fsu_garnet", "foot": ("boot", "fsu_garnet"),
+            "build": build_seminole},
 }
 for _rid, _r in RIVALS.items():
     _r.setdefault("geo", "rival_%s_geo" % _rid)
@@ -373,6 +303,40 @@ def build(rid="usf"):
     return model, geo_layout(r["geo"], tops), "\n".join(header) + "\n", ntris
 
 
+GHOST = {"geo": "knight_ghost_geo", "folder": "knight_ghost", "prefix": "knight_ghost"}
+
+
+def build_ghost():
+    """-> (model.inc.c, geo.inc.c, geo_header.h, triangle count) of the Knight ghost: one display list drawn opaque
+    or see-through by the Boo's transparency switch (oOpacity), exactly like boo_geo."""
+    mesh = G.Mesh()
+    build_knight_ghost(mesh)
+    vtx, dls, used = [], [], set()
+    top = G.emit_mesh(GHOST["prefix"], mesh, "body", vtx, dls, used)
+    model = "// GENERATED by tools/actors/make_rivals.py. Do not edit; edit the script and re-run it.\n\n"
+    model += "\n".join(G.materials(GHOST["prefix"], used)) + "\n" + "\n".join(vtx) + "\n" + "\n".join(dls)
+    geo = ("// GENERATED by tools/actors/make_rivals.py. Do not edit; edit the script and re-run it.\n"
+           "// boo_geo's layout (sm64coopdx actors/boo/geo.inc.c): the layer switch follows the object's oOpacity.\n\n"
+           "const GeoLayout %s[] = {\n"
+           "\tGEO_SHADOW(SHADOW_CIRCLE_4_VERTS, 0x96, 70),\n"
+           "\tGEO_OPEN_NODE(),\n"
+           "\t\tGEO_ASM(0, geo_update_layer_transparency),\n"
+           "\t\tGEO_SWITCH_CASE(2, geo_switch_anim_state),\n"
+           "\t\tGEO_OPEN_NODE(),\n"
+           "\t\t\tGEO_DISPLAY_LIST(LAYER_OPAQUE, %s),\n"
+           "\t\t\tGEO_DISPLAY_LIST(LAYER_TRANSPARENT, %s),\n"
+           "\t\tGEO_CLOSE_NODE(),\n"
+           "\tGEO_CLOSE_NODE(),\n"
+           "\tGEO_END(),\n"
+           "};\n") % (GHOST["geo"], top, top)
+    header = ["extern const GeoLayout %s[];" % GHOST["geo"]]
+    for mat in sorted(used):
+        header += ["extern Lights1 %s_%s_lights;" % (GHOST["prefix"], mat), "extern Gfx mat_%s_%s[];" % (GHOST["prefix"], mat),
+                   "extern Gfx mat_revert_%s_%s[];" % (GHOST["prefix"], mat)]
+    header += ["extern " + chunk.split(" = ")[0] + ";" for chunk in vtx + dls]
+    return model, geo, "\n".join(header) + "\n", sum(len(t) for t in mesh.tris.values())
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", default=OUT, help="actors folder (default mods/sgl64/actors)")
@@ -386,6 +350,14 @@ def main(argv=None):
                 f.write(text)
         print("make_rivals: %-6s %-24s %4d triangles -> %s (%s)" % (rid, r["school"], ntris,
                                                                  os.path.relpath(folder, ROOT), r["geo"]))
+    model, geo, header, ntris = build_ghost()
+    folder = os.path.join(args.out, GHOST["folder"])
+    os.makedirs(folder, exist_ok=True)
+    for fname, text in (("model.inc.c", model), ("geo.inc.c", geo), ("geo_header.h", header)):
+        with open(os.path.join(folder, fname), "w") as f:
+            f.write(text)
+    print("make_rivals: ghost  UCF Knights (Boo)        %4d triangles -> %s (%s)" % (
+        ntris, os.path.relpath(folder, ROOT), GHOST["geo"]))
     return 0
 
 
