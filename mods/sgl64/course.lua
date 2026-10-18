@@ -27,8 +27,9 @@
 -- 3 Remote Robotics Lab (design act 2, co-op); design acts 3 (Weil Wind Tunnel), 4 (Rogue Robot Roundup)
 -- and 6 (Data Packet Relay) come later as 4/5/6.
 -- Lake Alice: 1 Boardwalk Welcome (design 7.4 act 1), 2 Gator Hop (design act 2), 3 Bat Census at Dusk (design
--- act 4, co-op); design acts 3 (Shell Surf Regatta), 5 (Lost Hatchling) and 6 (Lily Pad Red Coins) come later
--- as 4/5/6.
+-- act 4, co-op), 4 Gator Regatta (design act 3 "Shell Surf Regatta", a race on ride gators; solo-able, but act
+-- select offers it only after act 3's star, like any act 4); design acts 5 (Lost Hatchling) and 6 (Lily Pad Red
+-- Coins) come later as 5/6.
 -- Marston Science Library: 1 Out-of-Order Elevator (design 7.3 act 1), 2 Shhh! Lost Textbooks (design acts 2 + 4: the
 -- quiet floor's Shushers guarding 8 textbooks), 3 Study Room Booking (design act 3, co-op); design acts 4 (Lost Lab
 -- Notebook Pages), 5 (Printer Jam) and 6 (Overdue Book Express) come later as 4/5/6. Built: levels/ccm (an interior,
@@ -84,7 +85,7 @@ SGL_STAGES = {
           "BOARDWALK WELCOME",            -- uf_lake_missions.lua lake_boardwalk (lily pads to the lake-centre deck; spawns star id 0)
           "GATOR HOP",                    -- uf_lake_missions.lua lake_gator_hop (sinking gators to the nest)
           "BAT CENSUS AT DUSK - 2P",      -- uf_lake_missions.lua lake_bat_census (co-op, 2-4 players, dusk lighting)
-          "COMING SOON - REGATTA",        -- design 7.4 act 3 "Shell Surf Regatta" (no mission yet)
+          "GATOR REGATTA",                -- uf_lake_missions.lua lake_regatta (race on ride gators round 8 buoys, par 1'15)
           "COMING SOON - HATCHLING",      -- design 7.4 act 5 "Lost Hatchling" (no mission yet)
           "COMING SOON - RED COINS",      -- design 7.4 act 6 "Lily Pad Red Coins" (no mission yet)
       } },

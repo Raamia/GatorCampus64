@@ -149,17 +149,18 @@ end
 ---------------------------------------------------------------------------------------------
 -- registry, act names, act select, level script, coordinates
 ---------------------------------------------------------------------------------------------
-test("registry: three Lake Alice missions on acts 1/2/3, star ids act-1, titles = course.lua act names, acts 4-6 coming soon", function()
+test("registry: four Lake Alice missions on acts 1-4, star ids act-1, titles = course.lua act names, acts 5-6 coming soon", function()
     local w, A = world_with({ "A" })
     local env = A.env
-    local d1, d2, d3 = def_of(A, 1), def_of(A, 2), def_of(A, 3)
+    local d1, d2, d3, d4 = def_of(A, 1), def_of(A, 2), def_of(A, 3), def_of(A, 4)
     check(d1 and d1.id == "lake_boardwalk" and d1.starId == 0 and d1.minPlayers == 1, "act 1 boardwalk, star 0, solo")
     check(d2 and d2.id == "lake_gator_hop" and d2.starId == 1 and d2.minPlayers == 1, "act 2 gator hop, star 1, solo")
     check(d3 and d3.id == "lake_bat_census" and d3.starId == 2 and d3.minPlayers == 2, "act 3 bat census, star 2, 2+ players")
+    check(d4 and d4.id == "lake_regatta" and d4.starId == 3 and d4.minPlayers == 1, "act 4 gator regatta, star 3, solo")
     local stage = env.sgl_stage_by_level(JRB)
     check(stage ~= nil and stage.key == "alice" and stage.door == 3 and stage.stars == 5 and stage.course == C.COURSE_JRB
         and stage.acts ~= nil, "course.lua: door 3 = LAKE ALICE (5 stars, COURSE_JRB) with act names")
-    for _, d in ipairs({ d1, d2, d3 }) do
+    for _, d in ipairs({ d1, d2, d3, d4 }) do
         check((d.bparams >> 24) == d.starId, d.id .. " bparams carry the star id")
         check(stage.acts[d.act] == d.title, d.id .. " title matches course.lua act " .. d.act .. " (" .. tostring(stage.acts[d.act]) .. ")")
         check(not env.sgl_act_is_soon(stage, d.act), d.id .. " act is not 'coming soon'")
@@ -168,7 +169,7 @@ test("registry: three Lake Alice missions on acts 1/2/3, star ids act-1, titles 
         check(d.pointsFile ~= nil and d.pointsFile:find("uf_lake_missions.lua", 1, true) ~= nil, d.id .. " names its points file")
         check(not d.levelStar, d.id .. " spawns its own star")
     end
-    for act = 4, 6 do
+    for act = 5, 6 do
         check(env.sgl_mission_get(JRB, act) == nil, "act " .. act .. " has no mission yet")
         check(env.sgl_act_is_soon(stage, act) and stage.acts[act]:find("^COMING SOON") ~= nil,
             "act " .. act .. " is named COMING SOON: " .. tostring(stage.acts[act]))
@@ -177,13 +178,13 @@ test("registry: three Lake Alice missions on acts 1/2/3, star ids act-1, titles 
         check(not stage.acts[act]:find("[^A-Z0-9 '%.,%-&!%?]") and #stage.acts[act] <= 28,
             "act " .. act .. " name fits the act-select menu font: " .. stage.acts[act])
     end
-    check(env.sgl_mission_get(C.LEVEL_BOB, 1).id == "swamp_skybox" and #env.SGL_MISSION_LIST == 6, "3 Swamp + 3 Lake missions")
+    check(env.sgl_mission_get(C.LEVEL_BOB, 1).id == "swamp_skybox" and #env.SGL_MISSION_LIST == 7, "3 Swamp + 4 Lake missions")
     check(env.sgl_party_location_text(JRB, 3) == "LAKE ALICE - Act 3: BAT CENSUS AT DUSK - 2P", "player-list location text")
     check(Sim.cmd(A, "mission", "list") and Sim.find(A.chat, "lake_bat_census: level " .. JRB .. " act 3 %(star 2%)") ~= nil,
         "/mission list shows the lake missions")
 end)
 
-test("act select (star_select.c): an empty save reaches acts 1, 2, 3 in turn; the solo acts come first", function()
+test("act select (star_select.c): an empty save reaches acts 1, 2, 3, 4 in turn; the solo acts come first up to the co-op act", function()
     local w, A = world_with({ "A" })
     local flags, playable = 0, 0
     for k = 1, 6 do
@@ -192,17 +193,20 @@ test("act select (star_select.c): an empty save reaches acts 1, 2, 3 in turn; th
             playable = k
         end
     end
-    check(playable == 3, "3 playable acts")
+    check(playable == 4, "4 playable acts")
     for k = 1, playable do
         local acts = Sim.selectable_acts(flags)
         check(acts[#acts] == k, "act " .. k .. " selectable after acts 1.." .. (k - 1))
         flags = flags | (1 << (k - 1))
     end
     check(def_of(A, 1).minPlayers == 1 and def_of(A, 2).minPlayers == 1 and def_of(A, 3).minPlayers == 2,
-        "the co-op act is last, so it never holds up a solo player")
+        "the co-op act comes after both solo acts 1-2, so it never holds them up")
+    check(def_of(A, 4).minPlayers == 1, "act 4 (the regatta, after act 3's star) is solo-able")
+    local acts = Sim.selectable_acts(0x03)
+    check(acts[#acts] == 3, "acts 1-2 only: act select stops at the co-op act 3 (the regatta waits for its star)")
 end)
 
-test("levels/jrb/script.c (when built): warp contract for door 3, no level-script star for acts 1-3", function()
+test("levels/jrb/script.c (when built): warp contract for door 3, no level-script star for acts 1-4", function()
     local ls = Sim.level_script("jrb")
     if ls == nil then
         print("  (levels/jrb not built: skipped)")
@@ -220,7 +224,7 @@ test("levels/jrb/script.c (when built): warp contract for door 3, no level-scrip
     check(l2 == HUB and n2 == 0x33, "JRB 0xF1 -> hub 0x33")
     for _, o in ipairs(ls.objects) do
         if o.bhv == "bhvStar" then
-            check((o.acts & 0x07) == 0, string.format("no level-script star in acts 1-3 (found id %d, acts 0x%02X)",
+            check((o.acts & 0x0F) == 0, string.format("no level-script star in acts 1-4 (found id %d, acts 0x%02X)",
                 (o.bparams or 0) >> 24, o.acts))
         end
     end
@@ -1002,7 +1006,7 @@ end)
 ---------------------------------------------------------------------------------------------
 -- whole mod
 ---------------------------------------------------------------------------------------------
-test("whole mod: every file loads with the lake missions; /campus alice 3 starts the census at dusk; act 4 is coming soon", function()
+test("whole mod: every file loads with the lake missions; /campus alice 3 starts the census at dusk; act 4 races, act 5 is coming soon", function()
     local built = Sim.built_on_disk()
     built[JRB] = true
     local w = Sim.new({ files = Sim.ALL_FILES, built = built })
@@ -1029,9 +1033,14 @@ test("whole mod: every file loads with the lake missions; /campus alice 3 starts
         check(state(H) == MS.ACTIVE and lit(H), "the census is on at dusk")
     end
     w:warp(H, JRB, 1, 4)
-    w:step(5)
-    check(Sim.hud_has(H, "COMING SOON %- REGATTA"), "act 4: coming soon notice")
+    w:seconds(4)
+    local c4 = ctx_of(H)
+    check(state(H) == MS.ACTIVE and c4 ~= nil and c4.def.id == "lake_regatta" and not c4.dormant,
+        "act 4: the regatta is on (its geometry probes find the dock and the east shore)")
     check(is_default_light(H), "act 4: daylight")
+    w:warp(H, JRB, 1, 5)
+    w:step(5)
+    check(Sim.hud_has(H, "COMING SOON %- HATCHLING"), "act 5: coming soon notice")
 end)
 
 print(string.format("\n%d checks passed, %d failed", passed, failed))
