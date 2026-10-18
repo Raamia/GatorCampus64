@@ -551,3 +551,13 @@ END $$;
 DROP TRIGGER IF EXISTS jobs_timing_changed ON jobs;
 CREATE TRIGGER jobs_timing_changed BEFORE INSERT OR UPDATE OF state, step ON jobs
     FOR EACH ROW EXECUTE FUNCTION sgl_job_timing_trigger();
+
+
+-- Latest GPU observation per worker; no job, account, photo or inference data.
+-- Apply before rolling out the worker sampler and public API projection.
+CREATE TABLE IF NOT EXISTS worker_gpu_status (
+    worker text PRIMARY KEY,
+    observed_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+    available boolean NOT NULL,
+    gpus jsonb NOT NULL DEFAULT '[]' CHECK (jsonb_typeof(gpus) = 'array')
+);

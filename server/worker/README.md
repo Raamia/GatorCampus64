@@ -193,3 +193,18 @@ terminal writes supply the boundaries; repeated progress/log writes and lease
 renewals do not reset them. The API's public `/pipeline/status` projects only
 anonymous operational fields from these records for the companion `/pipeline`
 page. Older jobs without recorded transitions show timings as unavailable.
+
+
+### Public GPU measurements
+
+The `GpuReporter` thread samples local `nvidia-smi` every ten seconds, including
+while idle and during long inference/Blender calls. It uses a separate database
+connection with bounded connect, lock and statement waits. Failures are retried
+without interrupting jobs or lease renewal; error output never includes secrets.
+Apply `server/api/schema.sql` before restarting the worker. The latest numeric
+readings are upserted into `worker_gpu_status`, one row per worker name, with
+observations older than 24 hours pruned. No names, serials or process lists are
+stored in the metrics payload. A stopped worker's readings become stale after
+30 seconds in the public `/pipeline` view. The API returns at most eight workers
+and 16 GPUs each; unsupported metrics remain null. Metrics describe the GPUs
+visible to the worker container and include other processes sharing those GPUs.

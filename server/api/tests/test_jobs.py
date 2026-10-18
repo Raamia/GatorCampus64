@@ -209,3 +209,17 @@ def test_admin_delete_in_progress(client, auth, conn):
     assert r.status_code == 200 and r.json()["freed_slot"] is None
     assert conn.execute("SELECT count(*) AS n FROM jobs").fetchone()["n"] == 0
     assert conn.execute("SELECT count(*) AS n FROM deploys").fetchone()["n"] == 0
+
+
+def test_ios_jpeg_with_mpo_content_uploads_as_clean_guest_photo(client, conn, s3):
+    from .conftest import mpo
+    response = client.post('/characters', headers={'Authorization': 'Guest ' + 'a' * 64},
+                           data={'name': 'Gator', 'consent': 'true'},
+                           files=[('photos', ('IMG_0123.jpeg', mpo(), 'image/jpeg'))])
+    assert response.status_code == 201, response.text
+    assert response.json()['requires_login'] is True
+    job = conn.execute('SELECT photos FROM jobs WHERE id=%s', (response.json()['job_id'],)).fetchone()
+    raw = s3.get_object(Bucket=BUCKET, Key=job['photos'][0])['Body'].read()
+    with Image.open(io.BytesIO(raw)) as image:
+        assert image.format == 'JPEG' and image.size == (512, 1024)
+        assert not image.getexif()

@@ -56,7 +56,7 @@ def main():
         status, _, raw = get(config['apiBase'] + '/pipeline/status')
         data = json.loads(raw)
         assert status == 200
-        assert set(data) == {'observed_at', 'jobs'} and len(data['jobs']) <= 12
+        assert set(data) == {'observed_at', 'jobs', 'gpu'} and len(data['jobs']) <= 12
         for job in data['jobs']:
             assert set(job) == {'id', 'state', 'step', 'elapsed_seconds', 'steps'}
             assert len(job['id']) == 12 and all(c in '0123456789abcdef' for c in job['id'])
@@ -66,7 +66,13 @@ def main():
             for step in job['steps']:
                 assert set(step) == {'step', 'seconds', 'running'}
                 assert step['step'] in ('queued', 'spec', 'face', 'build', 'export', 'validate', 'preview', 'store')
-        return {'reachable': True, 'anonymous_jobs': len(data['jobs']), 'allowlisted_fields_only': True}
+        assert len(data['gpu']) <= 8
+        for worker in data['gpu']:
+            assert set(worker) == {'id', 'observed_at', 'available', 'gpus'}
+            assert len(worker['id']) == 12 and len(worker['gpus']) <= 16
+            for gpu in worker['gpus']:
+                assert set(gpu) == {'index', 'utilization_gpu_pct', 'memory_used_mib', 'memory_total_mib'}
+        return {'reachable': True, 'anonymous_jobs': len(data['jobs']), 'gpu_workers': len(data['gpu']), 'allowlisted_fields_only': True}
     check('pipeline_status', pipeline)
     for route in ('/gatorize', '/home', '/pipeline'):
         check('companion' + route, lambda route=route: get(args.origin.rstrip('/') + route)[0] == 200)

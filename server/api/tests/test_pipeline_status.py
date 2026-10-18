@@ -21,7 +21,8 @@ def test_public_allowlist_limit_order_and_read_only(client, conn):
     assert response.status_code == 200
     assert response.headers['Cache-Control'] == 'public, max-age=5'
     data = response.json()
-    assert set(data) == {'observed_at', 'jobs'}
+    assert set(data) == {'observed_at', 'jobs', 'gpu'}
+    assert data['gpu'] == []
     assert len(data['jobs']) == 12
     expected = sorted(before, key=lambda row: (row['created'], row['id']), reverse=True)[:12]
     assert [row['id'] for row in data['jobs']] == [hashlib.sha256(str(row['id']).encode()).hexdigest()[:12] for row in expected]
@@ -95,3 +96,41 @@ def test_legacy_and_untrusted_history(conn):
     conn.execute("UPDATE jobs SET state='build', step='build' WHERE id=%s", (jid,))
     row = conn.execute('SELECT * FROM jobs WHERE id=%s', (jid,)).fetchone()
     assert [entry['step'] for entry in row['step_history']] == ['build']
+
+
+def test_gpu_projection_is_public_bounded_private_and_read_only(client, conn):
+    metrics = [{'name': 'private-device', 'utilization_gpu_pct': 0, 'memory_used_mib': 12000,
+                'memory_total_mib': 16384, 'serial': 'private-serial', 'processes': ['private-account']},
+               {'utilization_gpu_pct': None, 'memory_used_mib': None, 'memory_total_mib': None}]
+    for i in range(10):
+        conn.execute('INSERT INTO worker_gpu_status(worker, available, gpus) VALUES (%s, true, %s)',
+                     (f'private-host-{i}', Jsonb(metrics)))
+    conn.execute("INSERT INTO worker_gpu_status(worker, observed_at, available) VALUES ('private-expired', now() - interval '2 days', false)")
+    before = conn.execute('SELECT * FROM worker_gpu_status ORDER BY worker').fetchall()
+    response = client.get('/pipeline/status')
+    assert response.status_code == 200
+    gpu = response.json()['gpu']
+    assert len(gpu) == 8
+    assert 'private' not in response.text
+    for reading in gpu:
+        assert set(reading) == {'id', 'observed_at', 'available', 'gpus'}
+        assert len(reading['id']) == 12 and reading['available']
+        assert reading['gpus'] == [
+            {'index': 0, 'utilization_gpu_pct': 0, 'memory_used_mib': 12000, 'memory_total_mib': 16384},
+            {'index': 1, 'utilization_gpu_pct': None, 'memory_used_mib': None, 'memory_total_mib': None}]
+    assert before == conn.execute('SELECT * FROM worker_gpu_status ORDER BY worker').fetchall()
+
+
+def test_gpu_missing_unavailable_stale_and_invalid_values(client, conn):
+    conn.execute("""INSERT INTO worker_gpu_status(worker, observed_at, available, gpus)
+        VALUES ('private-offline', now() - interval '1 hour', false, %s)""", (Jsonb([{'name': 'secret'}]),))
+    row = client.get('/pipeline/status').json()['gpu'][0]
+    assert not row['available'] and row['gpus'] == []
+    assert (datetime.now(timezone.utc) - datetime.fromisoformat(row['observed_at'])).total_seconds() > 3500
+    base = dict(worker='private', observed_at=datetime.now(timezone.utc), available=True)
+    for bad in (True, 'secret', -1, float('nan'), float('inf'), 1_048_577, 10 ** 1000):
+        projected = pipeline_status.public_gpu({**base, 'gpus': [dict(utilization_gpu_pct=bad, memory_used_mib=bad, memory_total_mib=bad)]})
+        assert projected['gpus'][0] == dict(index=0, utilization_gpu_pct=None, memory_used_mib=None, memory_total_mib=None)
+    projected = pipeline_status.public_gpu({**base, 'gpus': [dict(utilization_gpu_pct=101, memory_used_mib=5, memory_total_mib=2)]})
+    assert projected['gpus'][0] == dict(index=0, utilization_gpu_pct=None, memory_used_mib=None, memory_total_mib=2)
+    assert not pipeline_status.public_gpu({**base, 'gpus': ['secret']})['available']

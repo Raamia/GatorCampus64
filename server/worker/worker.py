@@ -20,6 +20,7 @@ import threading
 import time
 
 import db
+from gpu_reporter import GpuReporter
 import pipeline
 import spec_ai
 import storage as storage_mod
@@ -157,33 +158,34 @@ def main(argv=None):
     backend = spec_ai.OpenAICompatBackend.from_env()
     print(f"worker {worker}: repo {cfg.repo}, blender {cfg.blender}, "
           f"model {os.environ.get('VLM_MODEL') or '-'} @ {os.environ.get('VLM_BASE_URL') or 'none'}", flush=True)
-    conn = None
-    while not _stop:
-        try:
-            if conn is None or conn.closed:
-                conn = db.connect(os.environ["DATABASE_URL"])
-            recover(conn, store)
-            job = db.claim_job(conn, worker)
-            if job is None:
+    with GpuReporter(os.environ["DATABASE_URL"], worker):
+        conn = None
+        while not _stop:
+            try:
+                if conn is None or conn.closed:
+                    conn = db.connect(os.environ["DATABASE_URL"])
+                recover(conn, store)
+                job = db.claim_job(conn, worker)
+                if job is None:
+                    if args.once:
+                        return 0
+                    time.sleep(poll)
+                    continue
+                handle(conn, job, store, backend, cfg)
                 if args.once:
                     return 0
-                time.sleep(poll)
-                continue
-            handle(conn, job, store, backend, cfg)
-            if args.once:
-                return 0
-        except Exception as e:  # noqa: BLE001 - DB hiccups: reconnect and keep going
-            print(f"worker: error: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
-            try:
-                if conn is not None:
-                    conn.close()
-            except Exception:  # noqa: BLE001
-                pass
-            conn = None
-            if args.once:
-                return 1
-            time.sleep(max(poll, 5))
-    return 0
+            except Exception as e:  # noqa: BLE001 - DB hiccups: reconnect and keep going
+                print(f"worker: error: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
+                try:
+                    if conn is not None:
+                        conn.close()
+                except Exception:  # noqa: BLE001
+                    pass
+                conn = None
+                if args.once:
+                    return 1
+                time.sleep(max(poll, 5))
+        return 0
 
 
 if __name__ == "__main__":

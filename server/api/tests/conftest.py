@@ -33,7 +33,7 @@ from sgl_api.storage import Storage
 ISSUER = "https://login.test.example/"
 AUDIENCE = "https://api.gatorcamp.us"
 BUCKET = "sgl-test"
-TABLES = "account_erases, identity_nonces, identity_links, run_erases, erased_events, erased_links, deleted_accounts, storage_cleanup, server_presence, generation_admissions, run_pushes, runs, deploys, events, link_codes, links, slots, jobs, characters, users"
+TABLES = "worker_gpu_status, account_erases, identity_nonces, identity_links, run_erases, erased_events, erased_links, deleted_accounts, storage_cleanup, server_presence, generation_admissions, run_pushes, runs, deploys, events, link_codes, links, slots, jobs, characters, users"
 
 
 # ── Postgres ──────────────────────────────────────────────────────────────────────────────────
@@ -198,4 +198,17 @@ def png(w=300, h=500, alpha=True) -> bytes:
     img = Image.new("RGBA" if alpha else "RGB", (w, h), (10, 80, 200, 128) if alpha else (10, 80, 200))
     out = io.BytesIO()
     img.save(out, "PNG")
+    return out.getvalue()
+
+
+def mpo() -> bytes:
+    """Synthetic iPhone-style JPEG with MPF auxiliary image and EXIF orientation."""
+    primary = Image.new('RGB', (1200, 600), (220, 20, 20))
+    auxiliary = Image.new('RGB', (64, 64), (10, 200, 10))
+    ex = Image.Exif()
+    ex[0x0112] = 6
+    ex[0x010F] = 'SecretCam'
+    ex[0x8825] = {2: (29.0, 38.0, 0.0)}
+    out = io.BytesIO()
+    primary.save(out, 'MPO', save_all=True, append_images=[auxiliary], exif=ex)
     return out.getvalue()
