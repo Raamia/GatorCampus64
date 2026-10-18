@@ -312,6 +312,8 @@ function sglBridgeEmit(t, fields)
 end
 
 local function on_event_packet(data)
+    -- npc_ask must go through sgl_npc.lua's own validation (pending/truncation checks), not this generic relay.
+    if data.t == "npc_ask" then return end
     if not sgl_bridge_is_host() or type(data.t) ~= "string" then return end
     local np = np_of_global(data.gi)
     if np == nil then return end
@@ -623,7 +625,8 @@ local function route_command(cmd)
     local fields = flat_fields(cmd)
     local pkt = { sgl = PKT_CMD, [CMD_KEY] = name }
     for k, v in pairs(fields) do
-        if k ~= "sgl" and k ~= CMD_KEY then pkt[k] = v end
+        -- Empty optional fields cannot be serialized by coopdx (for example a blank nickname).
+        if k ~= "sgl" and k ~= CMD_KEY and v ~= "" then pkt[k] = v end
     end
     if SGL_BRIDGE_BROADCAST[name] or type(fields.gi) ~= "number" then
         network_send(true, pkt)
