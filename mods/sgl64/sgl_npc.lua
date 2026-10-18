@@ -350,6 +350,35 @@ local sPending = {}           -- seq -> { npc, player, text, stats, age } (host 
 local sPollTimer = 0
 local sWarned = false
 
+-- coopdx custom-packet strings are limited to 256 BYTES, not characters.
+local function bounded(s, n)
+    s = s:sub(1, n)
+    -- Do not leave a partial UTF-8 character at the boundary.
+    while #s > 0 and utf8.len(s) == nil do s = s:sub(1, -2) end
+    return s
+end
+
+local function pack_text(data, text, count)
+    for i = 1, count do
+        local part = text:sub((i - 1) * 240 + 1, i * 240)
+        data["text" .. i] = part ~= "" and part or false -- engine rejects empty strings
+    end
+    return data
+end
+
+local function unpack_text(data, count)
+    local parts = {}
+    for i = 1, count do
+        local part = data["text" .. i]
+        if part == false then part = "" end
+        if type(part) ~= "string" or #part > 240 then return nil end
+        parts[i] = part
+    end
+    local text = table.concat(parts)
+    if utf8.len(text) == nil then return nil end
+    return text
+end
+
 local function escape(s)
     return (s:gsub("\\", "\\\\"):gsub("\t", "\\t"):gsub("\n", "\\n"):gsub("\r", ""))
 end
@@ -428,7 +457,8 @@ local function npc_show(id, text, thinking)
 end
 
 local function npc_say(id, text, thinking)
-    network_send(true, { sgl = "npc_say", npc = id, text = text, thinking = thinking == true })
+    text = bounded(text, 600)
+    network_send(true, pack_text({ sgl = "npc_say", npc = id, thinking = thinking == true }, text, 3))
     npc_show(id, text, thinking)
 end
 
@@ -461,7 +491,6 @@ local function my_stats()
         if kv.lock == nil and s.stars > stars then kv.lock = s.name .. "|" .. s.building .. "|" .. s.stars end
         if s.acts ~= nil and file >= 0 then kv["s_" .. s.key] = save_file_get_course_star_count(file, s.course - 1) end
     end
-    for _, npc in ipairs(SGL_NPCS) do kv[npc.id .. "_at"] = sgl_npc_where(npc) end
     local parts = {}
     for k, v in pairs(kv) do table.insert(parts, k .. "=" .. clean(v)) end
     table.sort(parts)
@@ -478,8 +507,12 @@ end
 -- host: queue a question for the bridge
 local function host_enqueue(npcId, player, text, stats)
     if sNpcById[npcId] == nil or pending_for(player) then return end   -- one question at a time per player
+    stats = stats or ""
+    -- Location descriptions stay on the host; transported over the wire they'd blow past the
+    -- per-string packet limit and crowd out every other stat (stars, lives, where the asker is).
+    for _, npc in ipairs(SGL_NPCS) do stats = stats .. ";" .. npc.id .. "_at=" .. clean(sgl_npc_where(npc)) end
     sSeq = sSeq + 1
-    local p = { npc = npcId, player = player, text = text:sub(1, 300), stats = stats or "", age = 0 }
+    local p = { npc = npcId, player = player, text = text:sub(1, 300), stats = stats, age = 0 }
     sPending[sSeq] = p
     sPollTimer = SGL_NPC_POLL
     if hosted() then
@@ -497,7 +530,8 @@ local function ask(npc, text)
     if network_is_server() then
         host_enqueue(npc.id, name, text, my_stats())
     else
-        network_send(true, { sgl = "npc_ask", npc = npc.id, player = name, text = text, stats = my_stats() })
+        network_send(true, pack_text({ sgl = "npc_ask", npc = npc.id, player = bounded(name, 64),
+            text = bounded(text, 240) }, my_stats(), 4))
     end
 end
 
@@ -520,7 +554,7 @@ local function ask_command(npc)
         end
         local line = chat_color(npc) .. gNetworkPlayers[0].name .. " asks " .. npc.name .. ":\\#dcdcdc\\ " .. msg
         djui_chat_message_create(line)
-        network_send(true, { sgl = "npc_q", line = line })
+        network_send(true, pack_text({ sgl = "npc_q" }, bounded(line, 480), 2))
         ask(npc, msg)
         return true
     end
@@ -570,13 +604,16 @@ local function on_update()
 end
 
 local function on_packet_receive(data)
-    if data.sgl == "npc_say" and type(data.npc) == "string" and type(data.text) == "string" then
-        npc_show(data.npc, data.text, data.thinking == true)
-    elseif data.sgl == "npc_ask" and network_is_server() and type(data.npc) == "string" and type(data.text) == "string"
-        and type(data.player) == "string" then
-        host_enqueue(data.npc, data.player, data.text, type(data.stats) == "string" and data.stats or "")
-    elseif data.sgl == "npc_q" and type(data.line) == "string" then
-        djui_chat_message_create(data.line)
+    if data.sgl == "npc_say" and type(data.npc) == "string" then
+        local text = unpack_text(data, 3)
+        if text ~= nil then npc_show(data.npc, text, data.thinking == true) end
+    elseif data.sgl == "npc_ask" and network_is_server() and type(data.npc) == "string"
+        and type(data.player) == "string" and type(data.text) == "string" and #data.text <= 240 then
+        local stats = unpack_text(data, 4)
+        if stats ~= nil then host_enqueue(data.npc, data.player, data.text, stats) end
+    elseif data.sgl == "npc_q" then
+        local line = unpack_text(data, 2)
+        if line ~= nil then djui_chat_message_create(line) end
     end
 end
 
