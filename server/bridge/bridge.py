@@ -44,12 +44,12 @@ class Bridge:
     """Event routing; everything with I/O is injected so tests can drive it line by line."""
 
     def __init__(self, inbox: Inbox, queue: RetryQueue | None, login: LoginService,
-                 leaderboards: LeaderboardPoller | None = None):
+                 leaderboards: LeaderboardPoller | None = None, *, npc: npc_mod.NpcService | None = None):
         self.inbox = inbox
         self.queue = queue
         self.login = login
         self.leaderboards = leaderboards
-        self.npc = None
+        self.npc = npc
         self.players: dict[int, str] = {}
         self._lock = threading.Lock()
 
@@ -113,6 +113,9 @@ class Bridge:
             self.leaderboards.kick()              # a new verified run may change a board
         elif t == "npc_ask" and self.npc is not None:
             self.npc.ask(ev)
+            return
+        elif t == "npc_ask":
+            return
         elif t == "link_req" and isinstance(gi, int):
             code = "".join(c for c in str(ev.get("code") or "") if c.isalnum()).upper()[:16]
             if code:
@@ -162,9 +165,8 @@ def main() -> int:
     else:
         log.warning("Auth0 not configured (AUTH0_DOMAIN / AUTH0_CLIENT_ID / AUTH0_AUDIENCE): /login answers 'unavailable'")
     login = LoginService(flow, validator, api, inbox)
-    bridge = Bridge(inbox, queue, login, leaderboards)
     npc = npc_mod.build(cfg)
-    bridge.npc = npc
+    bridge = Bridge(inbox, queue, login, leaderboards, npc=npc)
     if npc is not None:
         threads.append(threading.Thread(target=npc.run, args=(stop,), daemon=True, name="npc"))
 
