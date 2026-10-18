@@ -350,7 +350,8 @@ test("act 1 solo: barriers on the 7 stair doors + the 5F staff doors, ladders, B
     local ladders = Sim.objects_with(A, env.id_bhvSglLibwestLadder)
     check(#ladders == 4 and raw(ladders[1])._model == C.E_MODEL_CHECKERBOARD_PLATFORM
         and raw(ladders[1]).collisionData == "COL:checkerboard_platform", "4 rolling ladders (checkerboard collision)")
-    check(#ctx.objs.boos == 7 and #props_with_model(A, C.E_MODEL_BOO) == 7, "7 sleepy Boos (the vanilla Boo model)")
+    check(#ctx.objs.boos == 7 and #props_with_model(A, rawget(A.env, "SGL_KNIGHT_GHOST_MODEL") or C.E_MODEL_BOO) == 7,
+        "7 sleepy Knight ghosts (the Boos' stand-in model)")
     w:seconds(3.5)
     check(state(A) == MS.ACTIVE and ctx.isLeader, "solo: active, leader")
     check(Sim.hud_has(A, "ESCALATOR UP"), "lobby: marker ESCALATOR UP")
@@ -515,7 +516,7 @@ test("act 1 Boos in the stage: a turned back is touched (a wedge + knock-back), 
     end
     check(A.hurts == 1 and A.lastHurt == 4 and A.action == C.ACT_BACKWARD_GROUND_KB, "touched: one wedge and a knock-back")
     w:step(2)                                          -- (a toast fades in from its 2nd frame)
-    check(Sim.find(A.hudLog, "sleepy Boo") ~= nil or Sim.hud_has(A, "sleepy Boo"), "toast says what it was")
+    check(Sim.find(A.hudLog, "Knight ghost") ~= nil or Sim.hud_has(A, "Knight ghost"), "toast says what it was")
     check(ctx.loc.booHits == 1 and (boo.backoff or 0) > 0, "then it backs off")
     -- a punch from close while it is visible
     act_as(A, C.ACT_IDLE)

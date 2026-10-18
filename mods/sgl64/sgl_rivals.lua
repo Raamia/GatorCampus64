@@ -1,31 +1,25 @@
--- Super Gatorlator 64: UF's rivals sneak around campus in place of the Goombas.
+-- Super Gatorlator 64: UF's rivals sneak around campus. USF Bulls and FSU Seminoles replace the Goombas, and UCF
+-- Knight ghosts replace the Boos of Library West (SGL_KNIGHT_GHOST_MODEL, used by uf_west_library_missions.lua).
 -- Every Goomba already looks like a USF Bull (actors/goomba replaces the vanilla goomba_geo); this file swaps
--- individual Goombas to the other rivals' models (actors/rival_<id>, all on the vanilla Goomba skeleton, generated
--- by tools/actors/make_rivals.py). Only the model changes: they walk, charge, get squashed flat when you stomp
--- them (or knocked out by a punch or kick) and drop a coin exactly like Goombas.
+-- individual Goombas to the Seminole (actors/rival_fsu: a garnet rival with a gold spear-tip crest). Both are on the
+-- vanilla Goomba skeleton (tools/actors/make_rivals.py), and only the model changes: they walk, charge, get
+-- squashed flat when you stomp them (or knocked out by a punch or kick) and drop a coin exactly like Goombas.
 --
 -- Which rival a Goomba becomes comes from its home position (where it spawned), so every player sees the same
--- mascot on the same Goomba. Each level draws from its own pool (SGL_RIVAL_POOLS): the football rivals at The
--- Swamp, the Miami ibis by Lake Alice, Knights guarding the libraries, a bit of everyone on campus.
+-- mascot on the same Goomba.
 
 SGL_RIVALS = {
     usf = { school = "USF Bulls", mascot = "a bull" },                      -- the default Goomba model
-    ucf = { school = "UCF Knights", mascot = "a knight", geo = "rival_ucf_geo" },
-    uga = { school = "Georgia Bulldogs", mascot = "a bulldog", geo = "rival_uga_geo" },
-    tenn = { school = "Tennessee Volunteers", mascot = "Smokey the hound", geo = "rival_tenn_geo" },
-    miami = { school = "Miami Hurricanes", mascot = "Sebastian the ibis", geo = "rival_miami_geo" },
-    lsu = { school = "LSU Tigers", mascot = "a tiger", geo = "rival_lsu_geo" },
-    fsu = { school = "Florida State Seminoles", mascot = "Renegade the horse", geo = "rival_fsu_geo" },
+    fsu = { school = "Florida State Seminoles", mascot = "a spear-crested Seminole", geo = "rival_fsu_geo" },
 }
 
 SGL_RIVAL_POOLS = {
-    default = { "usf", "ucf", "uga", "tenn", "miami", "lsu", "fsu" },
-    [LEVEL_BOB] = { "uga", "fsu", "tenn", "lsu", "usf" },        -- The Swamp: gameday rivals
-    [LEVEL_WF] = { "ucf", "usf", "miami", "fsu" },               -- Reitz & Engineering: the in-state schools
-    [LEVEL_JRB] = { "miami", "lsu", "usf" },                     -- Lake Alice: the ibis loves a lake
-    [LEVEL_CCM] = { "ucf", "usf", "uga" },                       -- Marston: knights in the library
-    [LEVEL_BBH] = { "ucf", "lsu", "tenn" },                      -- Library West after dark
+    default = { "usf", "fsu" },
 }
+
+-- the Knight ghost (the Boos' stand-in), or nil when its model failed to load (the missions fall back to the Boo)
+SGL_KNIGHT_GHOST_MODEL = smlua_model_util_get_id("knight_ghost_geo")
+if SGL_KNIGHT_GHOST_MODEL == E_MODEL_ERROR_MODEL then SGL_KNIGHT_GHOST_MODEL = nil end
 
 SGL_RIVAL_SCAN = 5        -- frames between looks for new Goombas
 

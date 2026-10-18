@@ -30,6 +30,13 @@ local function setup(opts)
     return w, H, F
 end
 
+test("the Knight ghost replaces the Boo model", function()
+    local w, H = setup()
+    check(H.env.SGL_KNIGHT_GHOST_MODEL ~= nil and H.env.SGL_KNIGHT_GHOST_MODEL ~= C.E_MODEL_BOO, "a Knight ghost model")
+    local w2, H2 = setup({ broken = { knight_ghost_geo = true } })
+    check(rawget(H2.env, "SGL_KNIGHT_GHOST_MODEL") == nil, "no model: nil, so the missions keep the Boo")
+end)
+
 local function spawn_goombas(c, n)
     local out = {}
     for i = 1, n do
@@ -52,7 +59,7 @@ test("every Goomba becomes its home's rival, the same on both clients, from the 
     w:step(H.env.SGL_RIVAL_SCAN + 1)
     local seen, same = {}, true
     local pool = {}
-    for _, id in ipairs(H.env.SGL_RIVAL_POOLS[C.LEVEL_BOB]) do pool[id] = true end
+    for _, id in ipairs(H.env.SGL_RIVAL_POOLS[C.LEVEL_BOB] or H.env.SGL_RIVAL_POOLS.default) do pool[id] = true end
     for i = 1, #hg do
         local a, b = rival_of(H, hg[i]), rival_of(F, fg[i])
         local want = H.env.sgl_rival_for(C.LEVEL_BOB, raw(hg[i]).oHomeX, raw(hg[i]).oHomeZ)
@@ -64,7 +71,7 @@ test("every Goomba becomes its home's rival, the same on both clients, from the 
     check(same, "both clients dress the same Goomba as the same rival")
     local kinds = 0
     for _ in pairs(seen) do kinds = kinds + 1 end
-    check(kinds >= 4, "a mix of rivals in The Swamp (" .. kinds .. " kinds)")
+    check(kinds == 2, "Bulls and Seminoles both appear in The Swamp (" .. kinds .. " kinds)")
 end)
 
 test("a rival keeps its look while it wanders", function()
@@ -87,8 +94,7 @@ test("every rival has a model and a school; a missing model leaves a USF Bull", 
     for lvl, pool in pairs(H.env.SGL_RIVAL_POOLS) do
         for _, id in ipairs(pool) do check(H.env.SGL_RIVALS[id] ~= nil, tostring(lvl) .. ": known rival " .. id) end
     end
-    local w2, H2 = setup({ broken = { rival_ucf_geo = true, rival_uga_geo = true, rival_fsu_geo = true,
-        rival_tenn_geo = true, rival_lsu_geo = true, rival_miami_geo = true } })
+    local w2, H2 = setup({ broken = { rival_fsu_geo = true } })
     local g = spawn_goombas(H2, 10)
     w2:step(H2.env.SGL_RIVAL_SCAN + 1)
     for i, o in ipairs(g) do check(raw(o)._model == C.E_MODEL_GOOMBA, "goomba " .. i .. " stays a bull") end
