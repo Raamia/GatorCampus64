@@ -54,6 +54,7 @@ Both models are generated without Blender by `tools/actors/make_gators.py`: low-
 - `docs/flow.md` is the level-flow contract (doors, warp nodes, stars, act order, load order); `docs/game_design.md` is the original full design; `docs/singleplayer_campaign.md` is the detailed solo gameplay proposal for review before implementation.
 - `tools/campus/` builds the stages from campus data (`build_stage.py` for the outdoor stages, `build_interior.py` + `interiors/marston.py` for Marston; `interiors/libwest.py` remains a legacy prototype); `stage_pickups.py` places hearts, 1-ups, mission props, and poles. Ambient Mario yellow coins, coin formations, and Goombas are disabled; `tools/luatest/` checks the Lua offline.
 - `mods/sgl64/sgl_npc.lua` holds the roaming mascot NPCs (Albert and Alberta; animations in `sgl_albert.lua`); `tools/npc_bridge/` is the host-side helper that answers for them (`game_guide.md` + `guide.py` for game questions, Gemini for the rest; see NPC chat above); `tools/actors/make_gators.py` generates their models.
+- `mods/sgl64/actors/goomba/` is the mini bull, a USF Bulls joke enemy that replaces every Goomba (DynOS swaps in our `goomba_geo`, the vanilla Goomba behaviour stays); `tools/actors/make_minibull.py` generates it on the vanilla Goomba skeleton.
 - `install-mods.sh` copies `mods/` into the game's mods folder.
 - `server/` is the online side at [gatorcamp.us](https://gatorcamp.us) (`docs/web_platform_spec.md`): `api/` (FastAPI + Postgres) and `web/` (the website), `worker/` (Gatorize Me: photos → a playable guest gator on a Vultr GPU), `bridge/` (runs the headless game server, Gator Pass login and guest deploys) and `deploy/` (provisioning, systemd units, Caddyfile).
 - `companion/app/` is an optional DeepSpace web dashboard prototype. It is separate from the native game and is not required to play.
@@ -190,6 +191,14 @@ The second indoor stage: Library West at night, six floors 6 m apart (real: abou
 9. **Shared acts**: in act 1 both of you see the ladders in the same place (each of you is chased by your own Boos); in act 2 you race each other and see each other's cup.
 
 Shortcuts: `/campus swamp 1|2|3 [me]`, `/campus reitz 1|2|3 [me]`, `/campus alice 1|2|3 [me]`, `/campus marston 1|2|3 [me]`, `/campus libwest 1|2|3 [me]`, `/campus hub`, `/campus where`, `/mission`, `/mission reset`, `/mission start`, `/join [name]`. The Reitz Union interior has no shortcut of its own: `/campus reitz 4 me`, then walk in through a door.
+
+### Mini bulls
+
+Every Goomba is now a mini bull: a small dark-brown USF Bulls rival with gold horns, a green-and-gold headband and a tan muzzle with a gold nose ring.
+
+1. **Look**: in The Swamp (two wait on the coin line to the stadium gate in act 1), they walk with the Goomba's step, blink, turn and charge when you come near.
+2. **Stomp**: jump on one. It squashes flat with the Goomba sound, vanishes and drops a coin. A punch or kick also knocks it out; walking into one still hurts.
+3. **Everywhere**: the Goombas in Reitz & Engineering, Lake Alice, Marston and Library West are mini bulls too. Ask Albert "how do I beat the bulls?".
 
 ### NPC chat
 
