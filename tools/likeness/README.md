@@ -52,11 +52,11 @@ Dependencies are the versions pinned in `server/deploy/provision_gpu.sh`:
 
 ```sh
 python3 tools/likeness/build_batch.py --jobs 2
-# Rebuild particular studies:
+# Rebuild particular studies
 python3 tools/likeness/build_batch.py --only f01 h05 --jobs 2
-# Verify all delivered artifacts (requires Pillow):
+# Verify all delivered artifacts (requires Pillow)
 python3 tools/likeness/verify_batch.py
-# Exercise the running gallery in Chromium (uses the app's Playwright package):
+# Exercise the running gallery in Chromium (uses the app's Playwright package)
 node tools/likeness/check_gallery.mjs
 ```
 
@@ -81,6 +81,48 @@ The fitting check exercises 48 heads and 20 body/outfit combinations across the
 90-frame template example animation plus nine joint sweeps. It checks finite
 geometry, unchanged skeleton and protected vertex positions, not general clipping
 or the game's complete animation library.
+
+## Public character showcase
+
+The companion's `/showcase` page publishes the approved integrated batch without
+sign-in, uploads or inference. Its 23 self-contained GLBs and 23 WebP previews
+total about 1.34 MiB; 3D loads only after the visitor requests it. The checked-in
+assets are sufficient for deployment: the worker and private review gallery are
+not needed to serve this page.
+
+To refresh assets after rebuilding and validating the integrated batch:
+
+```sh
+python3 tools/likeness/export_showcase.py
+```
+
+The exporter requires Pillow, allows only the 23 approved study IDs, and records
+model hashes in `companion/app/public/showcase/provenance.json`. Do not copy whole
+evaluation folders into the public directory; private references and model
+responses about real subjects stay local.
+
+Build and validate from `companion/app` with `npm run build` and
+`npm run validate`. For a local browser check, run these from the repo root in
+separate terminals:
+
+```sh
+python3 -m http.server 5175 --bind 127.0.0.1 --directory companion/app/dist/client
+node tools/likeness/check_showcase.mjs
+```
+
+The check uses the app's Playwright installation and `/usr/bin/chromium`
+(`CHROMIUM` overrides it). It maps the clean route to `showcase.html` for Python's
+server, which lacks the production asset layer's HTML URL resolution. It checks
+lazy loading, actual GLBs in every category, camera reset, mobile overflow,
+absence of API/WebSocket traffic, and image fallback after a failed GLB request.
+Screenshots are written to `/tmp/sgl-showcase-{desktop,mobile}.png`.
+
+Handoff: `feat/public-character-showcase` is based on
+`docs/integrations-and-track-review`; include that documentation commit
+when merging. Build, TypeScript validation, all 52 app tests and the browser check
+passed; desktop/mobile screenshots were inspected. Merge/deployment
+belong to the deployment owner, who should verify `/showcase` on the deployed
+domain. No production deployment is performed by these checks.
 
 ## What to judge
 

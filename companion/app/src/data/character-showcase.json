@@ -1,0 +1,531 @@
+[
+  {
+    "id": "f01",
+    "group": "Faces",
+    "label": "Oval",
+    "profile": {
+      "face": "oval",
+      "hair": "buzz",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -1e-05,
+      2.15356,
+      0.19048
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 2.90978,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "f02",
+    "group": "Faces",
+    "label": "Round",
+    "profile": {
+      "face": "round",
+      "hair": "buzz",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -1e-05,
+      2.1387,
+      0.18142
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.11424
+    ],
+    "headRadius": 3.07192,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "f03",
+    "group": "Faces",
+    "label": "Square",
+    "profile": {
+      "face": "square",
+      "hair": "buzz",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -1e-05,
+      2.14861,
+      0.19688
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.10022
+    ],
+    "headRadius": 3.02937,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "f04",
+    "group": "Faces",
+    "label": "Long",
+    "profile": {
+      "face": "long",
+      "hair": "buzz",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -1e-05,
+      2.16347,
+      0.20462
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.0932
+    ],
+    "headRadius": 3.24269,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "f05",
+    "group": "Faces",
+    "label": "Heart",
+    "profile": {
+      "face": "heart",
+      "hair": "buzz",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -2e-05,
+      2.14365,
+      0.18647
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.11135
+    ],
+    "headRadius": 2.95734,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "f06",
+    "group": "Faces",
+    "label": "Broad jaw",
+    "profile": {
+      "face": "broad",
+      "hair": "buzz",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -1e-05,
+      2.1387,
+      0.18488
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.11149
+    ],
+    "headRadius": 3.15356,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "h01",
+    "group": "Hair",
+    "label": "Close crop",
+    "profile": {
+      "face": "oval",
+      "hair": "buzz",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -1e-05,
+      2.15356,
+      0.19048
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 2.90978,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "h02",
+    "group": "Hair",
+    "label": "Side part",
+    "profile": {
+      "face": "oval",
+      "hair": "sidepart",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -1e-05,
+      2.19815,
+      0.18099
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 3.12379,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "h03",
+    "group": "Hair",
+    "label": "Straight fringe",
+    "profile": {
+      "face": "oval",
+      "hair": "fringe",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -0.00141,
+      2.2031,
+      0.16912
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 3.14757,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "h04",
+    "group": "Hair",
+    "label": "Wavy crop",
+    "profile": {
+      "face": "oval",
+      "hair": "waves",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -1e-05,
+      2.19775,
+      0.18336
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 3.12186,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "h05",
+    "group": "Hair",
+    "label": "Curly fade",
+    "profile": {
+      "face": "oval",
+      "hair": "curls",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -2e-05,
+      2.22354,
+      0.19844
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.09081
+    ],
+    "headRadius": 3.24566,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "h06",
+    "group": "Hair",
+    "label": "Rounded coils",
+    "profile": {
+      "face": "oval",
+      "hair": "coils",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -2e-05,
+      2.24106,
+      0.17057
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.07595
+    ],
+    "headRadius": 3.32978,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "h07",
+    "group": "Hair",
+    "label": "Straight bob",
+    "profile": {
+      "face": "oval",
+      "hair": "bob",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -0.00735,
+      2.18329,
+      0.0982
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 3.0659,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "h08",
+    "group": "Hair",
+    "label": "Long / side part",
+    "profile": {
+      "face": "oval",
+      "hair": "long",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -0.00735,
+      1.94872,
+      0.06731
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 4.1784,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "b01",
+    "group": "Bodies",
+    "label": "Neutral",
+    "profile": {
+      "face": "oval",
+      "hair": "buzz",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -1e-05,
+      2.15356,
+      0.19048
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 2.90978,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "b02",
+    "group": "Bodies",
+    "label": "Slender",
+    "profile": {
+      "face": "oval",
+      "hair": "buzz",
+      "body": "slender",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -1e-05,
+      2.15356,
+      0.19048
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 2.90978,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "b03",
+    "group": "Bodies",
+    "label": "Broad",
+    "profile": {
+      "face": "oval",
+      "hair": "buzz",
+      "body": "broad",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -1e-05,
+      2.15356,
+      0.19048
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 2.90978,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "b04",
+    "group": "Bodies",
+    "label": "Stocky",
+    "profile": {
+      "face": "oval",
+      "hair": "buzz",
+      "body": "stocky",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -1e-05,
+      2.15356,
+      0.19048
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 2.90978,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "b05",
+    "group": "Bodies",
+    "label": "Fuller",
+    "profile": {
+      "face": "oval",
+      "hair": "buzz",
+      "body": "fuller",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -1e-05,
+      2.15356,
+      0.19048
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 2.90978,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "c01",
+    "group": "Clothes",
+    "label": "T-shirt",
+    "profile": {
+      "face": "oval",
+      "hair": "buzz",
+      "body": "neutral",
+      "outfit": "tee"
+    },
+    "headTarget": [
+      -1e-05,
+      2.15356,
+      0.19048
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 2.90978,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "c02",
+    "group": "Clothes",
+    "label": "Polo / collar",
+    "profile": {
+      "face": "oval",
+      "hair": "buzz",
+      "body": "neutral",
+      "outfit": "polo"
+    },
+    "headTarget": [
+      -1e-05,
+      2.15356,
+      0.19048
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 2.90978,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "c03",
+    "group": "Clothes",
+    "label": "Hoodie",
+    "profile": {
+      "face": "oval",
+      "hair": "buzz",
+      "body": "neutral",
+      "outfit": "hoodie"
+    },
+    "headTarget": [
+      -1e-05,
+      2.15356,
+      0.19048
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 2.90978,
+    "bodyRadius": 6.63185
+  },
+  {
+    "id": "c04",
+    "group": "Clothes",
+    "label": "Boxy overshirt",
+    "profile": {
+      "face": "oval",
+      "hair": "buzz",
+      "body": "neutral",
+      "outfit": "overshirt"
+    },
+    "headTarget": [
+      -1e-05,
+      2.15356,
+      0.19048
+    ],
+    "bodyTarget": [
+      0.01074,
+      1.56104,
+      -0.1059
+    ],
+    "headRadius": 2.90978,
+    "bodyRadius": 6.63185
+  }
+]

@@ -21,12 +21,14 @@ import { renderToString } from 'react-dom/server'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import * as app from './pages/_app'
 import Landing from './pages/index'
+import Showcase from './pages/showcase'
 
 // prerender.ts reads `origin` (canonical URLs, sitemap) and `noindex` from here.
 export { seo } from './seo'
 
 export const PAGES: Record<string, ComponentType> = {
   '/': Landing,
+  '/showcase': Showcase,
 }
 
 export const PRERENDER_ROUTES = Object.keys(PAGES)
