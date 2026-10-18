@@ -51,6 +51,7 @@ MAX_REPLY = 600                   # characters; the bubble shows the first ~200 
 UNANSWERED = os.path.join(HERE, "unanswered.log")
 DEFAULT_MODEL = "gemini-3.8-flash"
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent"
+GEMINI_TIMEOUT = 10          # keep below the game's 15 s NPC request timeout
 
 
 def default_sav_dir():
@@ -160,7 +161,8 @@ class FakeReplier:
 class GeminiReplier:
     """In-character replies from the Gemini API (generateContent, standard library HTTP)."""
 
-    def __init__(self, cast, api_key, model=DEFAULT_MODEL, thinking="low", timeout=20, urlopen=urllib.request.urlopen):
+    def __init__(self, cast, api_key, model=DEFAULT_MODEL, thinking="low", timeout=GEMINI_TIMEOUT,
+                 urlopen=urllib.request.urlopen):
         self.cast = cast
         self.api_key = api_key
         self.model = model
@@ -263,10 +265,11 @@ class Bridge:
             hist = self.history.setdefault((player, npc), [])
             try:
                 text, route = self.answer(npc, player, message, stats, hist)
-                text = clean_reply(text)
-            except Exception as e:   # network/API trouble: the game shows its own "lost in thought" line
-                self.log("[npc] %s -> %s failed: %s" % (player, npc, e))
-                continue
+            except Exception as e:   # network/API trouble: return a friendly fallback before the game times out
+                self.log("[npc] %s -> %s failed: %s; sending fallback" % (player, npc, e))
+                text = "Sorry, my connection is fuzzy right now, %s. Ask me again in a moment!" % player
+                route = "fallback"
+            text = clean_reply(text)
             if not text:
                 continue
             hist += [("user", message), ("model", text)]
