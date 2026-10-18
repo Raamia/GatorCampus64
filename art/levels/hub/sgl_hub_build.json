@@ -1,6 +1,7 @@
 {
  "level": "castle_grounds",
  "stage": "hub",
+ "built_at": "2026-10-18T04:14Z",
  "center_m": [
   -45,
   98
@@ -18,16 +19,16 @@
   338.0
  ],
  "extent_half_m": 324.0,
- "collision_tris": 8729,
- "visual_tris": 54567,
+ "collision_tris": 10887,
+ "visual_tris": 87188,
  "collision_by_object": {
   "Ground collision": 1552,
   "Pond basins collision": 195,
   "Props collision": 188,
   "Buildings collision": 3232,
-  "Trees collision": 1038,
+  "Trees collision": 1368,
   "Boundary walls": 192,
-  "Dressing collision": 134,
+  "Dressing collision": 1962,
   "LM century_tower collision": 370,
   "LM university_auditorium collision": 298,
   "LM The Hub collision": 207,
@@ -41,16 +42,16 @@
   "LM turlington_potato_collision": 39
  },
  "visual_by_object": {
-  "Ground visual": 7694,
-  "Roads and paths visual": 7134,
+  "Ground visual": 14901,
+  "Roads and paths visual": 12744,
   "Pond basins visual": 195,
   "Pond water": 137,
   "Props visual": 252,
   "Buildings visual": 7685,
   "Backdrop buildings": 4376,
-  "Trees visual": 16331,
+  "Trees visual": 21739,
   "Tree line": 560,
-  "Dressing visual": 1492,
+  "Dressing visual": 15468,
   "LM century_tower visual": 1474,
   "LM university_auditorium visual": 1199,
   "LM The Hub visual": 704,
@@ -58,8 +59,8 @@
   "LM library_west.visual": 945,
   "LM library_colonnade.visual": 278,
   "LM smathers_library.visual": 1127,
-  "LM plaza_americas.visual": 498,
-  "LM plaza_americas.walks": 132,
+  "LM plaza_americas.visual": 794,
+  "LM plaza_americas.walks": 256,
   "LM marston_visual": 639,
   "LM turlington_visual": 922,
   "LM turlington_potato_visual": 196
@@ -146,7 +147,7 @@
    ],
    "parts": 9,
    "collision_tris": 604,
-   "visual_tris": 2980,
+   "visual_tris": 3276,
    "budget_collision": 670,
    "budget_visual": 2800,
    "per_landmark": {
@@ -170,7 +171,7 @@
     },
     "plaza_of_the_americas": {
      "collision_tris": 86,
-     "visual_tris": 630,
+     "visual_tris": 926,
      "budget_collision": 120,
      "budget_visual": 900
     }
@@ -220,6 +221,14 @@
   },
   {
    "module": "reitz_reitz_union",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'hub' (stages: ['reitz_eng'])"
+  },
+  {
+   "module": "reitz_streetscape",
    "ok": true,
    "skipped": true,
    "slugs": [],
@@ -1670,18 +1679,6 @@
   },
   {
    "kind": "tree",
-   "osm_id": "n5673717545",
-   "map_m": [
-    3.78,
-    149.66
-   ],
-   "floor_m": 0.0,
-   "clearance_m": 2.0,
-   "pole_m": 5.0,
-   "behavior": "bhvTree"
-  },
-  {
-   "kind": "tree",
    "osm_id": "n5673717557",
    "map_m": [
     2.85,
@@ -1712,18 +1709,6 @@
     182.6
    ],
    "floor_m": 0.0,
-   "clearance_m": 2.0,
-   "pole_m": 5.0,
-   "behavior": "bhvTree"
-  },
-  {
-   "kind": "tree",
-   "osm_id": "n5673717620",
-   "map_m": [
-    5.19,
-    158.49
-   ],
-   "floor_m": -0.0,
    "clearance_m": 2.0,
    "pole_m": 5.0,
    "behavior": "bhvTree"
@@ -1934,18 +1919,6 @@
   },
   {
    "kind": "tree",
-   "osm_id": "n5676735882",
-   "map_m": [
-    80.33,
-    127.74
-   ],
-   "floor_m": 0.0,
-   "clearance_m": 2.0,
-   "pole_m": 5.0,
-   "behavior": "bhvTree"
-  },
-  {
-   "kind": "tree",
    "osm_id": "n5678663358",
    "map_m": [
     93.15,
@@ -1995,8 +1968,8 @@
   {
    "kind": "lamp",
    "map_m": [
-    26.8,
-    96.5
+    14.5,
+    132.0
    ],
    "floor_m": 0.0,
    "pole_m": 4.3,
@@ -2006,10 +1979,98 @@
   {
    "kind": "lamp",
    "map_m": [
-    49.6,
-    96.5
+    -1.5,
+    80.0
    ],
    "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -1.5,
+    58.5
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -3.0,
+    35.0
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -3.0,
+    10.0
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -43.0,
+    90.0
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -42.0,
+    22.0
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    -42.0,
+    -8.0
+   ],
+   "floor_m": 0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    28.3,
+    95.0
+   ],
+   "floor_m": -0.0,
+   "pole_m": 4.3,
+   "behavior": "bhvPoleGrabbing",
+   "bparams": "0x002B0000"
+  },
+  {
+   "kind": "lamp",
+   "map_m": [
+    48.1,
+    95.0
+   ],
+   "floor_m": 0.0,
    "pole_m": 4.3,
    "behavior": "bhvPoleGrabbing",
    "bparams": "0x002B0000"
@@ -2242,16 +2303,16 @@
  },
  "stars": [],
  "fog": {
-  "start_m": 200.0,
-  "end_m": 1000.0,
+  "start_m": 72.0,
+  "end_m": 360.0,
   "gsSPFogFactor": [
-   31949,
-   -31725
+   11502,
+   -11216
   ],
   "color_srgb": [
-   176,
-   200,
-   226
+   195,
+   207,
+   205
   ],
   "far_clip_units": 32767,
   "override_far_units": 100000,
@@ -2425,6 +2486,42 @@
    "fountains_removed": [],
    "buildings_overlapped": [],
    "shadow_hiding_faces": {}
+  },
+  "ground_surface_partition": {
+   "input_triangles": 9538,
+   "output_faces": 12799,
+   "overlap_removed_m2": 190251.65,
+   "meshes": [
+    "Ground visual",
+    "LM plaza_americas.walks",
+    "LM turlington_potato_visual",
+    "Roads and paths visual"
+   ],
+   "surface_z_m": -0.03,
+   "priority": {
+    "ground_grass": 0,
+    "hub_ground_grass": 0,
+    "grass": 5,
+    "lawn": 10,
+    "hub_lawn": 10,
+    "forest_floor": 11,
+    "mulch": 12,
+    "parking": 20,
+    "plaza_brick": 30,
+    "concrete": 31,
+    "path": 31,
+    "sidewalk": 31,
+    "steps": 32,
+    "asphalt": 40,
+    "road_paint": 50,
+    "crosswalk": 60
+   }
+  },
+  "sunk_roads": {
+   "road_z_m": -0.15,
+   "road_faces": 2415,
+   "curb_faces": 1942,
+   "landmark_road_faces": 0
   },
   "buildings": [
    {
@@ -3662,23 +3759,110 @@
    "Murphree statue"
   ],
   "trees": {
-   "oak": 116,
+   "oak": 112,
    "pine": 7,
    "palm": 167,
-   "colliders": 173,
-   "climbable": 28,
+   "colliders": 172,
+   "climbable": 25,
+   "hand_authored_oaks": 21,
+   "hand_authored_positions_m": [
+    [
+     12.0,
+     166.0
+    ],
+    [
+     1.0,
+     153.0
+    ],
+    [
+     86.0,
+     124.0
+    ],
+    [
+     60.0,
+     160.0
+    ],
+    [
+     20.0,
+     125.0
+    ],
+    [
+     42.0,
+     137.0
+    ],
+    [
+     8.0,
+     83.0
+    ],
+    [
+     50.0,
+     78.0
+    ],
+    [
+     78.0,
+     58.0
+    ],
+    [
+     66.0,
+     35.0
+    ],
+    [
+     -38.0,
+     90.0
+    ],
+    [
+     -40.0,
+     45.0
+    ],
+    [
+     -38.0,
+     25.0
+    ],
+    [
+     -38.0,
+     -8.0
+    ],
+    [
+     -8.0,
+     80.0
+    ],
+    [
+     -8.0,
+     60.0
+    ],
+    [
+     -8.0,
+     35.0
+    ],
+    [
+     15.0,
+     48.0
+    ],
+    [
+     15.0,
+     31.0
+    ],
+    [
+     -30.0,
+     8.0
+    ],
+    [
+     10.0,
+     -10.0
+    ]
+   ],
    "beyond_s16": 3,
    "in_ground_hole": 0
   },
   "dressing": {
    "lamps": [
     [
-     26.8,
-     96.5
+     28.3,
+     95.0
     ],
     [
-     49.6,
-     96.5
+     48.1,
+     95.0
     ],
     [
      14.0,
@@ -3757,6 +3941,14 @@
     [
      -38.0,
      34.0
+    ],
+    [
+     26.0,
+     83.0
+    ],
+    [
+     50.0,
+     83.0
     ]
    ],
    "planters": [
@@ -3785,9 +3977,458 @@
     [
      -42.0,
      14.0
+    ],
+    [
+     9.5,
+     84.5
+    ],
+    [
+     68.0,
+     83.0
     ]
    ],
-   "skipped": [],
+   "skipped": [
+    [
+     "raised brick bed",
+     5.0,
+     171.0
+    ],
+    [
+     "raised brick bed",
+     85.0,
+     103.0
+    ],
+    [
+     "Tower-side raised bed",
+     9.0,
+     42.0
+    ],
+    [
+     "lawn landscape mass",
+     74.0,
+     54.0
+    ],
+    [
+     "campus hedge row",
+     21.0,
+     100.0
+    ],
+    [
+     "campus hedge row",
+     55.0,
+     100.0
+    ],
+    [
+     "lawn shrub bed",
+     55.0,
+     68.0
+    ],
+    [
+     "lawn shrub bed",
+     15.0,
+     109.0
+    ],
+    [
+     "lawn shrub bed",
+     61.0,
+     109.0
+    ],
+    [
+     "Auditorium east landscape bed",
+     66.0,
+     12.0
+    ],
+    [
+     "Tower / road shrub bed",
+     9.0,
+     18.0
+    ],
+    [
+     "Tower-side landscape mass",
+     -42.0,
+     0.0
+    ]
+   ],
+   "tree_beds": [
+    [
+     12.0,
+     166.0,
+     2.65
+    ],
+    [
+     1.0,
+     153.0,
+     2.65
+    ],
+    [
+     86.0,
+     124.0,
+     2.65
+    ],
+    [
+     60.0,
+     160.0,
+     2.65
+    ],
+    [
+     20.0,
+     125.0,
+     2.65
+    ],
+    [
+     42.0,
+     137.0,
+     2.65
+    ],
+    [
+     8.0,
+     83.0,
+     2.65
+    ],
+    [
+     50.0,
+     78.0,
+     1.97
+    ],
+    [
+     66.0,
+     35.0,
+     2.65
+    ],
+    [
+     -38.0,
+     90.0,
+     1.61
+    ],
+    [
+     -40.0,
+     45.0,
+     2.56
+    ],
+    [
+     -38.0,
+     25.0,
+     2.65
+    ],
+    [
+     -38.0,
+     -8.0,
+     2.65
+    ],
+    [
+     -8.0,
+     60.0,
+     1.61
+    ],
+    [
+     -8.0,
+     35.0,
+     2.65
+    ],
+    [
+     15.0,
+     48.0,
+     2.64
+    ],
+    [
+     15.0,
+     31.0,
+     2.65
+    ],
+    [
+     -30.0,
+     8.0,
+     2.63
+    ],
+    [
+     10.0,
+     -10.0,
+     2.02
+    ]
+   ],
+   "raised_beds": [
+    [
+     81.0,
+     179.0
+    ],
+    [
+     10.5,
+     123.0
+    ]
+   ],
+   "tower_raised_beds": [
+    [
+     -42.0,
+     2.0,
+     0.0
+    ]
+   ],
+   "globe_lamps": [
+    [
+     14.5,
+     132.0
+    ]
+   ],
+   "campus_sign": [
+    56.5,
+    119.0
+   ],
+   "trash_cans": [
+    [
+     76.0,
+     176.0
+    ],
+    [
+     0.0,
+     129.0
+    ],
+    [
+     69.0,
+     99.0
+    ]
+   ],
+   "brick_insets": [
+    [
+     21.0,
+     113.5
+    ],
+    [
+     46.0,
+     88.5
+    ],
+    [
+     10.0,
+     69.2
+    ]
+   ],
+   "statues": [
+    {
+     "name": "Auditorium lawn gator",
+     "map_m": [
+      38.0,
+      83.0
+     ],
+     "facing_deg": 180.0
+    }
+   ],
+   "landscape_masses": [
+    [
+     6.0,
+     58.0
+    ],
+    [
+     72.0,
+     56.5
+    ],
+    [
+     0.0,
+     96.5
+    ],
+    [
+     24.0,
+     76.0
+    ],
+    [
+     56.0,
+     62.0
+    ]
+   ],
+   "hedge_rows": [
+    [
+     4.0,
+     82.0,
+     90.0
+    ],
+    [
+     72.0,
+     82.0,
+     90.0
+    ]
+   ],
+   "shrubs": [
+    [
+     14.0,
+     84.0
+    ],
+    [
+     60.0,
+     84.0
+    ],
+    [
+     17.0,
+     96.0
+    ],
+    [
+     58.5,
+     96.0
+    ],
+    [
+     18.0,
+     75.0
+    ],
+    [
+     58.0,
+     75.0
+    ],
+    [
+     23.0,
+     65.0
+    ],
+    [
+     8.0,
+     97.0
+    ],
+    [
+     71.5,
+     97.0
+    ],
+    [
+     77.0,
+     54.0
+    ],
+    [
+     23.0,
+     118.0
+    ],
+    [
+     53.0,
+     118.0
+    ]
+   ],
+   "foreground_shrubs": [
+    [
+     26.0,
+     98.0
+    ],
+    [
+     34.0,
+     98.0
+    ],
+    [
+     42.0,
+     98.0
+    ],
+    [
+     50.0,
+     98.0
+    ],
+    [
+     66.0,
+     98.0
+    ],
+    [
+     11.5,
+     94.5
+    ],
+    [
+     24.5,
+     94.5
+    ],
+    [
+     35.5,
+     94.5
+    ]
+   ],
+   "auditorium_east_beds": [
+    [
+     76.0,
+     29.0
+    ],
+    [
+     65.0,
+     50.0
+    ]
+   ],
+   "tower_road_shrubs": [
+    [
+     -34.0,
+     27.0
+    ],
+    [
+     -34.0,
+     4.0
+    ],
+    [
+     -31.0,
+     -12.0
+    ],
+    [
+     -4.0,
+     31.0
+    ],
+    [
+     -6.0,
+     73.5
+    ],
+    [
+     -6.0,
+     49.0
+    ]
+   ],
+   "tower_lawn_masses": [
+    [
+     8.0,
+     38.0
+    ]
+   ],
+   "road_lamps": [
+    [
+     -1.5,
+     80.0
+    ],
+    [
+     -1.5,
+     58.5
+    ],
+    [
+     -3.0,
+     35.0
+    ],
+    [
+     -3.0,
+     10.0
+    ],
+    [
+     -43.0,
+     90.0
+    ],
+    [
+     -42.0,
+     22.0
+    ],
+    [
+     -42.0,
+     -8.0
+    ]
+   ],
+   "tower_benches": [
+    [
+     -33.0,
+     18.0
+    ],
+    [
+     8.0,
+     18.5
+    ]
+   ],
+   "tower_trash_cans": [
+    [
+     -30.0,
+     17.0
+    ],
+    [
+     7.0,
+     48.0
+    ],
+    [
+     -42.0,
+     -12.0
+    ]
+   ],
+   "tower_sign": [
+    -10.0,
+    33.0
+   ],
    "hammocks": [
     [
      [
@@ -3804,32 +4445,32 @@
  },
  "attribution": "Map data (c) OpenStreetMap contributors, ODbL 1.0",
  "export_hygiene": {
-  "geometry_mode_lines_sorted": 102,
+  "geometry_mode_lines_sorted": 104,
   "trailing_ws_lines": 4,
   "max_abs_vertex": 32639,
-  "geometry_modes_rewritten": 48,
+  "geometry_modes_rewritten": 49,
   "common0_jump_link": true
  },
  "collision_repair": {
   "area_1": {
    "vertices": [
-    6713,
-    6694
+    8795,
+    8775
    ],
-   "welded_vertices": 19,
-   "collapsed_tris": 28,
-   "tjunction_splits": 240,
+   "welded_vertices": 20,
+   "collapsed_tris": 30,
+   "tjunction_splits": 264,
    "triangles": [
-    8723,
-    8935
+    10883,
+    11117
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [],
-  "collision_tris": 8935,
-  "render_tris": 54567,
+  "collision_tris": 11117,
+  "render_tris": 87188,
   "lua_names": [
    "SGL_HUB_SIGN_CENTURY_TOWER",
    "SGL_HUB_SIGN_FINAL_EXAM",
@@ -3843,9 +4484,9 @@
    "id_bhvSglDoor"
   ],
   "fog_patched": [
-   48,
-   48
+   49,
+   49
   ]
  },
- "level_dir": "mods/sgl64/levels/castle_grounds"
+ "level_dir": "/home/mdracc/super-gatorlator-64/.worktrees/pr35-release/mods/sgl64/levels/castle_grounds"
 }

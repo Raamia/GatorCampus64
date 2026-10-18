@@ -226,7 +226,8 @@ def build(S):
     hole_bbs = [G.bbox(h) for h in holes]
 
     # ---- base grass + collision ground
-    ground_sheet(vis, ext, Z["base"], "ground_grass", ponds + holes)
+    base_grass = "hub_ground_grass" if getattr(S, "key", "hub") == "hub" else "ground_grass"
+    ground_sheet(vis, ext, Z["base"], base_grass, ponds + holes)
     col_holes = [G.inset(h, HOLE_OVERLAP_M) or h for h in holes]
     ground_sheet(col, col_bounds, 0.0, "COL default", ponds + col_holes)
     if holes:
@@ -262,7 +263,8 @@ def build(S):
         holes = [[T(p) for p in h] for h in a.get("holes", [])]
         if in_pond(G.bbox(ring)[:2]) and in_pond(G.bbox(ring)[2:]):
             continue
-        z = Z["lawn"] if a["cls"] in ("lawn", "forest") else Z["area"]
+        is_lawn = a["cls"] in ("lawn", "forest")
+        z = Z["lawn"] if is_lawn else Z["area"]
         # ponds (and landmark ground holes) inside a park polygon become holes, or the lawn would
         # cover the water / the sunken bowl (a landmark hole the area already has is not added twice)
         own_holes = list(holes)
@@ -274,7 +276,8 @@ def build(S):
         tris = G.triangulate([ring] + holes)
         if S.ground_holes:   # partial overlaps: drop the triangles whose centre is in a ground hole
             tris = [t for t in tris if not piece_in_hole(t)]
-        vis.flat_tris(tris, z, a["mat"], cell=TILE, ox=TILE_OFF, oy=TILE_OFF)
+        area_mat = "hub_lawn" if is_lawn and getattr(S, "key", "hub") == "hub" else a["mat"]
+        vis.flat_tris(tris, z, area_mat, cell=TILE, ox=TILE_OFF, oy=TILE_OFF)
 
     # ---- roads
     node_roads, node_points = {}, {}
@@ -378,6 +381,13 @@ def build(S):
         if sum(1 for q in pts if in_pond(q)) > len(pts) / 2:
             continue
         w = p["width"]
+        # The Auditorium approach is a generous pedestrian plaza; widen only mapped sidewalks in
+        # this local Hub pocket, leaving narrow connectors and all other stages untouched.
+        if getattr(S, "key", "hub") == "hub" and p["mat"] == "sidewalk":
+            mx = sum(q[0] for q in raw) / len(raw) + S.cx
+            my = sum(q[1] for q in raw) / len(raw) + S.cy
+            if -5.0 <= mx <= 100.0 and 60.0 <= my <= 175.0:
+                w *= 1.14
         if p["kind"] == "crossing":
             # crosswalk stripes only where a road is: a crossing tag over a footpath or a lawn draws nothing
             quads = [q for q, _s0, _s1 in G.ribbon(pts, w)]

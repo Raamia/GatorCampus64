@@ -1501,6 +1501,58 @@ def _palm(vis, col, x, y, ht, key):
         vis.poly([base, ml, tip, mr], R("frond"), normal_hint=(0, 0, -1))
 
 
+def _bike_beam(vis, a, b, width, material):
+    """A slim, double-sided low-poly bicycle frame tube between two 3D points."""
+    dx, dz = b[0] - a[0], b[2] - a[2]
+    length = math.hypot(dx, dz) or 1.0
+    px, pz = -dz / length * width, dx / length * width
+    uv = [(0.1, 0.62)] * 4 if material in ("banner_orange", "banner_blue") else None
+    for side in (-1, 1):
+        y = side * 0.035
+        q = [(a[0] + px, a[1] + y, a[2] + pz), (b[0] + px, b[1] + y, b[2] + pz),
+             (b[0] - px, b[1] + y, b[2] - pz), (a[0] - px, a[1] + y, a[2] - pz)]
+        vis.poly(q, material, uvs=uv, normal_hint=(0.0, side, 0.0))
+
+
+def _bicycle(vis, x, y, frame):
+    """A parked campus bike: paired polygon wheels, visible spokes and a painted frame."""
+    wheel_z, wheel_r, wheel_w = 0.34, 0.32, 0.035
+    wheel_xs = (x - 0.52, x + 0.52)
+    for wx in wheel_xs:
+        for side in (-1, 1):
+            yy = y + side * wheel_w
+            for k in range(12):
+                a0, a1 = math.tau * k / 12, math.tau * (k + 1) / 12
+                outer0 = (wx + wheel_r * math.cos(a0), yy, wheel_z + wheel_r * math.sin(a0))
+                outer1 = (wx + wheel_r * math.cos(a1), yy, wheel_z + wheel_r * math.sin(a1))
+                inner1 = (wx + (wheel_r - 0.055) * math.cos(a1), yy, wheel_z + (wheel_r - 0.055) * math.sin(a1))
+                inner0 = (wx + (wheel_r - 0.055) * math.cos(a0), yy, wheel_z + (wheel_r - 0.055) * math.sin(a0))
+                vis.poly([outer0, outer1, inner1, inner0], "dark_trim", normal_hint=(0.0, side, 0.0))
+            # Four spokes make the wheels read clearly at game scale.
+            for k in range(4):
+                a = math.tau * k / 4
+                rim = (wx + (wheel_r - 0.055) * math.cos(a), yy, wheel_z + (wheel_r - 0.055) * math.sin(a))
+                hub = (wx, yy, wheel_z)
+                _bike_beam(vis, hub, rim, 0.009, "metal_gray")
+        # Tire sidewall gives the thin wheel a little depth when viewed obliquely.
+        for k in range(12):
+            a0, a1 = math.tau * k / 12, math.tau * (k + 1) / 12
+            p0 = (wx + wheel_r * math.cos(a0), y - wheel_w, wheel_z + wheel_r * math.sin(a0))
+            p1 = (wx + wheel_r * math.cos(a1), y - wheel_w, wheel_z + wheel_r * math.sin(a1))
+            p2 = (p1[0], y + wheel_w, p1[2])
+            p3 = (p0[0], y + wheel_w, p0[2])
+            vis.poly([p0, p1, p2, p3], "dark_trim")
+    rear, front = (wheel_xs[0], y, wheel_z), (wheel_xs[1], y, wheel_z)
+    crank = (x - 0.02, y, 0.36)
+    seat = (x - 0.18, y, 0.70)
+    head = (x + 0.30, y, 0.66)
+    for a, b in ((rear, crank), (crank, seat), (seat, head), (head, crank), (crank, front), (seat, rear)):
+        _bike_beam(vis, a, b, 0.025, frame)
+    box(vis, x - 0.40, x - 0.05, y - 0.07, y + 0.07, 0.70, 0.75, "dark_trim", faces="tnsew")
+    box(vis, x + 0.26, x + 0.44, y - 0.16, y + 0.16, 0.78, 0.83, "metal_gray", faces="tnsew")
+    _bike_beam(vis, (x + 0.30, y, 0.66), (x + 0.40, y, 0.79), 0.025, "metal_gray")
+
+
 def _build_plaza(ctx):
     vis, col, pave = Bld(), Bld(), Bld()
     # paving (decal: the generator moves it 1.5 cm under the collision floor)
@@ -1566,6 +1618,10 @@ def _build_plaza(ctx):
             xh = ax + (bx - ax) * k / 8
             vis.poly([(xh - 0.03, ay, 0.0), (xh + 0.03, ay, 0.0), (xh + 0.03, ay, 0.85), (xh - 0.03, ay, 0.85)],
                      "metal_gray", normal_hint=(0, -1, 0))
+    # The existing racks read as empty rails from the plaza. Park four simple campus bikes at them.
+    for bx, by, frame in ((-576.6, -62.25, "banner_orange"), (-572.5, -62.25, "banner_blue"),
+                          (-576.6, -67.25, "banner_blue"), (-572.5, -67.25, "banner_orange")):
+        _bicycle(vis, bx, by, frame)
     for k, (x, y, R_) in enumerate(OAKS):
         _oak(vis, col, x, y, R_, 5.0 + 0.4 * k, k)
     for k, (x, y, ht) in enumerate(PALMS):

@@ -8,7 +8,8 @@ import math
 
 GROUND_Z = -0.03  # below the collision/shadow floor; all visible pieces meet here
 PRIORITY = {
-    'ground_grass': 0, 'grass': 5, 'lawn': 10, 'forest_floor': 11,
+    'ground_grass': 0, 'hub_ground_grass': 0, 'grass': 5,
+    'lawn': 10, 'hub_lawn': 10, 'forest_floor': 11,
     'mulch': 12, 'parking': 20, 'plaza_brick': 30,
     'concrete': 31, 'path': 31, 'sidewalk': 31, 'steps': 32,
     'asphalt': 40, 'road_paint': 50, 'crosswalk': 60,

@@ -17,7 +17,7 @@
       "yaw": -120,
       "radius": 350,
       "label": "on the Plaza of the Americas, right by the spawn",
-      "search_radius": 300,
+      "search_radius": 500,
       "height_tolerance": 25
     },
     "hub_alberta": {

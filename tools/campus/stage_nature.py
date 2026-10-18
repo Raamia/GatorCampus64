@@ -16,6 +16,21 @@ MAX_POLE_TREES = 28
 POLE_MIN_SPACING = 4.5      # m between climbable trees (bhv_pole_base_loop pushes Mario to 0.7 m)
 POLE_TREE_HITBOX_M = 5.0    # bhvTree: SET_HITBOX(80, 500); Mario climbs to 4 m and handstands on top
 
+# Hand-authored live oaks, map metres from Century Tower. The road rows frame Newell Drive while
+# staying on its grass verges; the facade pair breaks up the Auditorium's west lawn wall, and the
+# tower pair frames (rather than blocks) the landmark. Existing OSM trees remain untouched.
+HUB_AUDITORIUM_GROVE_OAKS = [(12.0, 166.0), (1.0, 153.0), (86.0, 124.0),
+                             (-2.0, 105.0), (62.0, 108.0), (5.0, 100.0), (60.0, 160.0),
+                             (20.0, 125.0), (42.0, 137.0), (8.0, 83.0), (50.0, 78.0),
+                             (82.0, 43.0), (78.0, 58.0), (66.0, 35.0)]
+HUB_ROADSIDE_OAKS = [(-38.0, 90.0), (-40.0, 45.0), (-38.0, 25.0), (-38.0, -8.0),
+                     (-8.0, 80.0), (-8.0, 60.0), (-8.0, 35.0)]
+HUB_AUDITORIUM_FACADE_OAKS = [(15.0, 48.0), (15.0, 31.0)]
+HUB_TOWER_FLANK_OAKS = [(-30.0, 8.0), (10.0, -10.0)]
+HUB_LARGE_OAKS = set(HUB_AUDITORIUM_FACADE_OAKS + [(-30.0, 8.0)])
+HUB_OAKS = (HUB_AUDITORIUM_GROVE_OAKS + HUB_ROADSIDE_OAKS +
+            HUB_AUDITORIUM_FACADE_OAKS + HUB_TOWER_FLANK_OAKS)
+
 
 def rnd(key, lo=0.0, hi=1.0):
     v = int(hashlib.md5(key.encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
@@ -85,6 +100,90 @@ def oak(acc, x, y, key, clear, crown=None, pole=False):
                    ring(lx, ly, r2, lz + 0.4 * r2, 6, rot + 1.3, key + "e")],
              (lx, ly, lz + 1.1 * r2), (lx, ly, lz - 0.2), mat)
     return 0.45
+
+
+def _branch(acc, a, b, r0, r1, mat, key, sides=5):
+    """Low-poly tapered branch between 3D points."""
+    d = [b[i] - a[i] for i in range(3)]
+    length = math.sqrt(sum(v * v for v in d)) or 1.0
+    axis = [v / length for v in d]
+    ref = (0.0, 0.0, 1.0) if abs(axis[2]) < 0.9 else (0.0, 1.0, 0.0)
+    u = (axis[1] * ref[2] - axis[2] * ref[1], axis[2] * ref[0] - axis[0] * ref[2],
+         axis[0] * ref[1] - axis[1] * ref[0])
+    ul = math.sqrt(sum(v * v for v in u)) or 1.0
+    u = tuple(v / ul for v in u)
+    v = (axis[1] * u[2] - axis[2] * u[1], axis[2] * u[0] - axis[0] * u[2],
+         axis[0] * u[1] - axis[1] * u[0])
+    for i in range(sides):
+        j = (i + 1) % sides
+        def pt(c, r, k):
+            ang = 2 * math.pi * k / sides + rnd(key, 0, 0.4)
+            return tuple(c[q] + r * (u[q] * math.cos(ang) + v[q] * math.sin(ang)) for q in range(3))
+        acc.poly([pt(a, r0, i), pt(a, r0, j), pt(b, r1, j), pt(b, r1, i)], mat)
+
+
+def live_oak(acc, col, x, y, key, scale=1.0):
+    """Broad, low-spreading southern live oak with a trunk-only simple collider."""
+    trunk_r = 0.72 * scale
+    base_z, branch_z = -0.1, 3.15 * scale
+    trunk(acc, x, y, trunk_r, base_z, branch_z + 0.25, 7, "bark", key,
+          lean=(rnd(key + ":leanx", -0.22, 0.22), rnd(key + ":leany", -0.18, 0.18)))
+    rot = rnd(key + ":rot", 0, 2 * math.pi)
+    reach = 8.0 * scale
+    tips = []
+    for i in range(4):
+        a = rot + i * math.pi / 2 + rnd(f"{key}:branch{i}", -0.18, 0.18)
+        r = reach * rnd(f"{key}:reach{i}", 0.78, 1.0)
+        start = (x + math.cos(a) * 0.4, y + math.sin(a) * 0.4, branch_z)
+        tip = (x + math.cos(a) * r, y + math.sin(a) * r, branch_z + rnd(f"{key}:lift{i}", 0.6, 1.1))
+        _branch(acc, start, tip, 0.43 * scale, 0.18 * scale, "bark", f"{key}:limb{i}")
+        tips.append((tip[0], tip[1], tip[2] + 0.5 * scale, a))
+    for i, (cx, cy, cz, a) in enumerate(tips):
+        R = (4.5 if i % 2 == 0 else 4.0) * scale
+        H = 3.5 * scale
+        mat = "leaves_oak" if i % 2 == 0 else "leaves_oak2"
+        rings = [ring(cx, cy, 0.62 * R, cz, 8, rot, f"{key}:c{i}a", jitter=0.13, ry=0.78 * R),
+                 ring(cx, cy, R, cz + 0.25 * H, 8, rot + 0.2, f"{key}:c{i}b", jitter=0.12, ry=0.78 * R),
+                 ring(cx, cy, 0.72 * R, cz + 0.82 * H, 8, rot + 0.4, f"{key}:c{i}c", jitter=0.12, ry=0.8 * R)]
+        blob(acc, rings, (cx, cy, cz + H), (cx, cy, cz - 0.45 * scale), mat)
+        # A few short moss strands hang from the lower, outer canopy edge.
+        if i in (0, 2):
+            mx, my = cx + math.cos(a) * 1.2 * scale, cy + math.sin(a) * 1.2 * scale
+            for j, side in enumerate((-1, 1)):
+                xx, yy = mx + math.cos(a + math.pi / 2) * side * 0.55 * scale, my + math.sin(a + math.pi / 2) * side * 0.55 * scale
+                p0, p1 = (xx, yy, cz + 0.35 * scale), (xx + 0.35 * math.cos(a), yy + 0.35 * math.sin(a), cz - 1.7 * scale)
+                acc.wall(p0[:2], p1[:2], p1[2], p0[2], "spanish_moss", [(0, 0), (1, 0), (1, 1), (0, 1)])
+                acc.wall(p1[:2], p0[:2], p1[2], p0[2], "spanish_moss", [(1, 0), (0, 0), (0, 1), (1, 1)])
+    # Small transparent blotches (not one broad rectangle) make a readable dappled shadow.
+    shade_centres = ((-4.2, -3.4), (2.5, -4.1), (5.0, 0.8), (-3.8, 3.0), (2.0, 4.3))
+    for i, (ox, oy) in enumerate(shade_centres):
+        cx, cy = x + ox * scale, y + oy * scale
+        a = rnd(f"{key}:shade{i}", -0.45, 0.45)
+        hx, hy = 3.15 * scale, 2.2 * scale
+        c, s = math.cos(a), math.sin(a)
+        q = [(cx + c * u - s * v, cy + s * u + c * v, -0.02)
+             for u, v in ((-hx, -hy), (hx, -hy), (hx, hy), (-hx, hy))]
+        acc.poly(q, "oak_shadow", [(0, 0), (1, 0), (1, 1), (0, 1)])
+    # Eight short wall faces form a conservative trunk collider; canopy/moss/shade stay non-colliding.
+    if col is not None:
+        pts = [(x + math.cos(rot + 2 * math.pi * i / 8) * trunk_r,
+                y + math.sin(rot + 2 * math.pi * i / 8) * trunk_r) for i in range(8)]
+        for a, b in zip(pts, pts[1:] + pts[:1]):
+            col.wall(a, b, 0.0, 3.2 * scale, "COL default")
+
+
+def _path_clearance(S, p):
+    best = 999.0
+    for line in S.data["paths"]:
+        if line["id"] in S.replaced_ways:
+            continue
+        pts = line["pts"]
+        for a, b in zip(pts, pts[1:]):
+            best = min(best, G.seg_dist(p, a, b) - line["width"] / 2)
+    for line in S.data["roads"]:
+        for a, b in zip(line["pts"], line["pts"][1:]):
+            best = min(best, G.seg_dist(p, a, b) - line["width"] / 2)
+    return best
 
 
 def pine(acc, x, y, key, clear):
@@ -176,6 +275,25 @@ def build(S, pole_avoid=()):
     counts = {"oak": 0, "pine": 0, "palm": 0, "colliders": 0, "climbable": 0}
     poles = pick_pole_trees(S, pole_avoid)
     S.pole_trees = []
+    curated = []
+    if getattr(S, "key", "hub") == "hub":
+        for i, pt in enumerate(HUB_OAKS):
+            # Keep the heavy trunk off paths/roads and buildings. A nearby mapped tree is replaced
+            # visually by the authored tree so this does not double the canopy at one point.
+            if _path_clearance(S, pt) < 1.25:
+                continue
+            if any(G.point_in_poly(pt, b["pts"]) for b in d["buildings"]):
+                continue
+            if any(math.dist(pt, q) < 7.0 for q in curated):
+                continue
+            x, y = S.T(pt)
+            scale = (1.28 if pt == (50.0, 78.0) else
+                     (1.12 if pt in HUB_LARGE_OAKS else (1.0 if i < 2 else 0.92)))
+            live_oak(vis, col, x, y, f"hub_live_oak_{i}", scale)
+            curated.append(pt)
+        S.hub_oak_pts = curated
+        counts["hand_authored_oaks"] = len(curated)
+        counts["hand_authored_positions_m"] = [[round(x, 2), round(y, 2)] for x, y in curated]
     # crowns reach up to ~10.5 m from the trunk: a tree closer than that to the s16 vertex limit
     # (327.67 m from the stage centre) would wrap around; out there it is behind the tree line anyway
     lim = 327.0 - 10.5
@@ -183,6 +301,8 @@ def build(S, pole_avoid=()):
     holes = getattr(S, "ground_holes", None) or []     # landmark ground holes (no ground to stand on)
     counts["in_ground_hole"] = 0
     for t in d["trees"]:
+        if getattr(S, "key", "hub") == "hub" and any(math.dist(t["pt"], q) < 7.5 for q in curated):
+            continue
         if t["id"] in S.removed_points or t["id"] in S.replaced_ids:
             continue
         x, y = S.T(t["pt"])

@@ -84,6 +84,8 @@ PALETTE = {
     "white_trim":    {"tex": "white_trim.png",    "tile_m": 2.0, "color": "#E6E2D8"},
     "rock":          {"tex": "rock.png",          "tile_m": 3.0, "color": "#C2B79F"},   # pale (The Potato)
     "bronze":        {"tex": "bronze.png",        "tile_m": 1.0, "color": "#5E4630"},   # statues (the gator)
+    "leaves_oak":    {"tex": "leaves_oak.png",    "tile_m": 4.0, "color": "#3E6E2E"},   # plaza shrubs
+    "leaves_oak2":   {"tex": "leaves_oak2.png",   "tile_m": 4.0, "color": "#4A6A2C"},
     # name sign of The Hub: 64 x 32, white "THE HUB" on UF blue with an orange rule; map the whole
     # texture once (UV 0..1) onto a 2:1 panel
     "sign_the_hub":  {"tex": "sign_the_hub.png",  "tile_m": 6.0, "color": "#2A40A8"},
