@@ -58,7 +58,7 @@ def test_claim_oldest_and_skip_locked(conn, pg):
     j_old, c_old = add_job(conn, "Old", "now() - interval '1 minute'")
     other = psycopg.connect(pg)
     # another worker holds the oldest row locked: we get the next one
-    other.execute("SELECT id FROM jobs WHERE id = %s FOR UPDATE", (j_old,))
+    other.execute("SELECT id FROM characters WHERE id = %s FOR UPDATE", (c_old,))
     got = db.claim_job(conn, "w1")
     assert got["id"] == j_new and got["name"] == "New"
     assert got["photos"] == [f"photos/{j_new}/0.jpg", f"photos/{j_new}/1.jpg"] and got["attempts"] == 1
@@ -76,13 +76,13 @@ def test_claim_oldest_and_skip_locked(conn, pg):
 
 def test_progress_mirrors_state_to_character(conn):
     jid, cid = add_job(conn)
-    db.claim_job(conn, "w1")
-    db.update_job(conn, jid, cid, state="preview", step="store", log="x" * 9000)
+    job = db.claim_job(conn, "w1")
+    db.update_job(conn, jid, cid, lease_token=job["lease_token"], state="preview", step="store", log="x" * 9000)
     j, c = row(conn, "jobs", jid), row(conn, "characters", cid)
     assert (j["state"], j["step"], len(j["log"])) == ("preview", "store", db.LOG_TAIL)
     assert (c["state"], c["step"]) == ("preview", "store")
     with pytest.raises(ValueError):
-        db.update_job(conn, jid, cid, state="building")
+        db.update_job(conn, jid, cid, lease_token=job["lease_token"], state="building")
     with pytest.raises(psycopg.errors.CheckViolation):  # the schema agrees
         conn.execute("UPDATE jobs SET step = 'done' WHERE id = %s", (jid,))
 
@@ -92,7 +92,7 @@ def test_handle_success_assigns_slot_and_writes_artifacts(conn, monkeypatch):
     job = db.claim_job(conn, "w1")
     seen = {}
 
-    def fake_run(job_id, name, store, backend, cfg, progress, photos=None):
+    def fake_run(job_id, name, store, backend, cfg, progress, photos=None, check=None):
         seen["photos"] = photos
         progress("build", "build", "line\n" * 5000)
         assert row(conn, "characters", cid)["state"] == "build"
@@ -154,7 +154,7 @@ def test_deleted_character_cancels_job(conn, monkeypatch):
     job = db.claim_job(conn, "w1")
     calls = []
 
-    def run(job_id, name, store, backend, cfg, progress, photos=None):
+    def run(job_id, name, store, backend, cfg, progress, photos=None, check=None):
         progress("face", "face", "ok")
         conn.execute("DELETE FROM characters WHERE id = %s", (cid,))  # the owner deletes it
         with pytest.raises(pipeline.JobCancelled):
@@ -166,7 +166,7 @@ def test_deleted_character_cancels_job(conn, monkeypatch):
     assert worker.handle(conn, job, Store(), None, None, **QUIET) is False
     assert calls == ["cancelled"]
     with pytest.raises(db.JobGone):
-        db.update_job(conn, jid, cid, log="x")
+        db.update_job(conn, jid, cid, lease_token=job["lease_token"], log="x")
 
     # deleted after the pipeline finished: finish_job notices, the build is discarded
     jid2, cid2 = add_job(conn)
@@ -185,12 +185,186 @@ def test_deleted_character_cancels_job(conn, monkeypatch):
 
 def test_recover_orphans(conn):
     jid, cid = add_job(conn)
-    db.claim_job(conn, "w1")
-    db.update_job(conn, jid, cid, state="build", step="build")
+    job = db.claim_job(conn, "w1")
+    db.update_job(conn, jid, cid, lease_token=job["lease_token"], state="build", step="build")
     s = Store()
-    worker.recover(conn, "w1", s, **QUIET)
+    worker.recover(conn, s, **QUIET)
+    assert row(conn, "jobs", jid)["state"] == "build"  # same hostname does not revoke a live lease
+    assert not s.deleted
+    conn.execute("UPDATE jobs SET lease_expires_at = now() - interval '1 second' WHERE id = %s", (jid,))
+    worker.recover(conn, s, **QUIET)
     j = conn.execute("SELECT state, step, log, error FROM jobs WHERE id = %s", (jid,)).fetchone()
-    assert j["state"] == "failed" and j["step"] == "build" and "restarted" in j["log"] and "restarted" in j["error"]
+    assert j["state"] == "failed" and j["step"] == "build" and "expired" in j["log"] and "expired" in j["error"]
     assert row(conn, "characters", cid)["state"] == "failed"
-    assert s.deleted == [f"photos/{jid}/"]
-    assert db.orphaned_jobs(conn, "w1") == []
+    assert s.deleted == [f"photos/{jid}/", f"builds/{jid}/"]
+    assert db.expire_jobs(conn) == []
+
+
+def test_progress_does_not_lock_job_before_character(conn, pg):
+    import time
+    from concurrent.futures import ThreadPoolExecutor
+    jid, cid = add_job(conn)
+    job = db.claim_job(conn, "w1")
+    with psycopg.connect(pg) as deleting, ThreadPoolExecutor(max_workers=1) as executor:
+        deleting.execute('SELECT id FROM characters WHERE id = %s FOR UPDATE', (cid,))
+        def progress():
+            with db.connect(pg) as writer:
+                db.update_job(writer, jid, cid, state='build', step='build', lease_token=job['lease_token'])
+        update = executor.submit(progress)
+        try:
+            deadline = time.monotonic() + 3
+            while time.monotonic() < deadline:
+                waiting = conn.execute("SELECT 1 FROM pg_stat_activity WHERE datname = current_database() "
+                                       "AND wait_event_type = 'Lock'").fetchone()
+                if waiting:
+                    break
+                time.sleep(.01)
+            assert waiting
+            deleting.execute('SELECT id FROM jobs WHERE id = %s FOR UPDATE NOWAIT', (jid,))
+        finally:
+            deleting.rollback()
+        update.result(timeout=3)
+
+
+def test_lease_fences_all_writes_and_wrong_character(conn):
+    jid, cid = add_job(conn)
+    job = db.claim_job(conn, "same-host")
+    _, other = add_job(conn, "Other")
+    for token, character in [(uuid.uuid4(), cid), (job["lease_token"], other), (None, cid)]:
+        with pytest.raises(db.JobGone):
+            db.update_job(conn, jid, character, state="build", lease_token=token)
+        with pytest.raises(db.JobGone):
+            db.finish_job(conn, jid, character, True, "late", lease_token=token)
+        with pytest.raises(db.JobGone):
+            db.renew_lease(conn, jid, character, token)
+    conn.execute("UPDATE jobs SET lease_expires_at = now() - interval '1 second' WHERE id = %s", (jid,))
+    for operation in [lambda: db.renew_lease(conn, jid, cid, job["lease_token"]),
+                      lambda: db.update_job(conn, jid, cid, log="late", lease_token=job["lease_token"]),
+                      lambda: db.finish_job(conn, jid, cid, True, "late", lease_token=job["lease_token"]),
+                      lambda: db.finish_job(conn, jid, cid, False, "late", lease_token=job["lease_token"])]:
+        with pytest.raises(db.JobGone):
+            operation()
+    assert row(conn, "jobs", jid)["state"] == "spec"
+    assert db.expire_jobs(conn)[0]["id"] == jid
+    assert db.claim_job(conn, "replacement-host")["character_id"] == other
+    assert row(conn, "jobs", jid)["state"] == "failed"
+    with pytest.raises(db.JobGone):
+        db.finish_job(conn, jid, cid, True, "late", lease_token=job["lease_token"])
+    assert conn.execute("SELECT count(*) AS n FROM deploys").fetchone()["n"] == 0
+
+
+def test_renew_and_recover_all_hosts_and_legacy(conn):
+    jid, cid = add_job(conn)
+    job = db.claim_job(conn, "gone-host")
+    conn.execute("UPDATE jobs SET lease_expires_at = now() + interval '10 seconds' WHERE id = %s", (jid,))
+    db.renew_lease(conn, jid, cid, job["lease_token"])
+    assert conn.execute("SELECT lease_expires_at > now() + interval '100 seconds' AS ok "
+                        "FROM jobs WHERE id = %s", (jid,)).fetchone()["ok"]
+    legacy, _ = add_job(conn, "Legacy")
+    db.claim_job(conn, "another-host")
+    conn.execute("UPDATE jobs SET lease_token = NULL, lease_expires_at = NULL WHERE id = %s", (legacy,))
+    assert [j["id"] for j in db.expire_jobs(conn)] == [legacy]
+    assert row(conn, "jobs", jid)["state"] == "spec"
+
+
+def test_renew_waiting_on_character_cannot_revive_expired_job(conn, pg):
+    import time
+    from concurrent.futures import ThreadPoolExecutor
+    jid, cid = add_job(conn)
+    job = db.claim_job(conn, "w")
+    with psycopg.connect(pg) as locker, ThreadPoolExecutor(max_workers=1) as pool:
+        locker.execute("SELECT id FROM characters WHERE id = %s FOR UPDATE", (cid,))
+        def renew():
+            with db.connect(pg) as c:
+                db.renew_lease(c, jid, cid, job["lease_token"])
+        task = pool.submit(renew)
+        deadline = time.monotonic() + 3
+        while time.monotonic() < deadline:
+            if conn.execute("SELECT 1 FROM pg_stat_activity WHERE datname = current_database() "
+                            "AND wait_event_type = 'Lock'").fetchone():
+                break
+            time.sleep(.01)
+        else:
+            pytest.fail("renewal did not wait on character")
+        locker.execute("UPDATE jobs SET lease_expires_at = clock_timestamp() - interval '1 second' WHERE id = %s",
+                       (jid,))
+        locker.commit()
+        with pytest.raises(db.JobGone):
+            task.result(timeout=3)
+
+
+def test_watch_renews_during_quiet_pipeline_and_cancels_on_loss(conn, monkeypatch):
+    import time
+    jid, cid = add_job(conn)
+    job = db.claim_job(conn, "w")
+    monkeypatch.setattr(db, "RENEW_SECONDS", .02)
+    conn.execute("UPDATE jobs SET lease_expires_at = now() + interval '10 seconds' WHERE id = %s", (jid,))
+    watch = worker.LeaseWatch(conn, job)
+    watch.thread.start()
+    try:
+        deadline = time.monotonic() + 3
+        while time.monotonic() < deadline:
+            if conn.execute("SELECT lease_expires_at > now() + interval '100 seconds' AS ok "
+                            "FROM jobs WHERE id = %s", (jid,)).fetchone()["ok"]:
+                break
+            time.sleep(.01)
+        else:
+            pytest.fail("quiet job lease was not renewed")
+        conn.execute("DELETE FROM characters WHERE id = %s", (cid,))
+        assert watch.lost.wait(3)
+        with pytest.raises(pipeline.JobCancelled):
+            watch.check()
+    finally:
+        watch.stop.set()
+        watch.thread.join(3)
+    assert not watch.thread.is_alive()
+
+
+def test_concurrent_sweepers_only_one_owns_cleanup(conn, pg):
+    from concurrent.futures import ThreadPoolExecutor
+    jid, cid = add_job(conn)
+    db.claim_job(conn, 'retired-host')
+    conn.execute("UPDATE jobs SET lease_expires_at = now() - interval '1 second'")
+    def sweep():
+        with db.connect(pg) as c:
+            return db.expire_jobs(c)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        first, second = pool.submit(sweep), pool.submit(sweep)
+        expired = first.result(timeout=5) + second.result(timeout=5)
+    assert [j['id'] for j in expired] == [jid]
+    assert row(conn, 'characters', cid)['state'] == 'failed'
+
+
+def test_completed_job_is_immutable_and_not_swept(conn):
+    jid, cid = add_job(conn)
+    job = db.claim_job(conn, 'w')
+    db.finish_job(conn, jid, cid, True, 'done', spec={}, artifacts={}, lease_token=job['lease_token'])
+    assert not db.expire_jobs(conn)
+    with pytest.raises(db.JobGone):
+        db.update_job(conn, jid, cid, state='build', lease_token=job['lease_token'])
+    with pytest.raises(db.JobGone):
+        db.finish_job(conn, jid, cid, False, 'late failure', lease_token=job['lease_token'])
+    assert row(conn, 'jobs', jid)['state'] == 'ready'
+    assert row(conn, 'characters', cid)['slot'] == 1
+
+
+def test_storage_fences_upload_after_delete_or_lease_loss(conn):
+    jid, cid = add_job(conn)
+    job = db.claim_job(conn, 'w')
+    class Uploads(Store):
+        def __init__(self):
+            super().__init__()
+            self.puts = []
+        def put_file(self, key, path):
+            self.puts.append(key)
+    raw = Uploads()
+    guarded = worker.JobStorage(conn, job, raw)
+    guarded.put_file(f'builds/{jid}/one', 'unused')
+    conn.execute("UPDATE jobs SET lease_expires_at = now() - interval '1 second' WHERE id = %s", (jid,))
+    with pytest.raises(pipeline.JobCancelled):
+        guarded.put_file(f'builds/{jid}/two', 'unused')
+    conn.execute('DELETE FROM characters WHERE id = %s', (cid,))
+    with pytest.raises(pipeline.JobCancelled):
+        guarded.put_file(f'builds/{jid}/three', 'unused')
+    assert raw.puts == [f'builds/{jid}/one']
+    assert conn.execute('SELECT count(*) AS n FROM storage_cleanup WHERE job_id = %s', (jid,)).fetchone()['n'] == 2

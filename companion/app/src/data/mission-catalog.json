@@ -9,7 +9,11 @@
       "objective": "Climb the Reitz Union to its penthouse roof, 28.8 m!",
       "minimumPlayers": 1,
       "hint": "Start on the ravine side and use the terraces and window-washer lift to reach the tower roof.",
-      "hintTags": ["climb", "lift", "rooftop"]
+      "hintTags": [
+        "climb",
+        "lift",
+        "rooftop"
+      ]
     },
     {
       "id": "reitz_tokens",
@@ -19,7 +23,10 @@
       "objective": "Find the 8 meal-swipe tokens around the quad!",
       "minimumPlayers": 1,
       "hint": "Follow the quad route and check elevated spots as well as ground level.",
-      "hintTags": ["exploration", "collection"]
+      "hintTags": [
+        "exploration",
+        "collection"
+      ]
     },
     {
       "id": "reitz_robotics",
@@ -29,7 +36,11 @@
       "objective": "One drives the crane, one rides it up to the ledge!",
       "minimumPlayers": 2,
       "hint": "The rider jumps into each yellow sensor box to open a gate while the driver lines up the crane.",
-      "hintTags": ["co-op", "crane", "coordination"]
+      "hintTags": [
+        "co-op",
+        "crane",
+        "coordination"
+      ]
     },
     {
       "id": "marston_climb",
@@ -39,7 +50,11 @@
       "objective": "The elevator's broken! Climb the atrium to the 5th floor!",
       "minimumPlayers": 1,
       "hint": "Use the atrium stairs and book-cart lifts to climb toward the fifth floor.",
-      "hintTags": ["climb", "atrium", "lift"]
+      "hintTags": [
+        "climb",
+        "atrium",
+        "lift"
+      ]
     },
     {
       "id": "marston_quiet",
@@ -49,7 +64,10 @@
       "objective": "Find 8 lost textbooks on the silent 5th floor. Shhh!",
       "minimumPlayers": 1,
       "hint": "Hold L to tiptoe on the fifth floor, and keep an eye on the librarian patrols.",
-      "hintTags": ["stealth", "collection"]
+      "hintTags": [
+        "stealth",
+        "collection"
+      ]
     },
     {
       "id": "marston_booking",
@@ -59,7 +77,45 @@
       "objective": "Swap booking codes, then book every kiosk within 4 s!",
       "minimumPlayers": 2,
       "hint": "Coordinate the kiosk punches with your teammates; the booking window is only four seconds.",
-      "hintTags": ["co-op", "coordination", "timing"]
+      "hintTags": [
+        "co-op",
+        "coordination",
+        "timing"
+      ]
+    },
+    {
+      "id": "swamp_chorus",
+      "stage": "The Swamp",
+      "act": 3,
+      "title": "Gator Chomp Chorus",
+      "objective": "Watch four pads light up, then repeat the sequence with ground-pounds. Build from one practice note to a four-note phrase.",
+      "minimumPlayers": 1,
+      "hint": "You have 2.5 seconds to land each ground-pound. A wrong or late hit repeats the phrase without costing a life.",
+      "hintTags": [
+        "rhythm",
+        "memory",
+        "solo",
+        "co-op"
+      ]
+    }
+  ],
+  "minigames": [
+    {
+      "id": "swamp_chorus",
+      "title": "Gator Chomp Chorus",
+      "stage": "The Swamp",
+      "act": 3,
+      "objective": "Watch four pads light up, then repeat the sequence with ground-pounds. Build from one practice note to a four-note phrase.",
+      "minimumPlayers": 1,
+      "multiplayer": "With 2+ players in the act, hold the lit corner pads and ground-pound together on CHOMP!",
+      "command": "/campus swamp 3 me",
+      "grade": "A+ to C, based on missed notes",
+      "steps": [
+        "Watch the lit pads and listen to the sequence.",
+        "Wait for GO!, then jump and ground-pound the pads in order.",
+        "Clear the practice note and the 2-, 3-, and 4-note rounds to earn your grade."
+      ],
+      "hint": "You have 2.5 seconds to land each ground-pound. A wrong or late hit repeats the phrase without costing a life."
     }
   ]
 }

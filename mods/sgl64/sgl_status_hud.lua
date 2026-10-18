@@ -3,10 +3,17 @@
 
 local HIDE_VANILLA = HUD_DISPLAY_FLAGS_LIVES | HUD_DISPLAY_FLAGS_COIN_COUNT
     | HUD_DISPLAY_FLAGS_STAR_COUNT | HUD_DISPLAY_FLAGS_CAMERA
+    | HUD_DISPLAY_FLAGS_CAMERA_AND_POWER | HUD_DISPLAY_FLAGS_POWER
+    | HUD_DISPLAY_FLAGS_EMPHASIZE_POWER
 local sCoinTexture = nil
 local sPortraits = {}
 
 local function hide_vanilla_icons()
+    -- The game rebuilds parts of its HUD state during level updates, which can
+    -- re-enable the native coin counter after its display flags are cleared.
+    -- Hide the vanilla HUD at its render gate as well; the custom campus HUD
+    -- below is drawn by DJUI and remains visible.
+    hud_hide()
     local flags = hud_get_value(HUD_DISPLAY_FLAGS)
     local filtered = flags & ~HIDE_VANILLA
     if filtered ~= flags then hud_set_value(HUD_DISPLAY_FLAGS, filtered) end
@@ -28,10 +35,34 @@ local function life_texture()
     return sPortraits[id] or gator_coin_texture()
 end
 
+-- Replacing the normal HUD alone misses the course-complete/save menu, which
+-- draws its own coin and star glyphs. Override those engine textures as well.
+local sResultIconsReady = false
+local sResultPortrait = nil
+local function update_uf_icons()
+    if not sResultIconsReady then
+        local coin = get_texture_info("sgl_gator_coin")
+        local crest = get_texture_info("sgl_gator_crest")
+        if coin ~= nil and crest ~= nil then
+            texture_override_set("texture_hud_char_coin", coin)
+            texture_override_set("texture_hud_char_star", crest)
+            for _, locale in ipairs({ "us", "eu", "jp" }) do
+                texture_override_set("texture_font_char_" .. locale .. "_coin", coin)
+                texture_override_set("texture_font_char_" .. locale .. "_star_filled", crest)
+                texture_override_set("texture_font_char_" .. locale .. "_star_hollow", crest)
+            end
+            sResultIconsReady = true
+        end
+    end
+    local portrait = life_texture()
+    if portrait ~= nil and portrait ~= sResultPortrait then
+        texture_override_set("texture_hud_char_mario_head", portrait)
+        sResultPortrait = portrait
+    end
+end
+
 local function draw_status_hud()
-    if hud_is_hidden() or is_game_paused() then return end
-    local charMenu = _G.sglCharSelectIsOpen
-    if charMenu ~= nil and charMenu() then return end
+    if sgl_hud_blocked() then return end
 
     djui_hud_set_resolution(RESOLUTION_N64)
     djui_hud_set_filter(FILTER_NEAREST)
@@ -55,11 +86,8 @@ local function draw_status_hud()
     end
     sgl_hud_text("X" .. stars, sw - 56, 15, 0.55, { 255, 255, 255 }, 1)
 
-    -- Replace CoopDX's camera/Lakitu glyphs with a compact UF badge in the same corner.
-    sgl_hud_rect(sw - 54, 203, 32, 18, 250, 110, 30, 255)
-    sgl_hud_rect(sw - 52, 205, 28, 14, 20, 45, 95, 255)
-    sgl_hud_text_center("UF", sw - 38, 207, 0.34, { 255, 140, 35 }, 1)
 end
 
 hook_event(HOOK_UPDATE, hide_vanilla_icons)
+hook_event(HOOK_UPDATE, update_uf_icons)
 hook_event(HOOK_ON_HUD_RENDER, draw_status_hud)

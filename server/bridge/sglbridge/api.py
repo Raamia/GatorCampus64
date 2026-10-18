@@ -57,19 +57,35 @@ class ApiClient:
         body.update({"t": t, "payload": payload, "at": at})
         self._call("POST", "/events", body)
 
+    def active_links(self, ids: list[int]) -> set[int]:
+        result = self._call("POST", "/links/check", {"ids": ids})
+        if not isinstance(result, dict) or not isinstance(result.get("active"), list):
+            raise ApiUnavailable("invalid active links response")
+        return set(result["active"])
+
+    def post_presence(self, snapshot: dict[str, Any]) -> Any:
+        return self._call("POST", "/presence", snapshot)
+
     # POST /links {sub, coopdx_name, gi[, nickname, uf]} -> {nickname, guest_slot|null, uf, ...}
     def post_link(self, sub: str, coopdx_name: str, gi: int, nickname: str | None = None,
-                  uf: bool | None = None) -> dict[str, Any]:
+                  uf: bool | None = None, session_id: str | None = None,
+                  connection_id: str | None = None) -> dict[str, Any]:
         body: dict[str, Any] = {"sub": sub, "coopdx_name": coopdx_name, "gi": gi}
         if nickname:
             body["nickname"] = nickname[:64]
         if uf is not None:
             body["uf"] = uf
+        if session_id and connection_id:
+            body.update(session_id=session_id, connection_id=connection_id)
         return self._call("POST", "/links", body) or {}
 
     # §7.2 fallback (/link <code>): POST /links {code, coopdx_name, gi} -> same reply; 404 / 410 = bad code
-    def redeem_link_code(self, code: str, coopdx_name: str, gi: int) -> dict[str, Any]:
-        return self._call("POST", "/links", {"code": code, "coopdx_name": coopdx_name, "gi": gi}) or {}
+    def redeem_link_code(self, code: str, coopdx_name: str, gi: int, session_id: str | None = None,
+                         connection_id: str | None = None) -> dict[str, Any]:
+        body = {"code": code, "coopdx_name": coopdx_name, "gi": gi}
+        if session_id and connection_id:
+            body.update(session_id=session_id, connection_id=connection_id)
+        return self._call("POST", "/links", body) or {}
 
     # GET /deploys/pending -> {"deploys": [{id, slot, kind, name, owner_sub, files: [{path, url}], ...}],
     # "roster": [...]}; a bare list of deploys is accepted too
@@ -78,6 +94,15 @@ class ApiClient:
         if isinstance(out, dict):
             out = out.get("deploys")
         return [d for d in out if isinstance(d, dict)] if isinstance(out, list) else []
+
+    def check_deploys(self, ids: list[int]) -> set[int]:
+        result = self._call("POST", "/deploys/check", {"ids": ids})
+        if not isinstance(result, dict) or not isinstance(result.get("current"), list):
+            raise ApiUnavailable("invalid deploy check response")
+        return set(result["current"])
+
+    def reconcile_deploys(self, installed: dict[int, int | None]) -> None:
+        self._call("POST", "/deploys/reconcile", {"installed": installed})
 
     # POST /deploys/{id}: server/api reads {state, error}; {status, detail} is sent too
     def report_deploy(self, deploy_id: Any, status: str, detail: str = "") -> None:
@@ -116,6 +141,7 @@ class RetryQueue:
         self.next_attempt = 0.0
         self._q: collections.deque[Any] = collections.deque()
         self._cv = threading.Condition()
+        self._drain_lock = threading.Lock()
 
     def __len__(self) -> int:
         with self._cv:
@@ -133,19 +159,34 @@ class RetryQueue:
 
     def drain_once(self) -> int:
         """Send items until the queue is empty or a send fails. Returns how many were delivered."""
+        if not self._drain_lock.acquire(blocking=False):
+            return 0
+        try:
+            return self._drain()
+        finally:
+            self._drain_lock.release()
+
+    def _head(self):
+        return (self._q[0], self._q[0]) if self._q else None
+
+    def _reject(self, token, item, error):
+        self._pop(token)
+
+    def _drain(self) -> int:
         delivered = 0
         while True:
             with self._cv:
-                if not self._q:
+                head = self._head()
+                if head is None:
                     return delivered
                 if self.clock() < self.next_attempt:
                     return delivered
-                item = self._q[0]
+                token, item = head
             try:
                 self.send(item)
             except ApiError as e:
-                log.warning("dropping undeliverable item (%s): %r", e, item)
-                self._pop(item)
+                log.warning("API rejected queued item (%s): %r", e, item)
+                self._reject(token, item, e)
                 continue
             except Exception as e:  # noqa: BLE001 - outage: keep the item, back off
                 self.failures += 1
@@ -158,7 +199,7 @@ class RetryQueue:
             self.next_attempt = 0.0
             self.sent += 1
             delivered += 1
-            self._pop(item)
+            self._pop(token)
 
     def _pop(self, item: Any) -> None:
         with self._cv:
@@ -168,7 +209,7 @@ class RetryQueue:
     def run(self, stop: threading.Event) -> None:
         while not stop.is_set():
             with self._cv:
-                if not self._q:
+                if not len(self):
                     self._cv.wait(timeout=1.0)
                     continue
                 pause = self.next_attempt - self.clock()

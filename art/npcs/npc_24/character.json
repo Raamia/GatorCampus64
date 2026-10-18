@@ -1,0 +1,42 @@
+{
+  "id": "npc_24",
+  "name": "Hiro",
+  "colors": {
+    "skin": "#D69B78",
+    "hair": "#9A9A9E",
+    "eyes": "#6B4A2A",
+    "top": "#E8A0B8",
+    "pants": "#1C1C1E",
+    "shoes": "#B03030",
+    "skin_shadow": "#C18C6C",
+    "top_detail": "#BA8093",
+    "shoe_soles": "#9B2A2A"
+  },
+  "outfit": {
+    "top": "pink T-shirt",
+    "pants": "black",
+    "shoes": "red sneakers",
+    "accessory": "a backpack strap across the chest",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "he has short curly top with closely cropped sides",
+    "he has a wide toothy grin"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "crossbody_strap"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "round",
+    "hair": "curls",
+    "body": "neutral",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

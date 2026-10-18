@@ -401,12 +401,12 @@ test("campus boards: direct button and mouse open a later board without the mapp
     H.mouseX, H.mouseY, H.mouseButtons = 136, 12, C.L_MOUSE_BUTTON
     H.pressed = C.B_BUTTON -- CoopDX maps left click to B during gameplay.
     w:step(1)
-    check(table.concat(H.hudText, " | "):find("CAMPUS LEADERBOARDS", 1, true) ~= nil,
+    check(table.concat(H.hudText, " | "):find("CAMPUS BOARDS", 1, true) ~= nil,
         "gameplay BOARDS button opens the list directly")
 
     H.mouseButtons = 0
     w:step(2)
-    H.mouseX, H.mouseY, H.mouseButtons = 213, 152, C.L_MOUSE_BUTTON -- fourth row
+    H.mouseX, H.mouseY, H.mouseButtons = 250, 152, C.L_MOUSE_BUTTON -- fourth tile in the 2x2 grid
     H.pressed = C.B_BUTTON
     w:step(1)
     check(table.concat(H.hudText, " | "):find("SKYBOX CLIMB", 1, true) ~= nil,
@@ -422,12 +422,60 @@ test("campus boards: direct button and mouse open a later board without the mapp
 
     H.mouseButtons = 0
     w:step(1)
-    H.pressed = C.D_CBUTTONS -- keyboard Down arrow is mapped to C-down in CoopDX
+    H.pressed = C.U_CBUTTONS -- Up from the fourth tile moves to the second tile
     w:step(1)
     H.pressed = C.A_BUTTON
     w:step(1)
-    check(table.concat(H.hudText, " | "):find("REITZ ROOFTOP", 1, true) ~= nil,
-        "keyboard Down arrow wraps from fourth to first board, then A opens it")
+    check(table.concat(H.hudText, " | "):find("MARSTON CLIMB", 1, true) ~= nil,
+        "keyboard Up moves between grid rows, then A opens the selected board")
+end)
+
+test("campus map button: hosted travel picker lists locations and mission warps move the party", function()
+    local w = full_world()
+    local H, G = w:connect("Host"), w:connect("Guest")
+    w:step(3)
+    arrive_and_pick(w, H, 1)
+    arrive_and_pick(w, G, 1)
+
+    H.mouseX, H.mouseY, H.mouseButtons = 290, 12, C.L_MOUSE_BUTTON
+    H.pressed = C.B_BUTTON
+    w:step(1)
+    check(table.concat(H.hudText, " | "):find("CAMPUS MAP", 1, true) ~= nil
+        and table.concat(H.hudText, " | "):find("CENTRAL CAMPUS", 1, true) ~= nil,
+        "MAP button opens the campus destination grid")
+    local titleDraws = 0
+    for _, draw in ipairs(H.draw) do
+        if draw.k == "text" and draw.s == "CENTRAL CAMPUS" then
+            titleDraws = titleDraws + 1
+            check(draw.font == C.FONT_MENU, "travel labels use the readable block menu font")
+        end
+    end
+    check(titleDraws == 1, "small travel labels render once without a doubled shadow")
+    check(H.env.sgl_hud_blocked(), "campus menu blocks world HUD overlays")
+    check(not table.concat(H.hudText, " | "):find("X4", 1, true), "lives HUD stays hidden over travel menu")
+
+    H.mouseButtons, H.pressed = 0, 0
+    w:step(2)
+    H.pressed = C.R_JPAD -- Reitz is the left tile on row two after the two outdoor locations
+    w:step(1)
+    H.pressed = C.D_JPAD
+    w:step(1)
+    H.pressed = C.L_JPAD
+    w:step(1)
+    H.pressed = C.A_BUTTON
+    w:step(1)
+    check(table.concat(H.hudText, " | "):find("ROOFTOP OF THE REITZ", 1, true) ~= nil
+        and table.concat(H.hudText, " | "):find("EXPLORE AREA", 1, true) ~= nil,
+        "selecting a campus location offers its missions and free-roam destination")
+
+    H.pressed = C.D_JPAD
+    w:step(1)
+    H.pressed = C.R_JPAD
+    w:step(1)
+    H.pressed = C.A_BUTTON
+    w:step(1)
+    check(H.level == WF and H.act == 3 and G.level == WF and G.act == 3,
+        "host selecting Remote Robotics Lab warps the full party into that mission")
 end)
 
 test("mouse look toggle: Y/keyboard 0 toggles mouse capture and is consumed", function()
@@ -454,6 +502,24 @@ test("mouse look toggle: Y/keyboard 0 toggles mouse capture and is consumed", fu
     w:step(1)
     check(H.mouseLookEnabled == true, "second toggle restores mouse look for camera control")
     check(#H.popups == 2, "a distinct press shows exactly one new popup")
+end)
+
+test("mouse chat command: /mouse toggles mouse look and accepts explicit on/off", function()
+    local w = full_world()
+    local H = w:connect("Host")
+    check(H.commands.mouse ~= nil, "/mouse is registered")
+
+    Sim.cmd(H, "mouse", "off")
+    check(H.mouseLookEnabled == false, "/mouse off disables mouse look")
+    Sim.cmd(H, "mouse", "")
+    check(H.mouseLookEnabled == true, "/mouse with no option toggles mouse look")
+    Sim.cmd(H, "mouse", "OFF")
+    check(H.mouseLookEnabled == false, "/mouse on/off options are case insensitive")
+    Sim.cmd(H, "mouse", "on")
+    check(H.mouseLookEnabled == true, "/mouse on enables mouse look")
+
+    Sim.cmd(H, "mouse", "maybe")
+    check(H.mouseLookEnabled == true, "invalid /mouse option leaves mouse look unchanged")
 end)
 
 test("door 2: The Hub (2 stars) -> Reitz & Engineering act 1 -> star -> back outside The Hub door", function()
@@ -1090,7 +1156,7 @@ test("with a friend: invite, D-pad Up joins the act, co-op act 3 with every file
     local star = Sim.objects_with(F, C.id_bhvStarSpawnCoordinates)[1]
     Sim.run_hooks(F, C.HOOK_ON_INTERACT, F.ms[0], star, C.INTERACT_STAR_OR_KEY, true)
     w:step(3)
-    check(Sim.hud_has(H, "Friend got the star!"), "host: leave-together prompt")
+    check(Sim.hud_has(H, "Team Gator Crest earned!"), "host: automatic team completion prompt")
     H.pressed = C.U_JPAD
     w:step(2)
     check(H.level == HUB and H.arrivalNode == 0x31 and H.warpOps[1] == C.WARP_OP_EXIT,
@@ -1157,6 +1223,18 @@ test("character select: remembered pick, overlay hides the other HUDs", function
     Sim.cmd(H, "char", "")
     w:step(2)
     check(not Sim.hud_has(H, "STADIUM STAIR SPRINT"), "mission panel hidden under the menu")
+end)
+
+test("UF result icons: native course-complete coin, star and portrait use campus textures", function()
+    local w = full_world()
+    local H = w:connect("Host")
+    w:step(3)
+    arrive_and_pick(w, H, 1)
+    local tex = H.textureOverrides or {}
+    check(tex.texture_hud_char_coin ~= nil, "native coin glyph overridden")
+    check(tex.texture_hud_char_star ~= nil, "native reward star glyph overridden")
+    check(tex.texture_font_char_us_star_filled ~= nil, "course title's star glyph overridden")
+    check(tex.texture_hud_char_mario_head ~= nil, "native portrait glyph overridden")
 end)
 
 print(string.format("\n%d checks passed, %d failed", passed, failed))

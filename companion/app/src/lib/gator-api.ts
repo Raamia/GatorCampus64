@@ -24,7 +24,7 @@ export async function finishLogin() {
   return c.isAuthenticated()
 }
 
-export async function login() { return (await auth0()).loginWithRedirect({ appState: { returnTo: window.location.pathname } }) }
+export async function login(fresh = false) { return (await auth0()).loginWithRedirect({ ...(fresh ? { authorizationParams: { prompt: 'login' } } : {}), appState: { returnTo: window.location.pathname } }) }
 export async function logout() { return (await auth0()).logout({ logoutParams: { returnTo: window.location.origin } }) }
 export async function token() { return (await auth0()).getTokenSilently() }
 export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {

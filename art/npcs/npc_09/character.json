@@ -1,0 +1,42 @@
+{
+  "id": "npc_09",
+  "name": "Maya",
+  "colors": {
+    "skin": "#6E4430",
+    "hair": "#B48A58",
+    "eyes": "#3B2117",
+    "top": "#C8B28C",
+    "pants": "#4E5634",
+    "shoes": "#F2F2F2",
+    "skin_shadow": "#633D2B",
+    "top_detail": "#A08E70",
+    "shoe_soles": "#D5D5D5"
+  },
+  "outfit": {
+    "top": "tan hoodie, hood down",
+    "pants": "olive",
+    "shoes": "white sneakers",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has long straight hair past the shoulders with a side part",
+    "she has a friendly smile showing teeth"
+  ],
+  "build": {
+    "sleeves": "long",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "hood_down"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "heart",
+    "hair": "long",
+    "body": "broad",
+    "outfit": "hoodie"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

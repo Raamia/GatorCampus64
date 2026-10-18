@@ -3,18 +3,11 @@
  * (protected)/_layout.tsx already wraps the subtree in <AuthGate>.
  */
 
-import { useEffect, useState } from 'react'
 import { signOut, useUser } from 'deepspace'
 import { Avatar, AvatarFallback, AvatarImage, Button } from '@/components/ui'
 
 export default function SettingsPage() {
   const { user } = useUser()
-  const [squadCode, setSquadCode] = useState<string | null>(null)
-
-  useEffect(() => {
-    setSquadCode(window.localStorage.getItem('gator-squad-code'))
-  }, [])
-
   return (
     // No background on page wrappers — pages render into whatever the app's
     // (app)/_layout provides (a plain background, or a raised panel), so they
@@ -22,9 +15,9 @@ export default function SettingsPage() {
     <div className="min-h-full text-foreground">
       <div className="settings-page">
         <header className="settings-header">
-          <p>SETTINGS · GATOR PASS ACCOUNT</p>
+          <p>SETTINGS · FIELD BOARD ACCOUNT</p>
           <h1>Your account.</h1>
-          <p className="settings-sub">The Gator Pass identity you use across the field board, Gatorize Me and the hosted server.</p>
+          <p className="settings-sub">Your Field Board account. Manage its connection to Gator Pass in Gatorize Me.</p>
         </header>
 
         <section className="settings-card">
@@ -47,16 +40,6 @@ export default function SettingsPage() {
             Sign out
           </Button>
         </section>
-
-        {squadCode && (
-          <section className="settings-card">
-            <h2>Current squad</h2>
-            <ul className="settings-rows">
-              <li><span className="settings-label">Squad code</span><span className="settings-value">{squadCode}</span></li>
-            </ul>
-            <p className="settings-squad-note"><span />Stored on this device only — it is not part of your account. Leave the squad from the field board.</p>
-          </section>
-        )}
       </div>
     </div>
   )

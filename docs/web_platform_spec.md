@@ -94,15 +94,20 @@ contract in the header of `server/api/schema.sql`.
 2. **Spec (AI).** The worker sends the photos to a vision model with a strict JSON schema and gets
    a `character.json` (same format as `art/daniel/character.json`). The schema enums are the
    pipeline's real options, generated from the code so they can't drift:
-   - `build.hair_style` ∈ keys of `sgl_heads.HAIR_STYLES` (6 today)
+   - `appearance.face`, `hair`, `body`, `outfit` ∈ the shared approved catalog in
+     `sgl_appearance.py` (6 faces, 8 hairstyles, 5 body profiles, 4 outfits); each permits
+     `unknown` in model output. The server repairs unknowns and assigns `appearance.version = 1`.
    - `build.accessories` ⊆ the **implemented** entries of `sgl_body.ACCESSORIES`
      (`shirt_collar`, `rolled_cuffs`, `hood_down`, `crossbody_strap`; `_todo` stubs excluded)
-   - `build.sleeves` ∈ {long, short}, `build.legwear` ∈ {long_pants, shorts}
+   - `build.legwear` ∈ {long_pants, shorts}; the selected outfit supplies sleeve length
+     and collar/hood geometry. Stored specs retain legacy build fields for compatibility;
+     specs without `appearance` use the legacy builder.
    - `colors.*` as `#RRGGBB`; `signature_traits` and `outfit` free text (≤ 200 chars each)
 
    Validation: schema check, then clamp/repair (unknown enum → default, bad hex → sampled colour).
-   Colours are cross-checked against k-means samples from the photos (face crop for skin, top
-   crop for hair) and replaced when the model's value is far off. `id` is assigned by the server,
+   Colours are cross-checked against k-means samples from detected faces (face crop for skin,
+   top crop for hair) and replaced when the model's value is far off. Heuristic-only crops
+   provide missing-color fallbacks but cannot override valid model colors. `id` is assigned by the server,
    never by the model: every job builds under the neutral actor id **`sglguest`** (the slot is only
    known once the API slots the ready character, and may change on re-deploy); the deploy renames
    the export to `guest_<slot>` with `server/worker/actor_rename.py` (Fast64 derives every symbol
@@ -110,7 +115,8 @@ contract in the header of `server/api/schema.sql`.
    Model: any OpenAI-compatible endpoint with image input (`VLM_BASE_URL`, `VLM_MODEL`): Vultr
    Serverless Inference (e.g. `qwen3.8-flash-next`, which takes images), or a local vLLM on the
    GPU (`docker compose --profile vllm`). Without a model the worker falls back to photo colours
-   and defaults.
+   and defaults only when `VLM_REQUIRED` is disabled; required-model mode fails if the
+   backend is missing or unavailable. See `docs/gatorize_likeness.md` for the contract.
 3. **Face.** `SGL_ART_DIR=<job>/art python3 tools/blender/sgl_face_gen.py sglguest
    <job>/art/sglguest/textures`: the existing procedural eyes (8 states) and mouth from the spec.
    No new AI here.

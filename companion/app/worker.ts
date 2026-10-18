@@ -26,6 +26,7 @@ import { tasks as cronTasks, runTask as runCronTask } from './src/cron.js'
 import { runJob } from './src/jobs.js'
 import { schemas } from './src/schemas.js'
 import { registerActionRoutes } from './src/server/action-routes.js'
+import { registerIdentityRoutes } from './src/server/identity-routes.js'
 import { registerIngestRoutes } from './src/server/ingest-routes.js'
 import {
   registerAuthAndIntegrationRoutes,
@@ -35,6 +36,8 @@ import {
 } from './src/server/http-routes.js'
 import { registerRealtimeRoutes } from './src/server/realtime-routes.js'
 import { registerStudyRoutes } from './src/server/study-routes.js'
+export { RunIngestRoom } from './src/server/run-ingest-room.js'
+export { StudyBudgetRoom } from './src/server/study-budget.js'
 
 // Dynamic deploy reads this manifest to create the app's DO bindings.
 export const __DO_MANIFEST__ = [
@@ -44,6 +47,8 @@ export const __DO_MANIFEST__ = [
   { binding: 'PRESENCE_ROOMS', className: 'AppPresenceRoom', sqlite: true },
   { binding: 'CRON_ROOMS', className: 'AppCronRoom', sqlite: true },
   { binding: 'JOB_ROOMS', className: 'AppJobRoom', sqlite: true },
+  { binding: 'RUN_INGEST', className: 'RunIngestRoom', sqlite: true },
+  { binding: 'STUDY_BUDGETS', className: 'StudyBudgetRoom', sqlite: true },
 ] as const satisfies DOManifest
 
 export class AppRecordRoom extends RecordRoom<Env> {
@@ -150,6 +155,7 @@ registerRealtimeRoutes(app)
 registerStudyRoutes(app)
 // Before the user action route: the game API's HMAC-signed verified-run ingest (spec §10.4).
 registerIngestRoutes(app)
+registerIdentityRoutes(app)
 registerActionRoutes(app, resolveAuth)
 // The in-app assistant stores chat history in `ai-chats` / `ai-messages`,
 // which only the copilot overlay declares. When present, registerAgent enables

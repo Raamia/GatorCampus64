@@ -305,6 +305,23 @@ def swamp_pickups(S, probe):
     return P.items, P.skipped
 
 
+# ------------------------------------------------------------------ the hub (Plaza of the Americas)
+# Six rival Goombas on a 32 m hexagon around the spawn (map metres; the positions the earlier change placed by hand
+# in levels/castle_grounds/script.c, which every hub rebuild then dropped)
+HUB_GOOMBA_RING_M = 32.0
+
+
+def hub_pickups(S, probe):
+    """-> (items, skipped) for the hub: only the rival Goombas (sgl_rivals.lua dresses them)."""
+    P = Placer(S, probe)
+    sx, sy = S.spawn["pos"][0], S.spawn["pos"][1]
+    for k in range(6):
+        a = math.radians(60.0 * k)               # the hexagon's corners, starting due east of the spawn
+        p = (sx + math.cos(a) * HUB_GOOMBA_RING_M, sy + math.sin(a) * HUB_GOOMBA_RING_M, 0.0)
+        P.goomba(f"goomba hub ring {k}", p, bearing(p, (sx, sy)))
+    return P.items, P.skipped
+
+
 def summary(items, skipped):
     coins = sum(i["coins"] for i in items if i["kind"] != "goomba")
     kinds = {}

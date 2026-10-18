@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import re
+import uuid
 from typing import Any
 
 from .missions import MISSIONS
@@ -80,20 +81,33 @@ def parse(f: dict) -> dict:
     return row
 
 
-def resolve_link(c, gi: int, name: str) -> dict | None:
-    """The Gator Pass link for (gi, coopdx name) in the current server session: the most recent link
-    made after the latest `hello` event, provided that gi has not left since."""
+def resolve_link(c, gi: int, name: str, fields: dict, bridge_sub: str | None) -> dict | None:
+    """Use the login captured by the bridge at event creation, never a newer login.
+
+    Legacy events without an explicit identity remain stored but unranked. Receipt
+    order, player names and global indices alone are not an authentication proof.
+    """
+    identities = fields.get("identities")
+    identity = identities.get(str(gi)) if isinstance(identities, dict) else None
+    if not isinstance(identity, dict) or identity.get("name") != name:
+        return None
+    if type(identity.get("link_id")) is not int or not 0 < identity["link_id"] < 2**63:
+        return None
+    try:
+        session = uuid.UUID(str(fields.get("session_id")))
+        connection = uuid.UUID(str(identity.get("connection_id")))
+        if uuid.UUID(str(identity.get("session_id"))) != session:
+            return None
+    except ValueError:
+        return None
     return c.execute(
         """SELECT l.sub, u.nickname FROM links l JOIN users u ON u.sub = l.sub
-            WHERE l.gi = %(gi)s AND l.coopdx_name = %(name)s
-              AND l.linked_at >= COALESCE((SELECT max(at) FROM events WHERE t = 'hello'), '-infinity')
-              AND NOT EXISTS (SELECT 1 FROM events e WHERE e.t = 'leave' AND e.at > l.linked_at
-                                 AND COALESCE(e.payload->>'gi', e.payload->'payload'->>'gi') = %(gis)s)
-            ORDER BY l.linked_at DESC, l.id DESC LIMIT 1""",
-        {"gi": gi, "name": name, "gis": str(gi)}).fetchone()
+            WHERE l.revoked_at IS NULL AND l.id = %s AND l.gi = %s AND l.coopdx_name = %s
+              AND l.session_id = %s AND l.connection_id = %s AND l.bridge_sub = %s""",
+        (identity["link_id"], gi, name, session, connection, bridge_sub)).fetchone()
 
 
-def store(c, fields: dict, event_id: int | None) -> dict:
+def store(c, fields: dict, event_id: int | None, bridge_sub: str | None = None) -> dict:
     """Validate, link and insert one run (inside the caller's transaction). Ranked runs also get an
     outbox row for the DeepSpace push. Returns {id, ranked, reason}."""
     row = parse(fields)
@@ -101,7 +115,7 @@ def store(c, fields: dict, event_id: int | None) -> dict:
     player_key = None
     if row["reason"] is None:
         for i, (gi, name) in enumerate(zip(row["gis"], row["names"])):
-            link = resolve_link(c, gi, name)
+            link = resolve_link(c, gi, name, fields, bridge_sub)
             subs[i] = link["sub"] if link else None
         if any(s is None for s in subs):
             row["reason"] = "unlinked"

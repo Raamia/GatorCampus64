@@ -62,16 +62,12 @@ def _transport_schema(value):
 
 
 # ------------------------------------------------------------------ prompt
-def _hair_lines():
-    reviewed = set(schema_gen.reviewed_hair_styles())
-    lines = []
-    for name in schema_gen.hair_styles():
-        lines.append(f"  - {name}" + ("" if name in reviewed else " (rougher preset)"))
-    return "\n".join(lines)
-
-
 def system_prompt():
     acc = "\n".join(f"  - {a}: {ACCESSORY_HINTS.get(a, a.replace('_', ' '))}" for a in schema_gen.accessories())
+    catalog = schema_gen.appearance_catalog()
+    appearance = "\n".join(
+        f"appearance.{field}:\n" + "\n".join(f"  - {key}: {description}" for key, description in choices.items())
+        for field, choices in catalog.PROFILE_DESCRIPTIONS.items())
     return f"""You design characters for Super Gatorlator 64, a Nintendo 64 style game with
 low-poly, chunky, friendly cartoon characters. You get 1-4 photos of ONE real person and
 describe them as a character spec. Output ONLY a JSON object that matches the given schema.
@@ -81,16 +77,24 @@ Rules:
   skin = the face's mid tone; hair = the dominant hair colour; top = the main clothing colour
   above the waist; pants = what is worn on the legs (guess plain dark jeans #3B4E6E if not
   visible); shoes = shoe colour (#F2F2F2 if not visible).
-- build.hair_style: the closest preset (pick the shape, the colour comes from colors.hair):
-{_hair_lines()}
-  Prefer a preset without "(rougher preset)" when two are about equally close.
-- build.sleeves: long or short (the top's sleeves). build.legwear: long_pants or shorts.
+- Pick independent face, hair, body and outfit profiles from the approved catalog below.
+  Use "unknown" for any feature that is obscured, cropped out, or cannot be judged.
+  Judge face shape from the visible face outline, not the hairstyle. Judge body only
+  from a sufficiently visible silhouette; a headshot or a loose coat does not reveal it.
+  If the waist and hips are outside the image, appearance.body MUST be "unknown".
+  "neutral" describes visible balanced proportions; it is not an uncertainty default.
+  Do not infer body shape from face shape. Hair color comes from colors.hair.
+  These are stylized visual matches, not measurements or claims about the person.
+{appearance}
+- build.legwear: long_pants or shorts. The selected outfit supplies sleeves, collar
+  and hood geometry; do not add a collar to a hoodie or a hood to a collared shirt.
 - build.accessories: only from this list, only when clearly visible, else []:
 {acc}
 - outfit: one short phrase each (top, pants, shoes, accessory, headwear; "none" if nothing).
 - signature_traits: 2-5 short phrases about what makes this person recognisable
   (hair shape and fringe, smile, glasses, facial hair, eyebrows). Describe appearance only;
-  never guess identity, age, ethnicity or anything sensitive. Use "she"/"he" only if obvious.
+  never guess identity, age, ethnicity or anything sensitive. Describe visible features
+  directly without inferring gender or pronouns.
 """
 
 
@@ -243,14 +247,30 @@ def repair(raw, char_id, name, samples=None):
     raw = raw if isinstance(raw, dict) else {}
     samples = samples or {}
     notes = []
+    # A guessed portrait crop can land on a shirt/background in a full-body
+    # photo. Keep those samples as missing-color fallbacks, never as evidence
+    # that an otherwise valid model color is wrong. Explicit caller samples
+    # without detector metadata retain their existing trusted behavior.
+    trusted_samples = "_faces" not in samples or "haar" in samples["_faces"]
+
+    appearance = None
+    if "appearance" in raw:
+        catalog = schema_gen.appearance_catalog()
+        source = raw["appearance"] if isinstance(raw["appearance"], dict) else {}
+        appearance = {"version": catalog.VERSION}
+        for field, choices in catalog.PROFILE_DESCRIPTIONS.items():
+            appearance[field] = _enum(source.get(field), list(choices), catalog.DEFAULTS[field], notes,
+                                      f"appearance.{field}")
 
     # build
     b = raw.get("build") if isinstance(raw.get("build"), dict) else {}
     build = {
-        "sleeves": _enum(b.get("sleeves"), schema_gen.SLEEVES, schema_gen.DEFAULT_SLEEVES, notes, "build.sleeves"),
+        "sleeves": (catalog.OUTFITS[appearance["outfit"]]["sleeves"] if appearance else
+                    _enum(b.get("sleeves"), schema_gen.SLEEVES, schema_gen.DEFAULT_SLEEVES, notes, "build.sleeves")),
         "legwear": _enum(b.get("legwear"), schema_gen.LEGWEAR, schema_gen.DEFAULT_LEGWEAR, notes, "build.legwear"),
-        "hair_style": _enum(b.get("hair_style"), schema_gen.hair_styles(), schema_gen.default_hair_style(), notes,
-                            "build.hair_style"),
+        "hair_style": (schema_gen.default_hair_style() if appearance else
+                       _enum(b.get("hair_style"), schema_gen.hair_styles(), schema_gen.default_hair_style(), notes,
+                             "build.hair_style")),
     }
     allowed_acc = schema_gen.accessories()
     acc = []
@@ -283,8 +303,11 @@ def repair(raw, char_id, name, samples=None):
         if key in samples and key in colors and colors[key] != samples[key]:
             de = photo_colors.delta_e(colors[key], samples[key])
             if de > limit:
-                notes.append(f"colors.{key}: model {colors[key]} is dE {de:.0f} from the photos, using {samples[key]}")
-                colors[key] = samples[key]
+                if trusted_samples:
+                    notes.append(f"colors.{key}: model {colors[key]} is dE {de:.0f} from the photos, using {samples[key]}")
+                    colors[key] = samples[key]
+                else:
+                    notes.append(f"colors.{key}: keeping model {colors[key]}; heuristic sample {samples[key]} has no detected face")
     # derived shades follow the (possibly replaced) base colour unless the model gave sane ones
     if "skin_shadow" not in colors or photo_colors.delta_e(colors["skin_shadow"], colors["skin"]) > 15:
         colors["skin_shadow"] = _shade(colors["skin"], SKIN_SHADOW)
@@ -303,6 +326,12 @@ def repair(raw, char_id, name, samples=None):
 
     spec = {"id": char_id, "name": clean_text(name, 32) or char_id, "colors": colors, "outfit": outfit,
             "signature_traits": traits, "build": build}
+    if appearance:
+        spec["appearance"] = appearance
+        resolved = catalog.resolve_spec(spec)
+        if resolved["build"] != spec["build"]:
+            notes.append("build.accessories: fitted to selected appearance.outfit")
+        spec = resolved
     jsonschema.validate(spec, schema_gen.character_schema())  # repair bug if this fails
     return spec, notes
 
@@ -311,7 +340,9 @@ def repair(raw, char_id, name, samples=None):
 def generate_spec(photos, char_id, name, backend=None, use_cv=True, require_model=False, log=print):
     """photos: list of image bytes. Returns (spec, info) where info has the raw model answer,
     the photo samples and the repair notes. A model failure falls back to a sampled-colour
-    default spec unless require_model (then VLMError)."""
+    default spec unless require_model (then VLMError, including a missing backend)."""
+    if require_model and backend is None:
+        raise VLMError("vision model required but not configured: set VLM_BASE_URL")
     info = {"model": None, "notes": []}
     try:
         samples = photo_colors.sample_photos(photos, use_cv=use_cv)
@@ -337,7 +368,7 @@ def generate_spec(photos, char_id, name, backend=None, use_cv=True, require_mode
             log(f"spec: vision model failed ({e}); using photo samples and defaults")
     else:
         log("spec: no vision model configured (VLM_BASE_URL); using photo samples and defaults")
-    spec, notes = repair(raw, char_id, name, {k: v for k, v in samples.items() if not k.startswith("_")})
+    spec, notes = repair(raw, char_id, name, samples)
     info["notes"] = notes
     for n in notes:
         log("spec: repair: " + n)

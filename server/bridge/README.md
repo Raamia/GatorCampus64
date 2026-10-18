@@ -3,7 +3,16 @@
 This is the game host's bridge (docs/web_platform_spec.md §5.3, §6.2-§6.4, §7.1). It is a single Python 3.12 process that owns the headless sm64coopdx server.
 
 - **Game process.** `GAME_CMD` defaults to the flags of `server/deploy/sgl-game.service` and runs under `stdbuf -oL`. The bridge reads stdout line by line and logs non-event lines to the journal. When the game exits, the bridge restarts it with a 5 s backoff that doubles up to 60 s while it keeps crashing, and sends an `exit` event to the API.
-- **Events (game to bridge).** The game prints `SGLEVT {json}` lines (`mods/sgl64/sgl_bridge.lua`). Each event goes to `POST /events` through a bounded retry queue: 2000 items, the oldest dropped when full, exponential backoff, 4xx responses dropped. An API outage never blocks the pipe.
+- **Events (game to bridge).** The game prints `SGLEVT {json}` lines (`mods/sgl64/sgl_bridge.lua`). The bridge adds stable event/session IDs and captures authenticated player connections for runs. Events commit to `SGL_BRIDGE_STATE/events.sqlite3` before asynchronous delivery. Retries keep the same IDs; the API deduplicates them. Permanent rejections remain in the outbox with an error. At 20,000 stored rows or a persistence failure, the bridge stops the game rather than evicting accepted events. See [backend rollout and recovery](../../docs/backend_remediation.md).
+- **Presence.** Every 20 seconds the bridge posts a fresh snapshot to `POST /presence`
+  with its M2M `bridge` token. Online means the child process is running and has emitted
+  `hello`; snapshots include its session, version, start time and current players. These
+  requests bypass the event outbox and are resampled after outages. Shutdown attempts an
+  offline snapshot. `GET /status` expires presence after 90 seconds without a fresh snapshot
+  (`STATUS_STALE_SECS` on the API; zero/negative also uses 90). Old hello/join/exit events
+  cannot change current presence. The bridge/API clocks must be synchronized: the API
+  rejects observations older than 30 seconds or more than 5 seconds in the future.
+  This checks process presence, not gameplay responsiveness or UDP reachability.
 - **Login.** A `login_req` event starts the Auth0 device flow: `/oauth/device/code`, then polling `/oauth/token`, then ID token checks (RS256 via JWKS, `iss`, `aud` = the Gator Pass client id, `exp`), then `POST /links`, then an inbox `verified`. A `link_req` sends `POST /links {code}`. A `login_cancel` or a `leave` stops polling.
 - **Inbox (bridge to game).** The bridge writes `<savepath>/sav/sgl64.modfs` atomically (temp file, then rename). The mod reloads it every second.
 - **Deploys.** The bridge applies guest character deploys, with at most one game restart every 5 minutes.
@@ -44,6 +53,12 @@ Each event is one line, `SGLEVT {"t":"<type>",...}`. `t` comes first, the other 
 | exit | code (added by the bridge when the game process ends, not printed by the game) |
 
 `POST /events` body: `{t, payload, at}` plus a copy of the payload's fields at the top level, because server/api reads `friend` from the top level.
+
+The bridge generates `event_id`, `session_id`, and `sequence`; run events also
+carry `identities` keyed by global index, each containing the captured `link_id`,
+`session_id`, `connection_id`, and game name. `/links` receives the two context
+UUIDs and returns `link_id`. They are server-side metadata, never mod inbox fields.
+One-time link codes are excluded from event logs and the outbox.
 
 ## Inbox format (bridge to game)
 

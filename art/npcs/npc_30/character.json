@@ -1,0 +1,43 @@
+{
+  "id": "npc_30",
+  "name": "Ethan",
+  "colors": {
+    "skin": "#5A3726",
+    "hair": "#6B4A30",
+    "eyes": "#4A2C1A",
+    "top": "#FA4616",
+    "pants": "#6A6E73",
+    "shoes": "#C8B28C",
+    "skin_shadow": "#513222",
+    "top_detail": "#C83812",
+    "shoe_soles": "#B09D7B"
+  },
+  "outfit": {
+    "top": "UF orange hoodie, hood down",
+    "pants": "gray",
+    "shoes": "tan boots",
+    "accessory": "a backpack strap across the chest",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "he has rounded, fuller tight curls around the top and sides",
+    "he has a friendly smile showing teeth"
+  ],
+  "build": {
+    "sleeves": "long",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "crossbody_strap",
+      "hood_down"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "oval",
+    "hair": "coils",
+    "body": "slender",
+    "outfit": "hoodie"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

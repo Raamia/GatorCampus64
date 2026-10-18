@@ -124,7 +124,7 @@ def test_deploy_flow(client, auth, conn, s3, bridge):
     # polling again doesn't duplicate
     assert len(client.get("/deploys/pending", headers=bridge).json()["deploys"]) == 1
     assert client.post(f"/deploys/{d['id']}", json={"state": "deployed"}, headers=bridge).status_code == 200
-    assert client.post(f"/deploys/{d['id']}", json={"state": "deployed"}, headers=bridge).status_code == 409
+    assert client.post(f"/deploys/{d['id']}", json={"state": "deployed"}, headers=bridge).status_code == 200
     assert client.post("/deploys/999", json={"state": "deployed"}, headers=bridge).status_code == 404
     assert client.post(f"/deploys/{d['id']}", json={"state": "meh"}, headers=bridge).status_code == 422
     assert client.get("/deploys/pending", headers=bridge).json()["deploys"] == []
@@ -212,7 +212,7 @@ def test_link_code_flow(client, auth, conn, s3, bridge):
     assert len(code) == 6 and set(code) <= set("23456789ABCDEFGHJKLMNPQRSTUVWXYZ") and r.json()["expires_in"] == 600
     link = client.post("/links", json={"code": code.lower(), "coopdx_name": "AliG", "gi": 3}, headers=bridge)
     assert link.status_code == 200, link.text
-    assert link.json() == {"sub": "auth0|alice", "via": "code", "nickname": "Ali", "uf": False, "gi": 3,
+    assert link.json() == {"link_id": 1, "sub": "auth0|alice", "via": "code", "nickname": "Ali", "uf": False, "gi": 3,
                            "coopdx_name": "AliG", "guest_slot": 1, "character_name": "Ally"}
     again = client.post("/links", json={"code": code, "coopdx_name": "AliG", "gi": 3}, headers=bridge)
     assert again.status_code == 410 and again.json()["detail"]["reason"] == "used"
@@ -251,7 +251,7 @@ def test_events_and_status(client, bridge, conn):
            {"t": "leave", "gi": 1, "name": "Ali"}, {"t": "char", "gi": 2, "friend": "guest_3"}]
     assert client.post("/events", json=evs, headers=bridge).json() == {"stored": 4}
     s = client.get("/status").json()
-    assert s["online"] is True and s["version"] == "1.2.0" and s["players"] == [{"gi": 2, "name": "Bo"}]
+    assert s["online"] is False and s["players"] == []  # history never drives liveness
     assert conn.execute("SELECT last_played FROM slots WHERE n=3").fetchone()["last_played"] is not None
     # a restart: new hello resets presence
     client.post("/events", json={"t": "hello", "version": "1.2.1"}, headers=bridge)
@@ -273,18 +273,13 @@ def test_events_in_the_bridges_shape(client, bridge, conn):
     client.post("/events", json=[ev("join", gi=4, name="Cy"), ev("char", gi=4, friend="guest_2"),
                                  {"t": "join", "payload": {"t": "join", "gi": 5, "name": "Di"}}], headers=bridge)
     s = client.get("/status").json()
-    assert s["online"] is True and s["version"] == "1.3.0"
-    assert sorted(p["name"] for p in s["players"]) == ["Cy", "Di"]
+    assert s["online"] is False and s["players"] == []
     assert conn.execute("SELECT last_played FROM slots WHERE n=2").fetchone()["last_played"] is not None
     client.post("/events", json=ev("exit"), headers=bridge)
     assert client.get("/status").json()["online"] is False
 
 
-def test_status_stale(make_client, bridge, conn):
-    client = make_client(status_stale_secs=60)
+
+def test_events_cannot_revive_status(client, bridge):
     client.post("/events", json={"t": "hello", "version": "1"}, headers=bridge)
-    assert client.get("/status").json()["online"] is True
-    conn.execute("UPDATE events SET at = now() - interval '5 minutes'")
     assert client.get("/status").json()["online"] is False
-
-

@@ -93,7 +93,8 @@ def mesh_tris(name):
 def main():
     char_id, do_export, do_preview, out_override, actors_override = parse_args()
     t0 = time.time()
-    spec = load_spec(char_id)
+    from sgl_appearance import resolve_spec
+    spec = resolve_spec(load_spec(char_id))
     open_template()
 
     from sgl_blender import setup_fast64
@@ -108,6 +109,8 @@ def main():
     out_build = out_override or build_dir(char_id)  # --build-dir: test builds outside art/
     os.makedirs(out_build, exist_ok=True)
     report = {"id": char_id, "name": spec.get("name", char_id)}
+    if "appearance" in spec:
+        report["appearance"] = spec["appearance"]
 
     # 1. textures
     tex = sgl_textures.process_face_textures(char_id, spec, out_build)

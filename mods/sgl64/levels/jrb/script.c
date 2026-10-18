@@ -36,6 +36,11 @@ const LevelScript level_jrb_entry[] = {
 		OBJECT(MODEL_1UP, 2590, 460, -470, 0, -180, 0, 0x00000000, bhv1Up),
 		MARIO_POS(0x01, 30, -13300, 100, -11900),
 		OBJECT(MODEL_NONE, -13300, 100, -11900, 0, 30, 0, 0x000A0000, bhvSpinAirborneWarp),
+		OBJECT(MODEL_GOOMBA, -11000, 0, -12700, 0, -70, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, -15800, 0, -10700, 0, 120, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, -10200, 0, -7800, 0, -120, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, -18000, 0, 8800, 0, 150, 0, 0x00000000, bhvGoomba),
+		OBJECT(MODEL_GOOMBA, 12000, 0, 10000, 0, -180, 0, 0x00000000, bhvGoomba),
 		OBJECT(MODEL_HEART, -18668, 100, 7190, 0, -180, 0, 0x00000000, bhvRecoveryHeart),
 		OBJECT(MODEL_HEART, 24219, 100, -2833, 0, -180, 0, 0x00000000, bhvRecoveryHeart),
 		OBJECT(MODEL_HEART, -9006, 100, -4710, 0, -180, 0, 0x00000000, bhvRecoveryHeart),
@@ -73,11 +78,6 @@ const LevelScript level_jrb_entry[] = {
 		TERRAIN_TYPE(TERRAIN_GRASS),
 		/* Fast64 begin persistent block [area commands] */
 		/* Fast64 end persistent block [area commands] */
-		OBJECT(MODEL_GOOMBA, -11000, 0, -12700, 0, -70, 0, 0x00000000, bhvGoomba),
-		OBJECT(MODEL_GOOMBA, -15800, 0, -10700, 0, 120, 0, 0x00000000, bhvGoomba),
-		OBJECT(MODEL_GOOMBA, -10200, 0, -7800, 0, -120, 0, 0x00000000, bhvGoomba),
-		OBJECT(MODEL_GOOMBA, -18000, 0, 8800, 0, 150, 0, 0x00000000, bhvGoomba),
-		OBJECT(MODEL_GOOMBA, 12000, 0, 10000, 0, -180, 0, 0x00000000, bhvGoomba),
 	END_AREA(),
 	FREE_LEVEL_POOL(),
 	MARIO_POS(0x01, 30, -13300, 100, -11900),

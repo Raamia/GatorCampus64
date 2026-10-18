@@ -33,7 +33,7 @@ local Sim = {}
 local HERE = debug.getinfo(1, "S").source:match("^@(.*/)") or "./"
 Sim.ROOT = HERE .. "../../"
 Sim.MOD = os.getenv("SGL_MOD_DIR") or (Sim.ROOT .. "mods/sgl64/")   -- SGL_MOD_DIR: test a copy (mutation runs)
-Sim.FILES = { "course.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_mission.lua", "swamp_missions.lua" }
+Sim.FILES = { "course.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_mission.lua", "swamp_chomp.lua", "swamp_missions.lua" }
 Sim.ALL_FILES = {}
 do
     local p = io.popen('ls "' .. Sim.MOD .. '"')
@@ -657,8 +657,15 @@ function World:build_env(c)
     end
 
     -- network
+    local function check_packet_strings(t)
+        for k, v in pairs(t) do
+            assert(type(k) ~= "string" or (#k > 0 and #k <= 256), "coopdx packet string key must contain 1..256 bytes")
+            assert(type(v) ~= "string" or (#v > 0 and #v <= 256), "coopdx packet string value must contain 1..256 bytes: " .. tostring(k))
+        end
+    end
     S.network_send = function(reliable, t)
         assert(type(reliable) == "boolean" and type(t) == "table", "network_send(bool, table)")
+        check_packet_strings(t)
         local n = 0
         for k, v in pairs(t) do
             n = n + 1
@@ -669,6 +676,7 @@ function World:build_env(c)
         table.insert(w.queue, { kind = "packet", from = c, data = deepcopy(t) })
     end
     S.network_send_to = function(li, reliable, t)
+        check_packet_strings(t)
         assert(math.type(li) == "integer" and li > 0 and li < C.MAX_PLAYERS, "network_send_to local index")
         table.insert(w.queue, { kind = "packet", from = c, to = c.giAt[li], data = deepcopy(t) })
     end
@@ -698,6 +706,12 @@ function World:build_env(c)
         assert(math.type(file) == "integer" and math.type(courseIndex) == "integer", "save_file_get_star_flags ints")
         return w.starFlags[courseIndex + 1] or 0
     end
+    S.save_file_set_star_flags = function(file, courseIndex, flags)
+        assert(file >= 0 and math.type(flags) == "integer")
+        w.starFlags[courseIndex + 1] = (w.starFlags[courseIndex + 1] or 0) | flags
+        c.rewardWrites = (c.rewardWrites or 0) + 1
+    end
+    S.save_file_do_save = function(file, force) assert(file >= 0 and math.type(force) == "integer") end
     S.get_current_save_file_num = function() return 1 end
     S.warp_to_level = function(level, area, act)
         assert(math.type(level) == "integer" and math.type(area) == "integer" and math.type(act) == "integer", "warp_to_level ints")
@@ -735,6 +749,14 @@ function World:build_env(c)
 
     -- used by levels.lua / main.lua (integration test)
     S.camera_set_romhack_override = function() end
+    S.gLakituState = {}
+    for _, key in ipairs({ "pos", "focus", "curPos", "curFocus", "goalPos", "goalFocus" }) do
+        S.gLakituState[key] = { x = 0, y = 0, z = 0 }
+    end
+    S.set_override_fov = function(fov) c.overrideFov = fov end
+    S.camera_is_frozen = function() return c.cameraFrozen == true end
+    S.camera_freeze = function() c.cameraFrozen = true end
+    S.camera_unfreeze = function() c.cameraFrozen = false end
     S.camera_set_use_course_specific_settings = function() end
     S.camera_config_is_mouse_look_enabled = function() return c.mouseLookEnabled ~= false end
     S.camera_config_enable_mouse_look = function(enabled) c.mouseLookEnabled = enabled end
@@ -809,6 +831,15 @@ function World:build_env(c)
     -- vanilla object animations (sgl_npc.lua; stage tests replace these with their own tables)
     S.gObjectAnimations = setmetatable({}, { __index = function(_, k) return "ANIM:" .. k end })
     S.obj_init_animation = function(o, i) raw(o)._anim = i end
+    -- Mario's own animations on a Mario-rigged prop (sgl_campus_npcs.lua): a stand-in Animation per index
+    S.get_mario_vanilla_animation = function(i)
+        assert(math.type(i) == "integer" and i >= 0 and i < 209, "get_mario_vanilla_animation(int index)")
+        return { id = i, flags = 0, animYTransDivisor = 189, startFrame = 0, loopStart = 0, loopEnd = 40 }
+    end
+    S.cur_obj_push_mario_away_from_cylinder = function(radius, extentY)
+        assert(c.cur ~= nil, "cur_obj_push_mario_away_from_cylinder outside an object behaviour")
+        assert(type(radius) == "number" and type(extentY) == "number")
+    end
     S.approach_s16_symmetric = function(cur, target, inc)
         assert(math.type(cur) == "integer" and math.type(target) == "integer" and type(inc) == "number")
         local d = (target - cur + 32768) % 65536 - 32768
@@ -830,6 +861,11 @@ function World:build_env(c)
         if w.brokenModels and w.brokenModels[name] then return C.E_MODEL_ERROR_MODEL end
         modelN = modelN + 1
         return modelN
+    end
+    S.texture_override_set = function(name, texture)
+        assert(type(name) == "string" and texture ~= nil)
+        c.textureOverrides = c.textureOverrides or {}
+        c.textureOverrides[name] = texture
     end
     S.get_texture_info = function(name)
         assert(type(name) == "string")

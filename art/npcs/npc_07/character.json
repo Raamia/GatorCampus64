@@ -1,0 +1,43 @@
+{
+  "id": "npc_07",
+  "name": "Chloe",
+  "colors": {
+    "skin": "#5A3726",
+    "hair": "#16110F",
+    "eyes": "#2A1A12",
+    "top": "#7FB3E0",
+    "pants": "#1F2A3D",
+    "shoes": "#8C9096",
+    "skin_shadow": "#513222",
+    "top_detail": "#668FB3",
+    "shoe_soles": "#7B7F84"
+  },
+  "outfit": {
+    "top": "sky blue T-shirt",
+    "pants": "dark denim",
+    "shoes": "gray running shoes",
+    "accessory": "a backpack strap across the chest",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has rounded, fuller tight curls around the top and sides",
+    "she has a small closed-mouth smile",
+    "closed lips"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "crossbody_strap"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "long",
+    "hair": "coils",
+    "body": "stocky",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

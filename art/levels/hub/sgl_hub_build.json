@@ -19,7 +19,7 @@
  ],
  "extent_half_m": 324.0,
  "collision_tris": 8729,
- "visual_tris": 55166,
+ "visual_tris": 54567,
  "collision_by_object": {
   "Ground collision": 1552,
   "Pond basins collision": 195,
@@ -41,8 +41,8 @@
   "LM turlington_potato_collision": 39
  },
  "visual_by_object": {
-  "Ground visual": 9155,
-  "Roads and paths visual": 6272,
+  "Ground visual": 7694,
+  "Roads and paths visual": 7134,
   "Pond basins visual": 195,
   "Pond water": 137,
   "Props visual": 252,
@@ -120,6 +120,22 @@
    }
   },
   {
+   "module": "lake_alice_shore",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'hub' (stages: ['lake_alice'])"
+  },
+  {
+   "module": "lake_alice_water",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'hub' (stages: ['lake_alice'])"
+  },
+  {
    "module": "library_west_smathers_plaza",
    "ok": true,
    "slugs": [
@@ -193,6 +209,30 @@
      "budget_visual": 200
     }
    }
+  },
+  {
+   "module": "reitz_malachowsky",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'hub' (stages: ['reitz_eng'])"
+  },
+  {
+   "module": "reitz_reitz_union",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'hub' (stages: ['reitz_eng'])"
+  },
+  {
+   "module": "reitz_weil_eng_clocktower",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'hub' (stages: ['reitz_eng'])"
   },
   {
    "module": "swamp_oconnell_gym",
@@ -2241,7 +2281,137 @@
    "clipped": true
   }
  ],
- "pickups": null,
+ "pickups": {
+  "coins_placed": 0,
+  "coins_with_goombas": 6,
+  "objects": 6,
+  "by_kind": {
+   "goomba": 6
+  },
+  "skipped": [],
+  "items": [
+   {
+    "kind": "goomba",
+    "name": "goomba hub ring 0",
+    "map_m": [
+     70.2,
+     142.4,
+     -0.0
+    ],
+    "game": [
+     11520,
+     0,
+     -4440
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 270.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba hub ring 1",
+    "map_m": [
+     54.2,
+     170.11,
+     0.0
+    ],
+    "game": [
+     9920,
+     0,
+     -7211
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 210.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba hub ring 2",
+    "map_m": [
+     22.2,
+     170.11,
+     -0.0
+    ],
+    "game": [
+     6720,
+     0,
+     -7211
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 150.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba hub ring 3",
+    "map_m": [
+     6.2,
+     142.4,
+     0.0
+    ],
+    "game": [
+     5120,
+     0,
+     -4440
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 90.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba hub ring 4",
+    "map_m": [
+     22.2,
+     114.69,
+     0.0
+    ],
+    "game": [
+     6720,
+     0,
+     -1669
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 30.0,
+    "coins": 1,
+    "acts": null
+   },
+   {
+    "kind": "goomba",
+    "name": "goomba hub ring 5",
+    "map_m": [
+     54.2,
+     114.69,
+     -0.0
+    ],
+    "game": [
+     9920,
+     0,
+     -1669
+    ],
+    "behavior": "bhvGoomba",
+    "model": "MODEL_GOOMBA",
+    "bparams": "0x00000000",
+    "facing_deg": 330.0,
+    "coins": 1,
+    "acts": null
+   }
+  ]
+ },
  "stats": {
   "landmark_conflicts": {
    "trees_removed": [],
@@ -3634,9 +3804,11 @@
  },
  "attribution": "Map data (c) OpenStreetMap contributors, ODbL 1.0",
  "export_hygiene": {
-  "geometry_mode_lines_sorted": 104,
-  "trailing_ws_lines": 3,
-  "max_abs_vertex": 32400
+  "geometry_mode_lines_sorted": 102,
+  "trailing_ws_lines": 4,
+  "max_abs_vertex": 32639,
+  "geometry_modes_rewritten": 48,
+  "common0_jump_link": true
  },
  "collision_repair": {
   "area_1": {
@@ -3657,7 +3829,7 @@
   "errors": [],
   "warnings": [],
   "collision_tris": 8935,
-  "render_tris": 55166,
+  "render_tris": 54567,
   "lua_names": [
    "SGL_HUB_SIGN_CENTURY_TOWER",
    "SGL_HUB_SIGN_FINAL_EXAM",
@@ -3671,8 +3843,8 @@
    "id_bhvSglDoor"
   ],
   "fog_patched": [
-   49,
-   49
+   48,
+   48
   ]
  },
  "level_dir": "mods/sgl64/levels/castle_grounds"

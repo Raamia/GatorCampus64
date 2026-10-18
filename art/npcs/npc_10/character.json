@@ -1,0 +1,42 @@
+{
+  "id": "npc_10",
+  "name": "Jasmine",
+  "colors": {
+    "skin": "#C99A7A",
+    "hair": "#3B2A20",
+    "eyes": "#6E7F8C",
+    "top": "#5B3F8C",
+    "pants": "#22304F",
+    "shoes": "#F2F2F2",
+    "skin_shadow": "#B58B6E",
+    "top_detail": "#493270",
+    "shoe_soles": "#D5D5D5"
+  },
+  "outfit": {
+    "top": "purple T-shirt",
+    "pants": "navy shorts",
+    "shoes": "white sneakers",
+    "accessory": "a backpack strap across the chest",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has rounded, fuller tight curls around the top and sides",
+    "she has a wide toothy grin"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "shorts",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "crossbody_strap"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "square",
+    "hair": "coils",
+    "body": "broad",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

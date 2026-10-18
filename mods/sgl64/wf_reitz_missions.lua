@@ -185,6 +185,7 @@ local sPlat = {}
 local sPlatNext = 0
 
 local function plat_init(o)
+    o.header.gfx.shadowInvisible = true
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_ACTIVE_FROM_AFAR
     o.collisionData = gGlobalObjectCollisionData.checkerboard_platform_seg8_collision_0800D710
     o.oCollisionDistance = 4000
@@ -225,6 +226,8 @@ end
 
 -- visual-only scenery (sensor-gate bars, "!" sensor boxes): no billboard, no collision, no interaction
 local function prop_init(o)
+    -- Gate meshes are stretched by several storeys; their vanilla square shadows scale too.
+    o.header.gfx.shadowInvisible = true
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_ACTIVE_FROM_AFAR
     o.oDrawingDistance = 20000
     o.oIntangibleTimer = -1
@@ -436,36 +439,58 @@ local function kind_cranes(spec)
     local patterns = spec.patterns or { { 3, 1, 2, 3, 1 } }
     local RESEND = 90
 
-    -- The operator's view uses the engine's boss camera, with the crane as its second focus.
-    -- That camera keeps both Mario and the moving platform in frame and widens as they separate.
+    -- The ROM-hack override forces BOSS_FIGHT back to ROM_HACK. Freeze the engine
+    -- camera while driving and write an explicit, wide side view instead.
+    local viewFields = { "pos", "focus", "curPos", "curFocus", "goalPos", "goalFocus" }
+    local function copy_vec(dst, src)
+        if dst ~= nil then dst.x, dst.y, dst.z = src.x, src.y, src.z end
+    end
     local function restore_operator_camera(ctx)
-        local L = ctx.loc
-        if not L.cameraTracking then return end
-        local cam = L.cameraObj
-        if cam ~= nil and L.cameraMode ~= nil then
-            set_camera_mode(cam, L.cameraMode, 1)
+        local L = ctx.operatorCamera
+        if L == nil or not L.cameraTracking then return end
+        local ls = gLakituState
+        if ls ~= nil then
+            for key, value in pairs(L.cameraView or {}) do copy_vec(ls[key], value) end
         end
-        set_secondary_camera_focus(L.cameraFocus)
-        L.cameraTracking = nil
-        L.cameraMode = nil
-        L.cameraFocus = nil
-        L.cameraObj = nil
+        local cam = L.cameraObj
+        if cam ~= nil and L.cameraMode ~= nil then set_camera_mode(cam, L.cameraMode, 1) end
+        set_override_fov(0)
+        if not L.cameraWasFrozen then camera_unfreeze() end
+        ctx.operatorCamera = nil
     end
 
     local function track_operator_camera(ctx, k)
-        local L = ctx.loc
+        ctx.operatorCamera = ctx.operatorCamera or {}
+        local L = ctx.operatorCamera
         local m = gMarioStates[0]
         local cam = m ~= nil and m.area ~= nil and m.area.camera or nil
         local rec = ctx.objs.cranes and ctx.objs.cranes[k]
-        if cam == nil or rec == nil or rec.o == nil then return end
+        local ls = gLakituState
+        if cam == nil or rec == nil or rec.o == nil or ls == nil then return end
         if not L.cameraTracking then
             L.cameraTracking = true
-            L.cameraMode = cam.mode ~= nil and cam.mode or cam.defMode
-            L.cameraFocus = get_secondary_camera_focus()
-            L.cameraObj = cam
+            L.cameraObj, L.cameraMode = cam, cam.mode or cam.defMode
+            L.cameraWasFrozen = camera_is_frozen()
+            L.cameraView = {}
+            for _, key in ipairs(viewFields) do
+                local v = ls[key]
+                if v ~= nil then L.cameraView[key] = { x = v.x, y = v.y, z = v.z } end
+            end
         end
-        set_secondary_camera_focus(rec.o)
-        set_camera_mode(cam, CAMERA_MODE_BOSS_FIGHT, 1)
+        camera_freeze()
+        set_override_fov(75)
+        -- Keep the full lane width and the next gate visible; pan up with the deck.
+        local lane = lanes[k]
+        local crane = ctx.loc.cranes and ctx.loc.cranes[k] or rec
+        local cy = math.max(spec.yMin + 450, math.min(spec.yMax - 150, crane.y + 220))
+        local focus = { x = (lane.x0 + lane.x1) / 2, y = cy, z = spec.planeZ }
+        local pos = { x = focus.x, y = cy + 330, z = spec.atrium.z0 + 160 }
+        for _, key in ipairs(viewFields) do
+            copy_vec(ls[key], key:find("[Pp]os") and pos or focus)
+        end
+        copy_vec(cam.pos, pos)
+        copy_vec(cam.focus, focus)
+        cam.yaw = 0x8000
     end
 
     for _, lane in ipairs(lanes) do
@@ -966,13 +991,7 @@ local function kind_cranes(spec)
             end
             L.opK = myK
         end
-        -- Selecting a different console changes the second focus while preserving the same tracked view.
-        if myK ~= nil and L.opK == myK and L.cameraTracking then
-            local rec = ctx.objs.cranes and ctx.objs.cranes[myK]
-            if rec ~= nil and rec.o ~= nil and get_secondary_camera_focus() ~= rec.o then
-                set_secondary_camera_focus(rec.o)
-            end
-        end
+        if myK ~= nil then track_operator_camera(ctx, myK) else restore_operator_camera(ctx) end
         L.operating = myK ~= nil and alive(m)
         for k, cr in ipairs(cranes) do
             if k == myK then
@@ -1088,7 +1107,7 @@ local function kind_cranes(spec)
         return lines
     end
 
-    -- side view of crane k's lane (operator and riders): the operator's camera cannot see the crane once it
+    -- side view of crane k's lane (operator and riders), complementing the tracking camera once it
     -- climbs, so this is their view of it. Bars grey, a locked gap red, "!" boxes yellow, the crane blue,
     -- riders green (you white), Amps red, the star ledge gold.
     local function draw_lab(ctx, k)

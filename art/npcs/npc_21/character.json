@@ -1,0 +1,42 @@
+{
+  "id": "npc_21",
+  "name": "Victor",
+  "colors": {
+    "skin": "#F0C8A8",
+    "hair": "#6B4A30",
+    "eyes": "#6E7F8C",
+    "top": "#7FB3E0",
+    "pants": "#3B4E6E",
+    "shoes": "#B03030",
+    "skin_shadow": "#D8B497",
+    "top_detail": "#668FB3",
+    "shoe_soles": "#9B2A2A"
+  },
+  "outfit": {
+    "top": "sky blue T-shirt",
+    "pants": "blue jeans",
+    "shoes": "red sneakers",
+    "accessory": "a backpack strap across the chest",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "he has short straight hair swept to one side",
+    "he has a wide toothy grin"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "crossbody_strap"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "long",
+    "hair": "sidepart",
+    "body": "stocky",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

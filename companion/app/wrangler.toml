@@ -45,7 +45,13 @@ bindings = [
   { name = "PRESENCE_ROOMS", class_name = "AppPresenceRoom" },
   { name = "CRON_ROOMS", class_name = "AppCronRoom" },
   { name = "JOB_ROOMS", class_name = "AppJobRoom" },
+  { name = "RUN_INGEST", class_name = "RunIngestRoom" },
+  { name = "STUDY_BUDGETS", class_name = "StudyBudgetRoom" },
 ]
+
+[[migrations]]
+tag = "v2-study-budget"
+new_sqlite_classes = ["StudyBudgetRoom"]
 
 # For per-app resources (D1, KV, Vectorize, R2, Queues, AI Search), set the id
 # field to "auto" — DeepSpace provisions and tears down with the deploy.
@@ -74,3 +80,7 @@ bindings = [
 [dev]
 port = 8780
 inspector_port = 9237
+
+[[migrations]]
+tag = "v3-run-ingest"
+new_sqlite_classes = ["RunIngestRoom"]

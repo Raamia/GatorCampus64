@@ -1,0 +1,43 @@
+{
+  "id": "npc_23",
+  "name": "Tara",
+  "colors": {
+    "skin": "#F0C8A8",
+    "hair": "#6B4A30",
+    "eyes": "#2A1A12",
+    "top": "#0021A5",
+    "pants": "#1F2A3D",
+    "shoes": "#C8B28C",
+    "skin_shadow": "#D8B497",
+    "top_detail": "#001A84",
+    "shoe_soles": "#B09D7B"
+  },
+  "outfit": {
+    "top": "UF blue hoodie, hood down",
+    "pants": "dark denim",
+    "shoes": "tan boots",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has straight hair ending around the jaw",
+    "she has a friendly smile showing teeth",
+    "eyes that crinkle when smiling"
+  ],
+  "build": {
+    "sleeves": "long",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "hood_down"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "long",
+    "hair": "bob",
+    "body": "fuller",
+    "outfit": "hoodie"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

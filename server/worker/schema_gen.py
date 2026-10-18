@@ -11,6 +11,7 @@ Run `python3 schema_gen.py` to print the full schema.
 """
 import ast
 import functools
+import importlib.util
 import json
 import os
 import re
@@ -25,6 +26,31 @@ def repo_root():
 
 def blender_tools():
     return os.path.join(repo_root(), "tools", "blender")
+
+
+@functools.lru_cache(maxsize=None)
+def _appearance_catalog(root):
+    path = os.path.join(root, "tools", "blender", "sgl_appearance.py")
+    module_spec = importlib.util.spec_from_file_location("sgl_appearance_contract", path)
+    module = importlib.util.module_from_spec(module_spec)
+    module_spec.loader.exec_module(module)
+    return module
+
+
+def appearance_catalog():
+    """The builder's pure-Python catalog; no Blender dependency or duplicated enums."""
+    return _appearance_catalog(repo_root())
+
+
+def appearance_schema(for_model=False):
+    catalog = appearance_catalog()
+    properties = {}
+    if not for_model:
+        properties["version"] = {"type": "integer", "const": catalog.VERSION}
+    for field, choices in catalog.PROFILE_DESCRIPTIONS.items():
+        properties[field] = {"type": "string", "enum": [*choices, *(["unknown"] if for_model else [])],
+                             "description": "; ".join(f"{key}: {description}" for key, description in choices.items())}
+    return {"type": "object", "additionalProperties": False, "required": list(properties), "properties": properties}
 
 
 SLEEVES = ["long", "short"]
@@ -157,6 +183,7 @@ def character_schema():
             "signature_traits": {"type": "array", "maxItems": MAX_TRAITS, "items": _text()},
             "notes": _text(),
             "build": build_schema(),
+            "appearance": appearance_schema(),
         },
     }
 
@@ -177,11 +204,20 @@ def vlm_schema():
     """The structured-output schema sent to the vision model: no id/name (set by the server),
     every property required and additionalProperties false (OpenAI strict mode compatible)."""
     build = build_schema()
+    # Hair and sleeves are owned by the selected appearance profiles in v1.
+    # Keep the legacy builder fields only in the stored character schema.
+    for field in ("hair_style", "sleeves"):
+        del build["properties"][field]
+        build["required"].remove(field)
     return {
         "type": "object",
         "additionalProperties": False,
-        "required": ["colors", "outfit", "signature_traits", "build"],
+        # vLLM's guided decoder follows property order. Live reference-photo
+        # checks selected face/body more accurately before generating colors
+        # and descriptive prose. This changes ordering, not the stored contract.
+        "required": ["appearance", "colors", "outfit", "signature_traits", "build"],
         "properties": {
+            "appearance": appearance_schema(for_model=True),
             "colors": {
                 "type": "object",
                 "additionalProperties": False,

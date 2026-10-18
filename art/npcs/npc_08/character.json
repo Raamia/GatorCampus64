@@ -1,0 +1,43 @@
+{
+  "id": "npc_08",
+  "name": "Grace",
+  "colors": {
+    "skin": "#C68863",
+    "hair": "#4E3626",
+    "eyes": "#3E6E8C",
+    "top": "#7FB3E0",
+    "pants": "#6A6E73",
+    "shoes": "#F2F2F2",
+    "skin_shadow": "#B27A59",
+    "top_detail": "#668FB3",
+    "shoe_soles": "#D5D5D5"
+  },
+  "outfit": {
+    "top": "sky blue polo shirt",
+    "pants": "gray",
+    "shoes": "white sneakers",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has straight hair ending around the jaw",
+    "she has a calm closed smile",
+    "closed lips"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "shirt_collar"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "square",
+    "hair": "bob",
+    "body": "slender",
+    "outfit": "polo"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

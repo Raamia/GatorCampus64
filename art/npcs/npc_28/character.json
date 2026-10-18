@@ -1,0 +1,40 @@
+{
+  "id": "npc_28",
+  "name": "Priya",
+  "colors": {
+    "skin": "#9C6244",
+    "hair": "#D2B27A",
+    "eyes": "#3E6E8C",
+    "top": "#0021A5",
+    "pants": "#4E5634",
+    "shoes": "#F2F2F2",
+    "skin_shadow": "#8C583D",
+    "top_detail": "#001A84",
+    "shoe_soles": "#D5D5D5"
+  },
+  "outfit": {
+    "top": "UF blue T-shirt",
+    "pants": "olive",
+    "shoes": "white sneakers",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has rounded, fuller tight curls around the top and sides",
+    "she has a wide toothy grin"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": []
+  },
+  "appearance": {
+    "version": 1,
+    "face": "heart",
+    "hair": "coils",
+    "body": "slender",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

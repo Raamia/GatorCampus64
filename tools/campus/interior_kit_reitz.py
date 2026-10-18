@@ -6024,7 +6024,7 @@ if __name__ == "__main__":
 # ================================================================== stairs
 def stair_flight(V, C, a, b, z0, z1, width, steps=None, tread_mat="int_ru_terrazzo", side_mat="int_ru_white",
                  soffit=True, rails=True, rail_h=1.07, col_mat="COL notslip", stringer=0.35, rail_outer_head=None,
-                 rail_cap_foot=False, rail_skirt=None):
+                 rail_cap_foot=False, rail_skirt=None, rail_end=None):
     """Open stair flight from a (bottom, z0) to b (top, z1) in plan, `width` wide (photos: white stringers and
     soffit, terrazzo treads, silver picket railings). Collision: one ramp (no-slip) + the two railings.
     rail_outer_head: None = each railing is a closed 14 cm slab (inner + outer face) along the whole flight; a length
@@ -6053,31 +6053,60 @@ def stair_flight(V, C, a, b, z0, z1, width, steps=None, tread_mat="int_ru_terraz
         V.poly([P(s0, w2, zt - rise), P(s0, -w2, zt - rise), P(s0, -w2, zt), P(s0, w2, zt)], side_mat,
                normal_hint=(-dx, -dy, 0), ao=0.85)
     # stringers (white side plates following the slope) + soffit
+    # stairs_fast pass (game_stairs_25..28, user_02 / IMG_5235 / IMG_5255): CLOSED white stringers - the top edge
+    # runs one rise + 3 cm over the slope line so it covers every tread end (no tread / void peeking above it), and
+    # is clipped flush to the head floor over the last stretch (no white curb block at the stair head)
+    e = rise + 0.03
+    s_c = max(0.0, L * (1.0 - e / h)) if h > e else 0.0
+
+    def zl_(s):
+        return z0 + h * s / L
     for off in (-w2, w2):
         sgn = 1 if off > 0 else -1
-        q = [P(0, off, z0 - stringer), P(L, off, z1 - stringer), P(L, off, z1 + 0.12), P(0, off, z0 + 0.12)]
-        V.poly(q, side_mat, normal_hint=(nx * sgn, ny * sgn, 0), ao=0.95)
-        V.poly(list(reversed(q)), side_mat, normal_hint=(-nx * sgn, -ny * sgn, 0), ao=0.9)
+        for q in ([P(0, off, z0 - stringer), P(s_c, off, zl_(s_c) - stringer), P(s_c, off, z1), P(0, off, z0 + e)],
+                  [P(s_c, off, zl_(s_c) - stringer), P(L, off, z1 - stringer), P(L, off, z1), P(s_c, off, z1)]):
+            if math.dist(q[0], q[1]) < 0.01:
+                continue
+            V.poly(q, side_mat, normal_hint=(nx * sgn, ny * sgn, 0), ao=0.95)
+            V.poly(list(reversed(q)), side_mat, normal_hint=(-nx * sgn, -ny * sgn, 0), ao=0.9)
     if soffit:
         V.poly([P(0, w2, z0 - stringer), P(L, w2, z1 - stringer), P(L, -w2, z1 - stringer), P(0, -w2, z0 - stringer)],
                side_mat, normal_hint=(0, 0, -1), ao=0.9)
     if rails:
-        for off in (-w2 + 0.05, w2 - 0.05):
-            pa, pb = P(0, off, z0), P(L, off, z1)
-            V.poly([pa, pb, (pb[0], pb[1], pb[2] + rail_h), (pa[0], pa[1], pa[2] + rail_h)], "int_ru_picket2",
-                   uvs=[(0, 0), (L / 1.1, 0), (L / 1.1, 1), (0, 1)], ao=1.0)
-            # user-photo pass (user_02, C01, C05): a honey-wood handrail on the grey pickets (was a steel cap)
-            V.poly([(pa[0], pa[1], pa[2] + rail_h), (pb[0], pb[1], pb[2] + rail_h), (pb[0], pb[1], pb[2] + rail_h + 0.06),
-                    (pa[0], pa[1], pa[2] + rail_h + 0.06)], "int_ru_maple", ao=1.0)
-            V.poly([(pb[0], pb[1], pb[2] + rail_h), (pa[0], pa[1], pa[2] + rail_h), (pa[0], pa[1], pa[2] + rail_h + 0.06),
-                    (pb[0], pb[1], pb[2] + rail_h + 0.06)], "int_ru_maple", ao=1.0)
+        # stairs_fast pass: the picket panel stands ON the stringer line (+-w2, the arm edge the landing / balcony
+        # rails use, so caps meet in one line at the turns; inside the +-(w2-0.05)+-0.07 collision slab), its foot
+        # on the stringer top (no pickets through the treads), and the honey-wood handrail is one closed sloped
+        # box (two sides + top, 7 cm) run 4 cm past both ends so it overlaps the flat landing / balcony caps
+        for off in (-w2, w2):
+            # stairs_30m: rail_end = (-n side, +n side) horizontal length where that rail meets the balcony rail
+            # line (None = the flight's full length); the rail stops exactly there (no stub into the walkway)
+            Le = _rail_len(rail_end, off, L)
+            for sa_, sb_, za_, zb_ in ((0.0, s_c, z0 + e, z1), (s_c, L, z1, z1)):
+                sb_ = min(sb_, Le)
+                if sb_ - sa_ < 0.01:
+                    continue
+                V.poly([P(sa_, off, za_), P(sb_, off, zb_), P(sb_, off, zl_(sb_) + rail_h), P(sa_, off, zl_(sa_) + rail_h)],
+                       "int_ru_picket2", uvs=[(sa_ / 1.1, (za_ - zl_(sa_)) / rail_h), (sb_ / 1.1, (zb_ - zl_(sb_)) / rail_h),
+                                              (sb_ / 1.1, 1), (sa_ / 1.1, 1)], ao=1.0)
+            ex = 0.04
+            ha, hb = -ex, (L + ex if Le >= L else Le)
+            za, zb = zl_(ha) + rail_h, zl_(hb) + rail_h
+            for side in (-1, 1):
+                o = off + 0.035 * side
+                q = [P(ha, o, za), P(hb, o, zb), P(hb, o, zb + 0.06), P(ha, o, za + 0.06)]
+                if side < 0:
+                    q = list(reversed(q))
+                V.poly(q, "int_ru_maple", normal_hint=(nx * side, ny * side, 0), ao=1.0)
+            V.poly([P(ha, off - 0.035, za + 0.06), P(hb, off - 0.035, zb + 0.06), P(hb, off + 0.035, zb + 0.06),
+                    P(ha, off + 0.035, za + 0.06)], "int_ru_maple", normal_hint=(0, 0, 1), ao=1.0)
     # collision: ramp + railing blocks
     if C is not None:
         ramp = [P(0, -w2, z0), P(L, -w2, z1), P(L, w2, z1), P(0, w2, z0)]
         add_raw(C, ramp, col_mat, normal_hint=(0, 0, 1))
         if rails:
             for off in (-w2 + 0.05, w2 - 0.05):
-                pa, pb = P(0, off, z0), P(L, off, z1)
+                Le = _rail_len(rail_end, off, L)
+                pa, pb = P(0, off, z0), P(Le, off, z0 + h * Le / L)
                 for sgn in (1, -1):
                     o = 0.07 * sgn
                     qa = pa
@@ -6135,6 +6164,14 @@ def stair_flight(V, C, a, b, z0, z1, width, steps=None, tread_mat="int_ru_terraz
                     V.poly([P(s1 + 0.01, -w2 - 0.02, zb), P(s1 + 0.01, w2 + 0.02, zb), P(s1 + 0.01, w2 + 0.02, zv1),
                             P(s1 + 0.01, -w2 - 0.02, zv1)], side_mat, normal_hint=(dx, dy, 0), ao=0.7)
     return {"len": L, "angle_deg": math.degrees(math.atan2(h, L)), "steps": n}
+
+
+def _rail_len(rail_end, off, L):
+    """stair_flight: horizontal length of the rail on side off (rail_end = (-n side, +n side), None = full)."""
+    if rail_end is None:
+        return L
+    v = rail_end[1] if off > 0 else rail_end[0]
+    return L if v is None else max(0.05, min(L, v))
 
 
 def seg_intersect(p, d, poly):

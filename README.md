@@ -48,6 +48,7 @@ Full architecture and track-by-track detail: [`docs/web_platform_spec.md`](docs/
   written guide, and anything else via Gemini, in character.
 - **Campus rivals**: every Goomba wears a USF Bull or FSU Seminole, and Library West's ghosts are UCF
   Knights.
+- **Ride gators**: a saddled green gator replaces the Koopa shell — jump on to ride, Z to get off.
 
 Full writeup, the build-time numbers, and how it was built with Claude Code's multi-agent workflows:
 [`docs/project_overview.md`](docs/project_overview.md).
@@ -79,8 +80,8 @@ Full diagram, every deployable, and the database schema: [`docs/web_platform_spe
 - `server/` — the online side: `api/` (FastAPI + Postgres), `worker/` (the Vultr GPU character
   pipeline), `bridge/` (the headless game host + Auth0 device flow), `web/` (the static site),
   `deploy/` (provisioning, systemd, Caddy).
-- `companion/app/` — the Gator Field Board dashboard (squad coordination, leaderboards, the Gatorize
-  Me web upload flow).
+- `companion/app/` — the Gator Field Board dashboard (the campus mission board, leaderboards, the
+  Gatorize Me web upload flow).
 - `docs/` — design and spec documents; start with `project_overview.md` and `web_platform_spec.md`.
 
 Full file-by-file breakdown: [`docs/development.md`](docs/development.md) → Layout.

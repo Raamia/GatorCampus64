@@ -1,0 +1,44 @@
+{
+  "id": "npc_36",
+  "name": "Tyler",
+  "colors": {
+    "skin": "#F0C8A8",
+    "hair": "#D2B27A",
+    "eyes": "#6E7F8C",
+    "top": "#7FB3E0",
+    "pants": "#3B4E6E",
+    "shoes": "#1C1C1E",
+    "skin_shadow": "#D8B497",
+    "top_detail": "#668FB3",
+    "shoe_soles": "#19191A"
+  },
+  "outfit": {
+    "top": "sky blue hoodie, hood down",
+    "pants": "blue jeans",
+    "shoes": "black sneakers",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "he has short wavy hair with loose raised waves",
+    "he has a calm closed smile",
+    "closed lips",
+    "eyes that crinkle when smiling"
+  ],
+  "build": {
+    "sleeves": "long",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "hood_down"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "oval",
+    "hair": "waves",
+    "body": "slender",
+    "outfit": "hoodie"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

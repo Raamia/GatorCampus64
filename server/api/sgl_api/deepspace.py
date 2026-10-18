@@ -129,12 +129,51 @@ class Pusher:
                      permanent=r.status_code in PERMANENT)
         return ok
 
+    def erase_one(self, account=False):
+        """Deletion delivery retries indefinitely and cannot be lost when the original run is gone."""
+        with self.db.tx() as c:
+            table = "account_erases" if account else "run_erases"
+            pk = "id" if account else "uid"
+            row = c.execute(f"SELECT * FROM {table} WHERE next_at <= now() "
+                            "ORDER BY next_at LIMIT 1 FOR UPDATE SKIP LOCKED").fetchone()
+            if row is None:
+                return None
+            payload = {"v": 1, "deleteUserRuns": {"userId": row["deepspace_user"], "beforeMs": row["before_ms"]}} if account else {"v": 1, "deleteRunId": str(row["uid"])}
+            body = encode(payload)
+            ok = False
+            error = None
+            try:
+                response = self._client.post(self.s.deepspace_app_url.rstrip("/") + INGEST_PATH,
+                                             content=body, headers=sign(self.s.deepspace_ingest_secret, body))
+                ok = response.is_success and response.json().get("success") is True
+                error = None if ok else f"HTTP {response.status_code}"
+            except (httpx.HTTPError, ValueError) as e:
+                error = type(e).__name__
+            if ok:
+                c.execute(f"UPDATE {table} SET sent_at = now(), attempts = attempts + 1, last_error = NULL, next_at = now() + interval '1 day' "
+                          f"WHERE {pk} = %s", (row[pk],))
+            else:
+                c.execute(f"UPDATE {table} SET attempts = attempts + 1, last_error = %s, "
+                          f"next_at = now() + make_interval(secs => %s) WHERE {pk} = %s",
+                          (error, backoff(min(row["attempts"] + 1, 10)), row[pk]))
+            return ok
+
     def drain(self, max_items: int = 50) -> int:
         """Push due rows until none is left (or max_items). Returns how many were sent."""
         if not self.enabled or not self._lock.acquire(blocking=False):
             return 0
         sent = 0
         try:
+            for _ in range(max_items):
+                erased = self.erase_one(account=True)
+                if erased is None:
+                    break
+                sent += bool(erased)
+            for _ in range(max_items):
+                erased = self.erase_one()
+                if erased is None:
+                    break
+                sent += bool(erased)
             for _ in range(max_items):
                 r = self.send_one()
                 if r is None:
