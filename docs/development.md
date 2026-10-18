@@ -21,7 +21,7 @@ No repo or mod install needed: the server sends the mod when you join.
 2. **Join** → **Direct Connect** → `play.gatorcamp.us`, port `7777` (or `64.177.55.205` if the name doesn't resolve).
 3. Wait for the mod download, then pick your gator. L / R in the menu shows page 2, **GUEST GATORS**.
 
-Report anything odd (crashes, `[SGL]` lines in the console via the ` key, lag) in Discord. `/login` answers "unavailable" until Gator Pass goes live.
+Type `/login` to link Gator Pass: scan the QR code or enter the device code on your phone, then approve. You can also play with the existing cast without linking an account. Report crashes, console errors, or lag to the team.
 
 ## NPC chat (Gemini)
 
