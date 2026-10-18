@@ -1,6 +1,5 @@
 import { ArrowUpRight, Copy, ExternalLink, Gamepad2, MapPin, QrCode, Smartphone, Wrench } from 'lucide-react'
 import { useState } from 'react'
-import { Minigames } from '../../components/Minigames'
 
 const ADDRESS = 'play.gatorcamp.us:7777'
 
@@ -63,7 +62,5 @@ export default function PlayPage() {
         <a className="play-guide" href="https://gatorcamp.us" target="_blank" rel="noreferrer">Full game guide <ExternalLink size={13} /></a>
       </aside>
     </div>
-    <Minigames />
-    <p className="play-rom-note">You need your own legally obtained US Super Mario 64 ROM to run sm64coopdx. The game files are not provided here.</p>
   </main>
 }
