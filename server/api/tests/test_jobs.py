@@ -1,5 +1,7 @@
 """POST /characters, limits, GET /jobs/{id}, gallery, delete."""
 import io
+import pytest
+from psycopg.types.json import Jsonb
 
 from PIL import Image
 
@@ -90,9 +92,25 @@ def test_get_job_progress_and_previews(client, auth, conn, s3):
     assert [p["name"] for p in r["previews"]] == ["front.png", "side.png"]
     assert "Signature=" in r["previews"][0]["url"] or "X-Amz-Signature=" in r["previews"][0]["url"]
     assert r["portrait"]
+    assert r["browser_model"] is None  # older worker artifacts remain supported
     assert client.get(f"/jobs/{jid}", headers=auth(sub="auth0|mallory")).status_code == 404
     assert client.get(f"/jobs/{jid}", headers=auth(sub="auth0|admin", scope="admin:slots")).status_code == 200
     assert client.get("/jobs/not-a-uuid", headers=h).status_code == 422
+
+
+@pytest.mark.parametrize("key", ["own", "builds/other/preview.glb", "photos/private.jpg", None])
+def test_browser_model_is_scoped_to_its_job(client, auth, conn, s3, key):
+    h = auth()
+    jid = upload(client, h).json()["job_id"]
+    run_job(conn, s3)
+    expected = f"builds/{jid}/preview.glb"
+    conn.execute("UPDATE jobs SET artifacts = artifacts || %s WHERE id=%s",
+                 (Jsonb({"browser_model": expected if key == "own" else key}), jid))
+    result = client.get(f"/jobs/{jid}", headers=h).json()["browser_model"]
+    if key == "own":
+        assert expected in result and ("Signature=" in result or "X-Amz-Signature=" in result)
+    else:
+        assert result is None
 
 
 def test_get_job_lists_previews_when_worker_left_no_manifest(client, auth, conn, s3):

@@ -218,3 +218,56 @@ def test_openai_backend_server_error_is_final():
     with pytest.raises(spec_ai.VLMError):
         b.complete([{"role": "system", "content": "s"}], {})
     assert len(calls) == 1
+
+
+@pytest.mark.parametrize('content', [None, '', '   ', '{"colors": broken JSON'])
+def test_openai_backend_retries_http_200_unusable_content(content):
+    seen = []
+
+    def handler(request):
+        body = json.loads(request.content)
+        seen.append(body.get('response_format', {}).get('type'))
+        answer = content if len(seen) == 1 else json.dumps(GOOD)
+        return httpx.Response(200, json={'choices': [{'message': {'content': answer}}]})
+
+    backend = spec_ai.OpenAICompatBackend('http://vlm/v1', client=httpx.Client(transport=httpx.MockTransport(handler)))
+    output = backend.complete([{'role': 'system', 'content': 's'}], schema_gen.vlm_schema())
+    assert json.loads(output) == GOOD
+    assert seen == ['json_schema', 'json_object']
+
+
+def test_openai_backend_limits_unusable_content_retries_without_logging_content():
+    seen = []
+    sensitive = 'not JSON: private user description'
+
+    def handler(request):
+        body = json.loads(request.content)
+        seen.append(body.get('response_format', {}).get('type'))
+        return httpx.Response(200, json={'choices': [{'message': {'content': sensitive}}]})
+
+    backend = spec_ai.OpenAICompatBackend('http://vlm/v1', client=httpx.Client(transport=httpx.MockTransport(handler)))
+    with pytest.raises(spec_ai.VLMError, match='formats exhausted') as error:
+        backend.complete([{'role': 'system', 'content': 's'}], schema_gen.vlm_schema())
+    assert seen == ['json_schema', 'json_object', None]
+    assert sensitive not in str(error.value)
+
+
+def test_openai_backend_strips_transport_unique_items_preserves_local_validation():
+    schema = schema_gen.vlm_schema()
+    original = json.dumps(schema, sort_keys=True)
+    assert schema['properties']['build']['properties']['accessories']['uniqueItems'] is True
+
+    def handler(request):
+        body = json.loads(request.content)
+        sent = body['response_format']['json_schema']['schema']
+        assert 'uniqueItems' not in json.dumps(sent)
+        assert sent['properties']['build']['properties']['accessories']['items'] == schema['properties']['build']['properties']['accessories']['items']
+        return httpx.Response(200, json={'choices': [{'message': {'content': json.dumps(GOOD)}}]})
+
+    backend = spec_ai.OpenAICompatBackend('http://vlm/v1', client=httpx.Client(transport=httpx.MockTransport(handler)))
+    backend.complete([{'role': 'system', 'content': 's'}], schema)
+    assert json.dumps(schema, sort_keys=True) == original
+    duplicate = json.loads(json.dumps(GOOD))
+    duplicate['build']['accessories'] = ['hood_down', 'hood_down']
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(duplicate, schema)

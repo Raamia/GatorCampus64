@@ -48,6 +48,19 @@ class VLMError(RuntimeError):
     pass
 
 
+class _InvalidModelOutput(VLMError):
+    """A successful transport response that cannot be used as a character spec."""
+
+
+def _transport_schema(value):
+    """Keep local validation strict while avoiding unsupported vLLM guidance keywords."""
+    if isinstance(value, dict):
+        return {key: _transport_schema(item) for key, item in value.items() if key != "uniqueItems"}
+    if isinstance(value, list):
+        return [_transport_schema(item) for item in value]
+    return value
+
+
 # ------------------------------------------------------------------ prompt
 def _hair_lines():
     reviewed = set(schema_gen.reviewed_hair_styles())
@@ -119,16 +132,20 @@ class OpenAICompatBackend:
     def _post(self, body):
         r = self.client.post(self.url, json=body, headers=self.headers)
         if r.status_code >= 400:
-            raise VLMError(f"HTTP {r.status_code}: {r.text[:300]}")
+            raise VLMError(f"HTTP {r.status_code}")
         try:
-            return r.json()["choices"][0]["message"]["content"] or ""
-        except (KeyError, IndexError, ValueError) as e:
-            raise VLMError(f"unexpected response: {r.text[:300]}") from e
+            content = r.json()["choices"][0]["message"]["content"]
+        except (KeyError, IndexError, ValueError, TypeError) as e:
+            raise _InvalidModelOutput("unexpected vision response envelope") from e
+        if not isinstance(content, str) or not content.strip():
+            raise _InvalidModelOutput("empty or non-text vision response")
+        return content
 
     def complete(self, messages, schema):
         base = {"model": self.model, "messages": messages, "temperature": 0.2, "max_tokens": 1200}
+        transport_schema = _transport_schema(schema)
         formats = [
-            {"type": "json_schema", "json_schema": {"name": "character_spec", "schema": schema, "strict": True}},
+            {"type": "json_schema", "json_schema": {"name": "character_spec", "schema": transport_schema, "strict": True}},
             {"type": "json_object"},
             None,
         ]
@@ -141,13 +158,19 @@ class OpenAICompatBackend:
             else:
                 body["response_format"] = fmt
             try:
-                return self._post(body)
+                text = self._post(body)
+                try:
+                    parse_json(text)
+                except (ValueError, TypeError) as e:
+                    raise _InvalidModelOutput("vision response is not a JSON object") from e
+                return text
             except VLMError as e:
-                # 4xx on the response_format: try the next, weaker one; other failures are final
-                if "HTTP 4" not in str(e) or fmt is None:
+                # Some vLLM guidance failures return HTTP 200 with empty/invalid content.
+                # Retry each weaker format once; server/network failures remain final.
+                if not isinstance(e, _InvalidModelOutput) and "HTTP 4" not in str(e):
                     raise
                 errors.append(str(e))
-        raise VLMError("; ".join(errors))
+        raise VLMError("vision formats exhausted: " + "; ".join(errors))
 
 
 class StaticBackend:

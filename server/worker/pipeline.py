@@ -277,6 +277,9 @@ def step_store(storage, job_id, work, spec, report, spec_info, previews, portrai
     br = os.path.join(work, "build", "build_report.json")
     if os.path.isfile(br):
         uploads["build_report.json"] = br
+    browser_model = os.path.join(work, "build", "preview.glb")
+    if os.path.isfile(browser_model):
+        uploads["preview.glb"] = browser_model
     for f in previews:
         uploads[f"previews/{f}"] = os.path.join(work, "build", "previews", f)
     actor = os.path.join(work, "actors", BUILD_ID)
@@ -291,6 +294,7 @@ def step_store(storage, job_id, work, spec, report, spec_info, previews, portrai
         "name": spec["name"],
         "actor_dir": prefix + f"actors/{BUILD_ID}/",
         "portrait": prefix + "portrait.png",
+        "browser_model": prefix + "preview.glb" if "preview.glb" in uploads else None,
         "card_color": portrait_info["card_color"],
         "previews": {os.path.splitext(f)[0]: prefix + "previews/" + f for f in previews},
         "files": sorted(prefix + k for k in uploads) + [prefix + "manifest.json", prefix + "log.txt"],
@@ -321,6 +325,7 @@ def artifacts_of(manifest):
     prefix = f"builds/{manifest['job']}/"
     return {"build_id": manifest["build_id"], "prefix": prefix, "manifest": prefix + "manifest.json",
             "character_json": prefix + "character.json", "portrait": manifest["portrait"],
+            "browser_model": manifest.get("browser_model"),
             "previews": sorted(manifest["previews"].values()), "actor_dir": manifest["actor_dir"],
             "files": list(manifest["files"])}
 

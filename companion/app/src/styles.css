@@ -298,3 +298,21 @@ button { cursor: pointer; }
     touch-action: manipulation;
   }
 }
+
+/* Gatorize: the field board's paper, ink, ruled cards and editorial type. */
+.gator-page { max-width:1100px; margin:0 auto; padding:42px 32px 70px; color:#173e32; }
+.gator-header { margin-bottom:30px; max-width:730px; }
+.gator-header h1 { color:#173e32; font:500 clamp(40px,5vw,66px)/1.04 Georgia,serif; letter-spacing:-.045em; margin:15px 0; }
+.gator-header p { color:#6d756c; line-height:1.7; }
+.gator-header p:first-child { color:#7d806f; font-size:10px; font-weight:700; letter-spacing:.14em; }
+.gator-card { background:#fffdf7; border:1px solid #dedbd0; border-top:3px solid #173e32; padding:28px; color:#173e32; }
+.gator-card h2,.gator-card h3 { font-family:Georgia,serif; font-weight:500; }
+.gator-card h2 { font-size:28px; }
+.gator-card input:not([type=checkbox]) { color:#173e32; background:#f7f4ea; border:1px solid #d8d6ca; border-radius:2px; padding:12px; }
+.gator-card .text-muted-foreground { color:#6d756c; }
+.gator-card button[type=submit] { background:#ed6b37; color:#fffaf1; border-radius:3px; }
+.gator-viewer { position:relative; background:radial-gradient(ellipse at 50% 40%,#fffcf1 0%,#e9e5d9 75%); border:1px solid #d8d6ca; }
+.gator-viewer-caption { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; padding:16px 18px; color:#6d756c; font-size:10px; letter-spacing:.06em; border-bottom:1px solid #d8d6ca; }
+.gator-viewer-caption span:first-child { font-weight:700; color:#173e32; }
+.gator-viewer-note { text-align:center; padding:16px; color:#6d756c; font-size:13px; }
+@media(max-width:640px) { .gator-page { padding:28px 16px 50px; }.gator-card { padding:20px; }.gator-header h1 { font-size:42px; } }

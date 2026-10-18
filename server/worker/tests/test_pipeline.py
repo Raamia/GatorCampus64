@@ -90,6 +90,30 @@ def test_pipeline_artifacts_and_photo_keys(env):
     assert a["portrait"] == p + "portrait.png" and a["manifest"] == p + "manifest.json"
     assert p + "previews/front.png" in a["previews"] and a["previews"] == sorted(a["previews"])
     assert set(a["files"]) == set(store.list(p))
+    assert a["browser_model"] is None
+
+
+def test_store_optional_browser_model(tmp_path):
+    work = tmp_path / "work"
+    (work / "art" / pipeline.BUILD_ID).mkdir(parents=True)
+    (work / "art" / pipeline.BUILD_ID / "character.json").write_text("{}")
+    (work / "actors" / pipeline.BUILD_ID).mkdir(parents=True)
+    (work / "build").mkdir()
+    (work / "build" / "preview.glb").write_bytes(b"glTF-test")
+    (work / "portrait.png").write_bytes(b"portrait")
+    store = storage.LocalStorage(str(tmp_path / "bucket"))
+    manifest = pipeline.step_store(store, JOB, str(work), {"name": "Pat", "build": {"hair_style": "short"}},
+                                   {}, {}, [], {"card_color": "#fff"}, pipeline.JobLog())
+    key = f"builds/{JOB}/preview.glb"
+    assert manifest["browser_model"] == pipeline.artifacts_of(manifest)["browser_model"] == key
+    assert key in manifest["files"] and store.get(key) == b"glTF-test"
+
+
+def test_glb_upload_content_type(tmp_path):
+    class Client:
+        def upload_file(self, path, bucket, key, ExtraArgs):
+            assert ExtraArgs["ContentType"] == "model/gltf-binary"
+    storage.S3Storage("bucket", client=Client()).put_file("preview.glb", str(tmp_path / "preview.glb"))
 
 
 def test_pipeline_cancel_kills_blender_and_discards(env, monkeypatch):

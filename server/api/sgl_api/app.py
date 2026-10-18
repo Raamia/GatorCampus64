@@ -363,6 +363,10 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
         if not j or (j["owner_sub"] != p.sub and SCOPE_ADMIN not in p.scopes):
             raise HTTPException(404, "no such job")
         keys, portrait = preview_keys(j, allow_list=True)
+        # Only this job's known browser artifact may be presigned; legacy jobs have none.
+        browser_model = (j.get("artifacts") or {}).get("browser_model")
+        if browser_model != f"builds/{j['id']}/preview.glb":
+            browser_model = None
         step = j["step"] or j["state"]
         # position in PIPELINE: the failing step for failed jobs, else the state (store → preview)
         phase = SUBSTEPS.get(step, step) if j["state"] == "failed" else j["state"]
@@ -374,6 +378,7 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             "created": j["created"], "started": j["started"], "finished": j["finished"],
             "slot": j["slot"], "deployed": j["deployed_at"] is not None, "deploy_state": j["deploy_state"],
             "previews": presigned(keys), "portrait": ST().presign(portrait) if portrait else None,
+            "browser_model": ST().presign(browser_model) if browser_model else None,
         }
 
     @app.delete("/characters/{character_id}")
