@@ -75,6 +75,10 @@ def export_browser_model(path, armature="Mario", mesh="Mario Mesh"):
         bpy.context.view_layer.update()
         evaluated = body.evaluated_get(bpy.context.evaluated_depsgraph_get())
         data = bpy.data.meshes.new_from_object(evaluated)
+        # new_from_object preserves the evaluated mesh's material index table;
+        # use that table rather than the template object's slots (Fast64 can
+        # add/reorder slots while building a character).
+        evaluated_materials = list(data.materials)
         temporary = bpy.data.objects.new("Character", data)
         scene.collection.objects.link(temporary)
         temporary.matrix_world = body.matrix_world.copy()
@@ -89,13 +93,13 @@ def export_browser_model(path, armature="Mario", mesh="Mario Mesh"):
             bm.free()
         scales = {}
         data.materials.clear()
-        for i, slot in enumerate(body.material_slots):
-            if slot.material is None:
+        for i, source in enumerate(evaluated_materials):
+            if source is None:
                 fallback = bpy.data.materials.new("Browser Empty")
                 materials.append(fallback)
                 data.materials.append(fallback)
                 continue
-            material, scales[i] = _material(slot.material, images)
+            material, scales[i] = _material(source, images)
             materials.append(material)
             data.materials.append(material)
         if data.uv_layers.active:
