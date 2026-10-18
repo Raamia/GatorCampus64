@@ -25,7 +25,7 @@ declare const __DEEPSPACE_SITE_ORIGIN__: string | undefined
 
 export const seo = {
   title: APP_NAME,
-  description: 'Super Gatorlator 64 is a native SM64CoopDX campus adventure. Use the companion to choose a mission, invite your squad, and log player-reported runs.',
+  description: 'Super Gatorlator 64 is a native SM64CoopDX campus adventure. Choose a mission, join the hosted game, and set a time on the in-game leaderboard.',
   /** Public origin for canonical URLs, og:url, and the sitemap — no trailing
    *  slash. Replace with the custom domain once one is attached, e.g.
    *  'https://www.example.com'. */

@@ -325,7 +325,7 @@ test("leaderboard menu: live rows with age, every mission with rows listed, .sav
     A.strStorage["sgl_ds_lb_reitz_rooftop_1"] = "GATOR-AB12|900|2"
     Sim.cmd(A, "leaderboard")
     w:step(3)
-    check(hud_find(A, "CAMPUS LEADERBOARDS") and hud_find(A, "Reitz rooftop") and hud_find(A, "Skybox Climb"), "offline list")
+    check(hud_find(A, "CAMPUS BOARDS") and hud_find(A, "Reitz rooftop") and hud_find(A, "Skybox Climb"), "offline list")
     check(hud_find(A, "LIVE") == nil and hud_find(A, "1/") == nil, "no live marks, no scrolling with 4 boards")
     press(w, A, C.A_BUTTON)
     w:step(1)
@@ -346,8 +346,8 @@ test("leaderboard menu: live rows with age, every mission with rows listed, .sav
     check(#list == 6 and list[5].missionId == "swamp_chorus" and list[5].label == "Gator Chomp Chorus - 2P"
         and list[6].missionId == "zz_unknown" and list[6].label == "zz_unknown",
         "extra boards after the offline four: registered missions (title), then unknown ids")
-    -- down to the live chorus board (row 5: the list scrolls), open it
-    for _ = 1, 4 do press(w, A, C.D_JPAD) end
+    -- down twice through the 2x2 grid to the live chorus board (row 5: the list scrolls), open it
+    for _ = 1, 2 do press(w, A, C.D_JPAD) end
     check(hud_find(A, "5/6") ~= nil and hud_find(A, "Gator Chomp Chorus - 2P") ~= nil
         and hud_find(A, "Reitz rooftop") == nil, "scrolled: row 5 visible, row 1 not")
     press(w, A, C.A_BUTTON)
@@ -355,13 +355,13 @@ test("leaderboard menu: live rows with age, every mission with rows listed, .sav
     check(hud_find(A, "GATOR CHOMP CHORUS - 2P") and hud_find(A, "LIVE  UPDATED JUST NOW"), "live board + age")
     check(hud_find(A, "#1  Eve + Finn    1M20.0S") ~= nil, "live row (no retries)")
     press(w, A, C.B_BUTTON)
-    for _ = 1, 2 do press(w, A, C.U_JPAD) end   -- back to the sprint (row 3, live: its .sav snapshot is not used)
+    press(w, A, C.U_JPAD)   -- back to the sprint (row 3, live: its .sav snapshot is not used)
     press(w, A, C.A_BUTTON)
     w:step(1)
     check(hud_find(A, "STADIUM STAIR SPRINT") and hud_find(A, "LIVE  UPDATED 3M AGO"), "3 minutes old")
     check(hud_find(A, "#1  Alice + Bob    0M40.0S") ~= nil, "live row")
     press(w, A, C.START_BUTTON)
-    check(hud_find(A, "CAMPUS LEADERBOARDS") == nil, "START closes it")
+    check(hud_find(A, "CAMPUS BOARDS") == nil, "START closes it")
 end)
 
 print(string.format("\n%d checks passed, %d failed", passed, failed))
