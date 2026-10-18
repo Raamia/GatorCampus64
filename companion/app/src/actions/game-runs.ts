@@ -6,6 +6,7 @@
  * getGameLeaderboard: `rows` is the VERIFIED board only (verified_runs, pushed by the hosted
  * game's API through ingestVerifiedRun); offline runs come back separately in `offlineRows`.
  */
+import { soloEraseKey } from './account-erasure.js'
 import type { ActionHandler, ActionResult } from 'deepspace/worker'
 import type { Env } from '../../worker.js'
 import { bestVerifiedRows, type VerifiedRun } from '../lib/leaderboard.js'
@@ -104,6 +105,11 @@ export const submitGameRun: ActionHandler<Env> = async ({ userId, params, tools 
   const run = parseRun(params)
   if (!run) return { success: false, error: 'Run fields are invalid.' }
 
+  const key = await soloEraseKey(userId, run.runId)
+  const erased = await tools.query('erased_solo_runs', { where: { key }, limit: 1 })
+  if (!erased.success) return erased
+  if (erased.data.records.length) return { success: false, error: 'This run was deleted.' }
+
   const existing = await tools.query<SoloRun>('solo_runs', {
     where: { userId, runId: run.runId },
     limit: 1,
@@ -119,6 +125,13 @@ export const submitGameRun: ActionHandler<Env> = async ({ userId, params, tools 
     playerTag: await playerTag(userId),
   })
   if (!result.success) return result
+  const after = await tools.query('erased_solo_runs', { where: { key }, limit: 1 })
+  if (!after.success) return after
+  if (after.data.records.length) {
+    const removed = await tools.remove('solo_runs', result.data.recordId)
+    if (!removed.success) return removed
+    return { success: false, error: 'This run was deleted.' }
+  }
   return { success: true, data: { duplicate: false, recordId: result.data.recordId, verified: false, board: 'offline' } }
 }
 

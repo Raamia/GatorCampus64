@@ -25,7 +25,20 @@ export const soloRunsSchema: CollectionSchema = {
   permissions: {
     '*': { read: false, create: false, update: false, delete: false },
     viewer: { read: true, create: false, update: false, delete: false },
-    member: { read: true, create: true, update: false, delete: false },
-    admin: { read: true, create: true, update: true, delete: true },
+    member: { read: true, create: false, update: false, delete: false },
+    admin: { read: true, create: false, update: true, delete: true },
+  },
+}
+
+
+export const erasedSoloRunsSchema: CollectionSchema = {
+  name: 'erased_solo_runs',
+  columns: [{ name: 'key', storage: 'text', interpretation: 'plain', required: true, immutable: true }],
+  uniqueOn: ['key'],
+  permissions: {
+    '*': { read: false, create: false, update: false, delete: false },
+    viewer: { read: false, create: false, update: false, delete: false },
+    member: { read: false, create: false, update: false, delete: false },
+    admin: { read: false, create: false, update: false, delete: false },
   },
 }

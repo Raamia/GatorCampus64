@@ -229,6 +229,8 @@ def install_staged(staged: Path, mod_dir: Path, slot: int) -> None:
     if portrait.exists():
         (mod_dir / "textures").mkdir(parents=True, exist_ok=True)
         shutil.copyfile(portrait, mod_dir / "textures" / portrait.name)
+    else:
+        (mod_dir / "textures" / f"sgl_portrait_{actor}.png").unlink(missing_ok=True)
 
 
 @dataclass
@@ -305,6 +307,7 @@ class DeployLoop:
         if self.last_restart is not None and self.clock() - self.last_restart < self.min_restart_gap:
             return []
         try:
+            self.api.reconcile_deploys({slot: item.get("deploy_id") for slot, item in self.load_roster().items()})
             pending = self.api.pending_deploys()
         except (ApiUnavailable, ApiError) as e:
             log.warning("GET /deploys/pending: %s", e)
@@ -315,9 +318,42 @@ class DeployLoop:
             staged = self._stage_all(pending, Path(tmp))
             if not staged:
                 return []
+            self.prepare()  # pristine placeholders are required before a reversible install
+            fallbacks = []
+            for item in staged:
+                path = Path(tmp) / f"fallback-{item.slot}"
+                info = stage_placeholder(self.placeholder_sources, item.slot, path)
+                fallbacks.append(Staged({}, item.slot, f"Guest {item.slot}", "", path, info))
             self._announce_and_wait([s.name for s in staged if s.deploy.get("kind") != "placeholder"])
+            done = []
+            def install_current():
+                current = self.api.check_deploys([item.deploy["id"] for item in staged])
+                selected = [item for item in staged if item.deploy["id"] in current]
+                if self._stop.is_set():
+                    return
+                try:
+                    stale_slots = {item.slot for item in staged if item.deploy["id"] not in current}
+                    stale = [f for f in fallbacks if f.slot in stale_slots]
+                    if stale:
+                        self._install(stale)
+                    if not selected:
+                        return
+                    self._install(selected)
+                    for item in selected:
+                        # A second authoritative check occurs in the acknowledgement transaction.
+                        self.api.report_deploy(item.deploy["id"], "deployed", f"slot {item.slot}")
+                        done.append(item.deploy["id"])
+                except Exception:
+                    # Includes a lost acknowledgement: reconcile will queue the intended state again.
+                    try:
+                        self._install(fallbacks)
+                    except Exception:
+                        self.game.stop()  # never start with an install we could not undo
+                        raise
+                    done.clear()
+                    raise
             try:
-                self.game.restart(during=lambda: self._install(staged))
+                self.game.restart(during=install_current)
             except Exception as e:  # noqa: BLE001 - the supervisor still restarts the game
                 log.exception("installing deploys failed")
                 for s in staged:
@@ -325,10 +361,6 @@ class DeployLoop:
                 return []
             finally:
                 self.last_restart = self.clock()
-        done = []
-        for s in staged:
-            self._report(s.deploy.get("id"), "deployed", f"slot {s.slot}")
-            done.append(s.deploy.get("id"))
         return done
 
     def _fetch(self, d: dict[str, Any], dl: Path) -> None:

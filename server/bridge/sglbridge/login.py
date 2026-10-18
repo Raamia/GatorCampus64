@@ -70,8 +70,10 @@ class LoginService:
             if ev is not None:
                 ev.set()
 
-    def forget(self, gi: int) -> None:
+    def forget(self, gi: int, expected_link_id: int | None = None) -> None:
         with self._lock:
+            if expected_link_id is not None and self._identities.get(gi, {}).get("link_id") != expected_link_id:
+                return
             ev = self._sessions.pop(gi, None)
             if ev is not None:
                 ev.set()

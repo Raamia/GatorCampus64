@@ -102,7 +102,7 @@ def resolve_link(c, gi: int, name: str, fields: dict, bridge_sub: str | None) ->
         return None
     return c.execute(
         """SELECT l.sub, u.nickname FROM links l JOIN users u ON u.sub = l.sub
-            WHERE l.id = %s AND l.gi = %s AND l.coopdx_name = %s
+            WHERE l.revoked_at IS NULL AND l.id = %s AND l.gi = %s AND l.coopdx_name = %s
               AND l.session_id = %s AND l.connection_id = %s AND l.bridge_sub = %s""",
         (identity["link_id"], gi, name, session, connection, bridge_sub)).fetchone()
 

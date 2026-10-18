@@ -57,6 +57,15 @@ class ApiClient:
         body.update({"t": t, "payload": payload, "at": at})
         self._call("POST", "/events", body)
 
+    def active_links(self, ids: list[int]) -> set[int]:
+        result = self._call("POST", "/links/check", {"ids": ids})
+        if not isinstance(result, dict) or not isinstance(result.get("active"), list):
+            raise ApiUnavailable("invalid active links response")
+        return set(result["active"])
+
+    def post_presence(self, snapshot: dict[str, Any]) -> Any:
+        return self._call("POST", "/presence", snapshot)
+
     # POST /links {sub, coopdx_name, gi[, nickname, uf]} -> {nickname, guest_slot|null, uf, ...}
     def post_link(self, sub: str, coopdx_name: str, gi: int, nickname: str | None = None,
                   uf: bool | None = None, session_id: str | None = None,
@@ -85,6 +94,15 @@ class ApiClient:
         if isinstance(out, dict):
             out = out.get("deploys")
         return [d for d in out if isinstance(d, dict)] if isinstance(out, list) else []
+
+    def check_deploys(self, ids: list[int]) -> set[int]:
+        result = self._call("POST", "/deploys/check", {"ids": ids})
+        if not isinstance(result, dict) or not isinstance(result.get("current"), list):
+            raise ApiUnavailable("invalid deploy check response")
+        return set(result["current"])
+
+    def reconcile_deploys(self, installed: dict[int, int | None]) -> None:
+        self._call("POST", "/deploys/reconcile", {"installed": installed})
 
     # POST /deploys/{id}: server/api reads {state, error}; {status, detail} is sent too
     def report_deploy(self, deploy_id: Any, status: str, detail: str = "") -> None:

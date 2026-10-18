@@ -31,6 +31,10 @@
 --     UPDATE jobs SET state='spec', step='spec', started=now(), finished=NULL, worker=<host>,
 --            log='', error=NULL, attempts=attempts+1 WHERE id=<job_id>;
 --     UPDATE characters SET state='spec', step='spec' WHERE id=<character_id>;
+--   Each claim also sets a new lease_token UUID and a lease_expires_at (120 seconds).
+--   Renew every 30 seconds on a separate connection. All progress/terminal writes must
+--   check matching character/token, active state and unexpired lease AFTER taking row locks.
+--   Pollers fail expired claims from all hosts; they never requeue a job or reuse its keys.
 --   Photos: download exactly the keys in jobs.photos (photos/<job_id>/<i>.jpg).
 --   Each step: lock character FOR UPDATE, then UPDATE jobs and characters together.
 --   Ready/failed: take pg_advisory_xact_lock(hashtext('sgl_slots')), then lock character,
@@ -370,3 +374,122 @@ BEGIN
             ('queued','spec','face','build','export','validate','preview','store','ready')) NOT VALID;
     END IF;
 END $$;
+
+-- Lease tokens fence every worker write; expired jobs fail rather than reuse photo/build keys.
+ALTER TABLE jobs ADD COLUMN IF NOT EXISTS lease_token uuid;
+ALTER TABLE jobs ADD COLUMN IF NOT EXISTS lease_expires_at timestamptz;
+CREATE INDEX IF NOT EXISTS jobs_lease_idx ON jobs (lease_expires_at)
+    WHERE state NOT IN ('queued', 'ready', 'failed');
+
+-- Ephemeral presence is separate from the durable event history.
+CREATE TABLE IF NOT EXISTS server_presence (
+    bridge_sub text PRIMARY KEY,
+    session_id uuid NOT NULL,
+    observed_at timestamptz NOT NULL,
+    received_at timestamptz NOT NULL DEFAULT now(),
+    online boolean NOT NULL,
+    since timestamptz,
+    version text,
+    players jsonb NOT NULL DEFAULT '[]'
+);
+
+-- Durable cleanup intents outlive jobs and contain no account identifiers or photo data.
+-- Successful rows remain as low-frequency tombstones to catch late writes by old processes.
+CREATE TABLE IF NOT EXISTS storage_cleanup (
+    job_id uuid NOT NULL,
+    kind text NOT NULL CHECK (kind IN ('photos', 'builds')),
+    next_at timestamptz NOT NULL DEFAULT now(),
+    attempts integer NOT NULL DEFAULT 0,
+    failures integer NOT NULL DEFAULT 0,
+    last_error text,
+    cleaned_at timestamptz,
+    PRIMARY KEY (job_id, kind)
+);
+CREATE INDEX IF NOT EXISTS storage_cleanup_due_idx ON storage_cleanup (next_at);
+
+CREATE OR REPLACE FUNCTION sgl_enqueue_cleanup(jid uuid) RETURNS void
+LANGUAGE sql AS $$
+    INSERT INTO storage_cleanup (job_id, kind) VALUES (jid, 'photos'), (jid, 'builds')
+    ON CONFLICT (job_id, kind) DO UPDATE SET next_at = LEAST(storage_cleanup.next_at, now());
+$$;
+
+CREATE OR REPLACE FUNCTION sgl_cleanup_job_trigger() RETURNS trigger
+LANGUAGE plpgsql AS $$
+BEGIN
+    IF TG_OP = 'DELETE' THEN
+        PERFORM sgl_enqueue_cleanup(OLD.id);
+        RETURN OLD;
+    END IF;
+    PERFORM sgl_enqueue_cleanup(NEW.id);
+    RETURN NEW;
+END $$;
+DROP TRIGGER IF EXISTS jobs_cleanup_changed ON jobs;
+CREATE TRIGGER jobs_cleanup_changed AFTER INSERT OR UPDATE OF state ON jobs
+    FOR EACH ROW EXECUTE FUNCTION sgl_cleanup_job_trigger();
+DROP TRIGGER IF EXISTS jobs_cleanup_deleted ON jobs;
+CREATE TRIGGER jobs_cleanup_deleted BEFORE DELETE ON jobs
+    FOR EACH ROW EXECUTE FUNCTION sgl_cleanup_job_trigger();
+-- Backfill extant jobs; historical objects whose jobs were already deleted need a separate inventory.
+INSERT INTO storage_cleanup (job_id, kind)
+    SELECT j.id, k.kind FROM jobs j CROSS JOIN (VALUES ('photos'), ('builds')) k(kind)
+    ON CONFLICT DO NOTHING;
+
+-- The newest generation must still match the current slot and a ready build.
+CREATE OR REPLACE FUNCTION sgl_deploy_current(did bigint) RETURNS boolean
+LANGUAGE sql STABLE AS $$
+    SELECT EXISTS (
+        SELECT 1 FROM deploys d JOIN slots sl ON sl.n = d.slot
+        LEFT JOIN characters c ON c.id = d.character_id LEFT JOIN jobs j ON j.id = d.job_id
+        WHERE d.id = did AND d.state IN ('pending', 'deployed')
+          AND NOT EXISTS (SELECT 1 FROM deploys newer WHERE newer.slot = d.slot AND newer.id > d.id)
+          AND ((d.kind = 'placeholder' AND sl.character_id IS NULL)
+            OR (d.kind = 'character' AND sl.character_id = d.character_id AND c.slot = d.slot
+                AND c.state = 'ready' AND j.state = 'ready' AND j.character_id = c.id))
+    );
+$$;
+
+-- Account lifecycle: revocation metadata survives removal of application data.
+ALTER TABLE links ADD COLUMN IF NOT EXISTS revoked_at timestamptz;
+CREATE TABLE IF NOT EXISTS deleted_accounts (
+    subject_hash text PRIMARY KEY,
+    deleted_before bigint NOT NULL,
+    reactivated boolean NOT NULL DEFAULT false
+);
+CREATE TABLE IF NOT EXISTS erased_links (
+    link_id bigint PRIMARY KEY,
+    session_id uuid,
+    connection_id uuid
+);
+CREATE TABLE IF NOT EXISTS erased_events (
+    bridge_sub text NOT NULL,
+    event_key uuid NOT NULL,
+    PRIMARY KEY (bridge_sub, event_key)
+);
+CREATE TABLE IF NOT EXISTS run_erases (
+    uid uuid PRIMARY KEY,
+    attempts integer NOT NULL DEFAULT 0,
+    next_at timestamptz NOT NULL DEFAULT now(),
+    last_error text,
+    sent_at timestamptz
+);
+CREATE INDEX IF NOT EXISTS run_erases_due_idx ON run_erases (next_at) WHERE sent_at IS NULL;
+
+-- One-to-one mappings require independent proof of both provider identities.
+CREATE TABLE IF NOT EXISTS identity_links (
+    sub text PRIMARY KEY REFERENCES users(sub) ON DELETE CASCADE,
+    deepspace_user text NOT NULL UNIQUE,
+    created timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS identity_nonces (
+    nonce text PRIMARY KEY,
+    created timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS account_erases (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    deepspace_user text NOT NULL,
+    before_ms bigint NOT NULL,
+    attempts integer NOT NULL DEFAULT 0,
+    next_at timestamptz NOT NULL DEFAULT now(),
+    last_error text,
+    sent_at timestamptz
+);

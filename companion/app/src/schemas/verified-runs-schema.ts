@@ -49,3 +49,16 @@ export const ingestNoncesSchema: CollectionSchema = {
     admin: { read: true, create: false, update: false, delete: true },
   },
 }
+
+/** Non-personal run IDs prevent late ingestion from resurrecting deleted leaderboard rows. */
+export const erasedRunsSchema: CollectionSchema = {
+  name: 'erased_runs',
+  columns: [{ name: 'runId', storage: 'text', interpretation: 'plain', required: true, immutable: true }],
+  uniqueOn: ['runId'],
+  permissions: {
+    '*': { read: false, create: false, update: false, delete: false },
+    viewer: { read: false, create: false, update: false, delete: false },
+    member: { read: false, create: false, update: false, delete: false },
+    admin: { read: true, create: false, update: false, delete: false },
+  },
+}

@@ -37,7 +37,7 @@ class Settings:
     limit_user_total: int = 3
     limit_global_hour: int = 20
     link_code_ttl: int = 600
-    status_stale_secs: int = 0      # > 0: report the server offline when no event arrived for this long
+    status_stale_secs: int = 90     # heartbeat expiry; <= 0 also uses the safe 90-second default
     claim_namespace: str = f"https://{DEFAULT_DOMAIN}/"   # Auth0 Action custom claims: <ns>uf, <ns>nickname
     play_address: str = f"play.{DEFAULT_DOMAIN}:7777"     # shown by /status
     leaderboard_cache_secs: int = 5  # GET /leaderboards responses are reused for this long (0 = off)
@@ -84,7 +84,7 @@ def load() -> Settings:
         limit_user_total=_int("LIMIT_USER_TOTAL", 3),
         limit_global_hour=_int("LIMIT_GLOBAL_HOUR", 20),
         link_code_ttl=_int("LINK_CODE_TTL", 600),
-        status_stale_secs=_int("STATUS_STALE_SECS", 0),
+        status_stale_secs=_int("STATUS_STALE_SECS", 90),
         leaderboard_cache_secs=_int("LEADERBOARD_CACHE_SECS", 5),
         deepspace_app_url=_env("DEEPSPACE_APP_URL"),
         deepspace_ingest_secret=_env("DEEPSPACE_INGEST_SECRET"),

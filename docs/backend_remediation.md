@@ -103,3 +103,8 @@ The full evidence is local tests, not a production rollout. Other assessment
 follow-ups—worker leases, presence heartbeats, durable S3 cleanup, deployment
 revalidation, live Auth0 configuration, and backup/restore drills—remain separate
 work; they were not among the six prioritized remediation items.
+
+Worker leases and presence heartbeats are implemented in the follow-up
+[`feat/backend-leases-heartbeats` branch](backend_leases_heartbeats.md), with its
+own schema and coordinated rollout requirements. The remaining operational
+items above are still separate work.

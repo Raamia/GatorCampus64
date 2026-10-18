@@ -107,3 +107,39 @@ def test_game_start_resets_players_and_inbox(tmp_path):
     b.on_game_start()
     assert b.players_online() == 0
     assert inbox.document() == {"seq": 1, "cmds": []}
+
+
+def test_leave_retains_server_identity_and_rejects_event_supplied_identity(tmp_path):
+    from sglbridge.login import LoginService
+    inbox = Inbox(tmp_path / 'sgl64.modfs')
+    login = LoginService(None, None, None, inbox)
+    queue = ListQueue()
+    b = Bridge(inbox, queue, login)
+    b.on_event({'t': 'join', 'gi': 1, 'name': 'Ali'})
+    connection = b.connections[1]
+    identity = {'link_id': 42, 'connection_id': connection, 'session_id': b.session_id}
+    login._identities[1] = identity
+    b.on_event({'t': 'leave', 'gi': 1, 'name': 'Ali', 'identity': {'link_id': 999}, 'connection_id': 'forged'})
+    assert queue[-1]['payload']['identity'] == identity
+    assert queue[-1]['payload']['connection_id'] == connection
+    assert login.identities() == {}
+
+
+def test_revocation_response_cannot_clear_replacement_login(tmp_path):
+    from sglbridge.login import LoginService
+    inbox = Inbox(tmp_path / 'sgl64.modfs')
+    login = LoginService(None, None, None, inbox)
+    b = Bridge(inbox, ListQueue(), login)
+    login._identities[1] = {'link_id': 10}
+    class API:
+        def active_links(self, ids):
+            assert ids == [10]
+            login._identities[1] = {'link_id': 11}
+            return []
+    b.reconcile_links(API())
+    assert login.identities() == {'1': {'link_id': 11}}
+    class Revoked:
+        def active_links(self, ids):
+            return []
+    b.reconcile_links(Revoked())
+    assert login.identities() == {}
