@@ -240,7 +240,7 @@ def main():
                  "node": "0x0A", "spawn_object_game": [round(sx * 100), round(spawn_z * 100), round(-sy * 100)],
                  "note": getattr(mod, "SPAWN_NOTE", MARSTON_SPAWN_NOTE)}
     import stage_pickups
-    Pl = stage_pickups.Placer(S, probe)
+    Pl = stage_pickups.Placer(S, probe, rivals=False)
     for it in M.pickups:
         k, name, p = it["kind"], it["name"], it["pos"]
         n_placed = len(Pl.items)
@@ -446,7 +446,7 @@ def build_area(L, root, mod, M, mats, slot, door, levels_const, hub_const="LEVEL
         pads_out.append(dict(p, floor_m=pz, game=[round((x - cx) * 100), round((pz or z) * 100), round(-(y - cy) * 100)]))
     # pickups
     S = types.SimpleNamespace(cx=cx, cy=cy, key=mod.KEY)
-    Pl = stage_pickups.Placer(S, probe)
+    Pl = stage_pickups.Placer(S, probe, rivals=False)
     for it in M.pickups:
         k, name, p = it["kind"], it["name"], it["pos"]
         if k == "coin":

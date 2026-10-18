@@ -873,6 +873,7 @@ function World:build_env(c)
     -- objects
     local function new_object(bhv, model, x, y, z)
         local s = { behavior = bhv, _model = model, oPosX = x, oPosY = y, oPosZ = z, oBehParams = 0, oFlags = 0,
+            oHomeX = x, oHomeY = y, oHomeZ = z,
             activeFlags = C.ACTIVE_FLAG_ACTIVE, oAnimState = 0, oTimer = 0, oFaceAngleYaw = 0, oMoveAngleYaw = 0,
             oIntangibleTimer = 0,
             oDrawingDistance = 4000, oCollisionDistance = 1000, oStarSpawnExtCutsceneFlags = 0, oHealth = 0,

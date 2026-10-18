@@ -1,51 +1,90 @@
--- Super Gatorlator 64: Albert and Alberta, the UF mascots, roam the game as talking NPCs.
+-- Super Gatorlator 64: Albert and Alberta, the UF mascots, are the game's talking guides.
 -- Walk up to one and type in chat (or use /albert <question>, /alberta <question> from anywhere): the host's
 -- tools/npc_bridge/bridge.py answers game questions from tools/npc_bridge/game_guide.md and everything else with
 -- Gemini; the reply shows as a speech bubble over the mascot and a chat line for everyone.
 --
--- Where they are: every SGL_NPC_ROTATE seconds the host moves both mascots one step along their routes
--- (SGL_NPCS[].route, spots in SGL_NPC_SPOTS) by bumping gGlobalSyncTable.sglNpcStep; every client follows the
--- synced step, so everyone sees them in the same place. Exactly one of them is on the hub at any time
--- (Albert's route covers the outdoor stages, Alberta's the libraries; both visit Lake Alice, never together).
--- A mascot never vanishes mid-conversation: the step waits while anyone is talking to or standing near one.
--- Moving = a puff of mist and a vanish sound where they were, and the same where they appear.
+-- Where they are (SGL_NPC_POSTS): both stand on the Plaza of the Americas by the spawn, and in every stage one of
+-- them waits at the start of the mission you're playing (the act you entered): the race start box, the foot of the
+-- climb, the deck, the booking kiosk... so whoever is doing a mission can ask about it right there. Every client in
+-- the level spawns the same mascot at the same post, so everyone sees them in the same place.
 --
 -- The mascots are local props (spawn_non_sync_object on every client in their level, like the Marston Shushers),
 -- with their own skeleton models (actors/albert, actors/alberta, tools/actors/make_gators.py) animated by
--- sgl_albert.lua: they stroll around their spot, wave when someone walks up, turn to whoever they're talking to,
+-- sgl_albert.lua: they stroll around their post, wave when someone walks up, turn to whoever they're talking to,
 -- stroke their chin while thinking, gesture and flap their jaw while answering, and break into the Gator Chomp.
 -- Ids must match tools/npc_bridge/npcs.json (tools/luatest/check_npc_ids.py checks this).
 
 SGL_NPC_TALK_DIST = 600      -- chat within 6 m of a mascot goes to it
 SGL_NPC_FACE_DIST = 800      -- the fallback (Yoshi) model turns toward a player within 8 m
-SGL_NPC_ROTATE = 240         -- seconds between moves
-SGL_NPC_BUSY_HOLD = 6        -- seconds a "someone is near" report holds the next move
 
--- Where the mascots can be: flat, clear ground near each stage's arrival point, off the mission routes
--- (radius = how far they stroll; floors and clearance checked offline by tools/luatest/check_npc_spots.py).
--- yaw: degrees, 0 = facing +Z; they face the arrival point. label: for "where is Albert?" answers.
+-- Where the mascots stand: flat, clear floor next to each mission's start (off its route), checked offline against
+-- the built levels by tools/luatest/check_npc_spots.py. radius = how far they stroll (0: they stay put).
+-- yaw: degrees, 0 = facing +Z; they face the mission. label: for "where is Albert?" answers.
 SGL_NPC_SPOTS = {
     hub_albert = { level = SGL_HUB_LEVEL, area = 1, x = 8800, y = 0, z = -3750, yaw = -120, radius = 350,
                    label = "on the Plaza of the Americas, right by the spawn" },
     hub_alberta = { level = SGL_HUB_LEVEL, area = 1, x = 7896, y = 0, z = -4864, yaw = 45, radius = 450,
                     label = "on the Plaza of the Americas, right by the spawn" },
-    swamp = { level = LEVEL_BOB, area = 1, x = 6261, y = 0, z = -11523, yaw = 60, radius = 300,
-              label = "in The Swamp, near where you arrive" },
-    reitz = { level = LEVEL_WF, area = 1, x = 6975, y = 0, z = -9690, yaw = 30, radius = 300,
-              label = "at Reitz & Engineering, on the North Lawn near where you arrive" },
-    alice = { level = LEVEL_JRB, area = 1, x = -13750, y = 0, z = -11900, yaw = 90, radius = 300,
-              label = "at Lake Alice, on the bat-house field near where you arrive" },
-    marston = { level = LEVEL_CCM, area = 1, x = -596, y = 0, z = -786, yaw = -165, radius = 150,
-                label = "in Marston Science Library, in the lobby" },
-    libwest = { level = LEVEL_BBH, area = 1, x = -325, y = 0, z = 2508, yaw = 120, radius = 0,
-                label = "in Library West, by the entrance" },
+    swamp_kickoff = { level = LEVEL_BOB, area = 1, x = 6261, y = 0, z = -11523, yaw = 60, radius = 300,
+                      label = "The Swamp, by the arrival (Kickoff climb)" },
+    swamp_sprint = { level = LEVEL_BOB, area = 1, x = 6598, y = -1000, z = -498, yaw = 180, radius = 0,
+                     label = "The Swamp, behind the Stair Sprint start box" },
+    swamp_chorus = { level = LEVEL_BOB, area = 1, x = 4112, y = -1000, z = -1697, yaw = 90, radius = 0,
+                     label = "The Swamp, by the north-west end-zone button (Chomp Chorus)" },
+    reitz_rooftop = { level = LEVEL_WF, area = 1, x = -3069, y = 150, z = -950, yaw = 60, radius = 0,
+                      label = "Reitz, on the ravine terrace where the rooftop climb starts" },
+    reitz_lawn = { level = LEVEL_WF, area = 1, x = 6975, y = 0, z = -9690, yaw = 30, radius = 300,
+                   label = "Reitz, on the North Lawn (Meal Swipe Tokens)" },
+    reitz_lab = { level = LEVEL_WF, area = 1, x = 1830, y = 0, z = 22625, yaw = -60, radius = 0,
+                  label = "Reitz, in the Robotics Lab atrium by the consoles" },
+    alice_boardwalk = { level = LEVEL_JRB, area = 1, x = -8070, y = 50, z = -5271, yaw = -60, radius = 0,
+                        label = "Lake Alice, on the north boardwalk (Boardwalk Welcome)" },
+    alice_deck = { level = LEVEL_JRB, area = 1, x = 2731, y = 20, z = -611, yaw = -45, radius = 0,
+                   label = "Lake Alice, on the deck where the Gator Hop starts" },
+    alice_census = { level = LEVEL_JRB, area = 1, x = -12961, y = 0, z = -13345, yaw = -15, radius = 0,
+                     label = "Lake Alice, by the bat barns' census post" },
+    alice_field = { level = LEVEL_JRB, area = 1, x = -13750, y = 0, z = -11900, yaw = 90, radius = 300,
+                    label = "Lake Alice, on the bat-house field by the arrival" },
+    marston_lobby = { level = LEVEL_CCM, area = 1, x = -596, y = 0, z = -786, yaw = -165, radius = 150,
+                      label = "Marston, in the lobby by the grand stair" },
+    marston_quiet = { level = LEVEL_CCM, area = 1, x = 456, y = 1800, z = -2080, yaw = 120, radius = 0,
+                      label = "Marston, at the 5th-floor stairwell (Lost Textbooks)" },
+    marston_kiosk = { level = LEVEL_CCM, area = 1, x = 2085, y = -600, z = 1747, yaw = -150, radius = 0,
+                      label = "Marston, by the 1st-floor booking kiosk outside room L129" },
+    libwest_lobby = { level = LEVEL_BBH, area = 1, x = -325, y = 0, z = 2508, yaw = 120, radius = 0,
+                      label = "Library West, in the lobby by the entrance" },
+    libwest_desk = { level = LEVEL_BBH, area = 1, x = 116, y = 3000, z = 1909, yaw = -75, radius = 0,
+                     label = "Library West, by your 6th-floor desk (Coffee Run)" },
+    libwest_circ = { level = LEVEL_BBH, area = 1, x = 26, y = 600, z = 331, yaw = -105, radius = 0,
+                     label = "Library West, by the 2nd-floor circulation desk (Hide & Seek)" },
+}
+
+-- who stands where: on the hub always; in a stage for the listed acts (acts 4-6 are the free-roam acts)
+SGL_NPC_POSTS = {
+    { npc = "albert", spot = "hub_albert" },
+    { npc = "alberta", spot = "hub_alberta" },
+    { npc = "albert", spot = "swamp_kickoff", acts = { 1, 4, 5, 6 } },
+    { npc = "alberta", spot = "swamp_sprint", acts = { 2 } },
+    { npc = "albert", spot = "swamp_chorus", acts = { 3 } },
+    { npc = "albert", spot = "reitz_rooftop", acts = { 1 } },
+    { npc = "alberta", spot = "reitz_lawn", acts = { 2 } },
+    { npc = "albert", spot = "reitz_lab", acts = { 3 } },
+    { npc = "albert", spot = "reitz_lawn", acts = { 4, 5, 6 } },
+    { npc = "alberta", spot = "alice_boardwalk", acts = { 1 } },
+    { npc = "albert", spot = "alice_deck", acts = { 2 } },
+    { npc = "alberta", spot = "alice_census", acts = { 3 } },
+    { npc = "alberta", spot = "alice_field", acts = { 4, 5, 6 } },
+    { npc = "alberta", spot = "marston_lobby", acts = { 1, 4, 5, 6 } },
+    { npc = "albert", spot = "marston_quiet", acts = { 2 } },
+    { npc = "alberta", spot = "marston_kiosk", acts = { 3 } },
+    { npc = "alberta", spot = "libwest_lobby", acts = { 1, 4, 5, 6 } },
+    { npc = "albert", spot = "libwest_desk", acts = { 2 } },
+    { npc = "alberta", spot = "libwest_circ", acts = { 3 } },
 }
 
 SGL_NPCS = {
-    { id = "albert", name = "Albert", geo = "albert_geo", col = { 250, 140, 40 },
-      route = { "hub_albert", "swamp", "hub_albert", "reitz", "hub_albert", "alice" } },
-    { id = "alberta", name = "Alberta", geo = "alberta_geo", col = { 110, 170, 255 },
-      route = { "marston", "hub_alberta", "libwest", "hub_alberta", "alice", "hub_alberta" } },
+    { id = "albert", name = "Albert", geo = "albert_geo", col = { 250, 140, 40 } },
+    { id = "alberta", name = "Alberta", geo = "alberta_geo", col = { 110, 170, 255 } },
 }
 
 local sNpcById = {}
@@ -62,15 +101,41 @@ end
 
 function sgl_npc_by_id(id) return sNpcById[id] end
 
--- the synced rotation step and where each mascot is at it
-function sgl_npc_step()
-    local s = gGlobalSyncTable.sglNpcStep
-    return math.type(s) == "integer" and s or 0
+local function has_act(acts, act)
+    if acts == nil then return true end
+    for _, a in ipairs(acts) do
+        if a == act then return true end
+    end
+    return false
 end
 
-function sgl_npc_spot(npc, step)
-    step = step or sgl_npc_step()
-    return SGL_NPC_SPOTS[npc.route[step % #npc.route + 1]]
+-- the spot where a mascot stands in a level / area / act, or nil when it isn't there
+function sgl_npc_spot(npc, level, area, act)
+    for _, post in ipairs(SGL_NPC_POSTS) do
+        local spot = SGL_NPC_SPOTS[post.spot]
+        if post.npc == npc.id and spot.level == level and spot.area == area and has_act(post.acts, act) then
+            return spot
+        end
+    end
+    return nil
+end
+
+-- "where is Albert?": the hub, then every mission he waits at
+function sgl_npc_where(npc)
+    local hub, missions = nil, {}
+    for _, post in ipairs(SGL_NPC_POSTS) do
+        local spot = SGL_NPC_SPOTS[post.spot]
+        if post.npc == npc.id then
+            if spot.level == SGL_HUB_LEVEL then
+                hub = spot.label
+            elseif not has_act(post.acts, 4) then
+                local acts = {}
+                for _, a in ipairs(post.acts) do table.insert(acts, tostring(a)) end
+                table.insert(missions, spot.label .. " (act " .. table.concat(acts, ", ") .. ")")
+            end
+        end
+    end
+    return (hub or "around campus") .. ", and at the start of these missions: " .. table.concat(missions, "; ")
 end
 
 local function same_place(np, spot)
@@ -230,25 +295,18 @@ end
 
 id_bhvSglNpc = hook_behavior(nil, OBJ_LIST_DEFAULT, true, npc_init, npc_loop, "bhvSglNpc")
 
-local function poof(x, y, z)
-    spawn_non_sync_object(id_bhvMistParticleSpawner, E_MODEL_MIST, x, y + 60, z, nil)
-    play_sound(SOUND_GENERAL_VANISH_SFX, gGlobalSoundSource)
-end
-
-local function despawn(npc, withPoof)
-    if npc.obj ~= nil then
-        if withPoof then poof(npc.x, npc.y, npc.z) end
-        obj_mark_for_deletion(npc.obj)
-    end
+local function despawn(npc)
+    if npc.obj ~= nil then obj_mark_for_deletion(npc.obj) end
     npc.obj, npc.playing, npc.wasNear, npc.greet, npc.chomp = nil, nil, false, 0, 0
 end
 
--- (re)place a mascot for the current step: spawn it when its spot is in my level and area
-local function place(npc, withPoof)
-    local spot = sgl_npc_spot(npc)
+-- spawn a mascot at its post in my level, area and act (if it has one here)
+local function place(npc)
+    local np = gNetworkPlayers[0]
+    local spot = sgl_npc_spot(npc, np.currLevelNum, np.currAreaIndex, np.currActNum)
     npc.spot = spot
+    if spot == nil then return end
     npc.x, npc.y, npc.z = spot.x, spot.y, spot.z
-    if not same_place(gNetworkPlayers[0], spot) then return end
     local o = spawn_non_sync_object(id_bhvSglNpc, npc.model, spot.x, spot.y, spot.z, function(obj)
         obj.oBehParams = npc.index
         obj_scale(obj, npc.scale)
@@ -260,31 +318,14 @@ local function place(npc, withPoof)
         obj_init_animation(o, npc.anim)
     end
     npc.obj = o
-    if withPoof and o ~= nil then poof(spot.x, spot.y, spot.z) end
 end
-
-local sShownStep = nil
 
 local function on_level_init()
     for _, npc in ipairs(SGL_NPCS) do
         npc.obj = nil      -- the level change removed the old objects
-        despawn(npc, false)
-        place(npc, false)
+        despawn(npc)
+        place(npc)
     end
-    sShownStep = sgl_npc_step()
-end
-
--- every client: follow the synced step (the host moved them)
-local function follow_step()
-    local step = sgl_npc_step()
-    if sShownStep == nil or step == sShownStep then return end
-    for _, npc in ipairs(SGL_NPCS) do
-        if sgl_npc_spot(npc, step) ~= sgl_npc_spot(npc, sShownStep) then
-            despawn(npc, true)
-            place(npc, true)
-        end
-    end
-    sShownStep = step
 end
 
 ---------------------------------------------------------------------------------------------
@@ -308,9 +349,6 @@ local sSeq = 0
 local sPending = {}           -- seq -> { npc, player, text, stats, age } (host only)
 local sPollTimer = 0
 local sWarned = false
-local sMovedAt = nil          -- host: get_time() of the last move
-local sBusyUntil = 0          -- host: a client reported a player near a mascot until then
-local sBusyTimer = 0          -- clients: frames to the next "near a mascot" report
 
 local function escape(s)
     return (s:gsub("\\", "\\\\"):gsub("\t", "\\t"):gsub("\n", "\\n"):gsub("\r", ""))
@@ -423,7 +461,7 @@ local function my_stats()
         if kv.lock == nil and s.stars > stars then kv.lock = s.name .. "|" .. s.building .. "|" .. s.stars end
         if s.acts ~= nil and file >= 0 then kv["s_" .. s.key] = save_file_get_course_star_count(file, s.course - 1) end
     end
-    for _, npc in ipairs(SGL_NPCS) do kv[npc.id .. "_at"] = sgl_npc_spot(npc).label end
+    for _, npc in ipairs(SGL_NPCS) do kv[npc.id .. "_at"] = sgl_npc_where(npc) end
     local parts = {}
     for k, v in pairs(kv) do table.insert(parts, k .. "=" .. clean(v)) end
     table.sort(parts)
@@ -476,7 +514,7 @@ local function ask_command(npc)
     return function(msg)
         msg = (msg or ""):gsub("^%s+", ""):gsub("%s+$", "")
         if msg == "" then
-            djui_chat_message_create(chat_color(npc) .. npc.name .. "\\#dcdcdc\\ is " .. sgl_npc_spot(npc).label ..
+            djui_chat_message_create(chat_color(npc) .. npc.name .. "\\#dcdcdc\\ is " .. sgl_npc_where(npc) ..
                 ". Ask from anywhere with /" .. npc.id .. " <question>.")
             return true
         end
@@ -493,30 +531,8 @@ for _, npc in ipairs(SGL_NPCS) do
         npc.name .. "?)", ask_command(npc))
 end
 
--- host: is anyone talking to, waiting on, or standing near a mascot? (then they don't move yet)
-local function busy()
-    if next(sPending) ~= nil or get_time() < sBusyUntil then return true end
-    for _, b in pairs(sBubbles) do
-        if b.thinking or b.age < SGL_NPC_BUBBLE then return true end
-    end
-    local m = gMarioStates[0]
-    for _, npc in ipairs(SGL_NPCS) do
-        if npc.obj ~= nil and dist2d(m.pos.x, m.pos.z, npc.x, npc.z) < ALBERT_ATTEND_DIST then return true end
-    end
-    return false
-end
-
 local function host_update()
-    if not network_is_server() then return end
-    -- rotation
-    local now = get_time()
-    if sMovedAt == nil then sMovedAt = now end
-    if now - sMovedAt >= SGL_NPC_ROTATE and not busy() then
-        gGlobalSyncTable.sglNpcStep = sgl_npc_step() + 1
-        sMovedAt = now
-    end
-    -- requests
-    if next(sPending) == nil then return end
+    if not network_is_server() or next(sPending) == nil then return end
     local changed = false
     for seq, p in pairs(sPending) do
         p.age = p.age + 1
@@ -545,25 +561,8 @@ local function host_update()
     if changed then write_outbox() end
 end
 
--- clients: tell the host while my player is near a mascot (it holds the next move)
-local function report_busy()
-    if network_is_server() then return end
-    sBusyTimer = sBusyTimer - 1
-    if sBusyTimer > 0 then return end
-    sBusyTimer = 60
-    local m = gMarioStates[0]
-    for _, npc in ipairs(SGL_NPCS) do
-        if npc.obj ~= nil and dist2d(m.pos.x, m.pos.z, npc.x, npc.z) < ALBERT_ATTEND_DIST then
-            network_send(true, { sgl = "npc_busy" })
-            return
-        end
-    end
-end
-
 local function on_update()
-    follow_step()
     host_update()
-    report_busy()
     for id, b in pairs(sBubbles) do
         b.age = b.age + 1
         if b.age > (b.thinking and SGL_NPC_TIMEOUT or SGL_NPC_BUBBLE) then sBubbles[id] = nil end
@@ -576,8 +575,6 @@ local function on_packet_receive(data)
     elseif data.sgl == "npc_ask" and network_is_server() and type(data.npc) == "string" and type(data.text) == "string"
         and type(data.player) == "string" then
         host_enqueue(data.npc, data.player, data.text, type(data.stats) == "string" and data.stats or "")
-    elseif data.sgl == "npc_busy" and network_is_server() then
-        sBusyUntil = get_time() + SGL_NPC_BUSY_HOLD
     elseif data.sgl == "npc_q" and type(data.line) == "string" then
         djui_chat_message_create(data.line)
     end
