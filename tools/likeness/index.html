@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gatorize · Model workshop</title>
+  <link rel="stylesheet" href="gallery.css">
+  <script type="module" src="model-viewer.min.js"></script>
+  <script type="module" src="gallery.js"></script>
+</head>
+<body>
+  <header><a class="brand" href="./"><span class="mark">G</span> GATORIZE <span class="brand-sub">/ MODEL WORKSHOP</span></a><span class="round">ROUND 01 <i></i> READY FOR REVIEW</span></header>
+  <main>
+    <div class="intro"><div><p class="eyebrow">THE SHAPE OF YOUR GATOR</p><h1>A first look.</h1><p class="lede">Explore the silhouettes. Pick what works.<br>We’ll refine the details together.</p></div><div class="intro-note"><span id="count">…</span><p>studies / one shared game rig<br>Faces · Hair · Bodies · Clothes</p></div></div>
+    <nav id="categories" aria-label="Model category"></nav>
+    <div class="workspace-bar"><div><span class="eyebrow">COMPARE</span><span class="hint">Choose A or B, then pick a study below.</span></div><div class="views" aria-label="Camera controls"><button data-view="front">Front</button><button data-view="quarter" class="selected">¾ view</button><button data-view="side">Side</button><button data-view="back">Back</button><button id="focus">Full body</button><button id="spin" aria-pressed="false">↻ Rotate</button></div></div>
+    <div class="comparison">
+      <section class="panel active" data-slot="0" aria-label="Comparison A">
+        <div class="panel-head"><button class="slot-button" data-slot="0" aria-pressed="true">A <span>SELECTING</span></button><div><span class="spec-id"></span><h2></h2></div><a class="download" download>↓ GLB</a></div>
+        <div class="stage"><model-viewer camera-controls interaction-prompt="none" shadow-intensity="0.5" exposure="1" environment-image="neutral" field-of-view="30deg" min-field-of-view="15deg" max-field-of-view="55deg" touch-action="pan-y"></model-viewer><p class="viewer-state" role="status">Loading model…</p><span class="stage-hint">DRAG TO ORBIT · SCROLL TO ZOOM</span></div>
+        <div class="panel-bottom"><p class="model-note"></p><label>Review notes <textarea rows="2" placeholder="What feels right? What should change?"></textarea></label></div>
+      </section>
+      <section class="panel" data-slot="1" aria-label="Comparison B">
+        <div class="panel-head"><button class="slot-button" data-slot="1" aria-pressed="false">B <span>COMPARE</span></button><div><span class="spec-id"></span><h2></h2></div><a class="download" download>↓ GLB</a></div>
+        <div class="stage"><model-viewer camera-controls interaction-prompt="none" shadow-intensity="0.5" exposure="1" environment-image="neutral" field-of-view="30deg" min-field-of-view="15deg" max-field-of-view="55deg" touch-action="pan-y"></model-viewer><p class="viewer-state" role="status">Loading model…</p><span class="stage-hint">DRAG TO ORBIT · SCROLL TO ZOOM</span></div>
+        <div class="panel-bottom"><p class="model-note"></p><label>Review notes <textarea rows="2" placeholder="What feels right? What should change?"></textarea></label></div>
+      </section>
+    </div>
+    <div class="shelf-heading"><h2 id="shelf-title">Choose a study</h2><p id="shelf-note"></p><a class="sheet-link" href="overview.png" target="_blank" rel="noopener">View the whole batch ↗</a></div>
+    <div id="studies" class="studies"></div>
+    <footer><p>Round 01 · Synthetic shape studies; no reference photos used.<br>Body and garment animation fitting is pending. Qwen remains the image model.</p><div><span id="save-status" role="status">Notes stay in this browser.</span><button id="export-notes">Download feedback ↗</button></div></footer>
+    <p id="error" role="alert" hidden></p>
+  </main>
+</body>
+</html>

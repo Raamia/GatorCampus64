@@ -178,6 +178,15 @@ def test_pipeline_no_photos(env):
     assert ei.value.step == "spec"
 
 
+def test_pipeline_missing_required_model_fails_and_cleans_photos(env):
+    store, cfg = env
+    cfg.require_model = True
+    with pytest.raises(pipeline.StepFailed, match="required but not configured") as ei:
+        pipeline.run_job(JOB, "Pat", store, None, cfg)
+    assert ei.value.step == "spec"
+    assert not store.list(f"photos/{JOB}/")
+
+
 def test_pipeline_model_down_still_builds(env):
     store, cfg = env
 
@@ -187,6 +196,19 @@ def test_pipeline_model_down_still_builds(env):
     res = pipeline.run_job(JOB, "Pat", store, Down(), cfg)
     assert res["spec"]["build"]["hair_style"] == schema_gen.default_hair_style()
     assert "vision model failed" in res["log"]
+
+
+def test_pipeline_stores_versioned_appearance_and_resolved_garments(env):
+    from test_appearance import model_answer
+    store, cfg = env
+    result = pipeline.run_job(JOB, "Pat", store, spec_ai.StaticBackend(model_answer(outfit="polo")), cfg)
+    saved = json.loads(store.get(f"builds/{JOB}/character.json"))
+    assert saved["appearance"] == {"version": 1, "face": "square", "hair": "curls", "body": "broad", "outfit": "polo"}
+    assert saved == result["spec"]
+    assert result["manifest"]["appearance"] == saved["appearance"]
+    assert saved["build"]["sleeves"] == "short"
+    assert saved["build"]["accessories"] == ["crossbody_strap", "shirt_collar"]
+    assert store.list(f"photos/{JOB}/") == []
 
 
 def test_parse_build_report():
