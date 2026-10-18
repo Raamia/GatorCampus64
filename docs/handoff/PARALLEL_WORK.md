@@ -7,9 +7,9 @@ Owns the current catalog correction and handoff.
 
 ## Second Codex agent
 Checkout: `/path/to/gimmickfc-worktree`
-Branch: `codex/parallel-work`; baseline: main the earlier change.
-Context files are copied into this checkout. Website correction is in the primary checkout;
-inspect primary diff or its eventual commit before assuming identical source.
+Branch: `codex/parallel-work`; latest primary website and HUD changes are merged here.
+The branch also preserves the second agent’s HUD spacing and power-meter work in a WIP commit.
+Compare commit history before assuming this branch is identical to the primary checkout.
 Start:
 
 ```sh
