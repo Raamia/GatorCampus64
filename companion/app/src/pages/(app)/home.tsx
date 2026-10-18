@@ -64,7 +64,19 @@ export default function HomePage() {
 
     <section className="individual-runs" aria-labelledby="run-log-title">
       <div className="run-log-heading"><div><span className="section-index">RECORDED IN GAME</span><h2 id="run-log-title">Chase your next record</h2></div><p>Finish a mission on the hosted server while signed in with <code>/login</code>. Your time and retries are recorded when the round ends.</p></div>
-      {selected && <section className="selected-run"><div><span className="section-index">SELECTED MISSION</span><h3>{selected.title}</h3><p>{hint || selected.objective}</p><span className="reported-label"><Sparkles size={13}/> {selected.id === 'swamp_chorus' ? 'RHYTHM MISSION · SOLO OR CO-OP' : selected.minimumPlayers > 1 ? 'CO-OP MISSION · PLAY WITH A TEAMMATE' : 'SOLO MISSION'}</span></div><Link className="primary-action" to="/play"><Gamepad2 size={16}/>Play in game</Link></section>}
+      {selected && <section className="selected-run" aria-live="polite" aria-label="Selected mission details">
+        <div className="selected-run-copy">
+          <span className="section-index">SELECTED MISSION</span>
+          <h3>{selected.title}</h3>
+          <div className="selected-run-meta"><span><MapPin size={13}/>{selected.stage}</span><span>ACT {String(selected.act).padStart(2, '0')}</span></div>
+          <div className="selected-run-details">
+            <div><span>MISSION GOAL</span><p>{selected.objective}</p></div>
+            <div><span>FIELD TIP</span><p>{hint || selected.hint}</p></div>
+          </div>
+          <span className="mission-mode"><Sparkles size={13}/> {selected.id === 'swamp_chorus' ? 'RHYTHM MISSION · SOLO OR CO-OP' : selected.minimumPlayers > 1 ? 'CO-OP MISSION · PLAY WITH A TEAMMATE' : 'SOLO MISSION'}</span>
+        </div>
+        <Link className="primary-action" to="/play"><Gamepad2 size={16}/>Play in game</Link>
+      </section>}
       <Link className="primary-action" to="/leaderboard">View recorded runs <ArrowUpRight size={16}/></Link>
     </section>
   </main>
