@@ -1,0 +1,97 @@
+{
+  "source": "Approved integrated synthetic shape studies; fixed specs, no reference photos or inference.",
+  "models": [
+    {
+      "id": "f01",
+      "glb_sha256": "ccfe7ea15d7c2efc95f3afcf826eaf53f7df13a8e3475b0337c0199322d3ef17"
+    },
+    {
+      "id": "f02",
+      "glb_sha256": "8f6742fb5d3a48bb857c633afaa1733d83c11260bc8f66c1e7400f83565e8c76"
+    },
+    {
+      "id": "f03",
+      "glb_sha256": "2f659e75a28b00da12910e40d56333f644d4d31cd2f2c82765d1d94b02828c24"
+    },
+    {
+      "id": "f04",
+      "glb_sha256": "93687a7a72fc9507aff948e34f8b1e2d6ca1c4f38d39e3e96145c8282d1d50dd"
+    },
+    {
+      "id": "f05",
+      "glb_sha256": "836e557927c03d7f5eacfa51ec4c01371dca85cfedcbea738e97c71e5bb4b79f"
+    },
+    {
+      "id": "f06",
+      "glb_sha256": "3f146e717a77d52019ee9e78b3085e8c8eb434a5159119312faa5dd594ed2bb6"
+    },
+    {
+      "id": "h01",
+      "glb_sha256": "ccfe7ea15d7c2efc95f3afcf826eaf53f7df13a8e3475b0337c0199322d3ef17"
+    },
+    {
+      "id": "h02",
+      "glb_sha256": "5c9e19d0775b72567fec420d51ee4b5562728d8629b5b9ada07bbf560142a087"
+    },
+    {
+      "id": "h03",
+      "glb_sha256": "deddc045a358baef5ff0c2dac57c9a4f23606c06b2930db4b811137b9c95e72d"
+    },
+    {
+      "id": "h04",
+      "glb_sha256": "9a898d28a54eb0de9120420ed8be1ccb22249d650b1faf15ccd8749ebdbc708e"
+    },
+    {
+      "id": "h05",
+      "glb_sha256": "ac1a9692623e9994fa40be34a5a0a363b99183403bc63ab78db42b0791a6a19b"
+    },
+    {
+      "id": "h06",
+      "glb_sha256": "f3ff71c9db61a1c1abd5e8280b80f6c307ab8195072b293df55a8bd6ffb521ae"
+    },
+    {
+      "id": "h07",
+      "glb_sha256": "6ba049129392944ab8cfd004698f3b44c02543b88298682e3bd8138614d8119e"
+    },
+    {
+      "id": "h08",
+      "glb_sha256": "738050e0dde0708a3e20f51506d633d9c8b53bac9439e83a9cdd9688c23491fa"
+    },
+    {
+      "id": "b01",
+      "glb_sha256": "ccfe7ea15d7c2efc95f3afcf826eaf53f7df13a8e3475b0337c0199322d3ef17"
+    },
+    {
+      "id": "b02",
+      "glb_sha256": "da2eb59ee0b4c8dcbc3c948426cbdffd0c0b913f3768cbb19597773961f2bee8"
+    },
+    {
+      "id": "b03",
+      "glb_sha256": "e5d970bfd966dc19a5d3f1a3722f0804c7671f312448b6db481d7f24a7984cb8"
+    },
+    {
+      "id": "b04",
+      "glb_sha256": "f55a73c1657565e6ae23a19cd5d0a94725a896485781a11ff70a56cc3f884481"
+    },
+    {
+      "id": "b05",
+      "glb_sha256": "15ced6fe812856954a25cd5dfb1bf214f42cce428a219d7225727db691231abe"
+    },
+    {
+      "id": "c01",
+      "glb_sha256": "ccfe7ea15d7c2efc95f3afcf826eaf53f7df13a8e3475b0337c0199322d3ef17"
+    },
+    {
+      "id": "c02",
+      "glb_sha256": "6ef118791607b7f404f9db9e74d3faae111d0dc0d082fc322e358fd7187be99f"
+    },
+    {
+      "id": "c03",
+      "glb_sha256": "7e958d5ac53b923126aaaf95bc03d1abdcdafe79ca3425d27dfc3f20748a734e"
+    },
+    {
+      "id": "c04",
+      "glb_sha256": "2bcb822abfddf512beb8c24b5155df90c44f24ff69dfdf5340bde078db2a1ceb"
+    }
+  ]
+}

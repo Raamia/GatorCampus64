@@ -24,73 +24,71 @@ use the organizer's actual submission countdown as the deadline. It explicitly
 says to opt into extra tracks and put all members on the team. Video is optional.
 DeepSpace's credit claim/use deadline of October 28 is separate from submission.
 
-## Best additional bets
+## Decisions after review
 
-| Priority | Addition | Smallest useful implementation | Effort / spend |
-|---|---|---|---|
-| 1 | **No-login character showcase** | Publish a small set of the approved synthetic character variants with rotatable models or existing renders; link to Gatorize. Show face/hair/body/outfit choices and a recorded real pipeline result. Clearly label samples and recordings. | 1–3 hours; existing hosting/assets, no inference spend for viewing. Benefits Entertainment, AI, Vultr and UX demos. |
-| 2 | **AI evaluation card** | Publish aggregate schema validity, appearance accuracy and latency from the existing Qwen evaluation artifacts, plus a few synthetic failures and the design response. Add a compact guide/Gemini routing example. Keep private references and tokens out of the public report. | 1–2 hours; existing runs can supply evidence without new paid calls. Especially valuable because the AI track explicitly values technical depth and readable code. |
-| 3 | **DEV Writing Challenge** | Draft a technical story: turning reference photos into an N64-compatible player, hosting co-op, phone login from the game, and realtime results. Include architecture, tradeoffs, code links and measured failures. | 1–2 hours; no new infrastructure. User/team review and publication still required. The guide describes monthly selection, not a guaranteed expo prize. |
-| 4 | **Queue position and capacity feedback** | Show queued jobs ahead, measured approximate wait, and a clear admission-paused/full state. Reuse job timestamps and status APIs; distinguish model-ready from game-deployed. Avoid promising an exact ETA. | 2–4 hours; no extra provider. Improves the actual expo experience more than another sponsor logo. |
-| 5 | **Tiger Data mission analytics** | Finish the existing optional study service: authenticated `/events` ingestion with idempotent IDs, time-series mission results, and `/analytics/:missionId` aggregates for completion time/retries/team size. Show a real trend in the app. Keep self-reported study events separate from verified hosted results. | Roughly 4–8 hours for a small demo; allow more for deployment and real-data validation. Requires a Tiger Data project/credentials and checking current trial limits/pricing. No provider price or free tier was verified here. |
+The project owner confirmed the following after reviewing these proposals:
 
-**Tiger Data is the only new sponsor integration I would consider in the remaining
-hackathon window.** `companion/app/src/server/study-routes.ts` already validates,
-authenticates and rate-limits these proxy routes, and `src/lib/study-api.ts`
-contains the client contract. However, no Tiger Data service, schema migration or
-hypertable implementation was found in this repository. The optional external
-service's deployment is unverified. Those hooks alone do not establish a Tiger
-Data integration. Keep the existing Vultr PostgreSQL transactional database;
-analytics can be a separate sink. Do not migrate the core backend for this track.
+- End-to-end generation, leaderboard delivery and account deletion are accepted.
+- Servers will be shut down Tuesday night, October 20, after the LinkedIn post.
+  No additional database/backup project or operational monitoring/capacity work
+  is requested for this short-lived deployment. Existing app databases remain
+  part of the running system until shutdown.
+- **Approved:** the public, no-login character showcase.
+- **Explain before implementing:** the AI evaluation card.
+- **Maybe later:** a DEV technical write-up.
+- **Declined:** queue position/ETA work and Tiger Data integration. Expected
+  concurrency is roughly a dozen players; no extra provider is being added.
 
-For the first version, event-time buckets and SQL aggregates are enough to make
-useful analytics; add a Timescale hypertable/continuous aggregate where supported
-and demonstrate it with real data. Synthetic chart fixtures must be labeled.
-Avoid forwarding account identifiers, player names, photos or squad codes.
+No infrastructure is shut down, deleted, or scheduled for deletion by this
+branch. Merge and deployment remain with the deployment owner.
 
-## Backend priorities before more features
+## Approved showcase
 
-The prior backend branches are represented in main: session-bound identities,
-durable/idempotent event delivery, generation admission accounting, consistent
-slot locks, worker leases, presence heartbeats, durable storage cleanup, deploy
-revalidation, account erasure and explicit Auth0/DeepSpace linking. Reimplementing
-those would duplicate work. Existing deletion preserves provider accounts and
-removes associated Gator leaderboard runs, per the selected policy.
+`/showcase` is a public, prerendered companion route outside the auth/data-provider
+layout. It presents all 23 approved synthetic appearance studies with category
+filters, lightweight rendered previews, and optional interactive 3D rotation.
+It requires no login, photos, database calls, model inference or API credentials.
+The landing page and navigation link to it. The ordinary Gatorize flow remains
+available for visitors who want their own character.
 
-1. **Finish coordinated deployment acceptance.** Record the deployed commits,
-   schema/bindings and execute one consented character build through guest install,
-   a real hosted run through signed leaderboard delivery, and two-account
-   link/revoke/delete checks. Read-only health probes do not cover these. See
-   [the operations checklist](backend_operations_validation.md). Another agent
-   owns merges/deployment; this review did not change production.
-2. **Operational backups and recovery.** A synthetic schema restore tool exists,
-   but a scheduled encrypted production `pg_dump`, off-host retention and a
-   restore of an actual backup still need evidence. The documented Vultr hobbyist
-   DB plan lacks provider backup/fork support. Preserve deletion tombstones and
-   reconcile post-backup erasures before restoring service. Budget 2–4 hours for
-   scheduling/checks plus the real drill; use existing storage if suitable.
-3. **Cost and overload control.** Generation already has per-user and global-hour
-   admission limits; study proxies already have per-user/global budgets. These
-   are not a dollar cap or a GPU shutdown policy. Add an operator generation pause,
-   bounded queue admission, a shared NPC inference budget and visible capacity
-   errors; agree an exact post-expo shutdown/retention time. Alerts alone do not
-   stop charges. Roughly 2–4 hours for application controls, plus operator setup.
-4. **Actionable operational metrics.** Add protected summaries of oldest queued
-   job, worker lease age, cleanup failures, deploy age, bridge outbox rejections
-   and DeepSpace delivery backlog; alert on persistent age/failure thresholds.
-   Existing health/status endpoints and SQL checks are the starting point.
-   Expose aggregate public availability only, never account data. Roughly 2–4 hours.
-5. **Retention and recovery completeness.** Review old orphan objects, noncurrent
-   S3 versions, bridge/event history, cleanup tombstones and backup retention.
-   Current-job cleanup is implemented; those historical stores need an explicit
-   policy and inventory. Plan 1–2 hours of investigation before deletion work.
+Only fixed-spec synthetic GLBs and converted WebP posters are published. Source
+references, photo-evaluation outputs and Blender work files are excluded. The
+exporter is `tools/likeness/export_showcase.py`; source batch provenance is in
+`companion/app/public/showcase/provenance.json`. The app bundles all public assets,
+so neither the private Zion review server nor the generation worker is required
+for viewing the showcase. Publication still requires deploying this branch.
 
-The NPC work also needs an integration decision: main includes the smaller
-packet-size crash fix, while `fix/npc-interaction-errors` (`2a24f33`)
-contains broader sender attribution, history isolation and timeout fixes. That
-branch requires a coordinated patched engine/server/client rollout and direct
-connections. Do not deploy its Lua alone or count a full local build as a live
-multiplayer acceptance test. Keep this separate from the documentation branch.
+## AI evaluation card — proposal, not implemented
+
+A short public engineering page could explain four things:
+
+1. **What the model does:** Qwen reads photos and selects face/hair/body/outfit
+   profiles; the Blender builders produce geometry. Gemini separately answers
+   mascot questions using guide retrieval where appropriate.
+2. **What we tested:** use the existing fixed synthetic set and frozen labels,
+   show the exact number of cases, and distinguish raw schema validity from
+   label agreement. Synthetic results do not measure real-person resemblance.
+3. **What happened:** report measured latency and per-category selection results
+   from a specific existing run. Show one successful synthetic example and one
+   failure, rather than publishing a cherry-picked accuracy claim.
+4. **Why the design looks this way:** explain independent shape controls, schema
+   validation, uncertain-feature handling and known face/body selection biases.
+
+This is presentation of work already done, not another model, fine-tuning run,
+paid benchmark or telemetry system. No private reference photos or model prose
+about real subjects need to be published. Estimated effort remains 1–2 hours
+using existing artifacts. Await the owner's decision before adding this page.
+
+For example, the existing [synthetic diagnostic](gatorize_likeness.md#live-qwen-diagnostic)
+returned valid raw structured responses for 23/23 requests, with no inference
+failures and 9.104 seconds median latency. Label agreement was face 1/6, hair
+5/8, visible body 1/5 and outfit 2/4; none of the 14 head crops produced the
+expected unknown-body label. A card would present both the reliable response
+format and these selection limitations, explicitly as synthetic diagnostics
+rather than a real-person likeness score.
+
+The optional DEV article can reuse this explanation and the README architecture,
+with screenshots and code links. No article has been written or published.
 
 ## Tracks I would skip
 

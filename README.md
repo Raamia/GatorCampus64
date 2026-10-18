@@ -60,6 +60,10 @@ eligibility checks and optional additions. It does not claim entry or selection 
 
 **In a browser, no ROM needed:**
 
+Explore the [character showcase](https://gatorcamp.us/showcase) without signing in: 23
+synthetic face, hair, body and outfit studies, with rendered previews and optional 3D rotation.
+The route is included in the showcase branch and becomes available after its deployment.
+
 1. Open [Gatorize Me](https://gatorcamp.us/gatorize) (also available on
    [app.space](https://gator-field-board-mlh.app.space/gatorize)) and sign into **Gator Pass**.
 2. Upload 1–4 consented photos. Follow the queued build through appearance analysis, Blender
