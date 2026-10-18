@@ -80,8 +80,8 @@ Full diagram, every deployable, and the database schema: [`docs/web_platform_spe
 - `server/` — the online side: `api/` (FastAPI + Postgres), `worker/` (the Vultr GPU character
   pipeline), `bridge/` (the headless game host + Auth0 device flow), `web/` (the static site),
   `deploy/` (provisioning, systemd, Caddy).
-- `companion/app/` — the Gator Field Board dashboard (squad coordination, leaderboards, the Gatorize
-  Me web upload flow).
+- `companion/app/` — the Gator Field Board dashboard (the campus mission board, leaderboards, the
+  Gatorize Me web upload flow).
 - `docs/` — design and spec documents; start with `project_overview.md` and `web_platform_spec.md`.
 
 Full file-by-file breakdown: [`docs/development.md`](docs/development.md) → Layout.

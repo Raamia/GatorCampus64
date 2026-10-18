@@ -6024,7 +6024,7 @@ if __name__ == "__main__":
 # ================================================================== stairs
 def stair_flight(V, C, a, b, z0, z1, width, steps=None, tread_mat="int_ru_terrazzo", side_mat="int_ru_white",
                  soffit=True, rails=True, rail_h=1.07, col_mat="COL notslip", stringer=0.35, rail_outer_head=None,
-                 rail_cap_foot=False, rail_skirt=None):
+                 rail_cap_foot=False, rail_skirt=None, rail_end=None):
     """Open stair flight from a (bottom, z0) to b (top, z1) in plan, `width` wide (photos: white stringers and
     soffit, terrazzo treads, silver picket railings). Collision: one ramp (no-slip) + the two railings.
     rail_outer_head: None = each railing is a closed 14 cm slab (inner + outer face) along the whole flight; a length
@@ -6078,14 +6078,18 @@ def stair_flight(V, C, a, b, z0, z1, width, steps=None, tread_mat="int_ru_terraz
         # on the stringer top (no pickets through the treads), and the honey-wood handrail is one closed sloped
         # box (two sides + top, 7 cm) run 4 cm past both ends so it overlaps the flat landing / balcony caps
         for off in (-w2, w2):
+            # stairs_30m: rail_end = (-n side, +n side) horizontal length where that rail meets the balcony rail
+            # line (None = the flight's full length); the rail stops exactly there (no stub into the walkway)
+            Le = _rail_len(rail_end, off, L)
             for sa_, sb_, za_, zb_ in ((0.0, s_c, z0 + e, z1), (s_c, L, z1, z1)):
+                sb_ = min(sb_, Le)
                 if sb_ - sa_ < 0.01:
                     continue
                 V.poly([P(sa_, off, za_), P(sb_, off, zb_), P(sb_, off, zl_(sb_) + rail_h), P(sa_, off, zl_(sa_) + rail_h)],
                        "int_ru_picket2", uvs=[(sa_ / 1.1, (za_ - zl_(sa_)) / rail_h), (sb_ / 1.1, (zb_ - zl_(sb_)) / rail_h),
                                               (sb_ / 1.1, 1), (sa_ / 1.1, 1)], ao=1.0)
             ex = 0.04
-            ha, hb = -ex, L + ex
+            ha, hb = -ex, (L + ex if Le >= L else Le)
             za, zb = zl_(ha) + rail_h, zl_(hb) + rail_h
             for side in (-1, 1):
                 o = off + 0.035 * side
@@ -6101,7 +6105,8 @@ def stair_flight(V, C, a, b, z0, z1, width, steps=None, tread_mat="int_ru_terraz
         add_raw(C, ramp, col_mat, normal_hint=(0, 0, 1))
         if rails:
             for off in (-w2 + 0.05, w2 - 0.05):
-                pa, pb = P(0, off, z0), P(L, off, z1)
+                Le = _rail_len(rail_end, off, L)
+                pa, pb = P(0, off, z0), P(Le, off, z0 + h * Le / L)
                 for sgn in (1, -1):
                     o = 0.07 * sgn
                     qa = pa
@@ -6159,6 +6164,14 @@ def stair_flight(V, C, a, b, z0, z1, width, steps=None, tread_mat="int_ru_terraz
                     V.poly([P(s1 + 0.01, -w2 - 0.02, zb), P(s1 + 0.01, w2 + 0.02, zb), P(s1 + 0.01, w2 + 0.02, zv1),
                             P(s1 + 0.01, -w2 - 0.02, zv1)], side_mat, normal_hint=(dx, dy, 0), ao=0.7)
     return {"len": L, "angle_deg": math.degrees(math.atan2(h, L)), "steps": n}
+
+
+def _rail_len(rail_end, off, L):
+    """stair_flight: horizontal length of the rail on side off (rail_end = (-n side, +n side), None = full)."""
+    if rail_end is None:
+        return L
+    v = rail_end[1] if off > 0 else rail_end[0]
+    return L if v is None else max(0.05, min(L, v))
 
 
 def seg_intersect(p, d, poly):

@@ -41,7 +41,7 @@ assert(API.get_network_area_timer ~= nil and API.get_network_area_timer[1] == 0,
 
 local WF, HUB = C.LEVEL_WF, C.LEVEL_CASTLE_GROUNDS
 local MS = { IDLE = 0, WAITING = 1, INTRO = 2, ACTIVE = 3, SUCCESS = 4, FAILED = 5, DONE = 6 }
-local FILES = { "course.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_mission.lua", "swamp_missions.lua", "wf_reitz_missions.lua" }
+local FILES = { "course.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_mission.lua", "swamp_chomp.lua", "swamp_missions.lua", "wf_reitz_missions.lua" }
 local PHX, PTOP, PBOT, PHZ = 256, 26, 25, 153      -- checkerboard platform collision (scale 1)
 
 -- test stick: c.stick = { x, y } replaces the controller stick before every other hook sees it

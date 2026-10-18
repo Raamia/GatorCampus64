@@ -33,7 +33,7 @@ local Sim = {}
 local HERE = debug.getinfo(1, "S").source:match("^@(.*/)") or "./"
 Sim.ROOT = HERE .. "../../"
 Sim.MOD = os.getenv("SGL_MOD_DIR") or (Sim.ROOT .. "mods/sgl64/")   -- SGL_MOD_DIR: test a copy (mutation runs)
-Sim.FILES = { "course.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_mission.lua", "swamp_missions.lua" }
+Sim.FILES = { "course.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_mission.lua", "swamp_chomp.lua", "swamp_missions.lua" }
 Sim.ALL_FILES = {}
 do
     local p = io.popen('ls "' .. Sim.MOD .. '"')
