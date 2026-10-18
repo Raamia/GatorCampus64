@@ -171,8 +171,8 @@ test("registry: four Lake Alice missions on acts 1-4, star ids act-1, titles = c
     end
     for act = 5, 6 do
         check(env.sgl_mission_get(JRB, act) == nil, "act " .. act .. " has no mission yet")
-        check(env.sgl_act_is_soon(stage, act) and stage.acts[act]:find("^COMING SOON") ~= nil,
-            "act " .. act .. " is named COMING SOON: " .. tostring(stage.acts[act]))
+        check(env.sgl_act_is_soon(stage, act) and stage.acts[act] == "",
+            "act " .. act .. " is blank for free roam: " .. tostring(stage.acts[act]))
     end
     for act = 1, 6 do
         check(not stage.acts[act]:find("[^A-Z0-9 '%.,%-&!%?]") and #stage.acts[act] <= 28,
@@ -1040,7 +1040,7 @@ test("whole mod: every file loads with the lake missions; /campus alice 3 starts
     check(is_default_light(H), "act 4: daylight")
     w:warp(H, JRB, 1, 5)
     w:step(5)
-    check(Sim.hud_has(H, "COMING SOON %- HATCHLING"), "act 5: coming soon notice")
+    check(not Sim.hud_has(H, "COMING SOON"), "act 5: coming soon notice")
 end)
 
 print(string.format("\n%d checks passed, %d failed", passed, failed))

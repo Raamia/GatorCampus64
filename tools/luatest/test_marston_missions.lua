@@ -138,8 +138,8 @@ test("registry: three Marston missions on acts 1/2/3, star ids act-1, titles = c
     end
     for act = 4, 6 do
         check(env.sgl_mission_get(CCM, act) == nil, "act " .. act .. " has no mission yet")
-        check(env.sgl_act_is_soon(stage, act) and stage.acts[act]:find("^COMING SOON") ~= nil,
-            "act " .. act .. " is named COMING SOON: " .. tostring(stage.acts[act]))
+        check(env.sgl_act_is_soon(stage, act) and stage.acts[act] == "",
+            "act " .. act .. " is blank for free roam: " .. tostring(stage.acts[act]))
     end
     for act = 1, 6 do
         check(not stage.acts[act]:find("[^A-Z0-9 '%.,%-&!%?]") and #stage.acts[act] <= 28,
@@ -425,7 +425,7 @@ test("act 1: no barriers, lifts or books outside act 1; a stage that does not ma
         "act 2: no barriers, no lifts")
     enter(w, A, 4)
     w:step(5)
-    check(Sim.hud_has(A, "COMING SOON %- NOTEBOOK PAGES") and #Sim.objects_with(A, A.env.id_bhvSglMarstonSolid) == 0,
+    check(not Sim.hud_has(A, "COMING SOON") and #Sim.objects_with(A, A.env.id_bhvSglMarstonSolid) == 0,
         "act 4: coming soon, free roam, the stairs open")
     local w2, B = world_with({ "B" }, { floor = Sim.NO_FLOOR })
     enter(w2, B, 1)
@@ -1143,7 +1143,7 @@ test("whole mod: every file loads with the Marston missions; /campus marston 3 m
         and H.cam.collisions == 1, "in Marston: the rom-hack camera is closer and lower, with collision")
     w:warp(H, CCM, 1, 4)
     w:step(5)
-    check(Sim.hud_has(H, "COMING SOON %- NOTEBOOK PAGES"), "act 4: coming soon notice")
+    check(not Sim.hud_has(H, "COMING SOON"), "act 4: coming soon notice")
     local sets = H.cam.sets
     w:step(10)
     check(H.cam.sets == sets, "settings written once, not every frame")

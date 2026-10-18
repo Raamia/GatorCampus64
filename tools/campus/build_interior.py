@@ -287,6 +287,8 @@ def main():
         level_dir, _ = export_level(root.name, slot, o["levels_dir"], setup=False, validate=False)
         n_pos, n_col = BS.patch_fog(level_dir, fm, fo, mod.FOG_RGB)
         hyg = BS.export_hygiene(level_dir)
+        from fix_material_lighting import fix_level as fix_material_lighting
+        hyg["material_lights_repaired"] = fix_material_lighting(level_dir)
         hyg["common0_jump_link"] = BS.add_common0_models(level_dir)
         report["export_hygiene"] = hyg
         if o["repair"]:

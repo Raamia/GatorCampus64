@@ -1,5 +1,12 @@
 # Super Gatorlator 64: game flow contract
 
+## Current entry policy
+
+All built stages are open without stars. Walking through a hub door, or using `/campus <stage>` without an act, enters area 1 in act 0 for free roam. The travel menu always offers **Explore Area** first; choosing a named mission explicitly enters its numbered act. Mission IDs and collected stars are preserved. Unimplemented act slots have blank names, are excluded from travel, and display no arrival banner or placeholder panel. Unbuilt destinations remain unavailable.
+
+This policy supersedes the historical star-lock and automatic act-select descriptions below.
+
+
 Status: flow spike + integration pass + review fix round + Course 2 integration + Course 2 fix round + Course 3 integration + Course 3 fix round + Course 4 integration + Course 4 fix round + Course 5 integration + Course 5 fix round + Reitz interior / Marston upgrade integration + interior review rounds 1-3 and their fix rounds (Oct 2026), coopdx v1.5.1. The hub (`castle_grounds`), the Swamp (`bob`, door 1), Reitz Union & Engineering (`wf`, door 2, 0 stars), Lake Alice (`jrb`, door 3, 0 stars), Marston (`ccm`, door 4, 0 stars) and Library West After Dark (`bbh`, door 5, 0 stars) are built; each has 3 playable acts (§5.1), hearts and other mission props. Ambient coins and Goombas have been removed. Century Tower (`ttc`, door 6, no star requirement) is still "coming soon".
 This file is the contract for everything that moves a player between the hub and a stage: level slots, warp nodes, the hub doors, star ids, act order and how a stage must be built. Where it disagrees with `docs/game_design.md` §2.1, §2.3 and the act order of §7.1, **this file wins** (see §11).
 

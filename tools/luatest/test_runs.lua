@@ -326,7 +326,8 @@ test("leaderboard menu: live rows with age, every mission with rows listed, .sav
     Sim.cmd(A, "leaderboard")
     w:step(3)
     check(hud_find(A, "CAMPUS BOARDS") and hud_find(A, "Reitz rooftop") and hud_find(A, "Skybox Climb"), "offline list")
-    check(hud_find(A, "LIVE") == nil and hud_find(A, "1/") == nil, "no live marks, no scrolling with 4 boards")
+    check(hud_find(A, "LIVE") == nil and hud_find(A, "1/5") ~= nil,
+        "every registered mission in this focused fixture is listed before live scores arrive")
     press(w, A, C.A_BUTTON)
     w:step(1)
     check(hud_find(A, "REITZ ROOFTOP") and hud_find(A, "OFFLINE SNAPSHOT"), "offline board")
@@ -340,22 +341,32 @@ test("leaderboard menu: live rows with age, every mission with rows listed, .sav
     f({ mission = "swamp_empty", n = 0 })
     w:step(2)
     check(hud_find(A, "LIVE") ~= nil, "live mark on the list")
-    check(hud_find(A, "1/6") ~= nil, "6 boards (the offline 4 incl. the live sprint, + chorus + an unknown id; "
-        .. "empty live boards not added): the list scrolls")
+    check(hud_find(A, "1/6") ~= nil, "all registered boards plus one unknown live board; the list scrolls")
     local list = A.env.sgl_deepspace_board_list()
-    check(#list == 6 and list[5].missionId == "swamp_chorus" and list[5].label == "Gator Chomp Chorus"
+    local chorusIndex = nil
+    for i, board in ipairs(list) do
+        if board.missionId == "swamp_chorus" then chorusIndex = i end
+    end
+    check(#list == 6 and chorusIndex ~= nil and list[chorusIndex].label == "Gator Chomp Chorus"
         and list[6].missionId == "zz_unknown" and list[6].label == "zz_unknown",
-        "extra boards after the offline four: registered missions (title), then unknown ids")
-    -- down twice through the 2x2 grid to the live chorus board (row 5: the list scrolls), open it
-    for _ = 1, 2 do press(w, A, C.D_JPAD) end
-    check(hud_find(A, "5/6") ~= nil and hud_find(A, "Gator Chomp Chorus") ~= nil
-        and hud_find(A, "Reitz rooftop") == nil, "scrolled: row 5 visible, row 1 not")
+        "registered challenges are present even before scores; unknown live ids follow them")
+    -- Navigate the 2x2 list to Gator Chomp Chorus, whose live score arrived above.
+    local cursor = 1
+    while cursor + 2 <= chorusIndex do press(w, A, C.D_JPAD); cursor = cursor + 2 end
+    if cursor < chorusIndex then press(w, A, C.R_JPAD) end
+    check(hud_find(A, "Gator Chomp Chorus") ~= nil and hud_find(A, "Reitz rooftop") == nil,
+        "the registered chorus board scrolls into view")
     press(w, A, C.A_BUTTON)
     w:step(1)
     check(hud_find(A, "GATOR CHOMP CHORUS") and hud_find(A, "LIVE  UPDATED JUST NOW"), "live board + age")
     check(hud_find(A, "#1  Eve + Finn    1M20.0S") ~= nil, "live row (no retries)")
     press(w, A, C.B_BUTTON)
-    press(w, A, C.U_JPAD)   -- back to the sprint (row 3, live: its .sav snapshot is not used)
+    -- The live sprint remains at its offline-board slot, so select it from the full list.
+    local sprintIndex = nil
+    for i, board in ipairs(list) do if board.missionId == "swamp_sprint" then sprintIndex = i end end
+    cursor = chorusIndex
+    while cursor - 2 >= sprintIndex do press(w, A, C.U_JPAD); cursor = cursor - 2 end
+    if cursor > sprintIndex then press(w, A, C.L_JPAD) end
     press(w, A, C.A_BUTTON)
     w:step(1)
     check(hud_find(A, "STADIUM STAIR SPRINT") and hud_find(A, "LIVE  UPDATED 3M AGO"), "3 minutes old")

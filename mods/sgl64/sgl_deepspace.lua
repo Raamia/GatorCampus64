@@ -114,26 +114,26 @@ local function mission_title(missionId)
     return missionId
 end
 
--- the boards the menu lists: the offline four, then every other mission with live rows (in mission
--- registration order, unknown ids last by name)
+-- Always list the four boards with offline snapshots, then every registered challenge (even before
+-- it has a time), followed by unknown live boards. This makes the menu a complete challenge index.
 function sgl_deepspace_board_list()
     local out, seen = {}, {}
     for _, b in ipairs(BOARD_LIST) do
         out[#out + 1] = b
         seen[b.missionId] = true
     end
+    local list = rawget(_ENV, "SGL_MISSION_LIST")
+    for _, def in ipairs(type(list) == "table" and list or {}) do
+        if type(def.id) == "string" and not seen[def.id] then
+            out[#out + 1] = { label = mission_title(def.id), missionId = def.id }
+            seen[def.id] = true
+        end
+    end
     local extra = {}
     for id, board in pairs(sLiveBoards) do
         if not seen[id] and #board.rows > 0 then extra[#extra + 1] = id end
     end
-    local order = {}
-    local list = rawget(_ENV, "SGL_MISSION_LIST")
-    for i, def in ipairs(type(list) == "table" and list or {}) do order[def.id] = i end
-    table.sort(extra, function(a, b)
-        local oa, ob = order[a] or math.huge, order[b] or math.huge
-        if oa ~= ob then return oa < ob end
-        return a < b
-    end)
+    table.sort(extra)
     for _, id in ipairs(extra) do out[#out + 1] = { label = mission_title(id), missionId = id } end
     return out
 end
@@ -279,18 +279,12 @@ local function open_travel_destination(destination)
     end
     sTravelStage = sgl_stage_by_key(destination.key)
     if sTravelStage == nil then return end
-    sTravelActions = {}
-    local freeRoamAct = nil
+    sTravelActions = { { act = SGL_FREE_ROAM_ACT, label = "EXPLORE AREA", detail = "FREE ROAM" } }
     for act = 1, 6 do
         local name = sgl_act_name(sTravelStage, act)
         if name ~= nil and not sgl_act_is_soon(sTravelStage, act) then
             sTravelActions[#sTravelActions + 1] = { act = act, label = name, detail = "MISSION " .. act }
-        elseif freeRoamAct == nil then
-            freeRoamAct = act
         end
-    end
-    if freeRoamAct ~= nil then
-        table.insert(sTravelActions, 1, { act = freeRoamAct, label = "EXPLORE AREA", detail = "FREE ROAM" })
     end
     sTravelActCursor = 1
     sLeaderboardMenu = "travel_stage"

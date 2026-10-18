@@ -214,18 +214,12 @@ test("contract: hub doors, warp nodes and return spawns match course.lua (all si
     check(H.levelSpawns[0x0A] and H.levelSpawns[0x0A].bhv == "bhvSpinAirborneWarp", "BOB entry spawn 0x0A")
 end)
 
-test("acts: vanilla act select reaches every playable act in order; the rest are COMING SOON", function()
+test("missions keep stable IDs; blank acts are free roam and do not advertise unfinished challenges", function()
     local w = full_world()
     local H = w:connect("Host")
     w:step(2)
     local env = H.env
-    -- sanity of the act select model (star_select.c)
-    local function same(a, b) return table.concat(a, ",") == table.concat(b, ",") end
-    check(same(Sim.selectable_acts(0), { 1 }), "no stars: act 1")
-    check(same(Sim.selectable_acts(0x01), { 1, 2 }), "act 1 star: acts 1, 2")
-    check(same(Sim.selectable_acts(0x04), { 1, 3 }), "only act 3 (via /join): acts 1 and 3, not 2")
-    check(same(Sim.selectable_acts(0x07), { 1, 2, 3, 4 }), "acts 1-3: up to 4")
-    check(same(Sim.selectable_acts(0x40), { 1 }), "the 100-coin star opens nothing")
+    check(env.SGL_FREE_ROAM_ACT == 0, "physical entries use act zero for free roam")
     for _, stage in ipairs(env.SGL_STAGES) do
         local slot = Sim.level_script(stage.slot)
         if slot ~= nil then
@@ -242,7 +236,7 @@ test("acts: vanilla act select reaches every playable act in order; the rest are
                     end
                 end
             end
-            local lastPlayable, gap = 0, false
+            local registered = 0
             for k = 1, 6 do
                 local def = env.sgl_mission_get(stage.level, k)
                 local playable = def ~= nil or (starActs >> (k - 1)) & 1 == 1
@@ -254,21 +248,15 @@ test("acts: vanilla act select reaches every playable act in order; the rest are
                         stage.name .. " act " .. k .. ": a mission that spawns its star has no level-script one")
                 end
                 if playable then
-                    if lastPlayable ~= k - 1 then gap = true end
-                    lastPlayable = k
-                    check(not env.sgl_act_is_soon(stage, k), stage.name .. " act " .. k .. " is playable: not named COMING SOON")
+                    registered = registered + 1
+                    check(not env.sgl_act_is_soon(stage, k), stage.name .. " act " .. k .. " is a named mission")
                 else
-                    check(env.sgl_act_is_soon(stage, k), stage.name .. " act " .. k .. " has nothing: named COMING SOON")
+                    check(env.sgl_act_is_soon(stage, k) and stage.acts[k] == "",
+                        stage.name .. " act " .. k .. " is blank without an unfinished-act label")
                 end
             end
-            check(not gap, stage.name .. ": playable acts are 1.." .. lastPlayable .. " with no gap (act select would stop at a gap)")
-            -- walk the act select from an empty save: every playable act becomes selectable in turn
-            local flags = 0
-            for k = 1, lastPlayable do
-                local acts = Sim.selectable_acts(flags)
-                check(acts[#acts] == k, stage.name .. ": act " .. k .. " selectable after acts 1.." .. (k - 1))
-                flags = flags | (1 << (k - 1))
-            end
+            check(registered > 0 and stage.stars == 0,
+                stage.name .. ": named missions are reachable without earning stars")
             -- the first act is solo-able (a new player is never stuck at the door)
             local d1 = env.sgl_mission_get(stage.level, 1)
             check(d1 == nil or d1.minPlayers == 1, stage.name .. ": act 1 needs no second player")
@@ -328,29 +316,22 @@ test("single player: hub -> character select -> door -> act 1 -> star -> back ou
     -- Century Tower: not built yet, coming soon
     at_door(H, 6, 50)
     w:step(3)
-    check(Sim.find(H.popups, "CENTURY TOWER.-coming soon") ~= nil, "Century Tower: coming soon popup")
+    check(Sim.find(H.popups, "CENTURY TOWER.-not open yet") ~= nil, "Century Tower: coming soon popup")
     check(Sim.find(H.popups, "opens at %d+ stars") == nil, "unbuilt door does not advertise a star requirement")
     check(H.action ~= C.ACT_DISAPPEARED and H.level == HUB, "stays in the hub")
 
     -- the Auditorium door label, then walk in
     at_door(H, 1, 600)
     w:step(2)
-    check(Sim.hud_has(H, "THE SWAMP") and Sim.hud_has(H, "Walk in!"), "door label: THE SWAMP / Walk in!")
+    check(Sim.hud_has(H, "THE SWAMP") and Sim.hud_has(H, "Walk in to explore"), "door label: THE SWAMP / Walk in!")
     at_door(H, 1, 50)
     w:step(2)
     local m = H.ms[0]
-    check(H.action == C.ACT_DISAPPEARED and raw(m).actionArg == (C.WARP_OP_WARP_OBJECT << 16) + 2,
-        "vanilla warp-object entry (ACT_DISAPPEARED, WARP_OP_WARP_OBJECT)")
-    local used = raw(m).usedObj
-    check(used ~= nil and ((raw(used).oBehParams >> 16) & 0xFF) == 0x11, "usedObj carries hub node 0x11")
-    local lv, area, node = follow_node(HUB_SCRIPT, 0x11)
-    check(lv == BOB and area == 1 and node == 0x0A, "hub 0x11 -> BOB 0x0A")
+    check(H.level == BOB and H.act == 0, "Auditorium door enters free roam with zero stars")
 
-    -- act select (vanilla): only act 1 with an empty save
-    local acts = Sim.selectable_acts(w.starFlags[C.COURSE_BOB] or 0)
-    check(#acts == 1 and acts[1] == 1, "act select offers act 1 only")
-    H.action = C.ACT_IDLE
-    w:warp(H, lv, area, acts[1])
+    -- Choose the named challenge from the travel menu (modeled by its stage warp).
+    local lv, area = BOB, 1
+    w:warp(H, lv, area, 1)
     w:step(5)
     check(Sim.hud_has(H, "KICKOFF"), "act 1 banner")
     check(Sim.stars_of(H, 0) == 1, "the level-script act 1 star is there")
@@ -376,9 +357,9 @@ test("single player: hub -> character select -> door -> act 1 -> star -> back ou
     w:step(5)
     check(H.action ~= C.ACT_DISAPPEARED, "landing outside the Auditorium does not re-enter the door")
     check(H.env.sgl_total_stars() == 1, "1 star")
-    -- next visit: act select offers act 2 (the race)
-    acts = Sim.selectable_acts(w.starFlags[C.COURSE_BOB])
-    check(acts[#acts] == 2 and env.sgl_mission_get(BOB, 2).id == "swamp_sprint", "act 2 = STADIUM STAIR SPRINT")
+    -- Missions remain selectable from the travel menu; star progression does not gate them.
+    check(env.sgl_mission_get(BOB, 2).id == "swamp_sprint" and not env.sgl_act_is_soon(env.sgl_stage_by_level(BOB), 2),
+        "STADIUM STAIR SPRINT remains an available named mission")
 
     -- death return: BOB 0xF1 -> hub 0x31 (same spot outside the Auditorium)
     local lv3, _, n3 = follow_node(BOB_SCRIPT, 0xF1)
@@ -415,7 +396,7 @@ test("campus boards: direct button and mouse open a later board without the mapp
     H.pressed = C.B_BUTTON
     w:step(1)
     check(table.concat(H.hudText, " | "):find("Skybox Climb", 1, true) ~= nil,
-        "clicking the board footer returns to the four-board list")
+        "clicking the board footer returns to the full challenge list")
 
     H.mouseButtons = 0
     w:step(1)
@@ -545,10 +526,10 @@ test("door 2: The Hub (zero stars) -> Reitz & Engineering act 1 -> star -> back 
     check(Sim.hud_has(H, "NEXT: THE SWAMP"), "zero stars: the hint recommends the first unfinished stage")
     at_door(H, 2, 600)
     w:step(2)
-    check(Sim.hud_has(H, "REITZ & ENGINEERING") and Sim.hud_has(H, "Walk in!"), "door 2 label: open with zero stars")
+    check(Sim.hud_has(H, "REITZ & ENGINEERING") and Sim.hud_has(H, "Walk in to explore"), "door 2 label: open with zero stars")
     at_door(H, 2, 50)
     w:step(3)
-    check(H.action == C.ACT_DISAPPEARED, "Reitz door starts its warp with zero stars")
+    check(H.level == WF and H.act == 0, "Reitz door enters free roam with zero stars")
     check(Sim.find(H.popups, "Locked!") == nil, "no star-lock popup")
 
     -- 2 stars (Swamp acts 1 + 2), alone: open, and the hint skips The Swamp's co-op act 3
@@ -571,19 +552,13 @@ test("door 2: The Hub (zero stars) -> Reitz & Engineering act 1 -> star -> back 
     check(model2 == C.E_MODEL_STAR, "door 2: gold star (open)")
     at_door(H, 2, 600)
     w:step(2)
-    check(Sim.hud_has(H, "REITZ & ENGINEERING") and Sim.hud_has(H, "Walk in!"), "door 2 label: Walk in!")
+    check(Sim.hud_has(H, "REITZ & ENGINEERING") and Sim.hud_has(H, "Walk in to explore"), "door 2 label: Walk in!")
     at_door(H, 2, 50)
     w:step(2)
-    local m = H.ms[0]
-    check(H.action == C.ACT_DISAPPEARED and raw(m).actionArg == (C.WARP_OP_WARP_OBJECT << 16) + 2, "door 2: vanilla warp-object entry")
-    local used = raw(m).usedObj
-    check(used ~= nil and ((raw(used).oBehParams >> 16) & 0xFF) == 0x12, "usedObj carries hub node 0x12")
-    local lv, area, node = follow_node(HUB_SCRIPT, 0x12)
-    check(lv == WF and area == 1 and node == 0x0A, "hub 0x12 -> WF 0x0A")
-    local acts = Sim.selectable_acts(w.starFlags[C.COURSE_WF] or 0)
-    check(#acts == 1 and acts[1] == 1, "act select offers act 1 only")
-    H.action = C.ACT_IDLE
-    w:warp(H, lv, area, acts[1])
+    check(H.level == C.LEVEL_WF and H.act == 0, "door 2 enters free roam act 0")
+    local lv, area = C.LEVEL_WF, 1
+    w:warp(H, lv, area, 1) -- choose the named mission from the travel menu
+
     local sp0 = H.levelSpawns[0x0A]
     check(sp0 and sp0.bhv == "bhvSpinAirborneWarp", "WF entry spawn 0x0A (spin-in)")
     H.pos.x, H.pos.y, H.pos.z = sp0.x, sp0.y - 100, sp0.z
@@ -655,10 +630,10 @@ test("door 3: Newell Hall (zero stars) -> Lake Alice act 1 -> star -> back outsi
     check(env.sgl_next_stage() == env.sgl_stage_by_door(1), "NEXT recommends the first unfinished stage without locking other doors")
     at_door(H, 3, 600)
     w:step(2)
-    check(Sim.hud_has(H, "LAKE ALICE") and Sim.hud_has(H, "Walk in!"), "door 3 label: open with zero stars")
+    check(Sim.hud_has(H, "LAKE ALICE") and Sim.hud_has(H, "Walk in to explore"), "door 3 label: open with zero stars")
     at_door(H, 3, 50)
     w:step(3)
-    check(H.action == C.ACT_DISAPPEARED, "Lake Alice door starts its warp with zero stars")
+    check(H.level == JRB and H.act == 0, "Lake Alice door enters free roam with zero stars")
     check(Sim.find(H.popups, "Locked!") == nil, "no star-lock popup")
 
     -- 6 stars (every playable act of courses 1-2): open, and the hint points at Newell Hall
@@ -685,19 +660,13 @@ test("door 3: Newell Hall (zero stars) -> Lake Alice act 1 -> star -> back outsi
     check(model3 == C.E_MODEL_STAR, "door 3: gold star (open)")
     at_door(H, 3, 600)
     w:step(2)
-    check(Sim.hud_has(H, "LAKE ALICE") and Sim.hud_has(H, "Walk in!"), "door 3 label: Walk in!")
+    check(Sim.hud_has(H, "LAKE ALICE") and Sim.hud_has(H, "Walk in to explore"), "door 3 label: Walk in!")
     at_door(H, 3, 50)
     w:step(2)
-    local m = H.ms[0]
-    check(H.action == C.ACT_DISAPPEARED and raw(m).actionArg == (C.WARP_OP_WARP_OBJECT << 16) + 2, "door 3: vanilla warp-object entry")
-    local used = raw(m).usedObj
-    check(used ~= nil and ((raw(used).oBehParams >> 16) & 0xFF) == 0x13, "usedObj carries hub node 0x13")
-    local lv, area, node = follow_node(HUB_SCRIPT, 0x13)
-    check(lv == JRB and area == 1 and node == 0x0A, "hub 0x13 -> JRB 0x0A")
-    local acts = Sim.selectable_acts(w.starFlags[C.COURSE_JRB] or 0)
-    check(#acts == 1 and acts[1] == 1, "act select offers act 1 only")
-    H.action = C.ACT_IDLE
-    w:warp(H, lv, area, acts[1])
+    check(H.level == C.LEVEL_JRB and H.act == 0, "door 3 enters free roam act 0")
+    local lv, area = C.LEVEL_JRB, 1
+    w:warp(H, lv, area, 1) -- choose the named mission from the travel menu
+
     local sp0 = H.levelSpawns[0x0A]
     check(sp0 and sp0.bhv == "bhvSpinAirborneWarp", "JRB entry spawn 0x0A (spin-in)")
     H.pos.x, H.pos.y, H.pos.z = sp0.x, sp0.y - 100, sp0.z
@@ -796,10 +765,10 @@ test("door 4: Marston (zero stars) -> Marston Science Library act 1 -> star -> b
     check(env.sgl_total_stars() == 0, "fresh save has zero stars")
     at_door(H, 4, 600)
     w:step(2)
-    check(Sim.hud_has(H, "MARSTON LIBRARY") and Sim.hud_has(H, "Walk in!"), "door 4 label: open with zero stars")
+    check(Sim.hud_has(H, "MARSTON LIBRARY") and Sim.hud_has(H, "Walk in to explore"), "door 4 label: open with zero stars")
     at_door(H, 4, 50)
     w:step(3)
-    check(H.action == C.ACT_DISAPPEARED, "Marston door starts its warp with zero stars")
+    check(H.level == CCM and H.act == 0, "Marston door enters free roam with zero stars")
     check(Sim.find(H.popups, "Locked!") == nil, "no star-lock popup")
 
     -- 9 stars (courses 1-3 up to their co-op act 3): open, but Lake Alice's regatta (act 4) is next there
@@ -830,19 +799,13 @@ test("door 4: Marston (zero stars) -> Marston Science Library act 1 -> star -> b
     check(model4 == C.E_MODEL_STAR, "door 4: gold star (open)")
     at_door(H, 4, 600)
     w:step(2)
-    check(Sim.hud_has(H, "MARSTON LIBRARY") and Sim.hud_has(H, "Walk in!"), "door 4 label: Walk in!")
+    check(Sim.hud_has(H, "MARSTON LIBRARY") and Sim.hud_has(H, "Walk in to explore"), "door 4 label: Walk in!")
     at_door(H, 4, 50)
     w:step(2)
-    local m = H.ms[0]
-    check(H.action == C.ACT_DISAPPEARED and raw(m).actionArg == (C.WARP_OP_WARP_OBJECT << 16) + 2, "door 4: vanilla warp-object entry")
-    local used = raw(m).usedObj
-    check(used ~= nil and ((raw(used).oBehParams >> 16) & 0xFF) == 0x14, "usedObj carries hub node 0x14")
-    local lv, area, node = follow_node(HUB_SCRIPT, 0x14)
-    check(lv == CCM and area == 1 and node == 0x0A, "hub 0x14 -> CCM 0x0A")
-    local acts = Sim.selectable_acts(w.starFlags[C.COURSE_CCM] or 0)
-    check(#acts == 1 and acts[1] == 1, "act select offers act 1 only")
-    H.action = C.ACT_IDLE
-    w:warp(H, lv, area, acts[1])
+    check(H.level == C.LEVEL_CCM and H.act == 0, "door 4 enters free roam act 0")
+    local lv, area = C.LEVEL_CCM, 1
+    w:warp(H, lv, area, 1) -- choose the named mission from the travel menu
+
     local sp0 = H.levelSpawns[0x0A]
     check(sp0 and sp0.bhv == "bhvSpinAirborneWarp", "CCM entry spawn 0x0A (spin-in)")
     H.pos.x, H.pos.y, H.pos.z = sp0.x, sp0.y - 100, sp0.z
@@ -947,17 +910,17 @@ test("door 5: Library West (zero stars) -> Library West After Dark act 1 -> star
     check(sign_says("LIBRARY WEST", "Open to everyone!") and sign_says("LIBRARY WEST", "Walk into the door"),
         "Library West's signpost: open to everyone, walk in (built)")
     for _, building in ipairs({ "CENTURY TOWER", "SMATHERS LIBRARY", "FINAL EXAM DOOR" }) do
-        check(sign_says(building, "Coming soon!") and not sign_says(building, "Opens at"),
+        check(sign_says(building, "Not open yet.") and not sign_says(building, "Opens at"),
             building .. ": coming soon without a star threshold")
     end
     check(env.sgl_stage_ready(env.sgl_stage_by_door(5)), "levels/bbh is ours: course 5 is built")
     check(env.sgl_total_stars() == 0, "fresh save has zero stars")
     at_door(H, 5, 600)
     w:step(2)
-    check(Sim.hud_has(H, "LIBRARY WEST AFTER DARK") and Sim.hud_has(H, "Walk in!"), "door 5 label: open with zero stars")
+    check(Sim.hud_has(H, "LIBRARY WEST AFTER DARK") and Sim.hud_has(H, "Walk in to explore"), "door 5 label: open with zero stars")
     at_door(H, 5, 50)
     w:step(3)
-    check(H.action == C.ACT_DISAPPEARED, "Library West door starts its warp with zero stars")
+    check(H.level == BBH and H.act == 0, "Library West door enters free roam with zero stars")
     check(Sim.find(H.popups, "Locked!") == nil, "no star-lock popup")
 
     -- 12 stars, alone (acts 1-2 + the 100-coin star of courses 1-4: what a solo player can earn): open, the hint skips
@@ -981,19 +944,13 @@ test("door 5: Library West (zero stars) -> Library West After Dark act 1 -> star
     check(model5 == C.E_MODEL_STAR, "door 5: gold star (open)")
     at_door(H, 5, 600)
     w:step(2)
-    check(Sim.hud_has(H, "LIBRARY WEST AFTER DARK") and Sim.hud_has(H, "Walk in!"), "door 5 label: Walk in!")
+    check(Sim.hud_has(H, "LIBRARY WEST AFTER DARK") and Sim.hud_has(H, "Walk in to explore"), "door 5 label: Walk in!")
     at_door(H, 5, 50)
     w:step(2)
-    local m = H.ms[0]
-    check(H.action == C.ACT_DISAPPEARED and raw(m).actionArg == (C.WARP_OP_WARP_OBJECT << 16) + 2, "door 5: vanilla warp-object entry")
-    local used = raw(m).usedObj
-    check(used ~= nil and ((raw(used).oBehParams >> 16) & 0xFF) == 0x15, "usedObj carries hub node 0x15")
-    local lv, area, node = follow_node(HUB_SCRIPT, 0x15)
-    check(lv == BBH and area == 1 and node == 0x0A, "hub 0x15 -> BBH 0x0A")
-    local acts = Sim.selectable_acts(w.starFlags[C.COURSE_BBH] or 0)
-    check(#acts == 1 and acts[1] == 1, "act select offers act 1 only")
-    H.action = C.ACT_IDLE
-    w:warp(H, lv, area, acts[1])
+    check(H.level == C.LEVEL_BBH and H.act == 0, "door 5 enters free roam act 0")
+    local lv, area = C.LEVEL_BBH, 1
+    w:warp(H, lv, area, 1) -- choose the named mission from the travel menu
+
     local sp0 = H.levelSpawns[0x0A]
     check(sp0 and sp0.bhv == "bhvSpinAirborneWarp", "BBH entry spawn 0x0A (spin-in)")
     check(sp0 and sp0.yaw == 0x8000, "BBH spawn faces north (into the building, up the escalators)")
@@ -1080,13 +1037,11 @@ test("coming soon acts: free roam notice, no mission, no star, no invite; exit w
     w:step(3)
     arrive_and_pick(w, H, 1)
     arrive_and_pick(w, F, 2)
-    local acts = Sim.selectable_acts(0x07)
-    check(acts[#acts] == 4, "acts 1-3 starred: act 4 is offered")
     local popups = #F.popups
-    w:warp(H, BOB, 1, 4)
+    w:warp(H, BOB, 1, 0)
     w:step(5)
-    check(Sim.hud_has(H, "COMING SOON %- MASCOT"), "banner names the act")
-    check(Sim.hud_has(H, "EXIT COURSE"), "notice says how to leave")
+    check(not Sim.hud_has(H, "COMING SOON") and not Sim.hud_has(H, "ACT 4:"), "free roam has no unfinished-act notice")
+    check(not Sim.hud_has(H, "EXIT COURSE"), "free roam has no placeholder leave notice")
     check(H.env.sgl_mission_ctx() == nil and #Sim.objects_with(H, H.env.id_bhvSglMission) == 0, "no mission controller")
     check(Sim.stars_of(H, 3) == 0 and #H.starSpawns == 0, "no star")
     w:step(3)
@@ -1096,7 +1051,7 @@ test("coming soon acts: free roam notice, no mission, no star, no invite; exit w
     -- Pause > EXIT COURSE is the engine's (BOB 0xF1); /campus hub works as well
     Sim.cmd(H, "campus", "hub me")
     w:step(3)
-    check(H.level == HUB and not Sim.hud_has(H, "COMING SOON"), "back in the hub, notice gone")
+    check(H.level == HUB and not Sim.hud_has(H, "COMING SOON"), "back in the hub, still no notice")
 end)
 
 test("with a friend: invite, D-pad Up joins the act, co-op act 3 with every file loaded", function()
@@ -1109,8 +1064,7 @@ test("with a friend: invite, D-pad Up joins the act, co-op act 3 with every file
     -- Host walks into the Auditorium: the friend in the hub gets an invite
     at_door(H, 1, 50)
     w:step(2)
-    check(H.action == C.ACT_DISAPPEARED, "host enters the door")
-    H.action = C.ACT_IDLE
+    check(H.level == BOB and H.act == 0, "host enters the building in free roam")
     w:warp(H, BOB, 1, 1)
     w:step(5)
     check(Sim.find(F.popups, "Host.-started THE SWAMP act 1") ~= nil, "friend got the Study Group invite")
@@ -1122,9 +1076,12 @@ test("with a friend: invite, D-pad Up joins the act, co-op act 3 with every file
     local ctx = H.env.sgl_mission_ctx()
     check(ctx ~= nil and ctx.n == 2 and ctx.isLeader, "same instance, host leads")
     -- the character select menu eats the pad while open: no accidental join / movement
-    Sim.cmd(H, "campus", "hub")                                  -- everyone back to the Plaza
+    H.pos.x, H.pos.y, H.pos.z = 0, 0, 0 -- the simulator preserves coordinates across direct test warps
+    F.pos.x, F.pos.y, F.pos.z = 0, 0, 0
+    w:warp(H, HUB, 1, 0)
+    w:warp(F, HUB, 1, 0)
     w:step(5)
-    check(H.level == HUB and F.level == HUB, "/campus hub brings everyone back")
+    check(H.level == HUB and F.level == HUB, "both clients return to the Plaza H=" .. tostring(H.level) .. " F=" .. tostring(F.level))
     Sim.cmd(F, "char", "")
     w:step(1)
     check(menu_open(F), "/char opens the menu")
@@ -1138,7 +1095,7 @@ test("with a friend: invite, D-pad Up joins the act, co-op act 3 with every file
     w:step(2)
     check(not menu_open(F), "B closes the menu")
     check(F.env.gPlayerSyncTable[0].friend == 7, "closing keeps the pick")
-    -- co-op act 3 straight from /campus (act select would need acts 1-2 first)
+    -- Co-op act 3 is available from travel regardless of earlier stars.
     Sim.cmd(H, "campus", "swamp 3")
     w:step(5)
     check(H.level == BOB and H.act == 3 and F.level == BOB and F.act == 3, "both in act 3")
@@ -1211,16 +1168,16 @@ test("character select: remembered pick, overlay hides the other HUDs", function
     check(Sim.hud_has(H, "NEXT: THE SWAMP"), "no menu to wait for: the NEXT panel shows after 1.5 s")
     at_door(H, 1, 600)
     w:step(2)
-    check(Sim.hud_has(H, "Walk in!"), "door label visible")
+    check(Sim.hud_has(H, "Walk in to explore"), "door label visible")
     H.pressed = C.L_TRIG | C.START_BUTTON                        -- L + START
     w:step(2)
     check(menu_open(H), "L + START opens the menu")
-    check(not Sim.hud_has(H, "Walk in!") and not Sim.hud_has(H, "NEXT: THE SWAMP"), "door label and NEXT panel hidden under it")
+    check(not Sim.hud_has(H, "Walk in to explore") and not Sim.hud_has(H, "NEXT: THE SWAMP"), "door label and NEXT panel hidden under it")
     check(not Sim.hud_has(H, "Super Gatorlator 64 loaded"), "no debug-looking 'loaded' banner any more")
     check(Sim.hud_has(H, "A / click: choose") and Sim.hud_has(H, "JOSH"), "menu drawn (footer, cursor on Josh)")
     H.pressed = C.START_BUTTON
     w:step(2)
-    check(not menu_open(H) and Sim.hud_has(H, "Walk in!") and Sim.hud_has(H, "NEXT: THE SWAMP"), "START closes it, labels back")
+    check(not menu_open(H) and Sim.hud_has(H, "Walk in to explore") and Sim.hud_has(H, "NEXT: THE SWAMP"), "START closes it, labels back")
     -- a mission HUD is hidden too
     w:warp(H, BOB, 1, 2)
     w:seconds(4)

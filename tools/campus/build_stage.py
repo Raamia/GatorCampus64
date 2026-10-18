@@ -1142,6 +1142,8 @@ def main():
         # NPCs, Goombas, signs) showed through trees and walls (tools/blender/fix_geometry_modes.py)
         from fix_geometry_modes import fix_level as fix_geometry_modes
         hyg["geometry_modes_rewritten"] = fix_geometry_modes(level_dir)
+        from fix_material_lighting import fix_level as fix_material_lighting
+        hyg["material_lights_repaired"] = fix_material_lighting(level_dir)
         if key in STAGE_COMMON0_MODELS:
             hyg["common0_jump_link"] = add_common0_models(level_dir)
         report["export_hygiene"] = hyg

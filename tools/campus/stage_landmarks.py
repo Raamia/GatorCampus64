@@ -383,19 +383,45 @@ def props(S):
         made.append("flagpole")
     p = pois.get("n1637323042")
     if p and "n1637323042" not in gone:  # "The French Fries" sculpture near Marston
-        x, y = S.T(p["pt"])
-        hmax = p.get("height") or 9.75
-        offs = [(-1.0, -0.6, 1.0), (0.1, -0.9, 0.82), (1.0, -0.3, 0.68), (-0.6, 0.6, 0.9), (0.6, 0.8, 0.75),
-                (-1.5, 0.4, 0.6)]
-        for k, (dx, dy, f) in enumerate(offs):
-            hh = hmax * f
-            sq = [(x + dx - .3, y + dy - .3), (x + dx + .3, y + dy - .3), (x + dx + .3, y + dy + .3),
-                  (x + dx - .3, y + dy + .3)]
-            for a, b in zip(sq, sq[1:] + sq[:1]):
-                v.wall(a, b, -0.1, hh, "white_trim")
-                c.wall(a, b, 0.0, hh, "COL default")
-            v.flat(sq, hh, "door_marker")
-            c.flat(sq, hh, "COL default")
+        # Replace the old upright white placeholder with two splayed yellow
+        # beam clusters in the covered Marston/CSE court (user photo reference).
+        # Dimensions are a visual approximation; the central pedestrian gap stays open.
+        from mathutils import Vector
+        from marston_plaza import HEIGHT
+        x, y = S.T((-81.0, -77.0))
+        angle = math.radians(45)
+
+        def point(p):
+            px, py, pz = p
+            return Vector((x + px * math.cos(angle) - py * math.sin(angle),
+                           y + px * math.sin(angle) + py * math.cos(angle), HEIGHT + pz))
+
+        def beam(a, b, width=.32):
+            a, b = point(a), point(b)
+            axis = (b - a).normalized()
+            side = axis.cross(Vector((0, 1, 0))).normalized() * (width / 2)
+            other = axis.cross(side).normalized() * (width / 2)
+            verts = [tuple(p + u * side + w * other) for p in (a, b)
+                     for u, w in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+            for face in ((3, 2, 1, 0), (4, 5, 6, 7), (0, 1, 5, 4),
+                         (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)):
+                poly = [verts[i] for i in face]
+                v.poly(poly, "sculpture_yellow")
+                c.poly(poly, "COL default")
+
+        # Each fan has steep blades, crossed diagonals and a long low outrigger.
+        # Solid rectangular members reproduce the angular silhouette of Alachua.
+        for center, mirror in ((-3.7, 1), (3.7, -1)):
+            segments = [((-1.0, -.5, .18), (.1, -.5, 9.7)),
+                        ((.6, .2, .18), (-1.9, .2, 8.0)),
+                        ((-.8, .8, .18), (2.0, .8, 8.9)),
+                        ((1.4, -.1, .18), (-3.8, -.1, 6.6)),
+                        ((-2.4, .4, .18), (3.8, .4, 6.9)),
+                        ((-4.3, -.7, .18), (2.6, -.7, 3.5)),
+                        ((2.2, 1.0, .18), (-2.1, 1.0, 4.0))]
+            for start, end in segments:
+                beam((center + mirror * start[0], start[1], start[2]),
+                     (center + mirror * end[0], end[1], end[2]))
         made.append("The French Fries")
     for pid, label, kind in (("n5145535993", "Murphree statue", "statue"), ("n5623470779", "well-head", "well")):
         p = pois.get(pid)

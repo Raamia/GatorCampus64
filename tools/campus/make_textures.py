@@ -618,6 +618,7 @@ def build_all():
         "facade_service": tx_facade("service", 47),
         "roof_gravel": tx_roof_gravel(48),
         "door_marker": tx_door_marker(49),
+        "sculpture_yellow": tx_noise("#F5C400", 149, 2),
         "leaves_oak": tx_leaves("#3E6E2E", "#5E9440", "#2A4C20", 50),
         "leaves_oak2": tx_leaves("#46682C", "#6A8C3E", "#2E4A1E", 57),
         "spanish_moss": tx_spanish_moss(60),
