@@ -3,10 +3,17 @@
 
 local HIDE_VANILLA = HUD_DISPLAY_FLAGS_LIVES | HUD_DISPLAY_FLAGS_COIN_COUNT
     | HUD_DISPLAY_FLAGS_STAR_COUNT | HUD_DISPLAY_FLAGS_CAMERA
+    | HUD_DISPLAY_FLAGS_CAMERA_AND_POWER | HUD_DISPLAY_FLAGS_POWER
+    | HUD_DISPLAY_FLAGS_EMPHASIZE_POWER
 local sCoinTexture = nil
 local sPortraits = {}
 
 local function hide_vanilla_icons()
+    -- The game rebuilds parts of its HUD state during level updates, which can
+    -- re-enable the native coin counter after its display flags are cleared.
+    -- Hide the vanilla HUD at its render gate as well; the custom campus HUD
+    -- below is drawn by DJUI and remains visible.
+    hud_hide()
     local flags = hud_get_value(HUD_DISPLAY_FLAGS)
     local filtered = flags & ~HIDE_VANILLA
     if filtered ~= flags then hud_set_value(HUD_DISPLAY_FLAGS, filtered) end
@@ -55,7 +62,7 @@ local function update_uf_icons()
 end
 
 local function draw_status_hud()
-    if hud_is_hidden() or sgl_hud_blocked() then return end
+    if sgl_hud_blocked() then return end
 
     djui_hud_set_resolution(RESOLUTION_N64)
     djui_hud_set_filter(FILTER_NEAREST)
@@ -79,10 +86,6 @@ local function draw_status_hud()
     end
     sgl_hud_text("X" .. stars, sw - 56, 15, 0.55, { 255, 255, 255 }, 1)
 
-    -- Replace CoopDX's camera/Lakitu glyphs with a compact UF badge in the same corner.
-    sgl_hud_rect(sw - 54, 203, 32, 18, 250, 110, 30, 255)
-    sgl_hud_rect(sw - 52, 205, 28, 14, 20, 45, 95, 255)
-    sgl_hud_text_center("UF", sw - 38, 207, 0.34, { 255, 140, 35 }, 1)
 end
 
 hook_event(HOOK_UPDATE, hide_vanilla_icons)

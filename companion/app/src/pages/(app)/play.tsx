@@ -40,7 +40,7 @@ export default function PlayPage() {
         <p className="play-kicker"><Gamepad2 size={15}/> GAME SETUP · SM64COOPDX</p>
         <h1>Step into<br /><em>the campus.</em></h1>
         <p className="play-sub">Super Gatorlator 64 is a native co-op game. Install sm64coopdx, connect to the campus server, then bring your Gator Pass character into Reitz and Marston.</p>
-        <div className="play-location"><MapPin size={14}/> GAINESVILLE, FLORIDA <span>·</span> 2 BUILDINGS <span>·</span> 6 MISSIONS <span>·</span> 1 MINIGAME</div>
+        <div className="play-location"><MapPin size={14}/> GAINESVILLE, FLORIDA <span>·</span> 2 BUILDINGS <span>·</span> 7 MISSIONS</div>
       </div>
     </header>
     <div className="play-layout">
