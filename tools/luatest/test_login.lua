@@ -356,14 +356,20 @@ test("/login: request, QR + code panel, countdown, B closes it and sends login_c
     check(Sim.hud_has(F, "Code expires in 15:00") or Sim.hud_has(F, "Code expires in 14:59"), "countdown from 15 minutes")
     check(Sim.hud_has(F, "Waiting for approval"), "waiting line")
     check(Sim.hud_has(F, "B or /login cancel: close"), "how to close")
-    local rects, white = 0, false
+    local rects, white, frame = 0, false, nil
     for _, d in ipairs(F.draw) do
         if d.k == "rect" then
             rects = rects + 1
             if d.col[1] == 255 and d.col[2] == 255 and d.col[3] == 255 and d.w == d.h and d.w >= 45 then white = true end
+            if d.col[1] == 250 and d.col[2] == 70 and d.col[3] == 22 then frame = d end
         end
     end
     check(rects > 150 and white, "QR drawn: white square + many module runs (" .. rects .. " rects)")
+    local screenW, screenH = F.env.djui_hud_get_screen_width(), F.env.djui_hud_get_screen_height()
+    check(frame ~= nil and math.abs((frame.x + frame.w / 2) - screenW / 2) <= 1,
+        "Gator Pass card is centered between the corner HUD controls")
+    check(frame ~= nil and frame.y >= 21 and frame.x + frame.w < screenW - 54,
+        "card clears the top-left Boards button and the right-edge HUD badges")
     w:seconds(2)
     check(Sim.hud_has(F, "Code expires in 14:5[78]"), "countdown runs: " .. tostring(hud_text(F):match("Code expires in [%d:]+")))
     check(not Sim.hud_has(H, "GATOR PASS") and not Sim.hud_has(G, "GATOR PASS"), "only the requesting player sees it")

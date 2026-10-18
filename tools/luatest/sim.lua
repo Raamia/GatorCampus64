@@ -278,6 +278,7 @@ function World:connect(name, opts)
         level = C.LEVEL_CASTLE_GROUNDS, area = 1, act = 0, synced = false, syncIn = 1,
         pos = { x = 0, y = 0, z = 0 }, face = { x = 0, y = 0, z = 0 }, health = 0x880, action = C.ACT_IDLE,
         hooks = {}, behaviors = {}, commands = {}, menu = {}, objects = {}, cur = nil, dedup = {},
+        cameraFocus = nil,
         sync = {}, seq = {}, liOf = {}, giAt = {},
         popups = {}, chat = {}, console = {}, sounds = {}, warps = {}, starSpawns = {}, storage = {},
         hudText = {}, hudLog = {}, syncWrites = 0, fanfares = 0, nextObj = 1, pressed = 0,
@@ -729,6 +730,12 @@ function World:build_env(c)
     S.camera_set_use_course_specific_settings = function() end
     S.camera_config_is_mouse_look_enabled = function() return c.mouseLookEnabled ~= false end
     S.camera_config_enable_mouse_look = function(enabled) c.mouseLookEnabled = enabled end
+    S.get_secondary_camera_focus = function() return c.cameraFocus end
+    S.set_secondary_camera_focus = function(obj) c.cameraFocus = obj end
+    S.set_camera_mode = function(cam, mode, frames)
+        assert(type(cam) == "table" and math.type(mode) == "integer" and math.type(frames) == "integer", "set_camera_mode args")
+        cam.mode = mode
+    end
     local dialogN = 0
     S.smlua_text_utils_allocate_dialog = function() dialogN = dialogN + 1; return 0x100 + dialogN end
     S.smlua_text_utils_dialog_replace = function() end

@@ -436,6 +436,38 @@ local function kind_cranes(spec)
     local patterns = spec.patterns or { { 3, 1, 2, 3, 1 } }
     local RESEND = 90
 
+    -- The operator's view uses the engine's boss camera, with the crane as its second focus.
+    -- That camera keeps both Mario and the moving platform in frame and widens as they separate.
+    local function restore_operator_camera(ctx)
+        local L = ctx.loc
+        if not L.cameraTracking then return end
+        local cam = L.cameraObj
+        if cam ~= nil and L.cameraMode ~= nil then
+            set_camera_mode(cam, L.cameraMode, 1)
+        end
+        set_secondary_camera_focus(L.cameraFocus)
+        L.cameraTracking = nil
+        L.cameraMode = nil
+        L.cameraFocus = nil
+        L.cameraObj = nil
+    end
+
+    local function track_operator_camera(ctx, k)
+        local L = ctx.loc
+        local m = gMarioStates[0]
+        local cam = m ~= nil and m.area ~= nil and m.area.camera or nil
+        local rec = ctx.objs.cranes and ctx.objs.cranes[k]
+        if cam == nil or rec == nil or rec.o == nil then return end
+        if not L.cameraTracking then
+            L.cameraTracking = true
+            L.cameraMode = cam.mode ~= nil and cam.mode or cam.defMode
+            L.cameraFocus = get_secondary_camera_focus()
+            L.cameraObj = cam
+        end
+        set_secondary_camera_focus(rec.o)
+        set_camera_mode(cam, CAMERA_MODE_BOSS_FIGHT, 1)
+    end
+
     for _, lane in ipairs(lanes) do
         lane.xMin = lane.x0 + PHX + 20
         lane.xMax = lane.x1 - PHX - 20
@@ -925,14 +957,21 @@ local function kind_cranes(spec)
         if myK ~= L.opK then
             if L.opK ~= nil and cranes[L.opK] ~= nil then send_pos(ctx, L.opK, cranes[L.opK], true) end
             if myK ~= nil then
-                -- face the crane: the camera swings in behind, looking at it
-                local cr = cranes[myK]
-                m.faceAngle.y = atan2s(spec.planeZ - m.pos.z, cr.x - m.pos.x)
+                track_operator_camera(ctx, myK)
                 play_sound(SOUND_GENERAL2_PURPLE_SWITCH, gGlobalSoundSource)
                 L.dirX = nil
                 L.sendAge = nil
+            else
+                restore_operator_camera(ctx)
             end
             L.opK = myK
+        end
+        -- Selecting a different console changes the second focus while preserving the same tracked view.
+        if myK ~= nil and L.opK == myK and L.cameraTracking then
+            local rec = ctx.objs.cranes and ctx.objs.cranes[myK]
+            if rec ~= nil and rec.o ~= nil and get_secondary_camera_focus() ~= rec.o then
+                set_secondary_camera_focus(rec.o)
+            end
         end
         L.operating = myK ~= nil and alive(m)
         for k, cr in ipairs(cranes) do
@@ -988,6 +1027,10 @@ local function kind_cranes(spec)
             L.expandUntil = ctx.age + 150
         end
         L.wasOnLedge = onLedge
+    end
+
+    K.onLeave = function(ctx)
+        restore_operator_camera(ctx)
     end
 
     -- what crane k needs next -> text for the panel / diagram

@@ -1008,6 +1008,27 @@ test("act 3: a player leaving pauses it; the round's star needs the riders on th
     check(not ctx_of(A).loc.operating, "no driving while waiting")
 end)
 
+test("act 3: crane operator camera follows the platform and restores the prior camera on exit", function()
+    local w, A, B = world_with({ "A", "B" })
+    local P = A.env.REITZ_POINTS
+    enter(w, A, 3); enter(w, B, 3)
+    w:seconds(4)
+    local cam = { yaw = 0, mode = C.CAMERA_MODE_ROM_HACK, defMode = C.CAMERA_MODE_ROM_HACK }
+    A.env.gMarioStates[0].area = { camera = cam }
+    local priorFocus = { marker = "prior camera focus" }
+    A.cameraFocus = priorFocus
+    at(A, P.console_1)
+    w:step(3)
+    local craneObj = ctx_of(A).objs.cranes[1].o
+    check(ctx_of(A).loc.operating, "console starts crane operation")
+    check(cam.mode == C.CAMERA_MODE_BOSS_FIGHT, "operator gets a pulled-back tracking camera")
+    check(A.cameraFocus == craneObj, "the moving crane is the camera's secondary focus")
+    w:warp(A, HUB, 1, 0)
+    w:step(1)
+    check(cam.mode == C.CAMERA_MODE_ROM_HACK, "leaving the mission restores the original camera mode")
+    check(A.cameraFocus == priorFocus, "leaving the mission restores the previous camera focus")
+end)
+
 test("act 3: D-pad Down into the lab (not while driving); the operator's crane marker sticks to the screen edge", function()
     local w, A, B = world_with({ "A", "B" })
     local P = A.env.REITZ_POINTS
