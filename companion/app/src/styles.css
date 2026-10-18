@@ -884,7 +884,15 @@ body { background-color: var(--color-background); color: var(--color-foreground)
 .run-log-heading p { max-width:430px; margin:0; color:#526987; font-size:11px; line-height:1.5; }
 .individual-runs>.selected-run { margin:0 0 14px; }
 .individual-runs .selected-run h3 { margin:7px 0; font:900 20px Impact,"Arial Black",sans-serif; }
-.individual-runs .selected-run p { margin:0 0 8px; }
+.individual-runs .selected-run p { margin:0; }
+.selected-run-copy { min-width:0; flex:1; }
+.selected-run-meta { display:flex; flex-wrap:wrap; align-items:center; gap:8px 16px; margin:9px 0 13px; color:#cfe4fb; font-size:9px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+.selected-run-meta span:first-child { display:inline-flex; align-items:center; gap:5px; }
+.selected-run-meta span:last-child { color:#ffdc62; }
+.selected-run-details { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px 24px; max-width:780px; margin-bottom:12px; }
+.selected-run-details>div>span { display:block; margin-bottom:4px; color:#ffdc62; font-size:8px; font-weight:900; letter-spacing:.13em; }
+.individual-runs .selected-run .selected-run-details p { max-width:unset; color:#e4edf8; font-size:11px; line-height:1.5; }
+.mission-mode { display:flex; align-items:center; gap:6px; color:#cfe4fb; font-size:8px; font-weight:800; letter-spacing:.1em; }
 .individual-runs .selected-run .primary-action { flex:none; }
 .run-signin-note,.run-empty { padding:16px 18px; color:#526987; background:#fffaf0; border:1px solid #b7cbe3; font-size:11px; }
 .individual-run-list { margin:0; padding:0; list-style:none; border:1px solid #b7cbe3; background:#fffaf0; }
@@ -898,6 +906,9 @@ body { background-color: var(--color-background); color: var(--color-foreground)
 @media(max-width:900px) { .run-board-hero { grid-template-columns:1fr 1fr; gap:24px; } }
 @media(max-width:680px) {
   .run-board-hero { grid-template-columns:1fr; }
+  .individual-runs>.selected-run { align-items:stretch; flex-direction:column; }
+  .selected-run-details { grid-template-columns:1fr; gap:10px; }
+  .individual-runs .selected-run .primary-action { width:100%; }
   .run-summary-content { min-height:150px; }
   .run-log-heading { align-items:flex-start; flex-direction:column; gap:8px; }
   .individual-run-list li { grid-template-columns:minmax(0,1fr) auto; gap:5px 12px; }
