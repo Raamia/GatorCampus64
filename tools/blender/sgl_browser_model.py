@@ -92,16 +92,20 @@ def export_browser_model(path, armature="Mario", mesh="Mario Mesh"):
         finally:
             bm.free()
         scales = {}
-        data.materials.clear()
+        # Replace each slot in place rather than materials.clear() + append():
+        # clear() resets every polygon's material_index to 0 (Blender drops the
+        # index once the slot array is empty), which silently collapsed the
+        # whole mesh onto slot 0's material. Keeping the slot count unchanged
+        # throughout avoids that reset.
         for i, source in enumerate(evaluated_materials):
             if source is None:
                 fallback = bpy.data.materials.new("Browser Empty")
                 materials.append(fallback)
-                data.materials.append(fallback)
+                data.materials[i] = fallback
                 continue
             material, scales[i] = _material(source, images)
             materials.append(material)
-            data.materials.append(material)
+            data.materials[i] = material
         if data.uv_layers.active:
             uv = data.uv_layers.active.data
             for poly in data.polygons:
