@@ -56,6 +56,8 @@
 #      one mascot on the hub
 #  22. check_game_guide.py: tools/npc_bridge/game_guide.md covers every stage, door, star count and act of course.lua
 #  24. test_rivals.lua: sgl_rivals.lua dresses every Goomba as a rival school's mascot (same on every client)
+#  25. test_hud_sight.lua: sgl_hud_in_sight hides HUD labels drawn over the world (door labels, NPC name tags)
+#      when a wall stands between the camera and the label
 #  23. tools/npc_bridge/test_*.py: the NPC chat bridge and the game guide (modfs protocol, routing, Gemini requests;
 #      offline) and tools/actors/test_make_gators.py (the generated Albert and Alberta actors are valid and up to date)
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
@@ -135,6 +137,8 @@ echo "== test_npc (roaming mascots Albert and Alberta)"
 "$LUA" "$HERE/test_npc.lua"
 echo "== test_rivals (rival mascots replace the Goombas)"
 "$LUA" "$HERE/test_rivals.lua"
+echo "== test_hud_sight (door labels and NPC name tags hidden behind walls)"
+"$LUA" "$HERE/test_hud_sight.lua"
 echo "== check_npc_ids"
 python3 -I "$HERE/check_npc_ids.py"
 echo "== check_npc_spots"

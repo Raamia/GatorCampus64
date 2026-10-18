@@ -369,7 +369,7 @@ local function door_hud()
                 local pos = { x = d.x + sins(d.yaw) * 60, y = d.y + DOOR_LABEL_UP, z = d.z + coss(d.yaw) * 60 }
                 local out = { x = 0, y = 0, z = 0 }
                 djui_hud_world_pos_to_screen_pos(pos, out)
-                if out.z <= -260 then   -- in front of the camera (arena-hud convention)
+                if out.z <= -260 and sgl_hud_in_sight("door" .. i, pos) then   -- in front of the camera (arena-hud convention), not behind a wall
                     local stage = sgl_stage_by_door(i)
                     local title = stage and stage.name or "?"
                     local line, r, g, b

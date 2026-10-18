@@ -636,6 +636,14 @@ function World:build_env(c)
         assert(type(wd) == "number" and type(h) == "number")
         table.insert(c.draw, { k = "rect", x = x, y = y, w = wd, h = h, col = c.color })
     end
+    -- camera + collision ray for line-of-sight checks (sgl_hud_in_sight: door labels and NPC name tags are hidden
+    -- behind walls). Default: the camera at the origin and nothing in the way; tests that need walls or a camera
+    -- replace them (test_libwest_missions.lua)
+    S.gLakituState = { curPos = { x = 0, y = 0, z = 0 }, curFocus = { x = 0, y = 0, z = -100 } }
+    S.collision_find_surface_on_ray = function(x, y, z, dx, dy, dz)
+        assert(type(x) == "number" and type(dz) == "number", "collision_find_surface_on_ray(numbers)")
+        return { surface = nil, hitPos = { x = x + dx, y = y + dy, z = z + dz } }
+    end
     -- c.project(pos) -> front, x, y (default: everything on screen at (200, 120))
     S.djui_hud_world_pos_to_screen_pos = function(pos, out)
         assert(type(pos.x) == "number" and type(out) == "table")

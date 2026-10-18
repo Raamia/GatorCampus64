@@ -643,7 +643,8 @@ local function on_hud_render()
     for _, npc in ipairs(SGL_NPCS) do
         if npc.obj ~= nil and dist2d(m.pos.x, m.pos.z, npc.x, npc.z) < 2500 then
             local head = { x = npc.x, y = npc.y + 180 * npc.scale + 40, z = npc.z }
-            if djui_hud_world_pos_to_screen_pos(head, out) and out.x > -50 and out.x < W + 50 and out.y > 0 and out.y < H then
+            if djui_hud_world_pos_to_screen_pos(head, out) and out.x > -50 and out.x < W + 50 and out.y > 0 and out.y < H
+                and sgl_hud_in_sight("npc:" .. npc.id, head) then   -- not through walls
                 sgl_hud_text_center(npc.name, out.x, out.y - 10, 0.28, npc.col, 1)
                 local b = sBubbles[npc.id]
                 if b ~= nil then draw_bubble(b, out.x, out.y - 14, npc.col) end

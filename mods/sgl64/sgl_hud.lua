@@ -255,6 +255,38 @@ local function marker_text(pos, label, me)
     return text
 end
 
+-- line of sight from the camera to a world position, for labels drawn on the HUD over the world (door
+-- labels, NPC name tags): HUD text is drawn on top of everything, so without this check it shows through
+-- walls. A collision ray (walls, floors, ceilings; static and object collision) from the camera
+-- (gLakituState.curPos) to pos; a hit before 95% of the way hides the label. The answer is cached per
+-- key for SIGHT_FRAMES frames, so a label costs one ray every few frames. Mission markers stay visible
+-- through walls on purpose (they are waypoints).
+local SIGHT_FRAMES = 4
+local sSight = {}
+function sgl_hud_in_sight(key, pos)
+    if collision_find_surface_on_ray == nil then return true end
+    local ls = gLakituState
+    if ls == nil or ls.curPos == nil then return true end
+    local now = get_global_timer()
+    local c = sSight[key]
+    if c ~= nil and now >= c.t and now - c.t < SIGHT_FRAMES then return c.v end
+    local cp = ls.curPos
+    local dx, dy, dz = pos.x - cp.x, pos.y - cp.y, pos.z - cp.z
+    local v = true
+    local hit = collision_find_surface_on_ray(cp.x, cp.y, cp.z, dx, dy, dz)
+    if hit ~= nil and hit.surface ~= nil then
+        local hp = hit.hitPos
+        if hp == nil then
+            v = false
+        else
+            local f = ((hp.x - cp.x) ^ 2 + (hp.y - cp.y) ^ 2 + (hp.z - cp.z) ^ 2) / math.max(1, dx * dx + dy * dy + dz * dz)
+            v = f >= 0.95 * 0.95
+        end
+    end
+    sSight[key] = { t = now, v = v }
+    return v
+end
+
 -- world marker: a small diamond + label + distance over a world position. me = the local MarioState
 -- (for the distance). Off screen or behind the camera it sticks to the screen edge as an arrow pointing
 -- the way to turn, with the label beside it (noEdge = true: draw nothing then).
