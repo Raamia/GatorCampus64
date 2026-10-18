@@ -319,7 +319,7 @@ test("indoor routing respects room walls, separate floors and moving obstacles",
     w:step(6)
     local before = positions(H)
     w:step(30)
-    check(#students(H) > 0, "obstacle pauses students rather than removing them")
+    check(#students(H) == 0, "unsafe standing space suppresses students until the obstacle clears")
     for k, p in pairs(positions(H)) do
         check(p[1] == before[k][1] and p[3] == before[k][3], "walker stops for a newly blocking obstacle")
     end

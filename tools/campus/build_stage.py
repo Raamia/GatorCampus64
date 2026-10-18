@@ -152,7 +152,7 @@ STAGE_PICKUPS = {"swamp": lambda m: m.swamp_pickups, "reitz_eng": lambda m: m.re
                  "hub": lambda m: m.hub_pickups}                                     # the rival Goombas
 # stages whose level script loads the common0 model group (MODEL_HEART, MODEL_GOOMBA, ...):
 # JUMP_LINK(script_func_global_1) after MARIO(...), as every vanilla course does
-STAGE_COMMON0_MODELS = {"swamp", "reitz_eng", "lake_alice", "hub"}   # hub: the rival Goombas 
+STAGE_COMMON0_MODELS = {"swamp", "reitz_eng", "lake_alice", "hub"}   # hub: the rival Goombas (368e21f)
 # stage key -> anchor point exporter (stage_points.py), run after the build: data/uf/<key>_points.json
 STAGE_POINTS = {"swamp": lambda m: m.swamp_points, "reitz_eng": lambda m: m.reitz_points,
                 "lake_alice": lambda m: __import__("stage_lake").lake_points}        # data/uf/lake_points.json
@@ -1207,6 +1207,8 @@ def main():
         top = next((p for p in paths if p.endswith("_topdown.png")), None)
         if top:
             run_venv(os.path.join(HERE, "compare_map.py"), key, top, os.path.join(pv, f"{key}_map_compare.png"))
+    if opts["export"] and not opts["report_dir"] and os.path.abspath(opts["levels_dir"]) == os.path.join(ROOT, "mods", "sgl64", "levels"):
+        run_venv(os.path.join(ROOT, "tools", "npcs", "rebuild.py"))
     print(f"SGL: done in {time.time() - t0:.1f}s")
 
 
