@@ -318,7 +318,12 @@ button { cursor: pointer; }
 .gator-hero { border-top:3px solid #f07828; }
 .gator-viewer-caption { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; padding:16px 18px; color:#526987; font-size:10px; letter-spacing:.06em; border-bottom:1px solid #b7cbe3; }
 .gator-viewer-caption span:first-child { font-weight:700; color:#152b4f; }
-.gator-viewer-stage { position:relative; }
+.gator-viewer-stage { position:relative; min-height:min(70vh, 560px); }
+.gator-viewer-poster { display:block; width:100%; height:min(70vh, 560px); object-fit:contain; }
+.gator-viewer-poster + model-viewer { position:absolute; inset:0; }
+.gator-viewer-recovery { padding:16px; text-align:center; color:#526987; font-size:13px; }
+.gator-viewer-recovery button { margin-top:12px; padding:10px 16px; border:1px solid #526987; background:#fffaf0; color:#152b4f; cursor:pointer; }
+.gator-viewer-recovery button:focus-visible { outline:3px solid #b44e19; outline-offset:3px; }
 .gator-viewer-stage model-viewer { display:block; width:100%; height:min(70vh, 560px); }
 .gator-viewer-note { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:16px; color:#526987; font-size:13px; pointer-events:none; }
 
