@@ -33,7 +33,7 @@ from sgl_api.storage import Storage
 ISSUER = "https://login.test.example/"
 AUDIENCE = "https://api.gatorcamp.us"
 BUCKET = "sgl-test"
-TABLES = "generation_admissions, run_pushes, runs, deploys, events, link_codes, links, slots, jobs, characters, users"
+TABLES = "server_presence, generation_admissions, run_pushes, runs, deploys, events, link_codes, links, slots, jobs, characters, users"
 
 
 # ── Postgres ──────────────────────────────────────────────────────────────────────────────────

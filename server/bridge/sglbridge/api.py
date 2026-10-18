@@ -57,6 +57,9 @@ class ApiClient:
         body.update({"t": t, "payload": payload, "at": at})
         self._call("POST", "/events", body)
 
+    def post_presence(self, snapshot: dict[str, Any]) -> Any:
+        return self._call("POST", "/presence", snapshot)
+
     # POST /links {sub, coopdx_name, gi[, nickname, uf]} -> {nickname, guest_slot|null, uf, ...}
     def post_link(self, sub: str, coopdx_name: str, gi: int, nickname: str | None = None,
                   uf: bool | None = None, session_id: str | None = None,

@@ -52,7 +52,7 @@ presign `previews` and `portrait`.
 The schema is `server/api/schema.sql`; its header is the worker contract and `db.py` holds all of
 the worker's SQL for it (the tests run against that file):
 
-- **Claim**: oldest `queued` job, `FOR UPDATE OF j, c SKIP LOCKED`; both rows go to
+- **Claim**: oldest `queued` job, `FOR UPDATE OF c SKIP LOCKED`, then job lock; both rows go to
   `spec`/`spec`, `attempts + 1`, `error` cleared. The photos are exactly the keys in `jobs.photos`
   (`photos/<job>/<i>.jpg`, written by the API).
 - **States**: `jobs.state` = `characters.state` ∈ queued, spec, face, build, export, validate,
@@ -66,15 +66,24 @@ the worker's SQL for it (the tests run against that file):
 - **Deleted character**: the owner can delete it, and its job by cascade, at any time. A job
   UPDATE that affects 0 rows raises `db.JobGone`, and the pipeline stops (`JobCancelled`, which
   kills Blender's process group). Then `photos/<job>/` and `builds/<job>/` are deleted.
-- **Orphans**: on startup the worker fails any job it had claimed but not finished (by
-  `WORKER_NAME`) and deletes that job's photos.
+- **Leases**: every claim gets a fresh UUID token and a 120-second expiry. A dedicated
+  connection renews every 30 seconds, including during quiet model/Blender calls. Progress,
+  renewal, and completion require the same unexpired token and matching character. Lost
+  leases cancel the pipeline; a silent Blender child is checked every second and killed.
+- **Recovery**: before every claim/poll, any worker can atomically fail expired jobs from
+  any host, retaining their last step and a retry message. It then attempts photo/build cleanup.
+  Hostnames are diagnostic only. Pre-upgrade active jobs with NULL leases are also expired.
+  Jobs are never automatically requeued because their photos may already be deleted.
+  A new user submission gets a new job ID and follows normal generation quotas.
+  Recovery requires at least one worker to reach its poll loop; if all workers are down,
+  a replacement performs recovery when it starts. See [rollout](../../docs/backend_leases_heartbeats.md).
 
 ## Environment
 
 | Var | Default | |
 |---|---|---|
 | `DATABASE_URL` | – | libpq URL (`sslmode=require` for Vultr Managed PostgreSQL) |
-| `WORKER_NAME` | hostname | written to `jobs.worker`, used for orphan recovery |
+| `WORKER_NAME` | hostname | written to `jobs.worker` for diagnostics; not an ownership key |
 | `POLL_SECONDS` | 3 | |
 | `S3_ENDPOINT`, `S3_REGION`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY` | – | Vultr Object Storage; `STORAGE_DIR=<dir>` uses a local dir instead |
 | `VLM_BASE_URL`, `VLM_API_KEY`, `VLM_MODEL`, `VLM_TIMEOUT` | –, –, –, 120 | OpenAI-compatible endpoint with image input. Unset means no model (photo colours + defaults) |

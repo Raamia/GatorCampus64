@@ -20,7 +20,7 @@ from fastapi import BackgroundTasks, Depends, FastAPI, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from psycopg.types.json import Jsonb
-from pydantic import BaseModel, Field, model_validator
+from pydantic import AwareDatetime, BaseModel, Field, model_validator
 
 from . import config, images, names, runs
 from .auth import AuthError, JWKSCache, Principal, Verifier, bearer
@@ -70,6 +70,28 @@ def event_fields(e: dict) -> dict:
     the top level; top-level wins, the nested payload fills in anything missing."""
     nested = e.get("payload")
     return {**nested, **e} if isinstance(nested, dict) else e
+
+
+class PresencePlayer(BaseModel):
+    gi: int = Field(ge=0, le=255)
+    name: str = Field(max_length=64)
+
+
+class PresenceIn(BaseModel):
+    session_id: uuid.UUID
+    observed_at: AwareDatetime
+    online: bool
+    since: AwareDatetime | None = None
+    version: str | None = Field(None, max_length=64)
+    players: list[PresencePlayer] = Field(default_factory=list, max_length=256)
+
+    @model_validator(mode="after")
+    def valid_snapshot(self):
+        if self.since and self.since > self.observed_at:
+            raise ValueError("since must not follow observed_at")
+        if len({p.gi for p in self.players}) != len(self.players):
+            raise ValueError("duplicate player index")
+        return self
 
 
 class DeployResult(BaseModel):
@@ -204,37 +226,50 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                         "previews": presigned(keys), "portrait": ST().presign(portrait) if portrait else None})
         return {"characters": out}
 
+    @app.post("/presence")
+    def post_presence(body: PresenceIn, p: Annotated[Principal, Depends(scoped(SCOPE_BRIDGE))]):
+        if not p.is_m2m:
+            raise AuthError(403, "machine token required")
+        with DB().tx() as c:
+            # A heartbeat is a fresh snapshot, never durable/replayable. Limit network delay
+            # and clock skew; duplicates and reordered requests cannot extend its lifetime.
+            fresh = c.execute("SELECT %s BETWEEN clock_timestamp() - interval '30 seconds' "
+                              "AND clock_timestamp() + interval '5 seconds' AS fresh",
+                              (body.observed_at,)).fetchone()["fresh"]
+            if not fresh:
+                raise HTTPException(422, "heartbeat timestamp is not fresh; check bridge clock")
+            row = c.execute(
+                """INSERT INTO server_presence (bridge_sub, session_id, observed_at, online, since, version, players)
+                   VALUES (%s, %s, %s, %s, %s, %s, %s)
+                   ON CONFLICT (bridge_sub) DO UPDATE SET session_id = EXCLUDED.session_id,
+                     observed_at = EXCLUDED.observed_at, received_at = clock_timestamp(),
+                     online = EXCLUDED.online, since = EXCLUDED.since,
+                     version = EXCLUDED.version, players = EXCLUDED.players
+                   WHERE server_presence.observed_at < EXCLUDED.observed_at
+                   RETURNING bridge_sub""",
+                (p.sub, body.session_id, body.observed_at, body.online, body.since, body.version,
+                 Jsonb([player.model_dump() for player in body.players] if body.online else []))).fetchone()
+        return {"accepted": row is not None}
+
     @app.get("/status")
     def status():
         with DB().tx() as c:
-            hello = c.execute("SELECT id, at, payload FROM events WHERE t = 'hello' ORDER BY id DESC LIMIT 1").fetchone()
+            presence = c.execute(
+                """SELECT *, online AND observed_at > clock_timestamp() - make_interval(secs => %s)
+                          AS fresh FROM server_presence ORDER BY observed_at DESC LIMIT 1""",
+                (s.status_stale_secs if s.status_stale_secs > 0 else 90,)).fetchone()
             last = c.execute("SELECT max(at) AS at FROM events").fetchone()["at"]
             slots = c.execute(
                 """SELECT sl.n, sl.pinned, ch.name, ch.deployed_at IS NOT NULL AS deployed
                      FROM slots sl LEFT JOIN characters ch ON ch.id = sl.character_id ORDER BY sl.n""").fetchall()
             queue = c.execute(f"SELECT count(*) AS n FROM jobs WHERE state IN {IN_PROGRESS}").fetchone()["n"]
-            if not hello:
-                return {"online": False, "players": [], "player_count": 0, "version": None,
-                        "since": None, "last_event_at": last, "slots": slots, "jobs_in_progress": queue}
-            down = c.execute("SELECT 1 FROM events WHERE t IN ('exit','bye') AND id > %s LIMIT 1",
-                             (hello["id"],)).fetchone()
-            pres = c.execute(
-                """SELECT DISTINCT ON (COALESCE(payload->>'gi', payload->'payload'->>'gi')) t, payload FROM events
-                    WHERE t IN ('join','leave') AND id > %s
-                    ORDER BY COALESCE(payload->>'gi', payload->'payload'->>'gi'), id DESC""",
-                (hello["id"],)).fetchall()
-            if s.status_stale_secs > 0:
-                stale = c.execute("SELECT max(at) < now() - make_interval(secs => %s) AS stale FROM events",
-                                  (s.status_stale_secs,)).fetchone()["stale"]
-            else:
-                stale = False
-        online = not down and not stale
-        players = [{"gi": f.get("gi"), "name": f.get("name")}
-                   for p in pres if p["t"] == "join" for f in [event_fields(p["payload"])]] if online else []
-        hp = event_fields(hello["payload"])
+        online = bool(presence and presence["fresh"])
+        players = presence["players"] if online else []
         return {"online": online, "players": players, "player_count": len(players),
-                "version": hp.get("version") or hp.get("v") or hp.get("mod_version"),
-                "since": hello["at"], "last_event_at": last, "slots": slots, "jobs_in_progress": queue,
+                "version": presence["version"] if presence else None,
+                "since": presence["since"] if presence else None,
+                "last_heartbeat_at": presence["observed_at"] if presence else None,
+                "last_event_at": last, "slots": slots, "jobs_in_progress": queue,
                 "address": s.play_address}
 
     # ── leaderboards (§10.2, public) ──────────────────────────────────────────────────────────

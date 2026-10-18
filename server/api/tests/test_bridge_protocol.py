@@ -52,3 +52,38 @@ def test_buffered_runs_keep_accounts_after_reconnect_and_restart(client, auth, b
     replay.close()
     rows = conn.execute('SELECT subs, ranked FROM runs ORDER BY id').fetchall()
     assert rows == [{'subs': ['auth0|alice'], 'ranked': True}, {'subs': ['auth0|bob'], 'ranked': True}]
+
+
+def test_live_presence_survives_historical_replay(client, bridge, conn, tmp_path):
+    from sglbridge.presence import PresenceLoop
+    class Tokens:
+        def get(self):
+            return bridge['Authorization'].removeprefix('Bearer ')
+        def invalidate(self):
+            pass
+    class Http:
+        def request(self, method, url, *, json_body=None, headers=None, **_):
+            result = client.request(method, url, json=json_body, headers=headers)
+            return HttpResponse(result.status_code, result.content)
+    api = ApiClient('http://testserver', Tokens(), Http())
+    inbox = Inbox(tmp_path / 'inbox.modfs')
+    login = LoginService(None, None, api, inbox)
+    queue = DurableRetryQueue(lambda e: api.post_event(e['t'], e['payload'], e['at']),
+                              tmp_path / 'events.sqlite3')
+    game = Bridge(inbox, queue, login)
+    loop = PresenceLoop(api.post_presence, lambda: game.presence(True))
+    try:
+        game.on_event({'t': 'hello', 'version': 'test'})
+        game.on_event({'t': 'join', 'gi': 1, 'name': 'Old'})
+        game.on_game_exit(0)
+        game.on_event({'t': 'hello', 'version': 'new'})
+        game.on_event({'t': 'join', 'gi': 2, 'name': 'Current'})
+        loop.tick()
+        assert client.get('/status').json()['players'] == [{'gi': 2, 'name': 'Current'}]
+        assert conn.execute('SELECT count(*) AS n FROM events').fetchone()['n'] == 0
+        queue.drain_once()
+        assert client.get('/status').json()['players'] == [{'gi': 2, 'name': 'Current'}]
+        loop.tick(offline=True)
+        assert not client.get('/status').json()['online']
+    finally:
+        queue.close()

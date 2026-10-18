@@ -31,6 +31,10 @@
 --     UPDATE jobs SET state='spec', step='spec', started=now(), finished=NULL, worker=<host>,
 --            log='', error=NULL, attempts=attempts+1 WHERE id=<job_id>;
 --     UPDATE characters SET state='spec', step='spec' WHERE id=<character_id>;
+--   Each claim also sets a new lease_token UUID and a lease_expires_at (120 seconds).
+--   Renew every 30 seconds on a separate connection. All progress/terminal writes must
+--   check matching character/token, active state and unexpired lease AFTER taking row locks.
+--   Pollers fail expired claims from all hosts; they never requeue a job or reuse its keys.
 --   Photos: download exactly the keys in jobs.photos (photos/<job_id>/<i>.jpg).
 --   Each step: lock character FOR UPDATE, then UPDATE jobs and characters together.
 --   Ready/failed: take pg_advisory_xact_lock(hashtext('sgl_slots')), then lock character,
@@ -370,3 +374,21 @@ BEGIN
             ('queued','spec','face','build','export','validate','preview','store','ready')) NOT VALID;
     END IF;
 END $$;
+
+-- Lease tokens fence every worker write; expired jobs fail rather than reuse photo/build keys.
+ALTER TABLE jobs ADD COLUMN IF NOT EXISTS lease_token uuid;
+ALTER TABLE jobs ADD COLUMN IF NOT EXISTS lease_expires_at timestamptz;
+CREATE INDEX IF NOT EXISTS jobs_lease_idx ON jobs (lease_expires_at)
+    WHERE state NOT IN ('queued', 'ready', 'failed');
+
+-- Ephemeral presence is separate from the durable event history.
+CREATE TABLE IF NOT EXISTS server_presence (
+    bridge_sub text PRIMARY KEY,
+    session_id uuid NOT NULL,
+    observed_at timestamptz NOT NULL,
+    received_at timestamptz NOT NULL DEFAULT now(),
+    online boolean NOT NULL,
+    since timestamptz,
+    version text,
+    players jsonb NOT NULL DEFAULT '[]'
+);

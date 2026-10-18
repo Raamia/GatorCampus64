@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from sglbridge import config as config_mod  # noqa: E402
 from sglbridge.api import ApiClient, RetryQueue  # noqa: E402
+from sglbridge.presence import PresenceLoop  # noqa: E402
 from sglbridge.outbox import DurableRetryQueue  # noqa: E402
 from sglbridge.auth import Auth0Config, DeviceFlowClient, IdTokenValidator, M2MTokenProvider  # noqa: E402
 from sglbridge.deploy import DeployLoop  # noqa: E402
@@ -56,7 +57,18 @@ class Bridge:
         self.session_id = str(uuid.uuid4())
         self.connections: dict[int, str] = {}
         self.sequence = 0
+        self.ready = False
+        self.version = None
+        self.since = None
         self._lock = threading.Lock()
+
+    def presence(self, running: bool) -> dict:
+        with self._lock:
+            online = running and self.ready
+            return {"session_id": self.session_id, "observed_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+                    "online": online, "since": self.since, "version": self.version,
+                    "players": [{"gi": gi, "name": name[:64]} for gi, name in sorted(self.players.items())]
+                               if online else []}
 
     def players_online(self) -> int:
         with self._lock:
@@ -64,10 +76,13 @@ class Bridge:
 
     def on_game_start(self) -> None:
         with self._lock:
+            self.ready = False
             self.players.clear()
             self.connections.clear()
             self.session_id = str(uuid.uuid4())
             self.sequence = 0
+            self.version = None
+            self.since = dt.datetime.now(dt.timezone.utc).isoformat()
         self.login.reset()
         self.inbox.reset()
         if self.leaderboards is not None:
@@ -76,8 +91,9 @@ class Bridge:
             self.npc.reset()
 
     def on_game_exit(self, rc: int) -> None:
-        """The game process ended: tell the API (/status) with an `exit` event."""
+        """The game process ended: clear presence and record an `exit` event."""
         with self._lock:
+            self.ready = False
             self.players.clear()
             self.connections.clear()
         self.login.reset()
@@ -118,7 +134,10 @@ class Bridge:
         log.info("event %s %s", t, logged)
         if t == "hello":
             self.on_game_start()
-        elif t == "join" and isinstance(gi, int):
+            with self._lock:
+                self.ready = True
+                self.version = str(ev.get("version") or ev.get("v") or ev.get("mod_version") or "")[:64] or None
+        elif t == "join" and isinstance(gi, int) and 0 <= gi <= 255:
             with self._lock:
                 self.players[gi] = name
                 self.connections[gi] = str(uuid.uuid4())
@@ -211,6 +230,11 @@ def main() -> int:
     cmd = line_buffered(cfg.game_cmd) if cfg.line_buffer else cfg.game_cmd
     game = GameSupervisor(cmd, cfg.game_cwd, bridge.on_line, bridge.on_game_start, on_exit=bridge.on_game_exit)
 
+    if api is not None:
+        presence = PresenceLoop(api.post_presence, lambda: bridge.presence(game.running))
+        presence_thread = threading.Thread(target=presence.run, args=(stop,), daemon=True, name="presence")
+        threads.append(presence_thread)
+
     if api is not None and cfg.deploys:
         deploy = DeployLoop(api, inbox, game, cfg.mod_dir, Path(cfg.state_dir) / "roster.json", bridge.players_online,
                             placeholder_mod=cfg.placeholder_mod, rename_tool=cfg.actor_rename,
@@ -229,6 +253,9 @@ def main() -> int:
         t.start()
     game.run(stop)
     game.stop()
+    stop.set()
+    if api is not None:
+        presence_thread.join(timeout=35)  # final offline snapshot; hard crashes expire at the API
     if queue is not None:
         queue.next_attempt = 0.0
         queue.drain_once()                       # best effort: deliver `exit` before going down

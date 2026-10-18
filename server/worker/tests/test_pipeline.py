@@ -200,3 +200,25 @@ def test_run_streaming_lines_and_rc():
     rc = pipeline.run_streaming([sys.executable, "-c", "import sys; print('a'); print('b', file=sys.stderr); "
                                                       "sys.exit(3)"], 10, out.append)
     assert rc == 3 and sorted(out) == ["a", "b"]
+
+
+def test_lease_loss_kills_silent_child(monkeypatch):
+    children = []
+    popen = pipeline.subprocess.Popen
+    def launch(*args, **kwargs):
+        child = popen(*args, **kwargs)
+        children.append(child)
+        return child
+    monkeypatch.setattr(pipeline.subprocess, 'Popen', launch)
+    checks = 0
+    def lost():
+        nonlocal checks
+        checks += 1
+        if checks >= 2:
+            raise pipeline.JobCancelled('lease lost')
+    started = time.monotonic()
+    with pytest.raises(pipeline.JobCancelled):
+        pipeline.run_streaming([sys.executable, '-c', 'import time; time.sleep(30)'],
+                               60, lambda line: None, check=lost)
+    assert time.monotonic() - started < 5
+    assert len(children) == 1 and children[0].poll() is not None

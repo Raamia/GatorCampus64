@@ -16,6 +16,7 @@ import os
 import signal
 import socket
 import sys
+import threading
 import time
 
 import db
@@ -32,39 +33,76 @@ def _on_signal(signum, _frame):
     print(f"worker: signal {signum}, stopping after the current job", flush=True)
 
 
+class LeaseWatch:
+    """Renew on a dedicated connection, including during quiet model/Blender calls.
+
+    Any renewal error cancels this attempt. Database fencing is still authoritative if the
+    process stalls or cannot reach Postgres. Connections have bounded connect/statement waits.
+    """
+    def __init__(self, conn, job):
+        self.dsn, self.password, self.job = conn.info.dsn, conn.info.password, job
+        self.stop = threading.Event()
+        self.lost = threading.Event()
+        self.thread = threading.Thread(target=self.run, daemon=True, name="worker-lease")
+
+    def check(self):
+        if self.lost.is_set():
+            raise pipeline.JobCancelled("worker lease lost")
+
+    def run(self):
+        try:
+            with db.psycopg.connect(self.dsn, password=self.password, autocommit=True, row_factory=db.dict_row,
+                                   connect_timeout=5, options="-c statement_timeout=10000 -c lock_timeout=5000") as conn:
+                while not self.stop.wait(db.RENEW_SECONDS):
+                    db.renew_lease(conn, self.job["id"], self.job["character_id"], self.job["lease_token"])
+        except Exception:
+            self.lost.set()
+
+
 def handle(conn, job, store, backend, cfg, log=print):
+    watch = LeaseWatch(conn, job)
+    watch.thread.start()
+    try:
+        return _handle(conn, job, store, backend, cfg, log, watch.check)
+    finally:
+        watch.stop.set()
+        watch.thread.join(timeout=16)
+
+
+def _handle(conn, job, store, backend, cfg, log, check):
     """Run one claimed job and write its result. Returns True if it ended ready, False if it
     failed or was cancelled (character deleted mid-job: photos and builds/<job>/ are deleted)."""
     job_id, char_id = job["id"], job["character_id"]
     log(f"worker: job {job_id} ({job['name']!r})")
 
     def progress(state, step, text):
+        check()
         try:
-            db.update_job(conn, job_id, char_id, state=state, step=step, log=text)
+            db.update_job(conn, job_id, char_id, state=state, step=step, log=text, lease_token=job["lease_token"])
         except db.JobGone as e:
             raise pipeline.JobCancelled(str(job_id)) from e
-        except Exception as e:  # noqa: BLE001 - progress is best effort; the result write is not
-            log(f"worker: progress update failed: {e}")
+        except Exception as e:  # noqa: BLE001
+            raise pipeline.JobCancelled("cannot verify worker lease") from e
 
     def cancelled():
-        log(f"worker: job {job_id} cancelled: its character was deleted")
+        log(f"worker: job {job_id} cancelled: character deleted or worker lease lost")
         return False
 
     try:
-        result = pipeline.run_job(job_id, job["name"], store, backend, cfg, progress, photos=job.get("photos"))
+        result = pipeline.run_job(job_id, job["name"], store, backend, cfg, progress, photos=job.get("photos"), check=check)
     except pipeline.JobCancelled:
         return cancelled()
     except pipeline.StepFailed as e:
         try:
             db.finish_job(conn, job_id, char_id, False, getattr(e, "log", str(e)), step=e.step,
-                          error=str(e).splitlines()[0] if str(e) else None)
+                          error=str(e).splitlines()[0] if str(e) else None, lease_token=job["lease_token"])
         except db.JobGone:
             return cancelled()
         log(f"worker: job {job_id} FAILED at {e.step}: {e}")
         return False
     try:
         slot = db.finish_job(conn, job_id, char_id, True, result["log"], spec=result["spec"],
-                             artifacts=result["artifacts"])
+                             artifacts=result["artifacts"], lease_token=job["lease_token"])
     except db.JobGone:
         pipeline.discard_build(store, job_id, log)
         return cancelled()
@@ -73,19 +111,15 @@ def handle(conn, job, store, backend, cfg, log=print):
     return True
 
 
-def recover(conn, worker, store, log=print):
-    """Fail the jobs a previous run of this worker left half-done (and delete their photos)."""
-    for j in db.orphaned_jobs(conn, worker):
-        try:
-            store.delete_prefix(f"photos/{j['id']}/")
-        except Exception as e:  # noqa: BLE001
-            log(f"worker: photo cleanup for {j['id']} failed: {e}")
-        msg = f"worker {worker} restarted during step {j['step']}; please retry"
-        try:
-            db.finish_job(conn, j["id"], j["character_id"], False, msg, step=j["step"], error=msg)
-        except db.JobGone:
-            continue
-        log(f"worker: marked orphaned job {j['id']} failed")
+def recover(conn, store, log=print):
+    """Sweep all hosts on every poll, then clean objects only for committed expirations."""
+    for job in db.expire_jobs(conn):
+        for prefix in (f"photos/{job['id']}/", f"builds/{job['id']}/"):
+            try:
+                store.delete_prefix(prefix)
+            except Exception as e:  # noqa: BLE001
+                log(f"worker: cleanup for {prefix} failed: {e}")
+        log(f"worker: marked expired job {job['id']} failed")
 
 
 def main(argv=None):
@@ -107,7 +141,7 @@ def main(argv=None):
         try:
             if conn is None or conn.closed:
                 conn = db.connect(os.environ["DATABASE_URL"])
-                recover(conn, worker, store)
+            recover(conn, store)
             job = db.claim_job(conn, worker)
             if job is None:
                 if args.once:

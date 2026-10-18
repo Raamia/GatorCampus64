@@ -251,7 +251,7 @@ def test_events_and_status(client, bridge, conn):
            {"t": "leave", "gi": 1, "name": "Ali"}, {"t": "char", "gi": 2, "friend": "guest_3"}]
     assert client.post("/events", json=evs, headers=bridge).json() == {"stored": 4}
     s = client.get("/status").json()
-    assert s["online"] is True and s["version"] == "1.2.0" and s["players"] == [{"gi": 2, "name": "Bo"}]
+    assert s["online"] is False and s["players"] == []  # history never drives liveness
     assert conn.execute("SELECT last_played FROM slots WHERE n=3").fetchone()["last_played"] is not None
     # a restart: new hello resets presence
     client.post("/events", json={"t": "hello", "version": "1.2.1"}, headers=bridge)
@@ -273,18 +273,13 @@ def test_events_in_the_bridges_shape(client, bridge, conn):
     client.post("/events", json=[ev("join", gi=4, name="Cy"), ev("char", gi=4, friend="guest_2"),
                                  {"t": "join", "payload": {"t": "join", "gi": 5, "name": "Di"}}], headers=bridge)
     s = client.get("/status").json()
-    assert s["online"] is True and s["version"] == "1.3.0"
-    assert sorted(p["name"] for p in s["players"]) == ["Cy", "Di"]
+    assert s["online"] is False and s["players"] == []
     assert conn.execute("SELECT last_played FROM slots WHERE n=2").fetchone()["last_played"] is not None
     client.post("/events", json=ev("exit"), headers=bridge)
     assert client.get("/status").json()["online"] is False
 
 
-def test_status_stale(make_client, bridge, conn):
-    client = make_client(status_stale_secs=60)
+
+def test_events_cannot_revive_status(client, bridge):
     client.post("/events", json={"t": "hello", "version": "1"}, headers=bridge)
-    assert client.get("/status").json()["online"] is True
-    conn.execute("UPDATE events SET at = now() - interval '5 minutes'")
     assert client.get("/status").json()["online"] is False
-
-
