@@ -1,90 +1,73 @@
-/**
- * Leaderboards (docs/web_platform_spec.md §10.4).
- *
- * VERIFIED board: `verified_runs`, written only by the hosted game server's API (server-timed runs,
- * every player logged in with Gator Pass). Public: anyone can read it.
- * OFFLINE runs: `solo_runs`, reported by a player's own machine (submitGameRun). Shown below the
- * verified board, labelled, for signed-in players only, and never ranked together with it.
- */
-import { useMemo, useState } from 'react'
-import { useAuthProfileReady, useQuery } from 'deepspace'
-import { BadgeCheck, CloudOff, Trophy, Users } from 'lucide-react'
+/** Server-ranked, public game records. Legacy offline Field Board data stays stored. */
+import { useEffect, useMemo, useState } from 'react'
+import { BadgeCheck, Trophy, Users } from 'lucide-react'
 import catalog from '../../data/mission-catalog.json'
-import { bestVerifiedRows, formatFrames, type VerifiedRun } from '../../lib/leaderboard'
+import { formatFrames } from '../../lib/leaderboard'
+import { fetchGameBoards, type MissionBoard } from '../../lib/game-board'
 
-type OfflineRun = { playerTag: string; missionId: string; elapsedFrames: number; retries: number; assisted: boolean | number }
 type MissionTab = { id: string; title: string; stage?: string; act?: number }
 
-const TOP = 10
-
 export default function LeaderboardPage() {
-  const { isSignedIn } = useAuthProfileReady({ requireUser: true })
-  const { records, status } = useQuery<VerifiedRun>('verified_runs', { orderBy: 'frames', orderDir: 'asc', limit: 1000 })
+  const [boards, setBoards] = useState<MissionBoard[]>([])
+  const [loaded, setLoaded] = useState(false)
+  const [error, setError] = useState('')
+  useEffect(() => {
+    let active = true
+    let timer: ReturnType<typeof setTimeout>
+    let controller: AbortController
+    async function refresh() {
+      controller = new AbortController()
+      const deadline = setTimeout(() => controller.abort(), 10_000)
+      try {
+        const result = await fetchGameBoards(controller.signal)
+        if (active) { setBoards(result); setError(''); setLoaded(true) }
+      } catch (e) { if (active) setError((e as Error).name === 'AbortError' ? 'The leaderboard timed out. Retrying automatically.' : (e as Error).message) }
+      finally { clearTimeout(deadline); if (active) timer = setTimeout(() => void refresh(), 30_000) }
+    }
+    void refresh()
+    return () => { active = false; clearTimeout(timer); controller?.abort() }
+  }, [])
 
   // Catalog missions first, then any other mission the server has verified runs for.
   const missions = useMemo<MissionTab[]>(() => {
     const tabs: MissionTab[] = catalog.missions.map((m) => ({ id: m.id, title: m.title, stage: m.stage, act: m.act }))
     const known = new Set(tabs.map((t) => t.id))
-    for (const r of records) {
-      if (!known.has(r.data.missionId)) {
-        known.add(r.data.missionId)
-        tabs.push({ id: r.data.missionId, title: r.data.missionTitle || r.data.missionId })
+    for (const board of boards) {
+      if (!known.has(board.mission) && board.rows.length > 0) {
+        known.add(board.mission)
+        tabs.push({ id: board.mission, title: board.title })
       }
     }
     return tabs
-  }, [records])
+  }, [boards])
   const [selected, setSelected] = useState<string>(catalog.missions[0]?.id ?? '')
   const mission = missions.find((m) => m.id === selected) ?? missions[0]
-  const rows = useMemo(
-    () => bestVerifiedRows(records.filter((r) => r.data.missionId === mission?.id), TOP),
-    [records, mission?.id],
-  )
-  const counts = useMemo(() => {
-    const out = new Map<string, number>()
-    for (const r of records) out.set(r.data.missionId, (out.get(r.data.missionId) ?? 0) + 1)
-    return out
-  }, [records])
+  const rows = boards.find(b => b.mission === mission?.id)?.rows ?? []
+  const counts = new Map(boards.map(b => [b.mission, b.rows.length]))
 
   return <div className="board-page leaderboard-page">
-    <header className="board-topline leaderboard-topline"><div className="leaderboard-title-row"><span className="leaderboard-emblem"><Trophy size={22}/></span><div><div className="eyebrow"><Trophy size={14}/> CAMPUS RECORD BOARD · GATOR PASS</div><h1>Leaderboards</h1><p>Compare server-timed runs across campus missions.</p></div></div><span className="leaderboard-live"><i/> LIVE BOARD</span></header>
+    <header className="board-topline leaderboard-topline"><div className="leaderboard-title-row"><span className="leaderboard-emblem"><Trophy size={22}/></span><div><div className="eyebrow"><Trophy size={14}/> CAMPUS RECORD BOARD · GATOR PASS</div><h1>Leaderboards</h1><p>Compare server-timed runs across campus missions.</p></div></div><span className="leaderboard-live"><i/> UPDATES EVERY 30s</span></header>
     <div className="lb-layout">
       <nav className="lb-missions" aria-label="Missions">
         {missions.map((m) => <button key={m.id} className={`lb-mission ${m.id === mission?.id ? 'is-selected' : ''}`} onClick={() => setSelected(m.id)} aria-pressed={m.id === mission?.id}>
-          <span className="lb-mission-world">{m.stage ?? 'Campus'} <i>·</i> {m.act ? `ACT ${String(m.act).padStart(2, '0')}` : 'NEW MISSION'}</span><strong>{m.title}</strong><small>{counts.get(m.id) ?? 0} VERIFIED RUNS</small>
+          <span className="lb-mission-world">{m.stage ?? 'Campus'} <i>·</i> {m.act ? `ACT ${String(m.act).padStart(2, '0')}` : 'NEW MISSION'}</span><strong>{m.title}</strong><small>{counts.get(m.id) ?? 0} RANKED TEAMS</small>
         </button>)}
       </nav>
       <main>
         <section className="lb-card" aria-labelledby="verified-title">
           <div className="section-heading"><div><span className="section-index"><BadgeCheck size={13}/> VERIFIED</span><h2 id="verified-title">{mission?.title}</h2></div><span className="tiny-caption">BEST RUN PER TEAM</span></div>
           <p className="lb-note">{mission?.id === 'swamp_chorus' ? 'Co-op runs are timed by the hosted server. Solo rhythm mode awards a grade rather than a verified time.' : 'Timed by the hosted game server; every player was logged in with Gator Pass.'}</p>
-          {status === 'loading' ? <div className="lb-empty">Loading the board…</div>
-            : rows.length === 0 ? <div className="lb-empty">No verified runs yet. Play this mission on the hosted server, log in with <code>/login</code>, and finish a round.</div>
-            : <ol className="lb-rows">{rows.map((row, i) => <li key={`${row.names.join('|')}-${row.elapsedFrames}`} className="lb-row">
-                <span className="lb-rank">{i + 1}</span>
-                <span className="lb-names">{row.names.join(' & ')}{row.coop && <em><Users size={12}/> co-op</em>}</span>
-                <span className="lb-time">{formatFrames(row.elapsedFrames)}</span>
+          {error && <p role="status" className="lb-note">{error}{loaded ? ' Showing the last loaded results.' : ''}</p>}
+          {!loaded && !error ? <div className="lb-empty">Loading the board…</div>
+            : !loaded ? <div className="lb-empty">Results could not be loaded.</div> : rows.length === 0 ? <div className="lb-empty">No verified runs yet. Play this mission on the hosted server, log in with <code>/login</code>, and finish a round.</div>
+            : <ol className="lb-rows">{rows.map((row) => <li key={`${row.names.join('|')}-${row.frames}`} className="lb-row">
+                <span className="lb-rank">{row.rank}</span>
+                <span className="lb-names">{row.names.join(' & ')}{row.players > 1 && <em><Users size={12}/> co-op</em>}</span>
+                <span className="lb-time">{formatFrames(row.frames)}</span>
                 <span className="lb-retries">{row.retries} {row.retries === 1 ? 'retry' : 'retries'}</span>
               </li>)}</ol>}
         </section>
-        {mission && (isSignedIn ? <OfflineRuns missionId={mission.id}/> : <section className="lb-card lb-offline"><div className="section-heading compact"><div><span className="section-index"><CloudOff size={13}/> OFFLINE · UNVERIFIED</span><h2>Offline game runs</h2></div></div><p className="lb-note">Sign in to see runs synced from players’ own games. Times are recorded on the local game client and listed separately from the hosted server board.</p></section>)}
       </main>
     </div>
   </div>
-}
-
-function OfflineRuns({ missionId }: { missionId: string }) {
-  const { records, status } = useQuery<OfflineRun>('solo_runs', { where: { missionId }, orderBy: 'elapsedFrames', orderDir: 'asc', limit: 50 })
-  const rows = records.filter((r) => r.data.assisted === false || r.data.assisted === 0).slice(0, TOP)
-  return <section className="lb-card lb-offline" aria-labelledby="offline-title">
-    <div className="section-heading compact"><div><span className="section-index"><CloudOff size={13}/> OFFLINE · UNVERIFIED</span><h2 id="offline-title">Offline game runs</h2></div></div>
-    <p className="lb-note">Synced from players’ own games. The time is measured on their machine, so these are listed separately and never ranked with the verified board.</p>
-    {status === 'loading' ? <div className="lb-empty">Loading…</div>
-      : rows.length === 0 ? <div className="lb-empty">No offline runs for this mission.</div>
-      : <ol className="lb-rows">{rows.map((r) => <li key={r.recordId} className="lb-row">
-          <span className="lb-rank">·</span>
-          <span className="lb-names">{r.data.playerTag}<em>offline</em></span>
-          <span className="lb-time">{formatFrames(r.data.elapsedFrames)}</span>
-          <span className="lb-retries">{r.data.retries} {r.data.retries === 1 ? 'retry' : 'retries'}</span>
-        </li>)}</ol>}
-  </section>
 }

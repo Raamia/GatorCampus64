@@ -1,7 +1,7 @@
 import type { Context, Hono } from 'hono'
 import catalog from '../data/mission-catalog.json'
 import type { AppContext } from '../../worker.js'
-import { resolveAuth } from './http-routes.js'
+import { resolveGatorAuth } from './gator-auth.js'
 
 type Mission = (typeof catalog.missions)[number]
 
@@ -46,7 +46,7 @@ async function readJson(c: Context<AppContext>): Promise<Record<string, unknown>
 }
 
 async function authorize(c: Context<AppContext>): Promise<Response | null> {
-  const auth = await resolveAuth(c.req.raw, c.env)
+  const auth = await resolveGatorAuth(c.req.raw)
   if (!auth || auth.userId.startsWith('anon-')) return c.json({ error: 'Sign in required.' }, 401)
   if (!serviceReady(c.env)) return c.json({ error: 'Study service is unavailable.' }, 503)
   // Missing bindings or storage failures fail closed; never fall back to an

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { api, draftApi, draftToken, claimDraft, finishLogin, login, logout } from '../../lib/gator-api'
-import GatorAccount from '../../components/GatorAccount'
 import CharacterViewer from '../../components/CharacterViewer'
 import { PHOTO_ACCEPT, photoSelectionError } from '../../lib/gatorize-photos'
 import { pollJob } from '../../lib/job-polling'
@@ -166,8 +165,7 @@ export default function GatorizePage() {
     {error && <p role="alert" className="mb-5 rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm">{error}</p>}
     {!signedIn && <section className="gator-card mb-5"><h2 className="text-xl font-semibold">Build first. Sign in to play.</h2><p className="mt-2 text-muted-foreground">No login needed to upload photos or preview your gator. Drafts stay private to this browser for 24 hours. Sign in with Gator Pass to add a finished model to the game.</p><button className="mt-3 text-sm underline" onClick={() => login().catch((e: Error) => setError(e.message))}>{ready ? 'Already have a gator? Sign in' : 'Connect Gator Pass'}</button></section>}
     {signedIn && <>
-      <div className="mb-4 flex justify-between text-sm"><span>Gator Pass connected</span><button className="underline" onClick={() => logout().catch((e: Error) => setError(e.message))}>Sign out of Gator Pass</button></div>
-      <GatorAccount onDeleted={() => { setJob(null); setCharacters([]); setFiles([]); setError(''); window.localStorage.removeItem(savedJob); window.localStorage.removeItem(pendingClaim); if (fileInput.current) fileInput.current.value = '' }} />
+      <div className="mb-4 flex justify-between text-sm"><Link to="/settings" className="underline">Account settings</Link><button className="underline" onClick={() => logout().catch((e: Error) => setError(e.message))}>Sign out of Gator Pass</button></div>
     </>}
       {job ? <div className="space-y-5" aria-live="polite">
         <section className="gator-card gatorize-status">

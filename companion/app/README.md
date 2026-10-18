@@ -14,11 +14,11 @@ npx deepspace dev start
 
 The first DeepSpace CLI sign-in opens a browser and requires the account owner to accept DeepSpace's Terms of Service. No credentials belong in this repository. The scaffold uses the DeepSpace account's app namespace when the first app command registers the app. Keep the GitHub repository as the source of truth; do not run `npx deepspace push`.
 
-The local worker starts at `http://localhost:8780`. The existing browser UI still contains an older squad-room prototype; it is separate from the native single-player game integration. Build, sign in to, and use the macOS bridge by following [`../native-bridge/README.md`](../native-bridge/README.md). The bridge can refresh leaderboard snapshots into the native game's local save; the SGL64 mod displays them from its Mods menu.
+The local worker starts at `http://localhost:8780`. The website uses Gator Pass for account access. The legacy native bridge integration remains separate. Build, sign in to, and use the macOS bridge by following [`../native-bridge/README.md`](../native-bridge/README.md). The bridge can refresh leaderboard snapshots into the native game's local save; the SGL64 mod displays them from its Mods menu.
 
 ## Verified leaderboards (hosted server)
 
-The board at `/leaderboard` ranks only **verified** runs (`docs/web_platform_spec.md` §10.4): runs timed by the hosted game server and pushed by its API (`server/api`) when every player was logged in with Gator Pass. The API calls `POST /api/actions/ingestVerifiedRun` (`src/server/ingest-routes.ts`), signed with a shared secret; it is not a user action and needs no DeepSpace account. Runs synced with `submitGameRun` (the macOS bridge) are self-reported: they stay in `solo_runs`, are listed under the verified board as "Offline · unverified" and are never ranked with it. `getGameLeaderboard` returns the verified board in `rows` and offline runs in `offlineRows`.
+The board at `/leaderboard` reads public, server-ranked results directly from the game API's `GET /leaderboards` every 30 seconds. It no longer needs a Field Board session or RecordRoom connection. Existing signed ingestion into RecordRooms and the legacy native bridge APIs remain available; stored `solo_runs` are preserved but the retired offline board is no longer shown on the website.
 
 Turning it on (one shared random secret, e.g. `openssl rand -hex 32`):
 
@@ -45,3 +45,34 @@ python3 ../../tools/check_mission_catalog.py
 ```
 
 The catalog checker compares the committed JSON catalog with the registered mission definitions in the game mod.
+
+
+## One website account: Gator Pass
+
+All website Sign in and Sign up buttons use Auth0, matching the in-game Gator
+Pass account. Signup passes `screen_hint=signup` to Universal Login. The existing
+allowed `/gatorize` OAuth callback remains unchanged; the SDK validates it once
+and returns visitors to their original local page (including `/settings`).
+Public pages and anonymous Gatorize drafts remain accessible without login.
+
+`/settings` now owns identity display, sign-out, revoking game logins, confirmed
+account deletion, recent reauthentication, and explicit registration after
+deletion. Gatorize links to Settings instead of embedding account management.
+Deletion still uses the API's existing authorization and recent-login checks.
+It deletes game data, not the Auth0 identity-provider account.
+
+Field Board login, manual linking, the offline-run panel, and the unused scaffold
+integration-debug page are retired from the website. Existing DeepSpace records,
+identity mappings, ingestion, and erasure routes remain intact for legacy data;
+accounts are never merged by email. Existing linked offline data remains subject
+to the existing erasure flow. Unlinked historical Field Board accounts are not
+silently attached to a Gator Pass account.
+
+Mission hints use the same Gator Pass bearer as the game API. The worker resolves
+its subject through the API's verified `/me` endpoint before admitting requests
+under the existing durable per-user/global budgets. Invalid credentials, deleted
+accounts, and verification outages fail closed; anonymous catalog hints still
+work. No user credential is forwarded to the upstream study service.
+
+This change requires a companion deployment only, after anonymous Gatorize PR #7.
+No Auth0 callback allowlist change or database migration is introduced here.
