@@ -849,6 +849,9 @@ def build_body(spec, mats):
     report["cap_logos"] = strip_cap_logos(mats)
     report["sleeve_cuffs"] = sleeve_cuffs(spec, mats)   # before scaling: CUFF_U is in Mario's hand size
     report["hands_scaled"] = scale_hands(spec)
+    if "appearance" in spec:
+        from sgl_likeness import fit_body
+        report["appearance_fit"] = fit_body(obj, arm, spec["appearance"])
     ctx = {"obj": obj, "arm": arm, "mats": mats, "spec": spec}
     acc = {}
     build = spec.get("build", {})

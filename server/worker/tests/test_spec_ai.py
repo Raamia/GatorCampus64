@@ -170,11 +170,54 @@ def test_generate_spec_with_static_backend():
     logs = []
     spec, info = spec_ai.generate_spec([photo], "sglguest", "Pat", backend, use_cv=False, log=logs.append)
     jsonschema.validate(spec, SCHEMA)
-    assert photo_colors.delta_e(spec["colors"]["skin"], "#C89678") < 5
+    # No detected face: a guessed crop must not override a valid model color.
+    assert spec["colors"]["skin"] == raw["colors"]["skin"]
+    assert any("has no detected face" in note for note in info["notes"])
     messages, schema = backend.calls[0]
     assert schema == schema_gen.vlm_schema()
     assert messages[1]["content"][1]["image_url"]["url"].startswith("data:image/jpeg;base64,")
-    assert "straight_fringe_medium" in messages[0]["content"]
+    assert "appearance.face" in messages[0]["content"]
+    assert "fringe: straight, heavier fringe" in messages[0]["content"]
+
+
+def test_heuristic_full_body_samples_do_not_replace_valid_skin_and_hair():
+    samples = {"_faces": ["heuristic"], "skin": "#C12C26", "hair": "#E2DBD1"}
+    spec, notes = spec_ai.repair(GOOD, "sglguest", "Evaluation", samples)
+    assert spec["colors"]["skin"] == GOOD["colors"]["skin"]
+    assert spec["colors"]["hair"] == GOOD["colors"]["hair"]
+    assert sum("has no detected face" in note for note in notes) == 2
+
+
+def test_detected_face_samples_still_correct_model_colors(monkeypatch):
+    samples = {"_faces": ["haar", "heuristic"], "skin": "#8A5A40", "hair": "#1A1410"}
+    monkeypatch.setattr(photo_colors, "sample_photos", lambda *a, **kw: samples)
+    raw = json.loads(json.dumps(GOOD))
+    raw["colors"].update(skin="#FFE0D0", hair="#E0C040")
+    spec, _ = spec_ai.generate_spec([synthetic_photo()], "sglguest", "Evaluation",
+                                   spec_ai.StaticBackend(raw), log=lambda _: None)
+    assert spec["colors"]["skin"] == samples["skin"]
+    assert spec["colors"]["hair"] == samples["hair"]
+
+
+def test_heuristic_samples_remain_missing_color_fallbacks():
+    spec, _ = spec_ai.repair(None, "sglguest", "Evaluation",
+                            {"_faces": ["heuristic"], "skin": "#A07050", "hair": "#202020"})
+    assert spec["colors"]["skin"] == "#A07050"
+    assert spec["colors"]["hair"] == "#202020"
+
+
+def test_generate_spec_missing_required_model_fails():
+    with pytest.raises(spec_ai.VLMError, match="required but not configured.*VLM_BASE_URL"):
+        spec_ai.generate_spec([synthetic_photo()], "sglguest", "Pat", backend=None,
+                              use_cv=False, require_model=True, log=lambda m: None)
+
+
+def test_generate_spec_missing_optional_model_falls_back():
+    spec, info = spec_ai.generate_spec([synthetic_photo()], "sglguest", "Pat", backend=None,
+                                      use_cv=False, log=lambda m: None)
+    jsonschema.validate(spec, SCHEMA)
+    assert info["model"] is None
+    assert spec["build"]["hair_style"] == schema_gen.default_hair_style()
 
 
 def test_generate_spec_model_failure_falls_back():
