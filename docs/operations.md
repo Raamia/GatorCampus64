@@ -31,3 +31,32 @@ For rollback, stop the affected service, restore the previous source and matchin
 ## Remaining acceptance work
 
 Public API TLS/routing; website upload/generation UI integration; Auth0 browser login; interactive in-game login; a consented photo generation through preview and guest deployment; verified run ingestion into DeepSpace. Teammates will perform interactive play tests. DeepSpace login and Auth0/Gator Pass are currently separate identity systems; account linking is not yet implemented.
+
+## Local release command
+
+Run `python3 server/deploy/release.py` from the operator checkout. The ignored root `.env` supplies `SGL_HOST_*`, `SGL_GPU_*`, and optional `SGL_SSH_JUMP_HOST`; it is parsed as data, never sourced. SSH uses batch mode. The SSH account must have permission to write production paths and control services (currently root).
+
+```bash
+# Read-only: inspect exactly which committed source files would be installed.
+python3 server/deploy/release.py plan host --ref origin/main
+python3 server/deploy/release.py plan gpu --ref origin/main
+# Read-only: recorded source hashes, then service/socket/API checks.
+python3 server/deploy/release.py status host
+python3 server/deploy/release.py verify host
+python3 server/deploy/release.py verify gpu
+# Mutates production; first reconcile origin/main, review plan, back up DB/config,
+# and arrange a quiet game/job window. First adoption requires the extra flag.
+python3 server/deploy/release.py deploy host --ref origin/main --adopt-current --allow-restart
+python3 server/deploy/release.py deploy gpu --ref origin/main --adopt-current --allow-restart
+# Later deployments omit --adopt-current. Recover one source release per host:
+python3 server/deploy/release.py rollback host --allow-restart
+python3 server/deploy/release.py rollback gpu --allow-restart
+```
+
+This is an **existing-installation updater**, not a provisioning or migration command. It does not install units, Caddy configuration, system packages, secrets, Auth0 settings, or schema changes. API/bridge Python environments must already exist; changed requirements stop deployment so the operator can snapshot and prepare matching dependencies separately. Worker activation rebuilds only the worker service in the existing `worker` Compose project; it leaves vLLM and persistent volumes running. A worker restart may wait up to its configured eleven-minute grace period for a job. GPU verification proves container liveness only; use the inference probe and a consented character job to establish readiness.
+
+Each release packages **only regular files in `git archive <commit>`**. Host mappings are API → `/opt/sgl-api`, bridge/worker/NPC/pristine mod source → `/opt/sgl`, installed mod → `/srv/sgl/mods/sgl64`; GPU source → `/opt/sgl64`. Installed `guests.lua`, guest actors/portraits, `.env`, virtualenvs, saves, ROMs, vendor checkouts, and untracked toolchains are preserved. Repository symlinks are skipped and symlink destinations are rejected. Service units are intentionally installed separately. No recursive delete is applied to application directories.
+
+Before the first overwrite, the updater stores every affected existing file and the previous release manifest under `/var/lib/sgl-releases/<timestamp>-<commit>/`. `/var/lib/sgl-releases/current.json` records the installed commit, timestamp, and per-file SHA-256. Subsequent deployments and rollback stop on source drift. A release that removes previously managed paths also stops: inspect and archive those paths explicitly, then reconcile the manifest; the updater never silently removes old source. Plan output is safe to share; it contains paths, commit, counts and archive size, not env values.
+
+Source files are updated in place and services then restarted; this is not an atomic blue/green release. A failed activation leaves the recovery manifest available and must be followed by inspection or `rollback`. Rollback restores overwritten files and removes only files created by that release. It does **not** restore Python dependencies, database state, credentials, service definitions, generated assets, or game saves. On first adoption rollback returns to the unmanaged baseline, so `status` will again say no managed release. Retain at least the preceding release backup until the next release passes acceptance; backup pruning is manual.

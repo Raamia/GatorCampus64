@@ -103,6 +103,17 @@ docker compose up -d --build                  # Vultr Serverless Inference, or n
 docker compose --profile vllm up -d --build   # + local Qwen2.5-VL-7B-Instruct-AWQ (VLM_BASE_URL=http://vllm:8000/v1)
 ```
 
+After the model finishes downloading, run the dependency-free readiness probe
+from the worker container (it makes no inference request):
+
+```bash
+docker compose exec worker python /opt/sgl64/server/worker/vlm_probe.py
+```
+
+It checks `/health` and `/v1/models`, and verifies that `VLM_MODEL` is
+advertised. A failed probe means the worker will use its configured fallback
+unless `VLM_REQUIRED=1`.
+
 The docker setup needs the NVIDIA container toolkit with the `graphics` capability, because
 Blender renders its previews through EGL. `docker-compose.yml` documents the VRAM budget: vLLM is
 capped at 60% of the 16 GB A16 (about 9.6 GB: 6.7 GB weights plus KV cache for 2×8k tokens),
