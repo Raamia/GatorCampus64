@@ -38,4 +38,5 @@ Development used **Claude Code's multi-agent workflows**; see the [build process
 
 [Game setup & controls](docs/development.md) · [API](server/api/README.md) · [GPU worker](server/worker/README.md) · [Architecture](docs/web_platform_spec.md)
 
-Built on [sm64coopdx](https://github.com/coop-deluxe/sm64coopdx), [Fast64](https://github.com/Fast-64/fast64), [Fast64-Gart](https://github.com/ManIsCat2/Fast64-Gart), and the [coopdx character template](https://github.com/coop-deluxe/character-template). Map data © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), ODbL. ROMs are not included in this repository.
+Built on [sm64coopdx](https://github.com/coop-deluxe/sm64coopdx), [Fast64](https://github.com/Fast-64/fast64), [Fast64-Gart](https://github.com/ManIsCat2/Fast64-Gart), and the [coopdx character template](https://github.com/coop-deluxe/character-template). Map data © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), ODbL.
+ROMs are not included in this repository.
