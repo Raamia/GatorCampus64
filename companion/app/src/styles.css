@@ -940,3 +940,19 @@ body { background-color: var(--color-background); color: var(--color-foreground)
   .app-nav-signin { min-height:40px; padding:0 8px; font-size:11px; }
   .app-nav-mobile-toggle { width:40px; height:40px; }
 }
+
+/* Shared Gator Pass controls on both prerendered and dynamic pages. */
+.gator-auth-actions { position:relative; flex:none; margin-left:auto; }
+.gator-auth-buttons { display:flex; gap:8px; align-items:center; }
+.gator-signup { background:#ffd477; }
+.gator-auth-panel { margin-top:20px; }
+.gator-auth-error { color:#a52d25; background:#fff5e4; padding:10px; border:1px solid #d89657; max-width:320px; font-size:13px; }
+.gator-auth-actions .gator-auth-error { position:absolute; right:0; top:100%; width:260px; z-index:30; }
+@media(max-width:560px) {
+  .app-nav-brand { flex:1; min-width:0; }
+  .app-nav-brand strong { font-size:12px; }
+  .app-nav-brand small { display:none; }
+  .app-nav-brand .app-nav-crest { width:34px; height:38px; font-size:25px; }
+  .gator-auth-buttons { gap:5px; }
+  .gator-auth-actions { margin-left:0; }
+}

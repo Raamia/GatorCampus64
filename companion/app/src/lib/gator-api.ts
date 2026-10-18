@@ -10,21 +10,39 @@ function auth0() {
     cacheLocation: 'localstorage',
     useRefreshTokens: false,
     authorizationParams: { audience: publicConfig.audience, scope: 'openid profile email create:character read:own', redirect_uri: window.location.origin + '/gatorize' },
-  })
+  }).catch(error => { client = undefined; throw error })
   return client
 }
 
-export async function finishLogin() {
+let finishing: Promise<boolean> | undefined
+export function finishLogin(): Promise<boolean> {
+  // The header and page share the callback; OAuth codes can only be consumed once.
+  finishing ??= completeLogin().finally(() => { finishing = undefined })
+  return finishing
+}
+async function completeLogin() {
   const c = await auth0()
   const query = new URLSearchParams(window.location.search)
   if (query.has('state') && (query.has('code') || query.has('error'))) {
-    try { await c.handleRedirectCallback() }
+    let returnTo: unknown
+    try { returnTo = (await c.handleRedirectCallback())?.appState?.returnTo }
     finally { window.history.replaceState({}, '', window.location.pathname) }
+    // Keep the existing allowed Auth0 callback URI; only navigate locally afterward.
+    if (typeof returnTo === 'string' && returnTo.startsWith('/') && !returnTo.startsWith('//') && !returnTo.includes('\\')) {
+      const target = new URL(returnTo, window.location.origin)
+      if (target.origin === window.location.origin && target.pathname !== window.location.pathname) window.location.replace(target.pathname + target.search + target.hash)
+    }
   }
   return c.isAuthenticated()
 }
 
-export async function login(fresh = false) { return (await auth0()).loginWithRedirect({ ...(fresh ? { authorizationParams: { prompt: 'login' } } : {}), appState: { returnTo: window.location.pathname } }) }
+export async function login(fresh = false) {
+  return (await auth0()).loginWithRedirect({ ...(fresh ? { authorizationParams: { prompt: 'login' } } : {}), appState: { returnTo: window.location.pathname } })
+}
+export async function signup() {
+  return (await auth0()).loginWithRedirect({ authorizationParams: { screen_hint: 'signup' }, appState: { returnTo: window.location.pathname } })
+}
+export async function profile() { return (await auth0()).getUser() }
 export async function logout() { return (await auth0()).logout({ logoutParams: { returnTo: window.location.origin } }) }
 export async function token() { return (await auth0()).getTokenSilently() }
 const draftKey = 'sgl-draft-key'

@@ -4,8 +4,8 @@ import type { AppContext, Env } from '../../worker.js'
 import { StudyBudgetRoom, GLOBAL_HOURLY_LIMIT, USER_HOURLY_LIMIT } from './study-budget.js'
 import { registerStudyRoutes } from './study-routes.js'
 
-vi.mock('./http-routes.js', () => ({
-  resolveAuth: async (request: Request) => request.headers.get('Authorization') === 'Bearer verified-test-token'
+vi.mock('./gator-auth.js', () => ({
+  resolveGatorAuth: async (request: Request) => request.headers.get('Authorization') === 'Bearer verified-test-token'
     ? { userId: 'alice' } : null,
 }))
 

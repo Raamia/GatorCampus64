@@ -7,7 +7,6 @@ import GatorizePage from '../pages/(app)/gatorize'
 import { api, draftApi, draftToken, claimDraft, finishLogin, login } from '../lib/gator-api'
 import { photoSelectionError } from '../lib/gatorize-photos'
 vi.mock('../lib/gator-api', () => ({ api: vi.fn(), draftApi: vi.fn(), draftToken: vi.fn(), claimDraft: vi.fn(), finishLogin: vi.fn().mockResolvedValue(true), login: vi.fn(), logout: vi.fn() }))
-vi.mock('./GatorAccount', () => ({ default: () => null }))
 vi.mock('@google/model-viewer', () => ({}))
 let host: HTMLDivElement, root: Root
 beforeEach(async () => {
@@ -139,4 +138,9 @@ it('retains a draft when claiming fails so the user can retry', async () => {
   expect(host.textContent).toContain('Account limit reached')
   expect(host.textContent).toContain('Use this gator in game')
   expect(host.textContent).toContain('Private draft')
+})
+
+it('keeps account deletion in Settings, outside the creation page', () => {
+  expect(host.textContent).not.toContain('Delete Gator account')
+  expect(host.querySelector('a[href="/settings"]')?.textContent).toBe('Account settings')
 })

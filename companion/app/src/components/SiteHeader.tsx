@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Activity, Footprints, Gamepad2, House, Menu, Settings, Trophy, X } from 'lucide-react'
+import { GatorNavAccount } from './GatorNavAccount'
 import { APP_NAME } from '../constants'
 import { nav, type NavItem } from '../nav'
 
@@ -27,7 +28,7 @@ export function SiteHeader({ items = publicItems, account }: { items?: NavItem[]
           <Icon size={15} aria-hidden/>{item.label}
         </Link>
       })}</div>
-      {account === undefined ? <Link to="/settings" data-testid="nav-sign-in-button" className="app-nav-signin">Sign in</Link> : account}
+      {account === undefined ? <GatorNavAccount /> : account}
       <button className="app-nav-mobile-toggle" onClick={() => setMenuOpen((open) => !open)} aria-label="Toggle menu" aria-expanded={menuOpen} aria-controls="site-navigation-links">
         {menuOpen ? <X size={16} aria-hidden/> : <Menu size={16} aria-hidden/>}
       </button>

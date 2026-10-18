@@ -1,18 +1,5 @@
-/**
- * Root shell — wraps every route, static and dynamic alike.
- *
- * This layout deliberately mounts NO DeepSpace providers, so a page placed at
- * the top level of src/pages/ (like index.tsx) renders as a plain static page:
- * no auth session fetch, no records WebSocket, no Durable Object connection.
- *
- * The auth + realtime data layer lives one level down, in (app)/_layout.tsx.
- * Any page that needs `useAuth`, `useQuery`, `useMutations`, etc. must live
- * under src/pages/(app)/ (or (app)/(protected)/ to also require sign-in).
- * See https://docs.deep.space/guides/authentication § "Mixed (default)".
- *
- * ToastProvider is local UI state (src/components/ui), not a network surface,
- * so it's safe to mount here for every page.
- */
+/** Root shell for static and dynamic pages. Gator Pass session checks run only
+ * in client effects; prerendering remains independent of browser credentials. */
 
 import { Suspense } from 'react'
 import { Outlet, useRouteError } from 'react-router-dom'
