@@ -51,7 +51,7 @@ def claim_job(conn, worker):
                 WHERE j.state = 'queued'
                 ORDER BY j.created
                 LIMIT 1
-                FOR UPDATE OF j, c SKIP LOCKED""").fetchone()
+                FOR UPDATE OF c SKIP LOCKED""").fetchone()
         if row is None:
             return None
         conn.execute(
@@ -78,6 +78,9 @@ def update_job(conn, job_id, character_id, state=None, step=None, log=None):
         sets.append("log = %s")
         args.append(log[-LOG_TAIL:])
     with conn.transaction():
+        # All job writers lock the character first, then its job. Slot writers
+        # additionally acquire sgl_slots before either row lock.
+        conn.execute("SELECT id FROM characters WHERE id = %s FOR UPDATE", (character_id,))
         # always touch the row (even with nothing to set) so a deleted character is noticed
         cur = conn.execute(f"UPDATE jobs SET {', '.join(sets) or 'id = id'} WHERE id = %s", (*args, job_id))
         if cur.rowcount == 0:
@@ -92,9 +95,9 @@ def finish_job(conn, job_id, character_id, ok, log, step=None, spec=None, artifa
     retries on the next bridge poll). Failure records step/error and releases any slot.
     Raises JobGone if the job no longer exists."""
     with conn.transaction():
+        conn.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
+        conn.execute("SELECT id FROM characters WHERE id = %s FOR UPDATE", (character_id,))
         if ok:
-            # slot lock first: the same order as sgl_sync_deploys (lock, then character rows)
-            conn.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
             cur = conn.execute(
                 """UPDATE jobs SET state = 'ready', step = 'ready', log = %s, error = NULL, artifacts = %s,
                           finished = now() WHERE id = %s""",

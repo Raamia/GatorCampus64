@@ -20,7 +20,7 @@ def claim(conn, worker="gpu-1"):
     """The worker's claim transaction, from schema.sql's contract (no slot: builds are neutral)."""
     with conn.transaction():
         j = conn.execute("SELECT j.id, j.character_id, j.photos FROM jobs j JOIN characters c ON c.id = j.character_id "
-                         "WHERE j.state = 'queued' ORDER BY j.created LIMIT 1 FOR UPDATE OF j, c SKIP LOCKED").fetchone()
+                         "WHERE j.state = 'queued' ORDER BY j.created LIMIT 1 FOR UPDATE OF c SKIP LOCKED").fetchone()
         if not j:
             return None
         conn.execute("UPDATE jobs SET state='spec', step='spec', started=now(), finished=NULL, worker=%s, log='', "
@@ -50,8 +50,9 @@ def finish(conn, s3, job, state="ready", write_artifacts=True, assign=True):
             s3.put_object(Bucket=BUCKET, Key=k, Body=b"x")
     slot = None
     with conn.transaction():
+        conn.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
+        conn.execute("SELECT id FROM characters WHERE id = %s FOR UPDATE", (cid,))
         if state == "ready":
-            conn.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
             conn.execute("UPDATE jobs SET state='ready', step='ready', artifacts=%s, finished=now(), log='tail', "
                          "error=NULL WHERE id=%s", (Jsonb(arts) if write_artifacts else None, jid))
             conn.execute("UPDATE characters SET state='ready', step='ready', spec=%s WHERE id=%s",

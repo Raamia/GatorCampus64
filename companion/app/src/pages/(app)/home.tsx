@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { RecordScope, useAuthProfileReady, useMutations, useQuery } from 'deepspace'
 import { ArrowDownRight, ArrowUpRight, Copy, Flag, MapPin, Radio, Sparkles, Users } from 'lucide-react'
 import catalog from '../../data/mission-catalog.json'
+import { studyFetch } from '../../lib/study-api'
 import { missionEventsSchema } from '../../schemas/mission-events-schema'
 
 type Mission = (typeof catalog.missions)[number]
@@ -81,7 +82,7 @@ function SquadBoard({ code, signedIn, selected, setSelected, hint, setHint, resu
     setSelected(mission); setHint('')
     void addEvent({ eventType: 'mission_selected', missionId: mission.id, teamSize: 0, durationSeconds: 0, retries: 0, displayName: '', occurredAt: new Date().toISOString() })
     try {
-      const response = await fetch('/api/study/dispatcher', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ missionId: mission.id }) })
+      const response = await studyFetch('/api/study/dispatcher', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ missionId: mission.id }) })
       const data = await response.json() as { text?: string }
       setHint(data.text ?? mission.hint)
     } catch { setHint(mission.hint) }
@@ -106,7 +107,7 @@ function SquadBoard({ code, signedIn, selected, setSelected, hint, setHint, resu
       <section className="board-note"><span>FIELD NOTE</span><p>Runs are player-reported. The board is a shared log, not an automatic game tracker.</p><div className="note-rule"/><small>ONE CAMPUS · MANY WAYS UP</small></section>
       <button className="leave-squad" onClick={() => { window.localStorage.removeItem('gator-squad-code'); window.location.reload() }}>Leave this squad</button>
     </aside></div>
-    {resultOpen && <ResultDialog mission={selected} onClose={() => setResultOpen(false)} onSubmit={async (duration, team, retries) => { if (!selected) return; const occurredAt = new Date().toISOString(); const event = { eventType: 'mission_result' as const, missionId: selected.id, teamSize: team, durationSeconds: duration, retries, displayName: '', occurredAt }; await addEvent(event); void fetch('/api/study/events', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ eventId: crypto.randomUUID(), ...event }) }); setResultOpen(false) }}/ >}
+    {resultOpen && <ResultDialog mission={selected} onClose={() => setResultOpen(false)} onSubmit={async (duration, team, retries) => { if (!selected) return; const occurredAt = new Date().toISOString(); const event = { eventType: 'mission_result' as const, missionId: selected.id, teamSize: team, durationSeconds: duration, retries, displayName: '', occurredAt }; await addEvent(event); void studyFetch('/api/study/events', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ eventId: crypto.randomUUID(), ...event }) }); setResultOpen(false) }}/ >}
     {!signedIn && <div className="signin-hint">Sign in using the account menu to add a shared run.</div>}
   </div>
 }
