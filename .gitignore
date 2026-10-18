@@ -56,6 +56,7 @@ art/levels/*/reference_sheets/
 art/levels/*/compare/
 
 # Server venvs, caches and local env files (server/*/.env.example are the templates)
+/.env
 server/**/.venv
 .pytest_cache/
 server/**/.env
