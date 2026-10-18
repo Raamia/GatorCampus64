@@ -1,5 +1,6 @@
-import { Copy, ExternalLink, Gamepad2, QrCode, Smartphone, Wrench } from 'lucide-react'
+import { ArrowUpRight, Copy, ExternalLink, Gamepad2, MapPin, QrCode, Smartphone, Wrench } from 'lucide-react'
 import { useState } from 'react'
+import { Minigames } from '../../components/Minigames'
 
 const ADDRESS = 'play.gatorcamp.us:7777'
 
@@ -35,24 +36,34 @@ export default function PlayPage() {
   }
   return <main className="play-page">
     <header className="play-hero">
-      <p className="play-kicker">PLAY SUPER GATORLATOR 64</p>
-      <h1>Meet your gator<br /><em>on campus.</em></h1>
-      <p className="play-sub">The game is native, so install sm64coopdx, connect to the hosted server, and use Gator Pass to select your character — right from inside the game.</p>
+      <div className="play-hero-copy">
+        <p className="play-kicker"><Gamepad2 size={15}/> GAME SETUP · SM64COOPDX</p>
+        <h1>Step into<br /><em>the campus.</em></h1>
+        <p className="play-sub">Super Gatorlator 64 is a native co-op game. Install sm64coopdx, connect to the campus server, then bring your Gator Pass character into Reitz and Marston.</p>
+        <div className="play-location"><MapPin size={14}/> GAINESVILLE, FLORIDA <span>·</span> 2 BUILDINGS <span>·</span> 6 MISSIONS <span>·</span> 1 MINIGAME</div>
+      </div>
     </header>
     <div className="play-layout">
-      <ol className="play-steps">
+      <section className="play-instructions" aria-labelledby="play-steps-title">
+        <div className="play-section-heading"><p>FROM DESKTOP TO CAMPUS</p><h2 id="play-steps-title">Get into the game</h2></div>
+        <ol className="play-steps">
         {steps.map((step, i) => <li key={step.title} className="play-step">
           <span className="play-step-n">{String(i + 1).padStart(2, '0')}</span>
           <step.icon size={18} className="play-step-icon" aria-hidden />
           <div><h3>{step.title}</h3><p>{step.body}</p></div>
         </li>)}
-      </ol>
+        </ol>
+      </section>
       <aside className="play-server">
-        <span className="play-server-label">HOSTED SERVER</span>
+        <span className="play-server-label">JOIN THE CAMPUS SERVER</span>
+        <h2>Join a co-op session.</h2>
+        <p>Choose <strong>Join → Direct Connect</strong> in sm64coopdx, then use this address.</p>
         <code className="play-server-address">{ADDRESS}</code>
-        <button className="play-copy" onClick={() => void copy()}><Copy size={15} />{copied ? 'Copied to clipboard' : 'Copy server address'}</button>
+        <button className="play-copy" onClick={() => void copy()}><Copy size={15} />{copied ? 'Copied to clipboard' : 'Copy server address'}<ArrowUpRight size={14}/></button>
         <a className="play-guide" href="https://gatorcamp.us" target="_blank" rel="noreferrer">Full game guide <ExternalLink size={13} /></a>
       </aside>
     </div>
+    <Minigames />
+    <p className="play-rom-note">You need your own legally obtained US Super Mario 64 ROM to run sm64coopdx. The game files are not provided here.</p>
   </main>
 }

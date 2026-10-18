@@ -1,14 +1,13 @@
 import type { CollectionSchema } from 'deepspace/schema'
 
 /**
- * A single append-only stream per random squad code. The code selects an
- * isolated RecordRoom; anonymous members can read the room, while signed-in
- * members can add events. Existing events cannot be changed or deleted.
+ * Append-only player-reported mission results. Signed-in members can add
+ * results; existing events cannot be changed or deleted.
  */
 export const missionEventsSchema: CollectionSchema = {
   name: 'mission_events',
   columns: [
-    { name: 'eventType', storage: 'text', interpretation: { kind: 'select', options: ['squad_opened', 'mission_selected', 'mission_result'] } },
+    { name: 'eventType', storage: 'text', interpretation: { kind: 'select', options: ['mission_result'] } },
     { name: 'missionId', storage: 'text', interpretation: 'plain' },
     { name: 'teamSize', storage: 'number', interpretation: 'plain' },
     { name: 'durationSeconds', storage: 'number', interpretation: 'plain' },
