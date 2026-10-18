@@ -346,7 +346,7 @@ local function on_update()
 end
 
 local function panel_visible()
-    return sPanel ~= nil and not sgl_hud_blocked()
+    return sPanel ~= nil and not sgl_hud_blocked(true)
 end
 
 -- B closes the panel (the press does not punch)

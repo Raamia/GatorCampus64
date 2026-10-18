@@ -1694,7 +1694,7 @@ local function kind_hideseek(spec)
                     end
                 end
                 if L.chime ~= nil and ctx.age - L.chime.age < HNS.CHIME_SHOW then
-                    sgl_hud_prompt("CHIME! Hiders: " .. L.chime.text, "the quiet-hours chime tells the librarians every 30 s")
+                    sgl_hud_prompt("CHIME! Hiders: " .. L.chime.text, "the quiet-hours chime tells the librarians every 30 s", nil, 20)
                 end
                 for _, li in ipairs(ctx.players) do
                     local gi = gNetworkPlayers[li].globalIndex

@@ -66,25 +66,33 @@ local function draw_status_hud()
 
     djui_hud_set_resolution(RESOLUTION_N64)
     djui_hud_set_filter(FILTER_NEAREST)
-    djui_hud_set_font(FONT_HUD)
+    djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_color(255, 255, 255, 255)
     local sw = djui_hud_get_screen_width()
-    local lives = math.max(0, hud_get_value(HUD_DISPLAY_LIVES))
     local stars = math.max(0, hud_get_value(HUD_DISPLAY_STARS))
+
+    -- Match the navy panels and orange accent used by the navigation dock.
+    local countText = tostring(stars)
+    local countWidth = math.max(6, math.min(30, sgl_hud_text_width(countText, 0.32)))
+    local coinWidth = 32 + countWidth + 6
+    local rightX = sw - 18 - coinWidth
+    sgl_hud_rect(18, 8, 28, 28, 7, 17, 38, 210)
+    sgl_hud_rect(18, 8, 28, 2, 250, 110, 30, 255)
+    sgl_hud_rect(rightX, 8, coinWidth, 28, 7, 17, 38, 210)
+    sgl_hud_rect(rightX, 8, coinWidth, 2, 250, 110, 30, 255)
 
     local portrait = life_texture()
     if portrait ~= nil then
-        djui_hud_render_texture(portrait, 22, 15, 16 / portrait.width, 16 / portrait.height)
+        djui_hud_set_color(255, 255, 255, 255)
+        djui_hud_render_texture(portrait, 24, 14, 16 / portrait.width, 16 / portrait.height)
     end
-    sgl_hud_text("X" .. lives, 42, 15, 0.55, { 255, 255, 255 }, 1)
 
     local coin = gator_coin_texture()
     if coin ~= nil then
-        -- Center the coin around the counter's text line and give the small badge
-        -- a little more weight without moving the existing counter alignment.
-        djui_hud_render_texture(coin, sw - 81, 9, 20 / coin.width, 20 / coin.height)
+        djui_hud_set_color(255, 255, 255, 255)
+        djui_hud_render_texture(coin, rightX + 6, 12, 20 / coin.width, 20 / coin.height)
     end
-    sgl_hud_text("X" .. stars, sw - 56, 15, 0.55, { 255, 255, 255 }, 1)
+    sgl_hud_text_fit(countText, rightX + 32, 17, 0.32, countWidth, SGL_HUD_WHITE, 1)
 
 end
 
