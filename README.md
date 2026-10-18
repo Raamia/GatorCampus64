@@ -8,7 +8,7 @@ Explore a campus at real-world scale, race through libraries, ride gators, and t
 
 ## Jump in
 
-1. **Download [sm64coopdx v1.5.1](https://github.com/coop-deluxe/sm64coopdx/releases/tag/v1.5.1)** for your OS. Unzip, launch, and import a **US Super Mario 64 ROM (`.z64`)** when prompted.
+1. **Download [sm64coopdx v1.5.1](https://github.com/coop-deluxe/sm64coopdx/releases/tag/v1.5.1)** for your OS. Unzip, launch, and import a **[US Super Mario 64 ROM](https://www.romsgames.net/nintendo-64-rom-super-mario-64/) (`.z64`)** when prompted.
 2. **Join → Direct Connect:** enter **`play.gatorcamp.us`**, port **`7777`**. If DNS fails, use `64.177.55.205`. The server downloads the mod for you.
 3. **Pick a character and explore.** Press **Enter** for chat; `/char` changes your character, `/campus marston` takes you straight to the library, and `/albert what can I do here?` gets you started.
 
