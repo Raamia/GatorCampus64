@@ -1,0 +1,45 @@
+{
+  "id": "npc_13",
+  "name": "Kevin",
+  "colors": {
+    "skin": "#EBC0A1",
+    "hair": "#9A9A9E",
+    "eyes": "#3E6E8C",
+    "top": "#E8A0B8",
+    "pants": "#4E5634",
+    "shoes": "#C8B28C",
+    "skin_shadow": "#D4AD91",
+    "top_detail": "#BA8093",
+    "shoe_soles": "#B09D7B"
+  },
+  "outfit": {
+    "top": "pink overshirt",
+    "pants": "olive",
+    "shoes": "tan boots",
+    "accessory": "a backpack strap across the chest",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "he has straight, heavier fringe across the forehead",
+    "he has a small closed-mouth smile",
+    "closed lips",
+    "eyes that crinkle when smiling"
+  ],
+  "build": {
+    "sleeves": "long",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "crossbody_strap",
+      "shirt_collar"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "broad",
+    "hair": "fringe",
+    "body": "broad",
+    "outfit": "overshirt"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

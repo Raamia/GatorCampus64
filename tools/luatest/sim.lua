@@ -831,6 +831,15 @@ function World:build_env(c)
     -- vanilla object animations (sgl_npc.lua; stage tests replace these with their own tables)
     S.gObjectAnimations = setmetatable({}, { __index = function(_, k) return "ANIM:" .. k end })
     S.obj_init_animation = function(o, i) raw(o)._anim = i end
+    -- Mario's own animations on a Mario-rigged prop (sgl_campus_npcs.lua): a stand-in Animation per index
+    S.get_mario_vanilla_animation = function(i)
+        assert(math.type(i) == "integer" and i >= 0 and i < 209, "get_mario_vanilla_animation(int index)")
+        return { id = i, flags = 0, animYTransDivisor = 189, startFrame = 0, loopStart = 0, loopEnd = 40 }
+    end
+    S.cur_obj_push_mario_away_from_cylinder = function(radius, extentY)
+        assert(c.cur ~= nil, "cur_obj_push_mario_away_from_cylinder outside an object behaviour")
+        assert(type(radius) == "number" and type(extentY) == "number")
+    end
     S.approach_s16_symmetric = function(cur, target, inc)
         assert(math.type(cur) == "integer" and math.type(target) == "integer" and type(inc) == "number")
         local d = (target - cur + 32768) % 65536 - 32768

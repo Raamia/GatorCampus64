@@ -1,0 +1,41 @@
+{
+  "id": "npc_12",
+  "name": "Amara",
+  "colors": {
+    "skin": "#B27352",
+    "hair": "#6B4A30",
+    "eyes": "#6B4A2A",
+    "top": "#1E1E22",
+    "pants": "#4E5634",
+    "shoes": "#C8B28C",
+    "skin_shadow": "#A0684A",
+    "top_detail": "#18181B",
+    "shoe_soles": "#B09D7B"
+  },
+  "outfit": {
+    "top": "black T-shirt",
+    "pants": "olive",
+    "shoes": "tan boots",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has straight hair ending around the jaw",
+    "she has a calm closed smile",
+    "closed lips"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": []
+  },
+  "appearance": {
+    "version": 1,
+    "face": "broad",
+    "hair": "bob",
+    "body": "slender",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

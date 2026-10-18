@@ -1,0 +1,40 @@
+{
+  "id": "npc_31",
+  "name": "Paige",
+  "colors": {
+    "skin": "#6E4430",
+    "hair": "#6B4A30",
+    "eyes": "#6B4A2A",
+    "top": "#FA4616",
+    "pants": "#1C1C1E",
+    "shoes": "#B03030",
+    "skin_shadow": "#633D2B",
+    "top_detail": "#C83812",
+    "shoe_soles": "#9B2A2A"
+  },
+  "outfit": {
+    "top": "UF orange T-shirt",
+    "pants": "black",
+    "shoes": "red sneakers",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has short wavy hair with loose raised waves",
+    "she has a friendly smile showing teeth"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": []
+  },
+  "appearance": {
+    "version": 1,
+    "face": "broad",
+    "hair": "waves",
+    "body": "slender",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

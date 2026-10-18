@@ -1,0 +1,41 @@
+{
+  "id": "npc_11",
+  "name": "Sofia",
+  "colors": {
+    "skin": "#EBC0A1",
+    "hair": "#3C5CC8",
+    "eyes": "#4A2C1A",
+    "top": "#22304F",
+    "pants": "#B9A27A",
+    "shoes": "#B03030",
+    "skin_shadow": "#D4AD91",
+    "top_detail": "#1B263F",
+    "shoe_soles": "#9B2A2A"
+  },
+  "outfit": {
+    "top": "navy T-shirt",
+    "pants": "khaki",
+    "shoes": "red sneakers",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has rounded, fuller tight curls around the top and sides",
+    "she has a small closed-mouth smile",
+    "closed lips"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": []
+  },
+  "appearance": {
+    "version": 1,
+    "face": "square",
+    "hair": "coils",
+    "body": "slender",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

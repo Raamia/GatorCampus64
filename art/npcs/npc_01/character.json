@@ -1,0 +1,43 @@
+{
+  "id": "npc_01",
+  "name": "Marcus",
+  "colors": {
+    "skin": "#EBC0A1",
+    "hair": "#8A6440",
+    "eyes": "#6B4A2A",
+    "top": "#F2C94C",
+    "pants": "#1F2A3D",
+    "shoes": "#C8B28C",
+    "skin_shadow": "#D4AD91",
+    "top_detail": "#C2A13D",
+    "shoe_soles": "#B09D7B"
+  },
+  "outfit": {
+    "top": "yellow polo shirt",
+    "pants": "dark denim",
+    "shoes": "tan boots",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "he has short wavy hair with loose raised waves",
+    "he has a small closed-mouth smile",
+    "closed lips"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "shirt_collar"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "oval",
+    "hair": "waves",
+    "body": "slender",
+    "outfit": "polo"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

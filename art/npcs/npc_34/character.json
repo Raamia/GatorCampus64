@@ -1,0 +1,41 @@
+{
+  "id": "npc_34",
+  "name": "Yuna",
+  "colors": {
+    "skin": "#9C6244",
+    "hair": "#E07A30",
+    "eyes": "#3E6E8C",
+    "top": "#F2C94C",
+    "pants": "#1F2A3D",
+    "shoes": "#C8B28C",
+    "skin_shadow": "#8C583D",
+    "top_detail": "#C2A13D",
+    "shoe_soles": "#B09D7B"
+  },
+  "outfit": {
+    "top": "yellow T-shirt",
+    "pants": "dark denim",
+    "shoes": "tan boots",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has long straight hair past the shoulders with a side part",
+    "she has a calm closed smile",
+    "closed lips"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": []
+  },
+  "appearance": {
+    "version": 1,
+    "face": "oval",
+    "hair": "long",
+    "body": "stocky",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

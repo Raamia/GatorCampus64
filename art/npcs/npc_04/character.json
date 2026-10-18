@@ -1,0 +1,41 @@
+{
+  "id": "npc_04",
+  "name": "Hannah",
+  "colors": {
+    "skin": "#6E4430",
+    "hair": "#9A9A9E",
+    "eyes": "#4A2C1A",
+    "top": "#E8A0B8",
+    "pants": "#3B4E6E",
+    "shoes": "#22304F",
+    "skin_shadow": "#633D2B",
+    "top_detail": "#BA8093",
+    "shoe_soles": "#1E2A46"
+  },
+  "outfit": {
+    "top": "pink T-shirt",
+    "pants": "denim shorts",
+    "shoes": "navy canvas shoes",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has straight hair ending around the jaw",
+    "she has a calm closed smile",
+    "closed lips"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "shorts",
+    "hair_style": "short_wavy_curly",
+    "accessories": []
+  },
+  "appearance": {
+    "version": 1,
+    "face": "long",
+    "hair": "bob",
+    "body": "neutral",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}
