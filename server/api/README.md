@@ -26,3 +26,40 @@ GPU numbers can be added later by explicitly projecting allowlisted telemetry;
 this release does not read manifests or depend on `feat/gpu-telemetry-evidence`.
 Apply the normal API schema migration before serving the new endpoint. Existing
 workers automatically produce timings through their existing state writes.
+
+
+# Anonymous Gatorize drafts
+
+The companion can create and preview a character without an account. It stores
+32 random bytes (64 lowercase hex characters) in browser local storage before
+uploading and sends `Authorization: Guest <key>` to `POST /characters`,
+`GET /drafts`, `GET /jobs/{id}`, and `DELETE /characters/{id}`. The API stores
+only the SHA-256 hash, checks ownership and expiry on each private request, and
+never accepts an invalid Bearer token as an anonymous request. Keep this key
+out of URLs and logs. Clearing browser storage loses access to unclaimed drafts.
+
+Drafts expire 24 hours after creation. They are absent from the public gallery
+and cannot receive a game slot, even when the existing worker calls
+`sgl_assign_slot`. The cleanup loop deletes expired terminal drafts and queues
+artifact deletion; active builds can finish first. Existing photo cleanup still
+runs when processing ends. The public pipeline remains an allowlisted operational
+projection without names, photos, raw IDs, or credentials.
+
+After a user chooses **Sign in to use in game**, the companion preserves that
+intent across the Gator Pass redirect. `POST /characters/{id}/claim` requires a
+verified human Bearer token with `create:character` and JSON
+`{"draft_token":"<key>"}`. A ready draft becomes account-owned atomically;
+its key and expiry are cleared, account quotas are checked, and normal slot and
+deploy handling begins. Retrying a successful claim by the same account is safe.
+Signing in alone does not automatically claim all drafts. Signed-in creation
+continues to use the existing account-owned flow.
+
+Per-browser draft limits use the existing active/total settings. Browser keys
+are not identities and can be rotated; the durable global hourly admission cap
+is shared by anonymous and signed-in generation and survives character deletion.
+
+Deployment order: apply `server/api/schema.sql` to the API/worker database,
+then release the API, then the companion. The migration is idempotent, preserves
+existing owned characters, and updates slot assignment/reconciliation before
+anonymous uploads become possible. No worker or game-server binary change is
+needed. Do not roll back to old slot functions while anonymous rows remain.

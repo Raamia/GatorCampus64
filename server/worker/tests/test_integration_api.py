@@ -70,14 +70,18 @@ def api(pg, tmp_path):
         database.close()
 
 
-def test_upload_build_deploy_contract(api, pg, fake_repo, tmp_path):  # noqa: F811
+@pytest.mark.parametrize("anonymous", [False, True])
+def test_upload_build_deploy_contract(api, pg, fake_repo, tmp_path, anonymous):  # noqa: F811
     client, headers, s3 = api
     user = headers("auth0|ali", "create:character read:own", nickname="Ali")
     bridge = headers("bridge@clients", "bridge", gty="client-credentials")
 
+    key = 'ab' * 32
+    creator = {'Authorization': f'Guest {key}'} if anonymous else user
+
     # 1. the API stores the photos and the queued job
     files = [("photos", (f"p{i}.png", synthetic_photo(), "image/png")) for i in range(2)]
-    r = client.post("/characters", headers=user, data={"name": "Ally", "consent": "true"}, files=files)
+    r = client.post("/characters", headers=creator, data={"name": "Ally", "consent": "true"}, files=files)
     assert r.status_code == 201, r.text
     job_id, char_id = r.json()["job_id"], r.json()["character_id"]
 
@@ -86,7 +90,7 @@ def test_upload_build_deploy_contract(api, pg, fake_repo, tmp_path):  # noqa: F8
     try:
         job = db.claim_job(conn, "gpu-test")
         assert str(job["id"]) == job_id and job["photos"] == [f"photos/{job_id}/0.jpg", f"photos/{job_id}/1.jpg"]
-        jr = client.get(f"/jobs/{job_id}", headers=user).json()
+        jr = client.get(f"/jobs/{job_id}", headers=creator).json()
         assert jr["state"] == "spec" and jr["slot"] is None and jr["step_index"] == 1
 
         # 3. the real pipeline (fake Blender) on the API's bucket, through worker.handle
@@ -95,10 +99,19 @@ def test_upload_build_deploy_contract(api, pg, fake_repo, tmp_path):  # noqa: F8
                               build_timeout=30, use_cv=False)
         assert worker.handle(conn, job, store, spec_ai.StaticBackend(GOOD), cfg, log=lambda m: None)
         ch = conn.execute("SELECT state, step, slot FROM characters WHERE id = %s", (char_id,)).fetchone()
-        assert ch == {"state": "ready", "step": "ready", "slot": 1}
+        assert ch == {"state": "ready", "step": "ready", "slot": None if anonymous else 1}
     finally:
         conn.close()
     assert store.list(f"photos/{job_id}/") == []
+
+    if anonymous:
+        private = client.get(f"/jobs/{job_id}", headers=creator).json()
+        assert private['requires_login'] and private['previews'] and private['slot'] is None
+        assert client.get('/deploys/pending', headers=bridge).json()['deploys'] == []
+        assert client.get('/characters').json()['characters'] == []
+        claimed = client.post(f'/characters/{char_id}/claim', headers=user, json={'draft_token': key})
+        assert claimed.status_code == 200 and claimed.json()['slot'] == 1
+        assert client.get(f'/jobs/{job_id}', headers=creator).status_code == 404
 
     # 4. the owner's job page: previews/portrait are the worker's keys
     jr = client.get(f"/jobs/{job_id}", headers=user).json()

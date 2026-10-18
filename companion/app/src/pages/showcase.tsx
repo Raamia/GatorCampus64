@@ -121,7 +121,7 @@ export default function Showcase() {
       </div>
       <section className="showcase-about">
         <div><p className="eyebrow">FROM A SHAPE TO YOUR PLAYER</p><h2>Four parts. Plenty of character.</h2><p>Faces, hair, bodies and outfits are selected independently when we build a character. These fixed samples show one change at a time; they were made without reference photos.</p></div>
-        <div><p>For your own character, Qwen reads your photos and chooses appearance profiles. Our Blender builder creates the model and previews for the game. The result is a stylized interpretation of your look.</p><Link className="primary-action" to="/gatorize">Make your gator <ArrowUpRight size={16} aria-hidden /></Link><p className="showcase-small">Gator Pass sign-in is needed to upload your own photos.</p></div>
+        <div><p>For your own character, Qwen reads your photos and chooses appearance profiles. Our Blender builder creates the model and previews for the game. The result is a stylized interpretation of your look.</p><Link className="primary-action" to="/gatorize">Make your gator <ArrowUpRight size={16} aria-hidden /></Link><p className="showcase-small">Build and preview without login. Gator Pass sign-in is needed to use your model in the game.</p></div>
       </section>
       <footer className="showcase-footer"><Link to="/">Super Gatorlator 64</Link><span>Built for SwampHacks XII · Gainesville, FL</span></footer>
     </main>

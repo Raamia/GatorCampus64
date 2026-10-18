@@ -6,10 +6,12 @@ const sdk = vi.hoisted(() => ({
   loginWithRedirect: vi.fn(), logout: vi.fn(),
 }))
 vi.mock('@auth0/auth0-spa-js', () => ({ createAuth0Client: vi.fn().mockResolvedValue(sdk) }))
-import { api, finishLogin } from './gator-api'
+import { api, draftApi, draftToken, claimDraft, finishLogin } from './gator-api'
 
 beforeEach(() => {
-  vi.stubGlobal('window', { location: { origin: 'https://board.example', pathname: '/gatorize', search: '' }, history: { replaceState: vi.fn() } })
+  const stored = new Map<string, string>()
+  const storage = { getItem: (key: string) => stored.get(key) ?? null, setItem: (key: string, value: string) => stored.set(key, value) }
+  vi.stubGlobal('window', { localStorage: storage, location: { origin: 'https://board.example', pathname: '/gatorize', search: '' }, history: { replaceState: vi.fn() } })
   vi.stubGlobal('fetch', vi.fn())
   vi.clearAllMocks()
 })
@@ -37,4 +39,27 @@ describe('Gator Pass API boundary', () => {
     expect(sdk.handleRedirectCallback).toHaveBeenCalledOnce()
     expect(window.history.replaceState).toHaveBeenCalledWith({}, '', '/gatorize')
   })
+})
+
+it('persists a random draft key before uploading without consulting Auth0', async () => {
+  vi.mocked(fetch).mockResolvedValue(new Response(JSON.stringify({ job_id: 'draft' })))
+  await draftApi('/characters', { method: 'POST', body: new FormData() })
+  const key = draftToken()
+  expect(key).toMatch(/^[0-9a-f]{64}$/)
+  expect(window.localStorage.getItem('sgl-draft-key')).toBe(key)
+  expect(sdk.getTokenSilently).not.toHaveBeenCalled()
+  const [url, init] = vi.mocked(fetch).mock.calls[0]
+  expect(url).not.toContain(key!)
+  expect(new Headers(init?.headers).get('Authorization')).toBe(`Guest ${key}`)
+  expect(draftToken(true)).toBe(key)
+})
+
+it('claims with both the verified user bearer and the private draft key', async () => {
+  const key = draftToken(true)
+  vi.mocked(fetch).mockResolvedValue(new Response('{}'))
+  await claimDraft('my-draft')
+  const [url, init] = vi.mocked(fetch).mock.calls[0]
+  expect(url).toBe('https://api.gatorcamp.us/characters/my-draft/claim')
+  expect(new Headers(init?.headers).get('Authorization')).toBe('Bearer gator-token')
+  expect(JSON.parse(init?.body as string)).toEqual({ draft_token: key })
 })
