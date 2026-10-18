@@ -3,7 +3,8 @@
 -- outbox (npc_out.txt, with the asker's own live stats, sent by the asker's client), /albert and /alberta ask from
 -- anywhere, the bridge's reply file (sgl64_npc.modfs replies.txt) reaches every client as a chat line + bubble,
 -- the host moves them along their routes (synced step, poofs) but never mid-conversation, their animations follow
--- what they're doing, and with no bridge a request times out. Run: lua tools/luatest/test_npc.lua (run.sh).
+-- what they're doing, with no bridge a request times out, and on a headless host (play.gatorcamp.us) requests go
+-- out as npc_ask events for server/bridge instead. Run: lua tools/luatest/test_npc.lua (run.sh).
 local HERE = debug.getinfo(1, "S").source:match("^@(.*/)") or "./"
 local Sim = dofile(HERE .. "sim.lua")
 local C = Sim.C
@@ -320,6 +321,36 @@ test("a stale session's replies are ignored; no bridge -> timeout line", functio
     w:seconds(16)
     check(Sim.find(H.chat, "ask me again") ~= nil, "timeout line after 15 s")
     check(Sim.find(H.chat, "npc_bridge/bridge.py") ~= nil, "the host is told to start the bridge")
+end)
+
+test("hosted server (headless host): questions go out as npc_ask events, never into the bridge's inbox", function()
+    local w, H, F, disk = setup()
+    local prints = {}
+    for _, c in ipairs({ H, F }) do c.stubs.gServerSettings.headlessServer = 1 end
+    H.stubs.print = function(s) table.insert(prints, s) end
+    H.pos.x = H.pos.x + 5000
+    next_to(F, "albert")
+    w:step(2)
+    say(w, F, "how do i unlock lake alice")
+    local ev
+    for _, line in ipairs(prints) do
+        local json = line:match("^SGLEVT (.*)$")
+        local e = json and H.env.sgl_json_decode(json)
+        if e and e.t == "npc_ask" then ev = e end
+    end
+    check(ev ~= nil, "the host printed an npc_ask event")
+    ev = ev or {}
+    check(ev.npc == "albert" and ev.player == F.nps[0].name and ev.text == "how do i unlock lake alice"
+        and ev.seq == 1 and type(ev.session) == "string", "event fields: " .. tostring(ev.player) .. " " .. tostring(ev.text))
+    check(type(ev.stats) == "string" and ev.stats:find("players=2", 1, true) ~= nil, "with the asker's stats")
+    check(disk.own == nil, "no npc_out.txt in sgl64.modfs (server/bridge's inbox)")
+    disk.inbox["sgl64_npc"] = "session\t" .. tostring(ev.session) .. "\n1\talbert\tFind four stars, " ..
+        F.nps[0].name .. "!\n"
+    w:step(20)
+    check(Sim.find(F.chat, "Albert:.*Find four stars") ~= nil, "server/bridge's reply reaches the asker")
+    say(w, F, "and then?")
+    w:seconds(16)
+    check(Sim.find(H.chat, "npc_bridge/bridge.py") == nil, "no 'run bridge.py' hint on the hosted server")
 end)
 
 print(string.format("%d checks passed, %d failed", passed, failed))
