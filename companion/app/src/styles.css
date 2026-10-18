@@ -914,7 +914,7 @@ body { background-color: var(--color-background); color: var(--color-foreground)
   .individual-run-list li small { grid-column:1/-1; }
 }
 
-@media(max-width:1180px) {
+@media(max-width:1380px) {
   .app-nav-inner { min-height:88px; flex-wrap:wrap; padding:16px 24px; gap:14px; }
   .app-nav-brand { margin-right:auto; }
   .app-nav-links { display:none; order:5; flex-basis:100%; flex-direction:column; align-items:stretch; margin:0; padding-top:14px; border-top:1px solid #b7cbe3; }

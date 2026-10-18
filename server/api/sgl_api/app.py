@@ -22,7 +22,7 @@ from fastapi.responses import JSONResponse
 from psycopg.types.json import Jsonb
 from pydantic import AwareDatetime, BaseModel, Field, model_validator
 
-from . import accounts, config, images, names, runs
+from . import accounts, config, images, names, runs, pipeline_status
 from .auth import AuthError, JWKSCache, Principal, Verifier, bearer
 from .deepspace import Pusher
 from .cleanup import Cleaner
@@ -141,6 +141,8 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
     state: dict[str, Any] = {}
     board_cache: dict[str, tuple[float, Any]] = {}
     board_lock = threading.Lock()
+    pipeline_cache: tuple[float, Any] | None = None
+    pipeline_lock = threading.Lock()
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI):
@@ -241,6 +243,20 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
         with DB().tx() as c:
             c.execute("SELECT 1")
         return {"ok": True}
+
+    @app.get("/pipeline/status")
+    def public_pipeline_status(response: Response):
+        nonlocal pipeline_cache
+        response.headers["Cache-Control"] = f"public, max-age={pipeline_status.CACHE_SECONDS}"
+        # Fixed-size query and a shared cache, like the public boards. Keep the
+        # lock during refresh so simultaneous anonymous polls cannot stampede DB.
+        with pipeline_lock:
+            if pipeline_cache is None or pipeline_cache[0] <= time.monotonic():
+                with DB().tx() as c:
+                    c.execute("SET TRANSACTION READ ONLY")
+                    value = pipeline_status.snapshot(c)
+                pipeline_cache = (time.monotonic() + pipeline_status.CACHE_SECONDS, value)
+            return pipeline_cache[1]
 
     @app.get("/characters")
     def gallery(limit: int = 60):

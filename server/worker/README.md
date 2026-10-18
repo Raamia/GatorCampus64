@@ -184,3 +184,12 @@ These are reproducible host-wide observations for auditing the Vultr worker,
 not per-process attribution or peak utilization: idle snapshots can be zero,
 Blender may use the CPU, and a remotely hosted vision model is not measured by
 the worker's local GPU query. No inference, Blender, or deployment settings change.
+
+### Public step timing
+
+The shared API schema records up to 64 actual state/step intervals in
+`jobs.step_history` via a database trigger. Existing worker progress, retry, and
+terminal writes supply the boundaries; repeated progress/log writes and lease
+renewals do not reset them. The API's public `/pipeline/status` projects only
+anonymous operational fields from these records for the companion `/pipeline`
+page. Older jobs without recorded transitions show timings as unavailable.
