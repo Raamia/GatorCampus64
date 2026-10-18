@@ -184,7 +184,8 @@ class Placer:
         self._add("bobomb", name, p[0], p[1], fz, "bhvBobomb", "MODEL_BLACK_BOBOMB", "0x00000000", facing)
 
     def shell(self, name, p, room=2.0):
-        """A Koopa shell to ride (common0 MODEL_KOOPA_SHELL): spins in place until someone jumps on it."""
+        """A ride gator (common0 MODEL_KOOPA_SHELL, drawn as a saddled gator by actors/koopa_shell): rests facing
+        its spawn yaw until someone jumps on it (mods/sgl64/sgl_ride_gator.lua)."""
         fz = self.floor_at(name, p)
         if fz is None:
             return
@@ -344,7 +345,7 @@ def reitz_pickups(S, probe):
         and the Reitz stair penthouse;
       * Goombas on the North Lawn, the Reitz podium roof (a hazard on the act 1 climb), both plazas
         and in the ravine woods; Bob-ombs on the Reitz ballroom and tower roofs (act 1 hazards);
-      * Koopa shells to surf the flat campus: by the spawn, on the Engineering Plaza, on Reitz Union Drive;
+      * ride gators (Koopa shells) for the flat campus: by the spawn, on the Engineering Plaza, on Reitz Union Drive;
       * poles: the Reitz window-washer cable (podium -> tower roof) and colonnade lamp post, Weil Hall's
         seven copper downspouts (the only way onto its roofs from the ground)."""
     P = Placer(S, probe)
@@ -473,7 +474,7 @@ def reitz_pickups(S, probe):
     if spot(rs, "tower_roof_center"):
         P.bobomb("bobomb Reitz tower roof", rs["tower_roof_center"], 270.0)
 
-    # ---- Koopa shells to surf the flat campus (the act 2 hunt is ~1 km of ground): by the spawn on the North
+    # ---- ride gators (Koopa shells) for the flat campus (the act 2 hunt is ~1 km of ground): by the spawn on the North
     # Lawn, on the Engineering Plaza, and on the Reitz Union Drive loop (ravine side)
     if sp:
         f = math.radians(sp["facing"] - 90.0)

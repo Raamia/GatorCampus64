@@ -48,6 +48,7 @@ Full architecture and track-by-track detail: [`docs/web_platform_spec.md`](docs/
   written guide, and anything else via Gemini, in character.
 - **Campus rivals**: every Goomba wears a USF Bull or FSU Seminole, and Library West's ghosts are UCF
   Knights.
+- **Ride gators**: a saddled green gator replaces the Koopa shell — jump on to ride, Z to get off.
 
 Full writeup, the build-time numbers, and how it was built with Claude Code's multi-agent workflows:
 [`docs/project_overview.md`](docs/project_overview.md).
