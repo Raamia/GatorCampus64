@@ -137,7 +137,7 @@ answer: Our rivals' mascots are sneaking around campus! USF Bulls and FSU Semino
 ### What are the coming soon acts?
 id: coming-soon
 ask: coming soon, act 4, act 5, act 6, coming soon acts, free roam, explore mode, empty act, no mission
-answer: Acts 4 to 6 of each stage are COMING SOON. You can enter them to explore freely (no mission, no star), which is great for sightseeing, coins and secrets. Pause and EXIT COURSE takes you back.
+answer: Acts 4 to 6 of each stage are COMING SOON (except Lake Alice's act 4, the Gator Regatta). You can enter them to explore freely (no mission, no star), which is great for sightseeing, coins and secrets. Pause and EXIT COURSE takes you back.
 
 ## The Swamp (course 1, University Auditorium door, open from the start)
 
@@ -224,6 +224,11 @@ answer: Press D-pad Down to start on the deck, hop onto the big pad, then along 
 id: alice-act3
 ask: bat census, bat census at dusk, lake alice act 3, bats, census posts, swooper
 answer: It needs 2 to 4 players. Staff at least two of the three census posts (press D-pad Down to warp to a free one). Bats stream out of the barns at dusk and each post counts its share; Swoopers dive at you, so stay on your post. Count about 900 bats (1200 with 3 players, 1500 with 4) in about 70 s and the star flies out of the white barn.
+
+### How do I do the Gator Regatta?
+id: alice-act4
+ask: gator regatta, regatta, lake alice act 4, gator race, ride a gator race, buoys, race on gators, shell surf regatta
+answer: It's a race on ride gators, open once you have Lake Alice's act 3 star. Jump on the gator waiting at the dock off the Baughman lawn and ride it into the start box. After the countdown, steer round the 8 buoys in order (the next one glows blue). Finish under par (1'15) and the star lands at the dock. Lost your gator? Press Z to get off, and the dock's gator comes back; a spare also waits on the east shore. Friends can race too.
 
 ### What else is at Lake Alice?
 id: alice-secrets
