@@ -51,6 +51,7 @@
 #  20. check_npc_spots.py: every mascot spot stands on flat, clear floor in the built level; routes keep exactly
 #      one mascot on the hub
 #  21. check_game_guide.py: tools/npc_bridge/game_guide.md covers every stage, door, star count and act of course.lua
+#  23. test_rivals.lua: sgl_rivals.lua dresses every Goomba as a rival school's mascot (same on every client)
 #  22. tools/npc_bridge/test_*.py: the NPC chat bridge and the game guide (modfs protocol, routing, Gemini requests;
 #      offline) and tools/actors/test_make_gators.py (the generated Albert and Alberta actors are valid and up to date)
 # Usage: tools/luatest/run.sh            (exit status 0 = all good)
@@ -126,6 +127,8 @@ else
 fi
 echo "== test_npc (roaming mascots Albert and Alberta)"
 "$LUA" "$HERE/test_npc.lua"
+echo "== test_rivals (rival mascots replace the Goombas)"
+"$LUA" "$HERE/test_rivals.lua"
 echo "== check_npc_ids"
 python3 -I "$HERE/check_npc_ids.py"
 echo "== check_npc_spots"
