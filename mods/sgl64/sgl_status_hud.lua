@@ -29,9 +29,7 @@ local function life_texture()
 end
 
 local function draw_status_hud()
-    if hud_is_hidden() or is_game_paused() then return end
-    local charMenu = _G.sglCharSelectIsOpen
-    if charMenu ~= nil and charMenu() then return end
+    if hud_is_hidden() or sgl_hud_blocked() then return end
 
     djui_hud_set_resolution(RESOLUTION_N64)
     djui_hud_set_filter(FILTER_NEAREST)

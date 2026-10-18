@@ -3,18 +3,11 @@
  * (protected)/_layout.tsx already wraps the subtree in <AuthGate>.
  */
 
-import { useEffect, useState } from 'react'
 import { signOut, useUser } from 'deepspace'
 import { Avatar, AvatarFallback, AvatarImage, Button } from '@/components/ui'
 
 export default function SettingsPage() {
   const { user } = useUser()
-  const [squadCode, setSquadCode] = useState<string | null>(null)
-
-  useEffect(() => {
-    setSquadCode(window.localStorage.getItem('gator-squad-code'))
-  }, [])
-
   return (
     // No background on page wrappers — pages render into whatever the app's
     // (app)/_layout provides (a plain background, or a raised panel), so they
@@ -47,16 +40,6 @@ export default function SettingsPage() {
             Sign out
           </Button>
         </section>
-
-        {squadCode && (
-          <section className="settings-card">
-            <h2>Current squad</h2>
-            <ul className="settings-rows">
-              <li><span className="settings-label">Squad code</span><span className="settings-value">{squadCode}</span></li>
-            </ul>
-            <p className="settings-squad-note"><span />Stored on this device only — it is not part of your account. Leave the squad from the field board.</p>
-          </section>
-        )}
       </div>
     </div>
   )
