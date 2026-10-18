@@ -16,12 +16,20 @@ MAX_POLE_TREES = 28
 POLE_MIN_SPACING = 4.5      # m between climbable trees (bhv_pole_base_loop pushes Mario to 0.7 m)
 POLE_TREE_HITBOX_M = 5.0    # bhvTree: SET_HITBOX(80, 500); Mario climbs to 4 m and handstands on top
 
-# Curated live oaks around the Auditorium approach (map metres, origin = Century Tower). These
-# supplement OSM points where the real oak canopy frames the plaza; path clearance is checked below.
-HUB_OAKS = [(12.0, 166.0), (1.0, 153.0), (86.0, 124.0),
-            (-2.0, 105.0), (62.0, 108.0), (5.0, 100.0), (60.0, 160.0),
-            (20.0, 125.0), (42.0, 137.0), (8.0, 83.0), (50.0, 78.0),
-            (82.0, 43.0), (78.0, 58.0), (66.0, 35.0)]
+# Hand-authored live oaks, map metres from Century Tower. The road rows frame Newell Drive while
+# staying on its grass verges; the facade pair breaks up the Auditorium's west lawn wall, and the
+# tower pair frames (rather than blocks) the landmark. Existing OSM trees remain untouched.
+HUB_AUDITORIUM_GROVE_OAKS = [(12.0, 166.0), (1.0, 153.0), (86.0, 124.0),
+                             (-2.0, 105.0), (62.0, 108.0), (5.0, 100.0), (60.0, 160.0),
+                             (20.0, 125.0), (42.0, 137.0), (8.0, 83.0), (50.0, 78.0),
+                             (82.0, 43.0), (78.0, 58.0), (66.0, 35.0)]
+HUB_ROADSIDE_OAKS = [(-38.0, 90.0), (-40.0, 45.0), (-38.0, 25.0), (-38.0, -8.0),
+                     (-8.0, 80.0), (-8.0, 60.0), (-8.0, 35.0)]
+HUB_AUDITORIUM_FACADE_OAKS = [(15.0, 48.0), (15.0, 31.0)]
+HUB_TOWER_FLANK_OAKS = [(-30.0, 8.0), (10.0, -10.0)]
+HUB_LARGE_OAKS = set(HUB_AUDITORIUM_FACADE_OAKS + [(-30.0, 8.0)])
+HUB_OAKS = (HUB_AUDITORIUM_GROVE_OAKS + HUB_ROADSIDE_OAKS +
+            HUB_AUDITORIUM_FACADE_OAKS + HUB_TOWER_FLANK_OAKS)
 
 
 def rnd(key, lo=0.0, hi=1.0):
@@ -279,7 +287,8 @@ def build(S, pole_avoid=()):
             if any(math.dist(pt, q) < 7.0 for q in curated):
                 continue
             x, y = S.T(pt)
-            scale = 1.28 if pt == (50.0, 78.0) else (1.0 if i < 2 else 0.92)
+            scale = (1.28 if pt == (50.0, 78.0) else
+                     (1.12 if pt in HUB_LARGE_OAKS else (1.0 if i < 2 else 0.92)))
             live_oak(vis, col, x, y, f"hub_live_oak_{i}", scale)
             curated.append(pt)
         S.hub_oak_pts = curated

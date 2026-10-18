@@ -50,6 +50,16 @@ HUB_LAWN_MASSES = [(6.0, 58.0), (72.0, 58.0), (0.0, 98.0), (74.0, 54.0),
 # The east Auditorium frontage is a broad, flat lawn in the current model. Stagger low planting
 # islands beside (never across) the desire paths, with one oak behind the beds for depth.
 HUB_AUDITORIUM_EAST_BEDS = [(66.0, 12.0), (76.0, 29.0), (65.0, 47.0)]
+# Tower-side and road-verge props. All points are nudged only when the full footprint is clear.
+HUB_TOWER_SHRUBS = [(-34.0, 27.0), (-34.0, 4.0), (-31.0, -12.0),
+                    (-4.0, 31.0), (9.0, 18.0), (-6.0, 72.0), (-6.0, 49.0)]
+HUB_TOWER_MASSES = [(-42.0, 0.0), (8.0, 38.0)]
+HUB_TOWER_RAISED_BEDS = [(-42.0, 2.0, 0.0), (9.0, 42.0, 90.0)]
+HUB_ROAD_LAMPS = [(-3.0, 80.0), (-3.0, 60.0), (-3.0, 35.0), (-3.0, 10.0),
+                  (-43.0, 87.0), (-42.0, 22.0), (-42.0, -8.0)]
+HUB_TOWER_BENCHES = [(-33.0, 18.0, 90.0), (8.0, 20.0, 270.0)]
+HUB_TOWER_TRASH_CANS = [(-30.0, 17.0), (7.0, 48.0), (-42.0, -12.0)]
+HUB_TOWER_SIGN = (-10.0, 33.0)
 # Longer clipped-hedge beds give the open quad a planted edge and make foreground sightlines
 # read as a sequence of campus garden rooms. Gaps between these rows preserve the desire paths.
 HUB_HEDGE_ROWS = [
@@ -99,7 +109,19 @@ def _hedge_footprint_clear(S, x, y, yaw):
     return True
 
 
-def _place(S, probe, taken, mx, my, radius, walk_pad=None, road_pad=None):
+def _raised_bed_footprint_clear(S, x, y, yaw):
+    """Keep the complete 7.2 x 3.1 m raised planter clear of roads and walkways."""
+    angle = math.radians(yaw)
+    c, s = math.cos(angle), math.sin(angle)
+    for u in (-3.6, -2.4, -1.2, 0.0, 1.2, 2.4, 3.6):
+        for v in (-1.55, -0.8, 0.0, 0.8, 1.55):
+            px, py = x + c * u - s * v, y + s * u + c * v
+            if _on_road(S, px, py, 0.25) or _on_walk(S, px, py, 0.25):
+                return False
+    return True
+
+
+def _place(S, probe, taken, mx, my, radius, walk_pad=None, road_pad=None, footprint=None):
     """First nudge of map point (mx, my) with ground floor (z ~ 0), no collision within radius at
     0.6 m and 2.0 m, off roads (and walks when walk_pad is set) and away from items already placed.
     Returns stage (x, y) or None."""
@@ -115,6 +137,8 @@ def _place(S, probe, taken, mx, my, radius, walk_pad=None, road_pad=None):
         if _on_road(S, x, y, 0.6 + radius * 0.5 if road_pad is None else road_pad):
             continue
         if walk_pad is not None and _on_walk(S, x, y, walk_pad):
+            continue
+        if footprint is not None and not footprint(S, x, y):
             continue
         if any(math.dist((x, y), (tx, ty)) < radius + tr for tx, ty, tr in taken):
             continue
@@ -257,9 +281,7 @@ def dense_planting(vis, col, x, y, key):
         a = 2.0 * math.pi * i / 9 + 0.12
         flower(vis, x + 2.72 * math.cos(a), y + 1.10 * math.sin(a), f"{key}:flower:{i}",
                "white_trim" if i % 3 else "banner_orange")
-    if col is not None:
-        # Low planter-like collision keeps players from walking through the fuller shrubs; camera may pass.
-        _obox(col, x, y, 0.0, 3.12, 1.30, 0.0, 1.36, "COL nocam", None)
+    # Shrubs and ground cover are visual only; nearby paths and brick edging carry the collision.
 
 
 def hedge_row(vis, col, x, y, yaw, key):
@@ -509,13 +531,26 @@ def build(S, probe, avoid=()):
 
         rep["raised_beds"] = []
         for i, (mx, my, yaw) in enumerate(HUB_RAISED_BEDS):
-            p = _place(S, probe, taken, mx, my, 4.25, walk_pad=1.4, road_pad=1.4)
+            p = _place(S, probe, taken, mx, my, 4.25, walk_pad=1.4, road_pad=1.4,
+                       footprint=lambda stage, x, y: _raised_bed_footprint_clear(stage, x, y, yaw))
             if p is None:
                 rep["skipped"].append(("raised brick bed", mx, my))
                 continue
             raised_bed(vis, col, p[0], p[1], yaw, f"hub_raised_bed{i}")
             taken.append((p[0], p[1], 4.25))
             rep["raised_beds"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+
+        # Extend the same brick planter / palmetto treatment around the Tower and approach lawn.
+        rep["tower_raised_beds"] = []
+        for i, (mx, my, yaw) in enumerate(HUB_TOWER_RAISED_BEDS):
+            p = _place(S, probe, taken, mx, my, 4.25, walk_pad=1.4, road_pad=1.4,
+                       footprint=lambda stage, x, y: _raised_bed_footprint_clear(stage, x, y, yaw))
+            if p is None:
+                rep["skipped"].append(("Tower-side raised bed", mx, my))
+                continue
+            raised_bed(vis, col, p[0], p[1], yaw, f"hub_tower_bed{i}")
+            taken.append((p[0], p[1], 4.25))
+            rep["tower_raised_beds"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1), yaw])
 
         rep["globe_lamps"] = []
         for i, (mx, my) in enumerate(HUB_GLOBE_LAMPS):
@@ -634,6 +669,69 @@ def build(S, probe, avoid=()):
             dense_planting(vis, col, p[0], p[1], f"auditorium_east_bed{i}")
             taken.append((p[0], p[1], 3.6))
             rep["auditorium_east_beds"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+
+        # Low shrub beds on the two Newell Drive verges and in the open lawn around the Tower.
+        rep["tower_road_shrubs"] = []
+        for i, (mx, my) in enumerate(HUB_TOWER_SHRUBS):
+            p = _place(S, probe, taken, mx, my, 1.9, walk_pad=2.35, road_pad=2.35)
+            if p is None:
+                rep["skipped"].append(("Tower / road shrub bed", mx, my))
+                continue
+            shrub_bed(vis, p[0], p[1], f"hub_tower_road_shrub{i}")
+            taken.append((p[0], p[1], 1.9))
+            rep["tower_road_shrubs"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+
+        # Broad islands build a layered middle distance, with collision kept off the shrub masses.
+        rep["tower_lawn_masses"] = []
+        for i, (mx, my) in enumerate(HUB_TOWER_MASSES):
+            p = _place(S, probe, taken, mx, my, 3.6, walk_pad=3.8, road_pad=3.8)
+            if p is None:
+                rep["skipped"].append(("Tower-side landscape mass", mx, my))
+                continue
+            dense_planting(vis, col, p[0], p[1], f"hub_tower_lawn_mass{i}")
+            taken.append((p[0], p[1], 3.6))
+            rep["tower_lawn_masses"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+
+        # Extend the existing globe-lamp rhythm down both road-side grass verges.
+        rep["road_lamps"] = []
+        for i, (mx, my) in enumerate(HUB_ROAD_LAMPS):
+            p = _place(S, probe, taken, mx, my, 1.2, walk_pad=0.4, road_pad=1.2)
+            if p is None:
+                rep["skipped"].append(("roadside lamp", mx, my))
+                continue
+            lamp(vis, p[0], p[1], f"hub_road_lamp{i}", math.pi / 2, globe=True, banners=False)
+            taken.append((p[0], p[1], 1.2))
+            poles.append({"name": f"Roadside globe lamp {i + 1}", "stage": p,
+                          "z": 0.0, "height_m": LAMP_POLE_M})
+            rep["road_lamps"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+
+        rep["tower_benches"] = []
+        for mx, my, facing in HUB_TOWER_BENCHES:
+            p = _place(S, probe, taken, mx, my, 1.1, walk_pad=0.25, road_pad=1.15)
+            if p is None:
+                rep["skipped"].append(("Tower approach bench", mx, my))
+                continue
+            bench(vis, col, p[0], p[1], facing)
+            taken.append((p[0], p[1], 1.1))
+            rep["tower_benches"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+
+        rep["tower_trash_cans"] = []
+        for mx, my in HUB_TOWER_TRASH_CANS:
+            p = _place(S, probe, taken, mx, my, 0.65, walk_pad=0.2, road_pad=0.95)
+            if p is None:
+                rep["skipped"].append(("Tower approach trash can", mx, my))
+                continue
+            trash_can(vis, col, p[0], p[1], f"hub_tower_trash{len(rep['tower_trash_cans'])}")
+            taken.append((p[0], p[1], 0.65))
+            rep["tower_trash_cans"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+
+        p = _place(S, probe, taken, *HUB_TOWER_SIGN, 0.9, walk_pad=0.25, road_pad=0.9)
+        if p is None:
+            rep["skipped"].append(("Tower campus sign", *HUB_TOWER_SIGN))
+        else:
+            campus_sign(vis, col, p[0], p[1], 180.0)
+            taken.append((p[0], p[1], 0.9))
+            rep["tower_sign"] = [round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)]
     for i, (mx, my) in enumerate(LAMPS):
         p = _place(S, probe, taken, mx, my, 1.4, walk_pad=0.3)
         if p is None:
@@ -657,6 +755,8 @@ def build(S, probe, avoid=()):
           f"{len(rep.get('statues', []))} statues, {len(rep.get('shrubs', []))} shrub beds, "
           f"{len(rep.get('landscape_masses', []))} large planting islands, "
           f"{len(rep.get('hedge_rows', []))} hedge rows, "
+          f"{len(rep.get('tower_road_shrubs', []))} Tower / road shrub beds, "
+          f"{len(rep.get('road_lamps', []))} additional road lamps, "
           f"{len(rep['hammocks'])} hammocks; skipped {rep['skipped']}")
     return poles
 
