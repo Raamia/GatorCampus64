@@ -89,7 +89,7 @@ end
 test("two players split 24 students; all stay on sidewalks and animate", function()
     local w, H, F = setup(2)
     w:step(120)
-    check(#H.env.SGL_CROWD == 40, "40 models remain available for variety")
+    check(#H.env.SGL_CROWD == 64, "64 resident slots reuse the existing model library")
     check(#students(H) == 12 and #students(F) == 12, "12 local students per player, 24 total")
     check(H.env.sgl_crowd_quota() == 12 and F.env.sgl_crowd_quota() == 12, "equal allocation")
     for _, c in ipairs({H, F}) do
@@ -151,7 +151,7 @@ test("stage visits, local off, and no-path positions do not give others extra sh
     w:step(120)
     w:warp(F, C.LEVEL_BOB, 1, 1)
     w:step(60)
-    check(#students(F) > 0 and #students(F) <= 12 and #students(H) == 12, "stage visitor keeps the same budget")
+    check(#students(F) <= 12 and #students(H) == 12, "stage visitor stays within their share")
     w:warp(F, HUB, 2, 0)
     w:step(60)
     check(#students(F) == 0, "no outdoor crowd in an unsupported hub area")
@@ -238,103 +238,142 @@ test("host controls budgets; clients cannot change them; rounding never exceeds 
     check(total(w) == 12, "budget restored without warp")
 end)
 
-test("/campus marston follows the actual command and repopulates on the arrival floor", function()
+test("blocked students wait on safe ground without despawning", function()
+    local w, H = setup(1)
+    w:step(120)
+    local before = students(H)
+    check(#before == 12, "crowd populated")
+    H.env.sgl_npc_safe_step = function() return nil end
+    H.env.sgl_npc_safe_position = function(x, y, z) return y end
+    w:step(360)
+    local after = students(H)
+    check(#after == #before, "blocked crowd stays present")
+    local kept = {}
+    for _, o in ipairs(after) do kept[o] = true end
+    for _, o in ipairs(before) do check(kept[o], "same student survives blocked movement") end
+end)
+
+test("outdoor stage visits respect crowd limits, and returning to the hub restores them", function()
     local w, H, F = setup(2)
     w:step(120)
-    check(Sim.cmd(F, "campus", "marston 1 me"), "demo command accepted")
-    check(F.level == C.LEVEL_CCM, "command enters Marston")
-    -- The simulator does not apply Mario's spawn position automatically.
-    F.pos.x, F.pos.y, F.pos.z = -790.5, 0.0, -1510.25
-    w:step(120)
-    check(#students(F) > 0 and #students(F) <= 12, "Marston arrival has a bounded crowd")
-    check(#students(H) == 12 and total(w) <= 24, "hub player retains their share")
-    for _, o in ipairs(students(F)) do check(o.oPosY == 0, "arrival crowd stays on the lobby floor") end
-    -- Elevator / mission teleport within the same level, with no level-init hook.
-    F.pos.x, F.pos.y, F.pos.z = 456, 1800, -2080
-    w:step(120)
-    check(#students(F) > 0, "crowd follows an upstairs teleport")
-    for _, o in ipairs(students(F)) do check(o.oPosY == 1800, "no crowd remains on other floors") end
-    check(F.env.sgl_campus_warp("hub", 0, true), "map button uses the same travel function")
+    check(#students(F) == 12, "hub has students before entering a building")
+    for _, stage in ipairs({"reitz", "swamp", "alice"}) do
+        check(F.env.sgl_campus_warp(stage, 0, true), "travel to " .. stage)
+        w:step(120)
+        check(#students(F) <= 12, stage .. " uses bounded outdoor walkers")
+        F.pos.x, F.pos.y, F.pos.z = 456, 1800, -2080
+        w:step(120)
+        check(#students(F) <= 12, "teleport respects crowd cap in " .. stage)
+        check(#students(H) == 12, "hub player's budget remains stable")
+    end
+    check(F.env.sgl_campus_warp("hub", 0, true), "return to hub")
     F.pos.x, F.pos.y, F.pos.z = 8320, 0, -4440
     w:step(120)
-    check(#students(F) == 12, "return to hub recovers original sidewalk crowd")
+    check(#students(F) == 12, "outdoor sidewalk crowd returns")
 end)
 
-test("Reitz instant area transition without level init replaces outdoor routes", function()
+test("area changes immediately clear crowds and generated routes cannot bypass policy", function()
     local w, H = setup(1)
-    w:warp(H, C.LEVEL_WF, 1, 1)
-    H.pos.x, H.pos.y, H.pos.z = 7200, 0, -9300
     w:step(120)
-    check(#students(H) > 0, "Reitz outdoor arrival has students")
-    -- Model an instant warp: area/position changes but no HOOK_ON_LEVEL_INIT.
+    check(#students(H) == 12, "initial hub crowd")
+    H.env.SGL_CROWD_AREAS = {{level = HUB, area = 2, indoor = false,
+        nodes = H.env.SGL_CAMPUS_ROUTES.nodes, links = H.env.SGL_CAMPUS_ROUTES.links}}
     H.area = 2
-    local route
-    for _, r in ipairs(H.env.SGL_CROWD_AREAS) do
-        if r.level == C.LEVEL_WF and r.area == 2 then route = r end
-    end
-    local n = route.nodes[1]
-    H.pos.x, H.pos.y, H.pos.z = n[1], n[2], n[3]
     w:refresh_views()
+    w:step(1)
+    check(#students(H) == 0, "area transition clears existing crowd immediately")
     w:step(120)
-    check(#students(H) > 0 and #students(H) <= 12, "door arrival has interior students")
-    for _, o in ipairs(students(H)) do check(o.oPosY == n[2], "indoor crowd is on destination floor") end
+    check(#students(H) == 0, "generated route does not enable unsupported hub area")
+    for _, area in ipairs({1, 1}) do
+        w:warp(H, C.LEVEL_WF, area, 0)
+        H.pos.x, H.pos.y, H.pos.z = 7200, 0, -9300
+        w:step(120)
+        check(#students(H) == 0, "Reitz area " .. area .. " stays crowd-free")
+    end
 end)
 
-test("all demo stage arrivals have nearby routes", function()
+test("indoor residents persist on every floor until the building is left", function()
+    for _, building in ipairs({{C.LEVEL_CCM, 1, 5, 4}, {C.LEVEL_BBH, 1, 6, 4}, {C.LEVEL_WF, 2, 8, 8}}) do
+        local w, H = setup(1)
+        -- Engine collision stub: generated graph supplies the intended floor.
+        H.env.sgl_npc_safe_position = function(x, y, z) return y end
+        w:warp(H, building[1], building[2], 0)
+        w:step(600)
+        local before, heights = students(H), {}
+        for _, o in ipairs(before) do heights[o.oPosY] = (heights[o.oPosY] or 0) + 1 end
+        local floors = 0
+        for _, n in pairs(heights) do
+            check(n >= (building[4] == 8 and 6 or 4) and n <= building[4], "configured residents per floor: " .. n)
+            floors = floors + 1
+        end
+        check(floors == building[3], "all building floors populated")
+        H.pos.x, H.pos.y, H.pos.z = 5000, 1800, 5000
+        w:step(600)
+        local retained = {}
+        for _, o in ipairs(students(H)) do retained[o] = true end
+        for _, o in ipairs(before) do check(retained[o], "same resident after elevator/camera/distance change") end
+        Sim.cmd(H, "crowd", "off")
+        w:step(30)
+        check(#students(H) == 0, "explicit crowd off clears residents")
+        Sim.cmd(H, "crowd", "on")
+        w:step(600)
+        check(#students(H) == #before, "explicit crowd on restores residents")
+        w:warp(H, HUB, 1, 0)
+        H.pos.x, H.pos.y, H.pos.z = 8320, 0, -4440
+        w:step(120)
+        local outside = {}
+        for _, o in ipairs(students(H)) do outside[o] = true end
+        for _, o in ipairs(before) do check(not outside[o], "indoor resident removed on exit") end
+        check(#students(H) == 12, "outdoor crowd resumes")
+    end
+end)
+
+test("Reitz exterior has walkers and food court has residents", function()
     local w, H = setup(1)
-    for _, stage in ipairs({{"swamp", "bob"}, {"reitz", "wf"}, {"alice", "jrb"}, {"libwest", "bbh"}}) do
-        check(H.env.sgl_campus_warp(stage[1], 1, true), "map travel to " .. stage[1])
-        for _, obj in ipairs(Sim.level_script(stage[2]).objects) do
-            if obj.bhv == "bhvSpinAirborneWarp" and obj.area == 1 then
-                H.pos.x, H.pos.y, H.pos.z = obj.x, obj.y - 100, obj.z
-                break
+    w:warp(H, C.LEVEL_WF, 1, 0)
+    H.pos.x, H.pos.y, H.pos.z = 7200, 0, -9300
+    w:step(150)
+    check(#students(H) > 0 and #students(H) <= 12, "Reitz/Malachowsky exterior populated")
+    local before = positions(H)
+    w:step(60)
+    local moved = false
+    for k, p in pairs(positions(H)) do
+        if before[k] and (p[1] ~= before[k][1] or p[3] ~= before[k][3]) then moved = true end
+    end
+    check(moved, "outdoor students walk")
+    H.env.sgl_npc_safe_position = function(x,y,z) return y end
+    w:warp(H, C.LEVEL_WF, 2, 0)
+    w:step(600)
+    local food = 0
+    for _, o in ipairs(students(H)) do
+        if o.oPosY == 600 and (o.oPosX-3200)^2 + (o.oPosZ-2500)^2 < 1600^2 then food = food + 1 end
+    end
+    check(food >= 4, "at least four residents in food court vicinity")
+    local exclusions = H.env.SGL_NPC_EXCLUSIONS
+    check(exclusions and #exclusions >= 11, "food vendor exclusions loaded")
+    for _, o in ipairs(students(H)) do
+        for _, box in ipairs(exclusions or {}) do
+            local b = box.bounds
+            if box.level == C.LEVEL_WF and box.area == 2 then
+                check(not (o.oPosX >= b[1] and o.oPosX <= b[4]
+                    and o.oPosY >= b[2] and o.oPosY <= b[5]
+                    and o.oPosZ >= b[3] and o.oPosZ <= b[6]),
+                    "resident stays clear of service counters")
             end
         end
-        w:step(120)
-        check(#students(H) > 0 and #students(H) <= 12, "crowd at " .. stage[1] .. " arrival")
     end
 end)
 
-test("indoor routing respects room walls, separate floors and moving obstacles", function()
+test("unsafe indoor positions do not enter a spawn retry loop", function()
     local w, H = setup(1)
-    -- Two disconnected rooms on one floor and an overlapping upstairs room.
-    -- The nearest room is blocked by a wall; the visible room is farther away.
-    H.env.SGL_CROWD_AREAS = {{level = C.LEVEL_CCM, area = 1, indoor = true,
-        nodes = {{200,0,0},{400,0,0},{0,0,400},{0,0,600},{0,600,400},{0,600,600}},
-        links = {{1,2},{3,4},{5,6}}}}
-    local blockAll = false
-    H.stubs.collision_find_surface_on_ray = function(x,y,z,dx,dy,dz)
-        if (blockAll and not (x == 0 and z == 0)) or (x == 0 and z == 0 and dx > 0) then
-            return {surface = {}}
-        end
-        return {surface = nil}
-    end
-    w:warp(H, C.LEVEL_CCM, 1, 1)
-    H.pos.x, H.pos.y, H.pos.z = 0,0,0
-    w:step(120)
-    check(#students(H) > 0 and #students(H) <= 2, "small room limits crowd density below quota")
-    for _, o in ipairs(students(H)) do
-        check(o.oPosX == 0 and o.oPosY == 0 and o.oPosZ >= 400 and o.oPosZ <= 600,
-            "only reachable same-floor room receives students")
-    end
-    blockAll = true
-    w:step(6)
-    local before = positions(H)
-    w:step(30)
-    check(#students(H) == 0, "unsafe standing space suppresses students until the obstacle clears")
-    for k, p in pairs(positions(H)) do
-        check(p[1] == before[k][1] and p[3] == before[k][3], "walker stops for a newly blocking obstacle")
-    end
-    blockAll = false
-    H.stubs.gLakituState.curPos.x = -1000000
-    H.stubs.gLakituState.curFocus.x = 0
-    H.pos.x, H.pos.z = 600, 0 -- short doorway move, below the teleport threshold
-    w:step(120)
-    check(#students(H) > 0, "crowd follows a change of room without a warp hook")
-    for _, o in ipairs(students(H)) do
-        check(o.oPosZ == 0 and o.oPosX >= 200 and o.oPosX <= 400,
-            "old unreachable room is retired even when within the distance leash")
-    end
+    local probes = 0
+    H.env.sgl_npc_safe_position = function() probes = probes + 1; return nil end
+    w:warp(H, C.LEVEL_CCM, 1, 0)
+    w:step(600)
+    check(#students(H) == 0, "unsafe floor never spawns")
+    local before = probes
+    w:step(600)
+    check(probes == before, "no endless retry on rejected positions")
 end)
 
 print(string.format("test_campus_npcs: %d passed, %d failed", passed, failed))

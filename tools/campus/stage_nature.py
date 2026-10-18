@@ -278,6 +278,10 @@ def build(S, pole_avoid=()):
     curated = []
     if getattr(S, "key", "hub") == "hub":
         for i, pt in enumerate(HUB_OAKS):
+            # The broad crown at this point intersects Turlington's diagonal facade.
+            # Keep the list indices stable so every other oak retains its shape.
+            if pt == (-40.0, 45.0):
+                continue
             # Keep the heavy trunk off paths/roads and buildings. A nearby mapped tree is replaced
             # visually by the authored tree so this does not double the canopy at one point.
             if _path_clearance(S, pt) < 1.25:

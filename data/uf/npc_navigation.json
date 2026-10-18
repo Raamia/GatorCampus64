@@ -1,6 +1,183 @@
 {
   "schema": 1,
-  "exclusions": [],
+  "exclusions": [
+    {
+      "id": "reitz_vendor_panda_k",
+      "slot": "wf",
+      "area": 2,
+      "min": [
+        1440,
+        550,
+        1490
+      ],
+      "max": [
+        2460,
+        1000,
+        2010
+      ],
+      "reason": "Keep ambient students clear of visual service counters, kitchen equipment and the customer counter edge."
+    },
+    {
+      "id": "reitz_vendor_panda",
+      "slot": "wf",
+      "area": 2,
+      "min": [
+        2100,
+        550,
+        1540
+      ],
+      "max": [
+        3150,
+        1000,
+        2150
+      ],
+      "reason": "Keep ambient students clear of visual service counters, kitchen equipment and the customer counter edge."
+    },
+    {
+      "id": "reitz_vendor_smart",
+      "slot": "wf",
+      "area": 2,
+      "min": [
+        2750,
+        550,
+        1430
+      ],
+      "max": [
+        3700,
+        1000,
+        2160
+      ],
+      "reason": "Keep ambient students clear of visual service counters, kitchen equipment and the customer counter edge."
+    },
+    {
+      "id": "reitz_vendor_tacos",
+      "slot": "wf",
+      "area": 2,
+      "min": [
+        3430,
+        550,
+        750
+      ],
+      "max": [
+        3930,
+        1000,
+        1690
+      ],
+      "reason": "Keep ambient students clear of visual service counters, kitchen equipment and the customer counter edge."
+    },
+    {
+      "id": "reitz_vendor_mac",
+      "slot": "wf",
+      "area": 2,
+      "min": [
+        3430,
+        550,
+        340
+      ],
+      "max": [
+        3930,
+        1000,
+        1170
+      ],
+      "reason": "Keep ambient students clear of visual service counters, kitchen equipment and the customer counter edge."
+    },
+    {
+      "id": "reitz_vendor_burger",
+      "slot": "wf",
+      "area": 2,
+      "min": [
+        3550,
+        550,
+        165
+      ],
+      "max": [
+        4760,
+        1000,
+        670
+      ],
+      "reason": "Keep ambient students clear of visual service counters, kitchen equipment and the customer counter edge."
+    },
+    {
+      "id": "reitz_vendor_shakes",
+      "slot": "wf",
+      "area": 2,
+      "min": [
+        4320,
+        550,
+        -390
+      ],
+      "max": [
+        4820,
+        1000,
+        610
+      ],
+      "reason": "Keep ambient students clear of visual service counters, kitchen equipment and the customer counter edge."
+    },
+    {
+      "id": "reitz_vendor_closed",
+      "slot": "wf",
+      "area": 2,
+      "min": [
+        4320,
+        550,
+        -890
+      ],
+      "max": [
+        4820,
+        1000,
+        30
+      ],
+      "reason": "Keep ambient students clear of visual service counters, kitchen equipment and the customer counter edge."
+    },
+    {
+      "id": "reitz_vendor_sbux",
+      "slot": "wf",
+      "area": 2,
+      "min": [
+        1900,
+        550,
+        3290
+      ],
+      "max": [
+        3140,
+        1000,
+        3790
+      ],
+      "reason": "Keep ambient students clear of visual service counters, kitchen equipment and the customer counter edge."
+    },
+    {
+      "id": "reitz_vendor_pizza",
+      "slot": "wf",
+      "area": 2,
+      "min": [
+        2760,
+        550,
+        3860
+      ],
+      "max": [
+        3270,
+        1000,
+        4890
+      ],
+      "reason": "Keep ambient students clear of visual service counters, kitchen equipment and the customer counter edge."
+    },
+    {
+      "id": "reitz_vendor_halal2",
+      "slot": "wf",
+      "area": 2,
+      "min": [
+        2390,
+        550,
+        4540
+      ],
+      "max": [
+        3190,
+        1000,
+        5690
+      ],
+      "reason": "Keep ambient students clear of visual service counters, kitchen equipment and the customer counter edge."
+    }
+  ],
   "outdoor_regions": {
     "castle_grounds": {
       "height_range": [
