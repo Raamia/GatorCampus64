@@ -157,6 +157,53 @@ def _centre(pts):
     return (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts))
 
 
+def _split_half_plane(poly, a, b):
+    """Split a convex polygon by the line a->b: -> (part right of it, part left of it), None when empty."""
+    def side(p):
+        return (b[0] - a[0]) * (p[1] - a[1]) - (b[1] - a[1]) * (p[0] - a[0])
+    right, left = [], []
+    n = len(poly)
+    for i in range(n):
+        p, q = poly[i], poly[(i + 1) % n]
+        sp, sq = side(p), side(q)
+        (left if sp >= 0 else right).append(p)
+        if (sp >= 0) != (sq >= 0):
+            t = sp / (sp - sq)
+            x = (p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t)
+            right.append(x)
+            left.append(x)
+
+    def ok(c):
+        return c if len(c) >= 3 and abs(G.signed_area(c)) > 1e-4 else None
+    return ok(right), ok(left)
+
+
+def _convex_parts(poly):
+    """A CCW polygon as convex CCW parts: itself, or a fan of triangles when a mitred quad is concave."""
+    n = len(poly)
+    for i in range(n):
+        a, b, c = poly[i], poly[(i + 1) % n], poly[(i + 2) % n]
+        if (b[0] - a[0]) * (c[1] - b[1]) - (b[1] - a[1]) * (c[0] - b[0]) < -1e-9:
+            # fan from the reflex corner: every triangle is then convex and inside the polygon
+            r = (i + 1) % n
+            ring = poly[r:] + poly[:r]
+            return [tri for tri in ([ring[0], ring[k], ring[k + 1]] for k in range(1, n - 1))
+                    if G.signed_area(tri) > 1e-6]
+    return [poly]
+
+
+def _subtract_convex(poly, cutter):
+    """poly minus a convex CCW cutter -> list of convex pieces (poly itself convex)."""
+    out, rest = [], poly
+    for i in range(len(cutter)):
+        outside, rest = _split_half_plane(rest, cutter[i], cutter[(i + 1) % len(cutter)])
+        if outside:
+            out.append(outside)
+        if rest is None:
+            break
+    return out
+
+
 def build(S):
     d = S.data
     T = S.T
@@ -266,6 +313,7 @@ def build(S):
     # junction nodes, especially when the connected ways carry different
     # widths. A low polygon asphalt join closes those seams and rounds the
     # meeting point without changing the road edges along the rest of a block.
+    road_cut = []      # every asphalt polygon (CCW): sidewalk ribbons are cut out of them below
     for p, width in hot_records:
         # The diagonal gaps between two perpendicular road edges reach farther
         # than either road's half-width. Cover the full corner envelope so
@@ -274,6 +322,7 @@ def build(S):
         patch = [(p[0] + math.cos(i * math.tau / 12) * radius,
                   p[1] + math.sin(i * math.tau / 12) * radius) for i in range(12)]
         roads_acc.flat(patch, Z["road"] + 0.003, "asphalt")
+        road_cut.append(patch)
 
     for r in sorted(d["roads"], key=lambda r: r["width"]):
         if r["id"] in skip_ways:
@@ -285,18 +334,57 @@ def build(S):
             q, _ = clip_ext(quad)
             if q and not piece_in_hole(q):
                 roads_acc.flat(q, Z["road"], "asphalt")
+                road_cut.extend(_convex_parts(G.ccw(q)))
         if r.get("center_line"):
             _center_dashes(roads_acc, [T(p) for p in r["pts"]],
                            (lambda m: near_junction(m) or in_hole(m)) if holes else near_junction)
+
+    road_grid = {}
+    for k, rp in enumerate(road_cut):
+        x0, y0, x1, y1 = G.bbox(rp)
+        for gx in range(int(x0 // 20), int(x1 // 20) + 1):
+            for gy in range(int(y0 // 20), int(y1 // 20) + 1):
+                road_grid.setdefault((gx, gy), []).append(k)
+
+    def cut_roads(poly):
+        """A convex path piece minus every asphalt polygon it overlaps -> convex pieces."""
+        x0, y0, x1, y1 = G.bbox(poly)
+        ks = sorted({k for gx in range(int(x0 // 20), int(x1 // 20) + 1)
+                     for gy in range(int(y0 // 20), int(y1 // 20) + 1) for k in road_grid.get((gx, gy), ())})
+        pieces = _convex_parts(poly)
+        for k in ks:
+            rx0, ry0, rx1, ry1 = G.bbox(road_cut[k])
+            nxt = []
+            for pc in pieces:
+                bx0, by0, bx1, by1 = G.bbox(pc)
+                if bx1 < rx0 or bx0 > rx1 or by1 < ry0 or by0 > ry1:
+                    nxt.append(pc)
+                else:
+                    nxt.extend(_subtract_convex(pc, road_cut[k]))
+            pieces = nxt
+            if not pieces:
+                break
+        return [pc for pc in pieces if abs(G.signed_area(pc)) > 0.02]
 
     # ---- walkways, crossings, steps
     for p in d["paths"]:
         if p["id"] in skip_ways:
             continue
-        pts = densify([T(q) for q in p["pts"]], 9.0 if p["kind"] == "steps" else 18.0)
+        raw = [T(q) for q in p["pts"]]
+        if p["kind"] == "crossing" and len(raw) > 2 and \
+                all(G.seg_dist(q, raw[0], raw[-1]) < 1.5 for q in raw[1:-1]):
+            raw = [raw[0], raw[-1]]   # a crosswalk is painted straight: drop the small OSM kinks
+        pts = densify(raw, 9.0 if p["kind"] == "steps" else 18.0)
         if sum(1 for q in pts if in_pond(q)) > len(pts) / 2:
             continue
         w = p["width"]
+        if p["kind"] == "crossing":
+            # crosswalk stripes only where a road is: a crossing tag over a footpath or a lawn draws nothing
+            quads = [q for q, _s0, _s1 in G.ribbon(pts, w)]
+            over = sum(abs(G.signed_area(q)) - sum(abs(G.signed_area(c)) for c in cut_roads(G.ccw(q)))
+                       for q in quads)
+            if over < 1.0:
+                continue
         if p["kind"] in ("crossing", "steps"):
             mat = p["mat"]
             tile = S.tiles[mat]
@@ -311,11 +399,15 @@ def build(S):
         else:
             for quad, _s0, _s1 in G.ribbon(pts, w):
                 q, _ = clip_ext(quad)
-                if q and not piece_in_hole(q):
+                if not q or piece_in_hole(q):
+                    continue
+                # OSM sidewalks often run on across the carriageway (to a junction node or the far
+                # kerb) without a crossing tag: keep the asphalt clean, only crosswalks cross a road
+                for piece in cut_roads(G.ccw(q)):
                     # a non-sidewalk ribbon (a mulch trail) sits 3 cm above the sidewalks it crosses
                     # instead of z-fighting with them at the same height
                     z = Z["path"] if p["mat"] == "sidewalk" else Z["path"] + 0.03
-                    roads_acc.flat(q, z, p["mat"])
+                    roads_acc.flat(piece, z, p["mat"])
 
     # ---- ponds: basin (visual + collision), translucent water surface, water box
     basin_v = S.acc("Pond basins visual", collision=False)

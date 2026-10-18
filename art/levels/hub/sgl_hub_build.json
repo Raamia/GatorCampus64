@@ -19,7 +19,7 @@
  ],
  "extent_half_m": 324.0,
  "collision_tris": 8729,
- "visual_tris": 54163,
+ "visual_tris": 54567,
  "collision_by_object": {
   "Ground collision": 1552,
   "Pond basins collision": 195,
@@ -42,7 +42,7 @@
  },
  "visual_by_object": {
   "Ground visual": 7694,
-  "Roads and paths visual": 6730,
+  "Roads and paths visual": 7134,
   "Pond basins visual": 195,
   "Pond water": 137,
   "Props visual": 252,
@@ -3829,7 +3829,7 @@
   "errors": [],
   "warnings": [],
   "collision_tris": 8935,
-  "render_tris": 54163,
+  "render_tris": 54567,
   "lua_names": [
    "SGL_HUB_SIGN_CENTURY_TOWER",
    "SGL_HUB_SIGN_FINAL_EXAM",

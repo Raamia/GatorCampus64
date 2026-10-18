@@ -19,7 +19,7 @@
  ],
  "extent_half_m": 324.0,
  "collision_tris": 6949,
- "visual_tris": 47920,
+ "visual_tris": 48473,
  "collision_by_object": {
   "Ground collision": 1608,
   "Pond basins collision": 68,
@@ -34,7 +34,7 @@
  },
  "visual_by_object": {
   "Ground visual": 8215,
-  "Roads and paths visual": 5930,
+  "Roads and paths visual": 6483,
   "Pond basins visual": 76,
   "Pond water": 36,
   "Props visual": 364,
@@ -3430,7 +3430,7 @@
   "errors": [],
   "warnings": [],
   "collision_tris": 7188,
-  "render_tris": 47920,
+  "render_tris": 48473,
   "lua_names": [],
   "fog_patched": [
    44,

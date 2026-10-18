@@ -19,7 +19,7 @@
  ],
  "extent_half_m": 324.0,
  "collision_tris": 9427,
- "visual_tris": 77515,
+ "visual_tris": 77943,
  "collision_by_object": {
   "Ground collision": 1781,
   "Pond basins collision": 259,
@@ -38,7 +38,7 @@
  },
  "visual_by_object": {
   "Ground visual": 9779,
-  "Roads and paths visual": 5530,
+  "Roads and paths visual": 5958,
   "Pond basins visual": 263,
   "Pond water": 157,
   "Props visual": 350,
@@ -4680,7 +4680,7 @@
    "13093 static collision triangles in the largest area (22638 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
   ],
   "collision_tris": 22638,
-  "render_tris": 225811,
+  "render_tris": 226239,
   "lua_names": [],
   "fog_patched": [
    319,
