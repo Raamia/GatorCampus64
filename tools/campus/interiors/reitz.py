@@ -4305,11 +4305,21 @@ def rail_plugs(RZ):
     P = K.Prop("rail_plugs")
     for fid, x, y, h in RAIL_PLUGS:
         z = RZ.floors[fid].z
+        # stairs_fast2 pass (game_stairs_28: the 0.4-0.48 m junction squares read as stray blocks on the landings):
+        # every plug is cut to the rails' own collision width (0.24 m square, like the landing / balcony rail
+        # blocks it joins), so it reads as a slim newel post in the rail line. The L2 NE head plug keeps its 0.48 m:
+        # cut to 0.24 m it reopened its pocket (spotfall_r L2 head 1 -> 76 falls, falls_fast 0 -> 8)
+        if fid != "L2":
+            h = min(h, 0.12)
         K.col_box(P.collision, x - h, y - h, z - 0.05, x + h, y + h, z + RAIL_H + 0.06, K.COL_NOCAM)
         # fix round 5 (technical improvement 0): every plug that stays is a rendered newel post (it stood as an
         # invisible post on walkable floor); 1 cm inside its collision on every side
-        P.visual.box(x - h + 0.01, y - h + 0.01, z, x + h - 0.01, y + h - 0.01, z + RAIL_H + 0.05, "int_ru_white",
-                     faces="+x-x+y-y+z")
+        # stairs_fast pass (game_stairs_28: squat white blocks mid-landing): drawn as a short railing section -
+        # grey picket sides under a honey-wood cap, like the rails it joins (same footprint as the collision)
+        P.visual.box(x - h + 0.01, y - h + 0.01, z, x + h - 0.01, y + h - 0.01, z + RAIL_H, "int_ru_picket2",
+                     faces="+x-x+y-y")
+        P.visual.box(x - h + 0.01, y - h + 0.01, z + RAIL_H, x + h - 0.01, y + h - 0.01, z + RAIL_H + 0.05,
+                     "int_ru_maple", faces="+x-x+y-y+z")
     RZ.kit_add(P, "L1", tag="rail_plugs")
 
 
