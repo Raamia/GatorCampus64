@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight, Building2, Gamepad2, MapPin, Sparkles, Users } from 'lucide-react'
 import catalog from '../../data/mission-catalog.json'
@@ -11,19 +11,26 @@ const campusStages = [...new Set(catalogMissions.map((mission) => mission.stage)
 export default function HomePage() {
   const [selected, setSelected] = useState<Mission | null>(null)
   const [hint, setHint] = useState('')
+  const hintRequest = useRef<AbortController | null>(null)
+  useEffect(() => () => hintRequest.current?.abort(), [])
   const choose = async (mission: Mission) => {
+    hintRequest.current?.abort()
+    const controller = new AbortController()
+    hintRequest.current = controller
     setSelected(mission)
     setHint('')
     try {
       const response = await studyFetch('/api/study/dispatcher', {
         method: 'POST',
+        signal: controller.signal,
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ missionId: mission.id }),
       })
+      if (!response.ok) throw new Error('Hint unavailable')
       const data = await response.json() as { text?: string }
-      setHint(data.text ?? mission.hint)
+      if (!controller.signal.aborted) setHint(typeof data.text === 'string' && data.text.trim() ? data.text : mission.hint)
     } catch {
-      setHint(mission.hint)
+      if (!controller.signal.aborted) setHint(mission.hint)
     }
   }
 
