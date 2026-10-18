@@ -475,6 +475,9 @@ def build(S):
             bv.flat(quad, h, top)
             bc.flat(quad, h, "COL default")
 
+    from marston_plaza import build as build_marston_plaza
+    build_marston_plaza(S)
+
     # One visible ground surface at each point, including landmark walk ribbons.
     from ground_surfaces import apply as partition_ground
     partition_ground(S)

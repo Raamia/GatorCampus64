@@ -430,6 +430,7 @@ local function npc_show(id, text, thinking)
     sBubbles[id] = { text = text, age = 0, thinking = thinking }
     if thinking then return end
     npc.hop = 0
+    if sgl_minimap_chat_notice ~= nil then sgl_minimap_chat_notice() end
     djui_chat_message_create(chat_color(npc) .. npc.name .. ":\\#dcdcdc\\ " .. text)
     if npc.obj ~= nil and dist2d(gMarioStates[0].pos.x, gMarioStates[0].pos.z, npc.x, npc.z) < 2500 then
         play_sound(SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource)
@@ -650,6 +651,10 @@ local function draw_bubble(b, x, y, col)
     local h = #lines * lh + 6
     local alpha = sgl_hud_fade(b.age, b.thinking and SGL_NPC_TIMEOUT or SGL_NPC_BUBBLE, 4, 20)
     local top = y - h
+    local mapBox = sgl_minimap_rect ~= nil and sgl_minimap_rect() or nil
+    if mapBox ~= nil and not sgl_hud_clear_of_minimap(x - w / 2 - 1, top - 1, w + 2, h + 7) then
+        x = math.max(x, mapBox.x + mapBox.w + w / 2 + 8)
+    end
     sgl_hud_rect(x - w / 2 - 1, top - 1, w + 2, h + 2, col[1], col[2], col[3], 220 * alpha)
     sgl_hud_rect(x - w / 2, top, w, h, 255, 255, 255, 235 * alpha)
     sgl_hud_rect(x - 2, y, 4, 4, 255, 255, 255, 235 * alpha)   -- the tail
@@ -665,11 +670,14 @@ local function on_hud_render()
     local W, H = sgl_hud_setup(FONT_NORMAL)
     local out = { x = 0, y = 0, z = 0 }
     for _, npc in ipairs(SGL_NPCS) do
-        if npc.obj ~= nil and dist2d(m.pos.x, m.pos.z, npc.x, npc.z) < 2500 then
+        if npc.obj ~= nil and dist2d(m.pos.x, m.pos.z, npc.x, npc.z) < 1000 then
             local head = { x = npc.x, y = npc.y + 180 * npc.scale + 40, z = npc.z }
             if djui_hud_world_pos_to_screen_pos(head, out) and out.x > -50 and out.x < W + 50 and out.y > 0 and out.y < H
                 and sgl_hud_in_sight("npc:" .. npc.id, head) then   -- not through walls
-                sgl_hud_text_center(npc.name, out.x, out.y - 10, 0.28, npc.col, 1)
+                local nameWidth = sgl_hud_text_width(npc.name, 0.23)
+                if sgl_hud_clear_of_minimap(out.x - nameWidth / 2, out.y - 10, nameWidth, 10) then
+                    sgl_hud_text_center(npc.name, out.x, out.y - 10, 0.23, npc.col, 1)
+                end
                 local b = sBubbles[npc.id]
                 if b ~= nil then draw_bubble(b, out.x, out.y - 14, npc.col) end
             end
@@ -677,7 +685,7 @@ local function on_hud_render()
     end
     local near = sgl_npc_near(m)
     if near ~= nil then
-        sgl_hud_prompt("TALK TO " .. near.name:upper(), "Press Enter and type in chat", 1)
+        sgl_hud_prompt("TALK TO " .. near.name:upper(), "Enter: type in chat", 1, 1)
     end
 end
 

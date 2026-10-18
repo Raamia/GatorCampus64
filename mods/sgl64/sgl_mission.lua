@@ -1842,10 +1842,15 @@ function sgl_mission_kind_race(spec)
         end
         sgl_hud_toast("Finish! " .. sgl_hud_format_time(L.frames) .. (underPar and " - under par!" or
             (" - par is " .. sgl_hud_format_time(spec.par * 30))), 5, underPar and SGL_HUD_GREEN or SGL_HUD_WHITE)
-        if spec.gold ~= nil and L.frames <= spec.gold * 30 then
+        local goldTime = spec.gold ~= nil and L.frames <= spec.gold * 30
+        if goldTime and L.newPb then
+            -- A single visible notification must carry both accomplishments.
+            sgl_hud_toast("GOLD TIME! New personal best!", 5, SGL_HUD_GOLD)
+        elseif goldTime then
             sgl_hud_toast("GOLD TIME! (under " .. sgl_hud_format_time(spec.gold * 30) .. ")", 5, SGL_HUD_GOLD)
+        elseif L.newPb then
+            sgl_hud_toast("New personal best!", 5, SGL_HUD_GOLD)
         end
-        if L.newPb then sgl_hud_toast("New personal best!", 5, SGL_HUD_GOLD) end
         ctx:send("fin", { race = ctx.f, fr = L.frames, nm = gNetworkPlayers[0].name })
         -- sgl_bridge.lua: report the finish to a hosted server's bridge (inert offline)
         if _G.sglOnRaceFinish ~= nil then _G.sglOnRaceFinish(spec.pbKey, L.frames) end

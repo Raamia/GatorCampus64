@@ -121,7 +121,9 @@ test("joins and departures rebalance without rebuilding retained students", func
     local retained = students(H)[1]
     local J = w:connect("Late arrival")
     w:warp(J, HUB, 1, 0)
-    J.pos.x, J.pos.z = -1350, 16700
+    -- Use a node on the regenerated outdoor route graph; the old coordinate is no longer
+    -- within the graph's spawn radius after the Marston/plaza map rebuild.
+    J.pos.x, J.pos.z = -2830, 12497
     check(J.env.sgl_crowd_quota() == 0, "late arrival waits for host roster")
     w:step(150)
     check(#students(H) == 8 and #students(F) == 8 and #students(J) == 8, "three equal shares")

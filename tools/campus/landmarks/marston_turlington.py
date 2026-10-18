@@ -108,7 +108,8 @@ def _tile(mat):
 # landmark table
 # ---------------------------------------------------------------------------------------------
 POTATO_XY = (-44.31, 26.92)      # OSM node n4741925737
-MARSTON_DOOR = (-58.5, -69.0)    # north wing ground floor, centred between the planters
+MARSTON_BASE_Z = 1.20  # raised entrance level, photo-based metres
+MARSTON_DOOR = (-58.5, -69.0)    # left of the westbound approach from Newell Drive
 
 LANDMARKS = [
     {
@@ -118,13 +119,13 @@ LANDMARKS = [
         "center_m": (-59.6, -98.9),
         "height_m": 22.5,
         "doors": [
-            {"name": "DOOR_marston_1", "pos_m": (MARSTON_DOOR[0], MARSTON_DOOR[1], 0.0),
+            {"name": "DOOR_marston_1", "pos_m": (MARSTON_DOOR[0], MARSTON_DOOR[1], MARSTON_BASE_Z),
              "facing_deg": 0.0, "stage": "Marston Science Library (interior), course 3",
-             "note": "main entrance on the stepped north wing, facing the entry plaza", "primary": True},
+             "note": "north-facing entrance, on the left after the westbound brick stair approach", "primary": True},
         ],
         "markers": [
-            {"name": "marston_entry_plaza", "pos_m": (-58.5, -61.0, 0.0), "facing_deg": 180.0,
-             "note": "open paving between the two brick planters (TA Office Hours #2 spot)"},
+            {"name": "marston_entry_plaza", "pos_m": (-58.5, -65.0, MARSTON_BASE_Z), "facing_deg": 180.0,
+             "note": "upper courtyard approach beside the covered entrance"},
         ],
     },
     {
@@ -1008,7 +1009,7 @@ M_TOWERS = [_chamfer(t, c)[0] for t, c in M_TOWER_SRC]
 M_TOWER_CUTS = [cut for t, c in M_TOWER_SRC for cut in _chamfer(t, c)[1]]
 M_SKY = {"x": (-74.0, -50.0), "y": (-112.0, -94.0), "ridge_z": 21.3}
 M_COURT_Z = (15.0, 16.2)
-M_PLANTERS = [(-53.5, -64.2), (-63.5, -64.2)]
+M_PLANTERS = []  # Landscape builder owns connected beds and entrance clearance.
 M_PLANTER = (4.0, 2.6, 0.9)
 
 M_FALLBACK = [(-39.8, -67.47), (-39.61, -79.02), (-42.58, -79.03), (-42.61, -87.11), (-33.54, -87.07),
@@ -1170,18 +1171,26 @@ def _marston_planters(paint, visual):
 
 
 def _marston_door(paint):
+    # Door faces the upper courtyard, left of the approach from the street.
     x, y = MARSTON_DOOR
-    w, h = 3.2, 3.0
-    paint.poly([(x - w / 2, y + 0.05, 0.0), (x + w / 2, y + 0.05, 0.0), (x + w / 2, y + 0.05, h),
-                (x - w / 2, y + 0.05, h)], "dark_trim", hint=(0, 1, 0))
-    paint.poly([(x - w / 2 + 0.2, y + 0.08, 0.0), (x + w / 2 - 0.2, y + 0.08, 0.0),
-                (x + w / 2 - 0.2, y + 0.08, h - 0.25), (x - w / 2 + 0.2, y + 0.08, h - 0.25)], "window_glass",
-               uvs=[(1.0, 0.0), (0.0, 0.0), (0.0, 0.92), (1.0, 0.92)], hint=(0, 1, 0))
+    f = 0.0
+    nx, ny = math.sin(f), math.cos(f)
+    tx, ty = ny, -nx
+    def panel(half, top, offset, mat):
+        pts = [(x + tx * u + nx * offset, y + ty * u + ny * offset, z)
+               for u, z in [(-half, 0), (half, 0), (half, top), (-half, top)]]
+        paint.poly(pts, mat, hint=(nx, ny, 0))
+    panel(2.2, 3.1, .06, 'dark_trim')
+    panel(2.0, 2.85, .09, 'window_glass')
 
 
 def build_marston(ctx):
     plan = _marston_plan(ctx)
     base = _marston_massing(plan)
+    # Extend the masonry base to ground; translate the complete building below.
+    for v in base.verts:
+        if abs(v.co.z) < 0.001:
+            v.co.z -= MARSTON_BASE_Z
     out = []
     col = _copy_bm(base)
     pc = _Paint(col)
@@ -1192,6 +1201,8 @@ def build_marston(ctx):
     _pier_walls(pc, M_PIERS, M_FLOOR, "dark_trim")
     me, slots = _to_mesh(col, pc, "marston.collision")
     col.free()
+    for v in me.vertices:
+        v.co.z += MARSTON_BASE_Z
     out.append(_part("marston_collision", me, slots, collision=True, visual=False))
     vis = base
     pv = _Paint(vis)
@@ -1203,6 +1214,8 @@ def build_marston(ctx):
     _pier_walls(pv, M_PIERS, M_FLOOR, "dark_trim", shade=0.9)
     me, slots = _to_mesh(vis, pv, "marston.visual")
     vis.free()
+    for v in me.vertices:
+        v.co.z += MARSTON_BASE_Z
     out.append(_part("marston_visual", me, slots, collision=False, visual=True))
     return out
 

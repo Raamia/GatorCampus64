@@ -891,6 +891,8 @@ test("act 3: staying put 45 s ends in a sneeze heard 20 m away (warned at 35 s);
         w:step(1)
         guard = guard + 1
     end
+    -- The shared HUD prompt renderer draws on the next HUD frame after the mission publishes it.
+    w:step(1)
     check(ctx_of(S).loc.chime ~= nil and ctx_of(S).loc.chime.text == "2F WEST", "the 30 s chime: 2F WEST")
     check(Sim.hud_has(S, "CHIME! Hiders: 2F WEST"), "shown to the librarian")
     w:seconds(5.5)
