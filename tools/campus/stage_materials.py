@@ -22,6 +22,9 @@ def _hex(h):
 
 def _set_light(mat, srgb, ambient_k=0.5):
     f = mat.f3d_mat
+    # Fog presets may omit light commands. Never inherit an actor's lights:
+    # visible actors (and therefore the inherited tint) change with the camera.
+    f.set_lights = True
     if hasattr(f, "set_ambient_from_light"):
         f.set_ambient_from_light = False
     f.default_light_color = (*(_srgb_to_linear(c) for c in srgb), 1.0)
