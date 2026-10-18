@@ -261,7 +261,9 @@ def layout(site):
         prev = None
         for p, d, s in _walk(spts, 2.4, 1.0):
             q = (p[0] + d[1] * off, p[1] - d[0] * off)        # right of the walk = the lawn (south)
-            if any(math.dist(q, g) < 2.6 for g in gaps) or site.in_building(q, 0.5):
+            if any(math.dist(q, g) < 2.6 for g in gaps) or site.in_building(q, 0.5) or any(
+                    pid != SIDEWALK_ID and len(pts) >= 2 and _poly_dist(q, pts) < _f(t.get("width"), 2.0) / 2 + 0.6
+                    for pid, t, pts in site.paths):
                 prev = None
                 continue
             L["bollards"].append(q)

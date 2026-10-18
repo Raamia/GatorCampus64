@@ -525,7 +525,7 @@ extern Vtx wf_dl_LM_reitz_streetscape_visual_mesh_layer_1_vtx_0[584];
 extern Gfx wf_dl_LM_reitz_streetscape_visual_mesh_layer_1_tri_0[];
 extern Vtx wf_dl_LM_reitz_streetscape_visual_mesh_layer_1_vtx_1[1392];
 extern Gfx wf_dl_LM_reitz_streetscape_visual_mesh_layer_1_tri_1[];
-extern Vtx wf_dl_LM_reitz_streetscape_visual_mesh_layer_1_vtx_2[3764];
+extern Vtx wf_dl_LM_reitz_streetscape_visual_mesh_layer_1_vtx_2[3708];
 extern Gfx wf_dl_LM_reitz_streetscape_visual_mesh_layer_1_tri_2[];
 extern Vtx wf_dl_LM_reitz_streetscape_visual_mesh_layer_1_vtx_3[184];
 extern Gfx wf_dl_LM_reitz_streetscape_visual_mesh_layer_1_tri_3[];
