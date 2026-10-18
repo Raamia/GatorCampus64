@@ -52,3 +52,21 @@ Use two disposable/consented test identities and a quiet hosted-game window. Ano
 - Verify a consented generation and matching guest deploy with the new lease/revalidation protocol. Do not declare inference readiness from container state alone.
 
 Pending inputs/evidence: completed merged deployment, interactive testers/test accounts, and an isolated production-backup recovery target. No production restore or account deletion should be improvised as a health check.
+
+
+## In-game login configuration regression
+
+If `/login` receives Auth0 `Unauthorized or unknown client`, inspect the bridge's
+effective environment as well as `/etc/sgl/bridge.env`. A combined line such as
+`AUTH0_CLIENT_ID=<native-id> AUTH0_AUDIENCE=<audience>` makes systemd include the
+second assignment in the client ID. A shell-style checker that keeps only the
+first token can miss this. Keep one assignment per line and comments on their
+own lines. `check_config.py` now compares the running bridge's client ID against
+the file and validates its shape, domain and audience, emitting booleans only.
+
+After backing up and correcting the file, restart `sgl-bridge` to load the new
+environment (this also restarts the game). Verify device-code issuance and an
+`authorization_pending` token-poll response using the running native app client.
+Tenant discovery alone does not prove a particular client's device grant works;
+the website's SPA client may correctly disallow that grant. A player must still
+approve a login to verify the authenticated end-to-end flow.

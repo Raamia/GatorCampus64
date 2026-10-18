@@ -1,11 +1,24 @@
 #!/usr/bin/env python3
 """Read-only remote configuration checks; emit comparisons and presence flags, never secret values."""
+import inspect
 import json
 from pathlib import Path
 import release
 
-REMOTE = r'''
-import json, pathlib, shlex, sys
+def login_checks(expected, configured, running):
+    """Check what systemd actually passed to the bridge, without printing values."""
+    import re
+    client = running.get('AUTH0_CLIENT_ID', '')
+    return {
+        'bridge_running_client_matches_file': bool(client) and client == configured.get('AUTH0_CLIENT_ID'),
+        'bridge_running_client_is_single_id': bool(re.fullmatch(r'[A-Za-z0-9_-]+', client)),
+        'bridge_running_domain_matches_browser': running.get('AUTH0_DOMAIN') == expected['domain'],
+        'bridge_running_audience_matches_browser': running.get('AUTH0_AUDIENCE') == expected['audience'],
+    }
+
+
+REMOTE = inspect.getsource(login_checks) + r'''
+import json, pathlib, shlex, subprocess, sys
 expected = json.loads(sys.argv[1])
 def env(path):
     result = {}
@@ -29,6 +42,13 @@ checks = {
     'api_deepspace_delivery_configured': bool(api.get('DEEPSPACE_APP_URL') and api.get('DEEPSPACE_INGEST_SECRET')),
     'startup_schema_disabled': api.get('SGL_APPLY_SCHEMA', '0') == '0',
 }
+# EnvironmentFile syntax differs from shell tokenization. A malformed line can
+# look correct after shlex.split(...)[0] yet pass extra assignments as ID text.
+pid = subprocess.check_output(['systemctl', 'show', '-p', 'MainPID', '--value', 'sgl-bridge'], text=True).strip()
+running = {}
+if pid.isdigit() and pid != '0':
+    running = dict(part.decode().split('=', 1) for part in pathlib.Path('/proc', pid, 'environ').read_bytes().split(b'\0') if b'=' in part)
+checks.update(login_checks(expected, bridge, running))
 print(json.dumps(checks, indent=2))
 sys.exit(0 if all(checks.values()) else 1)
 '''
