@@ -36,6 +36,12 @@ class Config:
     deploy_gap: float
     announce_wait: float
     leaderboard_poll: float = 60.0
+    npc: bool = True
+    npc_dir: str = ""
+    npc_fake: bool = False
+    npc_model: str = "gemini-3.8-flash"
+    npc_thinking: str = "low"
+    gemini_api_key: str | None = None
 
     @property
     def login_enabled(self) -> bool:
@@ -84,4 +90,10 @@ def from_env(env: dict[str, str] | None = None) -> Config:
         deploy_gap=float(g("SGL_DEPLOY_MIN_GAP") or 300),
         announce_wait=float(g("SGL_DEPLOY_ANNOUNCE") or 60),
         leaderboard_poll=float(g("SGL_LEADERBOARD_POLL") or 60),
+        npc=_flag(e.get("SGL_NPC"), True),
+        npc_dir=g("SGL_NPC_DIR") or str(Path(__file__).resolve().parents[3] / "tools" / "npc_bridge"),
+        npc_fake=_flag(e.get("SGL_NPC_FAKE"), False),
+        npc_model=g("SGL_NPC_MODEL") or "gemini-3.8-flash",
+        npc_thinking=g("SGL_NPC_THINKING") or "low",
+        gemini_api_key=g("GEMINI_API_KEY"),
     )

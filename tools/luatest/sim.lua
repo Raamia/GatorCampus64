@@ -522,7 +522,7 @@ function World:build_env(c)
         local marioObj = strict("Object", mo)
         mo.__built = true
         local ms = { playerIndex = i, pos = (i == 0) and c.pos or { x = 0, y = 0, z = 0 },
-            faceAngle = (i == 0) and c.face or { x = 0, y = 0, z = 0 }, health = 0x880, action = C.ACT_IDLE, numLives = 4,
+            faceAngle = (i == 0) and c.face or { x = 0, y = 0, z = 0 }, health = 0x880, action = C.ACT_IDLE, numLives = 4, numCoins = 0,
             numStars = 0, controller = ctl, marioObj = marioObj, character = { type = C.CT_MARIO },
             skipWarpInteractionsTimer = 0, interactObj = nil, usedObj = nil, riddenObj = nil,
             vel = { x = 0, y = 0, z = 0 }, forwardVel = 0, heldObj = nil, area = nil }
@@ -727,6 +727,8 @@ function World:build_env(c)
     -- used by levels.lua / main.lua (integration test)
     S.camera_set_romhack_override = function() end
     S.camera_set_use_course_specific_settings = function() end
+    S.camera_config_is_mouse_look_enabled = function() return c.mouseLookEnabled ~= false end
+    S.camera_config_enable_mouse_look = function(enabled) c.mouseLookEnabled = enabled end
     local dialogN = 0
     S.smlua_text_utils_allocate_dialog = function() dialogN = dialogN + 1; return 0x100 + dialogN end
     S.smlua_text_utils_dialog_replace = function() end
@@ -769,6 +771,36 @@ function World:build_env(c)
         return a
     end
     S.soft_reset_camera = function(cam) assert(cam ~= nil) end
+    S.degrees_to_sm64 = function(deg)
+        assert(type(deg) == "number")
+        return math.floor(deg * 65536 / 360 + 0.5)
+    end
+    -- custom Lua animations (sgl_albert.lua): registered tables per client, the object's current one in _customAnim
+    c.customAnims = {}
+    S.smlua_anim_util_register_animation = function(name, flags, div, start, loopStart, loopEnd, values, index)
+        assert(type(name) == "string" and c.customAnims[name] == nil, "register_animation: new name " .. tostring(name))
+        for _, v in ipairs({ flags, div, start, loopStart, loopEnd }) do assert(math.type(v) == "integer") end
+        assert(#values > 0 and #index > 0 and #index % 2 == 0, "register_animation: values / index tables")
+        for _, v in ipairs(values) do assert(math.type(v) == "integer" and v >= 0 and v <= 0xFFFF, "u16 value") end
+        for i = 1, #index, 2 do
+            assert(index[i] >= 1 and index[i + 1] + index[i] <= #values, "index entry inside the values")
+        end
+        c.customAnims[name] = { values = values, index = index, frames = loopEnd }
+    end
+    S.smlua_anim_util_set_animation = function(o, name)
+        assert(c.customAnims[name] ~= nil, "set_animation: unknown animation " .. tostring(name))
+        raw(o)._customAnim = name
+    end
+    -- vanilla object animations (sgl_npc.lua; stage tests replace these with their own tables)
+    S.gObjectAnimations = setmetatable({}, { __index = function(_, k) return "ANIM:" .. k end })
+    S.obj_init_animation = function(o, i) raw(o)._anim = i end
+    S.approach_s16_symmetric = function(cur, target, inc)
+        assert(math.type(cur) == "integer" and math.type(target) == "integer" and type(inc) == "number")
+        local d = (target - cur + 32768) % 65536 - 32768
+        if d > inc then d = inc elseif d < -inc then d = -inc end
+        local v = (cur + d + 32768) % 65536 - 32768
+        return math.floor(v)
+    end
     S.set_mario_action = function(m, a, arg)
         raw(m).action = a
         raw(m).actionArg = arg
@@ -844,7 +876,7 @@ function World:build_env(c)
             activeFlags = C.ACTIVE_FLAG_ACTIVE, oAnimState = 0, oTimer = 0, oFaceAngleYaw = 0, oMoveAngleYaw = 0,
             oIntangibleTimer = 0,
             oDrawingDistance = 4000, oCollisionDistance = 1000, oStarSpawnExtCutsceneFlags = 0, oHealth = 0,
-            header = { gfx = { node = { flags = 0 }, scale = { x = 1, y = 1, z = 1 } } },
+            header = { gfx = { node = { flags = 0 }, scale = { x = 1, y = 1, z = 1 }, animInfo = { animFrame = 0 } } },
             _inited = false, _id = c.nextObj }
         c.nextObj = c.nextObj + 1
         local o = strict("Object", s)

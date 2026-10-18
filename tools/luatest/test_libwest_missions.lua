@@ -257,22 +257,13 @@ test("levels/bbh/script.c (when built): warp contract for door 5, no level-scrip
                 (o.bparams or 0) >> 24, o.acts))
         end
     end
-    -- enemies placed in act 3's hide-and-seek arena would chase hiders who keep still; flow.md 7 step 10: the stage
-    -- build act-masks them out of act 3 (libwest.py HIDE_SEEK_ACT; integration: this was a printed note before)
+    -- Ambient Goombas were removed map-wide while the UF-rivalry replacement is being made.
     local w, A = world_with({ "A" })
-    local enemies, inArena = 0, 0
+    local goombas = 0
     for _, o in ipairs(ls.objects) do
-        if o.bhv == "bhvGoomba" or o.bhv == "bhvBobomb" or o.bhv == "bhvBoo" then
-            enemies = enemies + 1
-            if A.env.sgl_libwest_in_arena({ x = o.x, y = o.y, z = o.z }, 0x7) then
-                inArena = inArena + 1
-                check((o.acts & 0x04) == 0 and (o.acts & 0x3B) == 0x3B,
-                    string.format("%s at (%d, %d, %d) in act 3's hide-and-seek arena: in every act but 3 (acts 0x%02X)",
-                        o.bhv, o.x, o.y, o.z, o.acts))
-            end
-        end
+        if o.bhv == "bhvGoomba" then goombas = goombas + 1 end
     end
-    check(enemies > 0 and inArena > 0, string.format("the level's enemies were checked (%d, %d in the arena)", enemies, inArena))
+    check(goombas == 0, string.format("no Goombas remain in the Library West level script (%d found)", goombas))
 end)
 
 test("LIBWEST_POINTS: inside s16, floors 6 m apart, star humps under the ceilings, the arena, ladders beside their ranges", function()

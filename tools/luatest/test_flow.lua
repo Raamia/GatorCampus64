@@ -122,7 +122,7 @@ test("load: every mod file in coopdx order, strict globals, no duplicate registr
     -- relative order of the files whose load order matters (other files may sit in between)
     local pos, ordered = 0, true
     for _, f in ipairs({ "characters.lua", "charselect.lua", "course.lua", "guests.lua", "levels.lua", "main.lua",
-        "sgl_bridge.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_login.lua", "sgl_mission.lua", "sgl_qr.lua",
+        "sgl_albert.lua", "sgl_bridge.lua", "sgl_controls.lua", "sgl_deepspace.lua", "sgl_hud.lua", "sgl_login.lua", "sgl_mission.lua", "sgl_npc.lua", "sgl_qr.lua",
         "sgl_status_hud.lua", "swamp_missions.lua" }) do
         local at = nil
         for i, g in ipairs(Sim.ALL_FILES) do if g == f then at = i end end
@@ -142,6 +142,26 @@ test("load: every mod file in coopdx order, strict globals, no duplicate registr
     check(H.env.gServerSettings.skipIntro == 1, "intro skipped (hub replaces Peach's castle grounds)")
     check(type(H.env._G.sglFriends) == "table" and #H.env._G.sglFriends == 18, "characters.lua exports 10 friends + 8 guest slots (guests.lua)")
     check(H.env._G.sglOpenCharSelect ~= nil and H.env._G.sglOnFriendSet ~= nil, "charselect.lua exports its hooks")
+end)
+
+test("campus maps: no ambient Mario coins or Goombas remain in level scripts", function()
+    local w = full_world()
+    local env = w:connect("Host").env
+    local checked = 0
+    for _, stage in ipairs(env.SGL_STAGES) do
+        local ls = Sim.level_script(stage.slot)
+        if ls ~= nil then
+            local found = {}
+            for _, o in ipairs(ls.objects) do
+                if o.bhv == "bhvYellowCoin" or o.bhv == "bhvCoinFormation" or o.bhv == "bhvGoomba" then
+                    found[#found + 1] = o.bhv
+                end
+            end
+            check(#found == 0, stage.key .. ": no yellow coins, coin formations, or Goombas in any act")
+            checked = checked + 1
+        end
+    end
+    check(checked >= 5, "checked all five campus course level scripts")
 end)
 
 test("contract: hub doors, warp nodes and return spawns match course.lua (all six doors)", function()
@@ -398,6 +418,32 @@ test("campus boards: direct button and mouse open a later board without the mapp
     w:step(1)
     check(table.concat(H.hudText, " | "):find("REITZ ROOFTOP", 1, true) ~= nil,
         "keyboard Down arrow wraps from fourth to first board, then A opens it")
+end)
+
+test("mouse look toggle: Y/keyboard 0 toggles mouse capture and is consumed", function()
+    local w = full_world()
+    local H = w:connect("Host")
+    check(H.mouseLookEnabled ~= false, "mouse look starts enabled")
+
+    H.pressed = C.Y_BUTTON
+    w:step(1)
+    check(H.mouseLookEnabled == false, "toggle turns mouse look off for clicking menus")
+    check((H.lastInput.pressed & C.Y_BUTTON) == 0 and (H.lastInput.buttons & C.Y_BUTTON) == 0,
+        "toggle press does not also perform the Y action")
+    check(#H.popups == 1, "first press shows one status popup")
+
+    -- Keyboard repeat can reassert buttonPressed every frame while 0 is held.
+    H.pressed = C.Y_BUTTON
+    w:step(3)
+    check(H.mouseLookEnabled == false and #H.popups == 1,
+        "holding/repeating 0 does not toggle repeatedly or stack popups")
+
+    H.pressed = 0
+    w:step(1) -- release the key before the next distinct press
+    H.pressed = C.Y_BUTTON
+    w:step(1)
+    check(H.mouseLookEnabled == true, "second toggle restores mouse look for camera control")
+    check(#H.popups == 2, "a distinct press shows exactly one new popup")
 end)
 
 test("door 2: The Hub (2 stars) -> Reitz & Engineering act 1 -> star -> back outside The Hub door", function()
@@ -927,7 +973,7 @@ test("door 5: Library West (11 stars) -> Library West After Dark act 1 -> star -
     check(H.level == BBH and H.act == 2, "/campus libwest 2 -> Library West act 2")
     w:step(3)
     check(#Sim.objects_with(H, env.id_bhvSglLibwestSolid) == #P.staff_doors, "act 2: only the staff-only doors, no stair barriers")
-    -- the level's Goombas: none in act 3's hide-and-seek arena in act 3 (OBJECT_WITH_ACTS), all four in acts 1 and 2
+    -- Goombas are disabled across the campus maps until the UF-rivalry character replacement is ready.
     local function goombas(act)
         local n = 0
         for _, o in ipairs(BBH_SCRIPT.objects) do
@@ -935,8 +981,8 @@ test("door 5: Library West (11 stars) -> Library West After Dark act 1 -> star -
         end
         return n
     end
-    check(goombas(1) == 4 and goombas(2) == 4 and goombas(3) == 1, string.format(
-        "Goombas: 4 in acts 1-2, only the one outside the hide-and-seek arena in act 3 (%d / %d / %d)", goombas(1), goombas(2), goombas(3)))
+    check(goombas(1) == 0 and goombas(2) == 0 and goombas(3) == 0, string.format(
+        "no Goombas until the rivalry replacement is ready (%d / %d / %d)", goombas(1), goombas(2), goombas(3)))
 end)
 
 test("coming soon acts: free roam notice, no mission, no star, no invite; exit works", function()

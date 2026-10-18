@@ -34,6 +34,7 @@ from sglbridge.httpclient import Http  # noqa: E402
 from sglbridge.inbox import Inbox  # noqa: E402
 from sglbridge.leaderboard import LeaderboardPoller, fetch_leaderboards  # noqa: E402
 from sglbridge.login import LoginService  # noqa: E402
+from sglbridge import npc as npc_mod  # noqa: E402
 
 log = logging.getLogger("sglbridge")
 game_log = logging.getLogger("game")
@@ -48,6 +49,7 @@ class Bridge:
         self.queue = queue
         self.login = login
         self.leaderboards = leaderboards
+        self.npc = None
         self.players: dict[int, str] = {}
         self._lock = threading.Lock()
 
@@ -62,6 +64,8 @@ class Bridge:
         self.inbox.reset()
         if self.leaderboards is not None:
             self.leaderboards.reset()
+        if self.npc is not None:
+            self.npc.reset()
 
     def on_game_exit(self, rc: int) -> None:
         """The game process ended: tell the API (/status) with an `exit` event."""
@@ -107,6 +111,8 @@ class Bridge:
             self.login.on_login_req(gi, name)
         elif t == "run" and self.leaderboards is not None:
             self.leaderboards.kick()              # a new verified run may change a board
+        elif t == "npc_ask" and self.npc is not None:
+            self.npc.ask(ev)
         elif t == "link_req" and isinstance(gi, int):
             code = "".join(c for c in str(ev.get("code") or "") if c.isalnum()).upper()[:16]
             if code:
@@ -157,6 +163,10 @@ def main() -> int:
         log.warning("Auth0 not configured (AUTH0_DOMAIN / AUTH0_CLIENT_ID / AUTH0_AUDIENCE): /login answers 'unavailable'")
     login = LoginService(flow, validator, api, inbox)
     bridge = Bridge(inbox, queue, login, leaderboards)
+    npc = npc_mod.build(cfg)
+    bridge.npc = npc
+    if npc is not None:
+        threads.append(threading.Thread(target=npc.run, args=(stop,), daemon=True, name="npc"))
 
     cmd = line_buffered(cfg.game_cmd) if cfg.line_buffer else cfg.game_cmd
     game = GameSupervisor(cmd, cfg.game_cwd, bridge.on_line, bridge.on_game_start, on_exit=bridge.on_game_exit)

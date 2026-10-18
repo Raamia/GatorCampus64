@@ -175,27 +175,27 @@ RU_MATERIALS = {
     "int_ru_wood_lvt":     {"size": (32, 32), "tile_m": 1.6, "color": "#6E5440"},
     # ---- fidelity pass 4 (ballrooms, upstairs meeting rooms, hotel, elevators, Level 4)
     "int_ru_wall_slateblue": {"size": (32, 32), "tile_m": 2.0, "color": "#8E95A8"},   # fidelity-4 r2: +15 % value
-    "int_ru_door_elev":    {"size": (32, 64), "tile_m": 2.2, "color": "#B4B8BC", "map": "once"},
+    "int_ru_door_elev":    {"size": (32, 64), "tile_m": 2.2, "color": "#70757A", "map": "once"},
     "int_ru_door_hotel":   {"size": (32, 64), "tile_m": 2.2, "color": "#7A4A2C", "map": "once"},
     "int_ru_call_button":  {"size": (16, 32), "tile_m": 0.4, "color": "#B4B8BC", "map": "once"},
     "int_ru_stone_clad":   {"size": (32, 32), "tile_m": 1.2, "color": "#B8AE9C"},
     "int_ru_shade":        {"size": (32, 32), "tile_m": 1.0, "color": "#C8C6C0", "map": "once"},
     # ---- design pass (wayfinding): one hanging two-face sign per Blue elevator lobby (int_ru_wayfind_<floor> = the
     # north face, _s = the south face; L5 / L6 have no arrows: one texture), UF blue, white caps, an orange rule
-    "int_ru_wayfind_LL": {"size": (64, 32), "tile_m": 2.4, "color": "#1E3C9E", "map": "once"},
-    "int_ru_wayfind_LL_s": {"size": (64, 32), "tile_m": 2.4, "color": "#1E3C9E", "map": "once"},
-    "int_ru_wayfind_G": {"size": (64, 32), "tile_m": 2.4, "color": "#1E3C9E", "map": "once"},
-    "int_ru_wayfind_G_s": {"size": (64, 32), "tile_m": 2.4, "color": "#1E3C9E", "map": "once"},
-    "int_ru_wayfind_L1": {"size": (64, 32), "tile_m": 2.4, "color": "#1E3C9E", "map": "once"},
-    "int_ru_wayfind_L1_s": {"size": (64, 32), "tile_m": 2.4, "color": "#1E3C9E", "map": "once"},
-    "int_ru_wayfind_L2": {"size": (64, 32), "tile_m": 2.4, "color": "#1E3C9E", "map": "once"},
-    "int_ru_wayfind_L2_s": {"size": (64, 32), "tile_m": 2.4, "color": "#1E3C9E", "map": "once"},
-    "int_ru_wayfind_L3": {"size": (64, 32), "tile_m": 2.4, "color": "#1E3C9E", "map": "once"},
-    "int_ru_wayfind_L3_s": {"size": (64, 32), "tile_m": 2.4, "color": "#1E3C9E", "map": "once"},
-    "int_ru_wayfind_L4": {"size": (64, 32), "tile_m": 2.4, "color": "#1E3C9E", "map": "once"},
-    "int_ru_wayfind_L4_s": {"size": (64, 32), "tile_m": 2.4, "color": "#1E3C9E", "map": "once"},
-    "int_ru_wayfind_L5": {"size": (64, 32), "tile_m": 2.4, "color": "#1E3C9E", "map": "once"},
-    "int_ru_wayfind_L6": {"size": (64, 32), "tile_m": 2.4, "color": "#1E3C9E", "map": "once"},
+    "int_ru_wayfind_LL": {"size": (64, 32), "tile_m": 2.4, "color": "#E2E4E6", "map": "once"},
+    "int_ru_wayfind_LL_s": {"size": (64, 32), "tile_m": 2.4, "color": "#E2E4E6", "map": "once"},
+    "int_ru_wayfind_G": {"size": (64, 32), "tile_m": 2.4, "color": "#E2E4E6", "map": "once"},
+    "int_ru_wayfind_G_s": {"size": (64, 32), "tile_m": 2.4, "color": "#E2E4E6", "map": "once"},
+    "int_ru_wayfind_L1": {"size": (64, 32), "tile_m": 2.4, "color": "#E2E4E6", "map": "once"},
+    "int_ru_wayfind_L1_s": {"size": (64, 32), "tile_m": 2.4, "color": "#E2E4E6", "map": "once"},
+    "int_ru_wayfind_L2": {"size": (64, 32), "tile_m": 2.4, "color": "#E2E4E6", "map": "once"},
+    "int_ru_wayfind_L2_s": {"size": (64, 32), "tile_m": 2.4, "color": "#E2E4E6", "map": "once"},
+    "int_ru_wayfind_L3": {"size": (64, 32), "tile_m": 2.4, "color": "#E2E4E6", "map": "once"},
+    "int_ru_wayfind_L3_s": {"size": (64, 32), "tile_m": 2.4, "color": "#E2E4E6", "map": "once"},
+    "int_ru_wayfind_L4": {"size": (64, 32), "tile_m": 2.4, "color": "#E2E4E6", "map": "once"},
+    "int_ru_wayfind_L4_s": {"size": (64, 32), "tile_m": 2.4, "color": "#E2E4E6", "map": "once"},
+    "int_ru_wayfind_L5": {"size": (64, 32), "tile_m": 2.4, "color": "#E2E4E6", "map": "once"},
+    "int_ru_wayfind_L6": {"size": (64, 32), "tile_m": 2.4, "color": "#E2E4E6", "map": "once"},
     # fix round 2, fidelity-2 (food court): Sonic-style glow letters, landscape menu screens, a tall neon swirl,
     # vertical-grain maple panels (Starbucks), orange booth upholstery, lay-in troffers, a pastry case, letter-only
     # vendor names (cutout, mounted straight on the fascia)
@@ -240,7 +240,7 @@ RU_MATERIALS = {
     # fix round 4 (fidelity-3 blocking): G315's pale blue-grey accent, the billiards hall's warm charcoal panel, the
     # Esports storefront's dark smoked glass
     "int_ru_wall_paleblue": {"size": (32, 32), "tile_m": 2.0, "color": "#BCC4D0"},
-    "int_ru_wall_billiards": {"size": (32, 32), "tile_m": 2.0, "color": "#4E4440"},
+    "int_ru_wall_billiards": {"size": (32, 32), "tile_m": 2.0, "color": "#2E3036"},
     # fix round 5 (fidelity-3; ru_es_oelrich_8951): alpha 0.62 -> 0.52, the blue-lit arena glows through from the Game Room
     "int_ru_glass_smoke":  {"size": (32, 32), "tile_m": 3.0, "color": "#1C2234", "kind": "water", "alpha": 0.52},
     # fix round 4 (fidelity-1 blocking): the atrium's east bulkhead, silver grid-seamed metal panels
@@ -288,6 +288,123 @@ RU_MATERIALS = {
     # iteration 9 (fidelity-4 improvement 8; ru_os_3305 / ru_os_3310: ~174, 159, 139): a warmer cream than
     # int_ru_wall_cream (which bakes near-white under the meeting rooms' cool linear lights)
     "int_ru_wall_warm":    {"size": (32, 32), "tile_m": 2.0, "color": "#EAD8BC"},
+    # ==== user-photo pass (the user's own photos: atrium core)
+    "int_ru_tower_glass":  {"size": (32, 64), "tile_m": 3.0, "color": "#14161B", "map": "once"},
+    "int_ru_tower_car":    {"size": (32, 64), "tile_m": 3.0, "color": "#E8CC9C", "map": "once"},
+    "int_ru_sign_gators":  {"size": (64, 32), "tile_m": 4.2, "color": "#F47A1E", "kind": "cutout", "map": "once"},
+    "int_ru_band_blue":    {"size": (64, 16), "tile_m": 12.0, "color": "#E8E8E8", "map": "once"},
+    "int_ru_word_blue":    {"size": (64, 16), "tile_m": 7.5, "color": "#2A5CE0", "kind": "cutout", "map": "once"},
+    "int_ru_band_orange":  {"size": (64, 16), "tile_m": 13.5, "color": "#E8E2DA", "map": "once"},
+    "int_ru_word_orange":  {"size": (64, 16), "tile_m": 10.5, "color": "#F05A1E", "kind": "cutout", "map": "once"},
+    "int_ru_bronze_black": {"size": (32, 32), "tile_m": 0.8, "color": "#24262A"},
+    "int_ru_carpet_tri":   {"size": (64, 32), "tile_m": 3.0, "color": "#2442A4"},
+    "int_ru_banner_welcome2": {"size": (64, 16), "tile_m": 5.0, "color": "#1E3CA0", "map": "once"},
+    "int_ru_banner_welcome3": {"size": (64, 16), "tile_m": 5.0, "color": "#1E3CA0", "map": "once"},
+    "int_ru_word_senate":  {"size": (64, 8), "tile_m": 3.0, "color": "#8A8D92", "kind": "cutout", "map": "once"},
+    "int_ru_picket2":      {"size": (32, 32), "tile_m": 1.1, "color": "#9EA2A6", "kind": "cutout"},
+    "int_ru_leather_char": {"size": (32, 32), "tile_m": 0.8, "color": "#2E3034"},
+    "int_ru_gator_claw":   {"size": (32, 32), "tile_m": 0.45, "color": "#1E2A5C", "kind": "cutout", "map": "once"},
+    "int_ru_gator_skin_grey": {"size": (32, 32), "tile_m": 1.0, "color": "#D2D3D4"},
+    "int_ru_word_cabo":    {"size": (64, 16), "tile_m": 3.2, "color": "#F57A1E", "kind": "cutout", "map": "once"},
+    "int_ru_word_mexgrill": {"size": (64, 8), "tile_m": 2.4, "color": "#FFFFFF", "kind": "cutout", "map": "once"},
+    "int_ru_snake_plant":  {"size": (16, 32), "tile_m": 0.9, "color": "#3C6E34", "kind": "cutout", "map": "once"},
+    # ==== user-photo pass (the user's own photos: the L1 food court, user_18-20, B01-B03)
+    "int_ru_vletters_sbux": {"size": (64, 16), "tile_m": 3.0, "color": "#F0EFEA", "kind": "cutout", "map": "once"},
+    "int_ru_badge_green":  {"size": (32, 32), "tile_m": 0.7, "color": "#1E6A44", "kind": "cutout", "map": "once"},
+    "int_ru_cafe_shelves": {"size": (64, 32), "tile_m": 2.0, "color": "#4A2E1E"},
+    "int_ru_slat_walnut":  {"size": (32, 32), "tile_m": 0.5, "color": "#5A3A24"},
+    "int_ru_mural_coffea": {"size": (64, 32), "tile_m": 3.3, "color": "#1E2021", "map": "once"},
+    "int_ru_brick_rustic": {"size": (32, 32), "tile_m": 1.0, "color": "#B8683C"},
+    "int_ru_vletters_babas": {"size": (128, 16), "tile_m": 3.8, "color": "#F2EEE4", "kind": "cutout", "map": "once"},
+    "int_ru_badge_black":  {"size": (32, 32), "tile_m": 1.0, "color": "#141414", "kind": "cutout", "map": "once"},
+    "int_ru_badge_gold":   {"size": (32, 32), "tile_m": 0.9, "color": "#D4A23A", "kind": "cutout", "map": "once"},
+    "int_ru_vletters_halal2": {"size": (128, 16), "tile_m": 3.0, "color": "#6A3E1A", "kind": "cutout", "map": "once"},
+    "int_ru_tile_lattice": {"size": (32, 32), "tile_m": 0.5, "color": "#F2F2EE"},
+    "int_ru_vletters_panda": {"size": (64, 16), "tile_m": 2.0, "color": "#FFFFFF", "kind": "cutout", "map": "once"},
+    "int_ru_badge_red":    {"size": (32, 32), "tile_m": 0.7, "color": "#C8202A", "kind": "cutout", "map": "once"},
+    "int_ru_vletters_smart": {"size": (128, 16), "tile_m": 2.6, "color": "#C8202A", "kind": "cutout", "map": "once"},
+    "int_ru_fc_queue":     {"size": (32, 32), "tile_m": 1.2, "color": "#4E4945"},
+    "int_ru_vinyl_grey":   {"size": (32, 32), "tile_m": 1.2, "color": "#A8A59F"},
+    "int_ru_troffer_sq":   {"size": (16, 16), "tile_m": 0.6, "color": "#F4F6F8", "map": "once"},
+    "int_ru_vent_sq":      {"size": (16, 16), "tile_m": 0.6, "color": "#9A9EA4", "map": "once"},
+    "int_ru_sign_bk_gators": {"size": (64, 16), "tile_m": 6.1, "color": "#2F6BFF", "kind": "cutout", "map": "once"},
+    "int_ru_sign_bk_store": {"size": (64, 16), "tile_m": 5.7, "color": "#2F6BFF", "kind": "cutout", "map": "once"},
+    "int_ru_badge_gator":  {"size": (32, 32), "tile_m": 1.4, "color": "#1E3CA0", "kind": "cutout", "map": "once"},
+    "int_ru_grille":       {"size": (32, 32), "tile_m": 0.6, "color": "#AEB2B8", "kind": "cutout"},
+    "int_ru_jersey":       {"size": (32, 16), "tile_m": 1.0, "color": "#F4F4F4", "map": "once"},
+    "int_ru_laminate_mauve": {"size": (32, 32), "tile_m": 0.9, "color": "#B98A96"},
+    "int_ru_order_here":   {"size": (64, 8), "tile_m": 0.4, "color": "#FFFFFF", "kind": "cutout", "map": "once"},
+    "int_ru_paint_cranberry": {"size": (32, 32), "tile_m": 2.0, "color": "#8A1C20"},
+    # ==== user-photo pass, Ground floor (user_01, user_03, user_04, B12-B20)
+    "int_ru_tile_ceiling_dark": {"size": (32, 32), "tile_m": 1.2, "color": "#4E5468"},
+    "int_ru_scale_led":    {"size": (64, 32), "tile_m": 2.0, "color": "#2B2BD8"},
+    "int_ru_inlay_reitz":  {"size": (64, 32), "tile_m": 2.45, "color": "#E6E1D4", "map": "once"},
+    "int_ru_granite_black": {"size": (32, 32), "tile_m": 0.8, "color": "#1C1C20"},
+    "int_ru_brass":        {"size": (32, 32), "tile_m": 1.0, "color": "#C8A04A"},
+    "int_ru_wayfind_G_w_a": {"size": (64, 32), "tile_m": 2.0, "color": "#F2F1EC", "map": "once"},
+    "int_ru_wayfind_G_w_b": {"size": (64, 32), "tile_m": 2.0, "color": "#F2F1EC", "map": "once"},
+    "int_ru_wayfind_G_w_c": {"size": (64, 32), "tile_m": 2.0, "color": "#F2F1EC", "map": "once"},
+    "int_ru_arrow_navy":   {"size": (16, 16), "tile_m": 0.4, "color": "#1E3C9E", "map": "once"},
+    "int_ru_terrazzo_grey": {"size": (32, 32), "tile_m": 1.5, "color": "#A5A39C"},
+    "int_ru_terrazzo_orange": {"size": (32, 32), "tile_m": 1.5, "color": "#D9782F"},
+    "int_ru_sign_gr_transom": {"size": (64, 16), "tile_m": 2.4, "color": "#FFFFFF", "kind": "cutout", "map": "once"},
+    "int_ru_barber_pole":  {"size": (16, 32), "tile_m": 0.6, "color": "#F4F4F4"},
+    "int_ru_sign_barber":  {"size": (64, 32), "tile_m": 2.8, "color": "#F6F6F4", "map": "once"},
+    "int_ru_photo_bw":     {"size": (64, 32), "tile_m": 1.1, "color": "#B4B4B0"},
+    "int_ru_dir_G":        {"size": (32, 64), "tile_m": 1.6, "color": "#1E3C9E", "map": "once"},
+    "int_ru_sign_arena":   {"size": (64, 16), "tile_m": 2.6, "color": "#FF8A2A", "kind": "cutout", "map": "once"},
+    "int_ru_subway_green": {"size": (32, 32), "tile_m": 2.0, "color": "#0F7A35"},
+    "int_ru_sign_subway":  {"size": (64, 16), "tile_m": 2.3, "color": "#FFC20E", "kind": "cutout", "map": "once"},
+    "int_ru_arcade_gamepod": {"size": (32, 64), "tile_m": 1.85, "color": "#1A1A1E", "map": "once"},
+    "int_ru_sign_nosh":    {"size": (64, 16), "tile_m": 2.2, "color": "#FFFFFF", "kind": "cutout", "map": "once"},
+    "int_ru_sign_market":  {"size": (32, 32), "tile_m": 0.7, "color": "#1E2A5C", "kind": "cutout", "map": "once"},
+    # ==== user-photo pass, L1-L3 corridors + Rion (user_06-user_17, C03, C04, C07, C08, C11-C16)
+    "int_ru_ccc_screen":   {"size": (64, 32), "tile_m": 3.4, "color": "#1F4DB0", "map": "once"},
+    "int_ru_marble":       {"size": (32, 32), "tile_m": 1.2, "color": "#E9E9EB"},
+    "int_ru_timeline":     {"size": (64, 32), "tile_m": 2.4, "color": "#E3672B"},
+    "int_ru_timeline_head": {"size": (128, 16), "tile_m": 4.8, "color": "#E3672B", "map": "once"},
+    "int_ru_timeline_head2": {"size": (128, 16), "tile_m": 4.8, "color": "#E3672B", "map": "once"},
+    "int_ru_sign_rion":    {"size": (128, 16), "tile_m": 4.6, "color": "#EDEBE6", "map": "once"},
+    "int_ru_sign_rion_east": {"size": (128, 16), "tile_m": 4.6, "color": "#EDEBE6", "map": "once"},
+    "int_ru_hang_pass_a":  {"size": (64, 32), "tile_m": 2.0, "color": "#E2E4E6", "map": "once"},
+    "int_ru_hang_pass_b":  {"size": (64, 32), "tile_m": 2.0, "color": "#E2E4E6", "map": "once"},
+    "int_ru_hang_pass_c":  {"size": (64, 32), "tile_m": 2.0, "color": "#E2E4E6", "map": "once"},
+    "int_ru_hang_blue_a":  {"size": (64, 32), "tile_m": 2.0, "color": "#E2E4E6", "map": "once"},
+    "int_ru_hang_blue_b":  {"size": (64, 32), "tile_m": 2.0, "color": "#E2E4E6", "map": "once"},
+    "int_ru_hang_blue_c":  {"size": (64, 32), "tile_m": 2.0, "color": "#E2E4E6", "map": "once"},
+    "int_ru_hang_blue_d":  {"size": (64, 32), "tile_m": 2.0, "color": "#E2E4E6", "map": "once"},
+    "int_ru_oils":         {"size": (64, 32), "tile_m": 1.8, "color": "#5E4626", "map": "once"},
+    "int_ru_sign_gatorwell": {"size": (64, 16), "tile_m": 2.2, "color": "#E8742A", "kind": "cutout", "map": "once"},
+    "int_ru_slate_floor":  {"size": (32, 32), "tile_m": 1.2, "color": "#555A62"},
+    "int_ru_partition":    {"size": (32, 32), "tile_m": 1.2, "color": "#8C9095"},
+    "int_ru_door_meeting_honey": {"size": (32, 64), "tile_m": 2.4, "color": "#B8823E", "map": "once"},
+    "int_ru_maple_pale":   {"size": (64, 32), "tile_m": 1.6, "color": "#D8BC90"},
+    "int_ru_word_wall_a":  {"size": (64, 32), "tile_m": 2.9, "color": "#8A5C34", "map": "once"},
+    "int_ru_word_wall_b":  {"size": (64, 32), "tile_m": 2.9, "color": "#8A5C34", "map": "once"},
+    "int_ru_hang_meet":    {"size": (64, 32), "tile_m": 2.0, "color": "#E2E4E6", "map": "once"},
+    "int_ru_frit":         {"size": (64, 8), "tile_m": 1.2, "color": "#F4F6F8", "kind": "cutout"},
+    "int_ru_rion_case":    {"size": (32, 64), "tile_m": 2.0, "color": "#1E2A44", "map": "once"},
+    # design + leftovers pass (user_06, C04, B05): the dark grey terrazzo inlay band of the L1-L3 corridors
+    "int_ru_terrazzo_dark": {"size": (32, 32), "tile_m": 1.5, "color": "#5E6062"},
+    # photo pass round 2 (C14 Rion walls, user_11 Blue elevator lobby)
+    "int_ru_wall_greige":  {"size": (32, 32), "tile_m": 2.0, "color": "#D4C4B0"},
+    "int_ru_wall_lobby_navy": {"size": (32, 32), "tile_m": 2.0, "color": "#2E3A72"},
+    "int_ru_glass_tint_dk": {"size": (32, 32), "tile_m": 1.2, "color": "#22262C"},
+    # photo pass round 2, atrium / food court / Ground leftovers (user_04, B08-B10, B14, B16, B20)
+    "int_ru_tile_ceiling_mid": {"size": (32, 32), "tile_m": 1.2, "color": "#A0A6B2"},
+    "int_ru_carpet_tri_dk": {"size": (64, 32), "tile_m": 3.0, "color": "#1E2F70"},
+    # photo pass round 3 (C03, C12, C13, user_12, user_13): muted Rion pre-function + L1 lounge carpets
+    "int_ru_carpet_prefn": {"size": (64, 32), "tile_m": 3.0, "color": "#6E7A9C"},
+    "int_ru_slat_cloud":   {"size": (32, 32), "tile_m": 0.5, "color": "#8C6A4C"},
+    "int_ru_fabric_teal":  {"size": (32, 32), "tile_m": 0.6, "color": "#2C7894"},
+    "int_ru_sign_restroom_blade": {"size": (32, 16), "tile_m": 0.6, "color": "#1E4AA0", "map": "once"},
+    "int_ru_word_wall_dense_a": {"size": (64, 32), "tile_m": 3.1, "color": "#B07C46", "map": "once"},
+    "int_ru_word_wall_dense_b": {"size": (64, 32), "tile_m": 3.1, "color": "#B07C46", "map": "once"},
+    "int_ru_carpet_lounge": {"size": (64, 32), "tile_m": 3.0, "color": "#384258"},
+    "int_ru_hours_screen": {"size": (32, 64), "tile_m": 1.0, "color": "#16224E", "map": "once"},
+    "int_ru_sign_barber_blade": {"size": (64, 32), "tile_m": 0.9, "color": "#F6F6F4", "map": "once"},
+    "int_ru_badge_babas":  {"size": (32, 32), "tile_m": 1.0, "color": "#141414", "kind": "cutout", "map": "once"},
+    "int_ru_badge_halal":  {"size": (32, 32), "tile_m": 0.9, "color": "#D4A23A", "kind": "cutout", "map": "once"},
 }
 for _m in RU_MATERIALS.values():
     _m["tex"] = None
@@ -670,7 +787,7 @@ def tx_carpet_billiards(seed):
     r = t.r
     pts = [(r.uniform(0, 64), r.uniform(0, 32)) for _ in range(42)]
     tone = [r.uniform(0.86, 1.1) for _ in pts]
-    base = hexc("#52555F")    # fix round 4 (fidelity-3): dark neutral field, blue scale outlines (photo (79,78,84))
+    base = hexc("#3D4A6A")    # user-photo pass (user_04, B20): a bluer field, orange + black accent scales
     for y in range(32):
         for x in range(64):
             ds = []
@@ -688,9 +805,11 @@ def tx_carpet_billiards(seed):
             # no 1-in-6 highlight dither inside them, a softer mid band; the scale pattern and the photo's neutral
             # field (79,78,84) stay
             if d2 - d1 < 0.45:
-                c = hexc("#857A66") if i1 % 4 == 0 else hexc("#6E7890")
+                c = hexc("#B86A2E") if i1 % 6 == 0 else hexc("#7C92C0")
             elif d2 - d1 < 0.95:
-                c = mix(shade(base, tone[i1]), hexc("#6A7086"), 0.4)
+                c = mix(shade(base, tone[i1]), hexc("#6A7CA6"), 0.4)
+            elif i1 % 7 == 3:
+                c = shade(hexc("#202228"), tone[i1])
             else:
                 c = shade(base, tone[i1] * (0.9 + 0.12 * min(1.0, d1 / 4.0)))
             t.set(x, y, c)
@@ -1656,8 +1775,10 @@ FONT3X = dict(FONT3, **{"^": [".#.", "###", ".#.", ".#.", ".#."], "v": [".#.", "
 
 def tx_wayfind(fid, face, seed):
     """One face ("N": normal +y, "S": normal -y) of floor fid's elevator-lobby wayfinding sign: UF blue, white caps
-    with the arrows that face's reader needs, an orange rule along the bottom (64 x 32: the 4 KB RGBA16 limit)."""
-    t = Tex(64, 32, hexc("#1E3C9E"), seed)
+    with the arrows that face's reader needs, an orange rule along the bottom (64 x 32: the 4 KB RGBA16 limit).
+    design + leftovers pass (user_03, user_11, C08: every real Reitz hanging sign is light grey with navy
+    caps): light grey field, navy caps (was UF blue with white caps), the orange + navy rules kept."""
+    t = Tex(64, 32, hexc("#E2E4E6"), seed)
     t.noise(2)
     lines = WAYFIND[fid]
     n = len(lines)
@@ -1668,7 +1789,7 @@ def tx_wayfind(fid, face, seed):
         else:
             a = WAYFIND_ARROW[face][side]
             txt = f"{name} >" if a == ">" else f"{a} {name}"
-        font_center(t, txt, y, hexc("#FFFFFF"), font=FONT3X)
+        font_center(t, txt, y, hexc("#1E2A5C"), font=FONT3X)
         y += 7
     t.rect(0, 28, 63, 29, hexc("#F06A1E"))
     t.rect(0, 30, 63, 31, hexc("#162C78"))
@@ -1971,12 +2092,12 @@ def tx_prints(seed):
 def tx_door_elev(seed):
     """Brushed-steel elevator doors (no public photo: the house finishes): two sliding leaves meeting at a centre
     seam, fine vertical brushing, a darker sill line; once-mapped across the whole opening."""
-    t = Tex(32, 64, hexc("#B4B8BC"), seed)
+    t = Tex(32, 64, hexc("#70757A"), seed)          # photo pass r2 (user_11): mid-grey stainless (was #B4B8BC)
     for x in range(32):
         k = 1.0 + 0.05 * math.sin(x * 2.3) + t.r.uniform(-0.03, 0.03)
         for y in range(64):
-            t.set(x, y, shade(hexc("#B4B8BC"), k + t.r.uniform(-0.015, 0.015)))
-    t.rect(15, 0, 16, 63, hexc("#5A5E62"))
+            t.set(x, y, shade(hexc("#70757A"), k + t.r.uniform(-0.015, 0.015)))
+    t.rect(15, 0, 16, 63, hexc("#4A4E52"))
     t.frame(hexc("#7A7E82"), 0, 0, 31, 63)
     t.rect(1, 61, 30, 62, hexc("#4A4E52"))
     return t
@@ -2404,7 +2525,7 @@ TEXTURES = {
     "int_ru_bulletin": lambda s: tx_bulletin(s),                        # ... corridor bulletin boards
     "int_ru_sign_bookstore": lambda s: tx_sign_bookstore(s),            # ... the Bookstore link sign (L1 south hall)
     "int_ru_wall_paleblue": lambda s: _flat("#BCC4D0", s, 2),           # fix round 4: G315 accent (ru_os_g315)
-    "int_ru_wall_billiards": lambda s: _flat("#4E4440", s, 3),          # ... billiards hall walls (ru_gr_billiards_room)
+    "int_ru_wall_billiards": lambda s: _flat("#2E3036", s, 3),     # user-photo pass (user_04): neutral black-navy          # ... billiards hall walls (ru_gr_billiards_room)
     "int_ru_glass_smoke": lambda s: _flat("#1C2234", s, 1),             # ... Esports storefront glass (ru_es_oelrich_8951)
     "int_ru_metal_panel": lambda s: tx_metal_panel(s),                  # ... atrium east bulkhead (ru_atrium_enr_vertical)
     "int_ru_orange_uf": lambda s: _flat("#FA8A1E", s, 3),               # fix round 4 fidelity-1: UF letters
@@ -2442,7 +2563,470 @@ TEXTURES = {
     "int_ru_art_gal_a": lambda s: tx_art_gallery("a", s),               # the Gallery: large blue canvas
     "int_ru_art_gal_b": lambda s: tx_art_gallery("b", s),               # ... tall multicolour + photo grid + landscapes
     "int_ru_wall_warm": lambda s: _flat("#EAD8BC", s, 2),               # 3305 / 3310 warm cream walls
+    # ==== user-photo pass (atrium core; appended LAST: earlier recipes keep their seeds)
+    "int_ru_tower_glass": lambda s: tx_tower_glass(s),                  # Gators tower: black-glass shaft bays
+    "int_ru_tower_car": lambda s: tx_tower_car(s),                      # ... its two lit glass cars
+    "int_ru_sign_gators": lambda s: tx_sign_gators(s),                  # ... the orange 'Gators' script
+    "int_ru_band_blue": lambda s: tx_band_word("blue", s),              # clerestory BLUE band graphics (C09)
+    "int_ru_word_blue": lambda s: tx_glow_letters("BLUE", "#2A5CE0", "#8FB0FF", s),
+    "int_ru_band_orange": lambda s: tx_band_word("orange", s),          # clerestory ORANGE band graphics (C10)
+    "int_ru_word_orange": lambda s: tx_glow_letters("ORANGE", "#F05A1E", "#FFB070", s),
+    "int_ru_bronze_black": lambda s: _flat("#24262A", s, 2),            # the black Swamp Boss head (B08, C01)
+    "int_ru_carpet_tri": lambda s: tx_carpet_tri(s),                    # lounge triangle carpet (B08, B09)
+    "int_ru_banner_welcome2": lambda s: tx_banner_welcome2(s, 0),       # WELCOME banner, left half (B09)
+    "int_ru_banner_welcome3": lambda s: tx_banner_welcome2(s, 1),       # ... right half (multilingual)
+    "int_ru_word_senate": lambda s: tx_word_small("SENATE CHAMBER", "#8A8D92", s),
+    "int_ru_picket2": lambda s: tx_picket2(s),                          # plain grey pickets (user_02, B05)
+    "int_ru_leather_char": lambda s: tx_leather("#2E3034", s),          # charcoal leather sofas (B09, C01)
+    "int_ru_gator_claw": lambda s: tx_gator_claw(s),                    # three-claw gator footprints (B05)
+    "int_ru_gator_skin_grey": lambda s: tx_gator_skin_grey(s),          # grey plates on white (B09)
+    "int_ru_word_cabo": lambda s: tx_glow_letters("CABO", "#F57A1E", "#FFC080", s),
+    "int_ru_word_mexgrill": lambda s: tx_word_small("MEXICAN GRILL", "#FFFFFF", s),
+    "int_ru_snake_plant": lambda s: tx_snake_plant(s),                  # CABO snake plants (B10)
+    # ==== user-photo pass (food court; appended LAST: earlier recipes keep their seeds)
+    "int_ru_vletters_sbux": lambda s: tx_glow_letters("STARBUCKS", "#F0EFEA", None, s),       # user_18 frieze
+    "int_ru_badge_green": lambda s: tx_badge_round("#1E6A44", "#F4F4F0", s, bars=None),       # ... round badge
+    "int_ru_cafe_shelves": lambda s: tx_cafe_shelves(s),                                     # ... lit back shelves
+    "int_ru_slat_walnut": lambda s: tx_slat_v("#5A3A24", s),                                 # ... slat pilasters
+    "int_ru_mural_coffea": lambda s: tx_mural_coffea(s),                                     # COFFEA ARABICA (user_18)
+    "int_ru_brick_rustic": lambda s: tx_brick_rustic(s),                                     # Baba's Pizza (B01)
+    "int_ru_vletters_babas": lambda s: tx_letters_distressed("BABA'S PIZZA", "#F2EEE4", s),
+    "int_ru_badge_black": lambda s: tx_badge_round("#141414", "#F2F2F2", s, bars="#F2F2F2"),
+    "int_ru_badge_gold": lambda s: tx_badge_round("#D4A23A", "#4A2A14", s, bars="#4A2A14"),  # Halal Shack (B01, u20)
+    "int_ru_vletters_halal2": lambda s: tx_letters_wide("HALAL SHACK", "#6A3E1A", s),
+    "int_ru_tile_lattice": lambda s: tx_tile_lattice(s),                                     # Panda counter (user_19)
+    "int_ru_vletters_panda": lambda s: tx_glow_letters("PANDA", "#FFFFFF", None, s),
+    "int_ru_badge_red": lambda s: tx_badge_round("#C8202A", "#FFFFFF", s, bars=None),
+    "int_ru_vletters_smart": lambda s: tx_letters_wide("SHAKE SMART", "#C8202A", s),
+    "int_ru_fc_queue": lambda s: tx_speckle_floor("#4E4945", ("#857C73", "#2C2826"), s, 70),  # queue band (user_19)
+    "int_ru_vinyl_grey": lambda s: tx_speckle_floor("#A8A59F", ("#B2AFA9", "#9E9B95"), s, 50),  # south hall (u20)
+    "int_ru_troffer_sq": lambda s: tx_troffer_sq(s),                                         # 2 x 2 troffers
+    "int_ru_vent_sq": lambda s: tx_vent_sq(s),                                               # ... return grilles
+    "int_ru_sign_bk_gators": lambda s: tx_sign_bk_gators(s),                                 # Bookstore (user_20)
+    "int_ru_sign_bk_store": lambda s: tx_glow_letters("BOOKSTORE", "#2F6BFF", "#A8C4FF", s),
+    "int_ru_badge_gator": lambda s: tx_badge_gator(s),
+    "int_ru_grille": lambda s: tx_grille(s),                                                 # rolling grilles
+    "int_ru_jersey": lambda s: tx_jersey(s),                                                 # Nike window #0 / #7
+    "int_ru_laminate_mauve": lambda s: tx_speckle_floor("#B98A96", ("#C29AA4", "#AE7E8A"), s, 40),  # B03 tables
+    "int_ru_order_here": lambda s: tx_word_small("ORDER HERE", "#FFFFFF", s),               # B02 kiosks
+    "int_ru_paint_cranberry": lambda s: _flat("#8A1C20", s, 3),                               # Panda walls (u19)
+    # ==== user-photo pass, Ground floor (appended LAST: earlier recipes keep their seeds)
+    "int_ru_tile_ceiling_dark": lambda s: tx_ceiling_dark(s),                               # Game Room (user_04)
+    "int_ru_scale_led": lambda s: tx_scale_led(s),                                           # Esports frieze (B15)
+    "int_ru_inlay_reitz": lambda s: tx_inlay_reitz(s),                                       # floor inlay (B17)
+    "int_ru_granite_black": lambda s: tx_granite_black(s),                                   # hotel desk top (B17)
+    "int_ru_brass": lambda s: _flat("#C8A04A", s, 3),                                        # gold pendant (B17)
+    "int_ru_wayfind_G_w_a": lambda s: tx_wayfind_g_white(0),                                 # white sign (user_03)
+    "int_ru_wayfind_G_w_b": lambda s: tx_wayfind_g_white(1),
+    "int_ru_wayfind_G_w_c": lambda s: tx_wayfind_g_white(2),
+    "int_ru_arrow_navy": lambda s: tx_arrow_navy(s),
+    "int_ru_terrazzo_grey": lambda s: tx_speckle_floor("#A5A39C", ("#8E8C86", "#B8B5AE", "#7E7C78"), s, 60),
+    "int_ru_terrazzo_orange": lambda s: tx_speckle_floor("#D9782F", ("#C4682A", "#E8955A", "#B05A22"), s, 60),
+    "int_ru_sign_gr_transom": lambda s: tx_glow_letters("GAME ROOM", "#FFFFFF", None, s),   # B16 transom
+    "int_ru_barber_pole": lambda s: tx_barber_pole(s),                                       # B12, B14
+    "int_ru_sign_barber": lambda s: tx_sign_barber(s),                                       # B14
+    "int_ru_photo_bw": lambda s: tx_photo_bw(s),                                             # B13 frieze
+    "int_ru_dir_G": lambda s: tx_dir_g(s),                                                   # B13 directory
+    "int_ru_sign_arena": lambda s: tx_glow_letters("ARENA", "#FF8A2A", "#FFC890", s),       # B19
+    "int_ru_subway_green": lambda s: _flat("#0F7A35", s, 3),                                 # user_03
+    "int_ru_sign_subway": lambda s: tx_sign_subway(s),                                       # user_03
+    "int_ru_arcade_gamepod": lambda s: tx_arcade_gamepod(s),                                 # B15 cabinets
+    "int_ru_sign_nosh": lambda s: tx_sign_nosh(s),                                           # user_03 Market
+    "int_ru_sign_market": lambda s: tx_badge_market(s),                                      # ... round blade
+    # ==== user-photo pass, L1-L3 corridors + Rion (appended LAST: earlier recipes keep their seeds)
+    "int_ru_ccc_screen": lambda s: tx_ccc_screen(s),                                         # user_14, user_15
+    "int_ru_marble": lambda s: tx_marble(s),                                                 # CCC desk (user_14)
+    "int_ru_timeline": lambda s: tx_timeline(s),                                             # user_07, user_08
+    "int_ru_timeline_head": lambda s: tx_timeline_head("UF STUDENT UNION HISTORY", "AND TIMELINE", s),
+    "int_ru_timeline_head2": lambda s: tx_timeline_head("THROUGH THE YEARS", None, s),
+    "int_ru_sign_rion": lambda s: tx_sign_rion("RION BALLROOM", s),                         # C12, C13
+    "int_ru_sign_rion_east": lambda s: tx_sign_rion("RION BALLROOM EAST", s),               # C03
+    "int_ru_hang_pass_a": lambda s: tx_hang("pass_up", 0),                                  # user_07
+    "int_ru_hang_pass_b": lambda s: tx_hang("pass_up", 1),
+    "int_ru_hang_pass_c": lambda s: tx_hang("pass_lo", 0),
+    "int_ru_hang_blue_a": lambda s: tx_hang("blue_up", 0),                                  # user_11
+    "int_ru_hang_blue_b": lambda s: tx_hang("blue_up", 1),
+    "int_ru_hang_blue_c": lambda s: tx_hang("blue_lo", 0),
+    "int_ru_hang_blue_d": lambda s: tx_hang("blue_lo", 1),
+    "int_ru_oils": lambda s: tx_oils(s),                                                     # user_06, C11
+    "int_ru_sign_gatorwell": lambda s: tx_glow_letters("GATORWELL", "#E8742A", None, s),    # user_10
+    "int_ru_slate_floor": lambda s: tx_slate_floor(s),                                       # user_14-16
+    "int_ru_partition": lambda s: tx_partition(s),                                           # C08
+    "int_ru_door_meeting_honey": lambda s: tx_door_meeting_honey(s),                         # C03, C08, C12
+    "int_ru_maple_pale": lambda s: _retone(tx_maple(s), (1.20, 1.27, 1.70)),                # Rion floor (C14-C16; r3: less yellow)
+    "int_ru_word_wall_a": lambda s: tx_word_wall(0, s),                                      # CCC word wall (user_16)
+    "int_ru_word_wall_b": lambda s: tx_word_wall(1, s),
+    "int_ru_hang_meet": lambda s: tx_hang("meet", 0),                                       # C08
+    "int_ru_frit": lambda s: tx_frit(s),                                                     # C04 dotted frit band
+    "int_ru_rion_case": lambda s: tx_rion_case(s),                                           # C12, C13
+    "int_ru_terrazzo_dark": lambda s: tx_speckle_floor("#5E6062", ("#4E5052", "#707274", "#46484A"), s, 60),  # user_06
+    "int_ru_wall_greige": lambda s: _flat("#D4C4B0", s, 2),                                # Rion wall panels (C14)
+    "int_ru_wall_lobby_navy": lambda s: _flat("#2E3A72", s, 3),                            # Blue lobby (user_11)
+    "int_ru_glass_tint_dk": lambda s: tx_glass_tint_dk(s),                                   # C08 meeting fronts
+    "int_ru_tile_ceiling_mid": lambda s: tx_ceiling_mid(s),                                 # Game Room (user_04, B20)
+    "int_ru_carpet_tri_dk": lambda s: tx_carpet_tri_dk(s),                                   # Ground lounge (B08-B10)
+    "int_ru_hours_screen": lambda s: tx_hours_screen(s),                                     # Game Room door (B16)
+    "int_ru_sign_barber_blade": lambda s: tx_sign_barber_blade(s),                           # barbershop blade (B14)
+    "int_ru_badge_babas": lambda s: tx_badge_text("#141414", "#F2F2F2", ("BABA'S", "PIZZA"), "#F2F2F2", s),  # B01
+    "int_ru_badge_halal": lambda s: tx_badge_text("#D4A23A", "#4A2A14", ("HALAL", "SHACK"), "#4A2A14", s),   # B01, u20
+    # photo pass round 3: appended last so every earlier recipe keeps its seed
+    "int_ru_carpet_prefn": lambda s: tx_carpet_muted(s, ("#6E7A9C", "#4A5578", "#98A4C0", "#5A72B0")),  # C12
+    "int_ru_slat_cloud": lambda s: tx_slat_v("#8C6A4C", s),                                  # CCC cloud (user_14)
+    "int_ru_fabric_teal": lambda s: tx_fabric("#2C7894", s),                                 # CCC tub chairs (user_16)
+    "int_ru_sign_restroom_blade": lambda s: tx_restroom_blade(s),                            # restroom flag (user_09)
+    "int_ru_word_wall_dense_a": lambda s: tx_word_wall_dense(0, s),                          # CCC word wall (user_16)
+    "int_ru_word_wall_dense_b": lambda s: tx_word_wall_dense(1, s),
+    "int_ru_carpet_lounge": lambda s: tx_carpet_muted(s, ("#323C54", "#262C3E", "#58627A", "#46526E")),  # user_13
 }
+
+
+def tx_badge_text(hx, ring_hx, lines, text_hx, seed):
+    """Photo pass round 2 (fidelity-foodcourt 1 / 5): a round blade sign with the vendor's plain name in two FONT3
+    lines (the generic text bars of tx_badge_round read as an icon); the apostrophe is drawn by hand."""
+    t = Tex(32, 32, (0, 0, 0), seed, alpha=0)
+    t.disc(16, 16, 15.5, hexc(ring_hx))
+    t.disc(16, 16, 13.0, hexc(hx))
+    c = hexc(text_hx)
+    for i, ln in enumerate(lines):
+        y = 10 + i * 7
+        if "'" in ln:
+            a_, b_ = ln.split("'")
+            wa, wb = font_width(a_, font=FONT3), font_width(b_, font=FONT3)
+            x = 16 - (wa + 3 + wb) // 2
+            font_text(t, a_, x, y, c, font=FONT3)
+            t.rect(x + wa + 1, y, x + wa + 1, y + 1, c)
+            font_text(t, b_, x + wa + 3, y, c, font=FONT3)
+        else:
+            font_center(t, ln, y, c, font=FONT3)
+    return t
+
+
+def tx_ceiling_mid(seed):
+    """Game Room lay-in ceiling, photo pass round 2 (user_04 mid blue-grey, B15 / B20 light grey): a mid grey-blue
+    2 x 2 field with a darker (low-contrast, 2-step) grid; the dark slate one baked near-black in every view."""
+    t = Tex(32, 32, hexc("#A2A8B4"), seed)
+    t.noise(2)
+    t.speckle(40, [hexc("#9AA0AC"), hexc("#A8AEBA")])
+    for i in range(32):
+        for (x, y) in ((i, 0), (i, 16), (0, i), (16, i)):
+            t.set(x, y, hexc("#868C9A"))
+        for (x, y) in ((i, 1), (i, 17), (1, i), (17, i)):
+            t.set(x, y, hexc("#949AA6"))
+    return t
+
+
+def tx_carpet_tri_dk(seed):
+    """Ground lounge carpet, photo pass round 2 (B08-B10, C01): navy / medium blue triangles with grey ones (the
+    saturated royal int_ru_carpet_tri, ~25 % darker), same 8 px triangle grid."""
+    navy, mid, grey = hexc("#1C2C68"), hexc("#28408E"), hexc("#5C6476")
+    pal = [mid, navy, grey, mid, mix(navy, mid, 0.5)]
+    t = Tex(64, 32, mid, seed)
+    for y in range(32):
+        for x in range(64):
+            cx, cy, fx, fy = x // 8, y // 8, x % 8, y % 8
+            up = 1 if fx > fy else 0
+            h = (cx * 7 + cy * 13 + up * 2 + (cx * cy) % 3) % len(pal)
+            t.set(x, y, pal[h])
+    t.noise(2)
+    return t
+
+
+def tx_carpet_muted(seed, cols):
+    """Photo pass round 3 (C03, C12, C13; user_12, user_13): the same 8 px triangle geometric as int_ru_carpet_tri in
+    a muted slate / navy / grey-blue palette (the royal int_ru_carpet_tri read far too saturated). cols = (base,
+    dark, light, accent)."""
+    base, dark, light, acc = (hexc(c_) for c_ in cols)
+    pal = [base, dark, mix(base, light, 0.6), base, light, mix(dark, base, 0.5), acc]
+    t = Tex(64, 32, base, seed)
+    for y in range(32):
+        for x in range(64):
+            cx, cy, fx, fy = x // 8, y // 8, x % 8, y % 8
+            up = 1 if fx > fy else 0
+            h = (cx * 7 + cy * 13 + up * 3 + (cx * cy) % 4) % len(pal)
+            t.set(x, y, pal[h])
+    t.noise(2)
+    return t
+
+
+def tx_hours_screen(seed):
+    """Game Room hours screen beside the entrance (B16): a portrait navy screen with a red GAME ROOM header, white
+    HOURS, two groups of white schedule lines and an orange rule; a 2-texel dark bezel (32 x 64)."""
+    t = Tex(32, 64, hexc("#16224E"), seed)
+    t.noise(1)
+    t.rect(0, 0, 31, 1, hexc("#202226"))
+    t.rect(0, 62, 31, 63, hexc("#202226"))
+    t.rect(0, 0, 1, 63, hexc("#202226"))
+    t.rect(30, 0, 31, 63, hexc("#202226"))
+    font_center(t, "GAME ROOM", 4, hexc("#E8404A"), font=FONT3, spacing=0, x0=2, x1=29)
+    font_center(t, "HOURS", 11, hexc("#FFFFFF"), x0=2, x1=29)
+    t.rect(4, 20, 27, 20, hexc("#F06A1E"))
+    for g_, y0 in enumerate((24, 42)):
+        for i in range(4):
+            y = y0 + i * 4
+            t.rect(4, y, 4 + 8, y + 1, hexc("#E6EAF4"))
+            t.rect(16, y, 16 + 6 + (i * 5 + g_ * 3) % 6, y + 1, hexc("#C8D2EA"))
+    return t
+
+
+def tx_sign_barber_blade(seed):
+    """BARBERSHOP projecting blade (B14): navy BARBER / SHOP on white inside the 2-texel red / white / blue
+    diagonal-stripe border (64 x 32, both faces)."""
+    t = Tex(64, 32, hexc("#F6F6F4"), seed)
+    cols = ("#D0202A", "#F6F6F4", "#1E3C9E", "#F6F6F4")
+    for y in range(32):
+        for x in range(64):
+            if y < 3 or y > 28 or x < 3 or x > 60:
+                t.set(x, y, hexc(cols[((x + y) // 2) % 4]))
+    font_center(t, "BARBER", 6, hexc("#1E2A5C"), spacing=2)
+    font_center(t, "SHOP", 18, hexc("#1E2A5C"), spacing=2)
+    return t
+
+
+# ==== user-photo pass: food court recipes (user_18-20, B01-B03). No reproduced logo art: plain names
+# in the photographed colours and generic round badges.
+def tx_badge_round(hx, ring_hx, seed, bars=None):
+    """A round sign: a disc with a 2-texel ring, optional two short text bars (no logo art)."""
+    t = Tex(32, 32, (0, 0, 0), seed, alpha=0)
+    t.disc(16, 16, 15.5, hexc(ring_hx))
+    t.disc(16, 16, 13.0, hexc(hx))
+    if bars:
+        t.rect(9, 12, 22, 13, hexc(bars))
+        t.rect(7, 16, 24, 18, hexc(bars))
+        t.rect(10, 21, 21, 22, hexc(bars))
+    else:
+        t.disc(16, 16, 7.0, hexc(ring_hx))
+        t.disc(16, 16, 5.0, hexc(hx))
+    return t
+
+
+def tx_cafe_shelves(seed):
+    """Warm-lit walnut shelving behind the coffee bar: 3 shelves of white cups, kraft bags and tins."""
+    t = Tex(64, 32, hexc("#4A2E1E"), seed)
+    t.noise(4)
+    for y0 in (9, 19, 29):
+        t.rect(0, y0, 63, y0 + 1, hexc("#E8C890"))
+        x = 1
+        while x < 60:
+            c = t.r.choice(("#F4F2EC", "#F4F2EC", "#C8A070", "#2E6A48", "#E8E4DA", "#9A6A3A"))
+            w = t.r.choice((2, 3, 4))
+            hh = t.r.choice((3, 4, 5))
+            t.rect(x, y0 - hh, x + w - 1, y0 - 1, hexc(c))
+            x += w + t.r.choice((1, 2))
+    return t
+
+
+def tx_slat_v(hx, seed):
+    """Vertical wood slats, 4 texels wide with 2-texel dark reveals."""
+    t = Tex(32, 32, hexc(hx), seed)
+    for x in range(32):
+        if x % 6 in (4, 5):
+            for y in range(32):
+                t.set(x, y, shade(hexc(hx), 0.55))
+        else:
+            k = 1.0 + ((x // 6) % 3 - 1) * 0.05
+            for y in range(32):
+                t.set(x, y, shade(hexc(hx), k))
+    t.noise(4)
+    return t
+
+
+def tx_mural_coffea(seed):
+    """COFFEA ARABICA chalk mural (user_18): black wall, 2-texel off-white branches with leaf pairs and berries,
+    a small text block top right (grey anti-aliased edges, no 1-texel lines)."""
+    t = Tex(64, 32, hexc("#1E2021"), seed)
+    chalk, soft = hexc("#E8E6DE"), hexc("#7A7A76")
+
+    def thick(x0, y0, x1, y1):
+        t.line(x0, y0, x1, y1, chalk)
+        t.line(x0 + 1, y0, x1 + 1, y1, chalk)
+    thick(4, 31, 14, 6)
+    thick(9, 18, 22, 10)
+    thick(26, 31, 30, 14)
+    thick(29, 20, 40, 24)
+    for (cx, cy) in ((8, 22), (12, 12), (17, 12), (21, 9), (28, 18), (33, 21), (38, 23), (6, 27)):
+        t.disc(cx + 0.5, cy + 0.5, 2.2, soft)
+        t.disc(cx + 0.5, cy + 0.5, 1.5, chalk)
+    for (cx, cy) in ((15, 16), (31, 26), (11, 25)):
+        t.disc(cx + 0.5, cy + 0.5, 1.6, hexc("#B84A3A"))
+    font_center_x = 50
+    for row, word in ((4, "COFFEA"), (11, "ARABICA")):
+        x = font_center_x - (len(word) * 4) // 2
+        for ch in word:
+            g = FONT3.get(ch) if "FONT3" in globals() else None
+            if g:
+                for py, line_ in enumerate(g):
+                    for px, c_ in enumerate(line_):
+                        if c_ == "#":
+                            t.set(x + px, row + py, chalk)
+            x += 4
+    t.rect(42, 18, 58, 18, soft)
+    t.rect(44, 21, 56, 21, soft)
+    return t
+
+
+def tx_brick_rustic(seed):
+    """Rustic running-bond brick tile (B01): small bricks in mixed tan / orange / brown, warm-grey mortar."""
+    mortar = hexc("#9C9286")
+    cols = [hexc(c) for c in ("#C89A6A", "#B8683C", "#7A4A30", "#A85A36", "#C8845A")]
+    t = Tex(32, 32, mortar, seed)
+    for course in range(8):
+        y0 = course * 4
+        off = 4 if course % 2 else 0
+        for b in range(5):
+            x0 = b * 8 - off
+            c = t.r.choice(cols)
+            for y in range(y0, y0 + 3):
+                for x in range(x0, x0 + 7):
+                    t.set(x % 32, y, shade(c, t.r.uniform(0.94, 1.05)))
+    return t
+
+
+def tx_letters_wide(text, hx, seed, h=16):
+    """tx_glow_letters on a 128 x 16 card (names of 10-12 letters stay 9 texels wide, bold 2-texel strokes)."""
+    t = Tex(128, h, (0, 0, 0), seed, alpha=0)
+    n = len(text)
+    gw = max(4, (t.w + 1) // n - 1)
+    gh = h - 2
+    x = (t.w - (n * gw + (n - 1))) // 2
+    col = hexc(hx)
+    for ch in text:
+        g = FONT5.get(ch)
+        if g is not None:
+            for py in range(gh):
+                for px in range(gw):
+                    if g[py * 7 // gh][px * 5 // gw] == "#":
+                        t.set(x + px, 1 + py, col)
+                        if px + 1 < gw:
+                            t.set(x + px + 1, 1 + py, col)
+        x += gw + 1
+    return t
+
+
+def tx_letters_distressed(text, hx, seed):
+    """Big painted letters with a few dropped texels (B01: BABA'S PIZZA on the brick counter)."""
+    t = tx_letters_wide(text, hx, seed)
+    for _ in range(30):
+        x, y = t.r.randrange(128), t.r.randrange(16)
+        r, g, b, a = t.px[y][x]
+        if a >= 128:
+            t.px[y][x] = (r, g, b, 0)
+    return t
+
+
+def tx_tile_lattice(seed):
+    """White counter-base tile with light-grey diamond lines (user_19, Panda), 2-texel lines."""
+    t = Tex(32, 32, hexc("#F2F2EE"), seed)
+    g = hexc("#C4C6C8")
+    for y in range(32):
+        for x in range(32):
+            if (x + y) % 16 in (0, 1) or (x - y) % 16 in (0, 1):
+                t.set(x, y, g)
+    t.noise(2)
+    return t
+
+
+def tx_speckle_floor(hx, specks, seed, n):
+    """A low-contrast speckled floor / laminate (no grout lines)."""
+    t = Tex(32, 32, hexc(hx), seed)
+    t.noise(3)
+    for _ in range(n):
+        x, y = t.r.randrange(32), t.r.randrange(32)
+        c = hexc(t.r.choice(specks))
+        t.set(x, y, c)
+        t.set(x + 1, y, c)
+    return t
+
+
+def tx_troffer_sq(seed):
+    """2 x 2 lay-in troffer (user_18-20, B02): a 2-texel frame, white lens, a soft cross baffle."""
+    t = Tex(16, 16, hexc("#EEF0F2"), seed)
+    t.rect(2, 2, 13, 13, hexc("#FFFFFF"))
+    t.rect(7, 2, 8, 13, hexc("#E2E6EC"))
+    t.rect(2, 7, 13, 8, hexc("#E2E6EC"))
+    return t
+
+
+def tx_vent_sq(seed):
+    """Square return-air grille: mid-grey, 2-texel slots."""
+    t = Tex(16, 16, hexc("#C8CACC"), seed)
+    t.rect(2, 2, 13, 13, hexc("#9A9EA4"))
+    for y in range(3, 13, 4):
+        t.rect(3, y, 12, y + 1, hexc("#5E6268"))
+    return t
+
+
+def tx_sign_bk_gators(seed):
+    """Bookstore fascia (user_20): small 'HOME OF THE' stacked left of a big 'GATORS', blue LED with a pale core."""
+    t = Tex(64, 16, (0, 0, 0), seed, alpha=0)
+    col, core = hexc("#2F6BFF"), hexc("#A8C4FF")
+    x = 23                         # GATORS: FONT5 glyphs 6 texels wide (2-texel strokes), 1-texel gaps
+    for ch in "GATORS":
+        g = FONT5.get(ch)
+        for py in range(14):
+            for px in range(6):
+                if g[py * 7 // 14][px * 5 // 6] == "#":
+                    c = mix(col, core, 0.35) if py < 6 else col
+                    t.set(x + px, 1 + py, c)
+                    if px + 1 < 6:
+                        t.set(x + px + 1, 1 + py, c)
+        x += 7
+    for row, word in ((2, "HOME"), (8, "OF THE")):
+        x = 1
+        for ch in word:
+            g = FONT3.get(ch) if "FONT3" in globals() else None
+            if g:
+                for py, line_ in enumerate(g):
+                    for px, c_ in enumerate(line_):
+                        if c_ == "#":
+                            t.set(x + px, row + py, mix(col, core, 0.3))
+            x += 2 if ch == " " else 4
+    return t
+
+
+def tx_badge_gator(seed):
+    """Round Bookstore badge (user_20): royal-blue disc, white rim, a simple orange / green gator-head silhouette."""
+    t = Tex(32, 32, (0, 0, 0), seed, alpha=0)
+    t.disc(16, 16, 15.5, hexc("#FFFFFF"))
+    t.disc(16, 16, 13.5, hexc("#1E3CA0"))
+    t.rect(7, 13, 24, 18, hexc("#3A9A4A"))
+    t.rect(7, 13, 12, 15, hexc("#F47A1E"))
+    t.rect(19, 11, 22, 13, hexc("#3A9A4A"))
+    t.rect(20, 11, 21, 12, hexc("#FFFFFF"))
+    t.rect(8, 17, 22, 18, hexc("#F47A1E"))
+    return t
+
+
+def tx_grille(seed):
+    """Rolling security grille (user_20): 2-texel horizontal rods with 2-texel gaps, staggered 2-texel links."""
+    t = Tex(32, 32, (0, 0, 0), seed, alpha=0)
+    rod, link = hexc("#AEB2B8"), hexc("#8E9298")
+    for y in range(32):
+        if y % 4 in (0, 1):
+            for x in range(32):
+                t.set(x, y, rod)
+        else:
+            row = y // 4
+            for x in range(32):
+                if (x + (4 if row % 2 else 0)) % 8 in (0, 1):
+                    t.set(x, y, link)
+    return t
+
+
+def tx_jersey(seed):
+    """Football jerseys for the Nike window (user_20): left half white with an orange 0, right half royal blue with
+    an orange 7 (2-texel strokes)."""
+    t = Tex(32, 16, hexc("#F4F4F4"), seed)
+    t.rect(16, 0, 31, 15, hexc("#1E3CA0"))
+    o = hexc("#F47A1E")
+    t.rect(4, 3, 11, 4, o)
+    t.rect(4, 11, 11, 12, o)
+    t.rect(4, 3, 5, 12, o)
+    t.rect(10, 3, 11, 12, o)
+    t.rect(19, 3, 27, 4, o)
+    t.line(26, 5, 22, 12, o)
+    t.line(27, 5, 23, 12, o)
+    return t
+
 
 
 def tx_art_gallery(kind, seed):
@@ -2553,6 +3137,744 @@ def tx_sign_bookstore(seed):
             q = (x + dx, y + dy)
             if 0 <= q[0] < 64 and 0 <= q[1] < 32 and q not in lit:
                 t.set(q[0], q[1], mix(bg, halo, 0.7))
+    return t
+
+
+# ==== user-photo pass (the user's own photos: atrium core). Appended LAST in TEXTURES (seeds kept).
+def tx_tower_glass(seed):
+    """The Gators elevator tower's black-glass shaft bay (user_05, B10, C02, C06): near-black #14161B with a soft
+    diagonal sheen and two faint guide-rail lines, 32 x 64 per bay (no 1-texel high-contrast line)."""
+    base = hexc("#14161B")
+    t = Tex(32, 64, base, seed)
+    for y in range(64):
+        for x in range(32):
+            c = shade(base, 1.0 + 0.12 * (1.0 - y / 63.0))
+            d = (x + y // 2) % 32
+            if d in (5, 6, 7, 8):
+                c = mix(c, hexc("#56607A"), 0.30 if d in (6, 7) else 0.14)
+            t.set(x, y, c)
+    for x in (3, 4, 27, 28):
+        for y in range(64):
+            t.set(x, y, mix(t.get(x, y)[:3], hexc("#2C3038"), 0.55))
+    t.noise(1)
+    return t
+
+
+def tx_tower_car(seed):
+    """A lit glass elevator car seen through the tower glass (B10: two visible cars): warm cab, steel frame and
+    centre mullion, a handrail line, dark roof / floor bands, two riders. 32 x 64, glows."""
+    warm = hexc("#F2D8A8")
+    t = Tex(32, 64, warm, seed)
+    for y in range(64):
+        for x in range(32):
+            t.set(x, y, shade(warm, 1.06 - 0.16 * (y / 63.0)))
+    steel = hexc("#8C9096")
+    t.rect(0, 0, 31, 5, hexc("#3A3E44"))
+    t.rect(0, 58, 31, 63, hexc("#3A3E44"))
+    t.rect(0, 6, 1, 57, steel)
+    t.rect(30, 6, 31, 57, steel)
+    t.rect(15, 6, 16, 57, steel)
+    t.rect(2, 7, 29, 8, hexc("#FFF6DC"))
+    for cx, body in ((8, "#4A5A7A"), (23, "#7A4A3A")):
+        t.disc(cx, 31, 2.6, hexc("#5A4A40"))
+        t.rect(cx - 3, 34, cx + 3, 57, hexc(body))
+    t.rect(0, 41, 31, 42, hexc("#C8CCD0"))
+    t.noise(1)
+    return t
+
+
+def tx_sign_gators(seed):
+    """The tower's orange 'Gators' script near the top (user_05, B10): slanted letters with a thin white outline and
+    a swash underline, on clear (64 x 32 cutout)."""
+    t = Tex(64, 32, (0, 0, 0), seed, alpha=0)
+    org, wht = hexc("#F47A1E"), hexc("#FFFFFF")
+    text = "GATORS"
+    gw, gh = 8, 17
+    x = (64 - (len(text) * (gw + 1) - 1)) // 2 - 2
+    pix = set()
+    for ch in text:
+        g = FONT5[ch]
+        for py in range(gh):
+            for px in range(gw):
+                if g[py * 7 // gh][px * 5 // gw] == "#":
+                    pix.add((x + px + (gh - py) // 4, 5 + py))
+        x += gw + 1
+    for xx in range(8, 58):
+        yy = 25 + int(round(1.4 * math.sin((xx - 8) / 50.0 * math.pi)))
+        pix.add((xx, yy))
+        pix.add((xx, yy + 1))
+    for (px, py) in pix:
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                if (px + dx, py + dy) not in pix:
+                    t.set(px + dx, py + dy, wht)
+    for (px, py) in pix:
+        t.set(px, py, org)
+    return t
+
+
+def tx_band_word(kind, seed):
+    """The clerestory word band behind the giant BLUE / ORANGE letters (C09, C10): a white field with two sweeping
+    grey diagonal stripes and small grey word echoes; ORANGE's band also carries an orange gator-skin block."""
+    t = Tex(64, 16, hexc("#F2F2F0"), seed)
+    grey, grey2 = hexc("#BEC1C5"), hexc("#9EA2A7")
+    for y in range(16):
+        for x in range(64):
+            d = (x - 2 * y) % 48
+            if 6 <= d <= 9 or 16 <= d <= 17:
+                t.set(x, y, grey)
+    word = "BLUE" if kind == "blue" else "ORANGE"
+    font_text(t, word + " " + word if kind == "blue" else word, 2, 2, grey2, font=FONT3)
+    font_text(t, word, 62 - font_width(word, font=FONT3), 9, grey2, font=FONT3)
+    if kind == "orange":
+        sk = tx_gator_skin(seed + 1)
+        for y in range(16):
+            for x in range(40, 54):
+                c = sk.get(x, y + 8)[:3]
+                lum = sum(c) / 765.0
+                t.set(x, y, mix(hexc("#E8601C"), hexc("#FFA868"), max(0.0, min(1.0, (lum - 0.80) * 6.0))))
+    t.noise(1)
+    return t
+
+
+def tx_carpet_tri(seed):
+    """Ground lounge carpet (B08, B09, user_02): a royal-blue triangle geometric, 8 px triangles in royal / navy /
+    mid-blue, softened toward royal so the field does not shimmer (64 x 32 over 3 m)."""
+    royal, navy, mid = hexc("#2348B4"), hexc("#1B2A66"), hexc("#3A64C8")
+    pal = [royal, mix(royal, navy, 0.6), mid, royal, mix(royal, mid, 0.5)]
+    t = Tex(64, 32, royal, seed)
+    for y in range(32):
+        for x in range(64):
+            cx, cy, fx, fy = x // 8, y // 8, x % 8, y % 8
+            up = 1 if fx > fy else 0
+            h = (cx * 7 + cy * 13 + up * 2 + (cx * cy) % 3) % len(pal)
+            t.set(x, y, pal[h])
+    t.noise(2)
+    return t
+
+
+def tx_banner_welcome2(seed, half):
+    """WELCOME banner on the L1 rail over the UF letters (B09): royal blue #1E3CA0 with orange #F06A1E end panels;
+    half 0 = WELCOME TO THE / REITZ UNION in white, half 1 = the multilingual welcome in light blue."""
+    t = Tex(64, 16, hexc("#1E3CA0"), seed)
+    t.noise(1)
+    org, wht, lb = hexc("#F06A1E"), hexc("#FFFFFF"), hexc("#A8C4FF")
+    if half == 0:
+        t.rect(0, 0, 4, 15, org)
+        font_center(t, "WELCOME TO THE", 1, wht, font=FONT3, x0=5)
+        font_center(t, "REITZ UNION", 8, wht, font=FONT5, spacing=0, x0=5)
+    else:
+        t.rect(59, 0, 63, 15, org)
+        font_center(t, "BIENVENIDOS", 2, lb, font=FONT3, x1=59)
+        font_center(t, "WILLKOMMEN", 9, lb, font=FONT3, x1=59)
+    return t
+
+
+def tx_word_small(text, hx, seed, w=64, h=8, font=None, bg=None):
+    """Small dimensional letters on clear (or on a bg colour): SENATE CHAMBER (B09), MEXICAN GRILL (B11)."""
+    t = Tex(w, h, hexc(bg) if bg else (0, 0, 0), seed, alpha=255 if bg else 0)
+    font_center(t, text, (h - 5) // 2, hexc(hx), font=font or FONT3)
+    return t
+
+
+def tx_picket2(seed):
+    """Atrium railing infill as photographed (user_02, B05, C05): plain grey vertical pickets every 3 texels
+    (~10 cm) between a top and a bottom rail; no mid rail."""
+    metal = hexc("#9EA2A6")
+    t = Tex(32, 32, (0, 0, 0), seed, alpha=0)
+    for y in range(32):
+        for x in range(32):
+            if y <= 1 or y >= 30 or x % 3 == 1:
+                t.set(x, y, shade(metal, 1.1 if y in (0, 30) else 1.0))
+    return t
+
+
+def tx_gator_claw(seed):
+    """Navy gator footprint (B05, B06): a tapered heel wedge and three long pointed claw toes spread about +-20 deg
+    in the world (the 32 px square maps onto a 0.25 x 0.45 m quad, toes toward row 0)."""
+    t = Tex(32, 32, (0, 0, 0), seed, alpha=0)
+    navy = hexc("#1E2A5C")
+    for y in range(17, 31):
+        w = 2.0 + (y - 17) * 0.5
+        for x in range(32):
+            if abs(x + 0.5 - 16) <= w and y < 30:
+                t.set(x, y, navy)
+    t.disc(16, 18, 5.0, navy)
+    for ang in (-33.0, 0.0, 33.0):
+        a = math.radians(ang)
+        for k in range(17):
+            px, py = 16 + math.sin(a) * k, 15 - math.cos(a) * k
+            t.disc(px, py, max(0.6, 2.3 * (1.0 - k / 17.0)), navy)
+    return t
+
+
+def tx_gator_skin_grey(seed):
+    """B09: the gator-skin wall's GREY irregular rounded plates (#B4B6B9..#C4C6C8) on a white #F4F4F2 network, the
+    same 2-texel soft network and 3 x 3 plates per 1.0 m tile as int_ru_gator_skin."""
+    sk = tx_gator_skin(seed)
+    net = hexc("#F3F1EC")
+    t = Tex(32, 32, hexc("#F4F4F2"), seed)
+    pal = [hexc("#B4B6B9"), hexc("#BCBEC1"), hexc("#C4C6C8")]
+    for y in range(32):
+        for x in range(32):
+            c = sk.get(x, y)[:3]
+            lum = sum(c) / 3.0
+            k = max(0.0, min(1.0, (lum - 200.0) / (243.0 - 200.0)))   # 0 = plate, 1 = network
+            p = pal[((x // 11) + (y // 11) * 2) % 3]
+            t.set(x, y, mix(p, hexc("#F4F4F2"), k))
+    t.noise(1)
+    return t
+
+
+def tx_snake_plant(seed):
+    """CABO's potted snake plants (B10): dark-green spiky upright leaves with yellow edges on clear (16 x 32)."""
+    t = Tex(16, 32, (0, 0, 0), seed, alpha=0)
+    for x0, top, lean in ((3, 4, -1), (6, 0, 0), (9, 2, 1), (12, 7, 1), (5, 9, -1), (10, 10, 0)):
+        for y in range(top, 32):
+            f = (y - top) / max(1.0, 31.0 - top)
+            w = 0.6 + 1.4 * min(1.0, f * 2.0)
+            cx = x0 + lean * (1.0 - f) * 1.5
+            for x in range(16):
+                dx = abs(x + 0.5 - cx)
+                if dx <= w:
+                    t.set(x, y, hexc("#C8C060") if dx > w - 0.7 and w > 1.2 else
+                          (hexc("#2E5A2C") if (y // 3) % 2 else hexc("#3C6E34")))
+    return t
+
+
+
+# ==== user-photo pass, Ground floor (user_01, user_03, user_04, B12-B20): appended recipes
+def _cond_text(t, text, x, y, col, gw=4, gh=7, sp=1):
+    """FONT5 glyphs resampled to gw x gh texels (condensed sign lettering), drawn at (x, y)."""
+    for ch in text:
+        g = FONT5.get(ch)
+        if g is not None:
+            for py in range(gh):
+                for px in range(gw):
+                    if g[py * 7 // gh][px * 5 // gw] == "#":
+                        t.set(x + px, y + py, col)
+        x += gw + sp
+    return x
+
+
+def _strip_tex(line, j):
+    """Texture j of a W x 16 line packed as 64 x 16 strips: strip 2j in rows 0-15, strip 2j+1 in rows 16-31."""
+    t = Tex(64, 32, (0, 0, 0), 1)
+    for s_ in (0, 1):
+        k = 2 * j + s_
+        for y in range(16):
+            for x in range(64):
+                xx = 64 * k + x
+                if xx < line.w:
+                    t.px[16 * s_ + y][x] = line.px[y][xx]
+    return t
+
+
+def tx_ceiling_dark(seed):
+    """Game Room dark lay-in ceiling (user_04 lit tiles ~#656B7A, user_01 black): slate field, a low-contrast grid."""
+    t = Tex(32, 32, hexc("#50566A"), seed)
+    t.noise(2)
+    t.speckle(40, [hexc("#4A5064"), hexc("#565C70")])
+    for i in range(32):
+        for (x, y) in ((i, 0), (i, 16), (0, i), (16, i)):
+            t.set(x, y, hexc("#454B5D"))
+    return t
+
+
+def tx_scale_led(seed):
+    """Glowing blue LED gator-scale panel (user_01, B15, B18): irregular croc scales (~0.35 m at tile 2.0), deep
+    blue-violet field, brighter scale faces, soft 2-texel periwinkle rims (no 1-texel white lines)."""
+    t = Tex(64, 32, hexc("#1A1690"), seed)
+    r = t.r
+    pts = []
+    for gy in range(3):
+        for gx in range(6):
+            pts.append(((gx + 0.5 + r.uniform(-0.3, 0.3)) * 64 / 6, (gy + 0.5 + r.uniform(-0.3, 0.3)) * 32 / 3))
+    tone = [r.uniform(0.85, 1.12) for _ in pts]
+    for y in range(32):
+        for x in range(64):
+            ds = []
+            for i, (px, py) in enumerate(pts):
+                dx = abs(x + 0.5 - px)
+                dx = min(dx, 64 - dx)
+                dy = abs(y + 0.5 - py)
+                dy = min(dy, 32 - dy)
+                ds.append((math.hypot(dx, dy), i))
+            ds.sort()
+            d1, i1 = ds[0]
+            d2 = ds[1][0]
+            if d2 - d1 < 1.6:
+                c = hexc("#5A6CFF")
+            elif d2 - d1 < 3.0:
+                c = mix(hexc("#2B2BD8"), hexc("#4250F0"), 0.5)
+            else:
+                c = mix(shade(hexc("#2B2BD8"), tone[i1]), hexc("#1A1690"), min(0.7, d1 / 9.0))
+            t.set(x, y, c)
+    t.noise(2)
+    return t
+
+
+def tx_inlay_reitz(seed):
+    """'J. WAYNE REITZ UNION' inlaid in the terrazzo by the hotel entrance (B17): charcoal caps on a cream band with
+    a grey frame. One 128 x 16 line in two 64 x 16 strips (rows 0-15 = left half, 16-31 = right half)."""
+    line = Tex(128, 16, hexc("#E6E1D4"), seed)
+    line.noise(2)
+    line.frame(hexc("#9A968C"), 0, 1, 127, 14)
+    font_center(line, "J. WAYNE REITZ UNION", 5, hexc("#3C3C40"))
+    t = _strip_tex(line, 0)
+    t.r = random.Random(seed)
+    return t
+
+
+def tx_granite_black(seed):
+    t = Tex(32, 32, hexc("#1C1C20"), seed)
+    t.noise(2)
+    t.speckle(26, [hexc("#3A3A40"), hexc("#2C2C32")])
+    return t
+
+
+def _wayfind_white_line(text, w):
+    line = Tex(w, 16, hexc("#F2F1EC"), 7)
+    line.rect(0, 0, w - 1, 0, hexc("#C9CCD2"))
+    line.rect(0, 15, w - 1, 15, hexc("#C9CCD2"))
+    return line
+
+
+def tx_wayfind_g_white(part):
+    """The white Ground hanging sign (user_03, B17): dark caps on off-white, two tiers. Upper line (256 x 16, parts
+    0 / 1): ATRIUM | MEETING ROOMS G310-G330 | SENATE CHAMBER; lower line (128 x 16, part 2): HOTEL RECEPTION."""
+    ink = hexc("#2B3242")
+    if part < 2:
+        line = _wayfind_white_line("", 256)
+        words = ["ATRIUM", "MEETING ROOMS G310-G330", "SENATE CHAMBER"]
+        n = sum(len(w_) for w_ in words)
+        width = n * 5 - 1 + 2 * 9
+        x = (256 - width) // 2
+        for i, w_ in enumerate(words):
+            x = _cond_text(line, w_, x, 4, ink)
+            if i < 2:
+                line.rect(x + 3, 3, x + 4, 12, hexc("#9AA0AC"))
+                x += 9
+        return _strip_tex(line, part)
+    line = _wayfind_white_line("", 128)
+    font_center(line, "HOTEL RECEPTION", 4, ink)
+    return _strip_tex(line, 0)
+
+
+def tx_arrow_navy(seed):
+    """Navy arrow tile of the white hanging sign: a white chevron arrow pointing +u (mirror the u for '<')."""
+    t = Tex(16, 16, hexc("#1E3C9E"), seed)
+    t.frame(hexc("#C9CCD2"))
+    w = hexc("#FFFFFF")
+    t.rect(3, 7, 10, 8, w)
+    for i in range(5):
+        t.rect(8 + i - 2, 3 + i, 9 + i - 2, 3 + i, w)
+        t.rect(8 + i - 2, 12 - i, 9 + i - 2, 12 - i, w)
+    return t
+
+
+def tx_barber_pole(seed):
+    """Lit barber pole sleeve (B12, B14): diagonal red / white / blue stripes, wraps once round the 8-gon."""
+    t = Tex(16, 32, hexc("#FFFFFF"), seed)
+    for y in range(32):
+        for x in range(16):
+            k = ((x + y) // 4) % 4
+            t.set(x, y, hexc(("#D0202A", "#F4F4F4", "#1E3C9E", "#F4F4F4")[k]))
+    return t
+
+
+def tx_sign_barber(seed):
+    """BARBERSHOP (B14): navy caps on white inside a 2-texel red / white / blue diagonal-stripe border (128 x 16 line
+    in two 64 x 16 strips)."""
+    line = Tex(128, 16, hexc("#F6F6F4"), seed)
+    cols = ("#D0202A", "#F6F6F4", "#1E3C9E", "#F6F6F4")
+    for y in range(16):
+        for x in range(128):
+            if y < 2 or y > 13 or x < 2 or x > 125:
+                line.set(x, y, hexc(cols[((x + y) // 2) % 4]))
+    font_center(line, "BARBERSHOP", 4, hexc("#1E2A5C"), spacing=2)
+    return _strip_tex(line, 0)
+
+
+def tx_photo_bw(seed):
+    """Historic B&W photo frieze (B13): three greyscale prints with mid-grey frames on the white wall (no 1-texel
+    pure black / white)."""
+    t = Tex(64, 32, hexc("#ECEBE8"), seed)
+    r = t.r
+    for k in range(3):
+        x0 = 2 + k * 21
+        t.rect(x0, 3, x0 + 18, 28, hexc("#7C7C7C"))
+        t.rect(x0 + 2, 5, x0 + 16, 26, hexc("#B4B4B0"))
+        # a few soft blocks: sky, buildings / figures
+        t.rect(x0 + 2, 5, x0 + 16, 12, hexc("#C8C8C4"))
+        for _ in range(5):
+            bx, by = r.randrange(x0 + 2, x0 + 14), r.randrange(10, 24)
+            g = r.choice(("#5A5A58", "#6E6E6C", "#8C8C8A", "#4A4A48"))
+            t.rect(bx, by, bx + r.randrange(1, 4), min(26, by + r.randrange(2, 8)), hexc(g))
+        t.rect(x0 + 2, 23, x0 + 16, 26, hexc("#7A7A78"))
+    t.noise(3)
+    return t
+
+
+def tx_dir_g(seed):
+    """Royal-blue Ground floor directory (B13): a big white G, six white text lines, an orange rule (32 x 64)."""
+    t = Tex(32, 64, hexc("#1E3C9E"), seed)
+    t.noise(2)
+    font_text(t, "G", 9, 4, hexc("#FFFFFF"), scale=2)
+    t.rect(4, 22, 27, 23, hexc("#F06A1E"))
+    for i in range(6):
+        y = 28 + i * 5
+        t.rect(4, y, 4 + 14 + (i * 7) % 10, y + 1, hexc("#E8ECF6"))
+    t.rect(0, 62, 31, 63, hexc("#162C78"))
+    return t
+
+
+def tx_sign_subway(seed):
+    """SUBWAY fascia letters (user_03): yellow SUB, white WAY on clear (64 x 16 cutout)."""
+    t = tx_glow_letters("SUBWAY", "#FFC20E", None, seed)
+    for y in range(16):
+        for x in range(32, 64):
+            if t.px[y][x][3] >= 128:
+                t.set(x, y, hexc("#FFFFFF"))
+    return t
+
+
+def tx_arcade_gamepod(seed):
+    """Gamepod Classic cabinet side (B15): black body, a vertical rainbow band of six 2-texel stripes, a lit
+    GAMEPOD marquee panel at the top, the blue screen bay."""
+    t = Tex(32, 64, hexc("#1A1A1E"), seed)
+    t.noise(2)
+    for i, hx in enumerate(("#E8303A", "#F28A1E", "#F2D21E", "#3CC24A", "#2E7CE8", "#8A44D8")):
+        t.rect(18 + 2 * i, 12, 19 + 2 * i, 63, hexc(hx))
+    t.rect(1, 1, 30, 9, hexc("#2A2A30"))
+    font_center(t, "GAMEPOD", 3, hexc("#8CC8FF"), font=FONT3)
+    t.rect(3, 14, 15, 28, hexc("#1E50C8"))
+    t.rect(5, 16, 13, 26, hexc("#3A80E8"))
+    return t
+
+
+def tx_sign_nosh(seed):
+    """NOSH SPOT (user_03, the Market's black fascia): white caps, the O in orange."""
+    t = tx_glow_letters("NOSH SPOT", "#FFFFFF", None, seed)
+    gw = (64 + 1) // 9 - 1
+    x0 = (64 - (9 * gw + 8)) // 2 + (gw + 1)
+    for y in range(16):
+        for x in range(x0, x0 + gw + 1):
+            if t.px[y][x][3] >= 128:
+                t.set(x, y, hexc("#F28A1E"))
+    return t
+
+
+def tx_badge_market(seed):
+    """The round navy MARKET blade sign (user_03): a navy disc, a white ring, MARKET in white caps."""
+    t = Tex(32, 32, (0, 0, 0), seed, alpha=0)
+    t.disc(16, 16, 15.5, hexc("#F4F4F2"))
+    t.disc(16, 16, 14.0, hexc("#1E2A5C"))
+    font_center(t, "MARKET", 13, hexc("#FFFFFF"), font=FONT3)
+    return t
+
+# ---------------------------------------------------------------- user-photo pass, L1-L3 corridors + Rion
+def _bold_letters(t, text, col, x0, x1, y0, gh, gap=1, shadow=None, sdx=1, sdy=1):
+    """FONT5 glyphs stretched to (x1 - x0) width and gh texels high, 2-texel strokes when wide enough; an optional
+    drop shadow (sdx, sdy texels) drawn first."""
+    n = len(text)
+    gw = max(4, min(10, (x1 - x0 + gap) // max(1, n) - gap))
+    total = n * gw + (n - 1) * gap
+    xs = x0 + (x1 - x0 - total) // 2
+    for pas, c, ox, oy in ((0, shadow, sdx, sdy), (1, col, 0, 0)):
+        if c is None:
+            continue
+        x = xs
+        for ch in text:
+            g = FONT5.get(ch)
+            if g is not None:
+                for py in range(gh):
+                    for px in range(gw):
+                        if g[py * 7 // gh][px * 5 // gw] == "#":
+                            for bx in ((0, 1) if gw >= 7 else (0,)):
+                                xx, yy = x + px + bx + ox, y0 + py + oy
+                                if 0 <= xx < t.w and 0 <= yy < t.h:
+                                    t.set(xx, yy, c)
+            x += gw + gap
+
+
+def tx_ccc_screen(seed):
+    """Career Connections Center video wall (user_14, user_15; the blue screen at the corridor end in user_06):
+    royal field, white CAREER / CONNECTIONS / CENTER, an orange rule."""
+    t = Tex(64, 32, hexc("#1F4DB0"), seed)
+    t.noise(2)
+    t.rect(0, 0, 63, 1, hexc("#2C5CC2"))
+    w = hexc("#F2F5FB")
+    _bold_letters(t, "CAREER", w, 8, 56, 3, 7)
+    font_center(t, "CONNECTIONS", 13, w, font=FONT3)
+    _bold_letters(t, "CENTER", w, 8, 56, 21, 7)
+    t.rect(22, 29, 41, 30, hexc("#F08A3A"))
+    return t
+
+
+def tx_marble(seed):
+    """White marble (CCC desk, user_14): #E9E9EB with soft 2-texel grey veins (seamless on 32 x 32)."""
+    t = _flat("#E9E9EB", seed, 2)
+    v1, v2 = hexc("#D9D9DD"), hexc("#E0E0E3")
+    # two soft wandering veins (a slow drift, not straight diagonals: those read as a big X on a desk face)
+    for k, (x0, amp) in enumerate(((6, 3), (21, 2))):
+        for y in range(32):
+            x = (x0 + int(round(amp * math.sin((y + 7 * k) * 0.39))) + y // 8) % 32
+            t.set(x, y, v1 if k == 0 else v2)
+            t.set((x + 1) % 32, y, v2)
+    return t
+
+
+def tx_timeline(seed):
+    """UF Student Union history timeline field (user_07, user_08). Photo pass r2: a WHITE field with narrow orange
+    and royal vertical panels, text columns with greyscale photo blocks and soft 2-texel caption lines (the earlier
+    orange / royal / navy blocks dominated the wall), 2.4 m repeat."""
+    t = Tex(64, 32, hexc("#F2F1EC"), seed)
+    r = t.r
+    t.rect(0, 0, 4, 31, hexc("#E3672B"))
+    t.rect(32, 0, 35, 31, hexc("#1F4DA5"))
+    for i, x0 in enumerate((8, 20, 40, 52)):
+        py = 3 if i % 2 == 0 else 17
+        t.rect(x0, py, x0 + 9, py + 9, hexc("#8A8A88"))
+        t.rect(x0 + 1, py + 1, x0 + 8, py + 8, hexc("#B0B0AC"))
+        t.rect(x0 + 1, py + 1, x0 + 8, py + 3, hexc("#C8C8C4"))
+        ty = 17 if i % 2 == 0 else 3
+        for j in range(3):
+            ln = r.randrange(6, 10)
+            t.rect(x0, ty + j * 4, x0 + ln, ty + j * 4 + 1, hexc("#BCBEC4"))
+        t.rect(x0, 29, x0 + 5, 30, hexc("#E3672B" if i < 2 else "#1F4DA5"))
+    return t
+
+
+def tx_timeline_head(text1, text2, seed):
+    """The orange header of the timeline wall (user_07): white caps on UF orange, 128 x 16 (one or two lines)."""
+    t = Tex(128, 16, hexc("#E3672B"), seed)
+    t.noise(1)
+    w = hexc("#FBF4EE")
+    if text2:
+        font_center(t, text1, 2, w, font=FONT3)
+        font_center(t, text2, 9, w, font=FONT3)
+    else:
+        _bold_letters(t, text1, w, 4, 124, 4, 8)
+    return t
+
+
+def tx_sign_rion(text, seed):
+    """Grey dimensional letters (C03, C12, C13): #8A8D92 letters with a #5C5F64 shadow on the #EDEBE6 wall, 128 x 16."""
+    t = Tex(128, 16, hexc("#EDEBE6"), seed)
+    _bold_letters(t, text, hexc("#8A8D92"), 3, 123, 2, 11, gap=2 if len(text) < 15 else 1, shadow=hexc("#5C5F64"),
+                  sdx=1, sdy=1)
+    return t
+
+
+def _cond4(t, text, x, y, col):
+    """FONT5 glyphs condensed to 4 x 7 texels keeping both outer columns (the centre column folds into the second),
+    so O / D / U / N keep their right edge (returns the x after the text, 1-texel gaps)."""
+    for ch in text:
+        g = FONT5.get(ch)
+        if g is not None:
+            for py in range(7):
+                row = g[py]
+                cells = (row[0] == "#", row[1] == "#" or row[2] == "#", row[3] == "#", row[4] == "#")
+                for px, on in enumerate(cells):
+                    if on:
+                        t.set(x + px, y + py, col)
+        x += 5
+    return x - 1
+
+
+def _hang_line(words, w, arrow=None):
+    """A light-grey hanging-sign line (user_07, user_11): navy condensed caps, grey '|' separators, w x 16."""
+    line = Tex(w, 16, hexc("#E2E4E6"), 5)
+    line.rect(0, 0, w - 1, 0, hexc("#C4C7CC"))
+    line.rect(0, 15, w - 1, 15, hexc("#C4C7CC"))
+    ink = hexc("#1C2B4F")
+    n = sum(len(w_) for w_ in words)
+    width = n * 5 - 1 + 9 * (len(words) - 1)
+    x = (w - width) // 2
+    for i, w_ in enumerate(words):
+        x = _cond4(line, w_, x, 4, ink)
+        if i < len(words) - 1:
+            line.rect(x + 3, 3, x + 4, 12, hexc("#8E94A0"))
+            x += 9
+    return line
+
+
+HANG_LINES = {
+    "pass_up": (["FOOD COURT", "GATOR ONE", "UF BOOKSTORE", "WELCOME CENTER"], 256),
+    "pass_lo": (["CONSTANS THEATRE"], 128),
+    "blue_up": (["CATERING", "CONSTANS THEATRE", "EVENT SERVICES"], 256),
+    "blue_lo": (["CAREER CONNECTIONS CENTER", "GATORWELL"], 256),
+    "meet": (["MEETING ROOMS 2315-2365"], 128),
+}
+
+
+def tx_hang(key, j):
+    words, w = HANG_LINES[key]
+    return _strip_tex(_hang_line(words, w), j)
+
+
+def tx_oils(seed):
+    """Two dark landscape oils in gilt frames (user_06, C11), one per 32 x 32 cell."""
+    t = Tex(64, 32, hexc("#7A5A30"), seed)
+    for k in range(2):
+        x0 = k * 32
+        t.rect(x0, 0, x0 + 31, 31, hexc("#8C6A36"))
+        t.rect(x0 + 2, 2, x0 + 29, 29, hexc("#5E4626"))
+        t.rect(x0 + 3, 3, x0 + 28, 28, hexc("#3E4A4C" if k == 0 else "#4A4438"))
+        t.rect(x0 + 3, 3, x0 + 28, 12, hexc("#6A7A78" if k == 0 else "#8A7454"))
+        t.rect(x0 + 3, 18, x0 + 28, 28, hexc("#2E3A26" if k == 0 else "#3A4250"))
+        t.disc(x0 + (10 if k == 0 else 21), 15, 5, hexc("#283420"))
+        t.rect(x0 + 3, 21, x0 + 28, 22, hexc("#4E5A3A" if k == 0 else "#56607A"))
+    t.noise(3)
+    return t
+
+
+def tx_slate_floor(seed):
+    """CCC slate floor (user_14-16): 0.6 m tiles in two slate greys, staggered rows, 2-texel #3B3E44 grout
+    (32 texels = 1.2 m)."""
+    t = Tex(32, 32, hexc("#474B52"), seed)
+    g = hexc("#3B3E44")
+    for row in range(2):
+        y0 = row * 16
+        off = 8 if row else 0
+        for c in range(2):
+            col = hexc("#6B7078" if (row + c) % 2 else "#4E525A")
+            for y in range(y0, y0 + 16):
+                for x in range(16):
+                    t.set((c * 16 + off + x) % 32, y, col)
+        t.rect(0, y0, 31, y0 + 1, g)
+        for c in range(2):
+            x = (c * 16 + off) % 32
+            t.rect(x, y0, x + 1, y0 + 15, g)
+    t.noise(3)
+    return t
+
+
+def tx_word_wall(k, seed):
+    """CCC cut-out word wall (user_16): blocky light-grey words on a dark warm-grey field, three lines per panel."""
+    t = Tex(64, 32, hexc("#8A5C34"), seed)        # photo pass r2: honey-brown wood (was a dark warm grey)
+    t.noise(2)
+    lines = (("DESIGN", "YOUR LIFE", "BRIDGE"), ("NEVER TOO", "LATE", "CREATE"))[k]
+    for i, w_ in enumerate(lines):
+        _bold_letters(t, w_, hexc("#F0C47E"), 2, 62, 2 + i * 10, 8, gap=1)     # cut-outs lit warm from behind
+    return t
+
+
+def tx_restroom_blade(seed):
+    """Photo pass round 3 (user_09): the blue projecting restroom flag sign, white man / woman pictograms (32 x 16)."""
+    t = Tex(32, 16, hexc("#1E4AA0"), seed)
+    t.noise(1)
+    w = hexc("#F4F6FA")
+    t.rect(0, 0, 31, 0, hexc("#E8ECF2"))
+    t.rect(0, 15, 31, 15, hexc("#E8ECF2"))
+    for cx, dress in ((10, False), (21, True)):
+        t.rect(cx - 1, 2, cx, 3, w)                       # head
+        if dress:
+            for i, y in enumerate(range(5, 10)):          # a widening dress
+                t.rect(cx - 1 - i // 2, y, cx + i // 2, y, w)
+        else:
+            t.rect(cx - 2, 5, cx + 1, 9, w)               # torso
+        t.rect(cx - 1, 10, cx - 1, 13, w)                 # legs
+        t.rect(cx, 10, cx, 13, w)
+    t.rect(15, 2, 15, 13, w)                              # divider
+    return t
+
+
+def tx_word_wall_dense(half, seed):
+    """Photo pass round 3 (user_16): the CCC word wall is ONE tall honey panel of dense small cut-out lettering
+    (DESIGN YOUR LIFE, NEVER TOO LATE, BRIDGE ... packed in rows of mixed sizes), the cut-outs dark behind the wood.
+    Two 64 x 32 halves (TMEM), half 0 the top."""
+    t = Tex(64, 32, hexc("#B88450"), seed)          # the honey wood field; the letters are the dark cut-outs
+    t.noise(2)
+    honey, light = hexc("#4A3020"), hexc("#2E1C10")
+    fill = ("CONNECT", "EXPLORE", "PURPOSE", "INSPIRE", "GROW", "LEAD", "DREAM", "BUILD", "IMPACT", "LEARN",
+            "CREATE", "BRIDGE", "FUTURE", "GATORS", "SKILLS", "VALUE")
+    rows = ((("DESIGN", FONT5), ("YOUR LIFE", FONT5), (None, FONT3), (None, FONT3)),
+            (("NEVER TOO", FONT5), ("LATE", FONT3), (None, FONT3), ("BRIDGE", FONT5)))[half]
+    y, k = 1, 5 * half
+    for text, font in rows:
+        gh = len(next(iter(font.values())))
+        gw = len(next(iter(font.values()))[0])
+        words = [text] if text else []
+        while True:
+            w_ = fill[k % len(fill)]
+            cand = " ".join(words + [w_])
+            if font_width(cand, font=font) > 62:
+                break
+            words.append(w_)
+            k += 1
+        line = " ".join(words)
+        font_text(t, line, 1, y, light if text else honey, font=font)
+        y += gh + 1
+        if y > 31 - 5:
+            break
+    return t
+
+
+def tx_glass_tint_dk(seed):
+    """photo pass r2 (C08): near-black tinted glass (opaque), a faint diagonal sheen band (32 x 32 over 1.2 m)."""
+    t = Tex(32, 32, hexc("#3E4246"), seed)         # photo pass round 3 (C08 ~43,43,41): lighter (was #22262C)
+    t.noise(1)
+    for y in range(32):
+        for x in range(32):
+            if 10 <= (x + y) % 32 <= 15:
+                t.set(x, y, hexc("#4A4F55"))
+    return t
+
+
+def tx_frit(seed):
+    """Dotted glass frit band (C04): 2-texel white dots on clear (cutout), rows offset, 64 x 8 = 1.2 m."""
+    t = Tex(64, 8, (244, 246, 248), seed, alpha=0)
+    for row, y in enumerate((1, 5)):
+        for x in range(0 if row == 0 else 2, 64, 4):
+            t.rect(x, y, x + 1, y + 1, hexc("#F4F6F8"))
+    return t
+
+
+def tx_rion_case(seed):
+    """William E. (Bill) Rion memorial display case (C12, C13): navy backing, a framed B&W portrait, a cream text
+    plaque with 2-texel lines, a brass name plate (32 x 64, top = v 1)."""
+    t = Tex(32, 64, hexc("#1E2A44"), seed)
+    t.noise(2)
+    t.rect(7, 6, 24, 29, hexc("#8C6A36"))
+    t.rect(9, 8, 22, 27, hexc("#9A9A96"))
+    t.rect(9, 8, 22, 13, hexc("#B8B8B4"))
+    t.disc(15, 16, 4, hexc("#D2CCC4"))
+    t.rect(11, 21, 20, 27, hexc("#3C3C40"))
+    t.rect(5, 34, 26, 52, hexc("#EDE6D6"))
+    for j in range(4):
+        t.rect(8, 37 + j * 4, 23 - (j % 2) * 4, 38 + j * 4, hexc("#8A8478"))
+    t.rect(9, 56, 22, 59, hexc("#C8A04A"))
+    return t
+
+
+def _retone(t, f):
+    """Scale every texel's RGB by f (clamped): a lighter / warmer copy of an existing recipe."""
+    for y in range(t.h):
+        for x in range(t.w):
+            c = t.get(x, y)
+            t.set(x, y, tuple(min(240, int(c[k] * f[k])) for k in range(3)))
+    return t
+
+
+def tx_door_meeting_honey(seed):
+    """The L2 / L3 meeting-room and Rion door in honey wood (C03, C08, C12, C13): the walnut recipe re-toned."""
+    t = tx_door_meeting(seed)
+    f = (1.96, 2.17, 1.72)
+    for y in range(t.h):
+        for x in range(t.w):
+            c = t.get(x, y)
+            if c[0] - c[2] > 18:
+                t.set(x, y, tuple(min(235, int(c[k] * f[k])) for k in range(3)))
+    return t
+
+
+def tx_partition(seed):
+    """Operable-partition panels (C08): #8C9095 with 2-texel #6E7277 joints every 0.6 m (32 = 1.2 m)."""
+    t = _flat("#8C9095", seed, 2)
+    for x in (0, 16):
+        t.rect(x, 0, x + 1, 31, hexc("#6E7277"))
     return t
 
 
@@ -3404,7 +4726,7 @@ def cue_rack():
     return P
 
 
-def billiard_table(L=2.84, W=1.57, h=0.79):
+def billiard_table(L=2.84, W=1.57, h=0.79, base="int_ru_espresso"):
     """9-ft table (ru_gr_billiards_room): blue felt, near-black espresso mahogany rails / apron / heavy legs (fix round
     5, fidelity-3: int_ru_cherry read bright orange against the photo's (36,15,13)); long axis = local x."""
     P = _p("billiards")
@@ -3414,12 +4736,12 @@ def billiard_table(L=2.84, W=1.57, h=0.79):
     for (x0, y0, x1, y1) in ((-L / 2, -W / 2, L / 2, -W / 2 + rw), (-L / 2, W / 2 - rw, L / 2, W / 2),
                              (-L / 2, -W / 2 + rw, -L / 2 + rw, W / 2 - rw), (L / 2 - rw, -W / 2 + rw, L / 2, W / 2 - rw)):
         V.box(x0, y0, h - 0.12, x1, y1, h + 0.04, "int_ru_espresso", faces="+x-x+y-y+z")
-    V.box(-L / 2 + 0.1, -W / 2 + 0.1, h - 0.32, L / 2 - 0.1, W / 2 - 0.1, h - 0.12, "int_ru_espresso",
+    V.box(-L / 2 + 0.1, -W / 2 + 0.1, h - 0.32, L / 2 - 0.1, W / 2 - 0.1, h - 0.12, base,
           faces="+x-x+y-y-z")
     for sx in (-1, 1):
         for sy in (-1, 1):
             V.box(sx * L * 0.38 - 0.11, sy * W * 0.3 - 0.11, 0.0, sx * L * 0.38 + 0.11, sy * W * 0.3 + 0.11, h - 0.32,
-                  "int_ru_espresso", faces="+x-x+y-y")
+                  base, faces="+x-x+y-y")
     # balls (a triangle rack + cue ball)
     for k, (bx, by) in enumerate([(0.6, 0), (0.66, 0.035), (0.66, -0.035), (0.72, 0.07), (0.72, 0), (0.72, -0.07),
                                   (-0.6, 0.0)]):
@@ -3431,18 +4753,18 @@ def billiard_table(L=2.84, W=1.57, h=0.79):
     return P
 
 
-def led_frame(w, d, z, t=0.08):
+def led_frame(w, d, z, t=0.08, h=0.06, strength=0.30):
     """Square LED ring light frame over a billiards table (ru_gr_billiards_room): white glowing bar."""
     P = _p("led_frame")
     V = P.visual
     for (x0, y0, x1, y1) in ((-w / 2, -d / 2, w / 2, -d / 2 + t), (-w / 2, d / 2 - t, w / 2, d / 2),
                              (-w / 2, -d / 2, -w / 2 + t, d / 2), (w / 2 - t, -d / 2, w / 2, d / 2)):
-        V.box(x0, y0, z - 0.06, x1, y1, z, "int_ru_led", faces="-z+x-x+y-y", glow=True)
-    P.lights.append(K.Light((0.0, 0.0, z - 0.3), radius=4.0, strength=0.30, color=(0.96, 0.98, 1.0)))
+        V.box(x0, y0, z - h, x1, y1, z, "int_ru_led", faces="-z+x-x+y-y", glow=True)
+    P.lights.append(K.Light((0.0, 0.0, z - 0.3), radius=4.0, strength=strength, color=(0.96, 0.98, 1.0)))
     return P
 
 
-def arcade_cabinet():
+def arcade_cabinet(side="int_ru_arcade", marquee=(1.0, 0.85, 0.4)):
     P = _p("arcade")
     V, C = P.visual, P.collision
     w, d, h = 0.72, 0.85, 1.85
@@ -3452,7 +4774,7 @@ def arcade_cabinet():
         pts = [(x, -d / 2, 0.0), (x, d / 2, 0.0), (x, d / 2, h), (x, -d / 2, h)]
         if sx < 0:
             pts = list(reversed(pts))
-        V.poly(pts, "int_ru_arcade", uvs=[(0, 0), (1, 0), (1, 1), (0, 1)] if sx > 0 else [(1, 1), (1, 0), (0, 0), (0, 1)][::-1],
+        V.poly(pts, side, uvs=[(0, 0), (1, 0), (1, 1), (0, 1)] if sx > 0 else [(1, 1), (1, 0), (0, 0), (0, 1)][::-1],
                normal_hint=(sx, 0, 0))
     # screen IN FRONT of the cabinet's +y face, leaning back (bottom 14 cm out, top 3 cm out)
     V.poly([(-w / 2 + 0.06, d / 2 + 0.14, 1.05), (w / 2 - 0.06, d / 2 + 0.14, 1.05), (w / 2 - 0.06, d / 2 + 0.03, 1.55),
@@ -3460,7 +4782,7 @@ def arcade_cabinet():
            normal_hint=(0, 1, 0.22))
     V.box(-w / 2, d / 2, 0.85, w / 2, d / 2 + 0.25, 0.95, "int_ru_black", faces="+y+z+x-x")
     V.poly([(-w / 2 + 0.04, d / 2 + 0.03, 1.62), (w / 2 - 0.04, d / 2 + 0.03, 1.62), (w / 2 - 0.04, d / 2 + 0.03, 1.80),
-            (-w / 2 + 0.04, d / 2 + 0.03, 1.80)], "int_ru_led", glow=True, tint=(1.0, 0.85, 0.4), normal_hint=(0, 1, 0))
+            (-w / 2 + 0.04, d / 2 + 0.03, 1.80)], "int_ru_led", glow=True, tint=marquee, normal_hint=(0, 1, 0))
     K.col_box(C, -w / 2, -d / 2, 0.0, w / 2, d / 2 + 0.25, h, K.COL_NOCAM)
     return P
 
@@ -3570,8 +4892,11 @@ def esports_row(n=6, seat_w=0.95, depth=0.75, h=0.75, double=True):
                   faces="+x-x+y-y+z")
             # fidelity-3 (round 2; ru_es_overview, ru_es_oelrich_9352): all-black gaming chairs (the red back panel
             # is gone); a dark-grey headrest band keeps the back readable against the black desks
-            V.box(x - 0.2, by + (0.081 * s if s > 0 else -0.001), 1.08, x + 0.2,
-                  by + (0.082 * s if s > 0 else 0.0), 1.2, "int_ru_fabric_char", faces="+y" if s > 0 else "-y")
+            # photo pass round 2: the band sits 1.5 cm proud of the back's OUTER face on both sides of a double row
+            # (it was 2 mm off it, a coplanar z-fight; on the -y side it was buried inside the back)
+            yf = by + s * 0.095
+            V.box(x - 0.2, min(yf, yf - s * 0.005), 1.08, x + 0.2, max(yf, yf - s * 0.005), 1.2, "int_ru_fabric_char",
+                  faces="+y" if s > 0 else "-y")
             V.box(x - 0.03, cy - 0.03, 0.0, x + 0.03, cy + 0.03, 0.42, "int_ru_steel", faces="+x-x+y-y")
     if double:
         V.box(-L / 2, -0.05, 0.0, L / 2, 0.05, h + 0.6, "int_ru_black", faces="+x-x+y-y+z")
@@ -3579,7 +4904,8 @@ def esports_row(n=6, seat_w=0.95, depth=0.75, h=0.75, double=True):
     return P
 
 
-def lounge_chair(mat="int_ru_fabric_navy", seat="int_ru_fabric_taupe", w=0.85, d=0.85, swivel=False, col=True, arm=None):
+def lounge_chair(mat="int_ru_fabric_navy", seat="int_ru_fabric_taupe", w=0.85, d=0.85, swivel=False, col=True, arm=None,
+                 back=None, cap=None):
     """Atrium club chair (ru_atrium_enr_lounge): navy shell / taupe cushion, or the orange swivel tub chair.
     arm: a material for the side panels (fix round 4: the photo's chairs have tan wood side panels)."""
     P = _p("lounge_chair")
@@ -3596,10 +4922,13 @@ def lounge_chair(mat="int_ru_fabric_navy", seat="int_ru_fabric_taupe", w=0.85, d
         return P
     V.box(-w / 2, -d / 2, 0.0, w / 2, d / 2, 0.42, mat, faces="+x-x+y-y")
     V.box(-w / 2 + 0.16, -d / 2 + 0.2, 0.42, w / 2 - 0.16, d / 2, 0.48, seat, faces="+z+y")
-    V.box(-w / 2, -d / 2, 0.42, w / 2, -d / 2 + 0.2, 0.82, mat, faces="+x-x+y-y+z")
+    V.box(-w / 2, -d / 2, 0.42, w / 2, -d / 2 + 0.2, 0.82, back or mat, faces="+x-x+y-y+z")
     for sx in (-1, 1):
         V.box(sx * w / 2 - (0.16 if sx > 0 else 0), -d / 2 + 0.2, 0.42, sx * w / 2 + (0 if sx > 0 else 0.16), d / 2,
-              0.64, arm or mat, faces="+x-x+y+z")
+              0.64, arm or mat, faces="+x-x+y" + ("" if cap else "+z"))
+        if cap:     # user-photo pass (user_06, B08): maple arm caps
+            V.box(sx * w / 2 - (0.17 if sx > 0 else -0.01), -d / 2 + 0.2, 0.64, sx * w / 2 + (-0.01 if sx > 0 else 0.17),
+                  d / 2 + 0.01, 0.675, cap, faces="+x-x+y+z")
     if col:
         K.col_box(C, -w / 2, -d / 2, 0.0, w / 2, d / 2, 0.48, K.COL_NOCAM)
     P.info["top_z"] = 0.48
@@ -3626,6 +4955,68 @@ def lounge_sofa(L=1.75, mat="int_ru_fabric_navy", seat="int_ru_leather_navy", ar
     if col:
         K.col_box(C, -L / 2, -d / 2, 0.0, L / 2, d / 2, 0.5, K.COL_NOCAM)
     P.info["top_z"] = 0.5
+    return P
+
+
+def swivel_highback(col=False):
+    """user-photo pass (B08, B09, C01): the lounge's orange high-back swivel chair: a 5-arm chrome star base,
+    a post, a seat disc with a royal-blue cushion and a 5-facet orange shell rising from 0.40 m to 1.15 m at the back
+    (lower at the sides). Front = +y."""
+    P = _p("swivel_highback")
+    V, C = P.visual, P.collision
+    for k in range(5):
+        a = math.radians(90.0 + 72.0 * k)
+        seg_box(V, (0.0, 0.0), (0.3 * math.cos(a), 0.3 * math.sin(a)), 0.025, 0.02, 0.06, "int_ru_steel_bright",
+                faces="sidetop")
+    cyl(V, 0.0, 0.0, 0.035, 0.06, 0.38, "int_ru_steel_bright", n=4, top=False)
+    cyl(V, 0.0, 0.0, 0.32, 0.38, 0.44, "int_ru_fabric_orange", n=8, top=False)
+    cyl(V, 0.0, 0.02, 0.28, 0.44, 0.48, "int_ru_uf_blue", n=8, top=True)
+    angs = [190.0 + 32.0 * k for k in range(6)]
+    pts = [(0.34 * math.cos(math.radians(a)), 0.34 * math.sin(math.radians(a))) for a in angs]
+    tops = [0.40 + 0.75 * (0.55 + 0.45 * math.sin(math.radians(-a))) for a in angs]
+    for (a, za), (b, zb) in zip(zip(pts, tops), zip(pts[1:], tops[1:])):
+        mx, my = (a[0] + b[0]) / 2, (a[1] + b[1]) / 2
+        L_ = math.hypot(mx, my)
+        V.poly([(a[0], a[1], 0.40), (b[0], b[1], 0.40), (b[0], b[1], zb), (a[0], a[1], za)], "int_ru_fabric_orange",
+               normal_hint=(mx / L_, my / L_, 0.0))
+        V.poly([(b[0], b[1], 0.40), (a[0], a[1], 0.40), (a[0], a[1], za), (b[0], b[1], zb)], "int_ru_fabric_orange",
+               normal_hint=(-mx / L_, -my / L_, 0.0), ao=0.85)
+    if col:
+        K.col_box(C, -0.36, -0.36, 0.0, 0.36, 0.36, 0.48, K.COL_NOCAM)
+    P.info["top_z"] = 0.48
+    return P
+
+
+def rocking_chair(mat="int_ru_white"):
+    """user-photo pass (B05, B06, C01): a white wooden rocking chair (the four in front of the L1 north
+    curtain wall): two 4-segment arc rockers 0.9 m long, legs, a seat at 0.42 m, arms at 0.62 m, two back posts and four
+    spindles up to 1.05 m. Front = +y. Visual only."""
+    P = _p("rocking_chair")
+    V = P.visual
+    for sx in (-0.25, 0.25):
+        prev = None
+        for k in range(5):
+            u = -0.45 + 0.9 * k / 4.0
+            z_ = 0.03 + 0.09 * (u / 0.45) ** 2
+            cur = (sx, u, z_)
+            if prev is not None:
+                for sg in (1, -1):
+                    q = [(sx, prev[1], prev[2]), (sx, cur[1], cur[2]), (sx, cur[1], cur[2] + 0.05),
+                         (sx, prev[1], prev[2] + 0.05)]
+                    V.poly(q if sg > 0 else list(reversed(q)), mat, normal_hint=(sg, 0.0, 0.0))
+            prev = cur
+        for uy in (-0.2, 0.2):
+            cyl(V, sx, uy, 0.025, 0.06, 0.42, mat, n=3, top=False)
+    V.box(-0.27, -0.24, 0.40, 0.27, 0.24, 0.44, mat, faces="+x-x+y-y+z")
+    for sx in (-1, 1):
+        seg_box(V, (sx * 0.28, -0.22), (sx * 0.28, 0.24), 0.03, 0.60, 0.64, mat, faces="sidetop")
+        cyl(V, sx * 0.25, -0.22, 0.03, 0.44, 1.05, mat, n=3, top=True)
+    V.box(-0.27, -0.25, 0.97, 0.27, -0.19, 1.07, mat, faces="+x-x+y-y+z")
+    for k in range(4):
+        x_ = -0.15 + 0.1 * k
+        for sg in (1, -1):
+            q = [(x_ - 0.012, -0.22, 0.44), (x_ + 0.012, -0.22, 0.44), (x_ + 0.012, -0.22, 0.97), (x_ - 0.012, -0.22, 0.97)]
+            V.poly(q if sg > 0 else list(reversed(q)), mat, normal_hint=(0.0, -sg, 0.0))
     return P
 
 
@@ -3949,8 +5340,9 @@ def uf_letters(height=2.6, depth=0.7, base=True, mat="int_ru_orange_uf"):
     if base:
         V.box(-total_w / 2 - 0.4, -depth / 2 - 0.25, 0.0, total_w / 2 + 0.4, depth / 2 + 0.25, z0, "int_ru_uf_blue",
               faces="+x-x+y-y+z")
-    K.col_box(C, -total_w / 2 - 0.4, -depth / 2 - 0.25, 0.0, total_w / 2 + 0.4, depth / 2 + 0.25, z0 + 0.1,
-              K.COL_NOCAM)
+    if base:        # design + leftovers pass (B09: the letters stand on the floor): no 10 cm plinth step without it
+        K.col_box(C, -total_w / 2 - 0.4, -depth / 2 - 0.25, 0.0, total_w / 2 + 0.4, depth / 2 + 0.25, z0 + 0.1,
+                  K.COL_NOCAM)
     P.anchor("u_stem_top", ox - st / 2, 0.0, zt, 0.0)
     P.info.update(width=total_w + 0.8, top_z=zt)
     return P
@@ -3965,9 +5357,11 @@ def gator_head(scale=1.0):
     P = _p("gator_head")
     V, C = P.visual, P.collision
     s = scale
-    V.box(-0.6 * s, -0.6 * s, 0.0, 0.6 * s, 0.6 * s, 0.9 * s, "int_ru_uf_blue", faces="+x-x+y-y+z")
-    V.box(-0.61 * s, -0.61 * s, 0.62 * s, 0.61 * s, 0.61 * s, 0.72 * s, "int_ru_orange_uf", faces="+x-x+y-y")
-    g = "int_ru_gator_green"
+    # user-photo pass (B08, C01: the real Swamp Boss): a BLACK gator head on a ROUND honey-wood drum
+    # with a black top disc (was a green head on a UF-blue box plinth with an orange band). Same 1.2 m collision box.
+    cyl(V, 0.0, 0.0, 0.55 * s, 0.0, 0.86 * s, "int_ru_maple", n=12, top=False)
+    cyl(V, 0.0, 0.0, 0.58 * s, 0.86 * s, 0.9 * s, "int_ru_black", n=12, top=True)
+    g = "int_ru_bronze_black"
     z = 0.9 * s
 
     def slab(foot, z0, z1, ztop_front=None):
@@ -3983,18 +5377,18 @@ def gator_head(scale=1.0):
     for a_, b_ in edges(sn):
         quad_wall(V, a_, b_, z + 0.16 * s, z + (0.36 if a_[1] < 0.5 * s and b_[1] < 0.5 * s else 0.26) * s, g)
     V.poly([(q[0], q[1], z + (0.36 if q[1] < 0.5 * s else 0.26) * s) for q in sn], g, normal_hint=(0, 0, 1))
-    V.poly([(q[0], q[1], z + 0.16 * s) for q in reversed(sn)], "int_ru_red", normal_hint=(0, 0, -1))
+    V.poly([(q[0], q[1], z + 0.16 * s) for q in reversed(sn)], "int_ru_black", normal_hint=(0, 0, -1))
     # lower jaw: open, a thinner wedge resting on the plinth top
     lj = [(-0.3 * s, 0.1 * s), (0.3 * s, 0.1 * s), (0.17 * s, 1.2 * s), (-0.17 * s, 1.2 * s)]
     for a_, b_ in edges(lj):
         quad_wall(V, a_, b_, z, z + 0.08 * s, g)
-    V.poly([(q[0], q[1], z + 0.08 * s) for q in lj], "int_ru_red", normal_hint=(0, 0, 1))   # the mouth's inside
+    V.poly([(q[0], q[1], z + 0.08 * s) for q in lj], "int_ru_black", normal_hint=(0, 0, 1))   # the mouth's inside
     # eye bumps with orange eyes, nostril bumps at the tip
     for sx in (-1, 1):
         V.box(sx * 0.26 * s - 0.1 * s, -0.3 * s, z + 0.42 * s, sx * 0.26 * s + 0.1 * s, -0.06 * s, z + 0.6 * s, g,
               faces="+x-x+y-y+z")
         V.box(sx * 0.26 * s - 0.06 * s, -0.05 * s, z + 0.46 * s, sx * 0.26 * s + 0.06 * s, -0.04 * s, z + 0.56 * s,
-              "int_ru_orange_uf", faces="+y", glow=True)
+              "int_ru_leather_char", faces="+y")
         V.box(sx * 0.09 * s - 0.05 * s, 1.12 * s, z + 0.26 * s, sx * 0.09 * s + 0.05 * s, 1.26 * s, z + 0.32 * s, g,
               faces="+x-x+y-y+z")
     # fix round 4 (design pass, improvement 9): from behind / the stair side it read as a green cube with orange
@@ -4007,14 +5401,14 @@ def gator_head(scale=1.0):
         y0_ = -0.52 * s + k * 0.17 * s
         for sx in (-1, 1):
             V.box(sx * 0.12 * s - 0.05 * s, y0_, z + 0.42 * s, sx * 0.12 * s + 0.05 * s, y0_ + 0.11 * s, z + 0.5 * s,
-                  "int_ru_slat_dark", faces="+x-x+y-y+z")
+                  "int_ru_black", faces="+x-x+y-y+z")
     # teeth: white zigzags down from the upper jaw and up from the lower jaw, both sides
     for k in range(7):
         y = 0.2 * s + k * 0.15 * s
         for sx in (-1, 1):
             xo = sx * (0.335 - 0.13 * (y / s - 0.1) / 1.25) * s + sx * 0.005
             V.poly([(xo, y, z + 0.16 * s), (xo, y + 0.09 * s, z + 0.16 * s), (xo, y + 0.045 * s, z + 0.08 * s)],
-                   "int_ru_white", normal_hint=(sx, 0, 0))
+                   "int_ru_leather_grey", tint=(0.55, 0.56, 0.58), normal_hint=(sx, 0, 0))
     # iteration 7 (fidelity-1 improvement 7; no photo, inferred): snout-on (from the lounge) it read as a green block
     # with two eyes. Front teeth across both jaw tips (1 cm proud of the tip faces), a pale cream under-jaw band
     # (2 cm proud of the lower jaw's sides), black nostrils on the nostril bumps, a black slit pupil on each eye
@@ -4022,14 +5416,14 @@ def gator_head(scale=1.0):
     for k in range(4):
         x_ = (-0.15 + 0.1 * k) * s
         V.poly([(x_ - 0.04 * s, 1.36 * s, z + 0.16 * s), (x_ + 0.04 * s, 1.36 * s, z + 0.16 * s),
-                (x_, 1.36 * s, z + 0.09 * s)], "int_ru_white", normal_hint=(0, 1, 0))
+                (x_, 1.36 * s, z + 0.09 * s)], "int_ru_leather_grey", tint=(0.55, 0.56, 0.58), normal_hint=(0, 1, 0))
     for k in range(3):
         x_ = (-0.09 + 0.09 * k) * s
         V.poly([(x_ - 0.035 * s, 1.21 * s, z + 0.08 * s), (x_, 1.21 * s, z + 0.14 * s),
-                (x_ + 0.035 * s, 1.21 * s, z + 0.08 * s)], "int_ru_white", normal_hint=(0, 1, 0))
+                (x_ + 0.035 * s, 1.21 * s, z + 0.08 * s)], "int_ru_leather_grey", tint=(0.55, 0.56, 0.58), normal_hint=(0, 1, 0))
     for a_, b_ in edges([(-0.32 * s, 0.1 * s), (0.32 * s, 0.1 * s), (0.19 * s, 1.22 * s), (-0.19 * s, 1.22 * s)]):
         if a_[1] > 0.5 * s or b_[1] > 0.5 * s:
-            quad_wall(V, a_, b_, z + 0.01 * s, z + 0.05 * s, "int_ru_wall_cream")
+            quad_wall(V, a_, b_, z + 0.01 * s, z + 0.05 * s, "int_ru_leather_char")
     for sx in (-1, 1):
         V.box(sx * 0.09 * s - 0.025 * s, 1.17 * s, z + 0.325 * s, sx * 0.09 * s + 0.025 * s, 1.21 * s, z + 0.335 * s,
               "int_ru_black", faces="+z")
@@ -4193,7 +5587,9 @@ def storefront(width, sign_mat, wall_mat="int_ru_paint_lime", side_mat="int_ru_p
             # fidelity-2: channel letters straight on the fascia (cutout card, no panel behind them)
             lw, lh = st.get("letters_w", min(W - 0.6, 4.4)), st.get("letters_h", min(fh - 0.1, 1.0))
             lz = oh + (h - oh - lh) / 2
-            V.poly([(lw / 2, 0.12, lz), (-lw / 2, 0.12, lz), (-lw / 2, 0.12, lz + lh), (lw / 2, 0.12, lz + lh)],
+            lx = st.get("letters_x", 0.0)      # user-photo pass: letters off centre (STARBUCKS, PANDA)
+            V.poly([(lx + lw / 2, 0.12, lz), (lx - lw / 2, 0.12, lz), (lx - lw / 2, 0.12, lz + lh),
+                    (lx + lw / 2, 0.12, lz + lh)],
                    st["letters"], uvs=[(0, 0), (1, 0), (1, 1), (0, 1)], glow=True, normal_hint=(0, 1, 0))
         elif sign_mat:
             sw = min(W - 0.6, fh * 3.6)
@@ -4207,6 +5603,17 @@ def storefront(width, sign_mat, wall_mat="int_ru_paint_lime", side_mat="int_ru_p
         sw = min(W - 0.4, 3.2)
         V.poly([(sw / 2, 0.06, h - 1.2), (-sw / 2, 0.06, h - 1.2), (-sw / 2, 0.06, h - 0.15), (sw / 2, 0.06, h - 0.15)],
                sign_mat, uvs=[(0, 0), (1, 0), (1, 1), (0, 1)], glow=True, normal_hint=(0, 1, 0))
+    # user-photo pass (food court): extra once-mapped decals in the local frame (round badges, the
+    # painted name on a counter front): (material, x0, x1, z0, z1, y, glow); x0 > x1 reads left to right
+    for (dm, dx0, dx1, dz0, dz1, dy, dg) in st.get("decals", ()):
+        V.poly([(dx1, dy, dz0), (dx0, dy, dz0), (dx0, dy, dz1), (dx1, dy, dz1)], dm,
+               uvs=[(1, 0), (0, 0), (0, 1), (1, 1)], glow=dg, normal_hint=(0, 1, 0))
+    # ... black dome pendants over the counter (B01, Baba's Pizza): a dome, a lit disc under it, a thin cord
+    for px_ in st.get("pendants", ()):
+        cyl(V, px_, 1.0, 0.28, 2.45, 2.67, "int_ru_black", n=8, top=True)
+        V.poly([(px_ + 0.24 * math.cos(2 * math.pi * k / 8), 1.0 + 0.24 * math.sin(2 * math.pi * k / 8), 2.44)
+                for k in reversed(range(8))], "int_ru_led", glow=True)
+        V.box(px_ - 0.01, 0.99, 2.67, px_ + 0.01, 1.01, h - 0.01, "int_ru_black", faces="+x-x+y-y")
     P.lights.append(K.Light((0.0, -0.6, h - 0.4), radius=5.0, strength=st.get("light", 0.35), color=(1.0, 0.95, 0.85)))
     return P
 
@@ -4353,13 +5760,16 @@ def sofa(L=2.0, mat="int_ru_uf_blue"):
 
 
 def cafe_table_set(table_w=0.75, h=0.75, chairs=4, chair_mat="int_ru_fabric_navy", top="int_wood", frame="int_ru_wood_panel",
-                   seat_box=False):
+                   seat_box=False, round_top=False):
     """Square cafe table with 2-4 wood/navy chairs (food court, Arredondo Cafe). seat_box: padded seat cushions
     with sides and a taller wood back (the Arredondo chairs, fidelity-4 round 2)."""
     P = _p("cafe_table")
     V, C = P.visual, P.collision
     t = table_w / 2
-    V.box(-t, -t, h - 0.04, t, t, h, top, faces="+x-x+y-y+z")
+    if round_top:      # user-photo pass (B03): round laminate tops by the Starbucks
+        cyl(V, 0.0, 0.0, 0.42, h - 0.04, h, top, n=8, top=True)
+    else:
+        V.box(-t, -t, h - 0.04, t, t, h, top, faces="+x-x+y-y+z")
     V.box(-0.04, -0.04, 0.0, 0.04, 0.04, h - 0.04, "int_ru_black", faces="+x-x+y-y")
     for k in range(chairs):
         a = math.pi / 2 * k
@@ -4654,12 +6064,13 @@ def stair_flight(V, C, a, b, z0, z1, width, steps=None, tread_mat="int_ru_terraz
     if rails:
         for off in (-w2 + 0.05, w2 - 0.05):
             pa, pb = P(0, off, z0), P(L, off, z1)
-            V.poly([pa, pb, (pb[0], pb[1], pb[2] + rail_h), (pa[0], pa[1], pa[2] + rail_h)], "int_ru_picket",
+            V.poly([pa, pb, (pb[0], pb[1], pb[2] + rail_h), (pa[0], pa[1], pa[2] + rail_h)], "int_ru_picket2",
                    uvs=[(0, 0), (L / 1.1, 0), (L / 1.1, 1), (0, 1)], ao=1.0)
+            # user-photo pass (user_02, C01, C05): a honey-wood handrail on the grey pickets (was a steel cap)
             V.poly([(pa[0], pa[1], pa[2] + rail_h), (pb[0], pb[1], pb[2] + rail_h), (pb[0], pb[1], pb[2] + rail_h + 0.06),
-                    (pa[0], pa[1], pa[2] + rail_h + 0.06)], "int_ru_steel", ao=1.0)
+                    (pa[0], pa[1], pa[2] + rail_h + 0.06)], "int_ru_maple", ao=1.0)
             V.poly([(pb[0], pb[1], pb[2] + rail_h), (pa[0], pa[1], pa[2] + rail_h), (pa[0], pa[1], pa[2] + rail_h + 0.06),
-                    (pb[0], pb[1], pb[2] + rail_h + 0.06)], "int_ru_steel", ao=1.0)
+                    (pb[0], pb[1], pb[2] + rail_h + 0.06)], "int_ru_maple", ao=1.0)
     # collision: ramp + railing blocks
     if C is not None:
         ramp = [P(0, -w2, z0), P(L, -w2, z1), P(L, w2, z1), P(0, w2, z0)]

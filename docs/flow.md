@@ -1,6 +1,6 @@
 # Super Gatorlator 64: game flow contract
 
-Status: flow spike + integration pass + review fix round + Course 2 integration + Course 2 fix round + Course 3 integration + Course 3 fix round + Course 4 integration + Course 4 fix round + Course 5 integration + Course 5 fix round + Reitz interior / Marston upgrade integration + interior review rounds 1-3 and their fix rounds (Oct 2026), coopdx v1.5.1. The hub (`castle_grounds`), the real Swamp (`bob`, door 1), Reitz Union & Engineering (`wf`, door 2, 2 stars; since with the Reitz Union interior as area 2, §9.2.1), Lake Alice (`jrb`, door 3, 5 stars), the Marston Science Library interior (`ccm`, door 4, 8 stars) and Library West After Dark, the Library West interior at night (`bbh`, door 5, 11 stars), are built; each has 3 playable acts (§5.1), coins for its 100-coin star, Goombas and hearts (and poles on the outdoor stages) (§9). Century Tower (`ttc`, door 6, 14 stars) is still "coming soon". Nothing here has been run in the game yet: §10 is the test script.
+Status: flow spike + integration pass + review fix round + Course 2 integration + Course 2 fix round + Course 3 integration + Course 3 fix round + Course 4 integration + Course 4 fix round + Course 5 integration + Course 5 fix round + Reitz interior / Marston upgrade integration + interior review rounds 1-3 and their fix rounds (Oct 2026), coopdx v1.5.1. The hub (`castle_grounds`), the Swamp (`bob`, door 1), Reitz Union & Engineering (`wf`, door 2, 2 stars), Lake Alice (`jrb`, door 3, 5 stars), Marston (`ccm`, door 4, 8 stars) and Library West After Dark (`bbh`, door 5, 11 stars) are built; each has 3 playable acts (§5.1), hearts and other mission props. Ambient coins and Goombas have been removed. Century Tower (`ttc`, door 6, 14 stars) is still "coming soon".
 This file is the contract for everything that moves a player between the hub and a stage: level slots, warp nodes, the hub doors, star ids, act order and how a stage must be built. Where it disagrees with `docs/game_design.md` §2.1, §2.3 and the act order of §7.1, **this file wins** (see §11).
 
 Code that implements it:
@@ -53,6 +53,8 @@ new game / game over ──► hub (LEVEL_CASTLE_GROUNDS), MARIO_POS on the Plaz
 ```
 
 Nothing warps "around" the engine: every step is a vanilla level-script warp node, so act select, the course-complete screen, life loss, coopdx instancing and star sharing all behave like Super Mario 64.
+
+**Current pickup policy:** Ambient yellow coins, coin formations, and Goombas have been removed from all campus level scripts and shared pickup builders. The vanilla 1-Up model is replaced by a Gator Life medallion; the existing pickup still awards one extra life. Red-token objects used by the Reitz Meal Swipe minigame remain. The vanilla 100-coin star is therefore unavailable; later course doors rely on shared co-op mission stars.
 
 ---
 
