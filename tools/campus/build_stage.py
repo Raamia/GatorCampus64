@@ -444,6 +444,133 @@ def landmark_extras(S):
     return out
 
 
+# ---- real ground relief (stage_terrain.py, USGS 3DEP): reitz_eng only, every other stage stays byte-identical
+TERRAIN_DRAPE = {"Ground visual", "Ground collision", "Roads and paths visual", "Pond basins visual",
+                 "Pond basins collision", "Pond water"}           # per-vertex drape
+TERRAIN_LANDMARKS = ("reitz_malachowsky", "reitz_weil_eng_clocktower")   # whole-module z offset (centroid)
+TERRAIN_SMALL_M = 12.0       # components smaller than this (trees, poles, props) ride the height at their centre
+
+
+def apply_terrain(S, objs):
+    """Drape the ground / road ribbons on stage_terrain.height_m and set everything else on it: generic buildings
+    sink to the lowest terrain under their footprint (no gap on a slope), trees / props / dressing ride the height
+    at their centre, the reitz_malachowsky / reitz_weil_eng_clocktower landmark parts get the height at their
+    centroid. Runs before the collision probe that places objects, so spawn / stars / pickups land on it."""
+    import bmesh
+    import stage_terrain
+    if not stage_terrain.has_terrain(S.key):
+        return None
+    hm = stage_terrain.height_m
+    key, cx, cy = S.key, S.cx, S.cy
+    T, OFF = stage_terrain.TILE, stage_terrain.TILE_OFF
+    st = {"draped_objects": [], "draped_vertices": 0, "components_lifted": 0, "landmarks": {}, "max_m": 0.0,
+          "min_m": 0.0}
+    flat_cache = {}
+    for o in objs:
+        if o is None or o.type != "MESH":
+            continue
+        me = o.data
+        lx, ly, lz = o.location
+        bm = bmesh.new()
+        bm.from_mesh(me)
+        if o.name in TERRAIN_DRAPE:
+            if o.name.startswith("Roads and paths visual") and bm.verts:
+                # split the ribbons on the ground tile lines so they follow the tiled ground exactly on tile edges
+                xs = [v.co.x for v in bm.verts]
+                ys = [v.co.y for v in bm.verts]
+                for axis, lo, hi in ((0, min(xs), max(xs)), (1, min(ys), max(ys))):
+                    for k in range(math.floor((lo - OFF) / T), math.floor((hi - OFF) / T) + 1):
+                        c = OFF + k * T
+                        if not (lo < c < hi):
+                            continue
+                        geom = list(bm.verts) + list(bm.edges) + list(bm.faces)
+                        bmesh.ops.bisect_plane(bm, geom=geom, dist=1e-4,
+                                               plane_co=(c, 0, 0) if axis == 0 else (0, c, 0),
+                                               plane_no=(1, 0, 0) if axis == 0 else (0, 1, 0))
+            # cut the faces of sloped tiles on the tile diagonal (x - y = m * TILE): height_m is planar on each half
+            by_diag = {}
+            for f in bm.faces:
+                c = f.calc_center_median()
+                i, j = math.floor((c.x - OFF) / T), math.floor((c.y - OFF) / T)
+                if (i, j) not in flat_cache:
+                    flat_cache[(i, j)] = all(abs(hm(key, OFF + (i + a) * T + lx + cx, OFF + (j + b) * T + ly + cy)) < 1e-4
+                                             for a in (0, 1) for b in (0, 1))
+                if flat_cache[(i, j)]:
+                    continue
+                d = [v.co.x - v.co.y for v in f.verts]
+                m = i - j
+                if min(d) < m * T - 1e-3 and max(d) > m * T + 1e-3:
+                    by_diag.setdefault(m, []).append(f)
+            for m, faces in by_diag.items():
+                edges = list({e for f in faces for e in f.edges})
+                verts = list({v for f in faces for v in f.verts})
+                bmesh.ops.bisect_plane(bm, geom=faces + edges + verts, dist=1e-4, plane_co=(m * T, 0, 0),
+                                       plane_no=(1, -1, 0))
+            st["diagonal_cuts"] = st.get("diagonal_cuts", 0) + sum(len(f) for f in by_diag.values())
+            for v in bm.verts:
+                h = hm(key, v.co.x + lx + cx, v.co.y + ly + cy)
+                v.co.z += h
+                st["max_m"], st["min_m"] = max(st["max_m"], h), min(st["min_m"], h)
+            st["draped_objects"].append(o.name)
+            st["draped_vertices"] += len(bm.verts)
+        else:
+            bm.verts.ensure_lookup_table()
+            parent = list(range(len(bm.verts)))
+
+            def find(i):
+                while parent[i] != i:
+                    parent[i] = parent[parent[i]]
+                    i = parent[i]
+                return i
+            for e in bm.edges:
+                a, b = find(e.verts[0].index), find(e.verts[1].index)
+                if a != b:
+                    parent[a] = b
+            comps = {}
+            for v in bm.verts:
+                comps.setdefault(find(v.index), []).append(v)
+            for vs in comps.values():
+                x0 = min(v.co.x for v in vs)
+                x1 = max(v.co.x for v in vs)
+                y0 = min(v.co.y for v in vs)
+                y1 = max(v.co.y for v in vs)
+                if math.hypot(x1 - x0, y1 - y0) < TERRAIN_SMALL_M:
+                    dz = hm(key, (x0 + x1) / 2 + lx + cx, (y0 + y1) / 2 + ly + cy)
+                else:
+                    dz = min(hm(key, v.co.x + lx + cx, v.co.y + ly + cy) for v in vs)
+                if abs(dz) < 1e-4:
+                    continue
+                for v in vs:
+                    v.co.z += dz
+                st["components_lifted"] += 1
+        bm.to_mesh(me)
+        bm.free()
+        me.update()
+    groups = {}
+    for o in S.landmark_objects:
+        mod = str(o.get("sgl_landmark", ""))
+        if o.type == "MESH" and any(m in mod for m in TERRAIN_LANDMARKS):
+            groups.setdefault(mod, []).append(o)
+    for mod, os_ in groups.items():
+        pts = [(v.co.x + o.location.x, v.co.y + o.location.y) for o in os_ for v in o.data.vertices]
+        if not pts:
+            continue
+        mx = (min(p[0] for p in pts) + max(p[0] for p in pts)) / 2
+        my = (min(p[1] for p in pts) + max(p[1] for p in pts)) / 2
+        dz = hm(key, mx + cx, my + cy)
+        st["landmarks"][mod] = round(dz, 3)
+        if abs(dz) < 1e-4:
+            continue
+        for o in os_:
+            for v in o.data.vertices:
+                v.co.z += dz
+            o.data.update()
+    st["max_m"], st["min_m"] = round(st["max_m"], 2), round(st["min_m"], 2)
+    print(f"SGL: terrain (USGS 3DEP): drape {st['draped_objects']} ({st['draped_vertices']} verts, "
+          f"{st['min_m']}..{st['max_m']} m), {st['components_lifted']} components set on it, landmarks {st['landmarks']}")
+    return st
+
+
 def place_on_ground(probe, x, y, z_ref, candidates):
     """First candidate (dx, dy) offset whose floor is within 1.5 m of z_ref and that has 0.9 m of
     room around it. Returns (x, y, z, clearance, index)."""
@@ -719,6 +846,9 @@ def main():
     avoid += [(t["stage"][0], t["stage"][1], 1.6) for t in S.pole_trees]
     lamp_poles = stage_dressing.build(S, probe, avoid)
     build_accs()
+    terrain_st = apply_terrain(S, objs)
+    if terrain_st is not None:
+        S.stats["terrain"] = terrain_st
     uv_span = max(acc.max_uv_span for acc, _, _ in S.accs.values())
     for name, (acc, collision, render) in S.accs.items():
         if render and acc.max_uv_span > G.UV_SPAN_MAX + 1:
