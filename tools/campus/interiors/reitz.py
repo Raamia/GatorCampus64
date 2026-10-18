@@ -4305,6 +4305,12 @@ def rail_plugs(RZ):
     P = K.Prop("rail_plugs")
     for fid, x, y, h in RAIL_PLUGS:
         z = RZ.floors[fid].z
+        # stairs_fast2 pass (game_stairs_28: the 0.4-0.48 m junction squares read as stray blocks on the landings):
+        # every plug is cut to the rails' own collision width (0.24 m square, like the landing / balcony rail
+        # blocks it joins), so it reads as a slim newel post in the rail line. The L2 NE head plug keeps its 0.48 m:
+        # cut to 0.24 m it reopened its pocket (spotfall_r L2 head 1 -> 76 falls, falls_fast 0 -> 8)
+        if fid != "L2":
+            h = min(h, 0.12)
         K.col_box(P.collision, x - h, y - h, z - 0.05, x + h, y + h, z + RAIL_H + 0.06, K.COL_NOCAM)
         # fix round 5 (technical improvement 0): every plug that stays is a rendered newel post (it stood as an
         # invisible post on walkable floor); 1 cm inside its collision on every side
