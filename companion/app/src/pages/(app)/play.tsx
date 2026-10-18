@@ -7,7 +7,7 @@ const steps = [
   {
     icon: Wrench,
     title: 'Install sm64coopdx',
-    body: <>Grab <strong>sm64coopdx v1.5.1</strong> and launch it once with your own US Super Mario 64 ROM.</>,
+    body: <>Download <strong><a href="https://github.com/coop-deluxe/sm64coopdx/releases" target="_blank" rel="noreferrer">sm64coopdx v1.5.1 <ExternalLink size={12} className="play-step-link-icon" /></a></strong> and launch it once with your own US Super Mario 64 ROM (not included).</>,
   },
   {
     icon: Gamepad2,

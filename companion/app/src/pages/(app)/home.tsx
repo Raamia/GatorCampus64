@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { RecordScope, useAuthProfileReady, useMutations, useQuery } from 'deepspace'
 import { ArrowDownRight, ArrowUpRight, Copy, Flag, MapPin, Radio, Sparkles, Users } from 'lucide-react'
 import catalog from '../../data/mission-catalog.json'
@@ -48,14 +49,15 @@ export default function HomePage() {
   }
 
   if (!room) return <div className="board-wrap"><section className="welcome-card">
-    <div className="eyebrow"><MapPin size={15}/> UNIVERSITY OF FLORIDA · CAMPUS FIELD BOARD</div>
+    <div className="eyebrow"><MapPin size={15}/> SUPER GATORLATOR 64 · UNIVERSITY OF FLORIDA</div>
     <h1>Pick a mission.<br/><em>Make it a run.</em></h1>
-    <p>Get your squad together, choose a campus challenge, and keep a shared log of the runs you report.</p>
+    <p>Super Gatorlator 64 is a free co-op Super Mario 64 mod set on UF's campus. This Field Board is where your squad picks a campus mission, gets a route note, and logs the runs you've played.</p>
     <div className="welcome-actions">
       <button className="primary-action" onClick={startSquad}><Users size={17}/> Start a squad <ArrowUpRight size={16}/></button>
       <div className="join-row"><input aria-label="Squad code" placeholder="Enter squad code" maxLength={12} value={joinCode} onChange={(e) => setJoinCode(e.target.value.toUpperCase())}/><button onClick={enterSquad} disabled={joinCode.length !== 12}>Join squad <ArrowDownRight size={16}/></button></div>
     </div>
     <div className="privacy-note"><span/> No account needed to browse. Sign in to post a run. Squad code is your private invite.</div>
+    <p className="welcome-links">New here? <Link to="/play">Get the game</Link> · <Link to="/gatorize">Make your gator</Link></p>
   </section><aside className="welcome-aside"><div className="map-graphic"><div className="map-grid"/><div className="route route-one"/><div className="route route-two"/><span className="pin pin-a"/><span className="pin pin-b"/><span className="pin pin-c"/><span className="map-label label-a">REITZ UNION</span><span className="map-label label-b">MARSTON</span><span className="map-label label-c">THE QUAD</span><div className="map-caption"><span>FIELD NOTES · 01</span><strong>Two corners<br/>of campus. One<br/>good afternoon.</strong></div></div><div className="aside-foot"><span>GAINESVILLE, FL</span><span>29° 38′ N · 82° 21′ W</span></div></aside></div>
   return <RecordScope roomId={`squad:${room}`} schemas={[missionEventsSchema]} isolated><SquadBoard code={room} signedIn={isSignedIn} selected={selected} setSelected={setSelected} hint={hint} setHint={setHint} resultOpen={resultOpen} setResultOpen={setResultOpen} copied={copied} setCopied={setCopied}/></RecordScope>
 }
