@@ -1084,6 +1084,64 @@ Sources: user_01, user_04, user_05, B01, B03, B08-B10, B13, B14, B16, B18-B20, C
   - Swamp Boss proportions (the 1-up and its collision box sit on the head), the Gators wordmark script, the tower's blue side returns into the void, the CABO storefront, the values-panel words, the L1 dining strip over CABO, the rocking-chair level question (B05 / B06).
   - Esports: the video-wall column and the ottomans into the arena (the console stations hold the east wall there). Racing-bay rigs, the arcade's hex LED panel and high-tops, the hotel-lobby wire pendant, the GAME ROOM transom lettering.
 
+### Photo pass round 3: the Rion pre-function gallery and upper-floor leftovers
+
+Sources: C03, C12, C13 (the Rion pre-function), C07, C14, C15 (the Rion), C08, user_06, user_09, user_12-user_16, and the round-2 fidelity-upper review (its blocker and improvements) and leftover list.
+
+- **Rion pre-function gallery (the round-2 blocker; C03, C12, C13).** The plan split the pre-function into the west patch and the east bulge of `l3_corridor_11`, with the solid `l3_room_10` strip and the south strip of `l3_room_107` between them. From C12 you faced room_10's west wall 3.4 m away. Through RION BALLROOM EAST you saw a square room 7.5 m deep. `_rion_gallery_plan` (called in `Reitz.__init__`) now does the following:
+  - `l3_room_10` becomes ONE walkable gallery zone (`RION_GALLERY_POLY`, x -456.9..-425.0, y -297.2..-289.6, type corridor). `l3_room_107` loses its south strip (`RION_GALLERY_STRIP`).
+  - The partitions inside the gallery are dropped (`RION_GALLERY_DROP`).
+  - Three plan walls are added (`RION_GALLERY_WALLS`): the north wall between the old patches, the east wall, and the west end wall.
+  - Two 2.0 m doors are added (`RION_GALLERY_DOORS`). These are not in the layout JSON, so the JSON door sweep does not walk them. A copy of doorpass8 on these doors walks both of them both ways under both models: they pass from both sides, with no threshold failures and no swath hits.
+  - The five narrow Rion north doors between the old patches are closed honey leaves (`_closed_look`, L3). The four double doors at the gallery's ends stay open.
+  - New `SEAM_JOINTS` at the five wall joints mean collinear faces abut instead of overlapping.
+- **Gallery dressing (`l1_userphoto_corridors` part 6, replacing the separate east and west pre-function props):**
+  - The muted grey-blue geometric carpet `int_ru_carpet_prefn` (new) is the zone's floor. The two round-2 carpet inlays are gone.
+  - Coffered ceiling: white soffits along both long walls (each piece's wall edge stays inside its wall run), five white cross ribs, the dark-wood beam strip, and two LED lines running the full 31.8 m.
+  - RION BALLROOM letters over the Rion's west and east double doors.
+  - A honey-front counter with a white top on the north wall (C12 left, C13 right).
+  - The Bill Rion memorial case on the west end wall, north of the west door, with an EXIT sign over that door (C13; the far end of C03).
+  - RION BALLROOM EAST (C03): a 2 m opening on the gallery's axis, with honey leaves held open into the corridor (NO_CAM boxes) and the letters over it, set parallel to the slightly skewed wall. An EXIT sign hangs over the opening inside.
+- **L1 west lounge (user_13).** The cross wall at y -277.3 (x -455.2..-450.4) had hidden half the lounge. The second charcoal group (cy -275.5), the south column (-275.6) and the three framed prints (now on that wall's north face) all stand north of it. The carpet ends under the wall at y -277.3 and uses the muted navy/slate `int_ru_carpet_lounge` (new). A wall TV hangs on the elevator block's west face (user_13, left).
+- **CCC (user_14, user_16):**
+  - The word wall is ONE honey panel of dense small cut-out lettering (`int_ru_word_wall_dense_a` / `_b`, new; two 64 x 32 halves for TMEM). It replaces the two boards of giant words.
+  - North of it is a shallow lounge alcove: honey lining with two warm LED lines, a wall TV, a walnut slat cloud, and four teal tub chairs (`int_ru_fabric_teal`, new) round a small table. The chairs stay within 1.7 m of the face and share one NO_CAM block, so the lane to the walkway glass doors keeps about 4 m.
+  - The reception's slat cloud has its own lighter walnut (`int_ru_slat_cloud`, new, unlit). It had baked near-black.
+  - Lime reveals (`int_ru_paint_lime`) line the side walls of the navy CCC door's recess.
+- **Rion (C14, C15).**
+  - The two screens are centred at -445.3 and -435.8, about 3 m apart (were -447.3 / -433.8), and raised to just under the cove's LED strip.
+  - The ceiling bands between the coves are 0.8 m darker mahogany strips (were the full 1.45 m gap in the redder cherry).
+  - The maple floor `int_ru_maple_pale` is retoned less yellow.
+- **Smaller items:**
+  - The north-corridor club chairs have navy upholstered arms with thin maple caps (the all-maple arms read as tan cubes; u06, u08, c11).
+  - The C08 fronts have a lighter tinted glass (`int_ru_glass_tint_dk` retoned) and a transom bar.
+  - A projecting blue restroom-pictogram flag sign hangs over the fountain niche (`int_ru_sign_restroom_blade`, new; user_09).
+- Budget:
+  - Area 2 visual: 148,152 tris (was 147,236).
+  - Reitz collision: 12,718 (was 12,579). The validator counts 13,095 in area 2 (was 12,959), with the same >12k warning. The extra triangles are the gallery's new walls and floor and ceiling pieces, the five Rion doors now walled on both faces, the counter, the leaves and the CCC cluster block.
+- New textures are appended last in `TEXTURES`, so the seeds of the earlier recipes are unchanged: `int_ru_carpet_prefn`, `int_ru_slat_cloud`, `int_ru_fabric_teal`, `int_ru_sign_restroom_blade`, `int_ru_word_wall_dense_a` / `_b` and `int_ru_carpet_lounge`. Two existing textures are retoned: `int_ru_maple_pale` and `int_ru_glass_tint_dk`.
+- QA against the pre-pass install (suite run before the first edit and again on the final install):
+  - Door sweep (dx151): 783 doors. Side passes went from 518 to 520 (the gallery's former partition doors now lie in open floor). There are still 0 vanilla-only sides and 0 threshold failures. Swath hits fell from 130 to 128.
+  - The five closed Rion doors are stuck from both sides. Before, they passed one way out of the solid strip.
+  - The 4 entrance warps and the exits behave the same.
+  - Walks: walk-off drops 0, spot falls the same, rail sims 0/732 and 131/1188. Sky below the floor 0. Cracks: 10 clusters (same).
+  - Coplanar overlap 7.6 m2 over 74 faces (visible 1.8 m2), the same as before, with 0 new clusters. Decor in doorways: 0.
+  - Visible with no collision: 1,424 tris (same). Invisible walls: 19 tris (same).
+  - Zone reach (vanilla / coopdx) went from 18,766 / 18,188 m2 to 18,911 / 18,241 m2. The gallery adds about 97 m2 under coopdx.
+  - Zones below 50 % under coopdx went from 17 to 18. The new one is `l3_corridor_05` (v 28.0, x 0.0). This is caused by the order the global DFS flood visits cells, not by any geometry change:
+    - No collision triangle within 4 m of its only door (L3 #66, 1.12 m collision opening) changed.
+    - That door passes both ways in both models, before and after.
+    - A local flood with the same walk model, seeded on a 10 u grid in the corridor east of the door, reaches 24.5 m2 of the zone under coopdx in both the old and new builds.
+  - Furniture footprints cost l1_corridor_08 12 m2 under coopdx (the CCC cluster and the lounge group that moved out of the pocket; vanilla gained 35 m2) and l3_corridor_11 7 m2 (the counter and the west end wall).
+- Not done in this pass:
+  - L1 lounge: more club chairs and ottomans, and the gator's tapered snout and tail.
+  - North corridor: the transverse terrazzo bands (they conflict with C04), the LED coves and the blue TV.
+  - L2: the recycling bins, the partition stacks and C04's curved orange wall.
+  - The GatorWell honey door, the Blue-lobby panel restyle, the Rion banquet-chair backs and the clerestory band position.
+  - The CCC alcove is a lining on the face. The CCC is a sealed zone, so there is no real recess.
+  - The marble desk's curve.
+  - The Orange-passage runner: the passage between the walls is already 1.6 m orange plus a 0.3 m grey band.
+
 ## 10. Open questions (`open_questions`)
 
 - Real floor elevations, and the ceiling heights of the Grand Ballroom and Rion Ballroom.

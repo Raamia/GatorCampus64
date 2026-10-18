@@ -393,6 +393,14 @@ RU_MATERIALS = {
     # photo pass round 2, atrium / food court / Ground leftovers (user_04, B08-B10, B14, B16, B20)
     "int_ru_tile_ceiling_mid": {"size": (32, 32), "tile_m": 1.2, "color": "#A0A6B2"},
     "int_ru_carpet_tri_dk": {"size": (64, 32), "tile_m": 3.0, "color": "#1E2F70"},
+    # photo pass round 3 (C03, C12, C13, user_12, user_13): muted Rion pre-function + L1 lounge carpets
+    "int_ru_carpet_prefn": {"size": (64, 32), "tile_m": 3.0, "color": "#6E7A9C"},
+    "int_ru_slat_cloud":   {"size": (32, 32), "tile_m": 0.5, "color": "#8C6A4C"},
+    "int_ru_fabric_teal":  {"size": (32, 32), "tile_m": 0.6, "color": "#2C7894"},
+    "int_ru_sign_restroom_blade": {"size": (32, 16), "tile_m": 0.6, "color": "#1E4AA0", "map": "once"},
+    "int_ru_word_wall_dense_a": {"size": (64, 32), "tile_m": 3.1, "color": "#B07C46", "map": "once"},
+    "int_ru_word_wall_dense_b": {"size": (64, 32), "tile_m": 3.1, "color": "#B07C46", "map": "once"},
+    "int_ru_carpet_lounge": {"size": (64, 32), "tile_m": 3.0, "color": "#384258"},
     "int_ru_hours_screen": {"size": (32, 64), "tile_m": 1.0, "color": "#16224E", "map": "once"},
     "int_ru_sign_barber_blade": {"size": (64, 32), "tile_m": 0.9, "color": "#F6F6F4", "map": "once"},
     "int_ru_badge_babas":  {"size": (32, 32), "tile_m": 1.0, "color": "#141414", "kind": "cutout", "map": "once"},
@@ -2645,7 +2653,7 @@ TEXTURES = {
     "int_ru_slate_floor": lambda s: tx_slate_floor(s),                                       # user_14-16
     "int_ru_partition": lambda s: tx_partition(s),                                           # C08
     "int_ru_door_meeting_honey": lambda s: tx_door_meeting_honey(s),                         # C03, C08, C12
-    "int_ru_maple_pale": lambda s: _retone(tx_maple(s), (1.10, 1.26, 1.50)),                # Rion floor (C14-C16; r2: blonder)
+    "int_ru_maple_pale": lambda s: _retone(tx_maple(s), (1.20, 1.27, 1.70)),                # Rion floor (C14-C16; r3: less yellow)
     "int_ru_word_wall_a": lambda s: tx_word_wall(0, s),                                      # CCC word wall (user_16)
     "int_ru_word_wall_b": lambda s: tx_word_wall(1, s),
     "int_ru_hang_meet": lambda s: tx_hang("meet", 0),                                       # C08
@@ -2661,6 +2669,14 @@ TEXTURES = {
     "int_ru_sign_barber_blade": lambda s: tx_sign_barber_blade(s),                           # barbershop blade (B14)
     "int_ru_badge_babas": lambda s: tx_badge_text("#141414", "#F2F2F2", ("BABA'S", "PIZZA"), "#F2F2F2", s),  # B01
     "int_ru_badge_halal": lambda s: tx_badge_text("#D4A23A", "#4A2A14", ("HALAL", "SHACK"), "#4A2A14", s),   # B01, u20
+    # photo pass round 3: appended last so every earlier recipe keeps its seed
+    "int_ru_carpet_prefn": lambda s: tx_carpet_muted(s, ("#6E7A9C", "#4A5578", "#98A4C0", "#5A72B0")),  # C12
+    "int_ru_slat_cloud": lambda s: tx_slat_v("#8C6A4C", s),                                  # CCC cloud (user_14)
+    "int_ru_fabric_teal": lambda s: tx_fabric("#2C7894", s),                                 # CCC tub chairs (user_16)
+    "int_ru_sign_restroom_blade": lambda s: tx_restroom_blade(s),                            # restroom flag (user_09)
+    "int_ru_word_wall_dense_a": lambda s: tx_word_wall_dense(0, s),                          # CCC word wall (user_16)
+    "int_ru_word_wall_dense_b": lambda s: tx_word_wall_dense(1, s),
+    "int_ru_carpet_lounge": lambda s: tx_carpet_muted(s, ("#323C54", "#262C3E", "#58627A", "#46526E")),  # user_13
 }
 
 
@@ -2710,6 +2726,23 @@ def tx_carpet_tri_dk(seed):
             cx, cy, fx, fy = x // 8, y // 8, x % 8, y % 8
             up = 1 if fx > fy else 0
             h = (cx * 7 + cy * 13 + up * 2 + (cx * cy) % 3) % len(pal)
+            t.set(x, y, pal[h])
+    t.noise(2)
+    return t
+
+
+def tx_carpet_muted(seed, cols):
+    """Photo pass round 3 (C03, C12, C13; user_12, user_13): the same 8 px triangle geometric as int_ru_carpet_tri in
+    a muted slate / navy / grey-blue palette (the royal int_ru_carpet_tri read far too saturated). cols = (base,
+    dark, light, accent)."""
+    base, dark, light, acc = (hexc(c_) for c_ in cols)
+    pal = [base, dark, mix(base, light, 0.6), base, light, mix(dark, base, 0.5), acc]
+    t = Tex(64, 32, base, seed)
+    for y in range(32):
+        for x in range(64):
+            cx, cy, fx, fy = x // 8, y // 8, x % 8, y % 8
+            up = 1 if fx > fy else 0
+            h = (cx * 7 + cy * 13 + up * 3 + (cx * cy) % 4) % len(pal)
             t.set(x, y, pal[h])
     t.noise(2)
     return t
@@ -3728,14 +3761,65 @@ def tx_word_wall(k, seed):
     return t
 
 
+def tx_restroom_blade(seed):
+    """Photo pass round 3 (user_09): the blue projecting restroom flag sign, white man / woman pictograms (32 x 16)."""
+    t = Tex(32, 16, hexc("#1E4AA0"), seed)
+    t.noise(1)
+    w = hexc("#F4F6FA")
+    t.rect(0, 0, 31, 0, hexc("#E8ECF2"))
+    t.rect(0, 15, 31, 15, hexc("#E8ECF2"))
+    for cx, dress in ((10, False), (21, True)):
+        t.rect(cx - 1, 2, cx, 3, w)                       # head
+        if dress:
+            for i, y in enumerate(range(5, 10)):          # a widening dress
+                t.rect(cx - 1 - i // 2, y, cx + i // 2, y, w)
+        else:
+            t.rect(cx - 2, 5, cx + 1, 9, w)               # torso
+        t.rect(cx - 1, 10, cx - 1, 13, w)                 # legs
+        t.rect(cx, 10, cx, 13, w)
+    t.rect(15, 2, 15, 13, w)                              # divider
+    return t
+
+
+def tx_word_wall_dense(half, seed):
+    """Photo pass round 3 (user_16): the CCC word wall is ONE tall honey panel of dense small cut-out lettering
+    (DESIGN YOUR LIFE, NEVER TOO LATE, BRIDGE ... packed in rows of mixed sizes), the cut-outs dark behind the wood.
+    Two 64 x 32 halves (TMEM), half 0 the top."""
+    t = Tex(64, 32, hexc("#B88450"), seed)          # the honey wood field; the letters are the dark cut-outs
+    t.noise(2)
+    honey, light = hexc("#4A3020"), hexc("#2E1C10")
+    fill = ("CONNECT", "EXPLORE", "PURPOSE", "INSPIRE", "GROW", "LEAD", "DREAM", "BUILD", "IMPACT", "LEARN",
+            "CREATE", "BRIDGE", "FUTURE", "GATORS", "SKILLS", "VALUE")
+    rows = ((("DESIGN", FONT5), ("YOUR LIFE", FONT5), (None, FONT3), (None, FONT3)),
+            (("NEVER TOO", FONT5), ("LATE", FONT3), (None, FONT3), ("BRIDGE", FONT5)))[half]
+    y, k = 1, 5 * half
+    for text, font in rows:
+        gh = len(next(iter(font.values())))
+        gw = len(next(iter(font.values()))[0])
+        words = [text] if text else []
+        while True:
+            w_ = fill[k % len(fill)]
+            cand = " ".join(words + [w_])
+            if font_width(cand, font=font) > 62:
+                break
+            words.append(w_)
+            k += 1
+        line = " ".join(words)
+        font_text(t, line, 1, y, light if text else honey, font=font)
+        y += gh + 1
+        if y > 31 - 5:
+            break
+    return t
+
+
 def tx_glass_tint_dk(seed):
     """photo pass r2 (C08): near-black tinted glass (opaque), a faint diagonal sheen band (32 x 32 over 1.2 m)."""
-    t = Tex(32, 32, hexc("#22262C"), seed)
+    t = Tex(32, 32, hexc("#3E4246"), seed)         # photo pass round 3 (C08 ~43,43,41): lighter (was #22262C)
     t.noise(1)
     for y in range(32):
         for x in range(32):
             if 10 <= (x + y) % 32 <= 15:
-                t.set(x, y, hexc("#2C3138"))
+                t.set(x, y, hexc("#4A4F55"))
     return t
 
 
