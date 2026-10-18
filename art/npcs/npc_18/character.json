@@ -1,0 +1,43 @@
+{
+  "id": "npc_18",
+  "name": "Aaliyah",
+  "colors": {
+    "skin": "#C99A7A",
+    "hair": "#3C5CC8",
+    "eyes": "#3B2117",
+    "top": "#E8A0B8",
+    "pants": "#1C1C1E",
+    "shoes": "#22304F",
+    "skin_shadow": "#B58B6E",
+    "top_detail": "#BA8093",
+    "shoe_soles": "#1E2A46"
+  },
+  "outfit": {
+    "top": "pink hoodie, hood down",
+    "pants": "black",
+    "shoes": "navy canvas shoes",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has short wavy hair with loose raised waves",
+    "she has a friendly smile showing teeth",
+    "eyes that crinkle when smiling"
+  ],
+  "build": {
+    "sleeves": "long",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "hood_down"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "heart",
+    "hair": "waves",
+    "body": "fuller",
+    "outfit": "hoodie"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

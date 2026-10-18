@@ -1,0 +1,41 @@
+{
+  "id": "npc_06",
+  "name": "Mateo",
+  "colors": {
+    "skin": "#F0C8A8",
+    "hair": "#1E1A1B",
+    "eyes": "#2A1A12",
+    "top": "#22304F",
+    "pants": "#1C1C1E",
+    "shoes": "#F2F2F2",
+    "skin_shadow": "#D8B497",
+    "top_detail": "#1B263F",
+    "shoe_soles": "#D5D5D5"
+  },
+  "outfit": {
+    "top": "navy T-shirt",
+    "pants": "black",
+    "shoes": "white sneakers",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "he has very short close crop with little volume",
+    "he has a calm closed smile",
+    "closed lips"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": []
+  },
+  "appearance": {
+    "version": 1,
+    "face": "heart",
+    "hair": "buzz",
+    "body": "neutral",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

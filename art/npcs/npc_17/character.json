@@ -1,0 +1,40 @@
+{
+  "id": "npc_17",
+  "name": "Noah",
+  "colors": {
+    "skin": "#B27352",
+    "hair": "#6B4A30",
+    "eyes": "#3B2117",
+    "top": "#E8A0B8",
+    "pants": "#6A6E73",
+    "shoes": "#1C1C1E",
+    "skin_shadow": "#A0684A",
+    "top_detail": "#BA8093",
+    "shoe_soles": "#19191A"
+  },
+  "outfit": {
+    "top": "pink T-shirt",
+    "pants": "gray",
+    "shoes": "black sneakers",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "he has short curly top with closely cropped sides",
+    "he has a friendly smile showing teeth"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": []
+  },
+  "appearance": {
+    "version": 1,
+    "face": "heart",
+    "hair": "curls",
+    "body": "fuller",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

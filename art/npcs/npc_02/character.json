@@ -1,0 +1,40 @@
+{
+  "id": "npc_02",
+  "name": "Darius",
+  "colors": {
+    "skin": "#6E4430",
+    "hair": "#B48A58",
+    "eyes": "#4A2C1A",
+    "top": "#22304F",
+    "pants": "#B9A27A",
+    "shoes": "#F2F2F2",
+    "skin_shadow": "#633D2B",
+    "top_detail": "#1B263F",
+    "shoe_soles": "#D5D5D5"
+  },
+  "outfit": {
+    "top": "navy T-shirt",
+    "pants": "khaki",
+    "shoes": "white sneakers",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "he has rounded, fuller tight curls around the top and sides",
+    "he has a wide toothy grin"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": []
+  },
+  "appearance": {
+    "version": 1,
+    "face": "round",
+    "hair": "coils",
+    "body": "broad",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

@@ -1,0 +1,40 @@
+{
+  "id": "npc_20",
+  "name": "Leo",
+  "colors": {
+    "skin": "#F0C8A8",
+    "hair": "#D2B27A",
+    "eyes": "#4A2C1A",
+    "top": "#22304F",
+    "pants": "#3B4E6E",
+    "shoes": "#F2F2F2",
+    "skin_shadow": "#D8B497",
+    "top_detail": "#1B263F",
+    "shoe_soles": "#D5D5D5"
+  },
+  "outfit": {
+    "top": "navy T-shirt",
+    "pants": "denim shorts",
+    "shoes": "white sneakers",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "he has short straight hair swept to one side",
+    "he has a wide toothy grin"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "shorts",
+    "hair_style": "short_wavy_curly",
+    "accessories": []
+  },
+  "appearance": {
+    "version": 1,
+    "face": "oval",
+    "hair": "sidepart",
+    "body": "stocky",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

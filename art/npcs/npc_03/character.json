@@ -1,0 +1,44 @@
+{
+  "id": "npc_03",
+  "name": "Mei",
+  "colors": {
+    "skin": "#EBC0A1",
+    "hair": "#16110F",
+    "eyes": "#2A1A12",
+    "top": "#2E7D7A",
+    "pants": "#6A6E73",
+    "shoes": "#C8B28C",
+    "skin_shadow": "#D4AD91",
+    "top_detail": "#256462",
+    "shoe_soles": "#B09D7B"
+  },
+  "outfit": {
+    "top": "teal hoodie, hood down",
+    "pants": "gray",
+    "shoes": "tan boots",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has long straight hair past the shoulders with a side part",
+    "she has a small closed-mouth smile",
+    "closed lips",
+    "eyes that crinkle when smiling"
+  ],
+  "build": {
+    "sleeves": "long",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "hood_down"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "square",
+    "hair": "long",
+    "body": "fuller",
+    "outfit": "hoodie"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

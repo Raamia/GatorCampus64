@@ -1,0 +1,42 @@
+{
+  "id": "npc_16",
+  "name": "Elena",
+  "colors": {
+    "skin": "#9C6244",
+    "hair": "#4E3626",
+    "eyes": "#2A1A12",
+    "top": "#8C9096",
+    "pants": "#6A6E73",
+    "shoes": "#C8B28C",
+    "skin_shadow": "#8C583D",
+    "top_detail": "#707378",
+    "shoe_soles": "#B09D7B"
+  },
+  "outfit": {
+    "top": "heather gray T-shirt",
+    "pants": "gray shorts",
+    "shoes": "tan boots",
+    "accessory": "none",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "she has long straight hair past the shoulders with a side part",
+    "she has a small closed-mouth smile",
+    "closed lips",
+    "eyes that crinkle when smiling"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "shorts",
+    "hair_style": "short_wavy_curly",
+    "accessories": []
+  },
+  "appearance": {
+    "version": 1,
+    "face": "round",
+    "hair": "long",
+    "body": "fuller",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}

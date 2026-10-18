@@ -1,0 +1,43 @@
+{
+  "id": "npc_05",
+  "name": "Caleb",
+  "colors": {
+    "skin": "#87533A",
+    "hair": "#6B4A30",
+    "eyes": "#3B2117",
+    "top": "#FA4616",
+    "pants": "#B9A27A",
+    "shoes": "#1C1C1E",
+    "skin_shadow": "#7A4B34",
+    "top_detail": "#C83812",
+    "shoe_soles": "#19191A"
+  },
+  "outfit": {
+    "top": "UF orange T-shirt",
+    "pants": "khaki",
+    "shoes": "black sneakers",
+    "accessory": "a backpack strap across the chest",
+    "headwear": "none"
+  },
+  "signature_traits": [
+    "he has very short close crop with little volume",
+    "he has a calm closed smile",
+    "closed lips"
+  ],
+  "build": {
+    "sleeves": "short",
+    "legwear": "long_pants",
+    "hair_style": "short_wavy_curly",
+    "accessories": [
+      "crossbody_strap"
+    ]
+  },
+  "appearance": {
+    "version": 1,
+    "face": "broad",
+    "hair": "buzz",
+    "body": "neutral",
+    "outfit": "tee"
+  },
+  "notes": "Campus NPC (random spec, tools/npcs/make_campus_npcs.py)"
+}
