@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Super Gatorlator 64 bridge (docs/web_platform_spec.md §6.4): one process that owns the headless game.
+"""GatorCampus 64 bridge (docs/web_platform_spec.md §6.4): one process that owns the headless game.
 
   * runs sm64coopdx as its child (GAME_CMD, default = the flags of server/deploy/sgl-game.service),
     restarts it when it exits, logs its stdout to the journal;

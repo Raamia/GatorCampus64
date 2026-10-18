@@ -1,6 +1,6 @@
-# Super Gatorlator 64 Companion
+# GatorCampus 64 Companion
 
-The web companion for Super Gatorlator 64, a native SM64CoopDX campus game. It supports squad mission planning, player-reported offline run logs, and verified leaderboards populated by the hosted game server. Offline scores remain separate from ranked runs. The Lua mod saves completed runs to a local ModFS outbox, and `companion/native-bridge/` provides a macOS OAuth/sync CLI that uploads them after the game closes. The game does not make network requests.
+The web companion for GatorCampus 64, a native SM64CoopDX campus game. It supports squad mission planning, player-reported offline run logs, and verified leaderboards populated by the hosted game server. Offline scores remain separate from ranked runs. The Lua mod saves completed runs to a local ModFS outbox, and `companion/native-bridge/` provides a macOS OAuth/sync CLI that uploads them after the game closes. The game does not make network requests.
 
 ## Local setup
 

@@ -1,4 +1,4 @@
-"""Raami face textures (Super Gatorlator 64) - FINAL set.
+"""Raami face textures (GatorCampus 64) - FINAL set.
 
 Same conventions as Daniel's approved set (art/daniel/textures/): every pixel
 comes from the ASCII grids / tables below - no antialiasing, no gradients, no

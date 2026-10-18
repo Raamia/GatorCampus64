@@ -355,7 +355,7 @@ def validate_level(level_dir):
         info.append(f"area {idx}: geo {a['geo']}, collision {a['terrain']}, {a['objects']} objects, "
                     f"warp nodes {sorted('0x%02X' % w for w in a['warps'])}, "
                     f"spawn warps {sorted('0x%02X' % w for w in a['spawns'])}")
-    # ---- Super Gatorlator 64 flow contract (docs/flow.md) for vanilla-slot level folders
+    # ---- GatorCampus 64 flow contract (docs/flow.md) for vanilla-slot level folders
     check_flow_contract(name, areas, errors, warnings, info)
 
     # ---- geo layouts
@@ -503,7 +503,7 @@ MODEL_TRAJECTORY_MARKER_BALL
 }
 
 
-# ---- Super Gatorlator 64 flow contract (docs/flow.md, tools/campus/build_stage.py) ----------------
+# ---- GatorCampus 64 flow contract (docs/flow.md, tools/campus/build_stage.py) ----------------
 FLOW_HUB = "castle_grounds"
 FLOW_SLOT_LEVEL = {"castle_grounds": "LEVEL_CASTLE_GROUNDS", "bob": "LEVEL_BOB", "wf": "LEVEL_WF",
                    "jrb": "LEVEL_JRB", "ccm": "LEVEL_CCM", "bbh": "LEVEL_BBH", "ttc": "LEVEL_TTC"}

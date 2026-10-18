@@ -1,4 +1,4 @@
--- Super Gatorlator 64: levels and the hub <-> stage flow. Contract: docs/flow.md; the stage table and
+-- GatorCampus 64: levels and the hub <-> stage flow. Contract: docs/flow.md; the stage table and
 -- the warp node numbers live in course.lua (loaded first).
 --
 -- The mod is a romhack-style total conversion (main.lua: "-- incompatible: romhack"). Its levels
@@ -823,4 +823,4 @@ hook_event(HOOK_MARIO_UPDATE, lives_mario_update)
 hook_event(HOOK_ON_HUD_RENDER, door_hud)
 hook_event(HOOK_UPDATE, hub_hint_update)
 hook_event(HOOK_ON_HUD_RENDER, hub_hint_hud)
-hook_chat_command("campus", "where | list | hub | back | test | swamp | reitz | alice | marston | libwest [act] [me] - Super Gatorlator 64 levels", on_campus_command)
+hook_chat_command("campus", "where | list | hub | back | test | swamp | reitz | alice | marston | libwest [act] [me] - GatorCampus 64 levels", on_campus_command)

@@ -1,4 +1,4 @@
--- Super Gatorlator 64: GATOR CHOMP CHORUS, the SOLO rhythm game (Swamp act 3, LEVEL_BOB).
+-- GatorCampus 64: GATOR CHOMP CHORUS, the SOLO rhythm game (Swamp act 3, LEVEL_BOB).
 -- With 2+ players in the act the co-op chorus of swamp_missions.lua runs unchanged (corner buttons,
 -- GA... TOR... CHOMP!). ALONE (the mission waits for a study buddy) this Simon-style game runs instead:
 -- 4 pads in the north end zone; the pads play a phrase (each lights up with its own sound on a steady

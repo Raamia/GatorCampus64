@@ -1,4 +1,4 @@
-"""Alfred face textures (Super Gatorlator 64) - FINAL set.
+"""Alfred face textures (GatorCampus 64) - FINAL set.
 
 Same conventions, sizes and code layout as Daniel's approved set
 (art/daniel/textures/make_textures.py): flat skin background (keyed to alpha 0

@@ -1,6 +1,6 @@
 # Web platform: Gatorize Me, Gator Pass, hosted server
 
-The online side of Super Gatorlator 64: a hosted game server, photo-to-character builds and accounts
+The online side of GatorCampus 64: a hosted game server, photo-to-character builds and accounts
 linked inside the game. Built for the SwampHacks XII sponsor tracks **Best Use of Vultr**,
 **Best Use of Auth0** and **Best Domain Name from GoDaddy Registry**. Code: `server/` and the
 web-facing files in `mods/sgl64/` (§9).
@@ -8,7 +8,7 @@ web-facing files in `mods/sgl64/` (§9).
 ## 1. Goal
 
 Anyone can turn their photos into a playable N64-style gator and play it on our hosted
-Super Gatorlator 64 server, with their account linked inside the game:
+GatorCampus 64 server, with their account linked inside the game:
 
 1. Open **gatorcamp.us**, log in (Auth0).
 2. Upload 1-4 photos. A Vultr GPU job turns them into a character: spec → face → Blender build →

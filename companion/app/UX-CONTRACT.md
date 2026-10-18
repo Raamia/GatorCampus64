@@ -1,4 +1,4 @@
-# Super Gatorlator 64 companion UX contract
+# GatorCampus 64 companion UX contract
 
 ## Business context
 

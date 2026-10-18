@@ -1,10 +1,10 @@
-# Super Gatorlator 64 web API (server/api) behind Caddy: api.gatorcamp.us → 127.0.0.1:8000.
+# GatorCampus 64 web API (server/api) behind Caddy: api.gatorcamp.us → 127.0.0.1:8000.
 # Install: code in /opt/sgl-api (server/api/ contents), venv in /opt/sgl-api/.venv
 #   python3.12 -m venv /opt/sgl-api/.venv && /opt/sgl-api/.venv/bin/pip install -r /opt/sgl-api/requirements.txt
 # Config: /etc/sgl/api.env (mode 640 root:sgl-api), from server/api/.env.example.
 # Logs: journalctl -u sgl-api -f
 [Unit]
-Description=Super Gatorlator 64 web API (FastAPI)
+Description=GatorCampus 64 web API (FastAPI)
 After=network-online.target
 Wants=network-online.target
 

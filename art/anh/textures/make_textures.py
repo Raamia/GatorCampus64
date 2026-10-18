@@ -1,4 +1,4 @@
-"""Anh face textures (Super Gatorlator 64) - FINAL set.
+"""Anh face textures (GatorCampus 64) - FINAL set.
 
 Same conventions as Daniel's (art/daniel/textures/make_textures.py): every pixel
 comes from the ASCII grids / tables below (no antialiasing, no gradients, no

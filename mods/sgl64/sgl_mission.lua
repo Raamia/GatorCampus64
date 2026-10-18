@@ -1,4 +1,4 @@
--- Super Gatorlator 64: mission framework (docs/game_design.md section 6, docs/flow.md section 5).
+-- GatorCampus 64: mission framework (docs/game_design.md section 6, docs/flow.md section 5).
 --
 -- One MISSION per stage act. A mission is a table registered with sgl_mission_register(def) (see
 -- swamp_missions.lua for real ones). This file provides:
@@ -1990,7 +1990,7 @@ hook_event(HOOK_ON_PACKET_RECEIVE, on_packet_receive)
 hook_event(HOOK_ON_HUD_RENDER, mission_hud)
 hook_event(HOOK_ON_HUD_RENDER, party_hud)
 hook_event(HOOK_ON_HUD_RENDER, exit_hud)
-hook_chat_command("mission", "[status|reset|start|list|force] Super Gatorlator 64 mission of this act", on_mission_command)
+hook_chat_command("mission", "[status|reset|start|list|force] GatorCampus 64 mission of this act", on_mission_command)
 hook_chat_command("join", "[name] Join your friends' stage act (Study Group)", on_join_command)
 if hook_mod_menu_button ~= nil then
     hook_mod_menu_button("Join my study group", function() join_best_group() end)

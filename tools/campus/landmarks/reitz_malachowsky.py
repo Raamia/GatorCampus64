@@ -1,5 +1,5 @@
 """REITZ UNION + ENGINEERING stage landmark: Malachowsky Hall for Data Science & Information Technology
-(UF, opened 3 Nov 2023) and its entrance plaza, hand-modelled for Super Gatorlator 64.
+(UF, opened 3 Nov 2023) and its entrance plaza, hand-modelled for GatorCampus 64.
 
 Landmark module (contract: tools/campus/landmarks/_common.py). The single LANDMARKS entry carries
 "stages": ["reitz_eng"], so only `build_stage.py reitz_eng` builds it. Geometry is in MAP METRES, z up

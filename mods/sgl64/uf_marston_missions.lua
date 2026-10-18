@@ -1,4 +1,4 @@
--- Super Gatorlator 64: Marston Science Library (course 4, LEVEL_CCM, hub door 4 "Marston") missions, on the
+-- GatorCampus 64: Marston Science Library (course 4, LEVEL_CCM, hub door 4 "Marston") missions, on the
 -- framework in sgl_mission.lua (docs/game_design.md 7.3, docs/flow.md 5). An INTERIOR stage: five floors 6 m apart
 -- (F1 the basement at Y -600, F2 the entrance floor at Y 0 ... F5 at Y 1800), a 13 x 15 m atrium open from the
 -- F2 court to a skylight (data/uf/marston_layout.json, docs/marston_layout.md).

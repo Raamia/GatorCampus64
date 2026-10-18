@@ -1,4 +1,4 @@
--- Super Gatorlator 64: QR codes on the HUD (Gator Pass login, docs/web_platform_spec.md §7.1).
+-- GatorCampus 64: QR codes on the HUD (Gator Pass login, docs/web_platform_spec.md §7.1).
 --
 -- Vendored from speedata/luaqrcode (qrencode.lua, master @ 5a9c34bc04d5113048df8528af72ef31d25b7300,
 -- 2025-12-02), 3-clause BSD license (kept verbatim below). Changes for coopdx's Lua 5.3 sandbox
@@ -1131,7 +1131,7 @@ end
 
 
 ---------------------------------------------------------------------------------------------
--- Super Gatorlator 64 API (see the top of this file)
+-- GatorCampus 64 API (see the top of this file)
 ---------------------------------------------------------------------------------------------
 
 function sgl_qr_codewords(str, ecLevel)

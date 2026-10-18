@@ -1,4 +1,4 @@
-"""Jaime face textures (Super Gatorlator 64) - FINAL set.
+"""Jaime face textures (GatorCampus 64) - FINAL set.
 
 Same conventions as Daniel's set (art/daniel/textures/make_textures.py): 64x32
 eye textures holding both eyes, a 32x16 mouth, opaque background of exactly

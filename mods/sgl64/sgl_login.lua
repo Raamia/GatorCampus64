@@ -1,4 +1,4 @@
--- Super Gatorlator 64: Gator Pass, the in-game login (docs/web_platform_spec.md §7.1, §7.2).
+-- GatorCampus 64: Gator Pass, the in-game login (docs/web_platform_spec.md §7.1, §7.2).
 --
 --   /login            ask the hosted server for a login code: a panel shows a QR code (scan it with a
 --                     phone) plus "login.gatorcamp.us/activate" and the code to type there,

@@ -1,4 +1,4 @@
-"""Century Tower + University Auditorium: hand-modelled hub landmarks for Super Gatorlator 64.
+"""Century Tower + University Auditorium: hand-modelled hub landmarks for GatorCampus 64.
 
 Landmark module contract (see landmarks/_common.py): LANDMARKS + build(ctx). Geometry is authored
 in MAP METRES, z up (x = east, y = north, origin = Century Tower centroid) on top of the exact OSM

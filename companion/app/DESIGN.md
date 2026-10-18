@@ -39,7 +39,7 @@ components:
 
 ## Overview
 
-The **Super Gatorlator 64 companion** should feel like the level-select and mission boards from a bright 1990s 3D platform game, translated into a useful campus companion. The game is the product; this site helps players choose a mission and see their recorded results. Name Super Gatorlator 64 and identify it as a native 3D game in the first screen. Make clear that the game runs in SM64CoopDX; results shown here come from the hosted server (verified, via Gator Pass `/login`) or are synced from a player's own game (offline, unverified).
+The **GatorCampus 64 companion** should feel like the level-select and mission boards from a bright 1990s 3D platform game, translated into a useful campus companion. The game is the product; this site helps players choose a mission and see their recorded results. Name GatorCampus 64 and identify it as a native 3D game in the first screen. Make clear that the game runs in SM64CoopDX; results shown here come from the hosted server (verified, via Gator Pass `/login`) or are synced from a player's own game (offline, unverified).
 
 Its signature is a sky-blue campus field framed in stadium navy, with Gator-orange route markers and warm gold highlights. The landing page should feel like a platform-game title screen: original low-poly campus scenery, a custom gator avatar and crest pickup, a readable mission HUD, and an accurate campus map. Product routes carry the same world through game-menu navigation, a mission board, score screen, and field manual. Use playful, chunky display type and game-menu framing for key actions. The visual reference is an N64-era campus level-select screen; do not use Mario logos, character art, coins, stars, or other borrowed game assets.
 

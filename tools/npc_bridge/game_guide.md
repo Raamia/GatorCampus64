@@ -1,4 +1,4 @@
-# Super Gatorlator 64: the NPC game guide
+# GatorCampus 64: the NPC game guide
 
 Albert and Alberta, the mascot NPCs, answer game questions straight from this file: no AI call, instant, always right.
 Anything this file can't answer (general knowledge, small talk) goes to Gemini instead.
@@ -24,10 +24,10 @@ Questions nobody could answer well land in tools/npc_bridge/unanswered.log: turn
 
 ## Getting started
 
-### What is Super Gatorlator 64?
+### What is GatorCampus 64?
 id: about
-ask: what is this game, what is super gatorlator, tell me about the game, what game is this, about this game, what is this, explain the game, whats the point of the game
-answer: Super Gatorlator 64 is the real University of Florida campus, at true scale, inside Super Mario 64, with online co-op and your friends as playable characters. Explore campus, enter any built stage with 0 stars, and collect stars to progress through its acts. Go Gators!
+ask: what is this game, what is gatorcampus 64, tell me about the game, what game is this, about this game, what is this, explain the game, whats the point of the game
+answer: GatorCampus 64 is the real University of Florida campus, at true scale, inside Super Mario 64, with online co-op and your friends as playable characters. Explore campus, enter any built stage with 0 stars, and collect stars to progress through its acts. Go Gators!
 
 ### What does the game have to offer?
 id: offer
@@ -359,7 +359,7 @@ answer: You can play as 10 of our friends: Daniel, Corina, Raami, Anh, Josh, Don
 ### How do I play with friends?
 id: multiplayer
 ask: play with friends, multiplayer, co op, coop, online, invite friends, host, join a game, how do friends join, play together
-answer: One player chooses Host (with Super Gatorlator 64 enabled under Mods) and the others choose Join and connect to them. Explore campus together; stars count for everyone.
+answer: One player chooses Host (with GatorCampus 64 enabled under Mods) and the others choose Join and connect to them. Explore campus together; stars count for everyone.
 
 ### How do I join my friends' mission?
 id: join-act
@@ -444,4 +444,4 @@ answer: Yes! The campus is built from OpenStreetMap data at true 1:1 scale, so e
 ### Who made this game?
 id: credits
 ask: who made this, who made the game, developers, credits, who built this, creators
-answer: Super Gatorlator 64 is a fan project by a group of UF friends, built as mods for sm64coopdx (the co-op Super Mario 64 PC port). The playable characters are the friends who made it. Map data (c) OpenStreetMap contributors.
+answer: GatorCampus 64 is a fan project by a group of UF friends, built as mods for sm64coopdx (the co-op Super Mario 64 PC port). The playable characters are the friends who made it. Map data (c) OpenStreetMap contributors.

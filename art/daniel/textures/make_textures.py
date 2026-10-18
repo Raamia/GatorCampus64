@@ -1,4 +1,4 @@
-"""Daniel face textures (Super Gatorlator 64) - FINAL set.
+"""Daniel face textures (GatorCampus 64) - FINAL set.
 
 Built on the "faithful" candidate (its proportions: narrow 16-px eyes with
 about one eye-width between them, a wide closed-bite grin, no lower teeth),

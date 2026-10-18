@@ -1,4 +1,4 @@
--- Super Gatorlator 64: HUD kit for missions (banners, panels, timers, counters, prompts, world
+-- GatorCampus 64: HUD kit for missions (banners, panels, timers, counters, prompts, world
 -- markers, results boards, toasts). Used by sgl_mission.lua (framework) and the stage mission files.
 --
 -- Shared layout at RESOLUTION_N64 (240 units tall): counters in the top

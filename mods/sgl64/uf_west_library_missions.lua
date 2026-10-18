@@ -1,4 +1,4 @@
--- Super Gatorlator 64: Library West After Dark (course 5, LEVEL_BBH, hub door 5 "Library West") missions, on the
+-- GatorCampus 64: Library West After Dark (course 5, LEVEL_BBH, hub door 5 "Library West") missions, on the
 -- framework in sgl_mission.lua (docs/game_design.md 7.5, docs/flow.md 5). An INTERIOR stage at night: six floors 6 m
 -- apart (F1 the lobby + stacks at Y 0 ... F6 the graduate floor at Y 3000), a three-storey base whose roof (Y 1800)
 -- is a walkable terrace round the tower's 4th floor (data/uf/libwest_layout.json, docs/libwest_layout.md).

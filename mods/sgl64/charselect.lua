@@ -1,7 +1,7 @@
 -- Character select menu: an SM64-style overlay with one portrait card per friend.
 --
 -- Opens by itself on your first spawn while you have never picked a friend, and any time with
--- /char (no name), L + START, or Pause > Mods > Super Gatorlator 64 > "Choose your friend".
+-- /char (no name), L + START, or Pause > Mods > GatorCampus 64 > "Choose your friend".
 --   move:  D-pad, stick, C-buttons (arrow keys on keyboard) or the mouse
 --   page:  L / R, or D-pad / stick left-right past the first / last card of a page
 --   pick:  A or left click        close: B or START

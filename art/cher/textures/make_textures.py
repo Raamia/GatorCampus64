@@ -1,4 +1,4 @@
-"""Cher face textures (Super Gatorlator 64) - FINAL set.
+"""Cher face textures (GatorCampus 64) - FINAL set.
 
 Drawn from her only reference photo (reference/friends/cher/photo1.png, a front
 portrait) in the same style, sizes and conventions as Daniel's approved set

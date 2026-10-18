@@ -1,4 +1,4 @@
-"""NPC chat bridge for Super Gatorlator 64: carries chat between the game and the NPCs' answers.
+"""NPC chat bridge for GatorCampus 64: carries chat between the game and the NPCs' answers.
 
 Game questions are answered locally from game_guide.md (guide.py, no AI call); everything else
 (general knowledge, small talk) goes to Gemini. Questions about the game the guide doesn't cover well go

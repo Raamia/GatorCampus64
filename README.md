@@ -1,4 +1,4 @@
-# Super Gatorlator 64
+# GatorCampus 64
 
 **The University of Florida, rebuilt as a co-op Super Mario 64 playground. Starring our friends—and you.**
 

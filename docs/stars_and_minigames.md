@@ -1,4 +1,4 @@
-# Super Gatorlator 64: Stars and Minigames
+# GatorCampus 64: Stars and Minigames
 
 Every star in the game, as the mission code builds it today. The stage table and act names live in `mods/sgl64/course.lua`, and each stage's missions are in its own `*_missions.lua` file.
 

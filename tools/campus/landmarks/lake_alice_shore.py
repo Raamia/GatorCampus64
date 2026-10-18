@@ -1,6 +1,6 @@
 """LAKE ALICE stage (course 3, slot jrb, stages.json key "lake_alice") shore landmarks: the UF bat barns,
 the Baughman Center, the real boardwalks / overlook, the Museum Road lake edge and the bat-house field
-(the stage's landing zone) with the Bat House Gardens. Hand-modelled for Super Gatorlator 64.
+(the stage's landing zone) with the Bat House Gardens. Hand-modelled for GatorCampus 64.
 
 Landmark module (contract: tools/campus/landmarks/_common.py). Every LANDMARKS entry carries
 "stages": ["lake_alice"], so only `build_stage.py lake_alice` builds it. Geometry is in MAP METRES, z up

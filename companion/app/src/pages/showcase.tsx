@@ -97,7 +97,7 @@ export default function Showcase() {
   const selected = models.find(m => m.id === selectedId)!
   const studies = models.filter(m => m.group === selected.group)
   return <>
-    <Seo {...seo} title="Character showcase · Super Gatorlator 64" path="/showcase"
+    <Seo {...seo} title="Character showcase · GatorCampus 64" path="/showcase"
       description="Explore 23 low-poly character studies: faces, hair, body shapes and outfits. View rendered samples or rotate them in 3D, without signing in." />
     <SiteHeader />
     <main className="showcase-page" data-testid="character-showcase">
@@ -144,7 +144,7 @@ export default function Showcase() {
         <div><p className="eyebrow">FROM A SHAPE TO YOUR PLAYER</p><h2>Four parts. Plenty of character.</h2><p>Faces, hair, bodies and outfits are selected independently when we build a character. These fixed samples show one change at a time; they were made without reference photos.</p></div>
         <div><p>For your own character, Qwen reads your photos and chooses appearance profiles. Our Blender builder creates the model and previews for the game. The result is a stylized interpretation of your look.</p><Link className="primary-action" to="/gatorize">Make your gator <ArrowUpRight size={16} aria-hidden /></Link><p className="showcase-small">Build and preview without login. Gator Pass sign-in is needed to use your model in the game.</p></div>
       </section>
-      <footer className="showcase-footer"><Link to="/">Super Gatorlator 64</Link><span>Built for SwampHacks XII · Gainesville, FL</span></footer>
+      <footer className="showcase-footer"><Link to="/">GatorCampus 64</Link><span>Built for SwampHacks XII · Gainesville, FL</span></footer>
     </main>
   </>
 }

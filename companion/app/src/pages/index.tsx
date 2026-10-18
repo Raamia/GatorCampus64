@@ -1,5 +1,5 @@
 /**
- * Static title screen for the native Super Gatorlator 64 campus adventure.
+ * Static title screen for the native GatorCampus 64 campus adventure.
  * Keep it renderable without browser APIs so the page can be prerendered.
  */
 
@@ -29,7 +29,7 @@ export default function Landing() {
         <section className="game-title-screen" aria-labelledby="game-title">
           <div className="title-copy">
             <p className="eyebrow title-eyebrow"><span className="pixel-caret">▶</span> PRESS START · GAINESVILLE, FL</p>
-            <h1 id="game-title"><span>SUPER</span><span>GATORLATOR <i>64</i></span></h1>
+            <h1 id="game-title"><span className="brand-line">GATORCAMPUS <i>64</i></span></h1>
             <p className="title-description">A campus-sized platform adventure. Team up, explore the Reitz and Marston, and take on the challenges tucked inside.</p>
             <div className="title-actions"><Link to="/home" className="primary-action start-button"><Gamepad2 size={19}/> OPEN THE MISSION BOARD <ArrowUpRight size={17}/></Link><span className="native-note"><span className="note-dot"/> PLAYED IN SM64COOPDX</span></div>
           </div>
@@ -52,7 +52,7 @@ export default function Landing() {
 
       <section className="how-it-works game-how" aria-labelledby="how-it-works"><div className="how-title"><p className="eyebrow">MAKE YOUR GATOR · JOIN THE ADVENTURE</p><h2 id="how-it-works">Your look.<br/><em>Your player.</em></h2></div><div className="how-copy"><p>Turn a few photos into a playable, low-poly campus character. A private Vultr GPU runs a local vision model to build a character spec; Blender turns it into textures, animations, and an in-game gator.</p><div className="game-pipeline"><span>YOUR PHOTOS</span><i>→</i><span>GATOR BUILDER</span><i>→</i><span>SM64 CO-OP</span></div><Link to="/showcase" className="builder-link">EXPLORE THE CHARACTER SHOWCASE <ArrowUpRight size={14}/></Link><br/><Link to="/gatorize" className="builder-link">MAKE YOUR GATOR <ArrowUpRight size={14}/></Link></div></section>
 
-      <footer className="landing-footer game-footer"><span>SUPER GATORLATOR 64 · UF</span><span>ONE CAMPUS · MANY WAYS UP</span><span>IN-GAME RECORDS · BUILT FOR CO-OP</span></footer>
+      <footer className="landing-footer game-footer"><span>GATORCAMPUS 64 · UF</span><span>ONE CAMPUS · MANY WAYS UP</span><span>IN-GAME RECORDS · BUILT FOR CO-OP</span></footer>
     </div>
   </>
 }

@@ -1,4 +1,4 @@
-"""Corina face textures (Super Gatorlator 64) - FINAL set.
+"""Corina face textures (GatorCampus 64) - FINAL set.
 
 Same conventions as Daniel's approved set (art/daniel/textures/): 64x32 eye
 states + 32x16 mouth, flat skin background (keyed to alpha 0 by the builder),

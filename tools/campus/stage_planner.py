@@ -1,4 +1,4 @@
-# Super Gatorlator 64 - campus map renders, stage windows and geometry budgets.
+# GatorCampus 64 - campus map renders, stage windows and geometry budgets.
 #
 # Reads data/uf/campus.json (+ the raw OSM tiles for multipolygon relations such as
 # Lake Alice and the stadium bowl, which campus.json does not carry) and writes:
@@ -1248,7 +1248,7 @@ def main():
     top = cv.hm // SS
     cv.d.rectangle([0, cv.hm, cv.W, cv.H], fill=(255, 255, 255))
     cv.d.line([(0, cv.hm), (cv.W, cv.hm)], fill=(200, 196, 188), width=SS)
-    cv.text((24, top + 16), "Super Gatorlator 64 - UF campus extract (top-down, true scale)", 18, bold=True)
+    cv.text((24, top + 16), "GatorCampus 64 - UF campus extract (top-down, true scale)", 18, bold=True)
     cv.text((24, top + 42), f"{X1 - X0:.0f} m x {Y1 - Y0:.0f} m around Century Tower (0,0); x = east, y = north. "
                             f"{len(campus['buildings'])} building polygons, {len(trees)} mapped trees.", 12, color=(80, 80, 80))
     draw_legend(cv, 24, top + 70)

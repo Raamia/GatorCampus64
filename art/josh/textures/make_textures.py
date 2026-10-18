@@ -1,4 +1,4 @@
-"""Josh face textures (Super Gatorlator 64) - FINAL set.
+"""Josh face textures (GatorCampus 64) - FINAL set.
 
 Josh is Anh's face on a browner skin, so this folder holds Anh's final face art
 (art/anh/textures/make_textures.py, unchanged) re-skinned with Josh's colours:

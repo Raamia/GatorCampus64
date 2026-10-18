@@ -5,7 +5,7 @@
 set -eu
 HERE="$(cd "$(dirname "$0")" && pwd)"
 OUT_DIR="$HOME/.config/sgl64"
-VPC_ID="e716d656-f06c-4c86-b3c2-f3e26b3c61ae"   # gatorlator, atl, 10.6.96.0/20
+VPC_ID="e716d656-f06c-4c86-b3c2-f3e26b3c61ae"   # gatorcampus, atl, 10.6.96.0/20
 
 case "${1:-}" in
   db)

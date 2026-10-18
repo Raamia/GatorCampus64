@@ -1,4 +1,4 @@
--- Super Gatorlator 64: Reitz Union & Engineering Quad (course 2, LEVEL_WF, hub door 2 "The Hub") missions,
+-- GatorCampus 64: Reitz Union & Engineering Quad (course 2, LEVEL_WF, hub door 2 "The Hub") missions,
 -- on the framework in sgl_mission.lua (docs/game_design.md 7.2, docs/flow.md 5).
 --
 --   act 1  ROOFTOP OF THE REITZ        reach (solo): climb the J. Wayne Reitz Union from the ravine side:

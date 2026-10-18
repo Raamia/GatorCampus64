@@ -1,4 +1,4 @@
--- Small keyboard quality-of-life controls for Super Gatorlator 64.
+-- Small keyboard quality-of-life controls for GatorCampus 64.
 -- Keyboard 0 is bound to Y_BUTTON in sm64config.txt and is consumed here so it
 -- only switches mouse look; it must not also perform the normal Y action.
 
