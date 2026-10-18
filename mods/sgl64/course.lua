@@ -13,8 +13,8 @@
 --   door 5 bbh             LEVEL_BBH / COURSE_BBH  Library West After Dark (Library West door) built (11 stars; an interior)
 --   door 6 ttc             LEVEL_TTC / COURSE_TTC  Century Tower interior (tower base door)    reserved (14 stars)
 --
--- Stars: act k (1..6) mission star = star id k - 1 of the stage's course; the 100-coin star is id 6
--- (vanilla). Star collection is shared by coopdx (packet_collect_star).
+-- Stars: act k (1..6) mission star = star id k - 1 of the stage's course. Star id 6 is the unused vanilla
+-- 100-coin slot; ambient coins are disabled in the campus maps. Star collection is shared by coopdx.
 --
 -- Act order = what is actually playable. Vanilla act select only offers the acts you already have
 -- stars for plus the NEXT one, so the built missions must be acts 1, 2, 3 (in that order, solo-able
@@ -37,8 +37,8 @@
 -- Seek (design act 2, co-op / competitive); design acts 3 (The Ghost of Finals Past), 4 (Lights Out) and 6 (Re-shelve the
 -- Glowing Books) come later as 4/5/6. Missions: uf_west_library_missions.lua. Built: levels/bbh (an interior at night,
 -- tools/campus/build_interior.py libwest).
--- Star curve: doors open at 0, 2, 5, 8, 11, 14. Every built course gives a solo player 3 stars (2 solo acts + 100 coins),
--- so door k >= 2 needs 3 (k - 1) - 1 and is reachable alone with one star to spare (docs/flow.md 11).
+-- Star curve: doors open at 0, 2, 5, 8, 11, 14. With ambient coins removed, the third act's shared co-op star is
+-- required to keep advancing beyond the first two courses.
 
 ---------------------------------------------------------------------------------------------
 -- warp nodes (area 1 everywhere)

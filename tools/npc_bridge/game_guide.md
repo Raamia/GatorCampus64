@@ -127,7 +127,12 @@ answer: Losing all your health (or drowning) throws you out of that stage's door
 ### What is a 100-coin star?
 id: hundred-coins
 ask: 100 coins, 100 coin star, hundred coins, coin star, collect 100 coins, red coins
-answer: Every stage has a 100-coin star: collect 100 coins in one visit and it appears. There are plenty to find: about 142 in The Swamp, about 250 outside in Reitz & Engineering plus more inside the Reitz Union, about 176 at Lake Alice, about 190 in Marston and about 206 in Library West. Goombas drop a coin each too.
+answer: Every stage has a 100-coin star: collect 100 coins in one visit and it appears. There are plenty to find: about 142 in The Swamp, about 250 outside in Reitz & Engineering plus more inside the Reitz Union, about 176 at Lake Alice, about 190 in Marston and about 206 in Library West. Every mini bull you squash drops a coin too.
+
+### What are the mini bulls?
+id: mini-bulls
+ask: mini bulls, bulls, enemies, goombas, goomba, usf bull, what are the bulls, how do i beat the bulls, how to kill enemies, stomp, squash, little bulls, rival mascots
+answer: Those little USF Bulls are our rivals' mascots, sneaking around campus in place of Goombas! They wander and charge at you, so jump on their heads to squash them flat (or punch or kick them). Each one you take out drops a coin. Go Gators!
 
 ### What are the coming soon acts?
 id: coming-soon

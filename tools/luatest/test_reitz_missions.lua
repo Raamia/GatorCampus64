@@ -170,8 +170,8 @@ test("levels/wf/script.c (when built): warp contract for door 2, no level-script
         check((d.levelStar == true) == has, string.format("act %d: levelStar %s matches the level script (%s)", k,
             tostring(d.levelStar), has and "has a bhvStar" or "no bhvStar"))
     end
-    -- the level's coins, act by act (bhvCoinFormation: bparam2 0 = line of 5 along the facing, 1.6 m apart;
-    -- 2 = ring of 8, r 3 m; a Goomba drops one)
+    -- Ambient Mario coins and Goombas are intentionally absent from the map. Red-token objectives are
+    -- mission objects managed by the Reitz mission script, not level coin pickups.
     local function coins_in(act)
         local out, n = {}, 0
         for _, o in ipairs(ls.objects) do
@@ -209,14 +209,14 @@ test("levels/wf/script.c (when built): warp contract for door 2, no level-script
             end
         end
     end
-    check(onToken == 0, "act " .. tokAct .. ": no level coin is drawn inside a meal-swipe token (stage_pickups REITZ_TOKEN_ACT)")
+    check(onToken == 0, "act " .. tokAct .. ": no ambient level coin overlaps a meal-swipe token")
     for act = 1, 6 do
         local _, n = coins_in(act)
-        check(n >= 120, string.format("act %d: %d coins (incl. Goombas) for the 100-coin star", act, n))
+        check(n == 0, string.format("act %d: no ambient coins or Goombas (%d found)", act, n))
     end
     local _, n1 = coins_in(1)
     local _, n2 = coins_in(tokAct)
-    check(n1 - n2 <= 5, "the token act only loses the coins on token spots (" .. (n1 - n2) .. ")")
+    check(n1 == n2, "the token act has the same zero ambient coin count as other acts")
 end)
 
 test("levels/wf area 2 (the Reitz Union interior, when built): entry node, exits, paired instant warps, elevator pads", function()

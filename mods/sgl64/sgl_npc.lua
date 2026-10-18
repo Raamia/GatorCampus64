@@ -293,6 +293,8 @@ end
 -- directly); /albert and /alberta ask from anywhere. The host queues the request in its own modfs
 -- (sav/sgl64.modfs, npc_out.txt); tools/npc_bridge/bridge.py answers in sav/sgl64_npc.modfs (replies.txt,
 -- public), which the host re-reads with mod_fs_reload() and relays to everyone ("npc_say"). Format: bridge.py.
+-- On the hosted server (headless host under server/bridge) sgl64.modfs is the bridge's inbox, so the host prints
+-- each request as an "npc_ask" event instead (sgl_bridge.lua) and server/bridge answers in the same replies.txt.
 ---------------------------------------------------------------------------------------------
 SGL_NPC_POLL = 15             -- frames between reads of the bridge's replies while a request is pending
 SGL_NPC_TIMEOUT = 15 * 30     -- frames before a request gives up (no bridge running, API trouble)
@@ -320,7 +322,13 @@ local function unescape(s)
     end))
 end
 
+-- the headless host under server/bridge: requests go out as SGLEVT lines, never into the bridge's inbox file
+local function hosted()
+    return sgl_bridge_is_host ~= nil and sgl_bridge_is_host()
+end
+
 local function write_outbox()
+    if hosted() then return true end
     mod_fs_hide_errors(true)
     local fs = mod_fs_get() or mod_fs_create()
     if fs == nil then return false end
@@ -433,9 +441,15 @@ end
 local function host_enqueue(npcId, player, text, stats)
     if sNpcById[npcId] == nil or pending_for(player) then return end   -- one question at a time per player
     sSeq = sSeq + 1
-    sPending[sSeq] = { npc = npcId, player = player, text = text:sub(1, 300), stats = stats or "", age = 0 }
+    local p = { npc = npcId, player = player, text = text:sub(1, 300), stats = stats or "", age = 0 }
+    sPending[sSeq] = p
     sPollTimer = SGL_NPC_POLL
-    write_outbox()
+    if hosted() then
+        sglBridgeEmit("npc_ask", { session = sSession, seq = sSeq, npc = npcId, player = player, text = p.text,
+            stats = p.stats })
+    else
+        write_outbox()
+    end
     npc_say(npcId, "...", true)
 end
 
@@ -510,7 +524,7 @@ local function host_update()
             sPending[seq] = nil
             changed = true
             npc_say(p.npc, "Hmm... ask me again in a bit, " .. p.player .. ".")
-            if not sWarned then
+            if not sWarned and not hosted() then
                 sWarned = true
                 djui_chat_message_create("\\#ffa0a0\\NPC chat: no reply from the bridge. On the host, run: python3 tools/npc_bridge/bridge.py")
             end

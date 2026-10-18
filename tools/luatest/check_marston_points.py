@@ -43,9 +43,8 @@ course 4, LEVEL_CCM, an interior stage) against its sources and, once it exists,
    is crossed both ways with the coopdx push. Iteration 8: the stair-hall and core doors (TOWER_DOORS) are walked too
    and must be crossed both ways; a must-cross door with no floor at any start point fails; a CLOSED study-room door
    (marston_points.json door_closed: the F1 glass rooms show their closed honey leaves) must stop every walk.
-6. The level script's act gating (iteration 7): no Goomba stands on the silent 5th floor in act 2 (the Shushers'
-   stealth act: OBJECT_WITH_ACTS without ACT_2), and every act keeps at least 120 coins (yellow coins, coin lines of
-   5, rings / arrows of 8, a coin per Goomba) so the 100-coin star stays reachable.
+6. The level script contains no ambient Mario yellow coins, coin formations, or Goombas. Mission-specific red-token
+   objectives are separate objects and are not part of this map-pickup check.
 Usage (from anywhere):
   tools/.venv/bin/python -I tools/luatest/check_marston_points.py          check, exit 1 on any finding
   tools/.venv/bin/python -I tools/luatest/check_marston_points.py --print  print the source values (Lua syntax)
@@ -1199,10 +1198,6 @@ def check_doors_dx(air, bad):
 
 # ------------------------------------------------------------------------------------------- level script act gating
 SCRIPT = os.environ.get("SGL_CCM_SCRIPT") or os.path.join(ROOT, "mods", "sgl64", "levels", "ccm", "script.c")
-F5_Y = (1750, 2350)                    # the silent 5th floor (F5 1800, up to its 5.4 m ceiling)
-MIN_ACT_COINS = 120
-
-
 def check_script_acts(bad):
     if not os.path.exists(SCRIPT):
         return bad
@@ -1216,28 +1211,14 @@ def check_script_acts(bad):
         if m.group(1):
             acts = {int(a.strip()[4:]) for a in m.group(7).split("|") if a.strip().startswith("ACT_")}
         objs.append((m.group(6), int(m.group(3)), int(m.group(5), 0), acts))
-    worst = None
-    for act in range(1, 7):
-        coins = 0
-        for bhv, y, bp, acts in objs:
-            if act not in acts:
-                continue
-            if bhv == "bhvYellowCoin" or bhv == "bhvGoomba":
-                coins += 1
-            elif bhv == "bhvCoinFormation":
-                coins += 5 if ((bp >> 16) & 0xFF) & 0x7 < 2 else 8
-        worst = coins if worst is None else min(worst, coins)
-        if coins < MIN_ACT_COINS:
-            print("COINS act %d: only %d coins in the level script (the 100-coin star needs a margin: >= %d)"
-                  % (act, coins, MIN_ACT_COINS))
-            bad += 1
-    f5 = [y for bhv, y, bp, acts in objs if bhv == "bhvGoomba" and F5_Y[0] <= y < F5_Y[1] and 2 in acts]
-    if f5:
-        print("GOOMBA %d Goomba(s) on the silent 5th floor in act 2 (Y %s): gate them with OBJECT_WITH_ACTS without "
-              "ACT_2" % (len(f5), f5))
+    ambient = [bhv for bhv, y, bp, acts in objs
+               if bhv in ("bhvYellowCoin", "bhvCoinFormation", "bhvGoomba")]
+    if ambient:
+        print("AMBIENT PICKUPS: %d Mario coin / Goomba objects remain in the campus map (%s)"
+              % (len(ambient), ", ".join(sorted(set(ambient)))))
         bad += 1
-    print("check_marston_points: level script: %d objects, fewest coins in an act %s, %d F5 Goomba(s) in act 2"
-          % (len(objs), worst, len(f5)))
+    print("check_marston_points: level script: %d objects, ambient coins / Goombas %d"
+          % (len(objs), len(ambient)))
     return bad
 
 def col_type_of(col, rec):

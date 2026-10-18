@@ -19,6 +19,10 @@ escaped as \\\\ \\t \\n):
   replies.txt   "session\\t<sid>" then one "<seq>\\t<npc id>\\t<reply>" per recent reply
 <sid> changes every time the mod loads; <seq> counts up within a session.
 
+On the hosted server (play.gatorcamp.us) this script doesn't run: sgl64.modfs is server/bridge's inbox there, so
+the headless host prints each request as an `npc_ask` SGLEVT line instead, and server/bridge/sglbridge/npc.py
+answers it with this module's Bridge.handle(), writing the same replies.txt.
+
 Usage (from anywhere):
   python3 tools/npc_bridge/bridge.py               Gemini replies (GEMINI_API_KEY in the environment or
                                                    tools/npc_bridge/.env; free key: aistudio.google.com/apikey)
@@ -236,10 +240,16 @@ class Bridge:
         self.history = {}      # (player, npc) -> [(role, text), ...]
 
     def poll(self):
-        """Answer every new request; returns how many were answered."""
+        """Answer every new request in the game's outbox; returns how many were answered."""
         session, reqs = read_requests(self.sav_dir)
         if session is None:
             return 0
+        return self.handle(session, reqs)
+
+    def handle(self, session, reqs):
+        """Answer the new ones of reqs [(seq, npc, player, message, stats), ...] from game session `session` and
+        rewrite the replies file; returns how many were answered. (On the hosted server, server/bridge calls this
+        for each npc_ask event instead of poll(): there sgl64.modfs is its inbox.)"""
         if session != self.session:   # the mod (re)loaded: start over
             self.session, self.done, self.replies = session, 0, []
         answered = 0
