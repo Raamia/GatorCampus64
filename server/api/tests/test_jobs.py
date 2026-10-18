@@ -108,9 +108,10 @@ def test_delete_waits_for_slot_lock_before_locking_character(client, auth, conn,
         assert deletion.result(timeout=3).status_code == 200
 
 
-def test_rejected_upload_leaves_no_photos(make_client, auth, s3):
+def test_rejected_upload_leaves_no_photos(make_client, auth, s3, conn):
     client = make_client(limit_global_hour=0)
     assert upload(client, auth()).status_code == 429
+    assert conn.execute("SELECT count(*) AS n FROM storage_cleanup").fetchone()["n"] == 0
     assert s3.list_objects_v2(Bucket=BUCKET).get("KeyCount", 0) == 0
 
 

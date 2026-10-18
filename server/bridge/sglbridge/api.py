@@ -89,6 +89,15 @@ class ApiClient:
             out = out.get("deploys")
         return [d for d in out if isinstance(d, dict)] if isinstance(out, list) else []
 
+    def check_deploys(self, ids: list[int]) -> set[int]:
+        result = self._call("POST", "/deploys/check", {"ids": ids})
+        if not isinstance(result, dict) or not isinstance(result.get("current"), list):
+            raise ApiUnavailable("invalid deploy check response")
+        return set(result["current"])
+
+    def reconcile_deploys(self, installed: dict[int, int | None]) -> None:
+        self._call("POST", "/deploys/reconcile", {"installed": installed})
+
     # POST /deploys/{id}: server/api reads {state, error}; {status, detail} is sent too
     def report_deploy(self, deploy_id: Any, status: str, detail: str = "") -> None:
         detail = detail[:2000]

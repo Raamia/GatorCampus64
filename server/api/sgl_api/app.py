@@ -25,6 +25,7 @@ from pydantic import AwareDatetime, BaseModel, Field, model_validator
 from . import config, images, names, runs
 from .auth import AuthError, JWKSCache, Principal, Verifier, bearer
 from .deepspace import Pusher
+from .cleanup import Cleaner
 from .missions import MISSIONS
 from .db import Database, apply_schema
 from .storage import Storage
@@ -99,6 +100,20 @@ class DeployResult(BaseModel):
     error: str | None = Field(None, max_length=2000)
 
 
+class DeployCheck(BaseModel):
+    ids: list[int] = Field(max_length=8)
+
+
+class DeployInventory(BaseModel):
+    installed: dict[int, int | None] = Field(default_factory=dict, max_length=8)
+
+    @model_validator(mode="after")
+    def valid_slots(self):
+        if any(n < 1 or n > 8 for n in self.installed):
+            raise ValueError("slot must be between 1 and 8")
+        return self
+
+
 class SlotPatch(BaseModel):
     pinned: bool
 
@@ -124,7 +139,11 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
         state["pusher"] = Pusher(s, lambda: state["db"], transport=deepspace_transport)
         state["pusher"].start()
         app.state.pusher = state["pusher"]
+        state["cleaner"] = Cleaner(state["db"], state["storage"])
+        app.state.cleaner = state["cleaner"]
+        state["cleaner"].start()
         yield
+        state["cleaner"].close()
         state["pusher"].close()
         if db is None:
             state["db"].close()
@@ -354,10 +373,14 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             raws.append((f.filename, data))
         cid, jid = uuid.uuid4(), uuid.uuid4()
         keys = [f"photos/{jid}/{i}.jpg" for i in range(len(raws))]
-        uploaded: list[str] = []
+        # Commit the intent BEFORE any object write, including writes whose DB transaction fails.
+        with DB().tx() as c:
+            c.execute("SELECT sgl_enqueue_cleanup(%s)", (jid,))
+        writing_started = False
         try:
             with DB().tx() as c:
                 c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_create'))")
+                c.execute("SELECT pg_advisory_xact_lock(hashtextextended(%s, 0))", (f"sgl_storage:{jid}",))
                 active = c.execute(f"SELECT count(*) AS n FROM characters WHERE owner_sub = %s AND state IN {IN_PROGRESS}",
                                    (p.sub,)).fetchone()["n"]
                 if active >= s.limit_user_active:
@@ -381,18 +404,21 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                 except images.PhotoError as e:
                     raise HTTPException(422, str(e)) from e
                 for k, data in zip(keys, cleaned):
+                    writing_started = True  # even a failed response may have stored the object
                     ST().put(k, data, "image/jpeg")
-                    uploaded.append(k)
                 c.execute("INSERT INTO characters (id, owner_sub, name, state, step) VALUES (%s, %s, %s, 'queued', 'queued')",
                           (cid, p.sub, clean_name))
                 c.execute("INSERT INTO jobs (id, character_id, state, step, photos) VALUES (%s, %s, 'queued', 'queued', %s)",
                           (jid, cid, keys))
         except BaseException:
-            if uploaded:
-                try:
-                    ST().delete_keys(uploaded)
-                except Exception:  # noqa: BLE001
-                    log.exception("cleaning up photos for %s", jid)
+            try:
+                if writing_started:
+                    state["cleaner"].drain(max_items=2, job_id=jid)
+                else:
+                    with DB().tx() as c:
+                        c.execute("DELETE FROM storage_cleanup WHERE job_id = %s", (jid,))
+            except Exception:
+                log.exception("photo cleanup deferred for %s", jid)
             raise
         return {"character_id": cid, "job_id": jid, "state": "queued", "name": clean_name}
 
@@ -438,11 +464,10 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             jobs = [r["id"] for r in c.execute("SELECT id FROM jobs WHERE character_id = %s", (character_id,))]
             c.execute("DELETE FROM characters WHERE id = %s", (character_id,))
         for jid in jobs:
-            for prefix in (f"photos/{jid}/", f"builds/{jid}/"):
-                try:
-                    ST().delete_prefix(prefix)
-                except Exception:  # noqa: BLE001 - row is gone; storage lifecycle rules catch strays
-                    log.exception("deleting %s", prefix)
+            try:
+                state["cleaner"].drain(max_items=2, job_id=jid)
+            except Exception:
+                log.exception("object cleanup deferred for %s", jid)
         return {"deleted": character_id, "freed_slot": freed}
 
     @app.post("/link-codes", status_code=201)
@@ -573,7 +598,7 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                           u.nickname AS owner, j.artifacts
                      FROM deploys d LEFT JOIN characters ch ON ch.id = d.character_id
                      LEFT JOIN users u ON u.sub = ch.owner_sub LEFT JOIN jobs j ON j.id = d.job_id
-                    WHERE d.state = 'pending' ORDER BY d.id""").fetchall()
+                    WHERE d.state = 'pending' AND sgl_deploy_current(d.id) ORDER BY d.id""").fetchall()
             ros = roster(c)
         out = []
         for r in rows:
@@ -607,16 +632,53 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
         rels = {k[len(prefix):] for k in keys if isinstance(k, str) and k.startswith(prefix)}
         return sorted(r for r in rels if r in DEPLOY_TOP_FILES or (r.startswith(actor) and "/" not in r[len(actor):]))
 
+    @app.post("/deploys/check")
+    def deploy_check(body: DeployCheck, _p: Annotated[Principal, Depends(scoped(SCOPE_BRIDGE))]):
+        with DB().tx() as c:
+            c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
+            ids = [r["id"] for r in c.execute(
+                "SELECT id FROM deploys WHERE id = ANY(%s) AND state = 'pending' AND sgl_deploy_current(id)",
+                (body.ids,))]
+        return {"current": ids}
+
+    @app.post("/deploys/reconcile")
+    def deploy_reconcile(body: DeployInventory, _p: Annotated[Principal, Depends(scoped(SCOPE_BRIDGE))]):
+        with DB().tx() as c:
+            c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
+            c.execute("UPDATE deploys SET state = 'superseded', finished = now() "
+                      "WHERE state = 'pending' AND NOT sgl_deploy_current(id)")
+            c.execute("SELECT sgl_sync_deploys()")
+            for row in c.execute("SELECT n, character_id FROM slots ORDER BY n").fetchall():
+                n = row["n"]
+                latest = c.execute("SELECT id, state FROM deploys WHERE slot = %s ORDER BY id DESC LIMIT 1", (n,)).fetchone()
+                if latest and latest["state"] == "pending":
+                    continue
+                installed = body.installed.get(n)
+                if latest and latest["state"] == "deployed" and installed == latest["id"]:
+                    continue
+                if row["character_id"] is not None or installed is not None:
+                    c.execute("UPDATE characters SET deployed_at = NULL WHERE id = %s", (row["character_id"],))
+                    c.execute("SELECT sgl_queue_deploy(%s::smallint, %s, %s)",
+                              (n, "character" if row["character_id"] else "placeholder", row["character_id"]))
+        return {"ok": True}
+
     @app.post("/deploys/{deploy_id}")
     def deploy_result(deploy_id: int, body: DeployResult, _p: Annotated[Principal, Depends(scoped(SCOPE_BRIDGE))]):
         with DB().tx() as c:
+            c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
             d = c.execute("SELECT * FROM deploys WHERE id = %s FOR UPDATE", (deploy_id,)).fetchone()
             if not d:
                 raise HTTPException(404, "no such deploy")
+            if not c.execute("SELECT sgl_deploy_current(%s) AS ok", (deploy_id,)).fetchone()["ok"]:
+                raise HTTPException(409, "deploy no longer matches the current slot")
+            if d["state"] == "deployed" and body.state == "deployed":
+                return {"id": deploy_id, "state": "deployed"}
             if d["state"] != "pending":
                 raise HTTPException(409, {"reason": d["state"], "message": f"deploy is {d['state']}, not pending"})
             c.execute("UPDATE deploys SET state = %s, error = %s, finished = now() WHERE id = %s",
                       (body.state, body.error, deploy_id))
+            if body.state == "failed" and d["character_id"]:
+                c.execute("UPDATE characters SET deployed_at = NULL WHERE id = %s", (d["character_id"],))
             if body.state == "deployed" and d["kind"] == "character" and d["character_id"]:
                 c.execute("UPDATE characters SET deployed_at = now() WHERE id = %s AND slot = %s",
                           (d["character_id"], d["slot"]))

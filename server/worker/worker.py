@@ -33,6 +33,27 @@ def _on_signal(signum, _frame):
     print(f"worker: signal {signum}, stopping after the current job", flush=True)
 
 
+class JobStorage:
+    """Serialize each build upload with durable cleanup; stale workers cannot recreate objects."""
+    def __init__(self, conn, job, store):
+        self.conn, self.job, self.store = conn, job, store
+
+    def __getattr__(self, key):
+        return getattr(self.store, key)
+
+    def put_file(self, key, path):
+        with self.conn.transaction():
+            self.conn.execute("SELECT pg_advisory_xact_lock(hashtextextended(%s, 0))",
+                              (f"sgl_storage:{self.job['id']}",))
+            live = self.conn.execute(
+                """SELECT 1 FROM jobs WHERE id = %s AND lease_token = %s
+                   AND lease_expires_at > clock_timestamp() AND state NOT IN ('queued', 'ready', 'failed')""",
+                (self.job['id'], self.job['lease_token'])).fetchone()
+            if not live:
+                raise pipeline.JobCancelled("upload lost worker lease")
+            return self.store.put_file(key, path)
+
+
 class LeaseWatch:
     """Renew on a dedicated connection, including during quiet model/Blender calls.
 
@@ -63,7 +84,7 @@ def handle(conn, job, store, backend, cfg, log=print):
     watch = LeaseWatch(conn, job)
     watch.thread.start()
     try:
-        return _handle(conn, job, store, backend, cfg, log, watch.check)
+        return _handle(conn, job, JobStorage(conn, job, store), backend, cfg, log, watch.check)
     finally:
         watch.stop.set()
         watch.thread.join(timeout=16)

@@ -24,6 +24,10 @@ Create/install dependencies before service activation. The API requires its `sgl
 
 For worker lease and server presence upgrades, follow [the coordinated rollout](backend_leases_heartbeats.md): drain old workers, apply the additive schema, and upgrade API/bridge together. Old bridge events no longer establish online status.
 
+For durable object cleanup and staged deploy revalidation, follow
+[the cleanup/deploy rollout](backend_cleanup_deploy_safety.md), including the
+new SQL triggers and matching API/bridge protocol.
+
 ## Verification and rollback
 
 After activation, record commit and timestamp on each host, compare deployed source hashes, check service state, and inspect fresh logs. API: `/healthz` returns 200; anonymous `/me` returns 401; a bridge token can access `/deploys/pending` but cannot access user-only `/me`. Game: bridge stays active and UDP 7777 is listening. GPU: inspect Compose state, fresh worker/VLM logs, and VRAM usage; a running worker alone does not prove image inference works.

@@ -346,3 +346,25 @@ def test_completed_job_is_immutable_and_not_swept(conn):
         db.finish_job(conn, jid, cid, False, 'late failure', lease_token=job['lease_token'])
     assert row(conn, 'jobs', jid)['state'] == 'ready'
     assert row(conn, 'characters', cid)['slot'] == 1
+
+
+def test_storage_fences_upload_after_delete_or_lease_loss(conn):
+    jid, cid = add_job(conn)
+    job = db.claim_job(conn, 'w')
+    class Uploads(Store):
+        def __init__(self):
+            super().__init__()
+            self.puts = []
+        def put_file(self, key, path):
+            self.puts.append(key)
+    raw = Uploads()
+    guarded = worker.JobStorage(conn, job, raw)
+    guarded.put_file(f'builds/{jid}/one', 'unused')
+    conn.execute("UPDATE jobs SET lease_expires_at = now() - interval '1 second' WHERE id = %s", (jid,))
+    with pytest.raises(pipeline.JobCancelled):
+        guarded.put_file(f'builds/{jid}/two', 'unused')
+    conn.execute('DELETE FROM characters WHERE id = %s', (cid,))
+    with pytest.raises(pipeline.JobCancelled):
+        guarded.put_file(f'builds/{jid}/three', 'unused')
+    assert raw.puts == [f'builds/{jid}/one']
+    assert conn.execute('SELECT count(*) AS n FROM storage_cleanup WHERE job_id = %s', (jid,)).fetchone()['n'] == 2

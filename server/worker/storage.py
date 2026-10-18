@@ -43,8 +43,10 @@ class S3Storage:
     def delete_prefix(self, prefix):
         keys = self.list(prefix)
         for i in range(0, len(keys), 1000):
-            self.s3.delete_objects(Bucket=self.bucket,
-                                   Delete={"Objects": [{"Key": k} for k in keys[i:i + 1000]], "Quiet": True})
+            result = self.s3.delete_objects(Bucket=self.bucket,
+                                            Delete={"Objects": [{"Key": k} for k in keys[i:i + 1000]], "Quiet": True})
+            if result.get("Errors"):
+                raise OSError("Object storage rejected one or more deletions")
         return len(keys)
 
 

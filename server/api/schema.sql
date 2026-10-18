@@ -392,3 +392,58 @@ CREATE TABLE IF NOT EXISTS server_presence (
     version text,
     players jsonb NOT NULL DEFAULT '[]'
 );
+
+-- Durable cleanup intents outlive jobs and contain no account identifiers or photo data.
+-- Successful rows remain as low-frequency tombstones to catch late writes by old processes.
+CREATE TABLE IF NOT EXISTS storage_cleanup (
+    job_id uuid NOT NULL,
+    kind text NOT NULL CHECK (kind IN ('photos', 'builds')),
+    next_at timestamptz NOT NULL DEFAULT now(),
+    attempts integer NOT NULL DEFAULT 0,
+    failures integer NOT NULL DEFAULT 0,
+    last_error text,
+    cleaned_at timestamptz,
+    PRIMARY KEY (job_id, kind)
+);
+CREATE INDEX IF NOT EXISTS storage_cleanup_due_idx ON storage_cleanup (next_at);
+
+CREATE OR REPLACE FUNCTION sgl_enqueue_cleanup(jid uuid) RETURNS void
+LANGUAGE sql AS $$
+    INSERT INTO storage_cleanup (job_id, kind) VALUES (jid, 'photos'), (jid, 'builds')
+    ON CONFLICT (job_id, kind) DO UPDATE SET next_at = LEAST(storage_cleanup.next_at, now());
+$$;
+
+CREATE OR REPLACE FUNCTION sgl_cleanup_job_trigger() RETURNS trigger
+LANGUAGE plpgsql AS $$
+BEGIN
+    IF TG_OP = 'DELETE' THEN
+        PERFORM sgl_enqueue_cleanup(OLD.id);
+        RETURN OLD;
+    END IF;
+    PERFORM sgl_enqueue_cleanup(NEW.id);
+    RETURN NEW;
+END $$;
+DROP TRIGGER IF EXISTS jobs_cleanup_changed ON jobs;
+CREATE TRIGGER jobs_cleanup_changed AFTER INSERT OR UPDATE OF state ON jobs
+    FOR EACH ROW EXECUTE FUNCTION sgl_cleanup_job_trigger();
+DROP TRIGGER IF EXISTS jobs_cleanup_deleted ON jobs;
+CREATE TRIGGER jobs_cleanup_deleted BEFORE DELETE ON jobs
+    FOR EACH ROW EXECUTE FUNCTION sgl_cleanup_job_trigger();
+-- Backfill extant jobs; historical objects whose jobs were already deleted need a separate inventory.
+INSERT INTO storage_cleanup (job_id, kind)
+    SELECT j.id, k.kind FROM jobs j CROSS JOIN (VALUES ('photos'), ('builds')) k(kind)
+    ON CONFLICT DO NOTHING;
+
+-- The newest generation must still match the current slot and a ready build.
+CREATE OR REPLACE FUNCTION sgl_deploy_current(did bigint) RETURNS boolean
+LANGUAGE sql STABLE AS $$
+    SELECT EXISTS (
+        SELECT 1 FROM deploys d JOIN slots sl ON sl.n = d.slot
+        LEFT JOIN characters c ON c.id = d.character_id LEFT JOIN jobs j ON j.id = d.job_id
+        WHERE d.id = did AND d.state IN ('pending', 'deployed')
+          AND NOT EXISTS (SELECT 1 FROM deploys newer WHERE newer.slot = d.slot AND newer.id > d.id)
+          AND ((d.kind = 'placeholder' AND sl.character_id IS NULL)
+            OR (d.kind = 'character' AND sl.character_id = d.character_id AND c.slot = d.slot
+                AND c.state = 'ready' AND j.state = 'ready' AND j.character_id = c.id))
+    );
+$$;

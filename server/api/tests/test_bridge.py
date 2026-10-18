@@ -124,7 +124,7 @@ def test_deploy_flow(client, auth, conn, s3, bridge):
     # polling again doesn't duplicate
     assert len(client.get("/deploys/pending", headers=bridge).json()["deploys"]) == 1
     assert client.post(f"/deploys/{d['id']}", json={"state": "deployed"}, headers=bridge).status_code == 200
-    assert client.post(f"/deploys/{d['id']}", json={"state": "deployed"}, headers=bridge).status_code == 409
+    assert client.post(f"/deploys/{d['id']}", json={"state": "deployed"}, headers=bridge).status_code == 200
     assert client.post("/deploys/999", json={"state": "deployed"}, headers=bridge).status_code == 404
     assert client.post(f"/deploys/{d['id']}", json={"state": "meh"}, headers=bridge).status_code == 422
     assert client.get("/deploys/pending", headers=bridge).json()["deploys"] == []
