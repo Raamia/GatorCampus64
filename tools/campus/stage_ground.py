@@ -26,8 +26,11 @@ import stage_geom as G
 
 TILE = 20.48          # collision / UV tile (2 x 2 SM64 collision cells)
 TILE_OFF = 5.12       # half a cell: tile edges never sit on cell edges
-Z = {"base": -0.12, "lawn": -0.10, "forest": -0.10, "area": -0.08, "road": -0.06, "paint": -0.05,
-     "crossing": -0.04, "path": -0.03}
+# Keep the road surface visibly above grass, mapped paving, and plaza polygons.
+# A few centimetres of separation was not enough at long campus draw distances:
+# the lower surface could bleed through the asphalt in the z buffer.
+Z = {"base": -0.12, "lawn": -0.10, "forest": -0.10, "area": -0.08, "road": -0.02, "paint": -0.01,
+     "crossing": 0.01, "path": 0.03}
 POND_FLOOR = -2.2
 POND_SURFACE = -0.3
 # landmark ground holes are cut this much SMALLER in the collision ground, so the ground and the
@@ -227,17 +230,25 @@ def build(S):
         vis.flat_tris(tris, z, a["mat"], cell=TILE, ox=TILE_OFF, oy=TILE_OFF)
 
     # ---- roads
-    junctions = {}
+    node_roads, node_points = {}, {}
     for r in d["roads"]:
-        for p in (r["pts"][0], r["pts"][-1]):
-            k = (round(p[0] / 2), round(p[1] / 2))
-            junctions[k] = junctions.get(k, 0) + 1
-    node_count = {}
-    for r in d["roads"]:
+        if r["id"] in skip_ways:
+            continue
         for p in r["pts"]:
             k = (round(p[0] / 2), round(p[1] / 2))
-            node_count[k] = node_count.get(k, 0) + 1
-    hot = [T((k[0] * 2, k[1] * 2)) for k, c in node_count.items() if c >= 2]
+            widths = node_roads.setdefault(k, {})
+            widths[r["id"]] = max(widths.get(r["id"], 0.0), r["width"])
+            node_points.setdefault(k, []).append(p)
+    hot_records = []
+    for k, widths in node_roads.items():
+        if len(widths) < 2:
+            continue
+        samples = node_points[k]
+        # Use the source-node positions, not the 2 m clustering key, so a seam
+        # patch stays centred even when two ways have slightly different snaps.
+        p = (sum(q[0] for q in samples) / len(samples), sum(q[1] for q in samples) / len(samples))
+        hot_records.append((T(p), max(widths.values())))
+    hot = [p for p, _width in hot_records]
     hot_grid = {}
     for p in hot:
         hot_grid.setdefault((int(p[0] // 20), int(p[1] // 20)), []).append(p)
@@ -250,6 +261,19 @@ def build(S):
                     if math.dist(p, q) < rad:
                         return True
         return False
+
+    # Independent OSM road ribbons can leave tiny grass wedges at shared
+    # junction nodes, especially when the connected ways carry different
+    # widths. A low polygon asphalt join closes those seams and rounds the
+    # meeting point without changing the road edges along the rest of a block.
+    for p, width in hot_records:
+        # The diagonal gaps between two perpendicular road edges reach farther
+        # than either road's half-width. Cover the full corner envelope so
+        # grass cannot show through at a cross-junction.
+        radius = min(width * (2 ** 0.5) * 0.5 + 0.25, 10.0)
+        patch = [(p[0] + math.cos(i * math.tau / 12) * radius,
+                  p[1] + math.sin(i * math.tau / 12) * radius) for i in range(12)]
+        roads_acc.flat(patch, Z["road"] + 0.003, "asphalt")
 
     for r in sorted(d["roads"], key=lambda r: r["width"]):
         if r["id"] in skip_ways:
@@ -276,7 +300,8 @@ def build(S):
         if p["kind"] in ("crossing", "steps"):
             mat = p["mat"]
             tile = S.tiles[mat]
-            z = Z["crossing"] if p["kind"] == "crossing" else Z["path"]
+            # steps carry their own striped UVs: lift them off the sidewalk ribbons they overlap
+            z = Z["crossing"] if p["kind"] == "crossing" else Z["path"] + 0.03
             for quad, s0, s1 in G.ribbon(pts, w, extend=0.3 if p["kind"] == "crossing" else None):
                 q, whole = clip_ext(quad)
                 if not q or piece_in_hole(q):
@@ -287,7 +312,10 @@ def build(S):
             for quad, _s0, _s1 in G.ribbon(pts, w):
                 q, _ = clip_ext(quad)
                 if q and not piece_in_hole(q):
-                    roads_acc.flat(q, Z["path"], p["mat"])
+                    # a non-sidewalk ribbon (a mulch trail) sits 3 cm above the sidewalks it crosses
+                    # instead of z-fighting with them at the same height
+                    z = Z["path"] if p["mat"] == "sidewalk" else Z["path"] + 0.03
+                    roads_acc.flat(q, z, p["mat"])
 
     # ---- ponds: basin (visual + collision), translucent water surface, water box
     basin_v = S.acc("Pond basins visual", collision=False)

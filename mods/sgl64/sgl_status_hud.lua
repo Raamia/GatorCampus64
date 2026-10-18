@@ -58,7 +58,10 @@ local function draw_status_hud()
     -- Replace CoopDX's camera/Lakitu glyphs with a compact UF badge in the same corner.
     sgl_hud_rect(sw - 54, 203, 32, 18, 250, 110, 30, 255)
     sgl_hud_rect(sw - 52, 205, 28, 14, 20, 45, 95, 255)
-    sgl_hud_text_center("UF", sw - 38, 207, 0.34, { 255, 140, 35 }, 1)
+    -- FONT_HUD's coloured glyphs turned the tinted F red and sat high in the box: use the plain
+    -- font, vertically centred in the 14-unit inner box (FONT_NORMAL line = 32 units at scale 1)
+    djui_hud_set_font(FONT_NORMAL)
+    sgl_hud_text_center("UF", sw - 38, 205 + (14 - 32 * 0.34) / 2, 0.34, { 255, 140, 35 }, 1)
 end
 
 hook_event(HOOK_UPDATE, hide_vanilla_icons)

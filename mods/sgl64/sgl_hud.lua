@@ -318,6 +318,11 @@ function sgl_hud_marker(pos, label, col, me, noEdge)
         local w = sgl_hud_text_width(text, sc)
         local tx = math.max(4 + w / 2, math.min(W - 4 - w / 2, x - ux * 22))
         local ty = math.max(36, math.min(H - 44, y - uy * 22 - 5))
+        -- clamping to the screen edge can slide a long label back over its own arrow (a left/right edge
+        -- arrow at mid height): move the label just below the arrow, or above it near the bottom
+        if math.abs(tx - x) < w / 2 + 8 and math.abs(ty + 4 - y) < 12 then
+            ty = (y + 10 <= H - 44) and (y + 10) or (y - 20)
+        end
         sgl_hud_text_center(text, tx, ty, sc, col, 1)
     end
     return "edge"

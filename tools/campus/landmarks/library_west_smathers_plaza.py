@@ -1418,9 +1418,9 @@ def _build_plaza(ctx, V, C, P, log):
     # central square paving (OSM area w595211018) and the colonnade / Garden Terrace paving
     sq = _area_pts(ctx, "w595211018")
     if sq:
-        P.flat(_ccw(sq), PATH_Z + 0.005, "plaza_brick")
+        P.flat(_ccw(sq), PATH_Z + 0.005, "concrete")
     for x0, y0, x1, y1 in TERRACE_PAVING:
-        P.rect(x0, y0, x1, y1, PATH_Z, "plaza_brick")
+        P.rect(x0, y0, x1, y1, PATH_Z, "concrete")
 
     # ---- the six raised planters of the central square (OSM gardens), 0.6 m: step-up
     for aid in ("w595211010", "w595211012", "w595211013", "w595211014", "w595211015", "w595211016"):
@@ -1461,8 +1461,8 @@ def _build_plaza(ctx, V, C, P, log):
 
     # ---- plaza-edge terrace where the colonnade's eastern section stood (in front of Smathers)
     x0, y0, x1, y1, h = EDGE_TERRACE
-    V.box(x0, y0, 0.0, x1, y1, h, "brick_red", top="plaza_brick")
-    C.rect(x0, y0, x1, y1, h, "plaza_brick")
+    V.box(x0, y0, 0.0, x1, y1, h, "brick_red", top="concrete")
+    C.rect(x0, y0, x1, y1, h, "concrete")
     for bx0, bx1 in ((92.0, 100.0), (110.0, 118.0)):
         V.box(bx0, 246.5, h, bx1, 247.1, h + 0.45, "brick_red", top="limestone")
         C.rect(bx0, 246.5, bx1, 247.1, h + 0.45, "limestone")
