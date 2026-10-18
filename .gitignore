@@ -13,6 +13,15 @@ download/
 *.blend2
 
 .DS_Store
+*.swp
+*.swo
+*~
+
+# Clipboard screenshots pasted into the repo root while debugging: view, never commit
+/clipboard-*.png
+
+# Stray bytecode outside __pycache__/
+*.pyc
 **/.build/
 
 # Raw reference photos of friends and the school stay local (only game textures get committed)
