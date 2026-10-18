@@ -15,7 +15,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 WORKER = os.path.dirname(HERE)
 sys.path.insert(0, WORKER)  # server/worker
 SCHEMA_SQL = os.path.join(WORKER, "..", "api", "schema.sql")
-TABLES = "deploys, events, link_codes, links, slots, jobs, characters, users"
+TABLES = "generation_admissions, deploys, events, link_codes, links, slots, jobs, characters, users"
 
 
 def _wait(url, secs=30):

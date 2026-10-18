@@ -58,7 +58,7 @@ def test_claim_oldest_and_skip_locked(conn, pg):
     j_old, c_old = add_job(conn, "Old", "now() - interval '1 minute'")
     other = psycopg.connect(pg)
     # another worker holds the oldest row locked: we get the next one
-    other.execute("SELECT id FROM jobs WHERE id = %s FOR UPDATE", (j_old,))
+    other.execute("SELECT id FROM characters WHERE id = %s FOR UPDATE", (c_old,))
     got = db.claim_job(conn, "w1")
     assert got["id"] == j_new and got["name"] == "New"
     assert got["photos"] == [f"photos/{j_new}/0.jpg", f"photos/{j_new}/1.jpg"] and got["attempts"] == 1
@@ -194,3 +194,28 @@ def test_recover_orphans(conn):
     assert row(conn, "characters", cid)["state"] == "failed"
     assert s.deleted == [f"photos/{jid}/"]
     assert db.orphaned_jobs(conn, "w1") == []
+
+
+def test_progress_does_not_lock_job_before_character(conn, pg):
+    import time
+    from concurrent.futures import ThreadPoolExecutor
+    jid, cid = add_job(conn)
+    with psycopg.connect(pg) as deleting, ThreadPoolExecutor(max_workers=1) as executor:
+        deleting.execute('SELECT id FROM characters WHERE id = %s FOR UPDATE', (cid,))
+        def progress():
+            with db.connect(pg) as writer:
+                db.update_job(writer, jid, cid, state='build', step='build')
+        update = executor.submit(progress)
+        try:
+            deadline = time.monotonic() + 3
+            while time.monotonic() < deadline:
+                waiting = conn.execute("SELECT 1 FROM pg_stat_activity WHERE datname = current_database() "
+                                       "AND wait_event_type = 'Lock'").fetchone()
+                if waiting:
+                    break
+                time.sleep(.01)
+            assert waiting
+            deleting.execute('SELECT id FROM jobs WHERE id = %s FOR UPDATE NOWAIT', (jid,))
+        finally:
+            deleting.rollback()
+        update.result(timeout=3)

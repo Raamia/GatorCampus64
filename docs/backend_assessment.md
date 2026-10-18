@@ -1,5 +1,10 @@
 # Backend assessment
 
+**Remediation status:** the six prioritized findings below are addressed on this
+branch. Their descriptions preserve the pre-fix evidence. See
+[backend remediation](backend_remediation.md) for the resulting behavior,
+regression coverage, migration requirements, and remaining operational work.
+
 Assessment branch: `audit/backend-review`, based on local `origin/main` at
 the reviewed revision. The completed likeness branch is preserved separately. Pending
 integration branches and deployed source were not included in this snapshot.

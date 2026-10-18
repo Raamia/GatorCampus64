@@ -19,6 +19,7 @@ import logging
 import signal
 import sys
 import threading
+import uuid
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from sglbridge import config as config_mod  # noqa: E402
 from sglbridge.api import ApiClient, RetryQueue  # noqa: E402
+from sglbridge.outbox import DurableRetryQueue  # noqa: E402
 from sglbridge.auth import Auth0Config, DeviceFlowClient, IdTokenValidator, M2MTokenProvider  # noqa: E402
 from sglbridge.deploy import DeployLoop  # noqa: E402
 from sglbridge.events import event_payload, parse_line  # noqa: E402
@@ -51,6 +53,9 @@ class Bridge:
         self.leaderboards = leaderboards
         self.npc = npc
         self.players: dict[int, str] = {}
+        self.session_id = str(uuid.uuid4())
+        self.connections: dict[int, str] = {}
+        self.sequence = 0
         self._lock = threading.Lock()
 
     def players_online(self) -> int:
@@ -60,6 +65,9 @@ class Bridge:
     def on_game_start(self) -> None:
         with self._lock:
             self.players.clear()
+            self.connections.clear()
+            self.session_id = str(uuid.uuid4())
+            self.sequence = 0
         self.login.reset()
         self.inbox.reset()
         if self.leaderboards is not None:
@@ -71,12 +79,27 @@ class Bridge:
         """The game process ended: tell the API (/status) with an `exit` event."""
         with self._lock:
             self.players.clear()
+            self.connections.clear()
+        self.login.reset()
+        self.inbox.reset()
         self._forward({"t": "exit", "code": rc})
 
     def _forward(self, ev: dict[str, Any]) -> None:
         if self.queue is not None:
             at = dt.datetime.now(dt.timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
-            self.queue.put({"t": ev["t"], "payload": event_payload(ev), "at": at})
+            self.sequence += 1
+            # These fields are generated here, never trusted from game output.
+            payload = event_payload(ev)
+            if ev["t"] == "link_req":
+                payload.pop("code", None)  # one-time credential belongs only in /links
+            payload.update(session_id=self.session_id, event_id=str(uuid.uuid4()), sequence=self.sequence,
+                           identities=self.login.identities() if ev["t"] == "run" else {})
+            self.queue.put({"t": ev["t"], "payload": payload, "at": at})
+
+    def _login_context(self, gi: int, name: str) -> dict | None:
+        if self.players.get(gi) != name or gi not in self.connections:
+            return None
+        return {"session_id": self.session_id, "connection_id": self.connections[gi]}
 
     def on_line(self, line: str) -> None:
         ev, other = parse_line(line)
@@ -89,13 +112,16 @@ class Bridge:
         t = ev["t"]
         gi = ev.get("gi")
         name = str(ev.get("name") or "")
-        log.info("event %s %s", t, event_payload(ev))
+        logged = event_payload(ev)
+        if t == "link_req":
+            logged.pop("code", None)
+        log.info("event %s %s", t, logged)
         if t == "hello":
-            with self._lock:
-                self.players.clear()
+            self.on_game_start()
         elif t == "join" and isinstance(gi, int):
             with self._lock:
                 self.players[gi] = name
+                self.connections[gi] = str(uuid.uuid4())
             self.login.forget(gi)                 # a new player in that slot is not linked
             self.login.resend_verified()          # late joiners see every star
             if self.leaderboards is not None:
@@ -103,12 +129,15 @@ class Bridge:
         elif t == "leave" and isinstance(gi, int):
             with self._lock:
                 self.players.pop(gi, None)
+                self.connections.pop(gi, None)
             self.login.cancel(gi)
             self.login.forget(gi)
         elif t == "login_cancel" and isinstance(gi, int):
             self.login.cancel(gi)
         elif t == "login_req" and isinstance(gi, int):
-            self.login.on_login_req(gi, name)
+            context = self._login_context(gi, name)
+            if context:
+                self.login.on_login_req(gi, name, context)
         elif t == "run" and self.leaderboards is not None:
             self.leaderboards.kick()              # a new verified run may change a board
         elif t == "npc_ask" and self.npc is not None:
@@ -119,7 +148,9 @@ class Bridge:
         elif t == "link_req" and isinstance(gi, int):
             code = "".join(c for c in str(ev.get("code") or "") if c.isalnum()).upper()[:16]
             if code:
-                self.login.on_link_req(gi, name, code)
+                context = self._login_context(gi, name)
+                if context:
+                    self.login.on_link_req(gi, name, code, context)
             else:
                 self.inbox.push("login_failed", gi=gi, reason="bad_code")
         self._forward(ev)
@@ -152,7 +183,14 @@ def main() -> int:
             if e["t"] == "run" and leaderboards is not None:
                 leaderboards.kick()               # accepted: the board may have changed
 
-        queue = RetryQueue(send_event)
+        def stop_for_outbox_failure():
+            log.critical("Event could not be persisted; stopping game. Inspect the bridge outbox and disk space.")
+            if not stop.is_set():
+                stop.set()
+                threading.Thread(target=game.stop, daemon=True).start()
+
+        queue = DurableRetryQueue(send_event, Path(cfg.state_dir) / "events.sqlite3",
+                                  fatal=stop_for_outbox_failure)
         threads.append(threading.Thread(target=queue.run, args=(stop,), daemon=True, name="events"))
     else:
         log.warning("API not configured (API_URL / AUTH0_M2M_*): events are logged only, no deploys")

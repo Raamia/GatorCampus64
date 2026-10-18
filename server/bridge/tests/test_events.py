@@ -40,10 +40,12 @@ class FakeLogin:
     def __init__(self):
         self.calls = []
 
-    def on_login_req(self, gi, name):
+    def on_login_req(self, gi, name, context=None):
+        assert context and context["session_id"] and context["connection_id"]
         self.calls.append(("login", gi, name))
 
-    def on_link_req(self, gi, name, code):
+    def on_link_req(self, gi, name, code, context=None):
+        assert context and context["session_id"] and context["connection_id"]
         self.calls.append(("link", gi, name, code))
 
     def cancel(self, gi):
@@ -57,6 +59,9 @@ class FakeLogin:
 
     def resend_verified(self):
         self.calls.append(("resend",))
+
+    def identities(self):
+        return {}
 
 
 class ListQueue(list):
@@ -80,15 +85,18 @@ def test_bridge_routes_events(tmp_path):
     b.on_line('SGLEVT {"t":"leave","gi":1,"name":"A"}')
     b.on_line("some engine log line")
     assert b.players_online() == 1
-    assert login.calls == [("forget", 1), ("resend",), ("forget", 2), ("resend",), ("login", 1, "A"),
+    assert login.calls == [("reset",), ("forget", 1), ("resend",), ("forget", 2), ("resend",), ("login", 1, "A"),
                            ("link", 2, "B", "K7Q2XF"), ("cancel", 2), ("cancel", 1), ("forget", 1)]
     b.on_game_exit(-9)
-    assert q[-1]["t"] == "exit" and q[-1]["payload"] == {"code": -9} and b.players_online() == 0
+    assert q[-1]["t"] == "exit" and q[-1]["payload"]["code"] == -9 and b.players_online() == 0
     files, _ = read_modfs((tmp_path / "sav" / "sgl64.modfs").read_bytes())
     doc = json.loads(files["inbox.json"])
-    assert doc["cmds"][-1] == {"seq": 1, "t": "login_failed", "gi": 2, "reason": "bad_code"}
+    assert doc["cmds"] == []  # game exit clears commands for the old session
     assert [e["t"] for e in q][:8] == ["hello", "join", "join", "login_req", "link_req", "link_req", "login_cancel", "leave"]
-    assert q[1]["payload"] == {"gi": 1, "name": "A"} and q[1]["at"].endswith("Z")
+    assert q[1]["payload"]["gi"] == 1 and q[1]["at"].endswith("Z")
+    assert len({e["payload"]["event_id"] for e in q}) == len(q)
+    assert [e["payload"]["sequence"] for e in q] == list(range(1, len(q) + 1))
+    assert all('code' not in e['payload'] for e in q if e['t'] == 'link_req')
 
 
 def test_game_start_resets_players_and_inbox(tmp_path):
