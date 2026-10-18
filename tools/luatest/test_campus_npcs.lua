@@ -1,9 +1,4 @@
--- Offline test of mods/sgl64/sgl_campus_npcs.lua (the students walking the hub's sidewalks) in the multi-client
--- simulator: every client in the hub spawns 40 students, the 24 synced ones in the same places on every client, they
--- walk along the generated sidewalk links (sgl_campus_npc_routes.lua) and keep moving, a player arriving later sees
--- the synced ones exactly where the others do (each client fast-forwards from the epoch's start), the 16 ambient ones
--- start around the local player and follow them across campus, they only exist in the hub, and /crowd off|on hides
--- and restores them. Run: lua tools/luatest/test_campus_npcs.lua (run.sh).
+-- Offline multi-client coverage for the shared player-local campus crowd budget.
 local HERE = debug.getinfo(1, "S").source:match("^@(.*/)") or "./"
 local Sim = dofile(HERE .. "sim.lua")
 local C = Sim.C
@@ -34,45 +29,40 @@ end
 
 local HUB = C.LEVEL_CASTLE_GROUNDS
 
--- a host and a friend; clock.t drives get_time() on both (tick() keeps it in step with the frames)
-local function setup()
+local function setup(count, dedicated)
+    math.randomseed(7421)
     local w = Sim.new({ files = Sim.ALL_FILES, built = Sim.built_on_disk() })
-    local H = w:connect("Host")
-    local F = w:connect("Friend")
-    local clock = { t = 1800000000 }
-    for _, c in ipairs({ H, F }) do c.stubs.get_time = function() return clock.t end end
-    local function tick(seconds)
-        for _ = 1, seconds do
-            w:step(30)
-            clock.t = clock.t + 1
-        end
+    local clients = {}
+    for i = 1, count do
+        local c = w:connect("Player " .. i)
+        c.stubs.gServerSettings.headlessServer = dedicated and 1 or 0
+        c.stubs.mod_fs_hide_errors = function() end
+        c.stubs.mod_fs_reload = function() return nil end
+        c.stubs.print = function() end
+        w:warp(c, HUB, 1, 0)
+        c.pos.x, c.pos.z = 8320, -4440
+        clients[i] = c
     end
-    return w, H, F, clock, tick
+    return w, table.unpack(clients)
 end
 
 local function students(c) return Sim.objects_with(c, c.env.id_bhvSglCrowd) end
-
--- [index into SGL_CROWD] = { x, y, z }; synced = true: only the 24 synced students, false: only the ambient ones
-local function positions(c, synced)
+local function positions(c)
     local out = {}
-    for _, o in ipairs(students(c)) do
-        local s = Sim.raw(o)
-        local isSynced = s.oBehParams <= c.env.SGL_CROWD_SYNCED
-        if synced == nil or synced == isSynced then out[s.oBehParams] = { s.oPosX, s.oPosY, s.oPosZ } end
-    end
+    for _, o in ipairs(students(c)) do out[o.oBehParams] = { o.oPosX, o.oPosY, o.oPosZ } end
     return out
 end
-
-local function count(t)
-    local n = 0
-    for _ in pairs(t) do n = n + 1 end
-    return n
-end
-
-local function farthest_from(c, x, z)
+local function farthest_from(c)
     local worst = 0
-    for _, p in pairs(positions(c, false)) do worst = math.max(worst, math.sqrt((p[1] - x) ^ 2 + (p[3] - z) ^ 2)) end
+    for _, o in ipairs(students(c)) do
+        worst = math.max(worst, math.sqrt((o.oPosX - c.pos.x)^2 + (o.oPosZ - c.pos.z)^2))
+    end
     return worst
+end
+local function total(w)
+    local n = 0
+    for _, c in ipairs(w.clients) do if c.connected then n = n + #students(c) end end
+    return n
 end
 
 -- distance from (x, z) to the nearest sidewalk link
@@ -90,99 +80,149 @@ local function off_route(c, x, z)
     return best
 end
 
-test("every client in the hub sees 40 students, the 24 synced ones in the same places", function()
-    local w, H, F, _, tick = setup()
-    w:warp(H, HUB, 1, 0)
-    w:warp(F, HUB, 1, 0)
-    tick(2)
-    check(#H.env.SGL_CROWD == 40, "40 students load (got " .. #H.env.SGL_CROWD .. ")")
-    check(H.env.SGL_CROWD_SYNCED == 24, "24 of them synced")
-    check(#students(H) == 40 and #students(F) == 40, "40 student objects on each client")
-    local ph, pf = positions(H, true), positions(F, true)
-    local same = true
-    for k, p in pairs(ph) do
-        local q = pf[k]
-        if q == nil or math.abs(p[1] - q[1]) > 0.01 or math.abs(p[3] - q[3]) > 0.01 then same = false end
-    end
-    check(same and count(ph) == 24, "host and friend place every synced student identically")
-    local worst = 0
-    for _, p in pairs(positions(H)) do worst = math.max(worst, off_route(H, p[1], p[3])) end
-    check(worst <= 36, string.format("every student is on a sidewalk link (worst %.0f units off)", worst))
-    for _, o in ipairs(students(H)) do
-        local info = Sim.raw(o).header.gfx.animInfo
-        if not check(info.curAnim ~= nil and info.animYTrans == 189, "students play Mario's animations") then break end
+test("two players split 24 students; all stay on sidewalks and animate", function()
+    local w, H, F = setup(2)
+    w:step(120)
+    check(#H.env.SGL_CROWD == 40, "40 models remain available for variety")
+    check(#students(H) == 12 and #students(F) == 12, "12 local students per player, 24 total")
+    check(H.env.sgl_crowd_quota() == 12 and F.env.sgl_crowd_quota() == 12, "equal allocation")
+    for _, c in ipairs({H, F}) do
+        check(farthest_from(c) <= c.env.SGL_CROWD_AROUND.recycle, "students are nearby")
+        for _, o in ipairs(students(c)) do
+            check(off_route(c, o.oPosX, o.oPosZ) <= 36, "on a safe sidewalk link")
+            local info = Sim.raw(o).header.gfx.animInfo
+            check(info.curAnim ~= nil and info.animYTrans == 189, "Mario-rigged animations")
+        end
     end
 end)
 
-test("they keep walking, and stay on the sidewalks", function()
-    local w, H, _, _, tick = setup()
-    w:warp(H, HUB, 1, 0)
-    tick(1)
-    local before = positions(H)
-    tick(20)
-    local after = positions(H)
-    local moved, worst = 0, 0
-    for k, p in pairs(after) do
-        local q = before[k]
-        if math.abs(p[1] - q[1]) + math.abs(p[3] - q[3]) > 200 then moved = moved + 1 end
-        worst = math.max(worst, off_route(H, p[1], p[3]))
-    end
-    check(moved >= 30, "most students walked somewhere in 20 s (" .. moved .. " of 40)")
-    check(worst <= 36, string.format("still on the sidewalks (worst %.0f units off)", worst))
+test("one player is capped at 12; growth is at most two per half second", function()
+    local w, H = setup(1)
+    w:step(1)
+    check(#students(H) <= 2, "bounded initial spawn")
+    w:step(14)
+    check(#students(H) <= 2, "no per-frame spawn burst")
+    w:step(150)
+    check(#students(H) == 12, "solo cap leaves excess budget unused")
+    check(Sim.cmd(H, "crowd", "budget 36"), "host can choose a busier budget")
+    w:step(60)
+    check(#students(H) == 12, "higher server budget still respects solo cap")
 end)
 
-test("a player arriving later sees them where everyone else does", function()
-    local w, H, F, _, tick = setup()
-    w:warp(H, HUB, 1, 0)
+test("joins and departures rebalance without rebuilding retained students", function()
+    local w, H, F = setup(2)
+    w:step(120)
+    local retained = students(H)[1]
+    local J = w:connect("Late arrival")
+    w:warp(J, HUB, 1, 0)
+    J.pos.x, J.pos.z = -1350, 16700
+    check(J.env.sgl_crowd_quota() == 0, "late arrival waits for host roster")
+    w:step(150)
+    check(#students(H) == 8 and #students(F) == 8 and #students(J) == 8, "three equal shares")
+    check(total(w) == 24, "total budget preserved after join")
+    check(H.env.SGL_CROWD[retained.oBehParams].obj == retained, "retained object keeps its walk")
+    check(farthest_from(J) <= J.env.SGL_CROWD_AROUND.hard, "late arrival spawns by their own position")
+    w:disconnect(F)
+    w:step(150)
+    check(#students(H) == 12 and #students(J) == 12, "departure returns equal shares to survivors")
+end)
+
+test("twelve human players get two each, headless host gets none", function()
+    local w = setup(13, true)
+    w:step(120)
+    check(#students(w.clients[1]) == 0, "headless process spawns no crowd")
+    for i = 2, 13 do
+        local c = w.clients[i]
+        check(c.env.sgl_crowd_quota() == 2 and #students(c) == 2, "player " .. i .. " gets two")
+    end
+    check(total(w) == 24, "24 across the entire server")
+end)
+
+test("stage visits, local off, and no-path positions do not give others extra shares", function()
+    local w, H, F = setup(2)
+    w:step(120)
     w:warp(F, C.LEVEL_BOB, 1, 1)
-    tick(1)
-    check(#students(F) == 0, "no students outside the hub")
-    tick(95)
+    w:step(60)
+    check(#students(F) == 0 and #students(H) == 12, "no students in stages; visitor remains in denominator")
+    w:warp(F, HUB, 2, 0)
+    w:step(60)
+    check(#students(F) == 0, "no outdoor crowd in an unsupported hub area")
     w:warp(F, HUB, 1, 0)
-    w:step(1)   -- both spawned / stepped this frame
-    local ph, pf = positions(H, true), positions(F, true)
-    local worst = 0
-    for k, p in pairs(ph) do
-        local q = pf[k]
-        worst = math.max(worst, q and math.abs(p[1] - q[1]) + math.abs(p[3] - q[3]) or math.huge)
+    F.pos.x, F.pos.z = 8320, -4440
+    w:step(120)
+    check(#students(F) == 12, "return repopulates near the player")
+    check(Sim.cmd(F, "crowd", "off"), "local toggle accepted")
+    w:step(60)
+    check(#students(F) == 0 and #students(H) == 12, "off is local and does not increase host share")
+    Sim.cmd(F, "crowd", "on")
+    F.pos.x, F.pos.z = 1000000, 1000000
+    w:step(120)
+    check(#students(F) == 0, "no fallback crowd when far from all sidewalks")
+    F.pos.x, F.pos.z = 8320, -4440
+    w:step(120)
+    check(#students(F) == 12, "recovers when player returns to sidewalks")
+end)
+
+test("walking and teleporting keep the crowd near the player", function()
+    local w, H = setup(1)
+    w:step(120)
+    local before = positions(H)
+    w:step(600)
+    local moved = 0
+    for k, p in pairs(positions(H)) do
+        local q = before[k]
+        if q and math.abs(p[1]-q[1]) + math.abs(p[3]-q[3]) > 100 then moved = moved + 1 end
+        check(off_route(H, p[1], p[3]) <= 36, "walking stays on sidewalks")
     end
-    check(worst < 20, string.format("late arrival matches the host (worst %.1f units apart)", worst))
+    check(moved >= 6, "students loiter and stroll rather than freezing")
+    H.pos.x, H.pos.z = 8391, -16043
+    w:step(120)
+    check(#students(H) > 0 and farthest_from(H) <= H.env.SGL_CROWD_AROUND.hard, "relocates to Library West")
+    w:step(900)
+    check(farthest_from(H) <= H.env.SGL_CROWD_AROUND.hard + 70, "no map-wide drift over time")
+    H.pos.y = 10000
+    w:step(30)
+    check(#students(H) == 0, "no distant crowd beneath a player on a roof")
 end)
 
-test("the ambient students stay around the player wherever they go", function()
-    local w, H, _, _, tick = setup()
-    w:warp(H, HUB, 1, 0)
-    tick(1)
-    local A = H.env.SGL_CROWD_AROUND
-    check(count(positions(H, false)) == 16, "16 ambient students")
-    local m = Sim.raw(H.ms[0]).pos
-    check(farthest_from(H, m.x, m.z) <= A.far + 200, "they start around the player")
-    -- walk (well, teleport) across campus to Library West: they catch up, out of view
-    m.x, m.z = 8391, -16043
-    tick(3)
-    local far = farthest_from(H, m.x, m.z)
-    check(far <= A.recycle, string.format("all 16 are around the player at Library West (farthest %.0f)", far))
-    tick(30)
-    far = farthest_from(H, m.x, m.z)
-    check(far <= A.recycle + 200, string.format("and stay around while the player waits (farthest %.0f)", far))
-    local worst = 0
-    for _, p in pairs(positions(H, false)) do worst = math.max(worst, off_route(H, p[1], p[3])) end
-    check(worst <= 36, string.format("still on the sidewalks (worst %.0f units off)", worst))
+test("hidden spawning never falls back into view and hard leash removes visible distant NPCs", function()
+    local w, H = setup(1)
+    w:step(120)
+    local cam = H.stubs.gLakituState
+    -- From far west all campus paths fall inside the forward cone.
+    cam.curPos.x, cam.curPos.z = -1000000, 0
+    cam.curFocus.x, cam.curFocus.z = 0, 0
+    H.pos.x, H.pos.z = 8391, -16043
+    w:step(120)
+    check(#students(H) == 0, "old visible crowd removed; no in-view respawn fallback")
+    cam.curFocus.x = -2000000
+    w:step(120)
+    check(#students(H) == 12, "turning away allows hidden spawns")
 end)
 
-test("/crowd off hides them and /crowd on brings them back", function()
-    local w, H, F, _, tick = setup()
-    w:warp(H, HUB, 1, 0)
-    w:warp(F, HUB, 1, 0)
-    tick(1)
-    check(Sim.cmd(H, "crowd", "off") == true, "/crowd off accepted")
-    w:step(1)
-    check(#students(H) == 0, "no students after /crowd off")
-    check(#students(F) == 40, "only the local client hides them")
-    check(Sim.cmd(H, "crowd", "on") == true, "/crowd on accepted")
-    w:step(1)
-    check(#students(H) == 40, "40 students after /crowd on")
-    check(Sim.cmd(H, "crowd", "sideways") == false, "unknown argument shows the usage")
+test("host controls budgets; clients cannot change them; rounding never exceeds budget", function()
+    local w, H, F, J = setup(3)
+    w:step(120)
+    local allocation = H.env.gGlobalSyncTable.sglCrowdAllocation
+    Sim.cmd(F, "crowd", "budget 40")
+    w:step(30)
+    check(H.env.gGlobalSyncTable.sglCrowdAllocation == allocation, "non-host command leaves allocation alone")
+    check(Sim.cmd(H, "crowd", "budget 41") == false, "reject over maximum")
+    check(Sim.cmd(H, "crowd", "budget -1") == false, "reject negative")
+    check(Sim.cmd(H, "crowd", "budget 1.5") == false, "reject fractional")
+    check(Sim.cmd(H, "crowd", "sideways") == false, "reject unknown command")
+    Sim.cmd(H, "crowd", "budget 10")
+    w:step(60)
+    check(#students(H) == 3 and #students(F) == 3 and #students(J) == 3, "equal floor division, one unused")
+    Sim.cmd(H, "crowd", "budget 0")
+    w:step(30)
+    check(total(w) == 0, "zero disables crowd for everyone")
+    Sim.cmd(H, "crowd", "budget 2")
+    w:step(60)
+    check(total(w) == 0, "less budget than players does not privilege any player")
+    Sim.cmd(H, "crowd", "budget 12")
+    w:step(120)
+    check(total(w) == 12, "budget restored without warp")
 end)
 
 print(string.format("test_campus_npcs: %d passed, %d failed", passed, failed))
