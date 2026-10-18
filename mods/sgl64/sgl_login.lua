@@ -262,6 +262,20 @@ local function close_by_player()
     close_panel()
 end
 
+-- Temporary diagnostic for the "Login is only available on the hosted server" report: prints the
+-- raw gServerSettings.headlessServer this client actually received in its join packet, and whether
+-- /login's own check (host_local_index(), mirrored here read-only) would currently pass. Remove
+-- once the live headlessServer sync is confirmed working (or fixed).
+local function on_sglhost_command()
+    local hs = gServerSettings.headlessServer
+    local headless = hs ~= nil and hs ~= 0 and hs ~= false
+    local isServer = network_is_server()
+    djui_chat_message_create(string.format(
+        "\\#ffd700\\SGL host check:\\#dcdcdc\\ is_server=%s headlessServer=%s (%s) login_would_work=%s",
+        tostring(isServer), tostring(hs), type(hs), tostring((not isServer) and headless)))
+    return true
+end
+
 local function on_login_command(msg)
     msg = trim(msg):lower()
     if msg == "cancel" or msg == "close" or msg == "off" then
@@ -489,4 +503,5 @@ hook_event(HOOK_ON_PLAYER_DISCONNECTED, on_player_disconnected)
 hook_event(HOOK_ON_NAMETAGS_RENDER, on_nametags_render)
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 hook_chat_command("login", "[cancel] Log in with Gator Pass (QR code) to get verified and your own gator", on_login_command)
+hook_chat_command("sglhost", "Debug: print this client's headlessServer sync state", on_sglhost_command)
 hook_chat_command("link", "<code> Link your gatorcamp.us account with the code from the website", on_link_command)
