@@ -229,10 +229,13 @@ def main():
         })
         footprints_for_trees.append(pts)
 
+    # Plaza of the Americas is lawn in this version. Keep this art override
+    # local to these mapped beds rather than changing woodchips campus-wide.
+    plaza_lawn_ids = {"w595674176", "w595674178", "w595959873", "w595959877"}
     # ------------------------------------------------------------------ ground areas
     out_areas, waters, fountains = [], [], []
     for a in areas:
-        cls = ground_class(a["tags"])
+        cls = "lawn" if a["id"] in plaza_lawn_ids else ground_class(a["tags"])
         if cls is None:
             continue
         rings = []
