@@ -18,8 +18,8 @@
   338.0
  ],
  "extent_half_m": 324.0,
- "collision_tris": 8789,
- "visual_tris": 56971,
+ "collision_tris": 8829,
+ "visual_tris": 59280,
  "collision_by_object": {
   "Ground collision": 1552,
   "Pond basins collision": 195,
@@ -27,7 +27,7 @@
   "Buildings collision": 3232,
   "Trees collision": 1038,
   "Boundary walls": 192,
-  "Dressing collision": 194,
+  "Dressing collision": 234,
   "LM century_tower collision": 370,
   "LM university_auditorium collision": 298,
   "LM The Hub collision": 207,
@@ -50,7 +50,7 @@
   "Backdrop buildings": 4376,
   "Trees visual": 16331,
   "Tree line": 560,
-  "Dressing visual": 3712,
+  "Dressing visual": 5909,
   "LM century_tower visual": 1474,
   "LM university_auditorium visual": 1199,
   "LM The Hub visual": 704,
@@ -58,7 +58,7 @@
   "LM library_west.visual": 945,
   "LM library_colonnade.visual": 278,
   "LM smathers_library.visual": 1127,
-  "LM plaza_americas.visual": 682,
+  "LM plaza_americas.visual": 794,
   "LM plaza_americas.walks": 132,
   "LM marston_visual": 639,
   "LM turlington_visual": 922,
@@ -146,7 +146,7 @@
    ],
    "parts": 9,
    "collision_tris": 604,
-   "visual_tris": 3164,
+   "visual_tris": 3276,
    "budget_collision": 670,
    "budget_visual": 2800,
    "per_landmark": {
@@ -170,7 +170,7 @@
     },
     "plaza_of_the_americas": {
      "collision_tris": 86,
-     "visual_tris": 814,
+     "visual_tris": 926,
      "budget_collision": 120,
      "budget_visual": 900
     }
@@ -3803,7 +3803,13 @@
      83.0
     ]
    ],
-   "skipped": [],
+   "skipped": [
+    [
+     "lawn landscape mass",
+     74.0,
+     54.0
+    ]
+   ],
    "statues": [
     {
      "name": "Auditorium lawn gator",
@@ -3813,6 +3819,28 @@
      ],
      "facing_deg": 180.0
     }
+   ],
+   "landscape_masses": [
+    [
+     6.0,
+     58.0
+    ],
+    [
+     72.0,
+     56.5
+    ],
+    [
+     0.0,
+     96.5
+    ],
+    [
+     24.0,
+     76.0
+    ],
+    [
+     56.0,
+     62.0
+    ]
    ],
    "shrubs": [
     [
@@ -3840,27 +3868,11 @@
      75.0
     ],
     [
-     6.0,
-     58.0
-    ],
-    [
-     72.0,
-     58.0
-    ],
-    [
-     0.0,
-     98.0
-    ],
-    [
-     74.0,
-     54.0
-    ],
-    [
      23.0,
      66.5
     ],
     [
-     55.0,
+     53.5,
      66.5
     ],
     [
@@ -3870,6 +3882,10 @@
     [
      70.0,
      97.0
+    ],
+    [
+     75.5,
+     52.5
     ]
    ],
    "hammocks": [
@@ -3897,23 +3913,23 @@
  "collision_repair": {
   "area_1": {
    "vertices": [
-    6761,
-    6742
+    6801,
+    6782
    ],
    "welded_vertices": 19,
    "collapsed_tris": 28,
    "tjunction_splits": 240,
    "triangles": [
-    8783,
-    8995
+    8823,
+    9035
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [],
-  "collision_tris": 8995,
-  "render_tris": 56971,
+  "collision_tris": 9035,
+  "render_tris": 59280,
   "lua_names": [
    "SGL_HUB_SIGN_CENTURY_TOWER",
    "SGL_HUB_SIGN_FINAL_EXAM",

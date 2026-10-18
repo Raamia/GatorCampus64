@@ -38,9 +38,12 @@ HUB_LAWN_SHRUBS = [
     # Existing beds give the Auditorium approach a small social-garden feel.
     (14.0, 84.0), (60.0, 84.0), (17.0, 96.0), (57.0, 96.0), (18.0, 75.0), (58.0, 75.0),
     # Continue the planting around the outer lawn edges, leaving the central view and paths open.
-    (6.0, 58.0), (72.0, 58.0), (0.0, 98.0), (74.0, 54.0),
-    (23.0, 68.0), (55.0, 68.0), (8.0, 97.0), (70.0, 97.0),
+    (23.0, 68.0), (55.0, 68.0), (8.0, 97.0), (70.0, 97.0), (74.0, 54.0),
 ]
+# Four larger, staggered planting islands make the open Auditorium lawn feel enclosed at human scale.
+# They sit in broad grass pockets and are placed with clearance for their full footprint.
+HUB_LAWN_MASSES = [(6.0, 58.0), (72.0, 58.0), (0.0, 98.0), (74.0, 54.0),
+                   (24.0, 76.0), (56.0, 62.0)]
 NUDGES = [(0.0, 0.0), (1.5, 0.0), (-1.5, 0.0), (0.0, 1.5), (0.0, -1.5), (1.5, 1.5), (-1.5, -1.5),
           (1.5, -1.5), (-1.5, 1.5), (3.0, 0.0), (-3.0, 0.0), (0.0, 3.0), (0.0, -3.0)]
 
@@ -67,7 +70,7 @@ def _on_walk(S, x, y, pad):
     return False
 
 
-def _place(S, probe, taken, mx, my, radius, walk_pad=None):
+def _place(S, probe, taken, mx, my, radius, walk_pad=None, road_pad=None):
     """First nudge of map point (mx, my) with ground floor (z ~ 0), no collision within radius at
     0.6 m and 2.0 m, off roads (and walks when walk_pad is set) and away from items already placed.
     Returns stage (x, y) or None."""
@@ -80,7 +83,7 @@ def _place(S, probe, taken, mx, my, radius, walk_pad=None):
         roof = probe.floor(x, y, 150.0)      # open sky above (no roof, overhang or canopy)
         if roof is not None and roof > 0.3:
             continue
-        if _on_road(S, x, y, 0.6 + radius * 0.5):
+        if _on_road(S, x, y, 0.6 + radius * 0.5 if road_pad is None else road_pad):
             continue
         if walk_pad is not None and _on_walk(S, x, y, walk_pad):
             continue
@@ -173,6 +176,53 @@ def shrub_bed(vis, x, y, key):
                  ring(sx, sy, radius, height * 0.45, 7, rot + 0.12, f"{key}:{i}:mid", jitter=0.12),
                  ring(sx, sy, radius * 0.62, height * 0.78, 7, rot + 0.24, f"{key}:{i}:high", jitter=0.10)]
         blob(vis, rings, (sx, sy, height), (sx, sy, 0.04), "leaves_oak" if i != 1 else "leaves_oak2")
+    for i in range(4):
+        a = rnd_key(f"{key}:flower:{i}") * math.tau
+        flower(vis, x + 1.17 * math.cos(a), y + 0.72 * math.sin(a), f"{key}:flower:{i}",
+               "white_trim" if i % 2 == 0 else "banner_orange")
+
+
+def flower(vis, x, y, key, petal_mat):
+    """A small low-poly campus bloom tucked into the edge of a planting bed."""
+    trunk(vis, x, y, 0.018, 0.03, 0.28, 4, "leaves_oak2", key + ":stem")
+    z = 0.30
+    radius = 0.105
+    for i in range(5):
+        a = i * math.tau / 5
+        ca, sa = math.cos(a), math.sin(a)
+        side = 0.045
+        pts = [(x + ca * 0.035, y + sa * 0.035, z),
+               (x + ca * radius - sa * side, y + sa * radius + ca * side, z),
+               (x + ca * radius + sa * side, y + sa * radius - ca * side, z)]
+        uv = [(0.1, 0.62)] * 3 if petal_mat == "banner_orange" else None
+        vis.poly(pts, petal_mat, uv)
+    uv = [(0.1, 0.62)] * 4
+    vis.poly([(x - 0.055, y, z + 0.01), (x, y + 0.055, z + 0.01),
+              (x + 0.055, y, z + 0.01), (x, y - 0.055, z + 0.01)], "banner_orange", uv)
+
+
+def dense_planting(vis, col, x, y, key):
+    """A broad, staggered native shrub island that breaks long lawn sightlines without trees."""
+    outer = ring(x, y, 3.55, 0.025, 14, rnd_key(key) * math.tau, key + ":bed", jitter=0.06, ry=1.55)
+    center = (x, y, 0.026)
+    for i in range(len(outer)):
+        vis.poly([center, outer[i], outer[(i + 1) % len(outer)]], "mulch")
+    shrubs = ((-2.35, 0.10, 0.83, 1.28), (-1.15, -0.18, 1.02, 1.55),
+              (0.05, 0.18, 1.15, 1.72), (1.30, -0.12, 1.00, 1.48), (2.38, 0.15, 0.82, 1.26))
+    for i, (dx, dy, radius, height) in enumerate(shrubs):
+        sx, sy = x + dx, y + dy
+        rot = rnd_key(f"{key}:mass:{i}") * math.pi
+        rings = [ring(sx, sy, radius * 0.62, 0.04, 8, rot, f"{key}:{i}:low", jitter=0.06, ry=radius * 0.54),
+                 ring(sx, sy, radius, height * 0.43, 8, rot + 0.12, f"{key}:{i}:mid", jitter=0.08, ry=radius * 0.76),
+                 ring(sx, sy, radius * 0.66, height * 0.78, 8, rot + 0.24, f"{key}:{i}:high", jitter=0.06, ry=radius * 0.52)]
+        blob(vis, rings, (sx, sy, height), (sx, sy, 0.04), "leaves_oak" if i % 2 == 0 else "leaves_oak2")
+    for i in range(9):
+        a = 2.0 * math.pi * i / 9 + 0.12
+        flower(vis, x + 2.72 * math.cos(a), y + 1.10 * math.sin(a), f"{key}:flower:{i}",
+               "white_trim" if i % 3 else "banner_orange")
+    if col is not None:
+        # Low planter-like collision keeps players from walking through the fuller shrubs; camera may pass.
+        _obox(col, x, y, 0.0, 3.12, 1.30, 0.0, 1.36, "COL nocam", None)
 
 
 def table(vis, col, x, y, mat):
@@ -316,6 +366,15 @@ def build(S, probe, avoid=()):
             table(vis, col, p[0], p[1], cloth)
             taken.append((p[0], p[1], 1.3))
             rep["tables"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+        rep["landscape_masses"] = []
+        for i, (mx, my) in enumerate(HUB_LAWN_MASSES):
+            p = _place(S, probe, taken, mx, my, 3.6, walk_pad=3.8, road_pad=3.8)
+            if p is None:
+                rep["skipped"].append(("lawn landscape mass", mx, my))
+                continue
+            dense_planting(vis, col, p[0], p[1], f"auditorium_lawn_mass{i}")
+            taken.append((p[0], p[1], 3.6))
+            rep["landscape_masses"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
         rep["shrubs"] = []
         for i, (mx, my) in enumerate(HUB_LAWN_SHRUBS):
             p = _place(S, probe, taken, mx, my, 1.35, walk_pad=0.25)
@@ -345,6 +404,7 @@ def build(S, probe, avoid=()):
     print(f"SGL: dressing: {len(rep['lamps'])} lamp posts, {len(rep['benches'])} benches, "
           f"{len(rep['planters'])} planters, {len(rep['tables'])} tables, "
           f"{len(rep.get('statues', []))} statues, {len(rep.get('shrubs', []))} shrub beds, "
+          f"{len(rep.get('landscape_masses', []))} large planting islands, "
           f"{len(rep['hammocks'])} hammocks; skipped {rep['skipped']}")
     return poles
 

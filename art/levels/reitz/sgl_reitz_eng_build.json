@@ -19,7 +19,7 @@
  ],
  "extent_half_m": 324.0,
  "collision_tris": 9427,
- "visual_tris": 78215,
+ "visual_tris": 79359,
  "collision_by_object": {
   "Ground collision": 1781,
   "Pond basins collision": 259,
@@ -46,7 +46,7 @@
   "Backdrop buildings": 2305,
   "Trees visual": 43487,
   "Tree line": 560,
-  "Dressing visual": 2344,
+  "Dressing visual": 2464,
   "LM malachowsky_hall visual": 1086,
   "LM malachowsky_hall paving": 24,
   "LM reitz_union visual": 1803,
@@ -55,7 +55,7 @@
   "LM weil_hall courtyard paving": 4,
   "LM engineering_clock_tower visual": 210,
   "LM engineering_plaza paving": 32,
-  "LM engineering_plaza visual": 392
+  "LM engineering_plaza visual": 1416
  },
  "landmark_modules": [
   {
@@ -163,7 +163,7 @@
    ],
    "parts": 8,
    "collision_tris": 393,
-   "visual_tris": 1561,
+   "visual_tris": 2585,
    "budget_collision": 360,
    "budget_visual": 1300,
    "per_landmark": {
@@ -181,7 +181,7 @@
     },
     "engineering_plaza": {
      "collision_tris": 76,
-     "visual_tris": 424,
+     "visual_tris": 1448,
      "budget_collision": null,
      "budget_visual": null
     }
@@ -2617,7 +2617,9 @@
    "barriers_removed": [],
    "fountains_removed": [],
    "buildings_overlapped": [],
-   "shadow_hiding_faces": {}
+   "shadow_hiding_faces": {
+    "LM engineering_plaza visual": 16
+   }
   },
   "buildings": [
    {
@@ -4711,7 +4713,7 @@
    "13100 static collision triangles in the largest area (22645 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
   ],
   "collision_tris": 22645,
-  "render_tris": 226511,
+  "render_tris": 227655,
   "lua_names": [],
   "fog_patched": [
    319,

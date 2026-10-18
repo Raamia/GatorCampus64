@@ -118,6 +118,7 @@ _PALETTE_NAMES = (
     "brick_red", "brick_dark", "limestone", "roof_tile_red", "roof_dark", "copper_green",
     "window_dark", "window_glass", "door_wood", "concrete", "metal_gray", "plaza_brick", "grass",
     "path", "water", "dark_trim", "white_trim", "rock", "bronze", "leaves_oak", "leaves_oak2",
+    "banner_orange",
 )
 _FALLBACK_TILE = {"window_glass": 3.0, "grass": 4.0, "path": 3.0, "water": 6.0, "rock": 3.0}
 _FALLBACK_COLOR = {
@@ -126,6 +127,7 @@ _FALLBACK_COLOR = {
     "door_wood": "#6B4226", "concrete": "#B8B4AA", "metal_gray": "#8A8E92", "plaza_brick": "#A65A42",
     "grass": "#5F9A3F", "path": "#C6C0B2", "water": "#3C78B4", "dark_trim": "#3A3430",
     "white_trim": "#E6E2D8", "rock": "#8C8272",
+    "banner_orange": "#F05A28",
 }
 
 LW_ID = "r12122775/196848215"
@@ -1424,6 +1426,19 @@ def _shrub_bed(V, x, y, scale=1.0, phase=0.0):
     _shrub_lobe(V, x - 0.34 * scale, y, 0.63 * scale, 0.52 * scale, 0.72 * scale, phase)
     _shrub_lobe(V, x + 0.34 * scale, y + 0.08 * scale, 0.64 * scale, 0.52 * scale,
                 0.82 * scale, phase + 0.35)
+    for i in range(4):
+        a = phase + i * math.pi / 2 + 0.3
+        fx, fy = x + 0.86 * scale * math.cos(a), y + 0.58 * scale * math.sin(a)
+        V.wall((fx, fy), (fx + 0.025, fy), 0.03, 0.29, "leaves_oak2")
+        for k in range(5):
+            t = a + k * 2 * math.pi / 5
+            side = 0.035 * scale
+            pts = [(fx, fy, 0.30),
+                   (fx + 0.13 * scale * math.cos(t) - side * math.sin(t),
+                    fy + 0.13 * scale * math.sin(t) + side * math.cos(t), 0.30),
+                   (fx + 0.13 * scale * math.cos(t) + side * math.sin(t),
+                    fy + 0.13 * scale * math.sin(t) - side * math.cos(t), 0.30)]
+            V.poly(pts, "banner_orange", uvs=[(0.1, 0.62)] * 3)
 
 
 def _build_plaza(ctx, V, C, P, log):
