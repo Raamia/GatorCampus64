@@ -165,3 +165,22 @@ support the usual color cross-check.
 See [the likeness contract](../../docs/gatorize_likeness.md) and
 [the local model workshop](../../tools/likeness/README.md) for profile IDs,
 validation scope and headless browser review instructions.
+
+### Per-job GPU evidence
+
+`manifest.json.gpu_telemetry` contains UTC-timestamped snapshots at `spec.before`,
+`spec.after`, `build.before`, and `build.after`. Each sample records `available` and
+`gpus` (one entry per local GPU: `name`, `utilization_gpu_pct`, `memory_used_mib`,
+`memory_total_mib`). Unsupported metrics are null, not zero. The same JSON samples
+appear as `GPU telemetry:` lines in the job log, including on failed steps (subject
+to the existing database log-tail limit). Successful jobs also store `log.txt`.
+The existing `jobs.artifacts` object-key contract is unchanged.
+
+The worker runs `nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total,name
+--format=csv,noheader` with a two-second timeout per snapshot. Missing drivers,
+missing binaries, timeouts, and invalid output produce an `available: false`
+sample with a clear `GPU telemetry unavailable` note and do not fail the job.
+These are reproducible host-wide observations for auditing the Vultr worker,
+not per-process attribution or peak utilization: idle snapshots can be zero,
+Blender may use the CPU, and a remotely hosted vision model is not measured by
+the worker's local GPU query. No inference, Blender, or deployment settings change.
