@@ -27,13 +27,38 @@ export async function finishLogin() {
 export async function login(fresh = false) { return (await auth0()).loginWithRedirect({ ...(fresh ? { authorizationParams: { prompt: 'login' } } : {}), appState: { returnTo: window.location.pathname } }) }
 export async function logout() { return (await auth0()).logout({ logoutParams: { returnTo: window.location.origin } }) }
 export async function token() { return (await auth0()).getTokenSilently() }
-export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
+const draftKey = 'sgl-draft-key'
+export function draftToken(create = false): string | null {
+  const saved = window.localStorage.getItem(draftKey)
+  if (saved && /^[0-9a-f]{64}$/.test(saved)) return saved
+  if (!create) return null
+  const value = Array.from(crypto.getRandomValues(new Uint8Array(32)), b => b.toString(16).padStart(2, '0')).join('')
+  // Persist before uploading: losing this key would make the draft inaccessible.
+  window.localStorage.setItem(draftKey, value)
+  return value
+}
+
+async function request<T>(path: string, init: RequestInit, authorization: string): Promise<T> {
   const headers = new Headers(init.headers)
-  headers.set('Authorization', `Bearer ${await token()}`)
+  headers.set('Authorization', authorization)
   const response = await fetch(`${publicConfig.apiBase}${path}`, { ...init, headers })
   if (!response.ok) {
     const detail = (await response.json().catch(() => null) as { detail?: unknown } | null)?.detail
     throw new Error(typeof detail === 'string' ? detail : `Request failed (${response.status}). Please try again.`)
   }
   return response.json() as Promise<T>
+}
+
+export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
+  return request<T>(path, init, `Bearer ${await token()}`)
+}
+export async function draftApi<T>(path: string, init: RequestInit = {}): Promise<T> {
+  return request<T>(path, init, `Guest ${draftToken(true)}`)
+}
+export async function claimDraft(characterId: string) {
+  const key = draftToken()
+  if (!key) throw new Error('This browser no longer has the key for your draft. Please build a new gator.')
+  return api(`/characters/${encodeURIComponent(characterId)}/claim`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ draft_token: key }),
+  })
 }

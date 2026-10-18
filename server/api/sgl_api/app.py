@@ -26,6 +26,7 @@ from . import accounts, config, images, names, runs, pipeline_status
 from .auth import AuthError, JWKSCache, Principal, Verifier, bearer
 from .deepspace import Pusher
 from .cleanup import Cleaner
+from .drafts import DraftAccess, token_hash, permits
 from .missions import MISSIONS
 from .db import Database, apply_schema
 from .storage import Storage
@@ -46,6 +47,10 @@ IMG_RE = re.compile(r"\.(png|jpe?g|webp)$", re.I)
 
 
 # ── request bodies ────────────────────────────────────────────────────────────────────────────
+
+class ClaimDraft(BaseModel):
+    draft_token: str = Field(pattern=r'^[0-9a-f]{64}$')
+
 
 class LinkIn(BaseModel):
     session_id: uuid.UUID | None = None
@@ -211,6 +216,21 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                 raise AuthError(403, f"missing scope: {' '.join(missing)}")
             upsert_user(p)
             return p
+        return dep
+
+    def draft_access(request: Request) -> DraftAccess:
+        header = request.headers.get("authorization", "")
+        scheme, _, value = header.partition(" ")
+        if scheme.lower() != "guest":
+            raise AuthError(401, "draft key required")
+        return DraftAccess(token_hash(value))
+
+    def character_access(*scopes: str, admin_ok: bool = False):
+        def dep(request: Request) -> Principal | DraftAccess:
+            if request.headers.get("authorization", "").partition(" ")[0].lower() == "guest":
+                return draft_access(request)
+            # Invalid/expired bearer tokens must never silently become anonymous requests.
+            return user(*scopes, admin_ok=admin_ok)(principal(request))
         return dep
 
     def scoped(scope: str) -> Callable[..., Principal]:
@@ -386,7 +406,7 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
 
     @app.post("/characters", status_code=201)
     def create_character(
-        p: Annotated[Principal, Depends(user(SCOPE_CREATE))],
+        p: Annotated[Principal | DraftAccess, Depends(character_access(SCOPE_CREATE))],
         name: Annotated[str, Form(max_length=64)],
         consent: Annotated[str, Form()] = "",
         photos: Annotated[list[UploadFile], File()] = [],  # noqa: B006 - FastAPI default
@@ -407,6 +427,10 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             if len(data) > s.max_photo_bytes:
                 raise HTTPException(413, f"{f.filename}: photos must be at most {s.max_photo_bytes // (1024 * 1024)} MB")
             raws.append((f.filename, data))
+        guest = isinstance(p, DraftAccess)
+        owner = None if guest else p.sub
+        draft_hash = p.token_hash if guest else None
+        quota_column, quota_value = ("draft_token_hash", draft_hash) if guest else ("owner_sub", owner)
         cid, jid = uuid.uuid4(), uuid.uuid4()
         keys = [f"photos/{jid}/{i}.jpg" for i in range(len(raws))]
         # Commit the intent BEFORE any object write, including writes whose DB transaction fails.
@@ -417,12 +441,12 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             with DB().tx() as c:
                 c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_create'))")
                 c.execute("SELECT pg_advisory_xact_lock(hashtextextended(%s, 0))", (f"sgl_storage:{jid}",))
-                active = c.execute(f"SELECT count(*) AS n FROM characters WHERE owner_sub = %s AND state IN {IN_PROGRESS}",
-                                   (p.sub,)).fetchone()["n"]
+                active = c.execute(f"SELECT count(*) AS n FROM characters WHERE {quota_column} = %s AND state IN {IN_PROGRESS}",
+                                   (quota_value,)).fetchone()["n"]
                 if active >= s.limit_user_active:
                     raise HTTPException(429, "you already have a gator in the oven: wait for it to finish")
-                total = c.execute("SELECT count(*) AS n FROM characters WHERE owner_sub = %s AND state <> 'failed'",
-                                  (p.sub,)).fetchone()["n"]
+                total = c.execute(f"SELECT count(*) AS n FROM characters WHERE {quota_column} = %s AND state <> 'failed'",
+                                  (quota_value,)).fetchone()["n"]
                 if total >= s.limit_user_total:
                     raise HTTPException(429, f"you already have {total} gators: delete one to make another")
                 hour = c.execute("SELECT count(*) AS n FROM generation_admissions "
@@ -442,8 +466,10 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
                 for k, data in zip(keys, cleaned):
                     writing_started = True  # even a failed response may have stored the object
                     ST().put(k, data, "image/jpeg")
-                c.execute("INSERT INTO characters (id, owner_sub, name, state, step) VALUES (%s, %s, %s, 'queued', 'queued')",
-                          (cid, p.sub, clean_name))
+                c.execute("""INSERT INTO characters (id, owner_sub, name, state, step, draft_token_hash, draft_expires_at)
+                             VALUES (%s, %s, %s, 'queued', 'queued', %s,
+                                     CASE WHEN %s THEN now() + interval '24 hours' END)""",
+                          (cid, owner, clean_name, draft_hash, guest))
                 c.execute("INSERT INTO jobs (id, character_id, state, step, photos) VALUES (%s, %s, 'queued', 'queued', %s)",
                           (jid, cid, keys))
         except BaseException:
@@ -456,16 +482,51 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
             except Exception:
                 log.exception("photo cleanup deferred for %s", jid)
             raise
-        return {"character_id": cid, "job_id": jid, "state": "queued", "name": clean_name}
+        return {"character_id": cid, "job_id": jid, "state": "queued", "name": clean_name, "requires_login": guest}
+
+    @app.get("/drafts")
+    def list_drafts(p: Annotated[DraftAccess, Depends(draft_access)]):
+        with DB().tx() as c:
+            rows = c.execute("""SELECT ch.id, ch.name, ch.state, ch.draft_expires_at, true AS requires_login,
+                                (SELECT id FROM jobs WHERE character_id = ch.id ORDER BY created DESC LIMIT 1) AS job_id
+                                FROM characters ch WHERE owner_sub IS NULL AND draft_token_hash = %s
+                                  AND draft_expires_at > now() ORDER BY created DESC""", (p.token_hash,)).fetchall()
+        return {"characters": rows}
+
+    @app.post("/characters/{character_id}/claim")
+    def claim_draft(character_id: uuid.UUID, body: ClaimDraft,
+                    p: Annotated[Principal, Depends(user(SCOPE_CREATE))]):
+        access = DraftAccess(token_hash(body.draft_token))
+        with DB().tx() as c:
+            # Match account erasure's lock order; serialize quota/ownership/slot changes.
+            c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_create'))")
+            accounts.lock(c)
+            accounts.require_active(c, p.sub, p.claims)
+            c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
+            ch = c.execute("SELECT * FROM characters WHERE id = %s FOR UPDATE", (character_id,)).fetchone()
+            if ch and ch["owner_sub"] == p.sub:
+                return {"character_id": character_id, "slot": ch["slot"], "requires_login": False}
+            if not ch or not permits(ch, access):
+                raise HTTPException(404, "no such draft")
+            if ch["state"] != "ready":
+                raise HTTPException(409, "wait for your gator to finish building before adding it to the game")
+            total = c.execute("SELECT count(*) AS n FROM characters WHERE owner_sub = %s AND state <> 'failed'",
+                              (p.sub,)).fetchone()["n"]
+            if total >= s.limit_user_total:
+                raise HTTPException(429, "delete one of your account's gators before adding this one")
+            c.execute("UPDATE characters SET owner_sub = %s, draft_token_hash = NULL, draft_expires_at = NULL WHERE id = %s",
+                      (p.sub, character_id))
+            slot = c.execute("SELECT sgl_assign_slot(%s) AS n", (character_id,)).fetchone()["n"]
+        return {"character_id": character_id, "slot": slot, "requires_login": False}
 
     @app.get("/jobs/{job_id}")
-    def get_job(job_id: uuid.UUID, p: Annotated[Principal, Depends(user(SCOPE_READ, admin_ok=True))]):
+    def get_job(job_id: uuid.UUID, p: Annotated[Principal | DraftAccess, Depends(character_access(SCOPE_READ, admin_ok=True))]):
         with DB().tx() as c:
             j = c.execute(
-                """SELECT j.*, ch.name, ch.owner_sub, ch.slot, ch.deployed_at,
+                """SELECT j.*, ch.name, ch.owner_sub, ch.draft_token_hash, ch.draft_expires_at, ch.slot, ch.deployed_at,
                           (SELECT state FROM deploys d WHERE d.character_id = ch.id ORDER BY d.id DESC LIMIT 1) AS deploy_state
                      FROM jobs j JOIN characters ch ON ch.id = j.character_id WHERE j.id = %s""", (job_id,)).fetchone()
-        if not j or (j["owner_sub"] != p.sub and SCOPE_ADMIN not in p.scopes):
+        if not j or not permits(j, p):
             raise HTTPException(404, "no such job")
         keys, portrait = preview_keys(j, allow_list=True)
         # Only this job's known browser artifact may be presigned; legacy jobs have none.
@@ -477,7 +538,8 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
         phase = SUBSTEPS.get(step, step) if j["state"] == "failed" else j["state"]
         return {
             "id": j["id"], "character_id": j["character_id"], "name": j["name"], "state": j["state"],
-            "step": step, "pipeline": PIPELINE,
+            "step": step, "pipeline": PIPELINE, "requires_login": j["owner_sub"] is None,
+            "draft_expires_at": j["draft_expires_at"],
             "step_index": PIPELINE.index(phase) if phase in PIPELINE else None,
             "log": (j["log"] or "")[-LOG_TAIL:], "error": j["error"],
             "created": j["created"], "started": j["started"], "finished": j["finished"],
@@ -487,14 +549,11 @@ def create_app(settings: config.Settings | None = None, *, db: Database | None =
         }
 
     @app.delete("/characters/{character_id}")
-    def delete_character(character_id: uuid.UUID, p: Annotated[Principal, Depends(principal)]):
-        if p.is_m2m:
-            raise AuthError(403, "user token required")
-        is_admin = SCOPE_ADMIN in p.scopes
+    def delete_character(character_id: uuid.UUID, p: Annotated[Principal | DraftAccess, Depends(character_access())]):
         with DB().tx() as c:
             c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
-            ch = c.execute("SELECT id, owner_sub FROM characters WHERE id = %s FOR UPDATE", (character_id,)).fetchone()
-            if not ch or (ch["owner_sub"] != p.sub and not is_admin):
+            ch = c.execute("SELECT id, owner_sub, draft_token_hash, draft_expires_at FROM characters WHERE id = %s FOR UPDATE", (character_id,)).fetchone()
+            if not ch or not permits(ch, p):
                 raise HTTPException(404, "no such character")
             freed = c.execute("SELECT sgl_release_slot(%s) AS n", (character_id,)).fetchone()["n"]
             jobs = [r["id"] for r in c.execute("SELECT id FROM jobs WHERE character_id = %s", (character_id,))]

@@ -16,6 +16,13 @@ class Cleaner:
         self.thread = None
 
     def drain(self, max_items=20, job_id=None):
+        if job_id is None:
+            with self.db.tx() as c:
+                # Let active workers finish; deletion triggers enqueue all draft artifacts.
+                # Slot lock comes first to match claim/delete/worker lock ordering.
+                c.execute("SELECT pg_advisory_xact_lock(hashtext('sgl_slots'))")
+                c.execute("""DELETE FROM characters WHERE owner_sub IS NULL
+                             AND draft_expires_at <= now() AND state IN ('ready', 'failed')""")
         cleaned = 0
         for _ in range(max_items):
             with self.db.tx() as c:

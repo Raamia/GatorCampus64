@@ -98,6 +98,23 @@ CREATE TABLE IF NOT EXISTS characters (
     deployed_at timestamptz,                            -- last successful deploy into its slot; NULL = not on the server
     evicted_at  timestamptz                             -- lost its slot to a newer character (never auto re-slotted)
 );
+-- Anonymous drafts are private capabilities, never game-slot candidates.
+ALTER TABLE characters ALTER COLUMN owner_sub DROP NOT NULL;
+ALTER TABLE characters ADD COLUMN IF NOT EXISTS draft_token_hash text;
+ALTER TABLE characters ADD COLUMN IF NOT EXISTS draft_expires_at timestamptz;
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'characters_draft_owner_check'
+                   AND conrelid = 'characters'::regclass) THEN
+        ALTER TABLE characters ADD CONSTRAINT characters_draft_owner_check CHECK (
+            (owner_sub IS NOT NULL AND draft_token_hash IS NULL AND draft_expires_at IS NULL)
+            OR (owner_sub IS NULL AND draft_token_hash IS NOT NULL
+                AND draft_token_hash ~ '^[0-9a-f]{64}$' AND draft_expires_at IS NOT NULL
+                AND slot IS NULL AND deployed_at IS NULL));
+    END IF;
+END $$;
+CREATE INDEX IF NOT EXISTS characters_draft_idx ON characters (draft_token_hash)
+    WHERE owner_sub IS NULL;
+
 CREATE INDEX IF NOT EXISTS characters_owner_idx ON characters (owner_sub);
 CREATE INDEX IF NOT EXISTS characters_state_idx ON characters (state);
 
@@ -246,16 +263,17 @@ DECLARE
     s smallint;
     victim uuid;
     cstate text;
+    owner text;
 BEGIN
     PERFORM pg_advisory_xact_lock(hashtext('sgl_slots'));
-    SELECT slot, state INTO s, cstate FROM characters WHERE id = cid FOR UPDATE;
+    SELECT slot, state, owner_sub INTO s, cstate, owner FROM characters WHERE id = cid FOR UPDATE;
     IF NOT FOUND THEN
         RETURN NULL;
     END IF;
     IF s IS NOT NULL THEN
         RETURN s;
     END IF;
-    IF cstate <> 'ready' THEN
+    IF cstate <> 'ready' OR owner IS NULL THEN
         RETURN NULL;
     END IF;
 
@@ -335,7 +353,8 @@ DECLARE
 BEGIN
     PERFORM pg_advisory_xact_lock(hashtext('sgl_slots'));
     FOR r IN SELECT id FROM characters
-              WHERE state = 'ready' AND slot IS NULL AND evicted_at IS NULL ORDER BY created LOOP
+              WHERE state = 'ready' AND owner_sub IS NOT NULL
+                AND slot IS NULL AND evicted_at IS NULL ORDER BY created LOOP
         IF sgl_assign_slot(r.id) IS NULL THEN
             EXIT;                                           -- every slot is pinned or busy
         END IF;
