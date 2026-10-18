@@ -40,11 +40,22 @@ HUB_LAWN_SHRUBS = [
     (14.0, 84.0), (60.0, 84.0), (17.0, 96.0), (57.0, 96.0), (18.0, 75.0), (58.0, 75.0),
     # Continue the planting around the outer lawn edges, leaving the central view and paths open.
     (23.0, 68.0), (55.0, 68.0), (8.0, 97.0), (70.0, 97.0), (74.0, 54.0),
+    # Additional low islands sit in the camera-facing lawn pockets around the Auditorium approach.
+    (23.0, 115.0), (53.0, 115.0), (15.0, 109.0), (61.0, 109.0),
 ]
 # Four larger, staggered planting islands make the open Auditorium lawn feel enclosed at human scale.
 # They sit in broad grass pockets and are placed with clearance for their full footprint.
 HUB_LAWN_MASSES = [(6.0, 58.0), (72.0, 58.0), (0.0, 98.0), (74.0, 54.0),
                    (24.0, 76.0), (56.0, 62.0)]
+# The east Auditorium frontage is a broad, flat lawn in the current model. Stagger low planting
+# islands beside (never across) the desire paths, with one oak behind the beds for depth.
+HUB_AUDITORIUM_EAST_BEDS = [(66.0, 12.0), (76.0, 29.0), (65.0, 47.0)]
+# Longer clipped-hedge beds give the open quad a planted edge and make foreground sightlines
+# read as a sequence of campus garden rooms. Gaps between these rows preserve the desire paths.
+HUB_HEDGE_ROWS = [
+    (21.0, 100.0, 90.0), (55.0, 100.0, 90.0),
+    (4.0, 82.0, 90.0), (72.0, 82.0, 90.0),
+]
 HUB_GLOBE_LAMPS = [(14.5, 132.0)]  # prominent lamp beside the Auditorium approach walk
 HUB_RAISED_BEDS = [(81.0, 179.0, 0.0), (5.0, 171.0, 90.0), (9.0, 123.0, 0.0), (85.0, 103.0, 90.0)]
 HUB_CAMPUS_SIGN = (58.0, 119.0)
@@ -73,6 +84,19 @@ def _on_walk(S, x, y, pad):
             if G.seg_dist((x, y), a, b) < hw:
                 return True
     return False
+
+
+def _hedge_footprint_clear(S, x, y, yaw):
+    """Check the whole tapered hedge bed against roads and walks, not just its center point."""
+    angle = math.radians(yaw)
+    c, s = math.cos(angle), math.sin(angle)
+    # Sample the full bed at sub-metre spacing, with a small safety margin for the brick edging.
+    for u in (-4.8, -4.0, -3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 4.8):
+        for v in (-1.55, -0.8, 0.0, 0.8, 1.55):
+            px, py = x + c * u - s * v, y + s * u + c * v
+            if _on_road(S, px, py, 0.25) or _on_walk(S, px, py, 0.25):
+                return False
+    return True
 
 
 def _place(S, probe, taken, mx, my, radius, walk_pad=None, road_pad=None):
@@ -176,13 +200,13 @@ def planter(vis, col, x, y, key):
 
 def shrub_bed(vis, x, y, key):
     """Low UF-campus landscape bed: dark mulch and three compact native evergreen shrubs."""
-    outer = ring(x, y, 1.55, 0.025, 10, rnd_key(key) * math.pi, key + ":bed", jitter=0.08, ry=0.78)
+    outer = ring(x, y, 1.9, 0.025, 10, rnd_key(key) * math.pi, key + ":bed", jitter=0.08, ry=0.82)
     center = (x, y, 0.026)
     for i in range(len(outer)):
         vis.poly([center, outer[i], outer[(i + 1) % len(outer)]], "mulch")
-    for i, (dx, dy, radius, height) in enumerate(((-0.62, 0.02, 0.57, 0.78),
-                                                   (0.02, 0.02, 0.65, 0.92),
-                                                   (0.65, -0.02, 0.54, 0.74))):
+    for i, (dx, dy, radius, height) in enumerate(((-0.72, 0.02, 0.68, 0.94),
+                                                   (0.02, 0.02, 0.77, 1.12),
+                                                   (0.72, -0.02, 0.64, 0.9))):
         sx, sy = x + dx, y + dy
         rot = rnd_key(f"{key}:shrub:{i}") * math.pi
         rings = [ring(sx, sy, radius * 0.62, 0.04, 7, rot, f"{key}:{i}:low", jitter=0.10),
@@ -191,7 +215,7 @@ def shrub_bed(vis, x, y, key):
         blob(vis, rings, (sx, sy, height), (sx, sy, 0.04), "leaves_oak" if i != 1 else "leaves_oak2")
     for i in range(4):
         a = rnd_key(f"{key}:flower:{i}") * math.tau
-        flower(vis, x + 1.17 * math.cos(a), y + 0.72 * math.sin(a), f"{key}:flower:{i}",
+        flower(vis, x + 1.48 * math.cos(a), y + 0.96 * math.sin(a), f"{key}:flower:{i}",
                "white_trim" if i % 2 == 0 else "banner_orange")
 
 
@@ -236,6 +260,44 @@ def dense_planting(vis, col, x, y, key):
     if col is not None:
         # Low planter-like collision keeps players from walking through the fuller shrubs; camera may pass.
         _obox(col, x, y, 0.0, 3.12, 1.30, 0.0, 1.36, "COL nocam", None)
+
+
+def hedge_row(vis, col, x, y, yaw, key):
+    """A broken, clipped hedge in a long brick-edged mulch bed, like a campus quad border."""
+    angle = math.radians(yaw)
+    c, s = math.cos(angle), math.sin(angle)
+
+    def point(u, v):
+        return x + c * u - s * v, y + s * u + c * v
+
+    # A tapered, faceted bed reads as a landscaped island instead of a floating hedge strip.
+    outline = [point(-4.8, -1.18), point(-4.25, -1.55), point(4.25, -1.55),
+               point(4.8, -1.18), point(4.45, 1.18), point(-4.45, 1.18)]
+    center = (x, y, 0.03)
+    for i, (a, b) in enumerate(zip(outline, outline[1:] + outline[:1])):
+        vis.poly([center, (a[0], a[1], 0.03), (b[0], b[1], 0.03)], "mulch")
+        # Low brick edging on the outward side; small gaps at the ends keep the bed approachable.
+        if i in (1, 4):
+            vis.wall(a, b, -0.05, 0.28, "brick_red")
+            mid = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
+            _obox(col, mid[0], mid[1], angle, 4.25, 0.12, 0.0, 0.28,
+                  "COL default", None)
+
+    # Individually rounded shrub masses make a varied, low-poly hedge with a few sightline gaps.
+    for i, (u, radius, height) in enumerate(((-3.85, 0.86, 1.22), (-2.75, 0.98, 1.42),
+                                              (-1.65, 0.9, 1.32), (-0.55, 1.02, 1.5),
+                                              (0.55, 1.02, 1.48), (1.65, 0.94, 1.34),
+                                              (2.75, 0.98, 1.4), (3.85, 0.84, 1.2))):
+        sx, sy = point(u, 0.0)
+        rot = rnd_key(f"{key}:shrub{i}") * math.tau
+        rings = [ring(sx, sy, radius * 0.62, 0.05, 7, rot, f"{key}:s{i}:low", jitter=0.08),
+                 ring(sx, sy, radius, height * 0.5, 7, rot + 0.16, f"{key}:s{i}:mid", jitter=0.08),
+                 ring(sx, sy, radius * 0.68, height * 0.82, 7, rot + 0.32, f"{key}:s{i}:top", jitter=0.07)]
+        blob(vis, rings, (sx, sy, height), (sx, sy, 0.04),
+             "leaves_oak" if i % 2 == 0 else "leaves_oak2")
+    for i, u in enumerate((-4.0, 4.0)):
+        fx, fy = point(u, -0.72)
+        flower(vis, fx, fy, f"{key}:flower{i}", "white_trim" if i == 0 else "banner_orange")
 
 
 def raised_bed(vis, col, x, y, yaw, key):
@@ -529,15 +591,49 @@ def build(S, probe, avoid=()):
             dense_planting(vis, col, p[0], p[1], f"auditorium_lawn_mass{i}")
             taken.append((p[0], p[1], 3.6))
             rep["landscape_masses"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+        rep["hedge_rows"] = []
+        for i, (mx, my, yaw) in enumerate(HUB_HEDGE_ROWS):
+            # The row is long but low, so only the central brick bed needs generous object
+            # clearance; path and road margins still protect the whole playable corridor.
+            p = _place(S, probe, taken, mx, my, 2.2, walk_pad=1.9, road_pad=1.9)
+            if p is None or not _hedge_footprint_clear(S, p[0], p[1], yaw):
+                rep["skipped"].append(("campus hedge row", mx, my))
+                continue
+            hedge_row(vis, col, p[0], p[1], yaw, f"hub_hedge_row{i}")
+            taken.append((p[0], p[1], 2.2))
+            rep["hedge_rows"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1), yaw])
         rep["shrubs"] = []
         for i, (mx, my) in enumerate(HUB_LAWN_SHRUBS):
-            p = _place(S, probe, taken, mx, my, 1.35, walk_pad=0.25)
+            p = _place(S, probe, taken, mx, my, 1.9, walk_pad=2.35, road_pad=2.35)
             if p is None:
                 rep["skipped"].append(("lawn shrub bed", mx, my))
                 continue
             shrub_bed(vis, p[0], p[1], f"auditorium_lawn_shrub{i}")
-            taken.append((p[0], p[1], 1.35))
+            taken.append((p[0], p[1], 1.9))
             rep["shrubs"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+        # Fill safe grass pockets on the camera-facing side of the quad instead of leaving a
+        # single broad empty foreground. The normal placement check keeps these off paths,
+        # roads, tree trunks, and the existing furniture; the cap keeps the lawn readable.
+        rep["foreground_shrubs"] = []
+        for my in (101.0, 96.0, 91.0, 86.0):
+            for mx in (10.0, 18.0, 26.0, 34.0, 42.0, 50.0, 58.0, 66.0, 74.0):
+                if len(rep["foreground_shrubs"]) >= 8:
+                    break
+                p = _place(S, probe, taken, mx, my, 1.8, walk_pad=2.35, road_pad=2.35)
+                if p is None:
+                    continue
+                shrub_bed(vis, p[0], p[1], f"hub_foreground_shrub{len(rep['foreground_shrubs'])}")
+                taken.append((p[0], p[1], 1.8))
+                rep["foreground_shrubs"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+        rep["auditorium_east_beds"] = []
+        for i, (mx, my) in enumerate(HUB_AUDITORIUM_EAST_BEDS):
+            p = _place(S, probe, taken, mx, my, 3.6, walk_pad=3.8, road_pad=3.8)
+            if p is None:
+                rep["skipped"].append(("Auditorium east landscape bed", mx, my))
+                continue
+            dense_planting(vis, col, p[0], p[1], f"auditorium_east_bed{i}")
+            taken.append((p[0], p[1], 3.6))
+            rep["auditorium_east_beds"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
     for i, (mx, my) in enumerate(LAMPS):
         p = _place(S, probe, taken, mx, my, 1.4, walk_pad=0.3)
         if p is None:
@@ -560,6 +656,7 @@ def build(S, probe, avoid=()):
           f"{len(rep['planters'])} planters, {len(rep['tables'])} tables, "
           f"{len(rep.get('statues', []))} statues, {len(rep.get('shrubs', []))} shrub beds, "
           f"{len(rep.get('landscape_masses', []))} large planting islands, "
+          f"{len(rep.get('hedge_rows', []))} hedge rows, "
           f"{len(rep['hammocks'])} hammocks; skipped {rep['skipped']}")
     return poles
 
