@@ -1,26 +1,20 @@
 """Pickups, enemies and poles a stage build places in its level script (inside Blender, called by
 build_stage.py once the meshes exist, with the CollisionProbe of the real collision).
 
-The Swamp (swamp_pickups), from the fix round's fun review:
-  * coins: enough for the vanilla 100-coin star (id 6) with room to spare (~140), laid out as route
-    breadcrumbs: one coin over every ledge and camera deck of the act 1 climb (in SM64 every coin also
-    heals one health wedge), lines on the act 2 stair sprint's long flat rim run, the concourse
-    (cross-aisle) toward the West Skybox Tower, the field (midfield ring, apron lines), the Courtyard
-    of Champions in front of the spawn, and rings on the secret roof tops (board tops, gatehouse);
+Ambient Mario yellow coins, coin formations, and Goombas are disabled across the campus maps. Mission-specific
+red-token objectives remain separate. Recovery hearts, 1-ups, poles, and other mission props are still placed.
+
+The Swamp (swamp_pickups):
   * recovery hearts at the foot of the climb (west rim), on the Bull Gator Deck and half way up the
     camera decks; 1-ups on the hardest secret spots;
-  * Goombas ("rowdy fans") on the concourse, in the Courtyard and two on the sprint's rim run (a hazard
-    on the flat part of the race);
   * the stadium module's poles (markers["poles"]): goalposts, the 22.5 m pole from the Bull Gator Deck
     to the press box roof (an alternative to the 10 camera-deck hops), the south board leg and the
     hanging east light-mast poles.
-Course 2, Reitz Union & Engineering (reitz_pickups): ~250 coins along the landmark climbs (Reitz Union,
-Malachowsky's glass stair, Weil Hall's roof run), on the lawns / plazas and along the act 2 hunt's long
-legs, hearts, 1-ups, Goombas, Bob-ombs on the act 1 climb, Koopa shells, and the Reitz Union's and Weil
+Course 2, Reitz Union & Engineering (reitz_pickups): hearts, 1-ups, Bob-ombs on the act 1 climb, Koopa shells,
+and the Reitz Union's and Weil
 Hall's poles (see the function docstring).
-Every position is checked against the collision: a coin (or every coin of a formation) must have its
-floor within TOL_M of the design height, a Goomba needs room around it. Failing items are skipped with
-a "SGL WARNING" (and listed in the report).
+Every active pickup position is checked against the collision. Failing items are skipped with a "SGL WARNING"
+(and listed in the report).
 
 Engine notes (SM64 / coopdx v1.5.1):
   bhvCoinFormation (MODEL_NONE) bparam2 = shape: 0 = line of 5 along the object's facing (1.6 m apart),
@@ -44,6 +38,7 @@ LINE_STEP_M = 1.6      # coin formation line spacing (160 units)
 RING_R_M = 3.0         # coin formation ring radius (300 units)
 FORMATION_SEARCH_M = 3.0
 MIN_ROOM_M = 0.5       # a formation coin needs this much room around it (not inside a wall)
+DISABLED_WORLD_PICKUPS = frozenset({"coin", "coin_line", "coin_ring", "goomba"})
 
 
 def _module(name):
@@ -82,6 +77,10 @@ class Placer:
         print(f"SGL WARNING: pickup {name}: {why}; skipped")
 
     def _add(self, kind, name, x, y, z, behavior, model, bparams="0x00000000", facing=0.0, coins=0, acts=None):
+        # Keep these out at the shared placement boundary so outdoor stages and every interior builder agree,
+        # including direct Placer._add callers such as Lake Alice's cypress-knee breadcrumbs.
+        if kind in DISABLED_WORLD_PICKUPS:
+            return
         S = self.S
         self.items.append({
             "kind": kind, "name": name, "map_m": [round(x, 2), round(y, 2), round(z, 2)],

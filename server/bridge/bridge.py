@@ -7,7 +7,8 @@
     (POST /events, M2M token) through a bounded retry queue: an API outage never blocks the pipe;
   * login_req -> Auth0 device flow -> POST /links -> inbox `verified` (§7.1); link_req -> §7.2;
   * writes the inbox (<savepath>/sav/sgl64.modfs) the mod polls;
-  * applies guest character deploys (§5.3), at most one game restart per 5 minutes.
+  * applies guest character deploys (§5.3), at most one game restart per 5 minutes;
+  * answers Albert and Alberta's npc_ask events (sglbridge/npc.py: game guide + Gemini) in sgl64_npc.modfs.
 Configuration: environment variables, see server/deploy/bridge.env.example.
 """
 from __future__ import annotations
@@ -31,6 +32,7 @@ from sglbridge.game import GameSupervisor, line_buffered  # noqa: E402
 from sglbridge.httpclient import Http  # noqa: E402
 from sglbridge.inbox import Inbox  # noqa: E402
 from sglbridge.login import LoginService  # noqa: E402
+from sglbridge import npc as npc_mod  # noqa: E402
 
 log = logging.getLogger("sglbridge")
 game_log = logging.getLogger("game")
@@ -39,10 +41,12 @@ game_log = logging.getLogger("game")
 class Bridge:
     """Event routing; everything with I/O is injected so tests can drive it line by line."""
 
-    def __init__(self, inbox: Inbox, queue: RetryQueue | None, login: LoginService):
+    def __init__(self, inbox: Inbox, queue: RetryQueue | None, login: LoginService,
+                 npc: npc_mod.NpcService | None = None):
         self.inbox = inbox
         self.queue = queue
         self.login = login
+        self.npc = npc
         self.players: dict[int, str] = {}
         self._lock = threading.Lock()
 
@@ -55,6 +59,8 @@ class Bridge:
             self.players.clear()
         self.login.reset()
         self.inbox.reset()
+        if self.npc is not None:
+            self.npc.reset()
 
     def on_game_exit(self, rc: int) -> None:
         """The game process ended: tell the API (/status) with an `exit` event."""
@@ -78,6 +84,11 @@ class Bridge:
         t = ev["t"]
         gi = ev.get("gi")
         name = str(ev.get("name") or "")
+        if t == "npc_ask":                        # player chat: answered here, never sent to the API
+            log.info("npc_ask %s -> %s", ev.get("player"), ev.get("npc"))
+            if self.npc is not None:
+                self.npc.ask(ev)
+            return
         log.info("event %s %s", t, event_payload(ev))
         if t == "hello":
             with self._lock:
@@ -132,7 +143,10 @@ def main() -> int:
     else:
         log.warning("Auth0 not configured (AUTH0_DOMAIN / AUTH0_CLIENT_ID / AUTH0_AUDIENCE): /login answers 'unavailable'")
     login = LoginService(flow, validator, api, inbox)
-    bridge = Bridge(inbox, queue, login)
+    npc = npc_mod.build(cfg)
+    if npc is not None:
+        threads.append(threading.Thread(target=npc.run, args=(stop,), daemon=True, name="npc"))
+    bridge = Bridge(inbox, queue, login, npc)
 
     cmd = line_buffered(cfg.game_cmd) if cfg.line_buffer else cfg.game_cmd
     game = GameSupervisor(cmd, cfg.game_cwd, bridge.on_line, bridge.on_game_start, on_exit=bridge.on_game_exit)

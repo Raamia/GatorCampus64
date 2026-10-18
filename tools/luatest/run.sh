@@ -138,7 +138,7 @@ python3 -I "$HERE/check_game_guide.py"
 echo "== npc_bridge tests"
 out="$(python3 -m unittest discover -s "$HERE/../npc_bridge" 2>&1)" || { echo "$out"; exit 1; }
 echo "$out" | tail -1
-echo "== mascot actor tests"
+echo "== generated mascot and pickup actor tests"
 out="$(python3 -m unittest discover -s "$HERE/../actors" 2>&1)" || { echo "$out"; exit 1; }
 echo "$out" | tail -1
 echo "== all luatest checks passed"
