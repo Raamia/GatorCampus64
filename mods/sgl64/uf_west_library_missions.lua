@@ -1603,10 +1603,10 @@ local function kind_hideseek(spec)
         elseif ctx.a == PH.OVER then
             table.insert(lines, { L.won and "You won this round!" or "Round over", L.won and SGL_HUD_GREEN or SGL_HUD_WHITE })
             if ctx.s == SGL_MS_SUCCESS then
-                table.insert(lines, { "Grab the star on the desk - then the next round", SGL_HUD_GREY, 0.26 })
+                table.insert(lines, { "Grab the Gator Crest on the desk - return to campus", SGL_HUD_GREY, 0.26 })
             end
         elseif ctx.a == PH.NEXT then
-            table.insert(lines, { string.format("Next round in %d s - D-pad Down: now", math.max(0, math.floor(ctx.c))),
+            table.insert(lines, { "Team reward earned - returning to campus",
                 SGL_HUD_GOLD })
         end
         if role == "seeker" then

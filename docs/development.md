@@ -115,6 +115,7 @@ Then start sm64coopdx → **Host** → an **unused save slot** (0 stars) → Mod
    - The HUD counts "GA..." and "TOR...", then "CHOMP!": both of you jump and ground-pound (Z) on your button within about 1.3 s.
    - "CHOMP! Phrase 1/3": the other two corners light up; run there (47 m) and do it again, then once more on the first pair. After the third phrase the star flies from the south scoreboard to midfield.
    - Pounding late or stepping off during the count: "Off the beat!" and that phrase starts again. Leaving the act shows "Paused: waiting for enough players".
+   - When a teammate collects the Gator Crest, everyone who participated gets the saved course reward and returns to campus automatically after a short delay. This includes crane operators in the Robotics Lab. Late arrivals after completion and players elsewhere are not moved; duplicate collection events do not award another crest.
 5. **Race together** (act 2): with both of you in the start box the countdown starts at once. If only one of you is in, a 10 s lobby wait runs first. The results board lists both times. If one of you leaves mid-race, the results come at once.
 6. **Leader hand-off**: in act 1 or 2 the host types `/campus hub me`. The mission keeps running for the friend, and `/mission` names them as leader.
 7. **Only the host moves everyone**: the friend's `/campus swamp 2` moves only the friend ("Only the host moves everyone; warping just you.").

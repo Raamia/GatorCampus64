@@ -1148,7 +1148,7 @@ test("with a friend: invite, D-pad Up joins the act, co-op act 3 with every file
     local star = Sim.objects_with(F, C.id_bhvStarSpawnCoordinates)[1]
     Sim.run_hooks(F, C.HOOK_ON_INTERACT, F.ms[0], star, C.INTERACT_STAR_OR_KEY, true)
     w:step(3)
-    check(Sim.hud_has(H, "Friend got the star!"), "host: leave-together prompt")
+    check(Sim.hud_has(H, "Team Gator Crest earned!"), "host: automatic team completion prompt")
     H.pressed = C.U_JPAD
     w:step(2)
     check(H.level == HUB and H.arrivalNode == 0x31 and H.warpOps[1] == C.WARP_OP_EXIT,
@@ -1215,6 +1215,18 @@ test("character select: remembered pick, overlay hides the other HUDs", function
     Sim.cmd(H, "char", "")
     w:step(2)
     check(not Sim.hud_has(H, "STADIUM STAIR SPRINT"), "mission panel hidden under the menu")
+end)
+
+test("UF result icons: native course-complete coin, star and portrait use campus textures", function()
+    local w = full_world()
+    local H = w:connect("Host")
+    w:step(3)
+    arrive_and_pick(w, H, 1)
+    local tex = H.textureOverrides or {}
+    check(tex.texture_hud_char_coin ~= nil, "native coin glyph overridden")
+    check(tex.texture_hud_char_star ~= nil, "native reward star glyph overridden")
+    check(tex.texture_font_char_us_star_filled ~= nil, "course title's star glyph overridden")
+    check(tex.texture_hud_char_mario_head ~= nil, "native portrait glyph overridden")
 end)
 
 print(string.format("\n%d checks passed, %d failed", passed, failed))

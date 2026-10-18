@@ -698,6 +698,12 @@ function World:build_env(c)
         assert(math.type(file) == "integer" and math.type(courseIndex) == "integer", "save_file_get_star_flags ints")
         return w.starFlags[courseIndex + 1] or 0
     end
+    S.save_file_set_star_flags = function(file, courseIndex, flags)
+        assert(file >= 0 and math.type(flags) == "integer")
+        w.starFlags[courseIndex + 1] = (w.starFlags[courseIndex + 1] or 0) | flags
+        c.rewardWrites = (c.rewardWrites or 0) + 1
+    end
+    S.save_file_do_save = function(file, force) assert(file >= 0 and math.type(force) == "integer") end
     S.get_current_save_file_num = function() return 1 end
     S.warp_to_level = function(level, area, act)
         assert(math.type(level) == "integer" and math.type(area) == "integer" and math.type(act) == "integer", "warp_to_level ints")
@@ -735,6 +741,14 @@ function World:build_env(c)
 
     -- used by levels.lua / main.lua (integration test)
     S.camera_set_romhack_override = function() end
+    S.gLakituState = {}
+    for _, key in ipairs({ "pos", "focus", "curPos", "curFocus", "goalPos", "goalFocus" }) do
+        S.gLakituState[key] = { x = 0, y = 0, z = 0 }
+    end
+    S.set_override_fov = function(fov) c.overrideFov = fov end
+    S.camera_is_frozen = function() return c.cameraFrozen == true end
+    S.camera_freeze = function() c.cameraFrozen = true end
+    S.camera_unfreeze = function() c.cameraFrozen = false end
     S.camera_set_use_course_specific_settings = function() end
     S.camera_config_is_mouse_look_enabled = function() return c.mouseLookEnabled ~= false end
     S.camera_config_enable_mouse_look = function(enabled) c.mouseLookEnabled = enabled end
@@ -830,6 +844,11 @@ function World:build_env(c)
         if w.brokenModels and w.brokenModels[name] then return C.E_MODEL_ERROR_MODEL end
         modelN = modelN + 1
         return modelN
+    end
+    S.texture_override_set = function(name, texture)
+        assert(type(name) == "string" and texture ~= nil)
+        c.textureOverrides = c.textureOverrides or {}
+        c.textureOverrides[name] = texture
     end
     S.get_texture_info = function(name)
         assert(type(name) == "string")
