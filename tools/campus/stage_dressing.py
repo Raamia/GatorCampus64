@@ -10,7 +10,7 @@ Coordinates in the tables are MAP metres (x = east, y = north, origin Century To
 import math
 
 import stage_geom as G
-from stage_nature import oak, trunk
+from stage_nature import blob, oak, ring, trunk
 
 # (x, y): Auditorium lawn walks (first view from the spawn), the porch approach, Turlington Plaza
 # (the strip east of Turlington's diagonal facade, around The Potato) and the paved plaza between
@@ -29,6 +29,18 @@ BENCHES = [
 PLANTERS = [(-78.0, -15.5), (-56.0, -38.0), (-38.0, -48.0)]     # 5 x 5 m, 0.7 m, live oak
 # tabling tables by the breezeway's east mouth (Turlington steps, the Tabling Gauntlet start)
 TABLES = [(-50.0, 17.0), (-50.0, 10.0), (-42.0, 14.0)]
+# A small social / landmark pocket on the Auditorium approach lawn. Keep the middle of the lawn
+# open: the statue sits beyond the crosswalk routes, with two seats and two campus tabling spots.
+HUB_LAWN_GATOR = (38.0, 83.0, 180.0, "Auditorium lawn gator")
+HUB_LAWN_BENCHES = [(26.0, 83.0, 90.0), (50.0, 83.0, 270.0)]
+HUB_LAWN_TABLES = [(8.0, 83.0), (68.0, 83.0)]
+HUB_LAWN_SHRUBS = [
+    # Existing beds give the Auditorium approach a small social-garden feel.
+    (14.0, 84.0), (60.0, 84.0), (17.0, 96.0), (57.0, 96.0), (18.0, 75.0), (58.0, 75.0),
+    # Continue the planting around the outer lawn edges, leaving the central view and paths open.
+    (6.0, 58.0), (72.0, 58.0), (0.0, 98.0), (74.0, 54.0),
+    (23.0, 68.0), (55.0, 68.0), (8.0, 97.0), (70.0, 97.0),
+]
 NUDGES = [(0.0, 0.0), (1.5, 0.0), (-1.5, 0.0), (0.0, 1.5), (0.0, -1.5), (1.5, 1.5), (-1.5, -1.5),
           (1.5, -1.5), (-1.5, 1.5), (3.0, 0.0), (-3.0, 0.0), (0.0, 3.0), (0.0, -3.0)]
 
@@ -146,6 +158,23 @@ def planter(vis, col, x, y, key):
         _obox(col, x, y, 0.0, hw, hw, 0.0, h, "COL default", "COL default")
 
 
+def shrub_bed(vis, x, y, key):
+    """Low UF-campus landscape bed: dark mulch and three compact native evergreen shrubs."""
+    outer = ring(x, y, 1.55, 0.025, 10, rnd_key(key) * math.pi, key + ":bed", jitter=0.08, ry=0.78)
+    center = (x, y, 0.026)
+    for i in range(len(outer)):
+        vis.poly([center, outer[i], outer[(i + 1) % len(outer)]], "mulch")
+    for i, (dx, dy, radius, height) in enumerate(((-0.62, 0.02, 0.57, 0.78),
+                                                   (0.02, 0.02, 0.65, 0.92),
+                                                   (0.65, -0.02, 0.54, 0.74))):
+        sx, sy = x + dx, y + dy
+        rot = rnd_key(f"{key}:shrub:{i}") * math.pi
+        rings = [ring(sx, sy, radius * 0.62, 0.04, 7, rot, f"{key}:{i}:low", jitter=0.10),
+                 ring(sx, sy, radius, height * 0.45, 7, rot + 0.12, f"{key}:{i}:mid", jitter=0.12),
+                 ring(sx, sy, radius * 0.62, height * 0.78, 7, rot + 0.24, f"{key}:{i}:high", jitter=0.10)]
+        blob(vis, rings, (sx, sy, height), (sx, sy, 0.04), "leaves_oak" if i != 1 else "leaves_oak2")
+
+
 def table(vis, col, x, y, mat):
     """Folding table with a UF-coloured cloth (1.8 x 0.75 m, 0.76 m high)."""
     _obox(vis, x, y, 0.0, 0.9, 0.375, 0.10, 0.76, mat, "white_trim")
@@ -260,6 +289,42 @@ def build(S, probe, avoid=()):
         bench(vis, col, p[0], p[1], facing)
         taken.append((p[0], p[1], 1.1))
         rep["benches"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+    if getattr(S, "key", "hub") == "hub":
+        mx, my, facing, name = HUB_LAWN_GATOR
+        p = _place(S, probe, taken, mx, my, 3.2, walk_pad=0.6)
+        if p is None:
+            rep["skipped"].append(("lawn statue", mx, my))
+        else:
+            gator_statue(vis, col, p[0], p[1], facing, "auditorium_lawn_gator")
+            taken.append((p[0], p[1], 3.2))
+            rep.setdefault("statues", []).append({"name": name,
+                "map_m": [round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)], "facing_deg": facing})
+        for i, (mx, my, facing) in enumerate(HUB_LAWN_BENCHES):
+            p = _place(S, probe, taken, mx, my, 1.1, walk_pad=0.15)
+            if p is None:
+                rep["skipped"].append(("lawn bench", mx, my))
+                continue
+            bench(vis, col, p[0], p[1], facing)
+            taken.append((p[0], p[1], 1.1))
+            rep["benches"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+        for i, (mx, my) in enumerate(HUB_LAWN_TABLES):
+            p = _place(S, probe, taken, mx, my, 1.3, walk_pad=0.15)
+            if p is None:
+                rep["skipped"].append(("lawn table", mx, my))
+                continue
+            cloth = "banner_orange" if i % 2 == 0 else "banner_blue"
+            table(vis, col, p[0], p[1], cloth)
+            taken.append((p[0], p[1], 1.3))
+            rep["tables"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+        rep["shrubs"] = []
+        for i, (mx, my) in enumerate(HUB_LAWN_SHRUBS):
+            p = _place(S, probe, taken, mx, my, 1.35, walk_pad=0.25)
+            if p is None:
+                rep["skipped"].append(("lawn shrub bed", mx, my))
+                continue
+            shrub_bed(vis, p[0], p[1], f"auditorium_lawn_shrub{i}")
+            taken.append((p[0], p[1], 1.35))
+            rep["shrubs"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
     for i, (mx, my) in enumerate(LAMPS):
         p = _place(S, probe, taken, mx, my, 1.4, walk_pad=0.3)
         if p is None:
@@ -278,8 +343,9 @@ def build(S, probe, avoid=()):
                                 [round(b[0] + S.cx, 1), round(b[1] + S.cy, 1)]])
     S.stats["dressing"] = rep
     print(f"SGL: dressing: {len(rep['lamps'])} lamp posts, {len(rep['benches'])} benches, "
-          f"{len(rep['planters'])} planters, {len(rep['tables'])} tables, {len(rep['hammocks'])} hammocks; "
-          f"skipped {rep['skipped']}")
+          f"{len(rep['planters'])} planters, {len(rep['tables'])} tables, "
+          f"{len(rep.get('statues', []))} statues, {len(rep.get('shrubs', []))} shrub beds, "
+          f"{len(rep['hammocks'])} hammocks; skipped {rep['skipped']}")
     return poles
 
 

@@ -117,7 +117,7 @@ SLUG = "library_west_smathers_plaza"
 _PALETTE_NAMES = (
     "brick_red", "brick_dark", "limestone", "roof_tile_red", "roof_dark", "copper_green",
     "window_dark", "window_glass", "door_wood", "concrete", "metal_gray", "plaza_brick", "grass",
-    "path", "water", "dark_trim", "white_trim", "rock", "bronze",
+    "path", "water", "dark_trim", "white_trim", "rock", "bronze", "leaves_oak", "leaves_oak2",
 )
 _FALLBACK_TILE = {"window_glass": 3.0, "grass": 4.0, "path": 3.0, "water": 6.0, "rock": 3.0}
 _FALLBACK_COLOR = {
@@ -1404,6 +1404,28 @@ def _nearest_dir(ctx, p, cache):
     return best
 
 
+def _shrub_lobe(V, x, y, rx, ry, height, phase=0.0):
+    """Small faceted leafy mound. Visual-only so it never catches or blocks the player."""
+    n = 5
+    rings = ((0.0, 0.82), (height * 0.48, 1.0), (height * 0.82, 0.62))
+    verts = [[(x + rx * scale * math.cos(phase + 2 * math.pi * i / n),
+               y + ry * scale * math.sin(phase + 2 * math.pi * i / n), z)
+              for i in range(n)] for z, scale in rings]
+    mats = ("leaves_oak", "leaves_oak2")
+    for ri in range(len(verts) - 1):
+        low, high = verts[ri], verts[ri + 1]
+        for i in range(n):
+            V.poly((low[i], low[(i + 1) % n], high[(i + 1) % n], high[i]), mats[(i + ri) % 2])
+    V.poly(verts[-1], "leaves_oak", (0.0, 0.0, 1.0))
+
+
+def _shrub_bed(V, x, y, scale=1.0, phase=0.0):
+    """Two overlapping low shrubs make a compact edge planting without narrowing a path."""
+    _shrub_lobe(V, x - 0.34 * scale, y, 0.63 * scale, 0.52 * scale, 0.72 * scale, phase)
+    _shrub_lobe(V, x + 0.34 * scale, y + 0.08 * scale, 0.64 * scale, 0.52 * scale,
+                0.82 * scale, phase + 0.35)
+
+
 def _build_plaza(ctx, V, C, P, log):
     # ---- walks (decal ribbons) from the OSM footways
     drawn = 0
@@ -1448,6 +1470,16 @@ def _build_plaza(ctx, V, C, P, log):
     cache = {}
     for _, p in keep:
         _bench(V, C, p[0], p[1], _nearest_dir(ctx, p, cache))
+
+    # ---- low shrub beds bring color to the outer lawn while leaving the central quad open.
+    # Anchors are in clear grass pockets, several metres from plaza paths and mapped trees.
+    for x, y, scale, phase in (
+        (12.0, 238.0, 0.92, 0.0),
+        (60.0, 234.0, 1.00, 0.4),
+        (20.0, 122.0, 1.00, 0.2),
+        (80.0, 122.0, 0.92, 0.7),
+    ):
+        _shrub_bed(V, x, y, scale, phase)
 
     # ---- Garden Terrace (Library West front): two-step planters with brick seats
     for x0, x1 in GARDEN_PLANTERS:
