@@ -39,8 +39,14 @@ local function setup(count, dedicated)
         c.stubs.mod_fs_hide_errors = function() end
         c.stubs.mod_fs_reload = function() return nil end
         c.stubs.print = function() end
+        local camera = { zoomed_in_dist = 900, zoomed_out_dist = 1400,
+            zoomed_in_height = 300, zoomed_out_height = 450, collisions = 0 }
+        for field in pairs(camera) do
+            c.stubs["camera_romhack_get_" .. field] = function() return camera[field] end
+            c.stubs["camera_romhack_set_" .. field] = function(v) camera[field] = v end
+        end
         w:warp(c, HUB, 1, 0)
-        c.pos.x, c.pos.z = 8320, -4440
+        c.pos.x, c.pos.z = 8320.25, -4440.5 -- engine Vec3f coordinates, including negative cells
         clients[i] = c
     end
     return w, table.unpack(clients)
@@ -143,7 +149,7 @@ test("stage visits, local off, and no-path positions do not give others extra sh
     w:step(120)
     w:warp(F, C.LEVEL_BOB, 1, 1)
     w:step(60)
-    check(#students(F) == 0 and #students(H) == 12, "no students in stages; visitor remains in denominator")
+    check(#students(F) > 0 and #students(F) <= 12 and #students(H) == 12, "stage visitor keeps the same budget")
     w:warp(F, HUB, 2, 0)
     w:step(60)
     check(#students(F) == 0, "no outdoor crowd in an unsupported hub area")
@@ -185,7 +191,7 @@ test("walking and teleporting keep the crowd near the player", function()
     check(#students(H) == 0, "no distant crowd beneath a player on a roof")
 end)
 
-test("hidden spawning never falls back into view and hard leash removes visible distant NPCs", function()
+test("a teleport repopulates even when every candidate is in front of the camera", function()
     local w, H = setup(1)
     w:step(120)
     local cam = H.stubs.gLakituState
@@ -194,7 +200,12 @@ test("hidden spawning never falls back into view and hard leash removes visible 
     cam.curFocus.x, cam.curFocus.z = 0, 0
     H.pos.x, H.pos.z = 8391, -16043
     w:step(120)
-    check(#students(H) == 0, "old visible crowd removed; no in-view respawn fallback")
+    check(#students(H) == 12 and farthest_from(H) < 3800, "arrival fallback repopulates at the destination")
+    Sim.cmd(H, "crowd", "off")
+    w:step(1)
+    Sim.cmd(H, "crowd", "on")
+    w:step(120)
+    check(#students(H) == 0, "after arrival, ordinary spawning still waits for hidden nodes")
     cam.curFocus.x = -2000000
     w:step(120)
     check(#students(H) == 12, "turning away allows hidden spawns")
@@ -223,6 +234,105 @@ test("host controls budgets; clients cannot change them; rounding never exceeds 
     Sim.cmd(H, "crowd", "budget 12")
     w:step(120)
     check(total(w) == 12, "budget restored without warp")
+end)
+
+test("/campus marston follows the actual command and repopulates on the arrival floor", function()
+    local w, H, F = setup(2)
+    w:step(120)
+    check(Sim.cmd(F, "campus", "marston 1 me"), "demo command accepted")
+    check(F.level == C.LEVEL_CCM, "command enters Marston")
+    -- The simulator does not apply Mario's spawn position automatically.
+    F.pos.x, F.pos.y, F.pos.z = -790.5, 0.0, -1510.25
+    w:step(120)
+    check(#students(F) > 0 and #students(F) <= 12, "Marston arrival has a bounded crowd")
+    check(#students(H) == 12 and total(w) <= 24, "hub player retains their share")
+    for _, o in ipairs(students(F)) do check(o.oPosY == 0, "arrival crowd stays on the lobby floor") end
+    -- Elevator / mission teleport within the same level, with no level-init hook.
+    F.pos.x, F.pos.y, F.pos.z = 456, 1800, -2080
+    w:step(120)
+    check(#students(F) > 0, "crowd follows an upstairs teleport")
+    for _, o in ipairs(students(F)) do check(o.oPosY == 1800, "no crowd remains on other floors") end
+    check(F.env.sgl_campus_warp("hub", 0, true), "map button uses the same travel function")
+    F.pos.x, F.pos.y, F.pos.z = 8320, 0, -4440
+    w:step(120)
+    check(#students(F) == 12, "return to hub recovers original sidewalk crowd")
+end)
+
+test("Reitz instant area transition without level init replaces outdoor routes", function()
+    local w, H = setup(1)
+    w:warp(H, C.LEVEL_WF, 1, 1)
+    H.pos.x, H.pos.y, H.pos.z = 7200, 0, -9300
+    w:step(120)
+    check(#students(H) > 0, "Reitz outdoor arrival has students")
+    -- Model an instant warp: area/position changes but no HOOK_ON_LEVEL_INIT.
+    H.area = 2
+    local route
+    for _, r in ipairs(H.env.SGL_CROWD_AREAS) do
+        if r.level == C.LEVEL_WF and r.area == 2 then route = r end
+    end
+    local n = route.nodes[1]
+    H.pos.x, H.pos.y, H.pos.z = n[1], n[2], n[3]
+    w:refresh_views()
+    w:step(120)
+    check(#students(H) > 0 and #students(H) <= 12, "door arrival has interior students")
+    for _, o in ipairs(students(H)) do check(o.oPosY == n[2], "indoor crowd is on destination floor") end
+end)
+
+test("all demo stage arrivals have nearby routes", function()
+    local w, H = setup(1)
+    for _, stage in ipairs({{"swamp", "bob"}, {"reitz", "wf"}, {"alice", "jrb"}, {"libwest", "bbh"}}) do
+        check(H.env.sgl_campus_warp(stage[1], 1, true), "map travel to " .. stage[1])
+        for _, obj in ipairs(Sim.level_script(stage[2]).objects) do
+            if obj.bhv == "bhvSpinAirborneWarp" and obj.area == 1 then
+                H.pos.x, H.pos.y, H.pos.z = obj.x, obj.y - 100, obj.z
+                break
+            end
+        end
+        w:step(120)
+        check(#students(H) > 0 and #students(H) <= 12, "crowd at " .. stage[1] .. " arrival")
+    end
+end)
+
+test("indoor routing respects room walls, separate floors and moving obstacles", function()
+    local w, H = setup(1)
+    -- Two disconnected rooms on one floor and an overlapping upstairs room.
+    -- The nearest room is blocked by a wall; the visible room is farther away.
+    H.env.SGL_CROWD_AREAS = {{level = C.LEVEL_CCM, area = 1, indoor = true,
+        nodes = {{200,0,0},{400,0,0},{0,0,400},{0,0,600},{0,600,400},{0,600,600}},
+        links = {{1,2},{3,4},{5,6}}}}
+    local blockAll = false
+    H.stubs.collision_find_surface_on_ray = function(x,y,z,dx,dy,dz)
+        if (blockAll and not (x == 0 and z == 0)) or (x == 0 and z == 0 and dx > 0) then
+            return {surface = {}}
+        end
+        return {surface = nil}
+    end
+    w:warp(H, C.LEVEL_CCM, 1, 1)
+    H.pos.x, H.pos.y, H.pos.z = 0,0,0
+    w:step(120)
+    check(#students(H) > 0 and #students(H) <= 2, "small room limits crowd density below quota")
+    for _, o in ipairs(students(H)) do
+        check(o.oPosX == 0 and o.oPosY == 0 and o.oPosZ >= 400 and o.oPosZ <= 600,
+            "only reachable same-floor room receives students")
+    end
+    blockAll = true
+    w:step(6)
+    local before = positions(H)
+    w:step(30)
+    check(#students(H) > 0, "obstacle pauses students rather than removing them")
+    for k, p in pairs(positions(H)) do
+        check(p[1] == before[k][1] and p[3] == before[k][3], "walker stops for a newly blocking obstacle")
+    end
+    blockAll = false
+    H.stubs.gLakituState.curPos.x = -1000000
+    H.stubs.gLakituState.curFocus.x = 0
+    H.pos.x, H.pos.z = 600, 0 -- short doorway move, below the teleport threshold
+    w:step(120)
+    check(#students(H) > 0, "crowd follows a change of room without a warp hook")
+    for _, o in ipairs(students(H)) do
+        check(o.oPosZ == 0 and o.oPosX >= 200 and o.oPosX <= 400,
+            "old unreachable room is retired even when within the distance leash")
+    end
 end)
 
 print(string.format("test_campus_npcs: %d passed, %d failed", passed, failed))

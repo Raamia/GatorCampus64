@@ -147,6 +147,10 @@ echo "== test_campus_npcs (students walking the hub's sidewalks)"
 "$LUA" "$HERE/test_campus_npcs.lua"
 echo "== campus_routes --check"
 python3 -I "$HERE/../npcs/campus_routes.py" --check
+echo "== area_routes --check"
+python3 -I "$HERE/../npcs/area_routes.py" --check
+echo "== indoor crowd geometry tests"
+python3 -m unittest discover -s "$HERE/../npcs" -p test_area_routes.py
 echo "== check_npc_ids"
 python3 -I "$HERE/check_npc_ids.py"
 echo "== check_npc_spots"

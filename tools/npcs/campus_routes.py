@@ -47,7 +47,8 @@ class Collision:
     CELL = 512
 
     def __init__(self, path):
-        src = open(path).read()
+        with open(path) as source:
+            src = source.read()
         verts = [tuple(int(v) for v in m) for m in
                  re.findall(r"COL_VERTEX\(\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)\s*\)", src)]
         self.floors, self.solids = {}, {}

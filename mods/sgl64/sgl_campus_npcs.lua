@@ -1,4 +1,4 @@
--- Campus students are local scenery around each player on the hub's safe sidewalk graph.
+-- Campus students are local scenery around each player on destination-specific safe walking graphs.
 -- The host divides one server-wide budget equally among connected human players (including
 -- players visiting stages). No fixed landmark crowd, no headless-host objects, no position packets.
 -- Each client renders only its own share; unused shares are not redistributed. Albert/Alberta
@@ -17,12 +17,54 @@ local IDLE_ANIMS = { MARIO_ANIM_IDLE_HEAD_LEFT, MARIO_ANIM_IDLE_HEAD_RIGHT, MARI
 ---------------------------------------------------------------------------------------------
 -- the sidewalk graph
 ---------------------------------------------------------------------------------------------
-local sNodes = SGL_CAMPUS_ROUTES.nodes
-local sAdj = {}
-for i = 1, #sNodes do sAdj[i] = {} end
-for _, l in ipairs(SGL_CAMPUS_ROUTES.links) do
-    table.insert(sAdj[l[1]], l[2])
-    table.insert(sAdj[l[2]], l[1])
+local sRoute = nil
+local sPlayerComponent = nil
+local sNodes, sAdj, sComponents, sBuckets = {}, {}, {}, {}
+local sLimits = SGL_CROWD_AROUND
+local INDOOR = { near = 200, far = 1200, leash = 900, recycle = 1600, hard = 2400,
+                 respawn = { 400, 1200 } }
+local sRouteCache = {}
+local function bucket_key(x, z) return math.floor(x / 1000) .. ":" .. math.floor(z / 1000) end
+
+local function select_routes(level, area)
+    local route = nil
+    if level == SGL_HUB_LEVEL and area == 1 then route = SGL_CAMPUS_ROUTES end
+    for _, candidate in ipairs(SGL_CROWD_AREAS) do
+        if candidate.level == level and candidate.area == area then route = candidate break end
+    end
+    sRoute = route
+    sLimits = route ~= nil and route.indoor and INDOOR or SGL_CROWD_AROUND
+    sNodes, sAdj, sComponents, sBuckets = {}, {}, {}, {}
+    if route == nil then return end
+    local cached = sRouteCache[route]
+    if cached == nil then
+        local adj, components, buckets = {}, {}, {}
+        for i, n in ipairs(route.nodes) do
+            adj[i] = {}
+            local key = bucket_key(n[1], n[3])
+            if buckets[key] == nil then buckets[key] = {} end
+            table.insert(buckets[key], i)
+        end
+        for _, link in ipairs(route.links) do
+            table.insert(adj[link[1]], link[2])
+            table.insert(adj[link[2]], link[1])
+        end
+        for i = 1, #route.nodes do
+            if components[i] == nil then
+                local queue, cursor = { i }, 1
+                components[i] = i
+                while cursor <= #queue do
+                    for _, n in ipairs(adj[queue[cursor]]) do
+                        if components[n] == nil then components[n] = i; queue[#queue + 1] = n end
+                    end
+                    cursor = cursor + 1
+                end
+            end
+        end
+        cached = { adj = adj, components = components, buckets = buckets }
+        sRouteCache[route] = cached
+    end
+    sNodes, sAdj, sComponents, sBuckets = route.nodes, cached.adj, cached.components, cached.buckets
 end
 
 local function dist2d(ax, az, bx, bz)
@@ -103,7 +145,7 @@ end
 -- A fresh walk from node a: speed, side of the path, first link.
 local function start_walk(s, a)
     s.speed = 3.2 + rnd(s) * 1.2                 -- units per frame (about 1-1.3 m/s)
-    s.side = (rnd(s) < 0.5 and -1 or 1) * (10 + rnd(s) * 25)
+    s.side = sRoute ~= SGL_CAMPUS_ROUTES and 0 or (rnd(s) < 0.5 and -1 or 1) * (10 + rnd(s) * 25)
     s.pause, s.idle = 0, IDLE_ANIMS[1]
     set_link(s, a, pick(s, sAdj[a]))
 end
@@ -130,16 +172,56 @@ local function camera_sees(x, z)
     return (fx * px + fz * pz) / (fl * pl) > 0.35
 end
 
--- Start at a safe sidewalk node, not a random distance down a potentially long link.
--- Never fall back to an in-view node during recycling. No nearby safe node means no spawn.
-local function place_ambient(s, minD, maxD, hidden)
-    local candidates = {}
-    for i, n in ipairs(sNodes) do
-        if #sAdj[i] > 0 and math.abs(n[2] - sAround.y) <= 500 then
-            local d = dist2d(n[1], n[3], sAround.x, sAround.z)
-            if d >= minD and d <= maxD and (not hidden or not camera_sees(n[1], n[3])) then
-                table.insert(candidates, i)
+-- Collision rays choose a reachable room/component, not merely the nearest
+-- node through a wall. Probe at most eight candidates per half second, shared by the crowd.
+local function reachable_node(n)
+    local hit = collision_find_surface_on_ray(sAround.x, sAround.y + 100, sAround.z,
+        n[1] - sAround.x, n[2] - sAround.y, n[3] - sAround.z)
+    return hit == nil or hit.surface == nil
+end
+
+local function nearby_nodes(maxD)
+    local nearby = {}
+    for bx = math.floor((sAround.x - maxD) / 1000), math.floor((sAround.x + maxD) / 1000) do
+        for bz = math.floor((sAround.z - maxD) / 1000), math.floor((sAround.z + maxD) / 1000) do
+            for _, i in ipairs(sBuckets[bx .. ":" .. bz] or {}) do
+                local n = sNodes[i]
+                local d = dist2d(n[1], n[3], sAround.x, sAround.z)
+                if #sAdj[i] > 0 and math.abs(n[2] - sAround.y) <= 120 and d <= maxD then
+                    nearby[#nearby + 1] = { i = i, d = d }
+                end
             end
+        end
+    end
+    return nearby
+end
+
+local function player_component()
+    local nearby = nearby_nodes(sLimits.far)
+    table.sort(nearby, function(a, b) return a.d < b.d end)
+    for k = 1, math.min(8, #nearby) do
+        local i = nearby[k].i
+        if reachable_node(sNodes[i]) then return sComponents[i] end
+    end
+    return nil
+end
+
+local function place_ambient(s, minD, maxD, hidden)
+    local nearby, candidates = nearby_nodes(maxD), {}
+    local component = sRoute.indoor and sPlayerComponent or nil
+    if sRoute.indoor and component == nil then return false end
+    for _, entry in ipairs(nearby) do
+        local i, d = entry.i, entry.d
+        local n = sNodes[i]
+        if d >= minD and (component == nil or sComponents[i] == component)
+                and (not hidden or not camera_sees(n[1], n[3])) then
+            local clear = true
+            for _, other in ipairs(SGL_CROWD) do
+                local o = other.obj
+                if o ~= nil and other ~= s and math.abs(o.oPosY - n[2]) < 200
+                        and dist2d(o.oPosX, o.oPosZ, n[1], n[3]) < 150 then clear = false; break end
+            end
+            if clear then candidates[#candidates + 1] = i end
         end
     end
     if #candidates == 0 then return false end
@@ -251,17 +333,27 @@ local function crowd_loop(o)
     -- after a teleport; camera direction must never keep a distant crowd alive.
     if (o.oTimer + s.index) % 15 == 0 then
         local distance = dist2d(o.oPosX, o.oPosZ, sAround.x, sAround.z)
-        if distance > SGL_CROWD_AROUND.hard or math.abs(o.oPosY - sAround.y) > 800 then
+        if distance > sLimits.hard or math.abs(o.oPosY - sAround.y) > (sRoute.indoor and 160 or 800) then
             despawn(s)
             return
         end
-        if distance > SGL_CROWD_AROUND.recycle and not camera_sees(o.oPosX, o.oPosZ) then
-            local r = SGL_CROWD_AROUND.respawn
+        if distance > sLimits.recycle and not camera_sees(o.oPosX, o.oPosZ) then
+            local r = sLimits.respawn
             if not place_ambient(s, r[1], r[2], true) then
                 despawn(s)
                 return
             end
         end
+    end
+    -- Static paths are validated offline. Recheck a short look-ahead indoors so
+    -- a moving mission prop or closed door can stop a walker between updates.
+    if sRoute.indoor and (o.oTimer + s.index) % 6 == 0 then
+        local a, b = sNodes[s.a], sNodes[s.b]
+        local t = math.min(s.len, s.pos + 80) / s.len
+        local tx, tz = a[1] + (b[1] - a[1]) * t, a[3] + (b[3] - a[3]) * t
+        local hit = collision_find_surface_on_ray(o.oPosX, o.oPosY + 100, o.oPosZ,
+            tx - o.oPosX, 0, tz - o.oPosZ)
+        if hit ~= nil and hit.surface ~= nil then s.pause = math.max(s.pause, 15) end
     end
     advance(s, 1)
     local x, y, z, yaw = place_of(s)
@@ -276,7 +368,8 @@ local function crowd_loop(o)
     end
     o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, yaw, 0x800)
     o.oMoveAngleYaw = o.oFaceAngleYaw
-    cur_obj_push_mario_away_from_cylinder(SGL_CROWD_PUSH_RADIUS, 160)
+    -- Interior crowds are scenery and must not shove players in tight halls or missions.
+    if not sRoute.indoor then cur_obj_push_mario_away_from_cylinder(SGL_CROWD_PUSH_RADIUS, 160) end
 end
 
 id_bhvSglCrowd = hook_behavior(nil, OBJ_LIST_DEFAULT, true, crowd_init, crowd_loop, "bhvSglCrowd")
@@ -284,6 +377,9 @@ id_bhvSglCrowd = hook_behavior(nil, OBJ_LIST_DEFAULT, true, crowd_init, crowd_lo
 local sEnabled = true
 local sFrame = 0
 local sLastQuota = -1
+local sPlace = nil
+local sLastPos = nil
+local sArrivalFrames = 0
 
 local function despawn_all()
     for _, s in ipairs(SGL_CROWD) do despawn(s) end
@@ -291,7 +387,7 @@ end
 
 local function eligible()
     local np = gNetworkPlayers[0]
-    return sEnabled and np.connected and np.currLevelNum == SGL_HUB_LEVEL and np.currAreaIndex == 1
+    return sEnabled and np.connected and sRoute ~= nil
         and not (network_is_server() and headless())
 end
 
@@ -309,8 +405,12 @@ local function reconcile(quota, spawn)
             despawn(s)
         elseif s.obj == nil and spawn and attempts < 2 then
             attempts = attempts + 1  -- bound graph scans even when there is no nearby sidewalk
-            local A = SGL_CROWD_AROUND
-            if place_ambient(s, A.near, A.far, true) then
+            local A = sLimits
+            local placed = place_ambient(s, A.near, A.far, true)
+            -- During arrival only, a forward-facing camera must not suppress the
+            -- entire destination crowd. Still require safe floor and separation.
+            if not placed and sArrivalFrames > 0 then placed = place_ambient(s, A.near, A.far, false) end
+            if placed then
                 local x, y, z, yaw = place_of(s)
                 s.obj = spawn_non_sync_object(id_bhvSglCrowd, s.model, x, y, z, function(obj)
                     obj.oBehParams = k
@@ -325,18 +425,40 @@ end
 local function update()
     sFrame = sFrame + 1
     if sFrame % 30 == 1 then publish_budget() end
+    local np, m = gNetworkPlayers[0], gMarioStates[0]
+    local place = np.currLevelNum .. ":" .. np.currAreaIndex .. ":" .. np.currActNum
+    local jumped = sLastPos ~= nil and (dist2d(m.pos.x, m.pos.z, sLastPos.x, sLastPos.z) > 1500
+        or math.abs(m.pos.y - sLastPos.y) > 400)
+    local changed = place ~= sPlace
+    if changed or jumped then
+        despawn_all()
+        if place ~= sPlace then select_routes(np.currLevelNum, np.currAreaIndex) end
+        sPlace, sArrivalFrames, sLastQuota = place, 100, -1
+    end
+    sLastPos = { x = m.pos.x, y = m.pos.y, z = m.pos.z }
     update_around()
+    sAround.leash = sLimits.leash
+    if eligible() and sRoute.indoor and (changed or jumped or sFrame % 15 == 1) then
+        local component = player_component()
+        if component ~= nil and component ~= sPlayerComponent then sArrivalFrames = 100 end
+        sPlayerComponent = component
+        for _, s in ipairs(SGL_CROWD) do
+            if s.obj ~= nil and sComponents[s.a] ~= sPlayerComponent then despawn(s) end
+        end
+    end
+    if sArrivalFrames > 0 then sArrivalFrames = sArrivalFrames - 1 end
     local quota = eligible() and sgl_crowd_quota() or 0
-    -- Reductions apply immediately; grow at most two students each half second.
+    -- Let the destination/camera settle for ten frames, then fill gradually.
+    local spawn = sFrame % 15 == 1 and sArrivalFrames < 90
     if quota ~= sLastQuota or sFrame % 15 == 1 then
-        reconcile(quota, sFrame % 15 == 1)
+        reconcile(quota, spawn)
         sLastQuota = quota
     end
 end
 
 local function on_level_init()
     for _, s in ipairs(SGL_CROWD) do s.obj, s.playing = nil, nil end
-    sLastQuota = -1  -- the engine already removed objects in the previous level
+    sPlace, sLastPos, sLastQuota = nil, nil, -1
 end
 
 function sgl_crowd_pos(k)
