@@ -4,7 +4,7 @@ Every star in the game, as the mission code builds it today. The stage table and
 
 ## How stars work
 
-- **Doors:** the stage doors in the hub open at **0, 2, 5, 8, 11 and 14** total stars.
+- **Doors:** every built stage in the hub is open from the start with **0 stars**. Century Tower and other unbuilt stages remain coming soon, with no star requirement.
 - **Stars per stage:** each stage has 7 stars, the 6 acts plus the 100-coin star.
   - Act *k* awards star id *k − 1*.
   - The 100-coin star is id 6.
@@ -16,7 +16,7 @@ Every star in the game, as the mission code builds it today. The stage table and
   - Stars are shared by everyone in the session.
   - When a friend starts a mission, everyone else gets a "join them" invite (the Study Group).
   - Co-op missions scale with the number of players.
-- **Solo players:** every built stage gives a solo player 3 stars (acts 1–2 plus 100 coins). That's enough to open each next door with one star to spare.
+- **Solo players:** you can enter any built stage on a fresh save. Stars still advance act selection within each stage; mission-specific player requirements remain unchanged.
 
 ---
 

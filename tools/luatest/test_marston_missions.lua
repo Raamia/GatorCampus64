@@ -125,8 +125,8 @@ test("registry: three Marston missions on acts 1/2/3, star ids act-1, titles = c
     check(d2_ and d2_.id == "marston_quiet" and d2_.starId == 1 and d2_.minPlayers == 1, "act 2 quiet floor, star 1, solo")
     check(d3 and d3.id == "marston_booking" and d3.starId == 2 and d3.minPlayers == 2, "act 3 booking, star 2, 2+ players")
     local stage = env.sgl_stage_by_level(CCM)
-    check(stage ~= nil and stage.key == "marston" and stage.door == 4 and stage.stars == 8 and stage.course == C.COURSE_CCM
-        and stage.slot == "ccm" and stage.acts ~= nil, "course.lua: door 4 = MARSTON LIBRARY (8 stars, COURSE_CCM, slot ccm) with act names")
+    check(stage ~= nil and stage.key == "marston" and stage.door == 4 and stage.stars == 0 and stage.course == C.COURSE_CCM
+        and stage.slot == "ccm" and stage.acts ~= nil, "course.lua: door 4 = MARSTON LIBRARY (zero stars, COURSE_CCM, slot ccm) with act names")
     for _, d in ipairs({ d1, d2_, d3 }) do
         check((d.bparams >> 24) == d.starId, d.id .. " bparams carry the star id")
         check(stage.acts[d.act] == d.title, d.id .. " title matches course.lua act " .. d.act .. " (" .. tostring(stage.acts[d.act]) .. ")")

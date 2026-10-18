@@ -1,4 +1,4 @@
--- Super Gatorlator 64: Lake Alice (course 3, LEVEL_JRB, hub door 3 "Newell Hall", 5 stars) missions, on the
+-- Super Gatorlator 64: Lake Alice (course 3, LEVEL_JRB, hub door 3 "Newell Hall") missions, on the
 -- framework in sgl_mission.lua (docs/game_design.md 7.4, docs/flow.md 5).
 --
 --   act 1  BOARDWALK WELCOME         solo (design 7.4 act 1): from the bat-house field across Museum Road onto

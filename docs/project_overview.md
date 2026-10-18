@@ -22,16 +22,16 @@ Each friend was built from 1–4 photos into an N64-style character that keeps e
 
 ### The campus: a hub and 5 stages
 
-| Stage | Door in the hub | Unlocks at | What it is |
+| Stage | Door in the hub | Entry | What it is |
 |---|---|---|---|
 | **Hub: Plaza of the Americas** | — | start | Century Tower (climbable, 47.9 m), the Auditorium, Library West, Smathers, Turlington and "The Potato", Marston, The Hub, Newell |
 | **1. The Swamp** | University Auditorium | 0 ★ | Ben Hill Griffin Stadium at true scale, the O'Connell Center, Florida Gym |
-| **2. Reitz Union + Engineering** | The Hub | 2 ★ | The Reitz Union (enterable food court, climbable tower), Weil Hall, Malachowsky Hall, Gator Corner |
-| **3. Lake Alice** | Newell Hall | 5 ★ | The real lake basin with its islands, lily pads, cypress, the bat houses, the Baughman Center |
-| **4. Marston Science Library** | Marston | 8 ★ | A 5-floor interior from UF floor plans: stacks, glass study rooms, quiet and silent floors |
-| **5. Library West After Dark** | Library West | 11 ★ | Exterior night course around the Library West facade, gardens, and nearby walks; no enterable interior in the solo campaign |
+| **2. Reitz Union + Engineering** | The Hub | 0 ★ | The Reitz Union (enterable food court, climbable tower), Weil Hall, Malachowsky Hall, Gator Corner |
+| **3. Lake Alice** | Newell Hall | 0 ★ | The real lake basin with its islands, lily pads, cypress, the bat houses, the Baughman Center |
+| **4. Marston Science Library** | Marston | 0 ★ | A 5-floor interior from UF floor plans: stacks, glass study rooms, quiet and silent floors |
+| **5. Library West After Dark** | Library West | 0 ★ | Exterior night course around the Library West facade, gardens, and nearby walks; no enterable interior in the solo campaign |
 
-Walk into a building's door to get SM64's real act select screen. Stars are shared by the whole group, save between sessions, and unlock the next doors.
+Every built stage is open from the start with 0 stars. Walk into a building's door to get SM64's real act select screen. Stars are shared by the whole group, save between sessions, and advance the available acts within each stage. Unbuilt stages remain coming soon.
 
 ### 15 missions: two solo and one co-op per stage
 
@@ -154,7 +154,7 @@ Super Mario 64 is Nintendo's. This project only works for people who own their o
 - **Act order:** act select only offers acts you have stars for, plus the next one. Missions must be acts 1..N with no gaps, or the game soft-locks.
 - **Load order:** coopdx loads mod Lua files alphabetically, so file names matter.
 - **Wall direction:** wall faces must point the right way. Airborne players get pushed out of walls they're near.
-- **Stars per player:** count how many stars a solo player can actually earn before setting door requirements.
+- **Stage entry:** built stages have no star requirement; keep act progression and coming-soon protection separate from entry.
 
 ### Credits to keep
 

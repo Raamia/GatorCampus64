@@ -7,11 +7,11 @@
 -- levels/level_<slot>_entry.lvl at launch and that .lvl replaces the vanilla level.
 --   hub    castle_grounds  LEVEL_CASTLE_GROUNDS  (tools/campus/build_stage.py hub)
 --   door 1 bob             LEVEL_BOB / COURSE_BOB  The Swamp (Auditorium door)                 built
---   door 2 wf              LEVEL_WF  / COURSE_WF   Reitz Union + Engineering (The Hub door)    built (2 stars)
---   door 3 jrb             LEVEL_JRB / COURSE_JRB  Lake Alice (Newell Hall door)               built (5 stars)
---   door 4 ccm             LEVEL_CCM / COURSE_CCM  Marston Science Library (Marston door)      built (8 stars; an interior)
---   door 5 bbh             LEVEL_BBH / COURSE_BBH  Library West After Dark (Library West door) built (11 stars; an interior)
---   door 6 ttc             LEVEL_TTC / COURSE_TTC  Century Tower interior (tower base door)    reserved (14 stars)
+--   door 2 wf              LEVEL_WF  / COURSE_WF   Reitz Union + Engineering (The Hub door)    built
+--   door 3 jrb             LEVEL_JRB / COURSE_JRB  Lake Alice (Newell Hall door)               built
+--   door 4 ccm             LEVEL_CCM / COURSE_CCM  Marston Science Library (Marston door)      built (an interior)
+--   door 5 bbh             LEVEL_BBH / COURSE_BBH  Library West After Dark (Library West door) built (an interior)
+--   door 6 ttc             LEVEL_TTC / COURSE_TTC  Century Tower interior (tower base door)    reserved
 --
 -- Stars: act k (1..6) mission star = star id k - 1 of the stage's course. Star id 6 is the unused vanilla
 -- 100-coin slot; ambient coins are disabled in the campus maps. Star collection is shared by coopdx.
@@ -38,8 +38,8 @@
 -- Seek (design act 2, co-op / competitive); design acts 3 (The Ghost of Finals Past), 4 (Lights Out) and 6 (Re-shelve the
 -- Glowing Books) come later as 4/5/6. Missions: uf_west_library_missions.lua. Built: levels/bbh (an interior at night,
 -- tools/campus/build_interior.py libwest).
--- Star curve: doors open at 0, 2, 5, 8, 11, 14. With ambient coins removed, the third act's shared co-op star is
--- required to keep advancing beyond the first two courses.
+-- Every built stage is open from the start. Stars track mission progress, not access to other stages.
+-- Unbuilt stages stay "coming soon" regardless of the team's star count.
 
 ---------------------------------------------------------------------------------------------
 -- warp nodes (area 1 everywhere)
@@ -54,8 +54,8 @@ SGL_NODE_DEATH_RETURN = 0x30   -- hub: spawn outside door after a death or pause
 SGL_STAR_ID_100_COINS = 6      -- vanilla 100-coin star id in every course
 
 ---------------------------------------------------------------------------------------------
--- stages. door = hub door index (its warp nodes are 0x10/0x20/0x30 + door); stars = total stars
--- (save file, all courses + castle secret stars) needed to open the door. acts = act select names
+-- stages. door = hub door index (its warp nodes are 0x10/0x20/0x30 + door); stars = entry requirement
+-- (zero for every stage, so no stars are needed). acts = act select names
 -- (menu font: A-Z 0-9 space ' . , - & ! ? only, no lower case / colon / parentheses / plus).
 ---------------------------------------------------------------------------------------------
 SGL_STAGES = {
@@ -69,7 +69,7 @@ SGL_STAGES = {
           "COMING SOON - TAILGATE",       -- design 7.1 "Tailgate Tokens" (no mission yet)
           "COMING SOON - FLYOVER!",       -- design 7.1 "Flyover!" (no mission yet)
       } },
-    { door = 2, key = "reitz", slot = "wf", level = LEVEL_WF, course = COURSE_WF, stars = 2,
+    { door = 2, key = "reitz", slot = "wf", level = LEVEL_WF, course = COURSE_WF, stars = 0,
       name = "REITZ & ENGINEERING", building = "THE HUB",
       acts = {
           "ROOFTOP OF THE REITZ",         -- wf_reitz_missions.lua reitz_rooftop (spawns star id 0; no level-script star)
@@ -79,7 +79,7 @@ SGL_STAGES = {
           "COMING SOON - ROBOT ROUNDUP",  -- design 7.2 "Rogue Robot Roundup" (no mission yet)
           "COMING SOON - DATA RELAY",     -- design 7.2 "Data Packet Relay" (no mission yet)
       } },
-    { door = 3, key = "alice", slot = "jrb", level = LEVEL_JRB, course = COURSE_JRB, stars = 5,
+    { door = 3, key = "alice", slot = "jrb", level = LEVEL_JRB, course = COURSE_JRB, stars = 0,
       name = "LAKE ALICE", building = "NEWELL HALL",
       acts = {
           "BOARDWALK WELCOME",            -- uf_lake_missions.lua lake_boardwalk (lily pads to the lake-centre deck; spawns star id 0)
@@ -89,7 +89,7 @@ SGL_STAGES = {
           "COMING SOON - HATCHLING",      -- design 7.4 act 5 "Lost Hatchling" (no mission yet)
           "COMING SOON - RED COINS",      -- design 7.4 act 6 "Lily Pad Red Coins" (no mission yet)
       } },
-    { door = 4, key = "marston", slot = "ccm", level = LEVEL_CCM, course = COURSE_CCM, stars = 8,
+    { door = 4, key = "marston", slot = "ccm", level = LEVEL_CCM, course = COURSE_CCM, stars = 0,
       name = "MARSTON LIBRARY", building = "MARSTON SCIENCE LIBRARY",
       acts = {
           "OUT-OF-ORDER ELEVATOR",        -- uf_marston_missions.lua marston_climb (atrium lifts to the 5th floor; spawns star id 0)
@@ -99,7 +99,7 @@ SGL_STAGES = {
           "COMING SOON - PRINTER JAM",    -- design 7.3 act 5 "Printer Jam" (no mission yet)
           "COMING SOON - BOOK EXPRESS",   -- design 7.3 act 6 "Overdue Book Express" (no mission yet)
       } },
-    { door = 5, key = "libwest", slot = "bbh", level = LEVEL_BBH, course = COURSE_BBH, stars = 11,
+    { door = 5, key = "libwest", slot = "bbh", level = LEVEL_BBH, course = COURSE_BBH, stars = 0,
       name = "LIBRARY WEST AFTER DARK", building = "LIBRARY WEST",
       acts = {
           "ALL-NIGHTER",                  -- uf_west_library_missions.lua libwest_allnighter (lobby to the 6F big window; spawns star id 0)
@@ -109,7 +109,7 @@ SGL_STAGES = {
           "COMING SOON - LIGHTS OUT",     -- design 7.5 act 4 "Lights Out" (no mission yet)
           "COMING SOON - GLOWING BOOKS",  -- design 7.5 act 6 "Re-shelve the Glowing Books" (no mission yet)
       } },
-    { door = 6, key = "tower", slot = "ttc", level = LEVEL_TTC, course = COURSE_TTC, stars = 14,
+    { door = 6, key = "tower", slot = "ttc", level = LEVEL_TTC, course = COURSE_TTC, stars = 0,
       name = "CENTURY TOWER", building = "CENTURY TOWER" },
 }
 
@@ -140,7 +140,7 @@ function sgl_hub_ready()
     return not level_is_vanilla_level(SGL_HUB_LEVEL)
 end
 
--- total stars of the current save file (what the door locks check; stars are shared in co-op)
+-- total stars of the current save file (mission progress; stars are shared in co-op)
 function sgl_total_stars()
     local file = get_current_save_file_num() - 1
     if file < 0 then return gMarioStates[0].numStars end

@@ -199,10 +199,11 @@ test("the host's own line near Albert -> outbox request with live stats and wher
         "request line: " .. tostring(seq) .. " " .. tostring(id) .. " " .. tostring(player) .. " " .. tostring(msg))
     stats = stats or ""
     for _, key in ipairs({ "stars=", "lives=", "coins=", "players=2", "here=central campus", "s_swamp=2",
-                           "go=THE SWAMP|UNIVERSITY AUDITORIUM", "lock=REITZ & ENGINEERING|THE HUB|2",
+                           "go=THE SWAMP|UNIVERSITY AUDITORIUM",
                            "albert_at=on the Plaza", "alberta_at=on the Plaza", "The Swamp, behind the Stair Sprint" }) do
         check(stats:find(key, 1, true) ~= nil, "stats has " .. key .. ": " .. stats)
     end
+    check(stats:find("lock=", 1, true) == nil, "NPC stats do not report a star-locked stage")
 end)
 
 test("a friend's line near Albert reaches the host from the friend's own client", function()

@@ -92,10 +92,10 @@ University Auditorium is\
 straight ahead (south):\
 walk into its door to\
 enter THE SWAMP.\
-The other stage doors\
-open as you collect\
-stars; their signposts\
-say how many you need.\
+Every built stage is\
+open from the start.\
+No stars are needed\
+to enter its door.\
 Century Tower is behind\
 the Auditorium.\
 Go Gators!")
@@ -137,18 +137,18 @@ end
 
 SGL_HUB_SIGN_UNIVERSITY_AUDITORIUM = door_sign("UNIVERSITY AUDITORIUM", "THE SWAMP", 0, 1)
 SGL_HUB_SIGN_THE_HUB = door_sign("THE HUB", "REITZ UNION AND\
-ENGINEERING", 2, 2)
-SGL_HUB_SIGN_NEWELL_HALL = door_sign("NEWELL HALL", "LAKE ALICE", 5, 3)
-SGL_HUB_SIGN_MARSTON = door_sign("MARSTON SCIENCE LIBRARY", "MARSTON", 8, 4)
+ENGINEERING", 0, 2)
+SGL_HUB_SIGN_NEWELL_HALL = door_sign("NEWELL HALL", "LAKE ALICE", 0, 3)
+SGL_HUB_SIGN_MARSTON = door_sign("MARSTON SCIENCE LIBRARY", "MARSTON", 0, 4)
 SGL_HUB_SIGN_LIBRARY_WEST = door_sign("LIBRARY WEST", "LIBRARY WEST\
-AFTER DARK", 11, 5)
+AFTER DARK", 0, 5)
 SGL_HUB_SIGN_CENTURY_TOWER = door_sign("CENTURY TOWER", "CENTURY TOWER\
-(INSIDE)", 14, 6)
+(INSIDE)", 0, 6)
 -- no stage slot yet (bonus slide, finale): always "coming soon"
 SGL_HUB_SIGN_SMATHERS = door_sign("SMATHERS LIBRARY", "SMATHERS STACKS\
-SLIDE", 3, nil)
+SLIDE", 0, nil)
 SGL_HUB_SIGN_FINAL_EXAM = door_sign("FINAL EXAM DOOR", "FINALS WEEK\
-ASCENT", 30, nil)
+ASCENT", 0, nil)
 refresh_door_signs()
 
 -- goal marker on top of the sgl_test tower (OBJECT(MODEL_NONE, ..., id_bhvSglTestGoal))
@@ -565,7 +565,7 @@ end
 -- is missing: vanilla act select offers it and the collected ones, nothing past it (Lake Alice's solo regatta,
 -- act 4, waits for the co-op act 3). Acts the players online can actually do come first: with The Swamp's co-op
 -- act 3 left and only you online, the hint points at the next stage's solo acts instead (e.g. Reitz &
--- Engineering once 2 stars open The Hub door); with nothing solo left anywhere it falls back to the first stage
+-- Engineering, which is open from the start); with nothing solo left anywhere it falls back to the first stage
 -- whose next act needs more players.
 function sgl_next_stage()
     local stars = sgl_total_stars()

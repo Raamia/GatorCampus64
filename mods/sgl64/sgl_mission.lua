@@ -33,7 +33,7 @@
 --   * HUD (sgl_hud.lua): act banner, left panel, players-needed prompt, STAR!/TRY AGAIN, markers.
 --   * Study Group: entering a stage act alone sends an invite; everyone elsewhere gets a popup and a
 --     10 s prompt: D-pad Up (or /join, or the mod menu "Join my study group") warps them into the
---     same level + act (door star lock still applies). /join <name> follows a given player.
+--     same level + act (the stage must be built). /join <name> follows a given player.
 --   * reusable mission kinds: sgl_mission_kind_reach (climb to a goal), sgl_mission_kind_buttons
 --     (co-op: N buttons held at once, N = players here, min 2), sgl_mission_kind_race (start box,
 --     countdown, ordered checkpoints, par time, results board).

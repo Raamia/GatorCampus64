@@ -1,5 +1,7 @@
 # Overnight progress
 
+> **Historical snapshot:** the door thresholds and test instructions below describe that earlier build. Current built stages open with 0 stars; unbuilt stages remain coming soon. Follow `docs/development.md` for current testing instructions.
+
 Everything below is installed in the game, compiles in coopdx and is committed to
 [Raamia/gimmickfc](https://github.com/Raamia/gimmickfc).
 Nothing has been played in the game yet. Your first session is the real test.
