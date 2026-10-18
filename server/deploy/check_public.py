@@ -52,7 +52,23 @@ def main():
         assert status == 200
         return {'reachable': True, 'online': data.get('online'), 'player_count': len(data.get('players', []))}
     check('server_status', presence)
-    for route in ('/gatorize', '/home'):
+    def pipeline():
+        status, _, raw = get(config['apiBase'] + '/pipeline/status')
+        data = json.loads(raw)
+        assert status == 200
+        assert set(data) == {'observed_at', 'jobs'} and len(data['jobs']) <= 12
+        for job in data['jobs']:
+            assert set(job) == {'id', 'state', 'step', 'elapsed_seconds', 'steps'}
+            assert len(job['id']) == 12 and all(c in '0123456789abcdef' for c in job['id'])
+            assert job['state'] in ('queued', 'spec', 'face', 'build', 'export', 'validate', 'preview', 'ready', 'failed', 'unknown')
+            assert job['step'] in (None, 'queued', 'spec', 'face', 'build', 'export', 'validate', 'preview', 'store', 'ready')
+            assert len(job['steps']) <= 64
+            for step in job['steps']:
+                assert set(step) == {'step', 'seconds', 'running'}
+                assert step['step'] in ('queued', 'spec', 'face', 'build', 'export', 'validate', 'preview', 'store')
+        return {'reachable': True, 'anonymous_jobs': len(data['jobs']), 'allowlisted_fields_only': True}
+    check('pipeline_status', pipeline)
+    for route in ('/gatorize', '/home', '/pipeline'):
         check('companion' + route, lambda route=route: get(args.origin.rstrip('/') + route)[0] == 200)
     def cors():
         status, headers, _ = get(config['apiBase'] + '/characters', 'OPTIONS', {

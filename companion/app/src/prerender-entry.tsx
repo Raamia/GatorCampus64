@@ -22,6 +22,7 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import * as app from './pages/_app'
 import Landing from './pages/index'
 import Showcase from './pages/showcase'
+import Pipeline from './pages/pipeline'
 
 // prerender.ts reads `origin` (canonical URLs, sitemap) and `noindex` from here.
 export { seo } from './seo'
@@ -29,6 +30,7 @@ export { seo } from './seo'
 export const PAGES: Record<string, ComponentType> = {
   '/': Landing,
   '/showcase': Showcase,
+  '/pipeline': Pipeline,
 }
 
 export const PRERENDER_ROUTES = Object.keys(PAGES)

@@ -20,6 +20,7 @@ export const nav: NavItem[] = [
   { path: '/leaderboard', label: 'Leaderboards' },
   { path: '/gatorize', label: 'Gatorize Me' },
   { path: '/showcase', label: 'Showcase' },
+  { path: '/pipeline', label: 'Pipeline' },
   { path: '/play', label: 'Play' },
   { path: '/settings', label: 'Settings' },
   // The /api-status debug page still exists — add

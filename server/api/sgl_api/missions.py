@@ -15,6 +15,7 @@ MISSIONS: dict[str, dict] = {
     'lake_boardwalk': {"title": 'BOARDWALK WELCOME', "par": None, "gold": None, "floor_frames": 300, "floor_rule": 'default', "source": 'uf_lake_missions.lua'},
     'lake_gator_hop': {"title": 'GATOR HOP', "par": None, "gold": None, "floor_frames": 300, "floor_rule": 'default', "source": 'uf_lake_missions.lua'},
     'lake_bat_census': {"title": 'BAT CENSUS AT DUSK - 2P', "par": None, "gold": None, "floor_frames": 1800, "floor_rule": 'constant', "source": 'uf_lake_missions.lua'},
+    'lake_regatta': {"title": 'GATOR REGATTA', "par": 75, "gold": 45, "floor_frames": 675, "floor_rule": 'gold/2', "source": 'uf_lake_missions.lua'},
     'marston_climb': {"title": 'OUT-OF-ORDER ELEVATOR', "par": None, "gold": None, "floor_frames": 300, "floor_rule": 'default', "source": 'uf_marston_missions.lua'},
     'marston_quiet': {"title": 'SHHH! LOST TEXTBOOKS', "par": None, "gold": None, "floor_frames": 300, "floor_rule": 'default', "source": 'uf_marston_missions.lua'},
     'marston_booking': {"title": 'STUDY ROOM BOOKING - 2P', "par": None, "gold": None, "floor_frames": 300, "floor_rule": 'default', "source": 'uf_marston_missions.lua'},

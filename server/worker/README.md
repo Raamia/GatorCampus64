@@ -165,3 +165,12 @@ support the usual color cross-check.
 See [the likeness contract](../../docs/gatorize_likeness.md) and
 [the local model workshop](../../tools/likeness/README.md) for profile IDs,
 validation scope and headless browser review instructions.
+
+### Public step timing
+
+The shared API schema records up to 64 actual state/step intervals in
+`jobs.step_history` via a database trigger. Existing worker progress, retry, and
+terminal writes supply the boundaries; repeated progress/log writes and lease
+renewals do not reset them. The API's public `/pipeline/status` projects only
+anonymous operational fields from these records for the companion `/pipeline`
+page. Older jobs without recorded transitions show timings as unavailable.
