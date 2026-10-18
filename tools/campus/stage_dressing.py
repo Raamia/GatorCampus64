@@ -545,6 +545,10 @@ REITZ_LAMPS = [(-452.0, -222.0), (-438.0, -236.0), (-470.0, -233.0), (-410.0, -2
                (-345.0, -226.0), (-305.0, -214.0), (-388.0, -203.0), (-330.0, -168.0), (-276.0, -192.0),
                (-470.0, -499.0), (-434.0, -499.0)]
 REITZ_BENCHES = [(-425.0, -219.0, 180.0), (-398.0, -219.0, 180.0), (-360.0, -205.0, 225.0), (-300.0, -190.0, 200.0)]
+# Low planting islands around the Reitz Union North Lawn and adjacent green pockets. Keep the radial
+# walks and the lawn's central gathering space clear.
+REITZ_LAWN_SHRUBS = [(-455.0, -258.0), (-425.0, -280.0), (-370.0, -265.0),
+                     (-325.0, -248.0), (-445.0, -185.0), (-292.0, -220.0)]
 REITZ_WIND_VENT = (-488.0, -136.0)       # act 3: east of the Weil Cooling Towers (east face x -499.6)
 WIND_VENT_R, WIND_VENT_H = 2.6, 0.4
 REITZ_DOCK = (-343.0, -352.0)            # act 4: lawn south-east of Liberty Pond
@@ -722,7 +726,7 @@ def build_reitz(S, probe, avoid=()):
     col = S.acc("Dressing collision", render=False)
     taken = list(avoid)
     rep = {"lamps": [], "benches": [], "tables": [], "wind_vent": None, "charging_dock": None, "boardwalk": [],
-           "skipped": []}
+           "shrubs": [], "skipped": []}
     poles = []
     p = _place(S, probe, taken, *REITZ_WIND_VENT, WIND_VENT_R + 0.6)
     if p is None:
@@ -773,6 +777,14 @@ def build_reitz(S, probe, avoid=()):
         bench(vis, col, p[0], p[1], facing)
         taken.append((p[0], p[1], 1.1))
         rep["benches"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
+    for i, (mx, my) in enumerate(REITZ_LAWN_SHRUBS):
+        p = _place(S, probe, taken, mx, my, 1.35, walk_pad=0.25)
+        if p is None:
+            rep["skipped"].append(("lawn shrub bed", mx, my))
+            continue
+        shrub_bed(vis, p[0], p[1], f"reitz_lawn_shrub{i}")
+        taken.append((p[0], p[1], 1.35))
+        rep["shrubs"].append([round(p[0] + S.cx, 1), round(p[1] + S.cy, 1)])
     for i, (mx, my) in enumerate(REITZ_LAMPS):
         p = _place(S, probe, taken, mx, my, 1.4, walk_pad=0.3)
         if p is None:
@@ -787,7 +799,8 @@ def build_reitz(S, probe, avoid=()):
     S.stats["dressing"] = rep
     S.reitz_dressing = rep
     print(f"SGL: reitz dressing: {len(rep['lamps'])} lamp posts, {len(rep['benches'])} benches, "
-          f"{len(rep['tables'])} patio tables, wind vent {'ok' if rep['wind_vent'] else 'MISSING'}, "
+          f"{len(rep['tables'])} patio tables, {len(rep['shrubs'])} shrub beds, "
+          f"wind vent {'ok' if rep['wind_vent'] else 'MISSING'}, "
           f"charging dock {'ok' if rep['charging_dock'] else 'MISSING'}, boardwalk runs "
           f"{[r['length_m'] for r in rep['boardwalk']]}; skipped {rep['skipped']}")
     return poles

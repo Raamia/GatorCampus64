@@ -19,7 +19,7 @@
  ],
  "extent_half_m": 324.0,
  "collision_tris": 9427,
- "visual_tris": 77943,
+ "visual_tris": 78215,
  "collision_by_object": {
   "Ground collision": 1781,
   "Pond basins collision": 259,
@@ -46,7 +46,7 @@
   "Backdrop buildings": 2305,
   "Trees visual": 43487,
   "Tree line": 560,
-  "Dressing visual": 2072,
+  "Dressing visual": 2344,
   "LM malachowsky_hall visual": 1086,
   "LM malachowsky_hall paving": 24,
   "LM reitz_union visual": 1803,
@@ -3569,7 +3569,38 @@
      "deck_m": 0.45
     }
    ],
-   "skipped": [],
+   "shrubs": [
+    [
+     -325.0,
+     -248.0
+    ],
+    [
+     -292.0,
+     -220.0
+    ]
+   ],
+   "skipped": [
+    [
+     "lawn shrub bed",
+     -455.0,
+     -258.0
+    ],
+    [
+     "lawn shrub bed",
+     -425.0,
+     -280.0
+    ],
+    [
+     "lawn shrub bed",
+     -370.0,
+     -265.0
+    ],
+    [
+     "lawn shrub bed",
+     -445.0,
+     -185.0
+    ]
+   ],
    "fans": [
     {
      "map_m": [
@@ -3637,7 +3668,7 @@
    "module": "tools/campus/interiors/reitz.py",
    "kit_tris": {
     "visual": 148296,
-    "collision": 12718
+    "collision": 12723
    },
    "warp_nodes": [
     {
@@ -4567,12 +4598,12 @@
     },
     "reitz L1 visual": {
      "group": "L1",
-     "tris": 17001,
+     "tris": 17005,
      "collision": false
     },
     "reitz L1 collision": {
      "group": "L1",
-     "tris": 1323,
+     "tris": 1328,
      "collision": true
     },
     "reitz L2 visual": {
@@ -4662,25 +4693,25 @@
   },
   "area_2": {
    "vertices": [
-    14575,
-    14427
+    14584,
+    14436
    ],
    "welded_vertices": 147,
    "collapsed_tris": 24,
-   "tjunction_splits": 419,
+   "tjunction_splits": 421,
    "triangles": [
-    12698,
-    13093
+    12703,
+    13100
    ]
   }
  },
  "validation": {
   "errors": [],
   "warnings": [
-   "13093 static collision triangles in the largest area (22638 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
+   "13100 static collision triangles in the largest area (22645 in 2 areas) vs SURFACE_POOL_SIZE 16384 (objects need room too; keep levels well under ~12k)"
   ],
-  "collision_tris": 22638,
-  "render_tris": 226239,
+  "collision_tris": 22645,
+  "render_tris": 226511,
   "lua_names": [],
   "fog_patched": [
    319,
