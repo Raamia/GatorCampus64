@@ -148,7 +148,8 @@ STAR_UP_M = 1.2
 # coins, hearts, 1-ups, Goombas and the landmark poles a stage places in its level script
 # (stage_pickups.py; the report lists them under "pickups")
 STAGE_PICKUPS = {"swamp": lambda m: m.swamp_pickups, "reitz_eng": lambda m: m.reitz_pickups,
-                 "lake_alice": lambda m: __import__("stage_lake").lake_pickups}      # Course 3: stage_lake.py
+                 "lake_alice": lambda m: __import__("stage_lake").lake_pickups,      # Course 3: stage_lake.py
+                 "hub": lambda m: m.hub_pickups}                                     # the rival Goombas
 # stages whose level script loads the common0 model group (MODEL_HEART, MODEL_GOOMBA, ...):
 # JUMP_LINK(script_func_global_1) after MARIO(...), as every vanilla course does
 STAGE_COMMON0_MODELS = {"swamp", "reitz_eng", "lake_alice", "hub"}   # hub: the rival Goombas 
@@ -783,7 +784,7 @@ def main():
                           "floor_m": None if fz is None else round(fz, 2)})
     # ---- coins, hearts, 1-ups, Goombas, poles of this stage (stage_pickups.py)
     pickups_out = None
-    if key in STAGE_PICKUPS and slot not in (None, HUB_SLOT):
+    if key in STAGE_PICKUPS and (slot not in (None, HUB_SLOT) or key == "hub"):
         import stage_pickups
         items, skipped = STAGE_PICKUPS[key](stage_pickups)(S, probe)
         for it in items:

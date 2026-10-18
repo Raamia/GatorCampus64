@@ -302,6 +302,13 @@ def _standins(S):
 
 
 def default_views(S):
+    # SGL_PREVIEW_VIEWS=<views.json>: render only these views (a list in the format below), e.g. to
+    # reproduce a player's screenshot without the full preview set
+    extra = os.environ.get("SGL_PREVIEW_VIEWS")
+    if extra:
+        import json
+        with open(extra) as f:
+            return json.load(f)
     H = S.data["extent_half_m"]
     if getattr(S, "key", "hub") == "swamp":
         return swamp_views(S)
