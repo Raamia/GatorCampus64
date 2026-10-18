@@ -1,29 +1,33 @@
-"""Offline checks of the generated mini bull (the Goomba replacement): python3 -m unittest discover -s tools/actors"""
+"""Offline checks of the generated rival mascots (the Goomba replacements): python3 -m unittest discover -s tools/actors"""
 import os
 import re
 import sys
 import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import make_minibull  # noqa: E402
+import make_rivals  # noqa: E402
 
 # the vanilla Goomba skeleton (sm64coopdx actors/goomba/geo.inc.c): its walk animation drives these parts, so the
 # replacement must keep the same animated parts, in the same order, at the same translations
 VANILLA_PARTS = [(0, 0, 0), (0, 0, 0), (48, 0, 0), (48, 0, 0), (-60, -16, 45), (0, 0, 0), (-60, -16, -45), (0, 0, 0)]
 
 
-class MiniBullTest(unittest.TestCase):
+class RivalTest(unittest.TestCase):
+    RID = "usf"
+
     @classmethod
     def setUpClass(cls):
-        cls.model, cls.geo, cls.header, cls.ntris = make_minibull.build()
+        cls.r = make_rivals.RIVALS[cls.RID]
+        cls.model, cls.geo, cls.header, cls.ntris = make_rivals.build(cls.RID)
 
     def test_committed_files_are_up_to_date(self):
         for name, text in (("model.inc.c", self.model), ("geo.inc.c", self.geo), ("geo_header.h", self.header)):
-            with open(os.path.join(make_minibull.OUT, name)) as f:
-                self.assertEqual(f.read(), text, "goomba/%s is stale: run python3 -I tools/actors/make_minibull.py" % name)
+            with open(os.path.join(make_rivals.OUT, self.r["folder"], name)) as f:
+                self.assertEqual(f.read(), text, "%s/%s is stale: run python3 -I tools/actors/make_rivals.py" % (
+                    self.r["folder"], name))
 
     def test_replaces_the_goomba_with_its_skeleton(self):
-        self.assertIn("const GeoLayout goomba_geo[]", self.geo)
+        self.assertIn("const GeoLayout %s[]" % self.r["geo"], self.geo)
         self.assertIn("GEO_SCALE(0x00, 16384)", self.geo)
         self.assertIn("GEO_SWITCH_CASE(2, geo_switch_anim_state)", self.geo)   # the blink
         parts = [tuple(int(v) for v in m) for m in
@@ -44,15 +48,34 @@ class MiniBullTest(unittest.TestCase):
             self.assertTrue(all(-32768 <= int(c) <= 32767 for c in v))
 
     def test_standing_on_the_ground_goomba_sized(self):
-        W = make_minibull.rest_world()
+        W = make_rivals.rest_world()
         owner = {"body": "body", "eyes": "eyes", "eyes_blink": "eyes", "foot_l": "foot_l", "foot_r": "foot_r"}
         ys = []
-        for part, mesh in make_minibull.build_parts().items():
+        for part, mesh in make_rivals.build_parts(self.RID).items():
             for tris in mesh.tris.values():
                 for tri, _ in tris:
-                    ys += [make_minibull.apply(p, W[owner[part]])[1] for p in tri]
+                    ys += [make_rivals.apply(p, W[owner[part]])[1] for p in tri]
         self.assertTrue(-3 < min(ys) < 8, min(ys))       # hooves on the ground
         self.assertTrue(45 < max(ys) < 70, max(ys))      # horn tips: about a Goomba's height (x1.5 in game)
+
+
+def _rival_case(rid):
+    return type("Rival_%s_Test" % rid, (RivalTest,), {"RID": rid})
+
+
+for _rid in make_rivals.RIVALS:
+    if _rid != "usf":
+        globals()["Rival_%s_Test" % _rid] = _rival_case(_rid)
+
+
+class RosterTest(unittest.TestCase):
+    def test_the_bull_replaces_the_goomba_and_lua_knows_every_rival(self):
+        self.assertEqual(make_rivals.RIVALS["usf"]["geo"], "goomba_geo")
+        lua = open(os.path.join(make_rivals.ROOT, "mods", "sgl64", "sgl_rivals.lua")).read()
+        for rid, r in make_rivals.RIVALS.items():
+            if rid != "usf":
+                self.assertIn('geo = "%s"' % r["geo"], lua, rid)
+                self.assertIn('school = "%s"' % r["school"], lua, rid)
 
 
 if __name__ == "__main__":
