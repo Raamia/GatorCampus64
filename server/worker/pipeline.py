@@ -277,7 +277,11 @@ def step_store(storage, job_id, work, spec, report, spec_info, previews, portrai
     br = os.path.join(work, "build", "build_report.json")
     if os.path.isfile(br):
         uploads["build_report.json"] = br
-    browser_model = os.path.join(work, "build", "preview.glb")
+    # Blender records the actual export path; use it first because an alternate
+    # build directory can be configured, then retain the conventional fallback.
+    browser_model = report.get("browser_model") if isinstance(report, dict) else None
+    if not isinstance(browser_model, str) or not os.path.isfile(browser_model):
+        browser_model = os.path.join(work, "build", "preview.glb")
     if os.path.isfile(browser_model):
         uploads["preview.glb"] = browser_model
     for f in previews:
