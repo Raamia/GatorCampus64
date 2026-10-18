@@ -53,7 +53,7 @@ def test_parse_ask():
 def test_ask_events_are_answered_and_never_forwarded(tmp_path):
     npc = service(tmp_path)
     q = ListQueue()
-    b = Bridge(Inbox(tmp_path / "sav" / "sgl64.modfs"), q, NoLogin(), npc)
+    b = Bridge(Inbox(tmp_path / "sav" / "sgl64.modfs"), q, NoLogin(), npc=npc)
     b.on_line(ASK % (1, "s-1", "how many stars do i have"))
     b.on_line('SGLEVT {"t":"npc_ask","seq":"bad"}')
     assert q == [] and npc.queue.qsize() == 1
@@ -72,7 +72,7 @@ def test_new_session_starts_over_and_game_start_drops_the_queue(tmp_path):
     assert len(replies(tmp_path).splitlines()) == 2
     npc.answer_one("s-2", (1, "alberta", "B", "hi alberta", ""))
     assert replies(tmp_path).startswith("session\ts-2\n1\talberta\t")
-    b = Bridge(Inbox(tmp_path / "sav" / "sgl64.modfs"), None, NoLogin(), npc)
+    b = Bridge(Inbox(tmp_path / "sav" / "sgl64.modfs"), None, NoLogin(), npc=npc)
     b.on_line(ASK % (2, "s-2", "anyone home"))
     b.on_game_start()
     assert npc.queue.empty()

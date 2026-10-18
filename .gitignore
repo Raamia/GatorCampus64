@@ -63,6 +63,7 @@ tools/npc_bridge/.env
 tools/npc_bridge/unanswered.log
 
 # Server venvs, caches and local env files (server/*/.env.example are the templates)
+/.env
 server/**/.venv
 .pytest_cache/
 server/**/.env

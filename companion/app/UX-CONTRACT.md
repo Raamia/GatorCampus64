@@ -6,6 +6,7 @@
 |---|---|---|
 | The game remains playable when the companion or a service is unavailable. | `../README.md`; `../docs/flow.md` | Every companion action is optional. Static mission hints remain available offline. |
 | The Lua mod is authoritative for in-game state and has no supported outbound HTTP bridge in sm64coopdx v1.5.1. | `../tools/luatest/coopdx_api_v151.lua`; engine version recorded in `../docs/flow.md` | Submitted results are labeled player reported. |
+| Verified leaderboard times come only from the hosted game server's API (`ingestVerifiedRun`, HMAC-signed; `../../docs/web_platform_spec.md` §10.4). | `src/server/ingest-routes.ts`, `src/schemas/verified-runs-schema.ts` | The Leaderboards page ranks only `verified_runs`. Runs from `submitGameRun` are shown below it as "Offline · unverified" (signed-in players only) and never ranked with it. |
 | Only real mission definitions may be shown or recommended. | `src/data/mission-catalog.json`, checked against `../mods/sgl64/*_missions.lua` | IDs, title, and objective must match the Lua sources. |
 | Do not send names or personal details to Gemini or analytics. | User-supplied SwampHacks terminal handoff | The optional service receives only mission ID or anonymized result fields; no account email or squad code. |
 
@@ -25,6 +26,7 @@
 | Select mission | Game registry and catalog | Append a mission-selected event for the exact supported mission ID. |
 | Ask dispatcher | Static catalog and optional service | Submit only the selected mission ID and authored hint. Validate returned ID and response type; otherwise show the static hint. |
 | Record result | Player report | Save an append-only event to DeepSpace, then attempt the optional anonymized service mirror. A mirror failure leaves the board usable. |
+| Leaderboards | `verified_runs` (public) and `solo_runs` (signed in) | Pick a mission; the verified board shows the best run per team (names, time, retries, co-op). Offline runs follow in a separate, labelled list. |
 | Recap | DeepSpace records | Show the latest player-reported run and total. |
 
 ## Canonical UI ownership

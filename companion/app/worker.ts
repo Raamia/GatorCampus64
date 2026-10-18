@@ -26,6 +26,7 @@ import { tasks as cronTasks, runTask as runCronTask } from './src/cron.js'
 import { runJob } from './src/jobs.js'
 import { schemas } from './src/schemas.js'
 import { registerActionRoutes } from './src/server/action-routes.js'
+import { registerIngestRoutes } from './src/server/ingest-routes.js'
 import {
   registerAuthAndIntegrationRoutes,
   registerPlatformProxyRoutes,
@@ -122,6 +123,12 @@ export interface Env extends DOBindings<typeof __DO_MANIFEST__> {
    * an authenticated app owner/admin. deepspace dev/test set it locally.
    */
   ALLOW_DEBUG_ROUTES?: string
+  /**
+   * Shared HMAC secret for POST /api/actions/ingestVerifiedRun (the hosted game API's verified
+   * runs, src/server/ingest-routes.ts). Same value as the API's DEEPSPACE_INGEST_SECRET. Unset:
+   * the route answers 503.
+   */
+  DEEPSPACE_INGEST_SECRET?: string
 }
 
 export type AppContext = { Bindings: Env }
@@ -141,6 +148,8 @@ app.use('*', async (c, next) => {
 registerAuthAndIntegrationRoutes(app)
 registerRealtimeRoutes(app)
 registerStudyRoutes(app)
+// Before the user action route: the game API's HMAC-signed verified-run ingest (spec §10.4).
+registerIngestRoutes(app)
 registerActionRoutes(app, resolveAuth)
 // The in-app assistant stores chat history in `ai-chats` / `ai-messages`,
 // which only the copilot overlay declares. When present, registerAgent enables

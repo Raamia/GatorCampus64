@@ -9,7 +9,9 @@
 --     (or earlier in the same file);
 --   * a name read at runtime must be written by SOME file (or be a coopdx / std name);
 --   * a mod global must not shadow a coopdx function or constant;
---   * two files writing the same global is reported (allowed only for the names in SHARED below).
+--   * two files writing the same global is reported (allowed only for the names in SHARED below);
+--   * `_G.name` only sees the real _G: reading a mod global through _G when every write is a bare
+--     `name = v` (which lands in the mod's _ENV) is reported (it is always nil in the game).
 -- Usage: lua check_globals.lua <mod dir>   (exit 1 on findings). LUAC env var picks the luac binary.
 -- Limitation: a main chunk that calls one of its own local functions at load time is only checked
 -- for the main chunk's own reads; test_missions.lua's full-mod load (strict globals) covers that.
@@ -105,6 +107,7 @@ end
 local findings, notes = {}, {}
 local writer = {}        -- name -> { file index, line } of the first write (load order)
 local writers = {}       -- name -> set of file names
+local writtenViaG = {}   -- name -> true when some file assigns it as _G.name
 local perFile = {}
 for i, path in ipairs(files) do
     perFile[i] = accesses(path)
@@ -114,6 +117,7 @@ for i, path in ipairs(files) do
             writers[a.name] = writers[a.name] or {}
             writers[a.name][base] = true
             if writer[a.name] == nil then writer[a.name] = { i = i, line = a.line, main = a.main } end
+            if a.viaG then writtenViaG[a.name] = true end
         end
     end
 end
@@ -126,6 +130,9 @@ for i, path in ipairs(files) do
             local w = writer[n]
             if w == nil then
                 findings[#findings + 1] = string.format("%s:%d reads global '%s' that no mod file assigns and coopdx does not have", base, a.line, n)
+            elseif a.viaG and not writtenViaG[n] then
+                findings[#findings + 1] = string.format("%s:%d reads _G.%s, but it is a mod global (assigned bare, so it is in the"
+                    .. " mod's _ENV, not _G): read it bare or with rawget(_ENV, ...)", base, a.line, n)
             elseif a.main and (w.i > i or (w.i == i and w.line > a.line) or not w.main) then
                 findings[#findings + 1] = string.format("%s:%d reads '%s' at LOAD time, but it is only assigned %s (%s:%d)",
                     base, a.line, n, w.main and "later in the load order" or "inside a function", files[w.i]:match("[^/]+$"), w.line)
