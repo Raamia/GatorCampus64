@@ -1,6 +1,6 @@
 # Super Gatorlator 64: the NPC game guide
 
-Albert and Alberta, the roaming mascot NPCs, answer game questions straight from this file: no AI call, instant, always right.
+Albert and Alberta, the mascot NPCs, answer game questions straight from this file: no AI call, instant, always right.
 Anything this file can't answer (general knowledge, small talk) goes to Gemini instead.
 tools/npc_bridge/guide.py reads it; tools/npc_bridge/test_guide.py and tools/luatest/check_game_guide.py check it.
 
@@ -131,8 +131,8 @@ answer: Every stage has a 100-coin star: collect 100 coins in one visit and it a
 
 ### Who are the enemies?
 id: mini-bulls
-ask: mini bulls, bulls, enemies, goombas, goomba, usf bull, what are the bulls, how do i beat the bulls, how to kill enemies, stomp, squash, little bulls, rival mascots, rivals, knights, bulldogs, seminoles, fsu, ucf, georgia, tennessee, miami, lsu, tigers, ibis, who are the bad guys
-answer: Our rivals' mascots are sneaking around campus! USF Bulls, UCF Knights, Georgia Bulldogs, Tennessee's Smokey, Miami's ibis, LSU Tigers and FSU's horse Renegade wander and charge at you. Jump on their heads to squash them flat (or punch or kick them), and each one drops a coin. Go Gators!
+ask: mini bulls, bulls, enemies, goombas, goomba, usf bull, what are the bulls, how do i beat the bulls, how to kill enemies, stomp, squash, little bulls, rival mascots, rivals, seminoles, fsu, spear, who are the bad guys, knights, ucf, ghosts, boos, knight ghosts
+answer: Our rivals' mascots are sneaking around campus! USF Bulls and FSU Seminoles (garnet, with a gold spear crest) wander the map and charge at you: jump on their heads to squash them flat (or punch or kick them), and each drops a coin. In Library West at night, UCF Knight ghosts creep up behind you: face one to freeze it and punch it to shoo it away. Go Gators!
 
 ### What are the coming soon acts?
 id: coming-soon
@@ -257,12 +257,12 @@ answer: Ride the book chute down to the basement and jump into the vent duct (a 
 ### How do I get into Library West?
 id: libwest-door
 ask: library west door, get into library west, library west after dark, course 5, fifth stage, where is library west, how to unlock library west, 11 stars, revolving door
-answer: Walk about 115 m north of the Plaza to Library West's revolving door. It opens at 11 stars. Inside it's night: six floors of stacks, desk lamps and sleepy Boos.
+answer: Walk about 115 m north of the Plaza to Library West's revolving door. It opens at 11 stars. Inside it's night: six floors of stacks, desk lamps and sleepy UCF Knight ghosts.
 
 ### How do I do the All-Nighter?
 id: libwest-act1
 ask: all nighter, all-nighter, library west act 1, big window, ladders, boos, rolling ladders
-answer: Ride the escalator to the 2nd floor, climb the rolling library ladders onto the north stacks, take a north stair tower up to its roof door, cross the roof terrace, go in through the 4th floor's north door and up a stair hall to the 6th floor's big window for the star. Face a Boo to freeze it; touching one costs a wedge.
+answer: Ride the escalator to the 2nd floor, climb the rolling library ladders onto the north stacks, take a north stair tower up to its roof door, cross the roof terrace, go in through the 4th floor's north door and up a stair hall to the 6th floor's big window for the star. Face a Knight ghost to freeze it; touching one costs a wedge, and a punch shoos it away.
 
 ### How do I do the Coffee Run?
 id: libwest-act2
@@ -385,40 +385,40 @@ answer: Stadium Stair Sprint (Swamp act 2): par 1'10, gold 0'45. Coffee Run (Lib
 id: who-albert
 npc: albert
 ask: who are you, who is albert, are you a gator, mascot, albert the alligator, whats your name, your name, introduce yourself
-answer: I'm Albert the Alligator, UF's official mascot and one of your two hosts, with Alberta! We roam campus and the stages to help you out. Ask me anything about the game. CHOMP CHOMP!
+answer: I'm Albert the Alligator, UF's official mascot and one of your two hosts, with Alberta! We wait on the Plaza and at the start of every mission to help you out. Ask me anything about the game. CHOMP CHOMP!
 
 ### Who are you, Alberta?
 id: who-alberta
 npc: alberta
 ask: who are you, who is alberta, are you a gator, mascot, alberta the alligator, whats your name, your name, introduce yourself
-answer: I'm Alberta the Alligator, UF's official mascot alongside Albert and one of your two hosts! I roam the libraries, Lake Alice and the Plaza to help you out. Ask me anything about the game. Go Gators!
+answer: I'm Alberta the Alligator, UF's official mascot alongside Albert and one of your two hosts! I wait on the Plaza and at the start of the missions, especially in the libraries and at Lake Alice. Ask me anything about the game. Go Gators!
 
 ### Who can I talk to?
 id: npcs
 ask: other npcs, who else can i talk to, npcs, characters to talk to, who are the mascots, mascots, albert and alberta, who is alberta, who is albert, guides, helpers
-answer: Albert and Alberta, UF's two alligator mascots, are your guides. One of them is always on the Plaza by the spawn, and the other visits a stage, popping up near where you arrive. They move every few minutes, with a puff of smoke. Walk up to one and type, or ask from anywhere with /albert or /alberta.
+answer: Albert and Alberta, UF's two alligator mascots, are your guides. Both stand on the Plaza by the spawn, and in every stage one of them waits at the start of the mission you're playing, so you can ask about it right there. Walk up to one and type, or ask from anywhere with /albert or /alberta.
 
 ### Where is Albert?
 id: where-albert
 ask: where is albert, wheres albert, find albert, albert location, where did albert go, where can i find albert
-answer: Albert is {albert_at} right now. He moves every few minutes, but you can always ask him from anywhere with /albert followed by your question.
+answer: Albert is {albert_at}. You can always ask him from anywhere with /albert followed by your question.
 
 ### Where is Alberta?
 id: where-alberta
 ask: where is alberta, wheres alberta, find alberta, alberta location, where did alberta go, where can i find alberta
-answer: Alberta is {alberta_at} right now. She moves every few minutes, but you can always ask her from anywhere with /alberta followed by your question.
+answer: Alberta is {alberta_at}. You can always ask her from anywhere with /alberta followed by your question.
 
 ### Where are you, Albert?
 id: where-am-i-albert
 npc: albert
 ask: where are you, where are you now, where are you right now, where will you be, where do you go
-answer: Right now I'm {albert_at}! I hop around campus every few minutes. When I'm away, Alberta is on the Plaza, and you can ask me from anywhere with /albert.
+answer: I'm on the Plaza by the spawn, and in each stage I wait at the start of some missions: The Swamp's Kickoff and Chomp Chorus, Reitz's rooftop climb and Robotics Lab, Lake Alice's Gator Hop, Marston's Lost Textbooks and Library West's Coffee Run. Ask me from anywhere with /albert.
 
 ### Where are you, Alberta?
 id: where-am-i-alberta
 npc: alberta
 ask: where are you, where are you now, where are you right now, where will you be, where do you go
-answer: Right now I'm {alberta_at}! I move around every few minutes. When I'm away, Albert is on the Plaza, and you can ask me from anywhere with /alberta.
+answer: I'm on the Plaza by the spawn, and in each stage I wait at the start of some missions: The Swamp's Stair Sprint, Reitz's Meal Swipe Tokens, Lake Alice's Boardwalk and Bat Census, Marston's Out-of-Order Elevator and Study Room Booking, and Library West's All-Nighter and Hide & Seek. Ask me from anywhere with /alberta.
 
 ### How do I talk to Albert or Alberta?
 id: talk-npc
