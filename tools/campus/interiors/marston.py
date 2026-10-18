@@ -885,6 +885,56 @@ def col_seg_box(C, p, q, th, z0, z1, mat, bottom=False, top=True):
     C.prism(foot, z0, z1, mat, top=mat if top else None, bottom=mat if bottom else None)
 
 
+
+def join_partition_corners(V):
+    """Close outer corners where two solid partition centre lines meet at 90 degrees.
+
+    Each wall has faces PART_T/2 either side of its line. Their unextended
+    faces leave a square notch with open sides at an L joint. Continue each
+    outer face to their common intersection, matching its paint and skirting.
+    No doorways, glass, collision, or independent wall ends are changed.
+    """
+    runs = getattr(V, "_sgl_solid_runs", [])
+    nodes = {}
+    for a, b, z0, z1, mat, tint, ends in runs:
+        length = math.dist(a, b)
+        if length < PART_T or min(abs(a[0] - b[0]), abs(a[1] - b[1])) > 1e-6:
+            continue
+        for p, q, allowed in ((a, b, ends[0]), (b, a, ends[1])):
+            key = (*p, z0, z1)
+            nodes.setdefault(key, []).append((p, q, allowed, mat, tint))
+    joined = getattr(V, "_sgl_joined_corners", set())
+    V._sgl_joined_corners = joined
+    count = 0
+    for key, walls in nodes.items():
+        if key in joined or len(walls) != 2 or not all(w[2] for w in walls):
+            continue
+        x, y, z0, z1 = key
+        directions = [((q[0] - x) / math.dist(p, q), (q[1] - y) / math.dist(p, q))
+                      for p, q, _, _, _ in walls]
+        u, v = directions
+        if abs(u[0] * v[0] + u[1] * v[1]) > 1e-6:
+            continue
+        # A third run through this point is a T/cross junction, not an L.
+        if any(abs(z0 - rz0) < 1e-6 and abs(z1 - rz1) < 1e-6
+               and math.dist((x, y), a) > 1e-6 and math.dist((x, y), b) > 1e-6
+               and seg_point_dist((x, y), a, b) < 1e-6
+               for a, b, rz0, rz1, _, _, _ in runs):
+            continue
+        h = PART_T / 2
+        corner = (x - h * (u[0] + v[0]), y - h * (u[1] + v[1]))
+        for other, wall in ((v, walls[0]), (u, walls[1])):
+            start = (x - h * other[0], y - h * other[1])
+            normal = (-other[0], -other[1], 0)
+            for lo, hi, mat, tint in ((z0, min(z0 + 0.1, z1), "int_plastic", None),
+                                      (min(z0 + 0.1, z1), z1, wall[3], wall[4])):
+                if hi > lo:
+                    V.wall(start, corner, lo, hi, mat, ao=0.85, tint=tint, normal_hint=normal)
+        joined.add(key)
+        count += 1
+    return count
+
+
 def thin_partition(V, C, a, b, z0, z1, kind="glass", doors=(), post_every=2.6, frame="int_metal",
                    solid_mat="int_drywall", tint=None, transom=DOOR_H, bulkhead=None, glass_mat="int_glass",
                    film=None, piers=(), casing="int_wood_dark", posts=None, windows=(), cam_heads=None):
@@ -923,6 +973,17 @@ def thin_partition(V, C, a, b, z0, z1, kind="glass", doors=(), post_every=2.6, f
             col_seg_box(C, at(s0), at(s1), max(th, THIN_COL_T / 2.0), z0, z1, K.COL, top=False)
         return
     cm = K.COL_NOCAM if kind == "glass" else K.COL
+    if kind == "solid":
+        # Retain actual runs so the floor builder can join their offset faces.
+        # Door jambs and windows touching a run end are not corner candidates.
+        runs = getattr(V, "_sgl_solid_runs", None)
+        if runs is None:
+            runs = []
+            V._sgl_solid_runs = runs
+        ends = [not any(d0 <= q + 1e-6 and d1 >= q - 1e-6 for d0, d1, _ in gaps)
+                and not any(w[0] <= q + 1e-6 and w[1] >= q - 1e-6 for w in windows)
+                for q in (0.0, L)]
+        runs.append((a, b, z0, z1, solid_mat, tint, ends))
     for s0, s1 in spans:
         if kind == "glass":
             V.wall(at(s0), at(s1), z0 + 0.10, glass_top, glass_mat, ao=1.0)
@@ -1747,6 +1808,7 @@ def build_partitions(M, fid, P):
     for p, q in diag:
         thin_partition(P.visual, P.collision, p, q, 0.0, CLEAR,
                        "staff_open" if staff_counter_edge(M, fid, p, q) else "solid")
+    M.stats.setdefault("partition_corners", {})[fid] = join_partition_corners(P.visual)
     M.stats.setdefault("partitions", {})[fid] = {"glass": n_glass, "solid": n_solid}
 
 
@@ -5283,6 +5345,18 @@ def build_core(M):
         tower_band_walls(M, V, C, [e for e in edges(ccw(stair_poly)) if not (abs(e[0][1] - sy0) < 1e-6 and
                                                                               abs(e[1][1] - sy0) < 1e-6)],
                          zb, top, lvl, doors, tint=wall_tint(lvl))
+        # The elevator fillers end at ELEV_Y[1], while the stair shell starts
+        # at sy0 and its outer faces sit WALL_T farther out. Close the exposed
+        # L-shaped return at both ends of this joint on every storey. These
+        # faces are outside the stair doorway and the open elevator shaft.
+        for x, sign in ((x0, -1), (x1, 1)):
+            corner = (x + sign * WALL_T, ELEV_Y[1])
+            for a, b in (((x, ELEV_Y[1]), corner),
+                         (corner, (corner[0], sy0))):
+                if sign < 0:
+                    a, b = b, a
+                V.wall(a, b, zb, min(top, zb + CLEAR), "int_ms_brick", ao=1.0)
+                C.wall(a, b, zb, min(top, zb + CLEAR), K.COL)
         # the stair-side face of the elevator block
         thick_wall(V, C, (x0, sy0), (x1, sy0), zb, top, t=0.2, in_mat="int_ms_wall", out_mat=None, col_in=True,
                    ceil=top)
