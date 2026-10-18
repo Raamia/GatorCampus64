@@ -68,7 +68,8 @@ class Collision:
 
 def lua_spots():
     text = open(LUA).read()
-    body = text[text.index("SGL_NPC_SPOTS = {"):]
+    generated = open(os.path.join(ROOT, "mods", "sgl64", "sgl_ambient_data.lua")).read()
+    body = generated[generated.index("SGL_NPC_SPOTS = {"): ]
     body = body[:body.index("\n}\n")]
     spots = {}
     for m in re.finditer(r"(\w+) = \{ level = (\w+), area = (\d+), x = (-?\d+), y = (-?\d+), z = (-?\d+), "
@@ -105,7 +106,7 @@ def main():
             continue
         path = os.path.join(LEVELS, slot, "area_%d" % sp["area"], "collision.inc.c")
         if not os.path.exists(path):
-            print("check_npc_spots: %s: levels/%s not built, skipped" % (name, slot))
+            bad.append("%s: required level %s is not built" % (name, slot))
             continue
         col = cols.setdefault(path, Collision(path))
         x, y, z, r = sp["x"], sp["y"], sp["z"], sp["radius"]
@@ -162,4 +163,5 @@ def main():
     return 0
 
 
-sys.exit(main())
+if __name__ == "__main__":
+    sys.exit(main())

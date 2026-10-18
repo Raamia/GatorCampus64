@@ -493,3 +493,42 @@ CREATE TABLE IF NOT EXISTS account_erases (
     last_error text,
     sent_at timestamptz
 );
+
+-- Operational timing only. A bounded history follows actual transitions, including
+-- Blender retries; progress-log writes and lease renewals never reset a step clock.
+-- Existing jobs keep an empty history: do not invent historical step timestamps.
+ALTER TABLE jobs ADD COLUMN IF NOT EXISTS step_history jsonb NOT NULL DEFAULT '[]';
+CREATE OR REPLACE FUNCTION sgl_job_timing_trigger() RETURNS trigger
+LANGUAGE plpgsql AS $$
+DECLARE
+    stamp timestamptz := clock_timestamp();
+    history jsonb;
+    n integer;
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        history := '[]'::jsonb;
+    ELSE
+        IF NEW.state IS NOT DISTINCT FROM OLD.state AND NEW.step IS NOT DISTINCT FROM OLD.step THEN
+            RETURN NEW;
+        END IF;
+        history := OLD.step_history;
+        n := jsonb_array_length(history);
+        IF n > 0 THEN
+            IF history->(n - 1)->>'finished' IS NULL THEN
+                history := jsonb_set(history, ARRAY[(n - 1)::text, 'finished'], to_jsonb(stamp));
+            END IF;
+        END IF;
+    END IF;
+    IF NEW.state NOT IN ('ready', 'failed') THEN
+        history := history || jsonb_build_array(jsonb_build_object(
+            'step', coalesce(NEW.step, NEW.state), 'started', stamp, 'finished', NULL));
+    END IF;
+    IF jsonb_array_length(history) > 64 THEN
+        history := history - 0;
+    END IF;
+    NEW.step_history := history;
+    RETURN NEW;
+END $$;
+DROP TRIGGER IF EXISTS jobs_timing_changed ON jobs;
+CREATE TRIGGER jobs_timing_changed BEFORE INSERT OR UPDATE OF state, step ON jobs
+    FOR EACH ROW EXECUTE FUNCTION sgl_job_timing_trigger();

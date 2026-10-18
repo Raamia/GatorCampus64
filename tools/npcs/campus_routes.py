@@ -18,6 +18,10 @@ import math
 import os
 import re
 import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import navigation as nav
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 sys.path.insert(0, os.path.join(ROOT, "tools", "luatest"))
@@ -34,71 +38,13 @@ MAX_LINK = 600      # longer links are split, so turning points stay close to th
 SAMPLE = 40         # walkability sample spacing along a link
 MIN_NY = 0.94       # floor normal y (about 20 degrees)
 MAX_STEP = 25       # floor change between two samples
-Y_RANGE = (-60, 120)
 CLEAR = 75          # sideways clearance: an NPC (about 0.5 m wide) keeps up to 0.35 m right of the line
 OBJ_GAP = 110
 KNEE, HEAD = 30, 190
 MERGE = 30          # vertices closer than this become one node (OSM junctions share their node)
 
 
-class Collision:
-    """Static collision of the exported hub with a grid index (SM64 floor rules)."""
-
-    CELL = 512
-
-    def __init__(self, path):
-        src = open(path).read()
-        verts = [tuple(int(v) for v in m) for m in
-                 re.findall(r"COL_VERTEX\(\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)\s*\)", src)]
-        self.floors, self.solids = {}, {}
-        for m in re.finditer(r"COL_TRI(?:_SPECIAL)?\(\s*(\d+),\s*(\d+),\s*(\d+)", src):
-            a, b, c = (verts[int(m.group(i))] for i in (1, 2, 3))
-            (x1, y1, z1), (x2, y2, z2), (x3, y3, z3) = a, b, c
-            nx = (y2 - y1) * (z3 - z2) - (z2 - z1) * (y3 - y2)
-            ny = (z2 - z1) * (x3 - x2) - (x2 - x1) * (z3 - z2)
-            nz = (x2 - x1) * (y3 - y2) - (y2 - y1) * (x3 - x2)
-            mag = math.sqrt(nx * nx + ny * ny + nz * nz)
-            if mag == 0:
-                continue
-            nx, ny, nz = nx / mag, ny / mag, nz / mag
-            tri = (a, b, c, nx, ny, nz, -(nx * x1 + ny * y1 + nz * z1))
-            xs, zs = (x1, x2, x3), (z1, z2, z3)
-            for gx in range(min(xs) // self.CELL, max(xs) // self.CELL + 1):
-                for gz in range(min(zs) // self.CELL, max(zs) // self.CELL + 1):
-                    (self.floors if ny > 0.01 else self.solids).setdefault((gx, gz), []).append(tri)
-                    if ny > 0.01:  # floors also block above the walking height (roofs, benches, ledges)
-                        self.solids.setdefault((gx, gz), []).append(tri)
-
-    def floor(self, x, y, z):
-        """(height, normal y) of the highest floor at or below y + 78, or None."""
-        best = None
-        for (a, b, c, nx, ny, nz, oo) in self.floors.get((int(x) // self.CELL, int(z) // self.CELL), ()):
-            (x1, _, z1), (x2, _, z2), (x3, _, z3) = a, b, c
-            if (z1 - z) * (x2 - x1) - (x1 - x) * (z2 - z1) < 0:
-                continue
-            if (z2 - z) * (x3 - x2) - (x2 - x) * (z3 - z2) < 0:
-                continue
-            if (z3 - z) * (x1 - x3) - (x3 - x) * (z1 - z3) < 0:
-                continue
-            h = -(x * nx + nz * z + oo) / ny
-            if y - (h - 78.0) >= 0 and (best is None or h > best[0]):
-                best = (h, ny)
-        return best
-
-    def blocked(self, x, z, y0, y1, r):
-        """Any static triangle overlapping the box x +- r, z +- r, y0..y1."""
-        seen = set()
-        for gx in range(int(x - r) // self.CELL, int(x + r) // self.CELL + 1):
-            for gz in range(int(z - r) // self.CELL, int(z + r) // self.CELL + 1):
-                for t in self.solids.get((gx, gz), ()):
-                    if id(t) in seen:
-                        continue
-                    seen.add(id(t))
-                    xs, ys, zs = [v[0] for v in t[:3]], [v[1] for v in t[:3]], [v[2] for v in t[:3]]
-                    if (max(xs) > x - r and min(xs) < x + r and max(ys) > y0 and min(ys) < y1
-                            and max(zs) > z - r and min(zs) < z + r):
-                        return True
-        return False
+from geometry import Collision
 
 
 def script_objects():
@@ -134,18 +80,18 @@ def main():
     col = Collision(os.path.join(LEVEL, "area_1", "collision.inc.c"))
     objs = script_objects()
 
+    config = nav.settings(Path(ROOT))
+    low, high = config['outdoor_regions']['castle_grounds']['height_range']
+
     def walkable(x, z):
-        f = col.floor(x, 400, z)
-        if f is None or f[1] < MIN_NY or not (Y_RANGE[0] <= f[0] <= Y_RANGE[1]):
-            return None
         if not (x0 <= x <= x1 and z0 <= z <= z1):
             return None
-        if col.blocked(x, z, f[0] + KNEE, f[0] + HEAD, CLEAR):
+        y = nav.supported(col, x, z, low, high, CLEAR, HEAD, MIN_NY)
+        if y is None or nav.excluded(config, 'castle_grounds', 1, x, y, z, CLEAR, HEAD):
             return None
-        if any(abs(ox - x) < OBJ_GAP and abs(oz - z) < OBJ_GAP and math.hypot(ox - x, oz - z) < OBJ_GAP
-               for ox, oz in objs):
+        if any(math.hypot(ox-x, oz-z) < OBJ_GAP for ox, oz in objs):
             return None
-        return f[0]
+        return y
 
     def link_ok(a, b):
         n = max(1, int(math.dist(a[:2], b[:2]) // SAMPLE))
@@ -228,7 +174,15 @@ def main():
     out_links = sorted((renum[i], renum[j]) for i, j in links if i in renum and j in renum)
     length = sum(math.dist(nodes[i][:2], nodes[j][:2]) for i, j in links if i in renum)
 
+    final_nodes = [(round(nodes[i][0]), round(nodes[i][2]), round(nodes[i][1])) for i in keep]
+    if len(out_links) < config['outdoor_regions']['castle_grounds']['minimum_links']:
+        raise ValueError('Hub crowd route coverage below configured minimum')
+    for summary in nav.coverage(config, 'castle_grounds', 1, final_nodes, out_links):
+        print(summary)
+    receipt = nav.fingerprint(nav.dependencies('castle_grounds', 1) +
+        ['tools/npcs/campus_routes.py', 'data/uf/campus.json', 'data/uf/stages.json'], Path(ROOT))
     lines = [
+        '-- Source SHA256: ' + receipt,
         "-- GENERATED by tools/npcs/campus_routes.py from data/uf/campus.json (OSM footways) and the built hub's",
         "-- collision. Do not edit; re-run the script after rebuilding levels/castle_grounds.",
         "-- The campus NPCs (sgl_campus_npcs.lua) walk these links. Map data (c) OpenStreetMap contributors, ODbL 1.0.",

@@ -359,6 +359,8 @@ def main():
             if os.path.exists(src):
                 shutil.copyfile(src, os.path.join(sc, name + ".png"))
         print(f"SGL: {len(paths)} previews in {pv}, showcase {sc}")
+    if o["export"] and not o["report_dir"] and os.path.abspath(o["levels_dir"]) == os.path.join(ROOT, "mods", "sgl64", "levels"):
+        BS.run_venv(os.path.join(ROOT, "tools", "npcs", "rebuild.py"))
     print(f"SGL: done in {time.time() - t0:.1f}s")
 
 

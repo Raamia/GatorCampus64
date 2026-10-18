@@ -1,6 +1,7 @@
 {
  "schema": "sgl64.reitz_points/1",
  "generated_by": "tools/campus/build_stage.py reitz_eng (stage_points.reitz_points)",
+ "generated_at": "2026-10-18T04:22Z",
  "stage": "reitz_eng",
  "level": "wf",
  "slot": "wf",
@@ -2465,37 +2466,69 @@
     {
      "name": "relay_wp_10",
      "map_m": [
-      -454.0,
-      -510.0,
-      0.0
+      -506.0,
+      -476.0,
+      0.26
      ],
      "game": [
-      1600,
-      0,
-      21700
+      -3600,
+      26,
+      18300
      ],
-     "floor_m": 0.0,
-     "clearance_m": 1.88,
-     "headroom_m": 3.83
+     "floor_m": 0.26,
+     "clearance_m": 3.0,
+     "headroom_m": null
     },
     {
      "name": "relay_wp_11",
      "map_m": [
-      -454.0,
-      -518.0,
-      0.0
+      -492.0,
+      -492.0,
+      0.03
      ],
      "game": [
-      1600,
-      0,
-      22500
+      -2200,
+      3,
+      19900
      ],
-     "floor_m": 0.0,
-     "clearance_m": 1.88,
+     "floor_m": 0.03,
+     "clearance_m": 3.0,
      "headroom_m": null
     },
     {
      "name": "relay_wp_12",
+     "map_m": [
+      -452.0,
+      -512.0,
+      0.0
+     ],
+     "game": [
+      1800,
+      0,
+      21900
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 2.67,
+     "headroom_m": 3.6
+    },
+    {
+     "name": "relay_wp_13",
+     "map_m": [
+      -456.0,
+      -520.0,
+      0.0
+     ],
+     "game": [
+      1400,
+      0,
+      22700
+     ],
+     "floor_m": 0.0,
+     "clearance_m": 3.0,
+     "headroom_m": null
+    },
+    {
+     "name": "relay_wp_14",
      "map_m": [
       -468.25,
       -526.0,
@@ -2563,14 +2596,24 @@
      13700
     ],
     [
-     1600,
-     0,
-     21700
+     -3600,
+     26,
+     18300
     ],
     [
-     1600,
+     -2200,
+     3,
+     19900
+    ],
+    [
+     1800,
      0,
-     22500
+     21900
+    ],
+    [
+     1400,
+     0,
+     22700
     ],
     [
      175,
@@ -2578,18 +2621,18 @@
      23300
     ]
    ],
-   "length_m": 606.9,
+   "length_m": 618.7,
    "straight_line_m": 488.0,
    "path_check": {
     "name": "relay_path",
-    "length_m": 606.9,
+    "length_m": 618.7,
     "closed": false,
-    "samples": 612,
+    "samples": 625,
     "floor_range_m": [
-     0.0,
-     0.0
+     -0.06,
+     0.3
     ],
-    "max_floor_deviation_m": 0.0,
+    "max_floor_deviation_m": 0.3,
     "gaps": [],
     "walls_across": []
    },
@@ -5211,14 +5254,14 @@
    "map_m": [
     -426.0,
     -374.6,
-    12.0
+    11.89
    ],
    "game": [
     4400,
-    1200,
+    1189,
     8160
    ],
-   "floor_m": 12.0,
+   "floor_m": 11.89,
    "clearance_m": 3.0,
    "headroom_m": null
   }
@@ -5629,7 +5672,7 @@
     "map_m": [
      -438.31,
      -491.61,
-     -0.0
+     0.0
     ],
     "game": [
      3169,
@@ -5749,7 +5792,7 @@
     "map_m": [
      -291.25,
      -211.75,
-     -0.0
+     0.0
     ],
     "game": [
      17875,
@@ -5869,7 +5912,7 @@
     "map_m": [
      -598.0,
      -82.0,
-     -0.0
+     0.0
     ],
     "game": [
      -12800,

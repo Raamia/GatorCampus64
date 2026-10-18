@@ -14,7 +14,7 @@ They are proposals, not implemented features or approved purchases.
 | Artificial Intelligence | Qwen structured appearance extraction, procedural geometry, validation/repair and likeness evaluations; guide-grounded Gemini NPC answers. | Public repo linked on Devpost with an explanatory README. Show evaluation results and failure cases. Do not describe procedural mesh presets as fine-tuned neural models. |
 | DeepSpace | Real SDK auth, SQLite-backed RecordRoom collections, permissions, reactive leaderboard queries and signed server ingest. | The guide requires a live demo and explanation of SDK features, not hosting alone. Demonstrate an actual hosted result appearing in two browsers. |
 | Best Use of Gemini API | In-character Albert/Alberta answers; guide retrieval supplies game context. | Demonstrate a real Gemini-backed response and distinguish it from direct guide or canned responses. Keep a fallback demo available. |
-| Best Use of Vultr | Compute game/API host, Cloud GPU Qwen/Blender worker, Managed PostgreSQL and Object Storage. | Show the upload → job → preview → deployed guest path. Current documented inference uses GPU-hosted vLLM, not Vultr Serverless Inference. |
+| Best Use of Vultr | Six products: Cloud Compute (game/API host), Cloud GPU (`vcg-a16-6c-60g-16vram`, NVIDIA A16, runs the Qwen/vLLM + Blender worker), Managed PostgreSQL 17, S3-compatible Object Storage, a private VPC and a Firewall group — all in Atlanta. | Show the upload → GPU job → preview → deployed guest path. Inference runs self-hosted vLLM on the Cloud GPU today; the client is already wired for Vultr Serverless Inference via one env var if a suitable vision model is available there. |
 | GoDaddy Registry domain | `gatorcamp.us` uses the GoDaddy Registry `.us` TLD across web/API/game entry points. | Registration and DNS are at Porkbun. Confirm the guide's eligible registration requirement with organizers; do not claim registration through GoDaddy's retail registrar or a GoDaddy API integration. |
 | Easy On The Eyes | Campus art, browser 3D previews, character identity and account flows. | Polish the judge path, small screens, loading/error states and demo transitions. Eligibility does not require another provider. |
 | First Timers | No technical integration required. | Only if at least 50% of the team is attending its first hackathon. |
@@ -56,7 +56,7 @@ references, photo-evaluation outputs and Blender work files are excluded. The
 exporter is `tools/likeness/export_showcase.py`; source batch provenance is in
 `companion/app/public/showcase/provenance.json`. The app bundles all public assets,
 so neither the private Zion review server nor the generation worker is required
-for viewing the showcase. Publication still requires deploying this branch.
+for viewing the showcase. Merged and deployed; live at [gatorcamp.us/showcase](https://gatorcamp.us/showcase).
 
 ## AI evaluation card — proposal, not implemented
 

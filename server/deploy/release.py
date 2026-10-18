@@ -86,6 +86,32 @@ def artifact(ref, host):
     return commit, data.getvalue(), records
 
 
+def validate_npc_data(commit):
+    """Check the candidate's derived navigation, never the operator's working copy."""
+    paths = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', commit], cwd=ROOT, text=True).splitlines()
+    entry = 'tools/npcs/rebuild.py'
+    if entry not in paths:
+        return  # Legacy releases predate generated placement data; rollback is separate.
+    selected = [p for p in paths if p.startswith('tools/npcs/')
+                or (p.startswith('data/uf/') and p.endswith('.json'))
+                or p == 'tools/luatest/check_npc_spots.py'
+                or (p.startswith('mods/sgl64/') and (p.endswith('.lua') or
+                    p.endswith('/script.c') or p.endswith('/collision.inc.c')))]
+    raw = subprocess.check_output(['git', 'archive', commit, '--', *selected], cwd=ROOT)
+    with tempfile.TemporaryDirectory(prefix='sgl-navigation-check-') as folder:
+        with tarfile.open(fileobj=io.BytesIO(raw)) as source:
+            for member in source:
+                if not member.isfile():
+                    continue
+                relative = PurePosixPath(member.name)
+                if relative.is_absolute() or '..' in relative.parts:
+                    raise ValueError('Invalid candidate path')
+                dest = Path(folder) / member.name
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                dest.write_bytes(source.extractfile(member).read())
+        run(['python3', '-I', str(Path(folder) / entry), '--check'])
+
+
 REMOTE = r'''
 import hashlib, json, os, pathlib, shutil, subprocess, sys, tarfile, time, urllib.request
 state = pathlib.Path('/var/lib/sgl-releases')
@@ -237,6 +263,8 @@ def main():
     dirty = subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT, text=True)
     if dirty:
         parser.error('Working tree is dirty; commit/review changes before deployment')
+    if args.host == 'host':
+        validate_npc_data(commit)
     with tempfile.TemporaryDirectory(prefix='sgl-release-') as folder:
         package = Path(folder) / 'source.tar'
         manifest = Path(folder) / 'manifest.json'

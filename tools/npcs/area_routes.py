@@ -1,0 +1,141 @@
+"""Build conservative crowd stroll graphs for demo destinations from exported collision.
+
+python3 -I tools/npcs/area_routes.py [--check]
+Outdoor heights come from collision within authored elevation bands; interiors
+retain explicit floor identity. Links require supported floor and body clearance.
+The existing OSM sidewalk graph still serves the hub.
+"""
+from functools import lru_cache
+from pathlib import Path
+import json
+import math
+import re
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from geometry import Collision
+import navigation as nav
+
+ROOT = Path(__file__).resolve().parents[2]
+OUT = ROOT / 'mods/sgl64/sgl_campus_npc_areas.lua'
+# slot, level, area, floor elevations, grid pitch, interior
+AREAS = [
+    ('bob', 'LEVEL_BOB', 1, [-1000, 0], 600, False),
+    ('wf', 'LEVEL_WF', 1, [0, 150], 600, False),
+    ('jrb', 'LEVEL_JRB', 1, [0, 20, 50], 600, False),
+    ('wf', 'LEVEL_WF', 2, [-600, 0, 600, 1200, 1800, 2400, 2900, 3400], 200, True),
+    ('ccm', 'LEVEL_CCM', 1, [-600, 0, 600, 1200, 1800], 200, True),
+    ('bbh', 'LEVEL_BBH', 1, [0, 600, 1200, 1800, 2400, 3000], 200, True),
+]
+
+
+def build(slot, area, heights, pitch, outdoor=False, config=None):
+    base = ROOT / f'mods/sgl64/levels/{slot}'
+    col = Collision(base / f'area_{area}/collision.inc.c')
+    script = (base / 'script.c').read_text()
+    block = re.search(rf'\bAREA\({area},.*?END_AREA\(\)', script, re.S).group()
+    objects = [tuple(map(int, xyz)) for xyz in re.findall(
+        r'OBJECT(?:_WITH_ACTS)?\(\s*\w+,\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)', block)]
+    vertices = [v for bucket in col.floors.values() for tri in bucket for v in tri[:3]]
+    x0, x1 = max(-30000, min(v[0] for v in vertices)), min(30000, max(v[0] for v in vertices))
+    z0, z1 = max(-30000, min(v[2] for v in vertices)), min(30000, max(v[2] for v in vertices))
+    del vertices
+    if area == 1 and slot in ('bob', 'wf', 'jrb'):
+        key = {'bob': 'swamp', 'wf': 'reitz_eng', 'jrb': 'lake_alice'}[slot]
+        stage = next(s for s in json.loads((ROOT / 'data/uf/stages.json').read_text())['stages'] if s['key'] == key)
+        cx, cz = stage['center_m']
+        bounds = stage['play_bounds_m']
+        # Match the hub's 8 m perimeter inset: do not spawn beyond the playable
+        # boundary just because the exported backdrop contains supporting floor.
+        x0, x1 = max(x0, (bounds['xmin'] + 8 - cx) * 100), min(x1, (bounds['xmax'] - 8 - cx) * 100)
+        z0, z1 = max(z0, -(bounds['ymax'] - 8 - cz) * 100), min(z1, -(bounds['ymin'] + 8 - cz) * 100)
+
+    config = config or {'exclusions': []}
+    band = config['outdoor_regions'][slot]['height_range'] if outdoor else None
+
+    @lru_cache(maxsize=300000)
+    def supported(x, y, z):
+        if outdoor:
+            h = nav.supported(col, x, z, *band)
+            if h is None:
+                return None
+        else:
+            h = y
+            for dx, dz in [(0, 0), (-60, 0), (60, 0), (0, -60), (0, 60)]:
+                floor = col.floor(x+dx, y-70, z+dz)
+                if floor is None or floor[1] < 0.99 or abs(floor[0]-y) > 2:
+                    return None
+            if col.blocked(x, z, y+25, y+200, 75):
+                return None
+        if nav.excluded(config, slot, area, x, h, z, 75, 200):
+            return None
+        if any(abs(oy-h) < 250 and math.hypot(ox-x, oz-z) < 160 for ox, oy, oz in objects):
+            return None
+        return round(h)
+
+    def link_ok(a, b):
+        steps = max(1, math.ceil(math.dist(a, b)/40))
+        previous = a[1]
+        for k in range(steps+1):
+            x, y, z = (round(a[j]+(b[j]-a[j])*k/steps) for j in range(3))
+            h = supported(x, y, z)
+            if h is None or abs(h-y) > 20 or abs(h-previous) > 25:
+                return False
+            previous = h
+        return True
+
+    nodes, index, links = [], {}, []
+    for layer, y in enumerate([0] if outdoor else heights):
+        for x in range(math.ceil(x0/pitch)*pitch, int(x1)+1, pitch):
+            for z in range(math.ceil(z0/pitch)*pitch, int(z1)+1, pitch):
+                h = supported(x, y, z)
+                if h is not None:
+                    index[(x, layer, z)] = len(nodes)
+                    nodes.append((x, h, z))
+    for (x, layer, z), i in index.items():
+        for key in [(x+pitch, layer, z), (x, layer, z+pitch)]:
+            j = index.get(key)
+            if j is not None and link_ok(nodes[i], nodes[j]):
+                links.append((i, j))
+
+    keep = sorted({i for link in links for i in link})
+    remap = {old: new for new, old in enumerate(keep, 1)}
+    return [nodes[i] for i in keep], [(remap[a], remap[b]) for a, b in links]
+
+
+def main():
+    config = nav.settings(ROOT)
+    paths = ['tools/npcs/area_routes.py', 'data/uf/stages.json']
+    for slot, level, area, heights, pitch, indoor in AREAS:
+        paths += nav.dependencies(slot, area)
+    lines = ['-- Source SHA256: ' + nav.fingerprint(paths, ROOT), '-- GENERATED by tools/npcs/area_routes.py from built area collision; do not edit.',
+             '-- Supported paths with body clearance; interior floors/rooms remain separate.',
+             'SGL_CROWD_AREAS = {']
+    for slot, level, area, heights, pitch, indoor in AREAS:
+        nodes, links = build(slot, area, heights, pitch, not indoor, config)
+        if not links:
+            raise RuntimeError(f'{slot} area {area} has no safe crowd paths')
+        if not indoor and len(links) < config['outdoor_regions'][slot]['minimum_links']:
+            raise ValueError(f'{slot}: crowd route coverage below configured minimum')
+        for summary in nav.coverage(config, slot, area, nodes, links):
+            print(summary)
+        print(f'{slot} area {area}: {len(nodes)} nodes, {len(links)} links', flush=True)
+        lines += [f'    {{ level = {level}, area = {area}, indoor = {str(indoor).lower()},', '      nodes = {']
+        for i in range(0, len(nodes), 6):
+            lines.append('        ' + ' '.join('{ %d, %d, %d },' % p for p in nodes[i:i+6]))
+        lines += ['      }, links = {']
+        for i in range(0, len(links), 10):
+            lines.append('        ' + ' '.join('{ %d, %d },' % p for p in links[i:i+10]))
+        lines += ['      } },']
+    lines += ['}']
+    output = '\n'.join(lines) + '\n'
+    if '--check' in sys.argv:
+        if not OUT.exists() or OUT.read_text() != output:
+            raise SystemExit('area_routes: stale output; run tools/npcs/area_routes.py')
+        print('area_routes: OK')
+    else:
+        OUT.write_text(output)
+
+
+if __name__ == '__main__':
+    main()

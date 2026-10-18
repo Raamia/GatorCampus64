@@ -161,7 +161,7 @@ def live_oak(acc, col, x, y, key, scale=1.0):
         a = rnd(f"{key}:shade{i}", -0.45, 0.45)
         hx, hy = 3.15 * scale, 2.2 * scale
         c, s = math.cos(a), math.sin(a)
-        q = [(cx + c * u - s * v, cy + s * u + c * v, -0.055)
+        q = [(cx + c * u - s * v, cy + s * u + c * v, -0.02)
              for u, v in ((-hx, -hy), (hx, -hy), (hx, hy), (-hx, hy))]
         acc.poly(q, "oak_shadow", [(0, 0), (1, 0), (1, 1), (0, 1)])
     # Eight short wall faces form a conservative trunk collider; canopy/moss/shade stay non-colliding.

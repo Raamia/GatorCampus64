@@ -34,7 +34,10 @@ def fake_repo(tmp_path):
 
 
 @pytest.fixture
-def env(tmp_path, fake_repo):
+def env(tmp_path, fake_repo, monkeypatch):
+    monkeypatch.setattr(pipeline.gpu_telemetry, "capture", lambda point: {
+        "timestamp": "2026-10-17T12:00:00+00:00", "point": point, "available": False,
+        "gpus": [], "note": "GPU telemetry unavailable: fake CPU host"})
     store = storage.LocalStorage(str(tmp_path / "bucket"))
     for i in range(2):
         p = tmp_path / f"p{i}.png"
@@ -71,6 +74,9 @@ def test_pipeline_ok(env):
     assert store.list(f"photos/{JOB}/") == []  # photos deleted
     man = json.loads(store.get(f"builds/{JOB}/manifest.json"))
     assert man["build_id"] == "sglguest" and man["previews"]["front"] == f"builds/{JOB}/previews/front.png"
+    assert [sample["point"] for sample in man["gpu_telemetry"]] == [
+        "spec.before", "spec.after", "build.before", "build.after"]
+    assert "GPU telemetry unavailable: fake CPU host" in res["log"]
     assert set(man["files"]) == set(keys)
     im = Image.open(os.path.join(store.root, f"builds/{JOB}/portrait.png"))
     assert im.size == (64, 64) and im.mode == "RGBA"
@@ -149,6 +155,7 @@ def test_pipeline_validation_failure(env, monkeypatch):
         pipeline.run_job(JOB, "Pat", store, spec_ai.StaticBackend(GOOD), cfg)
     assert ei.value.step == "validate"
     assert "FAILED at validate" in ei.value.log
+    assert '"point": "build.after"' in ei.value.log
     assert store.list(f"photos/{JOB}/") == [] and store.list(f"builds/{JOB}/") == []
 
 
@@ -184,6 +191,7 @@ def test_pipeline_missing_required_model_fails_and_cleans_photos(env):
     with pytest.raises(pipeline.StepFailed, match="required but not configured") as ei:
         pipeline.run_job(JOB, "Pat", store, None, cfg)
     assert ei.value.step == "spec"
+    assert '"point": "spec.after"' in ei.value.log
     assert not store.list(f"photos/{JOB}/")
 
 

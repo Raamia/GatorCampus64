@@ -1,7 +1,7 @@
 {
  "level": "castle_grounds",
  "stage": "hub",
- "built_at": "2026-10-18T03:39Z",
+ "built_at": "2026-10-18T04:14Z",
  "center_m": [
   -45,
   98
@@ -20,7 +20,7 @@
  ],
  "extent_half_m": 324.0,
  "collision_tris": 10887,
- "visual_tris": 74247,
+ "visual_tris": 87188,
  "collision_by_object": {
   "Ground collision": 1552,
   "Pond basins collision": 195,
@@ -42,8 +42,8 @@
   "LM turlington_potato_collision": 39
  },
  "visual_by_object": {
-  "Ground visual": 7694,
-  "Roads and paths visual": 7134,
+  "Ground visual": 14901,
+  "Roads and paths visual": 12744,
   "Pond basins visual": 195,
   "Pond water": 137,
   "Props visual": 252,
@@ -60,7 +60,7 @@
   "LM library_colonnade.visual": 278,
   "LM smathers_library.visual": 1127,
   "LM plaza_americas.visual": 794,
-  "LM plaza_americas.walks": 132,
+  "LM plaza_americas.walks": 256,
   "LM marston_visual": 639,
   "LM turlington_visual": 922,
   "LM turlington_potato_visual": 196
@@ -221,6 +221,14 @@
   },
   {
    "module": "reitz_reitz_union",
+   "ok": true,
+   "skipped": true,
+   "slugs": [],
+   "parts": 0,
+   "reason": "no LANDMARKS entry lists stage 'hub' (stages: ['reitz_eng'])"
+  },
+  {
+   "module": "reitz_streetscape",
    "ok": true,
    "skipped": true,
    "slugs": [],
@@ -2479,6 +2487,42 @@
    "buildings_overlapped": [],
    "shadow_hiding_faces": {}
   },
+  "ground_surface_partition": {
+   "input_triangles": 9538,
+   "output_faces": 12799,
+   "overlap_removed_m2": 190251.65,
+   "meshes": [
+    "Ground visual",
+    "LM plaza_americas.walks",
+    "LM turlington_potato_visual",
+    "Roads and paths visual"
+   ],
+   "surface_z_m": -0.03,
+   "priority": {
+    "ground_grass": 0,
+    "hub_ground_grass": 0,
+    "grass": 5,
+    "lawn": 10,
+    "hub_lawn": 10,
+    "forest_floor": 11,
+    "mulch": 12,
+    "parking": 20,
+    "plaza_brick": 30,
+    "concrete": 31,
+    "path": 31,
+    "sidewalk": 31,
+    "steps": 32,
+    "asphalt": 40,
+    "road_paint": 50,
+    "crosswalk": 60
+   }
+  },
+  "sunk_roads": {
+   "road_z_m": -0.15,
+   "road_faces": 2415,
+   "curb_faces": 1942,
+   "landmark_road_faces": 0
+  },
   "buildings": [
    {
     "id": "r2075617/154223654",
@@ -4410,14 +4454,14 @@
  "collision_repair": {
   "area_1": {
    "vertices": [
-    8794,
+    8795,
     8775
    ],
-   "welded_vertices": 19,
-   "collapsed_tris": 28,
+   "welded_vertices": 20,
+   "collapsed_tris": 30,
    "tjunction_splits": 264,
    "triangles": [
-    10881,
+    10883,
     11117
    ]
   }
@@ -4426,7 +4470,7 @@
   "errors": [],
   "warnings": [],
   "collision_tris": 11117,
-  "render_tris": 74247,
+  "render_tris": 87188,
   "lua_names": [
    "SGL_HUB_SIGN_CENTURY_TOWER",
    "SGL_HUB_SIGN_FINAL_EXAM",
@@ -4444,5 +4488,5 @@
    49
   ]
  },
- "level_dir": "/Users/nav/Desktop/super-gatorlator-64/mods/sgl64/levels/castle_grounds"
+ "level_dir": "/home/mdracc/super-gatorlator-64/.worktrees/pr35-release/mods/sgl64/levels/castle_grounds"
 }

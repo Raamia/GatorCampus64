@@ -118,6 +118,7 @@ echo "== test_runs (verified runs, leaderboard command + menu)"
 "$LUA" "$HERE/test_runs.lua"
 
 PY="$HERE/../.venv/bin/python"
+if [ ! -x "$PY" ]; then PY="$(command -v python3)"; fi
 if [ -x "$PY" ]; then
     echo "== check_swamp_points"
     out="$("$PY" -I "$HERE/check_swamp_points.py")" || { echo "$out"; exit 1; }
@@ -143,10 +144,14 @@ echo "== test_rivals (rival mascots replace the Goombas)"
 "$LUA" "$HERE/test_rivals.lua"
 echo "== test_hud_sight (door labels and NPC name tags hidden behind walls)"
 "$LUA" "$HERE/test_hud_sight.lua"
+echo "== live NPC geometry"
+"$LUA" "$HERE/test_npc_geometry.lua"
 echo "== test_campus_npcs (students walking the hub's sidewalks)"
 "$LUA" "$HERE/test_campus_npcs.lua"
-echo "== campus_routes --check"
-python3 -I "$HERE/../npcs/campus_routes.py" --check
+echo "== map-derived NPC data --check"
+python3 -I "$HERE/../npcs/rebuild.py" --check
+echo "== indoor crowd geometry tests"
+python3 -m unittest discover -s "$HERE/../npcs" -p 'test_*.py'
 echo "== check_npc_ids"
 python3 -I "$HERE/check_npc_ids.py"
 echo "== check_npc_spots"
