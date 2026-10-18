@@ -6,6 +6,27 @@ divides one budget among connected human players. Each client simulates only its
 own share around its player. All 40 existing models remain available as a visual
 library; no model or level rebuild is required.
 
+## Current spawn policy
+
+Outdoor walkers use the campus hub sidewalk graph and the generated outdoor
+graphs for Reitz/Malachowsky, the Swamp, and Lake Alice. Marston area 1, Library West area 1,
+have four persistent residents per authored floor (20 and 24 respectively).
+Reitz area 2 targets six to eight per floor (up to 64 total), with four Level 1 residents placed
+near the food court seating hall using its map coordinates. Their positions come from collision-safe
+route nodes with live body-clearance checks and at least five metres of spacing.
+They idle and look toward nearby players; they do not wander into stairs,
+elevators, or mission routes. Failed placements are skipped for that visit.
+
+Indoor residents remain the same objects throughout a building visit, including
+floor changes and elevator teleports. Leaving the building clears them. They are
+local scenery with no player pushing. `/crowd off` and a zero crowd allocation
+suppress them; `/crowd on` permits a fresh placement. Dedicated hosts spawn none.
+The outdoor shared budget below still applies to walkers; indoor groups have a
+separate fixed bound per graphical client (maximum 64 in Reitz).
+Mission characters and Albert/Alberta remain separate.
+
+This policy supersedes the historical destination-routing details below.
+
 ## Suggested budgets
 
 | Total budget | 1 player | 2 players | 4 players | 8 players | 12 players |
@@ -139,3 +160,11 @@ the hub, join/leave, and toggle `/crowd off|on`. Check for conspicuous spawn
 or removal, path clipping and animation quality on target machines; record
 frame times if choosing between the suggested budgets. Offline simulation does
 not establish visual quality or an FPS gain. No deployment is performed here.
+
+### Reitz counter clearance
+
+Food-service counters (including Shakes) have explicit exclusion boxes in
+`data/uf/npc_navigation.json`. These remove route candidates and reject runtime
+positions around the visual counters and kitchen equipment, which are not all
+represented by solid collision. Keep these exclusions when regenerating routes.
+The food-court density and stable per-visit indoor residents are unchanged.

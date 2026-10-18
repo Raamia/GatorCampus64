@@ -1365,6 +1365,27 @@ def build_floor(RZ, F):
         # z-fight). There each ends exactly at the joint (faces abut, no overlap)
         ea = 0.0 if any(fs == F.id and math.dist(a, pj) < 0.02 for fs, pj in SEAM_JOINTS) else ext
         eb = 0.0 if any(fs == F.id and math.dist(b, pj) < 0.02 for fs, pj in SEAM_JOINTS) else ext
+        # L3 plan corners are slightly skewed, rather than exactly square. A
+        # half-thickness extension can leave a hairline opening after export
+        # rounds vertices to game units. Overlap only joined corner ends by
+        # 3 cm; collinear material seams and free doorway ends stay unchanged.
+        if F.id == "L3":
+            for endpoint, is_start in ((a, True), (b, False)):
+                corner = False
+                for other in F.walls:
+                    oa, ob = tuple(other[:2]), tuple(other[2:4])
+                    ol = math.dist(oa, ob)
+                    if ol < 0.05 or min(math.dist(endpoint, oa), math.dist(endpoint, ob)) > 0.02:
+                        continue
+                    cross = abs(dx * (ob[1] - oa[1]) - dy * (ob[0] - oa[0])) / ol
+                    if cross > 0.5:
+                        corner = True
+                        break
+                if corner:
+                    if is_start:
+                        ea = ext + 0.03
+                    else:
+                        eb = ext + 0.03
         a2 = (a[0] - dx * ea, a[1] - dy * ea)
         b2 = (b[0] + dx * eb, b[1] + dy * eb)
         runs = _side_samples(F, a, b, 0.35)

@@ -1,7 +1,7 @@
--- Campus students are local scenery around each player on destination-specific safe walking graphs.
+-- Campus students: outdoor sidewalk walkers and persistent indoor floor groups.
 -- The host divides one server-wide budget equally among connected human players (including
 -- players visiting stages). No fixed landmark crowd, no headless-host objects, no position packets.
--- Each client renders only its own share; unused shares are not redistributed. Albert/Alberta
+-- Outdoor clients render only their share; indoor residents use bounded floor groups. Albert/Alberta
 -- and mission NPCs are separate. See docs/campus_crowd.md for budgets and rollout checks.
 
 SGL_CROWD_BUDGET = 24         -- default total across players; host: /crowd budget 0..40
@@ -29,8 +29,16 @@ local function bucket_key(x, z) return math.floor(x / 1000) .. ":" .. math.floor
 local function select_routes(level, area)
     local route = nil
     if level == SGL_HUB_LEVEL and area == 1 then route = SGL_CAMPUS_ROUTES end
-    for _, candidate in ipairs(SGL_CROWD_AREAS) do
-        if candidate.level == level and candidate.area == area then route = candidate break end
+    -- Authored outdoor graphs use hub-style walkers; actual interiors use residents.
+    if (level == LEVEL_CCM and area == 1) or (level == LEVEL_BBH and area == 1)
+        or (level == LEVEL_WF and (area == 1 or area == 2))
+        or ((level == LEVEL_BOB or level == LEVEL_JRB) and area == 1) then
+        for _, candidate in ipairs(SGL_CROWD_AREAS) do
+            if candidate.level == level and candidate.area == area then
+                route = candidate
+                break
+            end
+        end
     end
     sRoute = route
     sLimits = route ~= nil and route.indoor and INDOOR or SGL_CROWD_AROUND
@@ -75,8 +83,9 @@ end
 -- One moving anchor per client, updated once per frame, not once per object.
 local sAround = { x = 0, y = 0, z = 0, leash = SGL_CROWD_AROUND.leash }
 SGL_CROWD = {}
-for i = 1, 40 do
-    local id = string.format("npc_%02d", i)
+-- Reitz supports up to eight residents per floor; reuse the existing 40 models.
+for i = 1, 64 do
+    local id = string.format("npc_%02d", (i - 1) % 40 + 1)
     local model = smlua_model_util_get_id(id .. "_geo")
     if model ~= E_MODEL_ERROR_MODEL then
         table.insert(SGL_CROWD, { index = i, id = id, model = model, anchor = sAround })
@@ -329,6 +338,14 @@ local function crowd_loop(o)
         obj_mark_for_deletion(o)
         return
     end
+    if s.indoorHome ~= nil then
+        -- Floor residents keep their spots throughout this building visit. No player
+        -- distance, room, camera or elevator movement can recycle them.
+        local m = nearest_player(o, 450)
+        if m ~= nil then o.oFaceAngleYaw = atan2s(m.pos.z - o.oPosZ, m.pos.x - o.oPosX) end
+        play(o, s, s.idle, 0x10000)
+        return
+    end
     -- Stagger recycling checks. The hard leash also removes an in-view student
     -- after a teleport; camera direction must never keep a distant crowd alive.
     if (o.oTimer + s.index) % 15 == 0 then
@@ -352,7 +369,9 @@ local function crowd_loop(o)
     if floor == nil then
         for key, value in pairs(previous) do s[key] = value end
         s.blocked = (s.blocked or 0) + 1
-        if s.blocked >= 10 or sgl_npc_safe_position(o.oPosX, o.oPosY, o.oPosZ, 35, 190) == nil then
+        -- A blocked path is not a failed spawn: wait on the last safe spot.
+        -- Only retire the object when its standing surface itself is unsafe.
+        if sgl_npc_safe_position(o.oPosX, o.oPosY, o.oPosZ, 35, 190) == nil then
             despawn(s)
             return
         end
@@ -393,6 +412,7 @@ end
 local function eligible()
     local np = gNetworkPlayers[0]
     return sEnabled and np.connected and sRoute ~= nil
+
         and not (network_is_server() and headless())
 end
 
@@ -431,6 +451,71 @@ local function reconcile(quota, spawn)
     end
 end
 
+local function indoor_density()
+    return gNetworkPlayers[0].currLevelNum == LEVEL_WF and 8 or 4
+end
+
+local function reconcile_indoor(active, spawn)
+    local density = indoor_density()
+    local floors = {}
+    local byHeight = {}
+    for i, n in ipairs(sNodes) do
+        if #sAdj[i] > 0 then
+            if byHeight[n[2]] == nil then
+                byHeight[n[2]] = {}
+                floors[#floors + 1] = n[2]
+            end
+            table.insert(byHeight[n[2]], i)
+        end
+    end
+    table.sort(floors)
+    local attempts = 0
+    for k, student in ipairs(SGL_CROWD) do
+        local floorIndex = (k - 1) // density + 1
+        local height = floors[floorIndex]
+        if not active or height == nil then
+            despawn(student)
+            student.indoorAttempted, student.indoorHome = nil, nil
+        elseif student.obj == nil and not student.indoorAttempted and spawn and attempts < 2 then
+            attempts = attempts + 1
+            student.indoorAttempted = true -- no visible spawn/retry loop during this visit
+            local nodes = byHeight[height]
+            local seat = (k - 1) % density
+            local offset = seat * (#nodes // density)
+            -- Food court seating is south of the vendor block, on Reitz L1.
+            -- Give half this floor's residents priority here rather than distributing
+            -- all eight across distant corridors. Still use collision-safe nodes.
+            if gNetworkPlayers[0].currLevelNum == LEVEL_WF and height == 600 and seat < 4 then
+                local sorted = {}
+                for _, node in ipairs(nodes) do sorted[#sorted + 1] = node end
+                table.sort(sorted, function(a, b)
+                    return dist2d(sNodes[a][1], sNodes[a][3], 3200, 2500)
+                        < dist2d(sNodes[b][1], sNodes[b][3], 3200, 2500)
+                end)
+                nodes, offset = sorted, 0
+            end
+            for j = 1, #nodes do
+                local n = sNodes[nodes[(j + offset - 1) % #nodes + 1]]
+                local clear = true
+                for _, other in ipairs(SGL_CROWD) do
+                    local h = other.indoorHome
+                    if h and h.y == height and dist2d(h.x, h.z, n[1], n[3]) < 500 then clear = false; break end
+                end
+                local y = clear and sgl_npc_safe_position(n[1], height, n[3], 55, 190) or nil
+                if y ~= nil and y ~= false then
+                    student.indoorHome = { x = n[1], y = y, z = n[3] }
+                    student.idle = IDLE_ANIMS[(k - 1) % #IDLE_ANIMS + 1]
+                    student.obj = spawn_non_sync_object(id_bhvSglCrowd, student.model, n[1], y, n[3], function(o)
+                        o.oBehParams = k
+                        o.oFaceAngleYaw = (k * 13007) & 0xffff
+                    end)
+                    break
+                end
+            end
+        end
+    end
+end
+
 local function update()
     sFrame = sFrame + 1
     if sFrame % 30 == 1 then publish_budget() end
@@ -439,26 +524,28 @@ local function update()
     local jumped = sLastPos ~= nil and (dist2d(m.pos.x, m.pos.z, sLastPos.x, sLastPos.z) > 1500
         or math.abs(m.pos.y - sLastPos.y) > 400)
     local changed = place ~= sPlace
-    if changed or jumped then
+    if changed or (jumped and not (sRoute and sRoute.indoor)) then
         despawn_all()
-        if place ~= sPlace then select_routes(np.currLevelNum, np.currAreaIndex) end
+        if place ~= sPlace then
+            select_routes(np.currLevelNum, np.currAreaIndex)
+            for _, student in ipairs(SGL_CROWD) do
+                student.indoorHome, student.indoorAttempted = nil, nil
+                student.anchor = sAround
+            end
+        end
         sPlace, sArrivalFrames, sLastQuota = place, 100, -1
     end
     sLastPos = { x = m.pos.x, y = m.pos.y, z = m.pos.z }
     update_around()
     sAround.leash = sLimits.leash
-    if eligible() and sRoute.indoor and (changed or jumped or sFrame % 15 == 1) then
-        local component = player_component()
-        if component ~= nil and component ~= sPlayerComponent then sArrivalFrames = 100 end
-        sPlayerComponent = component
-        for _, s in ipairs(SGL_CROWD) do
-            if s.obj ~= nil and sComponents[s.a] ~= sPlayerComponent then despawn(s) end
-        end
-    end
     if sArrivalFrames > 0 then sArrivalFrames = sArrivalFrames - 1 end
     local quota = eligible() and sgl_crowd_quota() or 0
     -- Let the destination/camera settle for ten frames, then fill gradually.
     local spawn = sFrame % 15 == 1 and sArrivalFrames < 90
+    if sRoute and sRoute.indoor then
+        if sFrame % 15 == 1 then reconcile_indoor(eligible() and sgl_crowd_quota() > 0, spawn) end
+        return
+    end
     if quota ~= sLastQuota or sFrame % 15 == 1 then
         reconcile(quota, spawn)
         sLastQuota = quota
@@ -473,6 +560,7 @@ end
 function sgl_crowd_pos(k)
     local s = SGL_CROWD[k]
     if s == nil or s.obj == nil then return nil end
+    if s.indoorHome then return s.indoorHome.x, s.indoorHome.y, s.indoorHome.z, 0 end
     return place_of(s)
 end
 
@@ -493,11 +581,19 @@ hook_chat_command("crowd", "[on|off|budget 0..40] - local crowd toggle; host set
         despawn_all()
     elseif arg == "on" then
         sEnabled = true
+        for _, student in ipairs(SGL_CROWD) do
+            if student.obj == nil then student.indoorAttempted, student.indoorHome = nil, nil end
+        end
     elseif arg ~= "" then
         return false
     end
     local count = 0
     for _, s in ipairs(SGL_CROWD) do if s.obj ~= nil then count = count + 1 end end
+    if sRoute and sRoute.indoor then
+        djui_chat_message_create(string.format("Indoor crowd: %s (%d residents; %d per floor)",
+            sEnabled and "on" or "off", count, indoor_density()))
+        return true
+    end
     djui_chat_message_create(string.format("Campus crowd: %s (%d active; share %d, cap %d per player)",
         sEnabled and "on" or "off", count, sgl_crowd_quota(), SGL_CROWD_PER_PLAYER))
     return true
