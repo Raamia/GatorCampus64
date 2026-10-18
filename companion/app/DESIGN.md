@@ -35,9 +35,9 @@ components:
 
 ## Overview
 
-Study Group HQ is a **product surface** for teammates organizing around the real missions in Super Gatorlator 64. It should feel like a field board carried between campus buildings: warm paper, dark green ink, and one orange route marker. The single memorable element is the winding campus-route line that links the active mission to the latest reported run.
+This is the **Super Gatorlator 64 game companion**, for teammates organizing around the native SM64CoopDX campus adventure. The game is the product; this site helps players choose a mission, invite a squad, and log player-reported results. It should feel like a campus level-select map: warm paper, dark green ink, and orange route lines linking Reitz, Marston, and the stadium.
 
-This is a companion for students at a laptop or phone during a co-op session. Keep the game recognizable through mission names and stage details. The page must stay quick to scan while someone is playing.
+This is a companion for students at a laptop or phone during a co-op session. Name Super Gatorlator 64 and identify it as a native 3D game in the first screen. Make clear that the game runs in SM64CoopDX and that results in this web app are player-reported. Keep exact mission names and stage details visible and quick to scan while someone is playing.
 
 Avoid generic SaaS dashboards, sponsor logo walls, neon hacker themes, and decorative game screenshots that do not help a player choose the next action.
 

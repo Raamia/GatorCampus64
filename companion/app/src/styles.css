@@ -5,7 +5,7 @@
 @source "./**/*.{ts,tsx}";
 @source "../node_modules/deepspace/dist/**/*.js";
 
-/* Gator Field Board: a campus field notebook in warm paper, ink and orange. */
+/* Super Gatorlator 64 companion: campus-route paper, deep green and Gator orange. */
 @theme {
   --color-background: #f4f1e8;
   --color-foreground: #173e32;
@@ -38,6 +38,7 @@ button { cursor: pointer; }
 .landing-small { margin-top:36px; display:flex; gap:12px; align-items:center; font-size:9px; letter-spacing:.12em; color:#8c9087; }
 .landing-small span,.privacy-note span { width:5px; height:5px; border-radius:50%; background:#e97541; }
 .landing-map,.map-graphic { position:relative; min-height:490px; height:min(62vh,650px); overflow:hidden; background:#dfe5d4; border:1px solid #d0d8c6; }
+.map-title { position:absolute; z-index:1; top:20px; left:22px; color:#566654; font-size:9px; font-weight:800; letter-spacing:.16em; }
 .map-grid { position:absolute; inset:0; opacity:.46; background-image:linear-gradient(28deg,transparent 48%,#c4cfbd 49%,#c4cfbd 50%,transparent 51%),linear-gradient(115deg,transparent 48%,#c4cfbd 49%,#c4cfbd 50%,transparent 51%),linear-gradient(#d0d9c8 1px,transparent 1px),linear-gradient(90deg,#d0d9c8 1px,transparent 1px); background-size:230px 210px,250px 190px,38px 38px,38px 38px; }
 .landing-map:before,.map-graphic:before,.landing-map:after,.map-graphic:after { content:""; position:absolute; border:1px solid #c4cfbd; border-radius:48%; transform:rotate(-26deg); }
 .landing-map:before,.map-graphic:before { width:78%; height:20%; left:6%; top:38%; }.landing-map:after,.map-graphic:after { width:62%; height:28%; left:26%; top:9%; transform:rotate(58deg); }
@@ -219,7 +220,12 @@ button { cursor: pointer; }
     color: var(--color-foreground);
   }
 
-  /* Scrollbar styling */
+  /* Standards-based scrollbar styling with WebKit fallbacks. */
+  * {
+    scrollbar-color: var(--color-border) transparent;
+    scrollbar-width: thin;
+  }
+
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;

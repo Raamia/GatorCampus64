@@ -28,7 +28,7 @@ run_worker_first = ["/api/*", "/ws/*", "/internal/*", "/v1/*", "/_deepspace/*", 
 # secrets, and collaborators all key to it. Renames are safe.
 [vars]
 DEEPSPACE_APP_ID = "app_01M53MENR3QPDRDRBP2JKRP884"
-APP_NAME = "Gator Field Board"
+APP_NAME = "Super Gatorlator 64"
 # Exact callback URI for the macOS game bridge. PKCE and state are required by
 # the native auth routes; the bridge binds this loopback address only.
 NATIVE_AUTH_REDIRECT_URIS = "http://127.0.0.1:45173/callback"

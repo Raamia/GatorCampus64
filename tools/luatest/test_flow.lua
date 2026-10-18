@@ -287,8 +287,9 @@ test("single player: hub -> character select -> door -> act 1 -> star -> back ou
     check(raw(H.ms[0].marioObj)._model == env._G.sglFriends[4].model,
         "character model restored before the Mario frame is drawn")
     check(H.ms[0].numLives == 4, "4 lives")
-    check((H.hudFlags & (C.HUD_DISPLAY_FLAGS_LIVES | C.HUD_DISPLAY_FLAGS_STAR_COUNT)) == 0,
-        "vanilla Mario and star HUD icons hidden")
+    check((H.hudFlags & (C.HUD_DISPLAY_FLAGS_LIVES | C.HUD_DISPLAY_FLAGS_COIN_COUNT
+        | C.HUD_DISPLAY_FLAGS_STAR_COUNT)) == 0,
+        "vanilla lives, coin, and star HUD icons hidden")
     local portraitDrawn, coinDrawn = false, false
     for _, d in ipairs(H.draw) do
         if d.k == "tex" and d.name == "sgl_portrait_anh" then portraitDrawn = true end
@@ -388,7 +389,7 @@ test("campus boards: direct button and mouse open a later board without the mapp
     w:step(3)
     arrive_and_pick(w, H, 1)
 
-    H.mouseX, H.mouseY, H.mouseButtons = 213, 12, C.L_MOUSE_BUTTON
+    H.mouseX, H.mouseY, H.mouseButtons = 136, 12, C.L_MOUSE_BUTTON
     H.pressed = C.B_BUTTON -- CoopDX maps left click to B during gameplay.
     w:step(1)
     check(table.concat(H.hudText, " | "):find("CAMPUS LEADERBOARDS", 1, true) ~= nil,
